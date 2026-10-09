@@ -58,7 +58,7 @@ function pageHeading(title, description) {
     provenance.append(el('code', graph.repository.commit ? graph.repository.commit.slice(0, 12) : '커밋 정보 없음'));
     provenance.append(el('span', graph.repository.dirty ? '작업 트리 변경 포함' : '기록된 소스 스냅샷'));
     const hash = el('span', '그래프 ' + graph.hash.slice(0, 12)); hash.title = graph.hash; provenance.append(hash);
-    provenance.append(el('span', '정적 내보내기 · 이후 변경은 재빌드 필요'));
+    provenance.append(el('span', document.querySelector('meta[name="lattice-generation"]') ? '로컬 지도 · 파일 변경 시 자동 갱신' : '정적 내보내기 · 이후 변경은 재빌드 필요'));
     head.append(provenance); main.append(head);
 }
 function findingView(finding) {
@@ -193,7 +193,9 @@ function render() {
 }
 async function load() {
     try {
-        const [graphResponse, presentationResponse] = await Promise.all([fetch('./graph.json'), fetch('./presentation.json')]);
+        const generation = document.querySelector('meta[name="lattice-generation"]')?.content;
+        const suffix = generation ? '?generation=' + encodeURIComponent(generation) : '';
+        const [graphResponse, presentationResponse] = await Promise.all([fetch('./graph.json' + suffix), fetch('./presentation.json' + suffix)]);
         if (!graphResponse.ok) throw new Error('graph.json HTTP ' + graphResponse.status);
         graph = await graphResponse.json(); presentation = presentationResponse.ok ? await presentationResponse.json() : {};
         if (graph.schemaVersion !== 1 || !Array.isArray(graph.nodes) || !Array.isArray(graph.facets) || !Array.isArray(graph.findings) || !Array.isArray(graph.edges) || !graph.repository || typeof graph.hash !== 'string') throw new Error('지원하지 않거나 불완전한 그래프 형식입니다.');

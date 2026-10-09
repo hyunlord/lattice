@@ -54,3 +54,14 @@ export function saveSnapshot(cache, graph, coverage) {
   }
   return createGraph({ ...graph, snapshots }, digest);
 }
+
+export function persistBuild(root, result) {
+  const cache = join(root, '.lattice/cache');
+  const graph = saveSnapshot(cache, result.graph, result.coverage);
+  atomic(join(cache, 'presentation.json'), result.presentation);
+  atomic(join(cache, 'diagnostics.json'), result.diagnostics);
+  atomic(join(cache, 'inputs.json'), result.extraction.manifest);
+  atomic(join(cache, 'build.json'), result.extraction.stats);
+  atomic(join(cache, 'graph.json'), graph);
+  return graph;
+}

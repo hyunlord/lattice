@@ -7,8 +7,8 @@ export function inside(root, path) {
   return offset !== '..' && !offset.startsWith(`..${sep}`) && !isAbsolute(offset);
 }
 
-export function collectInputs({ paths, readText, lens, digest, sourceLink, cache }) {
-  const records = [], documents = [], modules = [], files = [], inputs = [], diagnostics = [];
+export function selectedInputs(paths, lens) {
+  const selected = [];
   for (const path of paths) {
     if (/^(?:\.lattice|\.omo|\.omx|\.codex|\.agents|\.git)\//u.test(path)) continue;
     const kinds = lens?.kinds.filter(kind => kind.files.some(pattern => matchesGlob(path, pattern))) ?? [];
@@ -21,9 +21,15 @@ export function collectInputs({ paths, readText, lens, digest, sourceLink, cache
       if (lens) throw new Error(`No adapter for selected input: ${path}`);
       continue;
     }
-    const text = readText(path);
-    if (text === undefined) continue;
-    const input = { path, text, contentHash: digest(text) };
+    selected.push({ path, kind, format });
+  }
+  return selected;
+}
+
+export function collectInputs({ selected, lens, sourceLink, cache }) {
+  const records = [], documents = [], modules = [], files = [], inputs = [], diagnostics = [];
+  for (const { input, kind, format } of selected) {
+    const { path } = input;
     inputs.push({ path, contentHash: input.contentHash });
     const extract = parse => cache.extract(input, { format, selector: format === 'json' ? kind?.records ?? '' : '' }, parse);
     if (format === 'code') {

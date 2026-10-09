@@ -18,7 +18,7 @@ Statuses: **designed** means a reviewed contract exists, not implementation; **p
 | L1-09 | Incremental build / content hashes | parse/reuse counters plus add/edit/delete/rename/lens/code changes | verified: [installed incremental/cold equivalence](l1-incremental.md) |
 | L1-10 | check exit status | real CLI pass=0/fail=1/unknown gate=1/config error=2 | verified: [installed CLI scenario](l1-check.md) |
 | L1-11 | diff nodes/edges/facets/findings incl changes | real two-commit repo, before/after and dirty worktree preservation | verified: [installed historical comparison](l1-history.md) |
-| L1-12 | Static export + graph / serve watch | package-installed CLI, static HTTP load, source change refresh, SIGINT cleanup | pending |
+| L1-12 | Static export + graph / serve watch | package-installed CLI, static HTTP load, source change refresh, SIGINT cleanup | verified: [local serving and staged export](l1-serve.md) |
 | L2-01 | Home counts, freshness, automatic findings + lens facets | real three-repository screens with meaningful data | pending |
 | L2-02 | Graph kinds/neighbors/path/facets/hubs | browser inputs and asserted matching graph results | pending |
 | L2-03 | List inferred/configured columns search/sort/filter/intent | browser checks and source-linked comparison | pending |
