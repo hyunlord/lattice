@@ -15,7 +15,7 @@ Statuses: **designed** means a reviewed contract exists, not implementation; **p
 | L1-06 | Lens schema, kinds, fields, edges, facet expressions | valid/invalid lens integration tests, zero domain branches | pending |
 | L1-07 | Views/findings/gates/code-link rules | non-game rules + unsupported/unknown/real dispatch fixtures | pending |
 | L1-08 | init skeleton, idempotence | real CLI temp-repo invocation and unchanged unrelated files | pending |
-| L1-09 | Incremental build / content hashes | parse/reuse counters plus add/edit/delete/rename/lens/code changes | pending |
+| L1-09 | Incremental build / content hashes | parse/reuse counters plus add/edit/delete/rename/lens/code changes | verified: [installed incremental/cold equivalence](l1-incremental.md) |
 | L1-10 | check exit status | real CLI pass=0/fail=1/unknown gate=1/config error=2 | verified: [installed CLI scenario](l1-check.md) |
 | L1-11 | diff nodes/edges/facets/findings incl changes | real two-commit repo, before/after and dirty worktree preservation | verified: [installed historical comparison](l1-history.md) |
 | L1-12 | Static export + graph / serve watch | package-installed CLI, static HTTP load, source change refresh, SIGINT cleanup | pending |

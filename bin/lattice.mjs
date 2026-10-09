@@ -28,6 +28,8 @@ function persist(root, result) {
   const graph = saveSnapshot(cache, result.graph, result.coverage);
   atomic(join(cache, 'presentation.json'), result.presentation);
   atomic(join(cache, 'diagnostics.json'), result.diagnostics);
+  atomic(join(cache, 'inputs.json'), result.extraction.manifest);
+  atomic(join(cache, 'build.json'), result.extraction.stats);
   atomic(join(cache, 'graph.json'), graph);
   return graph;
 }
@@ -37,6 +39,7 @@ function build(options) {
     const result = buildRepository(options);
     const graph = persist(options.root, result);
     console.log(`Built ${graph.nodes.length} nodes, ${graph.edges.length} edges, ${graph.facets.length} facets, ${graph.findings.length} findings.`);
+    console.log(`Extraction: ${result.extraction.stats.parsed} parsed, ${result.extraction.stats.reused} reused, ${result.extraction.stats.discarded} discarded; ${result.extraction.stats.files} files content-verified.`);
     console.log(`Input/reference diagnostics: ${result.diagnostics.length} (selected input scope).`);
     if (graph.lensDigest === null) console.log('Coverage: JSON, CSV, Markdown and code files; JS/TS/Python static imports. YAML is not yet included.');
     console.log(`Graph ${graph.hash}\n${join(options.root, '.lattice/cache/graph.json')}`);
