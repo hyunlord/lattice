@@ -8,13 +8,13 @@ Statuses: **designed** means a reviewed contract exists, not implementation; **p
 | L0-02 | Viewer wireframes + neutral tokens before code | viewer.md + DESIGN.md commit predating implementation | designed |
 | L0-03 | Determinism / core-domain separation / evidence ADRs | ADR 0001–0004 and review | designed |
 | L1-01 | Strict TypeScript, Node LTS, npm package | clean install/build/typecheck/format/test CI + installed package CLI | pending |
-| L1-02 | JSON/YAML/CSV records with source lines | quoted multiline/array/duplicate-key/malformed fixtures, real builds | pending |
+| L1-02 | JSON/YAML/CSV records with source lines | quoted multiline/array/duplicate-key/malformed fixtures, real builds | verified: [YAML and prior data extraction](l1-yaml-init.md) |
 | L1-03 | Markdown headings/links/ADRs | [Existing 12 fixtures, real docs, installed CLI and browser](l1-markdown.md) | verified |
 | L1-04 | Optional Graft import + own file/module fallback | validated real sample; missing/malformed schema fixture | pending |
 | L1-05 | Git metadata and reference auto-join | alias collisions/missing IDs/add/delete/source-pointer assertions | pending |
 | L1-06 | Lens schema, kinds, fields, edges, facet expressions | valid/invalid lens integration tests, zero domain branches | pending |
 | L1-07 | Views/findings/gates/code-link rules | non-game rules + unsupported/unknown/real dispatch fixtures | pending |
-| L1-08 | init skeleton, idempotence | real CLI temp-repo invocation and unchanged unrelated files | pending |
+| L1-08 | init skeleton, idempotence | real CLI temp-repo invocation and unchanged unrelated files | verified: [installed init workflow](l1-yaml-init.md) |
 | L1-09 | Incremental build / content hashes | parse/reuse counters plus add/edit/delete/rename/lens/code changes | verified: [installed incremental/cold equivalence](l1-incremental.md) |
 | L1-10 | check exit status | real CLI pass=0/fail=1/unknown gate=1/config error=2 | verified: [installed CLI scenario](l1-check.md) |
 | L1-11 | diff nodes/edges/facets/findings incl changes | real two-commit repo, before/after and dirty worktree preservation | verified: [installed historical comparison](l1-history.md) |

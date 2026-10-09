@@ -16,7 +16,8 @@ function implementationFingerprint() {
   }
   visit(root, '');
   sources.sort((left, right) => left.path < right.path ? -1 : left.path > right.path ? 1 : 0);
-  return digest(canonicalJson(sources));
+  const manifest = JSON.parse(readFileSync(new URL('../package.json', import.meta.url), 'utf8'));
+  return digest(canonicalJson({ sources, dependencies: manifest.dependencies ?? {} }));
 }
 export function extractionCache(root) {
   const implementation = implementationFingerprint();

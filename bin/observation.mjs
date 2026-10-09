@@ -1,5 +1,5 @@
 import { existsSync, readFileSync } from 'node:fs';
-import { relative, resolve, sep } from 'node:path';
+import { basename, relative, resolve, sep } from 'node:path';
 import { canonicalJson } from '../dist/index.js';
 import { parseLens } from '../dist/lens/index.js';
 import { inside, selectedInputs } from './inputs.mjs';
@@ -9,8 +9,16 @@ import { digest } from './storage.mjs';
 export function observeRepository(options, historical) {
   const { root } = options;
   const repository = historical ?? workingRepository(root);
-  const lensPath = resolve(root, options.lens ?? '.lattice/lens.json');
-  const lensRelative = inside(root, lensPath) ? relative(root, lensPath).split(sep).join('/') : '.lattice/lens.json';
+  const names = ['.lattice/lens.yaml', '.lattice/lens.yml', '.lattice/lens.json'];
+  const select = paths => {
+    const candidates = names.filter(path => paths.includes(path));
+    if (candidates.length > 1) throw new Error('Multiple default lenses found; choose one with --lens');
+    return candidates[0];
+  };
+  const historicalDefault = historical && options.lens === undefined ? select(repository.paths) : undefined;
+  const currentDefault = options.lens === undefined && !historicalDefault ? select(names.filter(path => existsSync(resolve(root, path)))) : undefined;
+  const lensPath = resolve(root, options.lens ?? historicalDefault ?? currentDefault ?? '.lattice/lens.yaml');
+  const lensRelative = inside(root, lensPath) ? relative(root, lensPath).split(sep).join('/') : `.lattice/${basename(lensPath)}`;
   const historicalText = historical && inside(root, lensPath) ? historical.readText(lensRelative) : undefined;
   const currentText = historicalText === undefined && (options.lens !== undefined || existsSync(lensPath)) ? readFileSync(lensPath, 'utf8') : undefined;
   const lensText = historicalText ?? currentText;

@@ -3,6 +3,7 @@ import { realpathSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { diffGraphs } from '../dist/index.js';
 import { exportSite } from './export.mjs';
+import { initialize } from './init.mjs';
 import { serve } from './serve.mjs';
 import { buildRepository } from './build.mjs';
 import { historicalRepository } from './repository.mjs';
@@ -17,6 +18,7 @@ function options(args) {
       if (!value || value.startsWith('--')) throw new Error(`Missing value for ${arg}`);
       options[arg.slice(2)] = value;
     } else if (arg === '--json') options.json = true;
+    else if (arg === '--no-global') options.noGlobal = true;
     else if (arg === '--force') options.force = true;
     else if (!arg.startsWith('-') && options.output === undefined) options.output = arg;
     else throw new Error(`Unknown argument: ${arg}`);
@@ -32,7 +34,7 @@ function build(options) {
     console.log(`Built ${graph.nodes.length} nodes, ${graph.edges.length} edges, ${graph.facets.length} facets, ${graph.findings.length} findings.`);
     console.log(`Extraction: ${result.extraction.stats.parsed} parsed, ${result.extraction.stats.reused} reused, ${result.extraction.stats.discarded} discarded; ${result.extraction.stats.files} files content-verified.`);
     console.log(`Input/reference diagnostics: ${result.diagnostics.length} (selected input scope).`);
-    if (graph.lensDigest === null) console.log('Coverage: JSON, CSV, Markdown and code files; JS/TS/Python static imports. YAML is not yet included.');
+    if (graph.lensDigest === null) console.log('Coverage: JSON, YAML, CSV, Markdown and code files; JS/TS/Python static imports. Unity tagged YAML is not included.');
     console.log(`Graph ${graph.hash}\n${join(options.root, '.lattice/cache/graph.json')}`);
     return graph;
   });
@@ -77,11 +79,13 @@ function check(options) {
 }
 try {
   const [command, ...args] = process.argv.slice(2);
+  if (command !== 'init' && args.includes('--no-global')) throw new Error('--no-global is supported by init');
   if (command !== 'serve' && args.includes('--port')) throw new Error('--port is supported by serve');
   if (command !== 'export' && args.includes('--force')) throw new Error('--force is supported by export');
   if (!command || command === '--help' || command === 'help') {
-    console.log('Lattice\n  lattice build --root <repository> [--lens <lens.json>]\n  lattice check --root <repository> [--lens <lens.json>]\n  lattice diff <ref> --root <repository> [--lens <lens.json>] [--json]\n  lattice export <directory> --root <repository> [--force]\n  lattice serve --root <repository> [--lens <lens.json>] [--port <number>]\n\nJSON/CSV/Markdown/code build; optional declarative JSON lens; static home/list/detail.');
-  } else if (command === 'build') build(options(args));
+    console.log('Lattice\n  lattice init --root <repository> [--no-global]\n  lattice build --root <repository> [--lens <lens.yaml|lens.json>]\n  lattice check --root <repository> [--lens <lens.yaml|lens.json>]\n  lattice diff <ref> --root <repository> [--lens <lens.yaml|lens.json>] [--json]\n  lattice export <directory> --root <repository> [--force]\n  lattice serve --root <repository> [--lens <lens.yaml|lens.json>] [--port <number>]\n\nJSON/YAML/CSV/Markdown/code build; optional declarative YAML/JSON lens; static home/list/detail.');
+  } else if (command === 'init') initialize(options(args));
+  else if (command === 'build') build(options(args));
   else if (command === 'check') check(options(args));
   else if (command === 'diff') diff(options(args));
   else if (command === 'serve') await serve(options(args));

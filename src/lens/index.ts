@@ -2,6 +2,7 @@ import { evaluateGate } from "./gates.js";
 import { canonicalJson } from "../core/canonical.js";
 import type { JsonObject, JsonValue } from "../core/canonical.js";
 import type { NodeDraft, Source, Facet, Finding } from "../core/model.js";
+import { extractYamlDocument } from "../adapters/yaml.js";
 import { extractJson } from "../adapters/json.js";
 import type { ExtractedRecord, SourceInput } from "../adapters/types.js";
 
@@ -20,8 +21,11 @@ function string(value: JsonValue | undefined): string {
     if (typeof value !== "string") throw new Error("Lens expected a string");
     return value;
 }
+function lensRecord(input: SourceInput): ExtractedRecord | undefined {
+    return /\.ya?ml$/iu.test(input.path) ? extractYamlDocument(input) : extractJson(input)[0];
+}
 export function parseLens(input: SourceInput): Lens {
-    const config = extractJson(input)[0]?.node.attributes;
+    const config = lensRecord(input)?.node.attributes;
     if (!config || config["schemaVersion"] !== 1) throw new Error("Expected lens schemaVersion 1");
     const kinds = array(config["kinds"]).map(value => {
         const kind = object(value);
@@ -125,7 +129,7 @@ function evaluate(expression: JsonValue | undefined, env: Environment): JsonValu
     }
 }
 export function applyLens(records: readonly ExtractedRecord[], lens: Lens, input: SourceInput): { readonly nodes: readonly NodeDraft[]; readonly facets: readonly Facet[]; readonly findings: readonly Finding[]; readonly presentation: JsonObject; } {
-    const lensRecord = extractJson(input)[0];
+    const definition = lensRecord(input);
     const derived = array(lens.config["derived"] ?? []);
     const graphVars: Record<string, JsonValue> = {};
     const graphSources = new Map<string, Source>();
@@ -146,7 +150,7 @@ export function applyLens(records: readonly ExtractedRecord[], lens: Lens, input
             const rule = object(value);
             if (!applies(rule, record.node)) return;
             const result = evaluate(rule["value"] ?? { op: "case", cases: rule["cases"] ?? [], default: rule["default"] ?? null }, env) ?? null;
-            const source = lensRecord?.fields[`/facets/${index}`];
+            const source = definition?.fields[`/facets/${index}`];
             facets.push({ id: `${string(rule["id"])}:${record.node.id}`, nodeId: record.node.id, key: string(rule["key"]), value: result, ruleId: string(rule["id"]), sources: [...env.sources.values(), ...(source ? [source] : [])] });
         });
     }
@@ -156,7 +160,7 @@ export function applyLens(records: readonly ExtractedRecord[], lens: Lens, input
         const sources = new Map<string, Source>();
         const env: Environment = { vars: { ...graphVars, targets: targets.map(record => recordView(record.node)) }, records, sources };
         for (const target of targets) addSources(env, [...(environments.get(target.node.id)?.sources.values() ?? target.node.sources)]);
-        const lensSource = lensRecord?.fields[`/findings/${index}`];
+        const lensSource = definition?.fields[`/findings/${index}`];
         if (lensSource) addSources(env, [lensSource]);
         const metrics: Record<string, JsonValue> = {};
         for (const [key, expression] of Object.entries(object(rule["metrics"]))) metrics[key] = evaluate(expression, env) ?? null;

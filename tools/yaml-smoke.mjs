@@ -1,0 +1,43 @@
+import assert from 'node:assert/strict';
+import { execFileSync, spawnSync } from 'node:child_process';
+import { mkdirSync, readFileSync, renameSync, writeFileSync } from 'node:fs';
+import { join } from 'node:path';
+import { stringify } from 'yaml';
+
+export function verifyYaml(cli, repository) {
+  mkdirSync(join(repository, '.lattice'), { recursive: true });
+  execFileSync('git', ['init', '--quiet', repository]);
+  const write = (path, text) => writeFileSync(join(repository, path), text);
+  const run = args => execFileSync(process.execPath, [cli, ...args, '--root', repository], { encoding: 'utf8' });
+  const read = path => JSON.parse(readFileSync(join(repository, path), 'utf8'));
+  write('.gitignore', '.lattice/cache/\n.lattice/site/\n');
+  write('services.yml', 'services:\n  - id: service:api\n    name: API\n    stage: live\n    dependencyId: service:worker\n  - id: service:worker\n    name: Worker\n    stage: draft\n');
+  const lens = { schemaVersion: 1, name: 'YAML services', kinds: [{ id: 'service', label: 'Service', files: ['services.yml'], records: '/services' }], facets: [{ id: 'stage', key: 'stage', value: { op: 'get', from: 'node', path: ['stage'] } }], findings: [{ id: 'count', query: { kinds: ['service'] }, metrics: { count: { op: 'count', value: { op: 'get', from: 'vars', path: ['targets'] } } }, template: 'Services: {count}', gate: { metric: 'count', comparator: 'eq', threshold: 2 } }] };
+  write('.lattice/lens.yaml', stringify(lens));
+  run(['build']); run(['check']);
+  const initial = read('.lattice/cache/graph.json');
+  assert.equal(initial.nodes.length, 2);
+  assert.equal(initial.edges.length, 1);
+  assert.equal(initial.facets.length, 2);
+  assert.equal(initial.findings[0].gate.status, 'pass');
+  assert.ok(initial.facets[0].sources.some(source => source.path === '.lattice/lens.yaml' && source.line > 1));
+  assert.equal(initial.nodes.find(node => node.id === 'service:api').sources[0].line, 2);
+  run(['build']);
+  assert.equal(read('.lattice/cache/build.json').parsed, 0);
+  assert.equal(read('.lattice/cache/graph.json').hash, initial.hash);
+  const git = args => execFileSync('git', ['-C', repository, ...args], { encoding: 'utf8' }).trim();
+  git(['add', '.']); git(['-c', 'user.name=Lattice', '-c', 'user.email=lattice@example.invalid', 'commit', '--quiet', '-m', 'YAML source lens']);
+  const commit = git(['rev-parse', 'HEAD']);
+  renameSync(join(repository, '.lattice/lens.yaml'), join(repository, '.lattice/lens.json'));
+  write('.lattice/lens.json', JSON.stringify(lens));
+  write('services.yml', 'services:\n  - id: service:api\n    name: Changed API\n    stage: live\n');
+  const difference = JSON.parse(run(['diff', commit, '--json']));
+  assert.equal(difference.before.coverage, 'repository-lens');
+  assert.equal(difference.nodes.removed[0].id, 'service:worker');
+  assert.equal(difference.nodes.changed[0].after.name, 'Changed API');
+  run(['export']);
+  assert.equal(read('.lattice/site/graph.json').nodes.length, 1);
+  const malformed = spawnSync(process.execPath, [cli, 'build', '--root', repository, '--lens', 'services.yml'], { encoding: 'utf8' });
+  assert.equal(malformed.status, 2);
+  console.log('Installed YAML: named records, exact source lines, declarative facets/gate, no-op cache reuse, historical YAML lens after JSON migration, and static export passed.');
+}

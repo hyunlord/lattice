@@ -8,6 +8,7 @@ export type { GraphDiff, RecordDiff, RecordChange } from "./core/diff.js";
 export type { Source, NodeDraft, Node, Edge, Facet, Finding, View, InputDigest, Snapshot, Repository, GraphDraft, Graph, Digest } from "./core/model.js";
 export { DataInputError } from "./adapters/types.js";
 export type { SourceInput, ExtractedRecord } from "./adapters/types.js";
+export { extractYaml, extractYamlDocument } from "./adapters/yaml.js";
 export { extractJson } from "./adapters/json.js";
 export { extractCsv } from "./adapters/csv.js";
 export { resolveRecords } from "./adapters/resolve.js";
