@@ -11,17 +11,16 @@ export function selectedInputs(paths, lens) {
   const selected = [];
   for (const path of paths) {
     if (/^(?:\.lattice|\.omo|\.omx|\.codex|\.agents|\.git)\//u.test(path)) continue;
-    const kinds = lens?.kinds.filter(kind => kind.files.some(pattern => matchesGlob(path, pattern))) ?? [];
+    const kinds = lens?.kinds.flatMap(kind => [kind, ...(kind.selections ?? []).map(selection => ({ ...kind, ...selection }))].filter(selection => selection.files.some(pattern => matchesGlob(path, pattern)))) ?? [];
     if (lens && kinds.length === 0) continue;
-    if (kinds.length > 1) throw new Error(`Ambiguous kind patterns: ${path}`);
-    const kind = kinds[0];
+    if (new Set(kinds.map(kind => kind.records ?? '')).size !== kinds.length) throw new Error(`Ambiguous kind patterns: ${path}`);
     const language = codeLanguage(path);
     const format = language ? 'code' : /\.(json|yaml|yml|csv|md|markdown)$/iu.exec(path)?.[1]?.toLowerCase();
     if (!format) {
       if (lens) throw new Error(`No adapter for selected input: ${path}`);
       continue;
     }
-    selected.push({ path, kind, format });
+    for (const kind of kinds.length ? kinds : [undefined]) selected.push({ path, kind, format });
   }
   return selected;
 }
@@ -57,8 +56,13 @@ export function collectInputs({ selected, lens, sourceLink, cache }) {
     for (const record of extracted) {
       const id = record.node.attributes[kind?.idField ?? 'id'];
       const name = record.node.attributes[kind?.nameField ?? 'name'];
+      const originalId = typeof id === 'string' && id ? id : record.node.id;
+      const selectedKind = kind?.kindField ? record.node.attributes[kind.kindField] : kind?.id ?? record.node.kind;
+      if (typeof selectedKind !== 'string' || !selectedKind) throw new Error(`Missing kind field in ${path}: ${record.node.sources[0]?.pointer}`);
+      const attributes = kind?.layer ? { ...record.node.attributes, layer: kind.layer, originalId } : record.node.attributes;
       records.push({
-        node: { ...record.node, id: typeof id === 'string' && id ? id : record.node.id, name: typeof name === 'string' && name ? name : record.node.name, kind: kind?.id ?? record.node.kind, sources: record.node.sources.map(sourceLink) },
+        node: { ...record.node, id: kind?.layer ? `${kind.layer}:${originalId}` : originalId, name: typeof name === 'string' && name ? name : record.node.name, kind: selectedKind, attributes, sources: record.node.sources.map(sourceLink) },
+        ...(kind?.references === false ? { references: false } : {}),
         fields: Object.fromEntries(Object.entries(record.fields).map(([key, value]) => [key, sourceLink(value)])),
       });
     }
@@ -66,5 +70,5 @@ export function collectInputs({ selected, lens, sourceLink, cache }) {
       files.push({ id: `file:${path}`, kind: 'file', name: path, attributes: { format }, sources: [sourceLink({ path, pointer: '', line: 1, contentHash: input.contentHash })] });
     }
   }
-  return { records, documents, modules, files, inputs, diagnostics };
+  return { records, documents, modules, files, inputs: [...new Map(inputs.map(input => [input.path, input])).values()], diagnostics };
 }

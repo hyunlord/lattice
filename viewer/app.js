@@ -22,7 +22,7 @@ function button(text, action) { const b = el('button', text); b.type = 'button';
 function display(value) { return typeof value === 'string' ? value : JSON.stringify(value); }
 function external(url) { try { const parsed = new URL(url); return ['http:', 'https:'].includes(parsed.protocol) ? parsed.href : null; } catch { return null; } }
 function nodeHref(id) { return '#/node/' + encodeURIComponent(id); }
-function listHref(params = {}) { const query = new URLSearchParams(params); return '#/list' + (query.size ? '?' + query : ''); }
+function listHref(params = {}) { const query = new URLSearchParams({ ...(activeLayer ? { layer: activeLayer } : {}), ...params }); return '#/list' + (query.size ? '?' + query : ''); }
 function section(title, className = 'panel section') { const box = el('section', undefined, className); box.append(el('h2', title)); return box; }
 function empty(text) { return el('p', text, 'empty'); }
 function sources(items) {
@@ -45,6 +45,30 @@ let nodes;
 let visibleNodes;
 let facets;
 let kinds;
+let allVisibleNodes;
+let activeLayer = '';
+let snapshots = [];
+let renderVersion = 0;
+const snapshotGraphs = new Map();
+const layerOf = node => String(node.attributes.layer ?? '');
+const layerLabel = layer => (Array.isArray(presentation.layers) ? presentation.layers.find(item => item.id === layer)?.label : presentation.layers?.[layer]?.label) || layer || '층 미지정';
+function routeHref(path, params = {}) { const query = new URLSearchParams({ ...(activeLayer ? { layer: activeLayer } : {}), ...params }); return '#' + path + (query.size ? '?' + query : ''); }
+function layerControl() {
+    const layers = [...new Set(allVisibleNodes.map(layerOf))];
+    if (layers.length < 2 && !layers[0]) return;
+    const bar = el('div', undefined, 'filters layer-filter');
+    const control = selectControl('데이터 층', 'layer', layers.map(value => [value, layerLabel(value)]), activeLayer);
+    control.querySelector('select').addEventListener('change', event => {
+        const [path, search = ''] = (location.hash.slice(1) || '/home').split('?'); const params = new URLSearchParams(search);
+        params.set('layer', event.target.value); params.delete('page');
+        location.hash = '#' + (path.startsWith('/node/') ? '/home' : path) + '?' + params;
+    });
+    bar.append(control, el('span', '각 층의 노드와 발견을 따로 셉니다. 대응 링크는 동일 구현을 뜻하지 않습니다.', 'meta')); main.append(bar);
+}
+function layerFindings(data = graph, layer = activeLayer) {
+    const ids = new Set(data.nodes.filter(node => layerOf(node) === layer).map(node => node.id));
+    return data.findings.filter(finding => finding.targetIds.length ? finding.targetIds.some(id => ids.has(id)) : (!layer || finding.metrics?.layer === layer));
+}
 const kindLabel = kind => kinds.find(item => item.id === kind)?.label || kind;
 const facetLabel = key => presentation.facets?.[key]?.label || key;
 const valueLabel = (key, value) => presentation.facets?.[key]?.values?.[display(value)] || display(value);
@@ -59,7 +83,7 @@ function pageHeading(title, description) {
     provenance.append(el('span', graph.repository.dirty ? '작업 트리 변경 포함' : '기록된 소스 스냅샷'));
     const hash = el('span', '그래프 ' + graph.hash.slice(0, 12)); hash.title = graph.hash; provenance.append(hash);
     provenance.append(el('span', document.querySelector('meta[name="lattice-generation"]') ? '로컬 지도 · 파일 변경 시 자동 갱신' : '정적 내보내기 · 이후 변경은 재빌드 필요'));
-    head.append(provenance); main.append(head);
+    head.append(provenance); main.append(head); layerControl();
 }
 function findingView(finding) {
     const article = el('article', undefined, 'finding');
@@ -88,7 +112,7 @@ function findingView(finding) {
 function home() {
     pageHeading(presentation.name || graph.repository.name, presentation.description || '데이터를 분류하고 발견의 근거를 확인합니다.');
     const summary = el('div', undefined, 'summary');
-    for (const [count, label] of [[visibleNodes.length, '노드'], [new Set(visibleNodes.map(node => node.kind)).size, '종류'], [graph.findings.length, '발견']]) { const item = el('span'); item.append(el('strong', count), document.createTextNode(label)); summary.append(item); }
+    for (const [count, label] of [[visibleNodes.length, '노드'], [new Set(visibleNodes.map(node => node.kind)).size, '종류'], [layerFindings().length, '발견']]) { const item = el('span'); item.append(el('strong', count), document.createTextNode(label)); summary.append(item); }
     main.append(summary);
     const columns = el('div', undefined, 'two-column');
     const inventory = section('종류별 목록', 'panel');
@@ -114,8 +138,8 @@ function home() {
     if (!facetKeys.length) distribution.append(empty('이 내보내기에는 렌즈 분류가 없습니다.'));
     columns.append(distribution); main.append(columns);
     const findings = section('발견과 근거');
-    if (!graph.findings.length) findings.append(empty('생성된 발견이 없습니다.'));
-    for (const finding of graph.findings) findings.append(findingView(finding));
+    if (!layerFindings().length) findings.append(empty('생성된 발견이 없습니다.'));
+    for (const finding of layerFindings()) findings.append(findingView(finding));
     main.append(findings);
 }
 function selectControl(label, name, values, selected) {
@@ -133,7 +157,7 @@ function listing(params) {
     const key = params.get('facet');
     if (key) form.append(selectControl('분류 값', 'value', [['', '모든 값'], ...[...new Set(graph.facets.filter(facet => facet.key === key).map(facet => display(facet.value)))].map(value => [value, presentation.facets?.[key]?.values?.[value] || value])], params.get('value') || ''));
     form.append(selectControl('정렬', 'sort', [['name', '이름 오름차순'], ['name-desc', '이름 내림차순'], ['kind', '종류 오름차순'], ['id', 'ID 오름차순']], params.get('sort') || 'name'));
-    const submit = el('button', '적용'); submit.type = 'submit'; form.append(submit, link('초기화', '#/list'));
+    const submit = el('button', '적용'); submit.type = 'submit'; form.append(submit, link('초기화', listHref()));
     const apply = () => { const query = new URLSearchParams(); for (const [name, value] of new FormData(form)) if (value) query.set(name, value); if (query.get('facet') !== params.get('facet')) query.delete('value'); location.hash = listHref(Object.fromEntries(query)); };
     form.addEventListener('submit', event => { event.preventDefault(); apply(); });
     form.addEventListener('change', event => { if (event.target.tagName === 'SELECT') apply(); }); main.append(form);
@@ -168,9 +192,9 @@ function listing(params) {
 }
 function detail(id) {
     const node = nodes.get(id);
-    main.append(link('← 목록으로', '#/list', 'breadcrumb'));
+    main.append(link('← 목록으로', listHref(), 'breadcrumb'));
     if (!node) { pageHeading('노드를 찾을 수 없습니다', id); main.append(empty('ID가 변경되었거나 현재 내보내기에 없는 노드입니다. 목록에서 다시 검색하세요.')); return; }
-    pageHeading(node.name, kindLabel(node.kind)); main.append(el('code', node.id, 'detail-id'));
+    pageHeading(node.name, kindLabel(node.kind) + (layerOf(node) ? ' · ' + layerLabel(layerOf(node)) : '')); main.append(el('code', node.id, 'detail-id'));
     const actions = el('div', undefined, 'actions'); const status = el('span', '', 'meta'); status.setAttribute('role', 'status');
     actions.append(button('링크 복사', async () => { try { await navigator.clipboard.writeText(location.href); status.textContent = '링크를 복사했습니다.'; } catch { status.textContent = '주소 표시줄의 URL을 복사하세요.'; } }), status); main.append(actions);
     const chips = el('div', undefined, 'facet-list'); for (const facet of facets.get(id) || []) chips.append(link(facetLabel(facet.key) + ': ' + valueLabel(facet.key, facet.value), listHref({ facet: facet.key, value: display(facet.value) }), 'badge')); main.append(chips);
@@ -180,14 +204,118 @@ function detail(id) {
     attributes.append(values); if (!Object.keys(node.attributes).length) attributes.append(empty('기록된 속성이 없습니다.')); main.append(attributes);
     const related = graph.findings.filter(finding => finding.targetIds.includes(id));
     const findings = section('관련 발견'); for (const finding of related) findings.append(findingView(finding)); if (!related.length) findings.append(empty('이 노드를 대상으로 한 발견은 없습니다.')); main.append(findings);
-    const edges = graph.edges.filter(edge => edge.source === id || edge.target === id); if (edges.length) { const neighbors = section('연결된 노드'); const list = el('ul', undefined, 'neighbors'); for (const edge of edges) { const target = edge.source === id ? edge.target : edge.source; const row = el('li'); row.append(el('span', (edge.source === id ? '→ ' : '← ') + edge.field + ' · '), link(nodes.get(target)?.name || target, nodeHref(target))); list.append(row); } neighbors.append(list); main.append(neighbors); }
+    const edges = graph.edges.filter(edge => edge.source === id || edge.target === id); if (edges.length) { const neighbors = section('연결된 노드'); const list = el('ul', undefined, 'neighbors'); for (const edge of edges) { const target = edge.source === id ? edge.target : edge.source; const row = el('li'); row.append(el('span', (edge.source === id ? '→ ' : '← ') + (edge.attributes?.label || edge.kind || edge.field) + ' · '), link(nodes.get(target)?.name || target, nodeHref(target))); if (nodes.has(target) && layerOf(nodes.get(target)) !== layerOf(node)) row.append(el('span', ' · ' + layerLabel(layerOf(nodes.get(target))), 'badge')); list.append(row); } neighbors.append(list); main.append(neighbors); }
 }
+function matrix(id, params) {
+    const views = (graph.views || []).filter(view => view.type === 'matrix');
+    let decoded; try { decoded = decodeURIComponent(id); } catch { decoded = ''; }
+    const view = views.find(view => view.id === decoded) || (!id ? views[0] : undefined);
+    pageHeading(view?.label || '영향 행렬', view?.description || '행에서 열로 향하는 연결을 확인합니다.');
+    if (!view) { main.append(empty(id ? '요청한 행렬이 없습니다. 다른 보기를 선택하세요.' : '이 그래프에는 행렬 보기가 없습니다.')); if (id) main.append(link('행렬 목록', routeHref('/views'))); return; }
+    const controls = el('div', undefined, 'filters');
+    const selector = selectControl('보기', 'view', views.map(item => [item.id, item.label]), view.id);
+    selector.querySelector('select').addEventListener('change', event => { location.hash = routeHref('/views/' + encodeURIComponent(event.target.value)); }); controls.append(selector); main.append(controls);
+    const query = view.query || {};
+    const directed = Array.isArray(query.rows) && Array.isArray(query.columns);
+    const allowed = id => nodes.has(id) && layerOf(nodes.get(id)) === activeLayer;
+    const cells = (Array.isArray(query.cells) ? query.cells : []).map(cell => directed ? cell : { ...cell, nodeIds: (cell.nodeIds || []).filter(allowed), count: (cell.nodeIds || []).filter(allowed).length }).filter(cell => directed || cell.count > 0);
+    const rows = directed ? query.rows.filter(allowed) : [...new Set(cells.map(cell => display(cell.row)))];
+    const columns = directed ? query.columns.filter(allowed) : [...new Set(cells.map(cell => display(cell.column)))];
+    if (!rows.length || !columns.length) { main.append(empty('선택한 층에는 이 행렬의 입력 노드가 없습니다. 데이터 층을 바꿔 보세요.')); return; }
+    const table = el('table', undefined, 'matrix'); table.append(el('caption', `${rows.length}행 × ${columns.length}열 · ${directed ? '행 → 열 방향. 숫자는 연결 수이며 선택하면 근거가 표시됩니다.' : '숫자는 해당 분류의 노드 수입니다.'}`));
+    const head = el('thead'); const header = el('tr'); const corner = el('th', '출발 ↓ / 도착 →'); corner.scope = 'col'; header.append(corner);
+    for (const column of columns) { const th = el('th'); th.scope = 'col'; th.append(directed ? link(nodes.get(column)?.name || column, nodeHref(column)) : el('span', column)); header.append(th); } head.append(header); table.append(head);
+    const body = el('tbody');
+    for (const row of rows) {
+        const tr = el('tr'); const title = el('th'); title.scope = 'row'; title.append(directed ? link(nodes.get(row)?.name || row, nodeHref(row)) : el('span', row)); tr.append(title);
+        for (const column of columns) {
+            const matches = cells.filter(cell => directed ? cell.source === row && cell.target === column : display(cell.row) === row && display(cell.column) === column);
+            const td = el('td'); const count = matches.reduce((sum, cell) => sum + (directed ? cell.edgeIds?.length || 1 : cell.count || 0), 0);
+            if (count) { const queryParams = { row, column }; const cellLink = link(String(count), routeHref('/views/' + encodeURIComponent(view.id), queryParams), 'matrix-cell'); cellLink.setAttribute('aria-label', `${directed ? nodes.get(row)?.name : row} → ${directed ? nodes.get(column)?.name : column}: ${count}`); td.append(cellLink); } else { td.textContent = '—'; td.className = 'muted'; } tr.append(td);
+        } body.append(tr);
+    }
+    table.append(body); const region = el('div', undefined, 'table-region'); region.tabIndex = 0; region.setAttribute('role', 'region'); region.setAttribute('aria-label', '영향 행렬, 가로로 스크롤할 수 있습니다'); region.append(table); main.append(el('p', '표를 가로로 스크롤해 도착 노드를 확인하세요. 숫자를 선택하면 연결의 근거가 나타납니다.', 'meta'), region);
+    const row = params.get('row'), column = params.get('column');
+    if (row && column) {
+        const detail = section('선택한 연결');
+        const selected = cells.filter(cell => directed ? cell.source === row && cell.target === column : display(cell.row) === row && display(cell.column) === column);
+        if (!selected.length) detail.append(empty('이 칸에는 연결이 없습니다.'));
+        for (const cell of selected) {
+            if (directed) {
+                detail.append(link(nodes.get(row)?.name || row, nodeHref(row)), el('span', ' → '), link(nodes.get(column)?.name || column, nodeHref(column)), el('p', display(cell.label ?? '')));
+                for (const edgeId of cell.edgeIds || []) { const edge = graph.edges.find(edge => edge.id === edgeId); if (edge) { detail.append(el('p', edge.attributes?.label || edge.kind), sources(edge.sources)); } }
+            } else { const list = el('ul', undefined, 'neighbors'); for (const nodeId of cell.nodeIds || []) { const li = el('li'); li.append(link(nodes.get(nodeId)?.name || nodeId, nodeHref(nodeId))); list.append(li); } detail.append(list); }
+        } main.append(detail);
+    }
+    if (view.sources?.length) { const provenance = el('details', undefined, 'panel section'); provenance.append(el('summary', '행렬 출처'), sources(view.sources)); main.append(provenance); }
+}
+function semantic(value, record = true) {
+    if (Array.isArray(value)) return value.map(item => semantic(item, false));
+    if (value && typeof value === 'object') return Object.fromEntries(Object.keys(value).sort().filter(key => !record || !['sources', 'contentHash'].includes(key)).map(key => [key, semantic(value[key], false)]));
+    return value;
+}
+function compareRecords(before, after, key = 'id') {
+    const left = new Map(before.map(item => [item[key], item])); const right = new Map(after.map(item => [item[key], item]));
+    return [...new Set([...left.keys(), ...right.keys()])].sort().flatMap(id => {
+        const previous = left.get(id), current = right.get(id);
+        if (previous && current && JSON.stringify(semantic(previous)) === JSON.stringify(semantic(current))) return [];
+        return [{ id, previous, current, status: !previous ? '추가' : !current ? '삭제' : '변경' }];
+    });
+}
+async function readSnapshot(snapshot) {
+    if (snapshotGraphs.has(snapshot.id)) return snapshotGraphs.get(snapshot.id);
+    const response = await fetch('./' + snapshot.artifactPath); if (!response.ok) throw new Error('스냅샷 HTTP ' + response.status);
+    const data = await response.json(); if (data.schemaVersion !== 1 || data.hash !== snapshot.graphHash || !Array.isArray(data.nodes) || !Array.isArray(data.findings)) throw new Error('스냅샷의 형식 또는 해시가 일치하지 않습니다.');
+    snapshotGraphs.set(snapshot.id, data); return data;
+}
+async function changes(params, version) {
+    pageHeading('스냅샷 변화', '기록된 두 시점의 노드 속성과 발견을 비교합니다. 출처 위치만 달라진 경우는 내용 변경에 포함하지 않습니다.');
+    if (snapshots.length < 2) { main.append(empty('비교할 스냅샷이 두 개 이상 필요합니다. Git 이력을 비교한 뒤 다시 내보내세요.')); return; }
+    const baseId = params.get('base') || snapshots[0].id, headId = params.get('head') || snapshots.at(-1).id;
+    const base = snapshots.find(item => item.id === baseId), head = snapshots.find(item => item.id === headId);
+    const choices = snapshots.map(item => [item.id, `${item.commit?.slice(0, 12) || '커밋 없음'} · ${item.graphHash.slice(0, 8)}`]);
+    const form = el('form', undefined, 'filters'); form.append(selectControl('이전', 'base', choices, baseId), selectControl('이후', 'head', choices, headId));
+    const submit = el('button', '비교'); submit.type = 'submit'; form.append(submit); form.addEventListener('submit', event => { event.preventDefault(); location.hash = routeHref('/changes', Object.fromEntries(new FormData(form))); }); main.append(form);
+    if (!base || !head) { main.append(empty('이 주소의 스냅샷이 내보내기에 없습니다. 이전·이후를 다시 선택하세요.')); return; }
+    const loading = el('p', '스냅샷을 불러오고 있습니다…', 'muted'); loading.setAttribute('role', 'status'); main.append(loading);
+    const layer = activeLayer;
+    try {
+        const [before, after] = await Promise.all([readSnapshot(base), readSnapshot(head)]); if (version !== renderVersion) return; loading.remove();
+        const beforeNodes = before.nodes.filter(node => layerOf(node) === layer && !kinds.find(kind => kind.id === node.kind)?.hidden), afterNodes = after.nodes.filter(node => layerOf(node) === layer && !kinds.find(kind => kind.id === node.kind)?.hidden);
+        const nodeChanges = compareRecords(beforeNodes, afterNodes), findingChanges = compareRecords(layerFindings(before, layer), layerFindings(after, layer), 'ruleId');
+        const beforeIds = new Set(beforeNodes.map(node => node.id)), afterIds = new Set(afterNodes.map(node => node.id));
+        const edgeChanges = compareRecords((before.edges || []).filter(edge => beforeIds.has(edge.source) || beforeIds.has(edge.target)), (after.edges || []).filter(edge => afterIds.has(edge.source) || afterIds.has(edge.target)));
+        const facetChanges = compareRecords((before.facets || []).filter(facet => beforeIds.has(facet.nodeId)), (after.facets || []).filter(facet => afterIds.has(facet.nodeId)));
+        const historicNodes = new Map([...before.nodes, ...after.nodes].map(node => [node.id, node]));
+        const counts = section('층별 개수 변화');
+        for (const kind of [...new Set([...beforeNodes, ...afterNodes].map(node => node.kind))].sort()) { const row = el('div', undefined, 'count-row'); row.append(el('span', kindLabel(kind)), el('code', `${beforeNodes.filter(node => node.kind === kind).length} → ${afterNodes.filter(node => node.kind === kind).length}`)); counts.append(row); } main.append(counts);
+        for (const [title, records] of [['발견 변화', findingChanges], ['노드 변화', nodeChanges], ['연결 변화', edgeChanges], ['분류 변화', facetChanges]]) {
+            const box = section(title + ' · ' + records.length); if (!records.length) box.append(empty('내용 변화가 없습니다.'));
+            for (const record of records) {
+                const value = record.current || record.previous;
+                const label = title === '연결 변화' ? `${historicNodes.get(value.source)?.name || value.source} → ${historicNodes.get(value.target)?.name || value.target} · ${value.attributes?.label || value.kind}` : title === '분류 변화' ? `${historicNodes.get(value.nodeId)?.name || value.nodeId} · ${facetLabel(value.key)}: ${valueLabel(value.key, value.value)}` : value.name || record.id;
+                const disclosure = el('details', undefined, 'change-record'); disclosure.append(el('summary', `${record.status} · ${label}`));
+                if (title === '노드 변화' && nodes.has(record.id)) disclosure.append(link('현재 노드 보기', nodeHref(record.id)));
+                const pair = el('div', undefined, 'two-column');
+                for (const [label, value] of [['이전', record.previous], ['이후', record.current]]) { const column = el('div'); column.append(el('h3', label), value ? el('pre', JSON.stringify(semantic(value), null, 2)) : el('p', '없음', 'muted')); pair.append(column); } disclosure.append(pair); box.append(disclosure);
+            } main.append(box);
+        }
+    } catch (error) { if (version !== renderVersion) return; loading.remove(); main.append(empty('비교를 불러오지 못했습니다: ' + error.message), button('다시 시도', render)); }
+}
+
 function render() {
+    const version = ++renderVersion;
     main.replaceChildren();
     const [path, search = ''] = (location.hash.slice(1) || '/home').split('?');
-    const route = path === '/home' ? 'home' : 'list';
-    document.querySelectorAll('[data-route]').forEach(item => { if (item.dataset.route === route) item.setAttribute('aria-current', 'page'); else item.removeAttribute('aria-current'); });
-    if (path === '/home') home(); else if (path === '/list') listing(new URLSearchParams(search)); else if (path.startsWith('/node/')) { try { detail(decodeURIComponent(path.slice(6))); } catch { pageHeading('잘못된 노드 주소'); main.append(link('목록으로 돌아가기', '#/list')); } } else { pageHeading('화면을 찾을 수 없습니다'); main.append(link('홈으로 돌아가기', '#/home')); }
+    const params = new URLSearchParams(search);
+    const layers = [...new Set(allVisibleNodes.map(layerOf))];
+    let node;
+    if (path.startsWith('/node/')) { try { node = nodes.get(decodeURIComponent(path.slice(6))); } catch {} }
+    activeLayer = node ? layerOf(node) : params.has('layer') ? params.get('layer') : layers.includes(presentation.defaultLayer) ? presentation.defaultLayer : layers[0] || '';
+    visibleNodes = allVisibleNodes.filter(node => layerOf(node) === activeLayer);
+    const route = path.startsWith('/views') ? 'views' : path.startsWith('/changes') ? 'changes' : path === '/home' ? 'home' : 'list';
+    document.querySelectorAll('[data-route]').forEach(item => { item.href = routeHref('/' + item.dataset.route); if (item.dataset.route === route) item.setAttribute('aria-current', 'page'); else item.removeAttribute('aria-current'); });
+    if (path === '/home') home(); else if (path === '/list') listing(params); else if (path.startsWith('/views')) matrix(path.slice(7), params); else if (path.startsWith('/changes')) changes(params, version); else if (path.startsWith('/node/')) { try { detail(decodeURIComponent(path.slice(6))); } catch { pageHeading('잘못된 노드 주소'); main.append(link('목록으로 돌아가기', listHref())); } } else { pageHeading('화면을 찾을 수 없습니다'); main.append(link('홈으로 돌아가기', routeHref('/home'))); }
     document.title = `${main.querySelector('h1')?.textContent || '지도'} · Lattice`;
     main.querySelector('h1')?.focus({ preventScroll: true });
 }
@@ -202,7 +330,8 @@ async function load() {
         nodes = new Map(graph.nodes.map(node => [node.id, node])); facets = new Map();
         for (const facet of graph.facets) { if (!facets.has(facet.nodeId)) facets.set(facet.nodeId, []); facets.get(facet.nodeId).push(facet); }
         kinds = [...(Array.isArray(presentation.kinds) ? presentation.kinds : [])]; for (const kind of new Set(graph.nodes.map(node => node.kind))) if (!kinds.some(item => item.id === kind)) kinds.push({ id: kind, label: kind });
-        visibleNodes = graph.nodes.filter(node => !kinds.find(kind => kind.id === node.kind)?.hidden);
+        allVisibleNodes = graph.nodes.filter(node => !kinds.find(kind => kind.id === node.kind)?.hidden);
+        try { const response = await fetch('./snapshots.json'); if (response.ok) { const data = await response.json(); if (Array.isArray(data)) snapshots = data.filter(item => /^[a-f0-9]{64}$/.test(item.id) && item.artifactPath === `snapshots/${item.id}.json`); } } catch { /* History is optional. */ }
         render(); addEventListener('hashchange', render);
     } catch (error) { main.replaceChildren(); main.append(el('h1', '지도를 불러오지 못했습니다'), el('p', error.message, 'muted'), el('p', '내보내기에 graph.json이 포함되어 있는지 확인하세요. 파일을 직접 열었다면 HTTP 정적 서버를 사용하세요.'), button('다시 시도', () => location.reload())); }
 }
