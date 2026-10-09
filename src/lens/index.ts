@@ -1,3 +1,5 @@
+import { compileDerived } from "./derived.js";
+import type { DerivedPlan } from "./derived.js";
 import { materializeEdges, materializeViews, matchesQuery, prepareRecords } from "./structure.js";
 import type { ReferenceDiagnostic } from "../adapters/resolve.js";
 import { evaluateGate } from "./gates.js";
@@ -11,14 +13,15 @@ import type { ExtractedRecord, SourceInput } from "../adapters/types.js";
 
 export type LensSelection = { readonly namespaceFrom?: string; readonly idField?: string; readonly nameField?: string; readonly files: readonly string[]; readonly records?: string; readonly kindField?: string; readonly layer?: string; readonly references?: boolean; };
 export type LensKind = { readonly namespaceFrom?: string; readonly selections?: readonly LensSelection[]; readonly kindField?: string; readonly layer?: string; readonly references?: boolean; readonly id: string; readonly label: string; readonly files: readonly string[]; readonly records?: string; readonly idField?: string; readonly nameField?: string; readonly columns?: readonly string[]; readonly hidden?: boolean; };
-export type Lens = { readonly name: string; readonly kinds: readonly LensKind[]; readonly config: JsonObject; };
+export type Lens = { readonly name: string; readonly kinds: readonly LensKind[]; readonly config: JsonObject; readonly derived: DerivedPlan; };
 function boolean(value: JsonValue): boolean { if (typeof value !== "boolean") throw new Error("Lens expected a boolean"); return value; }
 function lensRecord(input: SourceInput): ExtractedRecord | undefined {
     return /\.ya?ml$/iu.test(input.path) ? extractYamlDocument(input) : extractJson(input)[0];
 }
 export function parseLens(input: SourceInput): Lens {
-    const config = lensRecord(input)?.node.attributes;
-    if (!config || config["schemaVersion"] !== 1) throw new Error("Expected lens schemaVersion 1");
+    const definition = lensRecord(input);
+    const config = definition?.node.attributes;
+    if (!definition || !config || config["schemaVersion"] !== 1) throw new Error("Expected lens schemaVersion 1");
     const kinds = array(config["kinds"]).map(value => {
         const kind = object(value);
         return {
@@ -50,7 +53,7 @@ export function parseLens(input: SourceInput): Lens {
         };
     });
     if (new Set(kinds.map(kind => kind.id)).size !== kinds.length) throw new Error("Duplicate lens kind");
-    return { name: string(config["name"]), kinds, config };
+    return { name: string(config["name"]), kinds, config, derived: compileDerived(definition) };
 }
 export function matchesGlob(path: string, pattern: string): boolean {
     let expression = "^";
@@ -71,13 +74,10 @@ export function applyLens(base: readonly ExtractedRecord[], lens: Lens, input: S
     const resolved = prepareRecords(base, lens.config, definition);
     const records = resolved.records;
     const graph: Record<string, JsonValue> = { nodes: records.map(record => recordView(record.node)), edges: resolved.edges.map(edge => ({ ...edge, sources: edge.sources.map(source => ({ ...source })) })) };
-    const derived = array(lens.config["derived"] ?? []);
+    const derived = lens.derived;
     const graphVars: Record<string, JsonValue> = {};
     const graphSources = new Map<string, Source>();
-    for (const value of derived) {
-        const rule = object(value);
-        if (rule["scope"] === "graph") graphVars[string(rule["id"])] = evaluate(rule["value"], { vars: graphVars, records, sources: graphSources, graph }) ?? null;
-    }
+    for (const rule of derived.graph) graphVars[rule.id] = evaluate(rule.value, { vars: graphVars, records, sources: graphSources, graph }) ?? null;
     const environments = new Map<string, Environment>();
     const facets: Facet[] = [];
     const applies = (rule: JsonObject, node: NodeDraft): boolean => (rule["layer"] === undefined || rule["layer"] === node.attributes["layer"]) && (rule["kinds"] === undefined || array(rule["kinds"]).includes(node.kind));
@@ -85,7 +85,9 @@ export function applyLens(base: readonly ExtractedRecord[], lens: Lens, input: S
         const vars = { ...graphVars };
         const env: Environment = { node: recordView(record.node), vars, records, sources: new Map(graphSources), graph };
         addSources(env, record.node.sources);
-        for (const value of derived) { const rule = object(value); if (rule["scope"] === "node" && applies(rule, record.node)) vars[string(rule["id"])] = evaluate(rule["value"], env) ?? null; }
+        for (const rule of derived.node) {
+            if ((rule.layer === undefined || rule.layer === record.node.attributes["layer"]) && (rule.kinds === undefined || rule.kinds.includes(record.node.kind))) vars[rule.id] = evaluate(rule.value, env) ?? null;
+        }
         environments.set(record.node.id, env);
     }
     const context = { config: lens.config, definition, records, environments };
