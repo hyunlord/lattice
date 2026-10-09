@@ -61,6 +61,8 @@ L0: repository created and cloned; design/reference artifacts prepared. Independ
 
 L1 foundation: typed model, canonical graph construction and npm library packaging now have local Node24 evidence in [the slice report](l1-foundation.md). This does not fulfill the full L1 CLI or any later gate; those rows remain pending.
 
+L1 JSON/CSV slice: strict source-aware parsing and deterministic reference resolution have [library and actual read-only source evidence](l1-data-extraction.md). YAML, full repository discovery, lens classifications and CLI remain pending; no acceptance row is upgraded by this partial slice.
+
 ## Open decisions and risks
 
 - License recommendation is MIT; [decision issue #3](https://github.com/hyunlord/lattice/issues/3) records it before a license is granted or npm publication is claimed. Development and local package validation can continue.

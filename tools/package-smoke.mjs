@@ -20,12 +20,15 @@ try {
   const output = execFileSync(process.execPath, ['--input-type=module', '-e', `
     import assert from 'node:assert/strict';
     import { createHash } from 'node:crypto';
-    import { canonicalJson, createGraph } from '@hyunlord/lattice';
+    import { canonicalJson, createGraph, extractJson, extractCsv, resolveRecords } from '@hyunlord/lattice';
     const digest = text => createHash('sha256').update(text).digest('hex');
     assert.equal(canonicalJson({b:2,a:1}), '{"a":1,"b":2}');
     const graph = createGraph({ repository: {name:'installed',dirty:false,sourceFingerprint:digest('empty')},nodes:[],edges:[],facets:[],findings:[],views:[],snapshots:[],lensDigest:null,adapterVersions:{},inputs:[] }, digest);
     assert.match(graph.hash, /^[a-f0-9]{64}$/);
     assert.throws(() => canonicalJson({number:NaN}), {name:'GraphInputError'});
+    const text = '[{"id":"a","targetId":"b"},{"id":"b"}]';
+    assert.equal(resolveRecords(extractJson({path:'records.json',text,contentHash:digest(text)})).edges.length, 1);
+    assert.equal(extractCsv({path:'records.csv',text:'id,name',contentHash:digest('id,name')}).length, 0);
     console.log('Installed ESM exports, graph construction, hash and rejection path passed.');
   `], { cwd: temporary, encoding: 'utf8' });
   console.log(output.trim());
