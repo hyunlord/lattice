@@ -1,4 +1,5 @@
 import { createServer } from 'node:http';
+import { performance } from 'node:perf_hooks';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -10,13 +11,15 @@ const packageRoot = fileURLToPath(new URL('..', import.meta.url));
 export async function serve(options) {
   const port = options.port === undefined ? 4173 : Number(options.port);
   if (!Number.isInteger(port) || port < 0 || port > 65535) throw new Error('Port must be an integer from 0 to 65535');
-  if (options.output !== undefined || options.json || options.force) throw new Error('serve accepts --root, --lens, --cache-dir and --port');
+  if (options.output !== undefined || options.force) throw new Error('serve accepts --root, --lens, --cache-dir, --port and --json');
   const cache = cacheDirectory(options.root, options.cacheDir);
   const generations = new Map();
   const clients = new Set();
   const assets = new Map(['app.js', 'styles.css'].map(file => [`/${file}`, readFileSync(join(packageRoot, 'viewer', file))]));
   assets.set('/__lattice/live-client.js', readFileSync(join(packageRoot, 'bin/live-client.js')));
   const template = readFileSync(join(packageRoot, 'viewer/index.html'), 'utf8');
+  let ready = false, graphHash = null, latestBuild;
+  const emit = (event, extra = {}) => { if (options.json && ready) console.log(JSON.stringify({ schemaVersion: 1, command: 'serve', event, generation: String(generation), hash: graphHash, ...extra })); };
   let fingerprint, generation = 0, checks = 0, builds = 0, error = null, timer, closing = false;
   const status = () => ({ generation: String(generation), checks, builds, error, mode: 'strict-content-polling' });
   const publish = () => { for (const client of clients) client.write(`event: status\ndata: ${JSON.stringify(status())}\n\n`); };
@@ -25,23 +28,29 @@ export async function serve(options) {
     try {
       const observed = observeRepository(options);
       if (observed.fingerprint !== fingerprint) {
+        const startedAt = performance.now();
         const next = withCacheLock(options.root, () => {
           const result = buildRepository(options, undefined, observed);
           const graph = persistBuild(options.root, result, options.cacheDir);
           const files = new Map([['/graph.json', JSON.stringify(graph)], ['/presentation.json', JSON.stringify(result.presentation)], ['/snapshots.json', JSON.stringify(graph.snapshots)]]);
           for (const snapshot of graph.snapshots) files.set(`/${snapshot.artifactPath}`, JSON.stringify(readGraph(join(cache, snapshot.artifactPath))));
-          return files;
+          return { files, graph, result };
         }, options.cacheDir);
         generation++; builds++;
-        generations.set(String(generation), next);
+        generations.set(String(generation), next.files);
+        graphHash = next.graph.hash;
         while (generations.size > 4) generations.delete(generations.keys().next().value);
         fingerprint = observed.fingerprint;
+        const recovered = error !== null;
         error = null;
         publish();
-      } else if (error !== null) { error = null; publish(); }
+        latestBuild = { extraction: next.result.extraction.stats, diagnostics: next.result.diagnostics, durationMs: performance.now() - startedAt };
+        emit('rebuilt', latestBuild);
+        if (recovered) emit('recovered');
+      } else if (error !== null) { error = null; publish(); emit('recovered'); }
     } catch (failure) {
       const message = failure instanceof Error ? failure.message : String(failure);
-      if (message !== error) { error = message; console.error(`lattice serve: ${message}`); publish(); }
+      if (message !== error) { error = message; if (!options.json) console.error(`lattice serve: ${message}`); emit('error', { ok: false, error: { message } }); publish(); }
     }
   };
   refresh();
@@ -83,7 +92,9 @@ export async function serve(options) {
       server.close(resolve); server.closeAllConnections();
     };
     process.once('SIGINT', close); process.once('SIGTERM', close);
-    console.log(`Lattice serving http://127.0.0.1:${address.port}/`);
-    server.once('close', () => { process.removeListener('SIGINT', close); process.removeListener('SIGTERM', close); });
+    ready = true;
+    if (options.json) emit('ready', { url: `http://127.0.0.1:${address.port}/`, ...latestBuild });
+    else console.log(`Lattice serving http://127.0.0.1:${address.port}/`);
+    server.once('close', () => { emit('stopped'); process.removeListener('SIGINT', close); process.removeListener('SIGTERM', close); });
   });
 }

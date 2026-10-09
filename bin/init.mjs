@@ -20,7 +20,7 @@ function skeleton(name) {
 }
 
 export function initialize(options) {
-  if (options.output !== undefined || options.lens !== undefined || options.json || options.force || options.port !== undefined) throw new Error('init accepts --root and --no-global');
+  if (options.output !== undefined || options.lens !== undefined || options.force || options.port !== undefined) throw new Error('init accepts --root, --no-global and --json');
   const { root } = options;
   workingRepository(root);
   const directory = join(root, '.lattice');
@@ -43,6 +43,6 @@ export function initialize(options) {
   if (!candidates.length) writeFileSync(lensPath, text, { flag: 'wx' });
   if (next !== previous) writeFileSync(ignorePath, next);
   mkdirSync(join(directory, 'cache'), { recursive: true });
-  console.log(`Initialized Lattice lens: ${lensPath}\nCache/site ignores: ${ignorePath}\nAgent wiring is planned for L3; no global configuration was changed.`);
-  return { lensPath, ignorePath };
+  if (!options.json) console.log(`Initialized Lattice lens: ${lensPath}\nCache/site ignores: ${ignorePath}\nAgent wiring is planned for L3; no global configuration was changed.`);
+  return { lensPath, ignorePath, cachePath: join(directory, 'cache'), globalConfigurationChanged: false };
 }
