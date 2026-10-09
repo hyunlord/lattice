@@ -84,3 +84,5 @@ L1 code links: [static handler support evidence](l1-code-links.md) verifies gene
 Designed catalog delivery: [bs-mobile PR149](https://github.com/hyunlord/bs-mobile/pull/149) merged as `fbec38baca850f07bf296f071145e90f3972d1d2` after [full consumer CI](https://github.com/hyunlord/bs-mobile/actions/runs/37989411893). [Pages deployment](https://github.com/hyunlord/bs-mobile/actions/runs/37990283851) and public browser checks at 375/768/1280 verified home/list/detail/directed matrix/history for D3 v1.1. Historical 6/15/11/7/12/0 and current 0/0/2/2/0/3 are reproducible in the exported snapshots. This extends the published map; it does not complete the three-repository L2 or L5 acceptance gates.
 
 L1 unified graph: [mixed installed CLI and actual repository evidence](l1-unified-graph.md) proves that structural nodes and edges participate in data references and lens calculations. L1-05–07 remain pending for the rest of their contracts.
+
+L1 input scope: [installed CLI and actual manifest projection](l1-input-scope.md) verifies top-level include/exclude for ordinary and code-support inputs. L1-06 remains pending for full schema/expression compliance.

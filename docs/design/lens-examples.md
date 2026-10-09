@@ -283,3 +283,16 @@ Selected documents, headings, modules, files and imported Graft symbols particip
 Data references may target an exact structural ID such as `document:README.md` or `module:main.ts`. Structural attributes are not scanned as authored ID references. A conflicting data alias is disambiguated and diagnosed rather than silently replacing a fixed structural ID. Layered data aliases remain local to their layer/identity namespace; structural IDs are globally addressable and are not copied into every layer.
 
 The library accepts `knownNodes` in `resolveRecords` and in the `applyLens` options. `applyLens` also accepts `structuralEdges(nodes)`, called once after ID resolution and before derived evaluation. The CLI uses this to resolve document links against all nodes and to seed module/Graft relationships. Facets, findings and views then see these relationships together with explicit lens edges.
+
+## Input scope
+
+Top-level `include` and `exclude` are arrays of repository-relative glob strings, using the same matching rules as kind `files`. Omitted `include` imposes no extra restriction; `include: []` selects nothing. A file must match at least one include pattern when that array is present. Any exclude match wins. Kind file/collection selectors still determine the records projected from eligible files.
+
+These scope rules also apply to code-link source files. An excluded dispatch file contributes no evidence: support may consequently be unknown, rather than supported by a file outside the requested scope. Generated Lattice/agent/Graft directories remain excluded regardless of lens patterns. Changing scope changes the lens digest and refreshes the graph; edits to excluded files do not enter the selected-input content fingerprint.
+
+```yaml
+include: ['data/**/*.json', 'src/**/*.cs', 'README.md']
+exclude: ['data/test/**', 'src/Generated/**']
+```
+
+Input-scope values are validated before reading selected content. Malformed scope arrays report the lens source path, line and field pointer.
