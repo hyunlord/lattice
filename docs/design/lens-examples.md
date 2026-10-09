@@ -15,7 +15,7 @@ An expression object has `op` and only the operands for that operator. Literal a
 | coalesce | `values`: expression array | first non-null/non-missing result |
 | eq/ne/gt/gte/lt/lte | `left`, `right`: expressions | typed comparison; no implicit string-number conversion |
 | and/or/concat | `values`: expression array | boolean short-circuit / array concatenation |
-| not/exists/count/unique/flatten/sum | `value`: expression | documented unary result; count missing is missing, not zero |
+| not/exists/count/unique/flatten/sum/aggregate | `value`: expression | documented unary result; count missing is missing, not zero |
 | in | `value`: expression; `collection`: expression | exact scalar membership |
 | filter/map/any/all | `input`: expression; `where` for predicate or `value` for map | evaluate with `item` rebound, outer `node` retained |
 | groupBy | `input`: expression; `key`: expression | key-sorted groups with input-order members |
@@ -271,7 +271,8 @@ Additional reusable operators implemented for these projections:
 | --- | --- | --- |
 | `count` | `value` | Array length or string Unicode code-point length; unsupported/missing input is missing. |
 | `flatten` | `value` | Flatten one array level; unsupported/missing input is missing. |
-| `sum` | `value` | Finite numeric array sum; empty array is zero, missing/nonnumeric/nonfinite input is missing. |
+| `sum` | `value` | Finite numeric array sum, skipping true missing members; empty array is zero, all-missing nonempty arrays and invalid inputs yield missing. |
+| `aggregate` | `value` | Numeric sum with counts and coverage, as specified below. |
 | `concat` | `values` | Concatenate all-string operands or concatenate all-array operands one level; mixed types are missing. |
 | `indexOf` | `input`, `value` | First exact array-value match or string substring index; no match is -1, unsupported inputs are missing. |
 | `let` | `bindings`, `value` | Evaluate ordered named bindings into a local copy of `vars`, then evaluate `value`; outer `node`/`item` remain available and the outer environment is unchanged. |
@@ -315,7 +316,11 @@ Missing is an internal value distinct from authored JSON `null`. Wildcard reads,
 
 Equality, inequality, membership and lookup do not turn absent values into null matches. Equality or inequality involving missing data is false, including nested missing array/object members. Membership compares each candidate independently, so an authored null can still match a null in a collection that also contains missing members. Explicit null remains a comparable literal. `all` requires a nonempty array; `any` and `all` return false for a missing input. Thus an absent operation cannot prove a non-stat implementation, and an empty effect list cannot prove all effects are implemented. Missing results from map/filter remain missing rather than becoming empty successful collections.
 
-Numeric `sum` retains its existing finite-number-only contract. Complete aggregation coverage reporting and the remaining expression operators have separate acceptance work; this change does not claim those requirements complete.
+Numeric `sum` skips true missing array members while preserving a scalar result. Explicit null, strings, booleans, objects, arrays and non-finite numbers are invalid numeric entries and make the sum missing. A nonempty array containing only missing values also yields missing; an explicitly empty array sums to zero. Non-array input and numeric overflow yield missing.
+
+`{op: aggregate, value: <expression>}` returns `{sum, count, total, missing, invalid, coverage}` for an array. `count` counts finite numeric entries, `missing` counts absent values and `invalid` counts all other entries; their sum equals `total`. Its `sum` follows the same rules as scalar `sum`. Coverage is `complete` with no omissions/errors (including an explicitly empty array), `partial` when some numeric evidence exists but entries are missing/invalid, and `unknown` when a nonempty array has no numeric evidence or arithmetic overflows. A non-array input yields missing for the whole aggregate, not invented zero counts. Missing sums become null only when graph output is materialized.
+
+For example, a wildcard selecting capacities `3`, absent, `7` gives `{sum:10,count:2,total:3,missing:1,invalid:0,coverage:"partial"}`. Replacing the absent capacity with authored null gives a missing sum and `invalid:1`. Derived aggregates retain their actual input evidence; absent fields do not acquire fictional source pointers. Read aggregate members through `get from: vars` after binding a derived value or through `at` for an inline expression. A lens requiring complete numeric evidence can gate `missing == 0` and `invalid == 0`, as well as its numeric result. Partial sums never implicitly change configured gate behavior.
 
 ## Collection grouping and scalar joining
 
