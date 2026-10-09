@@ -9,7 +9,7 @@ Statuses: **designed** means a reviewed contract exists, not implementation; **p
 | L0-03 | Determinism / core-domain separation / evidence ADRs | ADR 0001–0004 and review | designed |
 | L1-01 | Strict TypeScript, Node LTS, npm package | clean install/build/typecheck/format/test CI + installed package CLI | pending |
 | L1-02 | JSON/YAML/CSV records with source lines | quoted multiline/array/duplicate-key/malformed fixtures, real builds | pending |
-| L1-03 | Markdown headings/links/ADRs | real docs + fenced syntax/broken-link fixtures | pending |
+| L1-03 | Markdown headings/links/ADRs | [Existing 12 fixtures, real docs, installed CLI and browser](l1-markdown.md) | verified |
 | L1-04 | Optional Graft import + own file/module fallback | validated real sample; missing/malformed schema fixture | pending |
 | L1-05 | Git metadata and reference auto-join | alias collisions/missing IDs/add/delete/source-pointer assertions | pending |
 | L1-06 | Lens schema, kinds, fields, edges, facet expressions | valid/invalid lens integration tests, zero domain branches | pending |
@@ -63,7 +63,9 @@ L1 foundation: typed model, canonical graph construction and npm library packagi
 
 L1 JSON/CSV slice: strict source-aware parsing and deterministic reference resolution have [library and actual read-only source evidence](l1-data-extraction.md). YAML, full repository discovery, lens classifications and CLI remain pending; no acceptance row is upgraded by this partial slice.
 
-The user approved a [thin first publication](first-published-map.md) before broader adapters/screens. Home/list/detail and build/export are being delivered first; full milestone rows remain pending until their complete contracts are proven.
+The user approved a [thin first publication](first-published-map.md) before broader adapters/screens. Home/list/detail and build/export are [published](https://hyunlord.github.io/bs-mobile/) via [consumer PR139](https://github.com/hyunlord/bs-mobile/pull/139); full milestone rows remain pending until their complete contracts are proven.
+
+L1 document integration: [Markdown extraction and zero-config CLI evidence](l1-markdown.md) verifies L1-03. Other L1 rows remain pending.
 
 ## Open decisions and risks
 

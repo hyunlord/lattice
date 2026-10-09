@@ -1,7 +1,7 @@
 import { fileURLToPath } from 'node:url';
 import assert from 'node:assert/strict';
 import { execFileSync } from 'node:child_process';
-import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 
@@ -38,4 +38,26 @@ try {
   assert.ok(entry.files.some(file => file.path === 'viewer/app.js'));
   assert.equal(manifest.license, 'MIT');
   console.log('Installed CLI launch and static viewer packaging passed.');
+  const repository = join(temporary, 'repository');
+  mkdirSync(repository);
+  execFileSync('git', ['init', '--quiet', repository]);
+  writeFileSync(join(repository, 'records.json'), '[{"id":"service:a","name":"API","dependencyId":"service:b"},{"id":"service:b","name":"Worker"}]');
+  writeFileSync(join(repository, 'owners.csv'), 'id,name,serviceId\nowner:a,Platform,service:a\n');
+  writeFileSync(join(repository, 'README.md'), '# Service map\n[Decision](decision.md#decision)\n');
+  writeFileSync(join(repository, 'decision.md'), '# Deployment\n## Status\nAccepted\n## Decision\nUse a worker.\n');
+  const cli = join(temporary, 'node_modules/@hyunlord/lattice/bin/lattice.mjs');
+  const run = args => execFileSync(process.execPath, [cli, ...args, '--root', repository], {encoding:'utf8'});
+  run(['build']);
+  const graphPath = join(repository, '.lattice/cache/graph.json');
+  const first = JSON.parse(readFileSync(graphPath, 'utf8'));
+  assert.equal(first.lensDigest, null);
+  assert.ok(first.edges.some(edge => edge.source === 'owner:a' && edge.target === 'service:a'));
+  assert.ok(first.edges.some(edge => edge.kind === 'link' && edge.target === 'document:decision.md#decision'));
+  assert.equal(first.nodes.find(node => node.id === 'document:decision.md').attributes.status, 'Accepted');
+  run(['build']);
+  assert.equal(JSON.parse(readFileSync(graphPath, 'utf8')).hash, first.hash);
+  const site = join(temporary, 'site');
+  run(['export', site]);
+  assert.equal(JSON.parse(readFileSync(join(site, 'graph.json'), 'utf8')).hash, first.hash);
+  console.log('Installed zero-config JSON/CSV/Markdown build, cross-file references, ADR metadata, deterministic rebuild and export passed.');
 } finally { rmSync(temporary, { recursive: true, force: true }); }

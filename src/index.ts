@@ -12,3 +12,7 @@ export { resolveRecords } from "./adapters/resolve.js";
 export type { ReferenceDiagnostic, ResolvedRecords } from "./adapters/resolve.js";
 export { parseLens, matchesGlob, applyLens } from "./lens/index.js";
 export type { Lens, LensKind } from "./lens/index.js";
+export { extractMarkdown } from "./adapters/markdown.js";
+export type { MarkdownDocument, DocumentLink } from "./adapters/markdown.js";
+export { resolveDocumentLinks } from "./adapters/document-links.js";
+export type { LinkedDocuments, DocumentDiagnostic } from "./adapters/document-links.js";
