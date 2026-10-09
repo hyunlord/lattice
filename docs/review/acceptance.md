@@ -76,3 +76,7 @@ L1 module integration: [own-module extraction and CLI evidence](l1-modules.md) s
 - A documented Graft JSON schema has not yet been verified; importer cannot guess it.
 - The 50ms freshness target is not proven, especially cold strict content checks. Correctness is required even if the performance gate fails.
 - L2 needs early consumer Pages plumbing before the L4 reusable Action; [ADR 0004](../adr/0004-delivery-and-permissions.md) sequences this without declaring L4 early.
+
+L1 derived values: [dependency ordering evidence](l1-derived.md) verifies order-independent graph/node evaluation and source-located dependency errors. L1-06 remains pending for its complete contract.
+
+Designed catalog delivery: [bs-mobile PR149](https://github.com/hyunlord/bs-mobile/pull/149) merged as `fbec38baca850f07bf296f071145e90f3972d1d2` after [full consumer CI](https://github.com/hyunlord/bs-mobile/actions/runs/37989411893). [Pages deployment](https://github.com/hyunlord/bs-mobile/actions/runs/37990283851) and public browser checks at 375/768/1280 verified home/list/detail/directed matrix/history for D3 v1.1. Historical 6/15/11/7/12/0 and current 0/0/2/2/0/3 are reproducible in the exported snapshots. This extends the published map; it does not complete the three-repository L2 or L5 acceptance gates.
