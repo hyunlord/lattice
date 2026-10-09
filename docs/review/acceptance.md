@@ -57,7 +57,9 @@ Statuses: **designed** means a reviewed contract exists, not implementation; **p
 
 ## Milestone evidence
 
-L0: repository created and cloned; design/reference artifacts prepared. Independent design review passed; local documentation and negative checks passed. Remote CI is pending publication. See [L0 evidence](l0.md). Product CLI, viewer, Pages, MCP, Action, performance and agent acceptance have **not** run.
+L0: repository created and cloned; design/reference artifacts prepared. Independent design review passed; local documentation and negative checks passed. [Remote L0 CI passed](https://github.com/hyunlord/lattice/actions/runs/37972697599) and [PR #4 merged](https://github.com/hyunlord/lattice/pull/4). See [L0 evidence](l0.md). Product CLI, viewer, Pages, MCP, Action, performance and agent acceptance have **not** run.
+
+L1 foundation: typed model, canonical graph construction and npm library packaging now have local Node24 evidence in [the slice report](l1-foundation.md). This does not fulfill the full L1 CLI or any later gate; those rows remain pending.
 
 ## Open decisions and risks
 
