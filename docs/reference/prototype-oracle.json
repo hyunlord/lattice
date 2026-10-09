@@ -1,0 +1,1379 @@
+{
+  "schemaVersion": 1,
+  "source": "hyunlord/bs-mobile",
+  "commit": "90c8ca3",
+  "briefSha256": "05c5555feb777ae8f64780536a0ce10a15787918608fc2c1dbd2aa933412c01b",
+  "prototypeSha256": "2103b2790a4942a728dfc6e9dcfb0d5acbb8db7537620b6802be8fd80cc9f53e",
+  "counts": [
+    {
+      "kind": "charter",
+      "total": 16,
+      "selected": 8,
+      "design": 8,
+      "stat": 4,
+      "base": 0,
+      "unique": 4
+    },
+    {
+      "kind": "enemy",
+      "total": 24,
+      "selected": 13,
+      "design": 11,
+      "stat": 0,
+      "base": 13,
+      "unique": 0
+    },
+    {
+      "kind": "evolution",
+      "total": 30,
+      "selected": 8,
+      "design": 22,
+      "stat": 2,
+      "base": 0,
+      "unique": 6
+    },
+    {
+      "kind": "item",
+      "total": 60,
+      "selected": 30,
+      "design": 30,
+      "stat": 24,
+      "base": 0,
+      "unique": 6
+    },
+    {
+      "kind": "tool",
+      "total": 40,
+      "selected": 8,
+      "design": 32,
+      "stat": 0,
+      "base": 5,
+      "unique": 3
+    },
+    {
+      "kind": "vassal",
+      "total": 16,
+      "selected": 0,
+      "design": 16,
+      "stat": 0,
+      "base": 0,
+      "unique": 0
+    },
+    {
+      "kind": "weapon",
+      "total": 30,
+      "selected": 10,
+      "design": 20,
+      "stat": 0,
+      "base": 9,
+      "unique": 1
+    }
+  ],
+  "contentCount": 216,
+  "selectedCount": 77,
+  "uniqueCount": 20,
+  "baseWeaponShapes": {
+    "disk": 3,
+    "rays": 5,
+    "sector180": 1,
+    "sector90": 1
+  },
+  "classification": [
+    {
+      "id": "core:apiary_orchard",
+      "kind": "evolution",
+      "inProfile": false,
+      "depth": "design"
+    },
+    {
+      "id": "core:ash_bearer",
+      "kind": "vassal",
+      "inProfile": false,
+      "depth": "design"
+    },
+    {
+      "id": "core:ash_gathering_charm",
+      "kind": "item",
+      "inProfile": true,
+      "depth": "stat"
+    },
+    {
+      "id": "core:ash_sabre",
+      "kind": "weapon",
+      "inProfile": false,
+      "depth": "design"
+    },
+    {
+      "id": "core:banner_caller",
+      "kind": "vassal",
+      "inProfile": false,
+      "depth": "design"
+    },
+    {
+      "id": "core:basket_mimic",
+      "kind": "enemy",
+      "inProfile": false,
+      "depth": "design"
+    },
+    {
+      "id": "core:bee_hive",
+      "kind": "tool",
+      "inProfile": false,
+      "depth": "design"
+    },
+    {
+      "id": "core:bee_return_ribbon",
+      "kind": "item",
+      "inProfile": false,
+      "depth": "design"
+    },
+    {
+      "id": "core:beekeeper_veil",
+      "kind": "tool",
+      "inProfile": false,
+      "depth": "design"
+    },
+    {
+      "id": "core:bell_thief",
+      "kind": "enemy",
+      "inProfile": true,
+      "depth": "base"
+    },
+    {
+      "id": "core:bitter_seed_dust",
+      "kind": "item",
+      "inProfile": true,
+      "depth": "stat"
+    },
+    {
+      "id": "core:blight_beetle",
+      "kind": "enemy",
+      "inProfile": false,
+      "depth": "design"
+    },
+    {
+      "id": "core:boundary_hinge",
+      "kind": "item",
+      "inProfile": true,
+      "depth": "unique"
+    },
+    {
+      "id": "core:burrow_larva",
+      "kind": "enemy",
+      "inProfile": false,
+      "depth": "design"
+    },
+    {
+      "id": "core:canal_bow",
+      "kind": "weapon",
+      "inProfile": true,
+      "depth": "base"
+    },
+    {
+      "id": "core:canal_chisel",
+      "kind": "tool",
+      "inProfile": false,
+      "depth": "design"
+    },
+    {
+      "id": "core:canal_gate_pin",
+      "kind": "item",
+      "inProfile": true,
+      "depth": "stat"
+    },
+    {
+      "id": "core:carpenter_hammer",
+      "kind": "tool",
+      "inProfile": true,
+      "depth": "base"
+    },
+    {
+      "id": "core:cart_axle_ring",
+      "kind": "item",
+      "inProfile": false,
+      "depth": "design"
+    },
+    {
+      "id": "core:cart_yoke",
+      "kind": "tool",
+      "inProfile": false,
+      "depth": "design"
+    },
+    {
+      "id": "core:chapel_bell",
+      "kind": "tool",
+      "inProfile": false,
+      "depth": "design"
+    },
+    {
+      "id": "core:chapel_reply_bell",
+      "kind": "item",
+      "inProfile": false,
+      "depth": "design"
+    },
+    {
+      "id": "core:cinder_flail",
+      "kind": "weapon",
+      "inProfile": false,
+      "depth": "design"
+    },
+    {
+      "id": "core:cinder_furrow",
+      "kind": "evolution",
+      "inProfile": false,
+      "depth": "design"
+    },
+    {
+      "id": "core:clay_water_bead",
+      "kind": "item",
+      "inProfile": true,
+      "depth": "stat"
+    },
+    {
+      "id": "core:compost_rain",
+      "kind": "evolution",
+      "inProfile": false,
+      "depth": "design"
+    },
+    {
+      "id": "core:compost_sack",
+      "kind": "tool",
+      "inProfile": false,
+      "depth": "design"
+    },
+    {
+      "id": "core:compost_screen",
+      "kind": "item",
+      "inProfile": false,
+      "depth": "design"
+    },
+    {
+      "id": "core:contract_seal",
+      "kind": "tool",
+      "inProfile": false,
+      "depth": "design"
+    },
+    {
+      "id": "core:contract_witness_seal",
+      "kind": "item",
+      "inProfile": false,
+      "depth": "design"
+    },
+    {
+      "id": "core:crop_grazer",
+      "kind": "enemy",
+      "inProfile": true,
+      "depth": "base"
+    },
+    {
+      "id": "core:crop_guard_signet",
+      "kind": "item",
+      "inProfile": true,
+      "depth": "stat"
+    },
+    {
+      "id": "core:deep_furrow",
+      "kind": "evolution",
+      "inProfile": false,
+      "depth": "design"
+    },
+    {
+      "id": "core:ditch_pike",
+      "kind": "weapon",
+      "inProfile": false,
+      "depth": "design"
+    },
+    {
+      "id": "core:ditch_watch",
+      "kind": "charter",
+      "inProfile": true,
+      "depth": "stat"
+    },
+    {
+      "id": "core:drum_tension_rope",
+      "kind": "item",
+      "inProfile": true,
+      "depth": "stat"
+    },
+    {
+      "id": "core:ember_sapper",
+      "kind": "enemy",
+      "inProfile": true,
+      "depth": "base"
+    },
+    {
+      "id": "core:ember_wand",
+      "kind": "weapon",
+      "inProfile": true,
+      "depth": "base"
+    },
+    {
+      "id": "core:fallow_axe",
+      "kind": "weapon",
+      "inProfile": false,
+      "depth": "design"
+    },
+    {
+      "id": "core:fallow_marker",
+      "kind": "item",
+      "inProfile": false,
+      "depth": "design"
+    },
+    {
+      "id": "core:fallow_rotation",
+      "kind": "charter",
+      "inProfile": false,
+      "depth": "design"
+    },
+    {
+      "id": "core:fertile_duel",
+      "kind": "charter",
+      "inProfile": true,
+      "depth": "stat"
+    },
+    {
+      "id": "core:fertility_surveyor",
+      "kind": "vassal",
+      "inProfile": false,
+      "depth": "design"
+    },
+    {
+      "id": "core:formation_drum",
+      "kind": "tool",
+      "inProfile": false,
+      "depth": "design"
+    },
+    {
+      "id": "core:front_rank_peg",
+      "kind": "item",
+      "inProfile": true,
+      "depth": "stat"
+    },
+    {
+      "id": "core:frost_chain",
+      "kind": "weapon",
+      "inProfile": true,
+      "depth": "base"
+    },
+    {
+      "id": "core:frost_drain_stone",
+      "kind": "item",
+      "inProfile": false,
+      "depth": "design"
+    },
+    {
+      "id": "core:frost_rake",
+      "kind": "tool",
+      "inProfile": false,
+      "depth": "design"
+    },
+    {
+      "id": "core:furrow_guard",
+      "kind": "vassal",
+      "inProfile": false,
+      "depth": "design"
+    },
+    {
+      "id": "core:furrow_measuring_rope",
+      "kind": "item",
+      "inProfile": false,
+      "depth": "design"
+    },
+    {
+      "id": "core:gate_pikeman",
+      "kind": "vassal",
+      "inProfile": false,
+      "depth": "design"
+    },
+    {
+      "id": "core:gleaner",
+      "kind": "vassal",
+      "inProfile": false,
+      "depth": "design"
+    },
+    {
+      "id": "core:gleaning_right",
+      "kind": "charter",
+      "inProfile": false,
+      "depth": "design"
+    },
+    {
+      "id": "core:golem_joint_oil",
+      "kind": "item",
+      "inProfile": false,
+      "depth": "design"
+    },
+    {
+      "id": "core:golem_seal",
+      "kind": "tool",
+      "inProfile": false,
+      "depth": "design"
+    },
+    {
+      "id": "core:grain_sack_bandit",
+      "kind": "enemy",
+      "inProfile": false,
+      "depth": "design"
+    },
+    {
+      "id": "core:granary_caravan",
+      "kind": "evolution",
+      "inProfile": false,
+      "depth": "design"
+    },
+    {
+      "id": "core:granary_lock",
+      "kind": "charter",
+      "inProfile": false,
+      "depth": "design"
+    },
+    {
+      "id": "core:granary_sling",
+      "kind": "weapon",
+      "inProfile": false,
+      "depth": "design"
+    },
+    {
+      "id": "core:grave_lantern",
+      "kind": "weapon",
+      "inProfile": false,
+      "depth": "design"
+    },
+    {
+      "id": "core:grave_light_furrow",
+      "kind": "evolution",
+      "inProfile": false,
+      "depth": "design"
+    },
+    {
+      "id": "core:grave_soil_sieve",
+      "kind": "item",
+      "inProfile": false,
+      "depth": "design"
+    },
+    {
+      "id": "core:grave_spade",
+      "kind": "tool",
+      "inProfile": false,
+      "depth": "design"
+    },
+    {
+      "id": "core:guarded_harvest",
+      "kind": "charter",
+      "inProfile": true,
+      "depth": "unique"
+    },
+    {
+      "id": "core:harpoon_plough",
+      "kind": "evolution",
+      "inProfile": false,
+      "depth": "design"
+    },
+    {
+      "id": "core:harvest_basket_lid",
+      "kind": "item",
+      "inProfile": true,
+      "depth": "stat"
+    },
+    {
+      "id": "core:harvest_cart",
+      "kind": "tool",
+      "inProfile": false,
+      "depth": "design"
+    },
+    {
+      "id": "core:harvest_scythe",
+      "kind": "weapon",
+      "inProfile": true,
+      "depth": "unique"
+    },
+    {
+      "id": "core:harvest_truce",
+      "kind": "charter",
+      "inProfile": false,
+      "depth": "design"
+    },
+    {
+      "id": "core:hearth_mace",
+      "kind": "weapon",
+      "inProfile": false,
+      "depth": "design"
+    },
+    {
+      "id": "core:hedge_drum",
+      "kind": "tool",
+      "inProfile": true,
+      "depth": "base"
+    },
+    {
+      "id": "core:heirloom_service",
+      "kind": "charter",
+      "inProfile": true,
+      "depth": "stat"
+    },
+    {
+      "id": "core:herb_basket",
+      "kind": "tool",
+      "inProfile": false,
+      "depth": "design"
+    },
+    {
+      "id": "core:herb_drying_frame",
+      "kind": "item",
+      "inProfile": false,
+      "depth": "design"
+    },
+    {
+      "id": "core:hive_dart",
+      "kind": "weapon",
+      "inProfile": false,
+      "depth": "design"
+    },
+    {
+      "id": "core:homecoming_horn",
+      "kind": "evolution",
+      "inProfile": false,
+      "depth": "design"
+    },
+    {
+      "id": "core:iron_blade",
+      "kind": "weapon",
+      "inProfile": true,
+      "depth": "base"
+    },
+    {
+      "id": "core:joiner_square",
+      "kind": "item",
+      "inProfile": true,
+      "depth": "stat"
+    },
+    {
+      "id": "core:kiln_bellows",
+      "kind": "tool",
+      "inProfile": false,
+      "depth": "design"
+    },
+    {
+      "id": "core:kiln_heat_tile",
+      "kind": "item",
+      "inProfile": false,
+      "depth": "design"
+    },
+    {
+      "id": "core:lantern_pasture",
+      "kind": "evolution",
+      "inProfile": false,
+      "depth": "design"
+    },
+    {
+      "id": "core:lantern_shutter",
+      "kind": "item",
+      "inProfile": false,
+      "depth": "design"
+    },
+    {
+      "id": "core:lantern_staff",
+      "kind": "tool",
+      "inProfile": false,
+      "depth": "design"
+    },
+    {
+      "id": "core:lantern_stalker",
+      "kind": "enemy",
+      "inProfile": false,
+      "depth": "design"
+    },
+    {
+      "id": "core:levee_furrow",
+      "kind": "evolution",
+      "inProfile": false,
+      "depth": "design"
+    },
+    {
+      "id": "core:levy_banner",
+      "kind": "weapon",
+      "inProfile": true,
+      "depth": "base"
+    },
+    {
+      "id": "core:levy_bread_wrap",
+      "kind": "item",
+      "inProfile": true,
+      "depth": "unique"
+    },
+    {
+      "id": "core:levy_relief",
+      "kind": "charter",
+      "inProfile": false,
+      "depth": "design"
+    },
+    {
+      "id": "core:levy_sergeant",
+      "kind": "vassal",
+      "inProfile": false,
+      "depth": "design"
+    },
+    {
+      "id": "core:living_compost",
+      "kind": "evolution",
+      "inProfile": false,
+      "depth": "design"
+    },
+    {
+      "id": "core:locust_cloud",
+      "kind": "enemy",
+      "inProfile": true,
+      "depth": "base"
+    },
+    {
+      "id": "core:long_shot_counter",
+      "kind": "item",
+      "inProfile": true,
+      "depth": "stat"
+    },
+    {
+      "id": "core:lure_pebble_box",
+      "kind": "item",
+      "inProfile": false,
+      "depth": "design"
+    },
+    {
+      "id": "core:mandrake_bulb",
+      "kind": "tool",
+      "inProfile": false,
+      "depth": "design"
+    },
+    {
+      "id": "core:mandrake_ear_plug",
+      "kind": "item",
+      "inProfile": false,
+      "depth": "design"
+    },
+    {
+      "id": "core:marching_banner",
+      "kind": "evolution",
+      "inProfile": false,
+      "depth": "design"
+    },
+    {
+      "id": "core:market_awning_hook",
+      "kind": "item",
+      "inProfile": false,
+      "depth": "design"
+    },
+    {
+      "id": "core:market_pole",
+      "kind": "tool",
+      "inProfile": false,
+      "depth": "design"
+    },
+    {
+      "id": "core:mason_automaton",
+      "kind": "evolution",
+      "inProfile": false,
+      "depth": "design"
+    },
+    {
+      "id": "core:meadow_buckle",
+      "kind": "item",
+      "inProfile": true,
+      "depth": "stat"
+    },
+    {
+      "id": "core:meal_oath",
+      "kind": "charter",
+      "inProfile": true,
+      "depth": "unique"
+    },
+    {
+      "id": "core:measured_volley",
+      "kind": "charter",
+      "inProfile": true,
+      "depth": "stat"
+    },
+    {
+      "id": "core:mill_disc",
+      "kind": "weapon",
+      "inProfile": true,
+      "depth": "base"
+    },
+    {
+      "id": "core:mill_return_disc",
+      "kind": "evolution",
+      "inProfile": true,
+      "depth": "stat"
+    },
+    {
+      "id": "core:miner_whistle",
+      "kind": "tool",
+      "inProfile": false,
+      "depth": "design"
+    },
+    {
+      "id": "core:miners_route_chalk",
+      "kind": "item",
+      "inProfile": false,
+      "depth": "design"
+    },
+    {
+      "id": "core:mortar_rat",
+      "kind": "enemy",
+      "inProfile": false,
+      "depth": "design"
+    },
+    {
+      "id": "core:mud_sleeper",
+      "kind": "enemy",
+      "inProfile": false,
+      "depth": "design"
+    },
+    {
+      "id": "core:mushroom_breath_cloth",
+      "kind": "item",
+      "inProfile": false,
+      "depth": "design"
+    },
+    {
+      "id": "core:mushroom_sieve",
+      "kind": "tool",
+      "inProfile": false,
+      "depth": "design"
+    },
+    {
+      "id": "core:muster_horn",
+      "kind": "tool",
+      "inProfile": true,
+      "depth": "base"
+    },
+    {
+      "id": "core:muster_roll",
+      "kind": "item",
+      "inProfile": true,
+      "depth": "stat"
+    },
+    {
+      "id": "core:ox_guard",
+      "kind": "weapon",
+      "inProfile": false,
+      "depth": "design"
+    },
+    {
+      "id": "core:plough",
+      "kind": "tool",
+      "inProfile": false,
+      "depth": "design"
+    },
+    {
+      "id": "core:poison_sickle",
+      "kind": "tool",
+      "inProfile": true,
+      "depth": "unique"
+    },
+    {
+      "id": "core:projectile_return_hook",
+      "kind": "item",
+      "inProfile": true,
+      "depth": "stat"
+    },
+    {
+      "id": "core:pruning_blade",
+      "kind": "weapon",
+      "inProfile": false,
+      "depth": "design"
+    },
+    {
+      "id": "core:pursuit_limit",
+      "kind": "charter",
+      "inProfile": false,
+      "depth": "design"
+    },
+    {
+      "id": "core:quarry_pick",
+      "kind": "weapon",
+      "inProfile": false,
+      "depth": "design"
+    },
+    {
+      "id": "core:raider",
+      "kind": "enemy",
+      "inProfile": true,
+      "depth": "base"
+    },
+    {
+      "id": "core:rain_channel_shot",
+      "kind": "evolution",
+      "inProfile": true,
+      "depth": "stat"
+    },
+    {
+      "id": "core:rain_chime",
+      "kind": "tool",
+      "inProfile": false,
+      "depth": "design"
+    },
+    {
+      "id": "core:rain_ladle",
+      "kind": "tool",
+      "inProfile": true,
+      "depth": "unique"
+    },
+    {
+      "id": "core:rain_watch_cup",
+      "kind": "item",
+      "inProfile": true,
+      "depth": "stat"
+    },
+    {
+      "id": "core:rally_boundary",
+      "kind": "charter",
+      "inProfile": true,
+      "depth": "unique"
+    },
+    {
+      "id": "core:rally_kitchen",
+      "kind": "evolution",
+      "inProfile": true,
+      "depth": "unique"
+    },
+    {
+      "id": "core:ram_runner",
+      "kind": "enemy",
+      "inProfile": true,
+      "depth": "base"
+    },
+    {
+      "id": "core:ration_counter",
+      "kind": "vassal",
+      "inProfile": false,
+      "depth": "design"
+    },
+    {
+      "id": "core:reed_ring",
+      "kind": "weapon",
+      "inProfile": false,
+      "depth": "design"
+    },
+    {
+      "id": "core:reed_spear",
+      "kind": "weapon",
+      "inProfile": false,
+      "depth": "design"
+    },
+    {
+      "id": "core:repair_apron",
+      "kind": "item",
+      "inProfile": true,
+      "depth": "stat"
+    },
+    {
+      "id": "core:repair_tithe",
+      "kind": "charter",
+      "inProfile": true,
+      "depth": "unique"
+    },
+    {
+      "id": "core:reserve_marshal",
+      "kind": "vassal",
+      "inProfile": false,
+      "depth": "design"
+    },
+    {
+      "id": "core:return_captain",
+      "kind": "vassal",
+      "inProfile": false,
+      "depth": "design"
+    },
+    {
+      "id": "core:return_path_knot",
+      "kind": "item",
+      "inProfile": true,
+      "depth": "unique"
+    },
+    {
+      "id": "core:returning_mallet",
+      "kind": "evolution",
+      "inProfile": false,
+      "depth": "design"
+    },
+    {
+      "id": "core:ripe_bell_clapper",
+      "kind": "item",
+      "inProfile": true,
+      "depth": "stat"
+    },
+    {
+      "id": "core:ripe_escort",
+      "kind": "vassal",
+      "inProfile": false,
+      "depth": "design"
+    },
+    {
+      "id": "core:root_binding_cord",
+      "kind": "item",
+      "inProfile": true,
+      "depth": "unique"
+    },
+    {
+      "id": "core:root_harpoon",
+      "kind": "weapon",
+      "inProfile": false,
+      "depth": "design"
+    },
+    {
+      "id": "core:root_thief",
+      "kind": "enemy",
+      "inProfile": false,
+      "depth": "design"
+    },
+    {
+      "id": "core:rope_catcher",
+      "kind": "enemy",
+      "inProfile": true,
+      "depth": "base"
+    },
+    {
+      "id": "core:rope_lasso",
+      "kind": "weapon",
+      "inProfile": false,
+      "depth": "design"
+    },
+    {
+      "id": "core:rotating_squadrons",
+      "kind": "evolution",
+      "inProfile": false,
+      "depth": "design"
+    },
+    {
+      "id": "core:rubble_golem",
+      "kind": "enemy",
+      "inProfile": false,
+      "depth": "design"
+    },
+    {
+      "id": "core:ruin_keystone",
+      "kind": "item",
+      "inProfile": true,
+      "depth": "stat"
+    },
+    {
+      "id": "core:ruin_mason",
+      "kind": "vassal",
+      "inProfile": false,
+      "depth": "design"
+    },
+    {
+      "id": "core:ruin_salvage",
+      "kind": "charter",
+      "inProfile": false,
+      "depth": "design"
+    },
+    {
+      "id": "core:ruin_shadow_grove",
+      "kind": "evolution",
+      "inProfile": false,
+      "depth": "design"
+    },
+    {
+      "id": "core:salt_crow",
+      "kind": "enemy",
+      "inProfile": false,
+      "depth": "design"
+    },
+    {
+      "id": "core:salt_javelin",
+      "kind": "weapon",
+      "inProfile": false,
+      "depth": "design"
+    },
+    {
+      "id": "core:salt_spreader",
+      "kind": "tool",
+      "inProfile": false,
+      "depth": "design"
+    },
+    {
+      "id": "core:scaffold_step",
+      "kind": "item",
+      "inProfile": true,
+      "depth": "stat"
+    },
+    {
+      "id": "core:seed_bag",
+      "kind": "tool",
+      "inProfile": true,
+      "depth": "base"
+    },
+    {
+      "id": "core:seed_bolt",
+      "kind": "weapon",
+      "inProfile": false,
+      "depth": "design"
+    },
+    {
+      "id": "core:seed_crown",
+      "kind": "evolution",
+      "inProfile": true,
+      "depth": "unique"
+    },
+    {
+      "id": "core:seed_keeper",
+      "kind": "vassal",
+      "inProfile": false,
+      "depth": "design"
+    },
+    {
+      "id": "core:seed_mite",
+      "kind": "enemy",
+      "inProfile": true,
+      "depth": "base"
+    },
+    {
+      "id": "core:seed_pouch_lining",
+      "kind": "item",
+      "inProfile": true,
+      "depth": "unique"
+    },
+    {
+      "id": "core:seed_vault_key",
+      "kind": "tool",
+      "inProfile": false,
+      "depth": "design"
+    },
+    {
+      "id": "core:shadow_stake",
+      "kind": "tool",
+      "inProfile": false,
+      "depth": "design"
+    },
+    {
+      "id": "core:shadow_stake_lens",
+      "kind": "item",
+      "inProfile": false,
+      "depth": "design"
+    },
+    {
+      "id": "core:shared_cauldron",
+      "kind": "evolution",
+      "inProfile": false,
+      "depth": "design"
+    },
+    {
+      "id": "core:sheltered_sowing",
+      "kind": "evolution",
+      "inProfile": true,
+      "depth": "unique"
+    },
+    {
+      "id": "core:shepherd_bell",
+      "kind": "tool",
+      "inProfile": false,
+      "depth": "design"
+    },
+    {
+      "id": "core:shepherd_staff",
+      "kind": "tool",
+      "inProfile": false,
+      "depth": "design"
+    },
+    {
+      "id": "core:shepherd_token",
+      "kind": "item",
+      "inProfile": false,
+      "depth": "design"
+    },
+    {
+      "id": "core:shield_raider",
+      "kind": "enemy",
+      "inProfile": true,
+      "depth": "base"
+    },
+    {
+      "id": "core:shock_absorber_pad",
+      "kind": "item",
+      "inProfile": true,
+      "depth": "stat"
+    },
+    {
+      "id": "core:shrine_censer",
+      "kind": "tool",
+      "inProfile": false,
+      "depth": "design"
+    },
+    {
+      "id": "core:shrine_smoke_cap",
+      "kind": "item",
+      "inProfile": false,
+      "depth": "design"
+    },
+    {
+      "id": "core:siege_cart",
+      "kind": "enemy",
+      "inProfile": true,
+      "depth": "base"
+    },
+    {
+      "id": "core:slow_burn_wick",
+      "kind": "item",
+      "inProfile": true,
+      "depth": "stat"
+    },
+    {
+      "id": "core:soup_ladle",
+      "kind": "tool",
+      "inProfile": true,
+      "depth": "unique"
+    },
+    {
+      "id": "core:soup_portion_cup",
+      "kind": "item",
+      "inProfile": true,
+      "depth": "stat"
+    },
+    {
+      "id": "core:sowing_sworddance",
+      "kind": "evolution",
+      "inProfile": true,
+      "depth": "unique"
+    },
+    {
+      "id": "core:spare_seed_locket",
+      "kind": "item",
+      "inProfile": false,
+      "depth": "design"
+    },
+    {
+      "id": "core:spore_fan",
+      "kind": "weapon",
+      "inProfile": true,
+      "depth": "base"
+    },
+    {
+      "id": "core:squad_route_board",
+      "kind": "item",
+      "inProfile": true,
+      "depth": "stat"
+    },
+    {
+      "id": "core:stitched_gaiter",
+      "kind": "item",
+      "inProfile": false,
+      "depth": "design"
+    },
+    {
+      "id": "core:stone_breaker",
+      "kind": "enemy",
+      "inProfile": true,
+      "depth": "base"
+    },
+    {
+      "id": "core:stone_maul",
+      "kind": "weapon",
+      "inProfile": false,
+      "depth": "design"
+    },
+    {
+      "id": "core:stone_seed",
+      "kind": "tool",
+      "inProfile": false,
+      "depth": "design"
+    },
+    {
+      "id": "core:stone_seed_crush",
+      "kind": "evolution",
+      "inProfile": false,
+      "depth": "design"
+    },
+    {
+      "id": "core:stone_sprout_cup",
+      "kind": "item",
+      "inProfile": false,
+      "depth": "design"
+    },
+    {
+      "id": "core:storm_fork",
+      "kind": "weapon",
+      "inProfile": true,
+      "depth": "base"
+    },
+    {
+      "id": "core:tailor_shears",
+      "kind": "tool",
+      "inProfile": false,
+      "depth": "design"
+    },
+    {
+      "id": "core:tax_ledger",
+      "kind": "tool",
+      "inProfile": false,
+      "depth": "design"
+    },
+    {
+      "id": "core:tax_receipt_cord",
+      "kind": "item",
+      "inProfile": false,
+      "depth": "design"
+    },
+    {
+      "id": "core:thorn_formation",
+      "kind": "evolution",
+      "inProfile": false,
+      "depth": "design"
+    },
+    {
+      "id": "core:thorn_whip",
+      "kind": "weapon",
+      "inProfile": false,
+      "depth": "design"
+    },
+    {
+      "id": "core:tithe_clerk",
+      "kind": "vassal",
+      "inProfile": false,
+      "depth": "design"
+    },
+    {
+      "id": "core:tithe_harvest_wagon",
+      "kind": "evolution",
+      "inProfile": false,
+      "depth": "design"
+    },
+    {
+      "id": "core:tool_steward",
+      "kind": "vassal",
+      "inProfile": false,
+      "depth": "design"
+    },
+    {
+      "id": "core:torch",
+      "kind": "tool",
+      "inProfile": false,
+      "depth": "design"
+    },
+    {
+      "id": "core:tower_counterweight",
+      "kind": "evolution",
+      "inProfile": false,
+      "depth": "design"
+    },
+    {
+      "id": "core:tower_exclusion",
+      "kind": "charter",
+      "inProfile": false,
+      "depth": "design"
+    },
+    {
+      "id": "core:tower_plumb_line",
+      "kind": "item",
+      "inProfile": false,
+      "depth": "design"
+    },
+    {
+      "id": "core:tower_weight",
+      "kind": "tool",
+      "inProfile": false,
+      "depth": "design"
+    },
+    {
+      "id": "core:turning_weight",
+      "kind": "item",
+      "inProfile": true,
+      "depth": "stat"
+    },
+    {
+      "id": "core:vault_counting_tag",
+      "kind": "item",
+      "inProfile": false,
+      "depth": "design"
+    },
+    {
+      "id": "core:veil_fastener",
+      "kind": "item",
+      "inProfile": false,
+      "depth": "design"
+    },
+    {
+      "id": "core:venom_reaping",
+      "kind": "evolution",
+      "inProfile": true,
+      "depth": "unique"
+    },
+    {
+      "id": "core:ward_orbit",
+      "kind": "weapon",
+      "inProfile": true,
+      "depth": "base"
+    },
+    {
+      "id": "core:warded_masonry",
+      "kind": "evolution",
+      "inProfile": true,
+      "depth": "unique"
+    },
+    {
+      "id": "core:watchtower_crossbow",
+      "kind": "weapon",
+      "inProfile": false,
+      "depth": "design"
+    },
+    {
+      "id": "core:water_carrier",
+      "kind": "vassal",
+      "inProfile": false,
+      "depth": "design"
+    },
+    {
+      "id": "core:whistle_hunter",
+      "kind": "enemy",
+      "inProfile": true,
+      "depth": "base"
+    },
+    {
+      "id": "core:wind_seed_flag",
+      "kind": "item",
+      "inProfile": true,
+      "depth": "unique"
+    },
+    {
+      "id": "core:windmill_brake",
+      "kind": "item",
+      "inProfile": true,
+      "depth": "stat"
+    },
+    {
+      "id": "core:windmill_crank",
+      "kind": "tool",
+      "inProfile": true,
+      "depth": "base"
+    },
+    {
+      "id": "core:wine_wasp",
+      "kind": "enemy",
+      "inProfile": false,
+      "depth": "design"
+    },
+    {
+      "id": "core:winter_dispatch_token",
+      "kind": "item",
+      "inProfile": false,
+      "depth": "design"
+    },
+    {
+      "id": "core:winter_hart",
+      "kind": "enemy",
+      "inProfile": true,
+      "depth": "base"
+    },
+    {
+      "id": "core:winter_seed_stove",
+      "kind": "evolution",
+      "inProfile": false,
+      "depth": "design"
+    },
+    {
+      "id": "core:worker_rest_mat",
+      "kind": "item",
+      "inProfile": false,
+      "depth": "design"
+    }
+  ]
+}
