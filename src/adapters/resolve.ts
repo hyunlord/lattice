@@ -29,8 +29,13 @@ function strings(value: JsonValue, visit: (value: string, pointer: string, key: 
         for (const [name, child] of Object.entries(value)) strings(child, visit, `${pointer}/${pointerToken(name)}`, name);
     }
 }
-export function resolveRecords(records: readonly ExtractedRecord[]): ResolvedRecords {
+export function resolveRecords(records: readonly ExtractedRecord[], knownNodes: readonly NodeDraft[] = []): ResolvedRecords {
     if (records.length > 100_000) throw new DataInputError("<records>", 1, "Input exceeds the 100,000 record limit");
+    const known = new Map<string, NodeDraft>();
+    for (const node of knownNodes) {
+        if (known.has(node.id)) throw new DataInputError(node.sources[0]?.path ?? "<nodes>", node.sources[0]?.line ?? 1, `Duplicate known node ID: ${node.id}`);
+        known.set(node.id, node);
+    }
     const ordered = [...records].sort((a, b) => compare(identity(a), identity(b)));
     const aliases = new Map<string, ExtractedRecord[]>();
     const locations = new Set<string>();
@@ -45,12 +50,12 @@ export function resolveRecords(records: readonly ExtractedRecord[]): ResolvedRec
         entries.push(record);
         aliases.set(record.node.id, entries);
     }
-    const used = new Set([...aliases].filter(([, entries]) => entries.length === 1).map(([id]) => id));
+    const used = new Set([...known.keys(), ...[...aliases].filter(([, entries]) => entries.length === 1).map(([id]) => id)]);
     const ids = new Map<ExtractedRecord, string>();
     const diagnostics: ReferenceDiagnostic[] = [];
     for (const record of ordered) {
         let id = record.node.id;
-        if ((aliases.get(id)?.length ?? 0) > 1) {
+        if ((aliases.get(id)?.length ?? 0) > 1 || known.has(id)) {
             const source = location(record);
             const base = `record:${encodeURIComponent(source.path)}#${encodeURIComponent(source.pointer)}`;
             id = base;
@@ -61,23 +66,25 @@ export function resolveRecords(records: readonly ExtractedRecord[]): ResolvedRec
         used.add(id);
         ids.set(record, id);
     }
-    const nodes: NodeDraft[] = [];
+    const nodes: NodeDraft[] = [...knownNodes];
     const edges: Edge[] = [];
     for (const record of ordered) {
         const id = ids.get(record);
         if (id === undefined) throw new Error("Missing assigned record ID");
         nodes.push({ ...record.node, id });
+        if (record.references === false) continue;
         strings(record.node.attributes, (value, pointer, key) => {
             if (pointer === "/id" || value === "") return;
             const candidates = aliases.get(value) ?? [];
             const source = record.fields[pointer];
             if (source === undefined) throw new DataInputError(location(record).path, location(record).line, `Missing field source ${pointer}`);
             const candidate = candidates[0];
-            if (candidates.length === 1 && candidate !== undefined) {
-                const target = ids.get(candidate);
+            const count = candidates.length + (known.has(value) ? 1 : 0);
+            if (count === 1) {
+                const target = candidate === undefined ? known.get(value)?.id : ids.get(candidate);
                 if (target === undefined) throw new Error("Missing target record ID");
                 edges.push({ id: `reference:${canonicalJson([id, target, pointer])}`, kind: pointer, source: id, target, directed: true, field: pointer, sources: [source] });
-            } else if (candidates.length > 1) diagnostics.push({ code: "ambiguous-reference", value, source });
+            } else if (count > 1) diagnostics.push({ code: "ambiguous-reference", value, source });
             else if (/Ids?$/u.test(key)) diagnostics.push({ code: "unresolved-reference", value, source });
         });
     }

@@ -71,12 +71,13 @@ export function matchesGlob(path: string, pattern: string): boolean {
     }
     return new RegExp(`${expression}$`, "u").test(path);
 }
-export function applyLens(base: readonly ExtractedRecord[], lens: Lens, input: SourceInput, options: { readonly codeInputs?: readonly SourceInput[]; readonly sourceLink?: (source: Source) => Source; } = {}): { readonly nodes: readonly NodeDraft[]; readonly facets: readonly Facet[]; readonly findings: readonly Finding[]; readonly presentation: JsonObject; readonly edges: readonly Edge[]; readonly views: readonly View[]; readonly diagnostics: readonly ReferenceDiagnostic[]; } {
+export function applyLens(base: readonly ExtractedRecord[], lens: Lens, input: SourceInput, options: { readonly knownNodes?: readonly NodeDraft[]; readonly structuralEdges?: (nodes: readonly NodeDraft[]) => readonly Edge[]; readonly codeInputs?: readonly SourceInput[]; readonly sourceLink?: (source: Source) => Source; } = {}): { readonly nodes: readonly NodeDraft[]; readonly facets: readonly Facet[]; readonly findings: readonly Finding[]; readonly presentation: JsonObject; readonly edges: readonly Edge[]; readonly views: readonly View[]; readonly diagnostics: readonly ReferenceDiagnostic[]; } {
     const definition = lensRecord(input);
     if (!definition) throw new Error("Missing lens definition");
-    const resolved = prepareRecords(base, lens.config, definition);
+    const resolved = prepareRecords(base, lens.config, definition, options.knownNodes);
     const records = resolved.records;
-    const graph: Record<string, JsonValue> = { nodes: records.map(record => recordView(record.node)), edges: resolved.edges.map(edge => ({ ...edge, sources: edge.sources.map(source => ({ ...source })) })) };
+    const initialEdges = [...resolved.edges, ...(options.structuralEdges?.(resolved.nodes) ?? [])];
+    const graph: Record<string, JsonValue> = { nodes: records.map(record => recordView(record.node)), edges: initialEdges.map(edge => ({ ...edge, sources: edge.sources.map(source => ({ ...source })) })) };
     const derived = lens.derived;
     const codeLinks = prepareCodeLinks(lens.codeLinks, options.codeInputs ?? [], matchesGlob);
     const expressionSource = definition.node.sources[0];
@@ -110,7 +111,7 @@ export function applyLens(base: readonly ExtractedRecord[], lens: Lens, input: S
         environments.set(record.node.id, env);
     }
     const context = { config: lens.config, definition, records, environments };
-    const edges = [...resolved.edges, ...materializeEdges(context)];
+    const edges = [...initialEdges, ...materializeEdges(context)];
     graph["edges"] = edges.map(edge => ({ ...edge, sources: edge.sources.map(source => ({ ...source })) }));
     for (const record of records) {
         const env = environments.get(record.node.id);
