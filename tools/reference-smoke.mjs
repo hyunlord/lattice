@@ -1,0 +1,58 @@
+import assert from 'node:assert/strict';
+import { execFileSync } from 'node:child_process';
+import { mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { join } from 'node:path';
+
+export function verifyReferences(cli, repository) {
+  mkdirSync(repository, { recursive: true });
+  const git = args => execFileSync('git', args, { cwd: repository, encoding: 'utf8' }).trim();
+  git(['init', '--quiet']); git(['config', 'user.name', 'Lattice fixture']); git(['config', 'user.email', 'fixture@example.invalid']);
+  writeFileSync(join(repository, '.gitignore'), '/.lattice/\n');
+  const path = join(repository, 'service.json');
+  const content = JSON.stringify({ id: 'service:a', targetId: 'service:b', externalId: 'https://example.invalid/service', opaqueId: 'core:missing', links: ['service:b'] });
+  writeFileSync(path, content);
+  git(['add', '.']); git(['commit', '--quiet', '-m', 'Record referring service']);
+  const before = git(['rev-parse', 'HEAD']);
+  const run = args => execFileSync(process.execPath, [cli, ...args, '--root', repository], { encoding: 'utf8' });
+  const read = path => JSON.parse(readFileSync(join(repository, path), 'utf8'));
+  const build = () => JSON.parse(run(['build', '--json']));
+  const references = () => read('.lattice/cache/graph.json').edges.filter(edge => edge.source === 'service:a');
+  const missing = build();
+  assert.equal(missing.result.diagnostics.find(item => item.value === 'https://example.invalid/service').code, 'external-reference');
+  for (const id of ['service:b', 'core:missing']) assert.equal(missing.result.diagnostics.find(item => item.value === id).code, 'unresolved-reference');
+  assert.deepEqual(references(), []);
+  assert.equal(build().result.extraction.reused, 1);
+  writeFileSync(join(repository, 'target.json'), '{"id":"service:b"}');
+  git(['add', 'target.json']); git(['commit', '--quiet', '-m', 'Supply target without editing referring service']);
+  const added = build();
+  assert.equal(added.result.extraction.parsed, 1);
+  assert.equal(added.result.extraction.reused, 1);
+  assert.equal(added.result.diagnostics.some(item => item.value === 'service:b'), false);
+  assert.deepEqual(references().map(edge => edge.field).sort(), ['/links/0', '/targetId']);
+  for (const edge of references()) { assert.equal(edge.target, 'service:b'); assert.equal(edge.sources[0].path, 'service.json'); assert.equal(edge.sources[0].pointer, edge.field); }
+  const addedHash = added.result.graph.hash;
+  rmSync(join(repository, '.lattice/cache'), { recursive: true });
+  assert.equal(build().result.graph.hash, addedHash);
+  const delta = JSON.parse(run(['diff', before, '--json']));
+  assert.equal(delta.edges.added.filter(edge => edge.source === 'service:a').length, 2);
+  const withTarget = git(['rev-parse', 'HEAD']);
+  rmSync(join(repository, 'target.json'));
+  git(['add', '-u']); git(['commit', '--quiet', '-m', 'Remove target without editing referring service']);
+  const removed = build();
+  assert.equal(removed.result.extraction.parsed, 0);
+  assert.equal(removed.result.extraction.reused, 1);
+  assert.equal(removed.result.extraction.files, 1);
+  assert.equal(removed.result.extraction.discarded, 0);
+  assert.equal(removed.result.diagnostics.find(item => item.value === 'service:b').code, 'unresolved-reference');
+  assert.deepEqual(references(), []);
+  const removedHash = removed.result.graph.hash;
+  rmSync(join(repository, '.lattice/cache'), { recursive: true });
+  assert.equal(build().result.graph.hash, removedHash);
+  const deleted = JSON.parse(run(['diff', withTarget, '--json']));
+  assert.equal(deleted.edges.removed.filter(edge => edge.source === 'service:a').length, 2);
+  run(['export', join(repository, '.lattice/site')]);
+  assert.equal(read('.lattice/site/graph.json').hash, removedHash);
+  assert.equal(readFileSync(path, 'utf8'), content);
+  assert.equal(git(['status', '--porcelain']), '');
+  console.log('Installed references: external/local diagnostics, unchanged referring shard, target add/remove, exact pointers, warm/cold parity, historical changes and export passed.');
+}

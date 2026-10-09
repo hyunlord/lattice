@@ -11,7 +11,7 @@ Statuses: **designed** means a reviewed contract exists, not implementation; **p
 | L1-02 | JSON/YAML/CSV records with source lines | quoted multiline/array/duplicate-key/malformed fixtures, real builds | verified: [YAML and prior data extraction](l1-yaml-init.md) |
 | L1-03 | Markdown headings/links/ADRs | [Existing 12 fixtures, real docs, installed CLI and browser](l1-markdown.md) | verified |
 | L1-04 | Optional Graft import + own file/module fallback | validated real sample; missing/malformed schema fixture | verified: [optional import and actual source graph](l1-graft.md) |
-| L1-05 | Git metadata and reference auto-join | alias collisions/missing IDs/add/delete/source-pointer assertions | pending |
+| L1-05 | Git metadata and reference auto-join | [alias priority, external diagnostics, unchanged-referrer refresh, history and source evidence](l1-references.md) | verified |
 | L1-06 | Lens schema, kinds, fields, edges, facet expressions | valid/invalid lens integration tests, zero domain branches | pending |
 | L1-07 | Views/findings/gates/code-link rules | non-game rules + unsupported/unknown/real dispatch fixtures | pending |
 | L1-08 | init skeleton, idempotence | real CLI temp-repo invocation and unchanged unrelated files | verified: [installed init workflow](l1-yaml-init.md) |
