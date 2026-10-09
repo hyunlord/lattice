@@ -3,6 +3,7 @@ import { verifyCodeLinks } from './code-links-smoke.mjs';
 import { verifyGraft } from './graft-smoke.mjs';
 import { verifyUnifiedGraph } from './unified-smoke.mjs';
 import { verifyInputScope } from './input-scope-smoke.mjs';
+import { verifyExpressionMissing } from './expression-missing-smoke.mjs';
 import { verifyYaml } from './yaml-smoke.mjs';
 import { verifyExport } from './export-smoke.mjs';
 import { verifyServe } from './serve-smoke.mjs';
@@ -106,6 +107,7 @@ try {
   verifyGraft(cli, join(temporary, 'graft-import'));
   verifyUnifiedGraph(cli, join(temporary, 'unified-graph'));
   verifyInputScope(cli, join(temporary, 'input-scope'));
+  verifyExpressionMissing(cli, join(temporary, 'expression-missing'));
   verifyExport(cli, join(temporary, 'export'));
   await verifyServe(cli, join(temporary, 'serve'));
 } finally { rmSync(temporary, { recursive: true, force: true }); }

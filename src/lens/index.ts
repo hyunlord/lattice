@@ -5,8 +5,8 @@ import type { DerivedPlan } from "./derived.js";
 import { materializeEdges, materializeViews, matchesQuery, prepareRecords } from "./structure.js";
 import type { ReferenceDiagnostic } from "../adapters/resolve.js";
 import { evaluateGate } from "./gates.js";
-import { addSources, array, evaluate, object, recordView, string } from "./runtime.js";
-import type { Environment } from "./runtime.js";
+import { addSources, array, evaluate, materializeValue, object, recordView, string } from "./runtime.js";
+import type { Environment, RuntimeValue } from "./runtime.js";
 import type { JsonObject, JsonValue } from "../core/canonical.js";
 import type { NodeDraft, Source, Facet, Finding, Edge, View } from "../core/model.js";
 import { extractYamlDocument } from "../adapters/yaml.js";
@@ -95,9 +95,9 @@ export function applyLens(base: readonly ExtractedRecord[], lens: Lens, input: S
     const codeLinks = prepareCodeLinks(lens.codeLinks, options.codeInputs ?? [], matchesGlob);
     const expressionSource = definition.node.sources[0];
     const supportContext = { ...(expressionSource ? { expressionSource } : {}), ...(options.sourceLink ? { sourceLink: options.sourceLink } : {}) };
-    const graphVars: Record<string, JsonValue> = {};
+    const graphVars: Record<string, RuntimeValue> = {};
     const graphSources = new Map<string, Source>();
-    for (const rule of derived.graph) graphVars[rule.id] = evaluate(rule.value, { ...supportContext, ...(rule.source ? { expressionSource: rule.source } : {}), vars: graphVars, records, sources: graphSources, graph }) ?? null;
+    for (const rule of derived.graph) graphVars[rule.id] = evaluate(rule.value, { ...supportContext, ...(rule.source ? { expressionSource: rule.source } : {}), vars: graphVars, records, sources: graphSources, graph });
     const environments = new Map<string, Environment>();
     const facets: Facet[] = [];
     const applies = (rule: JsonObject, node: NodeDraft): boolean => (rule["layer"] === undefined || rule["layer"] === node.attributes["layer"]) && (rule["kinds"] === undefined || array(rule["kinds"]).includes(node.kind));
@@ -109,7 +109,7 @@ export function applyLens(base: readonly ExtractedRecord[], lens: Lens, input: S
         for (const rule of derived.node) {
             switch (rule.type) {
                 case "derived":
-                    if ((rule.layer === undefined || rule.layer === record.node.attributes["layer"]) && (rule.kinds === undefined || rule.kinds.includes(record.node.kind))) vars[rule.id] = evaluate(rule.value, { ...env, ...(rule.source ? { expressionSource: rule.source } : {}) }) ?? null;
+                    if ((rule.layer === undefined || rule.layer === record.node.attributes["layer"]) && (rule.kinds === undefined || rule.kinds.includes(record.node.kind))) vars[rule.id] = evaluate(rule.value, { ...env, ...(rule.source ? { expressionSource: rule.source } : {}) });
                     break;
                 case "codeLink": {
                     const prepared = codeLinks.get(rule.id);
@@ -134,7 +134,7 @@ export function applyLens(base: readonly ExtractedRecord[], lens: Lens, input: S
             if (!applies(rule, record.node)) return;
             const source = definition.fields[`/facets/${index}`];
             const result = evaluate(rule["value"] ?? { op: "case", cases: rule["cases"] ?? [], default: rule["default"] ?? null }, { ...env, ...(source ? { expressionSource: source } : {}) }) ?? null;
-            facets.push({ id: `${string(rule["id"])}:${record.node.id}`, nodeId: record.node.id, key: string(rule["key"]), value: result, ruleId: string(rule["id"]), sources: [...env.sources.values(), ...(source ? [source] : [])] });
+            facets.push({ id: `${string(rule["id"])}:${record.node.id}`, nodeId: record.node.id, key: string(rule["key"]), value: materializeValue(result), ruleId: string(rule["id"]), sources: [...env.sources.values(), ...(source ? [source] : [])] });
         });
     }
     const findings: Finding[] = array(lens.config["findings"] ?? []).map((value, index) => {
@@ -146,7 +146,7 @@ export function applyLens(base: readonly ExtractedRecord[], lens: Lens, input: S
         const lensSource = definition?.fields[`/findings/${index}`];
         if (lensSource) addSources(env, [lensSource]);
         const metrics: Record<string, JsonValue> = {};
-        for (const [key, expression] of Object.entries(object(rule["metrics"]))) metrics[key] = evaluate(expression, env) ?? null;
+        for (const [key, expression] of Object.entries(object(rule["metrics"]))) metrics[key] = materializeValue(evaluate(expression, env));
         const severity = rule["severity"] ?? "info";
         if (severity !== "info" && severity !== "warning" && severity !== "error") throw new Error("Invalid finding severity");
         const basis = rule["basis"] ?? "computed";

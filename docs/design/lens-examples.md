@@ -296,3 +296,11 @@ exclude: ['data/test/**', 'src/Generated/**']
 ```
 
 Input-scope values are validated before reading selected content. Malformed scope arrays report the lens source path, line and field pointer.
+
+## Missing values during evaluation
+
+Missing is an internal value distinct from authored JSON `null`. Wildcard reads, map results, lexical bindings, derived variables and finding target-derived values retain that distinction until the result is materialized in the graph. Array positions are preserved. JSON graph outputs represent a remaining missing value as null; that output conversion does not feed back into expression evaluation.
+
+Equality, inequality, membership and lookup do not turn absent values into null matches. Equality or inequality involving missing data is false, including nested missing array/object members. Membership compares each candidate independently, so an authored null can still match a null in a collection that also contains missing members. Explicit null remains a comparable literal. `all` requires a nonempty array; `any` and `all` return false for a missing input. Thus an absent operation cannot prove a non-stat implementation, and an empty effect list cannot prove all effects are implemented. Missing results from map/filter remain missing rather than becoming empty successful collections.
+
+Numeric `sum` retains its existing finite-number-only contract. Complete aggregation coverage reporting and the remaining expression operators have separate acceptance work; this change does not claim those requirements complete.

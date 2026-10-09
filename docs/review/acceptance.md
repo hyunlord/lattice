@@ -86,3 +86,5 @@ Designed catalog delivery: [bs-mobile PR149](https://github.com/hyunlord/bs-mobi
 L1 unified graph: [mixed installed CLI and actual repository evidence](l1-unified-graph.md) proves that structural nodes and edges participate in data references and lens calculations. L1-05–07 remain pending for the rest of their contracts.
 
 L1 input scope: [installed CLI and actual manifest projection](l1-input-scope.md) verifies top-level include/exclude for ordinary and code-support inputs. L1-06 remains pending for full schema/expression compliance.
+
+L1 expression correctness: [missing-value propagation and classification evidence](l1-expression-missing.md) verifies missing/null distinctions and nonvacuous all through real CLI findings. Remaining expression operators and full L1-06/07 acceptance stay pending.
