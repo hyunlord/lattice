@@ -1,3 +1,5 @@
+import { verifyExport } from './export-smoke.mjs';
+import { verifyServe } from './serve-smoke.mjs';
 import { verifyHistory } from './history-smoke.mjs';
 import { verifyIncremental } from './incremental-smoke.mjs';
 import { fileURLToPath } from 'node:url';
@@ -92,4 +94,6 @@ try {
   console.log('Installed check: pass=0, edited input fail=1, unknown evidence=1, invalid config=2.');
   verifyHistory(cli, join(temporary, 'history'));
   verifyIncremental(cli, join(temporary, 'incremental'));
+  verifyExport(cli, join(temporary, 'export'));
+  await verifyServe(cli, join(temporary, 'serve'));
 } finally { rmSync(temporary, { recursive: true, force: true }); }

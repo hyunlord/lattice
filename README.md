@@ -22,6 +22,7 @@ node bin/lattice.mjs build --root /path/to/repository --lens /absolute/path/to/l
 node bin/lattice.mjs export /path/to/site --root /path/to/repository
 node bin/lattice.mjs check --root /path/to/repository
 node bin/lattice.mjs diff HEAD~1 --root /path/to/repository --json
+node bin/lattice.mjs serve --root /path/to/repository --port 4173
 ```
 
 `check` rebuilds from current inputs and evaluates findings with an explicit `gate`. Exit codes are 0 when all gates pass (or none are configured), 1 for failed or unknown gates, and 2 for invalid configuration or build errors. Informational findings without gates do not fail the command. See [gate syntax and verification](docs/review/l1-check.md).
@@ -30,7 +31,11 @@ node bin/lattice.mjs diff HEAD~1 --root /path/to/repository --json
 
 Builds reuse raw per-file extraction when content, path, selection and adapter implementation match. Every build still verifies file contents and recomputes references and lens results. CLI counters show parsed/reused files; `.lattice/cache/build.json` and `inputs.json` record the latest counters and input manifest. See [incremental build verification](docs/review/l1-incremental.md).
 
-Use [the bs-mobile lens](examples/bs-mobile/lens.json) for that repository, or a JSON lens with your own file patterns and rules. Serve the export directory with a static HTTP server. Installed packages provide the `lattice` command. Git is required. Without a lens, build discovers JSON, CSV, Markdown and code files, extracts records/headings/ADR metadata and resolves references/document links plus static JS/TS/Python imports. A default `.lattice/lens.json` is used when present. Explicit lenses limit input to their patterns. Other recognized code languages provide file-only modules. YAML and optional Graft import are still pending. See [document extraction evidence and limits](docs/review/l1-markdown.md).
+`serve` runs on `127.0.0.1:4173` and checks selected file contents every 500 ms after the previous check completes. Source changes refresh the browser while retaining its route and filters. Failed updates display an explicit stale-map message and recover after correction. Ctrl-C stops the server. See [local serving evidence and limits](docs/review/l1-serve.md).
+
+`export` builds a complete staging directory before replacing its destination. Repeated exports replace Lattice-owned output and remove obsolete assets. A nonempty unowned directory is refused unless `--force` is explicit; use a dedicated output directory. The replacement uses two directory renames, so a static server may observe a brief missing-directory interval. Use `serve` for a live local map.
+
+Use [the bs-mobile lens](examples/bs-mobile/lens.json) for that repository, or a JSON lens with your own file patterns and rules. Use `serve` for local source watching, or host the export directory with any static HTTP server. Installed packages provide the `lattice` command. Git is required. Without a lens, build discovers JSON, CSV, Markdown and code files, extracts records/headings/ADR metadata and resolves references/document links plus static JS/TS/Python imports. A default `.lattice/lens.json` is used when present. Explicit lenses limit input to their patterns. Other recognized code languages provide file-only modules. YAML and optional Graft import are still pending. See [document extraction evidence and limits](docs/review/l1-markdown.md).
 
 [Open the published bs-mobile map](https://hyunlord.github.io/bs-mobile/).
 
