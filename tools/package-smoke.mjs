@@ -1,4 +1,5 @@
 import { verifyInit } from './init-smoke.mjs';
+import { verifyCodeLinks } from './code-links-smoke.mjs';
 import { verifyYaml } from './yaml-smoke.mjs';
 import { verifyExport } from './export-smoke.mjs';
 import { verifyServe } from './serve-smoke.mjs';
@@ -98,6 +99,7 @@ try {
   verifyYaml(cli, join(temporary, 'yaml'));
   verifyHistory(cli, join(temporary, 'history'));
   verifyIncremental(cli, join(temporary, 'incremental'));
+  verifyCodeLinks(cli, join(temporary, 'code-links'));
   verifyExport(cli, join(temporary, 'export'));
   await verifyServe(cli, join(temporary, 'serve'));
 } finally { rmSync(temporary, { recursive: true, force: true }); }

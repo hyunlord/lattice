@@ -1,7 +1,7 @@
 import { existsSync, readFileSync } from 'node:fs';
 import { basename, relative, resolve, sep } from 'node:path';
 import { canonicalJson } from '../dist/index.js';
-import { parseLens } from '../dist/lens/index.js';
+import { matchesGlob, parseLens } from '../dist/lens/index.js';
 import { inside, selectedInputs } from './inputs.mjs';
 import { workingRepository } from './repository.mjs';
 import { digest } from './storage.mjs';
@@ -32,10 +32,16 @@ export function observeRepository(options, historical) {
     const text = contents.get(selection.path);
     if (text !== undefined) selected.push({ ...selection, input: { path: selection.path, text, contentHash: digest(text) } });
   }
+  const codeInputs = [];
+  for (const path of repository.paths.filter(path => lens?.codeLinks.some(rule => rule.files.some(pattern => matchesGlob(path, pattern))))) {
+    if (!contents.has(path)) contents.set(path, repository.readText(path));
+    const text = contents.get(path);
+    if (text !== undefined) codeInputs.push({ path, text, contentHash: digest(text) });
+  }
   if (!historical) {
     const after = workingRepository(root);
     if (repository.commit !== after.commit || repository.dirty !== after.dirty || repository.remoteUrl !== after.remoteUrl || canonicalJson(repository.paths) !== canonicalJson(after.paths)) throw new Error('Repository changed while reading inputs; retry the build');
   }
-  const fingerprint = digest(canonicalJson({ repository: { name: repository.name, remoteUrl: repository.remoteUrl ?? null, commit: repository.commit ?? null, dirty: repository.dirty }, lens: lensInput ?? null, inputs: selected.map(({ input }) => ({ path: input.path, contentHash: input.contentHash })) }));
-  return { repository, lens, lensInput, coverage, selected, fingerprint };
+  const fingerprint = digest(canonicalJson({ repository: { name: repository.name, remoteUrl: repository.remoteUrl ?? null, commit: repository.commit ?? null, dirty: repository.dirty }, lens: lensInput ?? null, inputs: selected.map(({ input }) => ({ path: input.path, contentHash: input.contentHash })), ...(lens?.codeLinks.length ? { codeInputs: codeInputs.map(({ path, contentHash }) => ({ path, contentHash })) } : {}) }));
+  return { repository, lens, lensInput, coverage, selected, codeInputs, fingerprint };
 }

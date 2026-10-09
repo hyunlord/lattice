@@ -122,7 +122,7 @@ findings:
     gate: {metric: selected, comparator: eq, threshold: 8}
 ```
 
-Finding metric evaluation binds `vars.targets` to the query results and retains each record's derived environment. Facet `cases` use the same expression semantics as `case`. `selected-charters` is an example regression gate, not a recommended perpetual content-count restriction; the complete consumer lens must distinguish design-quality gates from pinned-baseline acceptance assertions.
+Finding metric evaluation binds `vars.targets` to the query results and `vars.targetValues` to `{node, derived}` pairs retaining each target's record view and derived environment. These are finding-only bindings. Facet `cases` use the same expression semantics as `case`. `selected-charters` is an example regression gate, not a recommended perpetual content-count restriction; the complete consumer lens must distinguish design-quality gates from pinned-baseline acceptance assertions.
 
 ## Code-link selectors and alternate paths
 
@@ -152,6 +152,21 @@ codeLinks:
 For `switch-case`, parse the named method's bounded body, find a switch whose normalized token expression matches `expression`, and extract string case labels with nonempty handler bodies; preserve fall-through groups. For `call-argument`, match the call within the named method, inspect zero-based `argumentIndex` for a string literal, and require the call result be consumed in executable body (the present `foreach` path). Comments, unreachable text outside the method, and unparsed interpolation are not positive evidence. A matched selector is static support only; it is not complete control-flow or gameplay proof.
 
 Unsupported means the specified complete dispatch surface was successfully parsed and contained no matching selector value. Unknown means a required source is missing, language/syntax unsupported, method/selector surface not found, ambiguous, or incomplete. If any selector required for coverage is unknown and there is no positive handler, report unknown rather than unsupported. Matched handler with other coverage gaps is supported **with partial-coverage diagnostics**, not a whole-surface success. Invalid selector configuration fails lens validation.
+
+The `values` expression accepts a single nonempty string or an array of nonempty strings. Values are deduplicated and sorted. A missing, empty, or invalid result is unknown, not vacuous support. Each matching node retains a facet with key `codeSupport:<ruleId>` and this JSON value:
+
+```json
+{
+  "status": "supported",
+  "coverage": "complete",
+  "values": [{"value": "trim", "status": "supported", "evidence": []}],
+  "diagnostics": []
+}
+```
+
+`evidence` contains exact code `Source` objects. Diagnostics have `{selector, reason, sources}`, where selector is the zero-based selector index or `-1` for rule-wide coverage. Facet sources retain data, lens, and inspected code provenance, including negative surfaces. Overall status is unsupported if any value is definitively unsupported, otherwise unknown if any value is unknown or there are no values, otherwise supported. Coverage is partial if a required surface or pattern is missing or incomplete. A rule outside its query produces an explicit unknown/not-applicable expression result for that node, without persisting a support facet. Methods resolve across the complete matched file set; absent or ambiguous named methods are unknown.
+
+`{op: codeSupport, rule: effect-dispatch}` returns that same serialized result for the current node. Derived definitions and code links share one dependency graph: `get from: vars` in code-link values/query can depend on derived values, and derived expressions can depend on `codeSupport`. Unknown references, cycles, and graph-derived current-node support reads fail with lens source locations. Code links run before explicit edges, with the same edge-dependent expression restriction as derived values. A nested `item` never implicitly changes the current node. Finding aggregate metrics have no current node; they can read each target's retained derived values through `vars.targetValues` entries shaped `{node, derived}` (for example a filter over targetValues reading `item.derived.implementation.status`). `vars.targets` remains the unchanged record-view array, including any authored attribute named `derived`. The new finding-only binding does not implicitly rebind the current node.
 
 The lexer/adapters know C# token syntax and generic selector kinds, not `stat-add` or product names. No schema/enum string alone establishes support. A future handler refactor that changes method shapes must visibly change coverage and invalidate the dependent cache.
 

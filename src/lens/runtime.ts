@@ -1,6 +1,8 @@
 import { canonicalJson } from "../core/canonical.js";
 import type { JsonObject, JsonValue } from "../core/canonical.js";
 import type { NodeDraft, Source } from "../core/model.js";
+import { DataInputError } from "../adapters/types.js";
+import type { CodeSupportEvaluation } from "./code-links.js";
 import type { ExtractedRecord } from "../adapters/types.js";
 export function isObject(value: JsonValue | undefined): value is JsonObject { return value !== undefined && value !== null && typeof value === "object" && !Array.isArray(value); }
 export function object(value: JsonValue | undefined): JsonObject {
@@ -15,7 +17,7 @@ export function string(value: JsonValue | undefined): string {
     if (typeof value !== "string") throw new Error("Lens expected a string");
     return value;
 }
-export type Environment = { readonly node?: JsonObject; readonly item?: JsonValue; readonly vars: JsonObject; readonly records: readonly ExtractedRecord[]; readonly sources: Map<string, Source>; readonly graph?: JsonObject; };
+export type Environment = { readonly codeSupport?: ReadonlyMap<string, CodeSupportEvaluation>; readonly expressionSource?: Source; readonly sourceLink?: (source: Source) => Source; readonly node?: JsonObject; readonly item?: JsonValue; readonly vars: JsonObject; readonly records: readonly ExtractedRecord[]; readonly sources: Map<string, Source>; readonly graph?: JsonObject; };
 export function recordView(node: NodeDraft): JsonObject { return { ...node.attributes, id: node.id, kind: node.kind, name: node.name }; }
 export function addSources(env: Environment, sources: readonly Source[]): void {
     for (const source of sources) env.sources.set(`${source.path}#${source.pointer}`, source);
@@ -41,6 +43,16 @@ export function evaluate(expression: JsonValue | undefined, env: Environment): J
     const list = (): readonly JsonValue[] => array(expr["values"]);
     switch (op) {
         case "literal": return expr["value"];
+        case "codeSupport": {
+            const rule = expr["rule"];
+            const result = typeof rule === "string" ? env.codeSupport?.get(rule) : undefined;
+            if (!env.node || !result) {
+                const source = env.expressionSource;
+                throw new DataInputError(source?.path ?? "<lens>", source?.line ?? 1, `${source?.pointer ?? ""}: ${!env.node ? "codeSupport requires a current node" : `Unknown or unavailable codeSupport rule ${String(rule)}`}`);
+            }
+            addSources(env, result.sources);
+            return result.value;
+        }
         case "get": {
             const from = string(expr["from"]);
             const path = array(expr["path"]);
