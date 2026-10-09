@@ -33,23 +33,25 @@ export function prepareRecords(base: readonly ExtractedRecord[], config: JsonObj
     return { ...resolved, records };
 }
 function resolveLayered(records: readonly ExtractedRecord[]) {
-    const groups = new Map<string | undefined, ExtractedRecord[]>();
+    const groups = new Map<string, { readonly namespace: string | undefined; readonly records: ExtractedRecord[]; }>();
     for (const record of records) {
         const layer = typeof record.node.attributes["layer"] === "string" ? record.node.attributes["layer"] : undefined;
-        const group = groups.get(layer) ?? [];
-        group.push(record); groups.set(layer, group);
+        const namespace = typeof record.node.attributes["identityNamespace"] === "string" ? record.node.attributes["identityNamespace"] : layer;
+        const key = canonicalJson([layer ?? null, namespace ?? null]);
+        const group = groups.get(key) ?? { namespace, records: [] };
+        group.records.push(record); groups.set(key, group);
     }
     const nodes: NodeDraft[] = [], edges: Edge[] = [], diagnostics: ReferenceDiagnostic[] = [];
-    for (const [layer, group] of groups) {
+    for (const { namespace, records: group } of groups.values()) {
         const originals = new Map(group.map(record => [canonicalJson(record.node.sources), record]));
         const inputs = group.map(record => {
             const originalId = record.node.attributes["originalId"] ?? record.node.attributes["id"];
-            const id = layer !== undefined && typeof originalId === "string" ? originalId : layer !== undefined && record.node.id.startsWith(`${layer}:`) ? record.node.id.slice(layer.length + 1) : record.node.id;
-            const { layer: _layer, originalId: _originalId, ...attributes } = record.node.attributes;
-            return { ...record, node: { ...record.node, id, attributes: record.references === false ? {} : layer === undefined ? record.node.attributes : attributes } };
+            const id = namespace !== undefined && typeof originalId === "string" ? originalId : namespace !== undefined && record.node.id.startsWith(`${namespace}:`) ? record.node.id.slice(namespace.length + 1) : record.node.id;
+            const { layer: _layer, originalId: _originalId, identityNamespace: _namespace, ...attributes } = record.node.attributes;
+            return { ...record, node: { ...record.node, id, attributes: record.references === false ? {} : namespace === undefined ? record.node.attributes : attributes } };
         });
         const resolved = resolveRecords(inputs);
-        const qualify = (id: string): string => layer === undefined ? id : `${layer}:${id}`;
+        const qualify = (id: string): string => namespace === undefined ? id : `${namespace}:${id}`;
         for (const node of resolved.nodes) {
             const original = originals.get(canonicalJson(node.sources));
             if (!original) throw new GraphInputError(node.id, "Missing original record");

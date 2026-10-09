@@ -9,8 +9,8 @@ import { extractYamlDocument } from "../adapters/yaml.js";
 import { extractJson } from "../adapters/json.js";
 import type { ExtractedRecord, SourceInput } from "../adapters/types.js";
 
-export type LensSelection = { readonly idField?: string; readonly nameField?: string; readonly files: readonly string[]; readonly records?: string; readonly kindField?: string; readonly layer?: string; readonly references?: boolean; };
-export type LensKind = { readonly selections?: readonly LensSelection[]; readonly kindField?: string; readonly layer?: string; readonly references?: boolean; readonly id: string; readonly label: string; readonly files: readonly string[]; readonly records?: string; readonly idField?: string; readonly nameField?: string; readonly columns?: readonly string[]; readonly hidden?: boolean; };
+export type LensSelection = { readonly namespaceFrom?: string; readonly idField?: string; readonly nameField?: string; readonly files: readonly string[]; readonly records?: string; readonly kindField?: string; readonly layer?: string; readonly references?: boolean; };
+export type LensKind = { readonly namespaceFrom?: string; readonly selections?: readonly LensSelection[]; readonly kindField?: string; readonly layer?: string; readonly references?: boolean; readonly id: string; readonly label: string; readonly files: readonly string[]; readonly records?: string; readonly idField?: string; readonly nameField?: string; readonly columns?: readonly string[]; readonly hidden?: boolean; };
 export type Lens = { readonly name: string; readonly kinds: readonly LensKind[]; readonly config: JsonObject; };
 function boolean(value: JsonValue): boolean { if (typeof value !== "boolean") throw new Error("Lens expected a boolean"); return value; }
 function lensRecord(input: SourceInput): ExtractedRecord | undefined {
@@ -24,6 +24,7 @@ export function parseLens(input: SourceInput): Lens {
         return {
             id: string(kind["id"]), label: string(kind["label"]), files: array(kind["files"]).map(string),
             ...(kind["kindField"] === undefined ? {} : { kindField: string(kind["kindField"]) }),
+            ...(kind["namespaceFrom"] === undefined ? {} : { namespaceFrom: string(kind["namespaceFrom"]) }),
             ...(kind["layer"] === undefined ? {} : { layer: string(kind["layer"]) }),
             ...(kind["references"] === undefined ? {} : { references: boolean(kind["references"]) }),
             ...(kind["selections"] === undefined ? {} : {
@@ -35,6 +36,7 @@ export function parseLens(input: SourceInput): Lens {
                         ...(selection["nameField"] === undefined ? {} : { nameField: string(selection["nameField"]) }),
                         ...(selection["records"] === undefined ? {} : { records: string(selection["records"]) }),
                         ...(selection["kindField"] === undefined ? {} : { kindField: string(selection["kindField"]) }),
+                        ...(selection["namespaceFrom"] === undefined ? {} : { namespaceFrom: string(selection["namespaceFrom"]) }),
                         ...(selection["layer"] === undefined ? {} : { layer: string(selection["layer"]) }),
                         ...(selection["references"] === undefined ? {} : { references: boolean(selection["references"]) }),
                     };
