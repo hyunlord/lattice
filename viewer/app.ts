@@ -1,6 +1,7 @@
 import type { Node as GraphNode, Edge, Facet, Finding, Source, Snapshot } from '../dist/core/model.js';
 import { renderExplore } from './explore.js';
-import { object, parseGraph, parsePresentation, parseSnapshots, matrixData, type BrowserGraph, type Presentation } from './data.js';
+import { renderViews } from './views.js';
+import { object, parseGraph, parsePresentation, parseSnapshots, type BrowserGraph, type Presentation } from './data.js';
 function required<T extends Element>(value: T | null): T { if (!value) throw new Error('Required viewer element is missing'); return value; }
 function errorMessage(error: unknown): string { return error instanceof Error ? error.message : String(error); }
 const main = required(document.querySelector<HTMLElement>('#main'));
@@ -54,7 +55,7 @@ let allVisibleNodes: GraphNode[];
 let activeLayer = '';
 let snapshots: Snapshot[] = [];
 let renderVersion = 0;
-let disposeExplore: (() => void) | undefined;
+let disposeScreen: (() => void) | undefined;
 const snapshotGraphs = new Map<string, BrowserGraph>();
 const layerOf = (node: GraphNode) => String(node.attributes['layer'] ?? '');
 const layerLabel = (layer: string) => (Array.isArray(presentation.layers) ? presentation.layers.find(item => item.id === layer)?.label : presentation.layers?.[layer]?.label) || layer || '층 미지정';
@@ -213,48 +214,14 @@ function detail(id: string) {
     const findings = section('관련 발견'); for (const finding of related) findings.append(findingView(finding)); if (!related.length) findings.append(empty('이 노드를 대상으로 한 발견은 없습니다.')); main.append(findings);
     const edges = graph.edges.filter(edge => edge.source === id || edge.target === id); if (edges.length) { const neighbors = section('연결된 노드'); const list = el('ul', undefined, 'neighbors'); for (const edge of edges) { const target = edge.source === id ? edge.target : edge.source; const row = el('li'); row.append(el('span', (edge.source === id ? '→ ' : '← ') + (edge.attributes?.['label'] || edge.kind || edge.field) + ' · '), link(nodes.get(target)?.name || target, nodeHref(target))); if (nodes.has(target) && layerOf(nodes.get(target) ?? node) !== layerOf(node)) row.append(el('span', ' · ' + layerLabel(layerOf(nodes.get(target) ?? node)), 'badge')); list.append(row); } neighbors.append(list); main.append(neighbors); }
 }
-function matrix(id: string, params: URLSearchParams) {
-    const views = (graph.views || []).filter(view => view.type === 'matrix');
-    let decoded; try { decoded = decodeURIComponent(id); } catch { decoded = ''; }
-    const view = views.find(view => view.id === decoded) || (!id ? views[0] : undefined);
-    pageHeading(view?.label || '영향 행렬', view?.description || '행에서 열로 향하는 연결을 확인합니다.');
-    if (!view) { main.append(empty(id ? '요청한 행렬이 없습니다. 다른 보기를 선택하세요.' : '이 그래프에는 행렬 보기가 없습니다.')); if (id) main.append(link('행렬 목록', routeHref('/views'))); return; }
-    const controls = el('div', undefined, 'filters');
-    const selector = selectControl('보기', 'view', views.map(item => [item.id, item.label]), view.id);
-    required(selector.querySelector('select')).addEventListener('change', event => { if (!(event.target instanceof HTMLSelectElement)) return; location.hash = routeHref('/views/' + encodeURIComponent(event.target.value)); }); controls.append(selector); main.append(controls);
-    const query = matrixData(view.query);
-    const directed = query.directed;
-    const allowed = (id: string) => { const node = nodes.get(id); return node !== undefined && layerOf(node) === activeLayer; };
-    const cells = query.cells.map(cell => directed ? cell : { ...cell, nodeIds: cell.nodeIds.filter(allowed), count: cell.nodeIds.filter(allowed).length }).filter(cell => directed || cell.count > 0);
-    const rows = directed ? query.rows.filter(allowed) : [...new Set(cells.map(cell => display(cell.row)))];
-    const columns = directed ? query.columns.filter(allowed) : [...new Set(cells.map(cell => display(cell.column)))];
-    if (!rows.length || !columns.length) { main.append(empty('선택한 층에는 이 행렬의 입력 노드가 없습니다. 데이터 층을 바꿔 보세요.')); return; }
-    const table = el('table', undefined, 'matrix'); table.append(el('caption', `${rows.length}행 × ${columns.length}열 · ${directed ? '행 → 열 방향. 숫자는 연결 수이며 선택하면 근거가 표시됩니다.' : '숫자는 해당 분류의 노드 수입니다.'}`));
-    const head = el('thead'); const header = el('tr'); const corner = el('th', '출발 ↓ / 도착 →'); corner.scope = 'col'; header.append(corner);
-    for (const column of columns) { const th = el('th'); th.scope = 'col'; th.append(directed ? link(nodes.get(column)?.name || column, nodeHref(column)) : el('span', column)); header.append(th); } head.append(header); table.append(head);
-    const body = el('tbody');
-    for (const row of rows) {
-        const tr = el('tr'); const title = el('th'); title.scope = 'row'; title.append(directed ? link(nodes.get(row)?.name || row, nodeHref(row)) : el('span', row)); tr.append(title);
-        for (const column of columns) {
-            const matches = cells.filter(cell => directed ? cell.source === row && cell.target === column : display(cell.row) === row && display(cell.column) === column);
-            const td = el('td'); const count = matches.reduce((sum, cell) => sum + (directed ? cell.edgeIds?.length || 1 : cell.count || 0), 0);
-            if (count) { const queryParams = { row, column }; const cellLink = link(String(count), routeHref('/views/' + encodeURIComponent(view.id), queryParams), 'matrix-cell'); cellLink.setAttribute('aria-label', `${directed ? nodes.get(row)?.name : row} → ${directed ? nodes.get(column)?.name : column}: ${count}`); td.append(cellLink); } else { td.textContent = '—'; td.className = 'muted'; } tr.append(td);
-        } body.append(tr);
-    }
-    table.append(body); const region = el('div', undefined, 'table-region'); region.tabIndex = 0; region.setAttribute('role', 'region'); region.setAttribute('aria-label', '영향 행렬, 가로로 스크롤할 수 있습니다'); region.append(table); main.append(el('p', '표를 가로로 스크롤해 도착 노드를 확인하세요. 숫자를 선택하면 연결의 근거가 나타납니다.', 'meta'), region);
-    const row = params.get('row'), column = params.get('column');
-    if (row && column) {
-        const detail = section('선택한 연결');
-        const selected = cells.filter(cell => directed ? cell.source === row && cell.target === column : display(cell.row) === row && display(cell.column) === column);
-        if (!selected.length) detail.append(empty('이 칸에는 연결이 없습니다.'));
-        for (const cell of selected) {
-            if (directed) {
-                detail.append(link(nodes.get(row)?.name || row, nodeHref(row)), el('span', ' → '), link(nodes.get(column)?.name || column, nodeHref(column)), el('p', display(cell.label ?? '')));
-                for (const edgeId of cell.edgeIds || []) { const edge = graph.edges.find(edge => edge.id === edgeId); if (edge) { detail.append(el('p', edge.attributes?.['label'] || edge.kind), sources(edge.sources)); } }
-            } else { const list = el('ul', undefined, 'neighbors'); for (const nodeId of cell.nodeIds || []) { const li = el('li'); li.append(link(nodes.get(nodeId)?.name || nodeId, nodeHref(nodeId))); list.append(li); } detail.append(list); }
-        } main.append(detail);
-    }
-    if (view.sources?.length) { const provenance = el('details', undefined, 'panel section'); provenance.append(el('summary', '행렬 출처'), sources(view.sources)); main.append(provenance); }
+function views(id: string, params: URLSearchParams) {
+    const visibleIds = new Set(visibleNodes.map(node => node.id));
+    disposeScreen = renderViews(main, {
+        views: graph.views, nodes: visibleNodes,
+        edges: graph.edges.filter(edge => visibleIds.has(edge.source) && visibleIds.has(edge.target)),
+        id, params, heading: pageHeading, kindLabel, nodeHref, sources,
+        href: (viewId, values) => routeHref('/views/' + encodeURIComponent(viewId), values),
+    });
 }
 function semantic(value: unknown, record = true): unknown {
     if (Array.isArray(value)) return value.map(item => semantic(item, false));
@@ -332,7 +299,7 @@ async function changes(params: URLSearchParams, version: number) {
 
 function render() {
     const version = ++renderVersion;
-    disposeExplore?.(); disposeExplore = undefined;
+    disposeScreen?.(); disposeScreen = undefined;
     main.replaceChildren();
     const [path = '/home', search = ''] = (location.hash.slice(1) || '/home').split('?');
     const params = new URLSearchParams(search);
@@ -343,7 +310,7 @@ function render() {
     visibleNodes = allVisibleNodes.filter(node => layerOf(node) === activeLayer);
     const route = path === '/explore' ? 'explore' : path.startsWith('/views') ? 'views' : path.startsWith('/changes') ? 'changes' : path === '/home' ? 'home' : 'list';
     document.querySelectorAll<HTMLAnchorElement>('[data-route]').forEach(item => { item.href = routeHref('/' + item.dataset['route']); if (item.dataset['route'] === route) item.setAttribute('aria-current', 'page'); else item.removeAttribute('aria-current'); });
-    if (path === '/home') home(); else if (path === '/explore') { pageHeading('관계 탐색', '종류와 분류로 좁히고, 방향 경로와 이웃을 따라 출처까지 탐색합니다.'); layerControl(); const visibleIds = new Set(visibleNodes.map(node => node.id)); disposeExplore = renderExplore(main, { nodes: visibleNodes, edges: graph.edges.filter(edge => visibleIds.has(edge.source) && visibleIds.has(edge.target)), facets: graph.facets.filter(facet => visibleIds.has(facet.nodeId)), params, kindLabel, facetLabel, valueLabel, nodeHref, href: values => routeHref('/explore', values) }); } else if (path === '/list') listing(params); else if (path.startsWith('/views')) matrix(path.slice(7), params); else if (path.startsWith('/changes')) changes(params, version); else if (path.startsWith('/node/')) { try { detail(decodeURIComponent(path.slice(6))); } catch { pageHeading('잘못된 노드 주소'); main.append(link('목록으로 돌아가기', listHref())); } } else { pageHeading('화면을 찾을 수 없습니다'); main.append(link('홈으로 돌아가기', routeHref('/home'))); }
+    if (path === '/home') home(); else if (path === '/explore') { pageHeading('관계 탐색', '종류와 분류로 좁히고, 방향 경로와 이웃을 따라 출처까지 탐색합니다.'); const visibleIds = new Set(visibleNodes.map(node => node.id)); disposeScreen = renderExplore(main, { nodes: visibleNodes, edges: graph.edges.filter(edge => visibleIds.has(edge.source) && visibleIds.has(edge.target)), facets: graph.facets.filter(facet => visibleIds.has(facet.nodeId)), params, kindLabel, facetLabel, valueLabel, nodeHref, href: values => routeHref('/explore', values) }); } else if (path === '/list') listing(params); else if (path.startsWith('/views')) views(path.slice(7), params); else if (path.startsWith('/changes')) changes(params, version); else if (path.startsWith('/node/')) { try { detail(decodeURIComponent(path.slice(6))); } catch { pageHeading('잘못된 노드 주소'); main.append(link('목록으로 돌아가기', listHref())); } } else { pageHeading('화면을 찾을 수 없습니다'); main.append(link('홈으로 돌아가기', routeHref('/home'))); }
     document.title = `${main.querySelector('h1')?.textContent || '지도'} · Lattice`;
     main.querySelector('h1')?.focus({ preventScroll: true });
 }

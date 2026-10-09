@@ -15,3 +15,19 @@
 .explore-map svg.explore-kind-sample { display:inline-block; width:40px; height:40px; min-height:0; border:0; vertical-align:middle; margin-right:var(--space-2); }
 
 .explore-group-row>a { flex:1 0 120px; } .explore-group-row>span { overflow-wrap:anywhere; } @media(max-width:639px) { .explore-group-row { align-items:flex-start; flex-direction:column; gap:var(--space-1); } .explore-group-row>a { flex:none; width:100%; } .explore-group-row>span { width:100%; } }
+
+/* Generic view templates share the workbench table and evidence tokens. */
+.view-controls label { min-width: 0; max-width: 100%; }
+.view-controls select { max-width: 100%; }
+.view-axis-pages { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-4); }
+.view-axis-pages h3 { margin-bottom: var(--space-1); }
+.view-evidence { padding-left: var(--space-5); }
+.view-evidence li { padding-block: var(--space-3); border-bottom: 1px solid var(--border); overflow-wrap: anywhere; }
+.view-distribution { min-width: 0; width: 100%; }
+.view-distribution th { overflow-wrap: anywhere; }
+.view-distribution td:last-child { min-width: 8rem; width: 40%; }
+.view-bar { display: block; height: var(--space-2); margin-top: var(--space-1); background: var(--surface-active); border: 1px solid var(--border); }
+.view-bar > span { display: block; height: 100%; background: var(--accent); }
+.view-data-table { min-width: var(--table-min-width); }
+.view-data-table td { white-space: pre-wrap; overflow-wrap: anywhere; }
+@media (max-width: 639px) { .view-axis-pages { grid-template-columns: 1fr; } .view-distribution th { max-width: 8rem; } }
