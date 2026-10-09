@@ -3,7 +3,7 @@ import type { Edge, NodeDraft, Source } from "../core/model.js";
 import { DataInputError, pointerToken, type ExtractedRecord } from "./types.js";
 
 export type ReferenceDiagnostic = {
-    readonly code: "duplicate-id" | "ambiguous-reference" | "unresolved-reference";
+    readonly code: "duplicate-id" | "ambiguous-reference" | "unresolved-reference" | "external-reference";
     readonly value: string;
     readonly source: Source;
 };
@@ -28,6 +28,15 @@ function strings(value: JsonValue, visit: (value: string, pointer: string, key: 
     else if (value !== null && typeof value === "object") {
         for (const [name, child] of Object.entries(value)) strings(child, visit, `${pointer}/${pointerToken(name)}`, name);
     }
+}
+function isExternalReference(value: string): boolean {
+    if (/[\s\\]/u.test(value) || /%(?![\da-f]{2})/iu.test(value)) return false;
+    const authority = /^(?:https?:)?\/\/([^/?#]+)(?:[/?#]|$)/iu.exec(value)?.[1];
+    if (authority !== undefined) {
+        return /^(?:[^@]+@)?(?:\[[\da-f:.]+\]|[\p{L}\p{N}._~-]+)(?::\d+)?$/iu.test(authority);
+    }
+    return /^mailto:[^@/?#]+@[^@/?#]+(?:\?[^#]*)?$/iu.test(value)
+        || /^tel:\+?[\d().-]*\d[\d().-]*(?:;[^?#]+)?$/iu.test(value);
 }
 export function resolveRecords(records: readonly ExtractedRecord[], knownNodes: readonly NodeDraft[] = []): ResolvedRecords {
     if (records.length > 100_000) throw new DataInputError("<records>", 1, "Input exceeds the 100,000 record limit");
@@ -85,7 +94,7 @@ export function resolveRecords(records: readonly ExtractedRecord[], knownNodes: 
                 if (target === undefined) throw new Error("Missing target record ID");
                 edges.push({ id: `reference:${canonicalJson([id, target, pointer])}`, kind: pointer, source: id, target, directed: true, field: pointer, sources: [source] });
             } else if (count > 1) diagnostics.push({ code: "ambiguous-reference", value, source });
-            else if (/Ids?$/u.test(key)) diagnostics.push({ code: "unresolved-reference", value, source });
+            else if (/Ids?$/u.test(key)) diagnostics.push({ code: isExternalReference(value) ? "external-reference" : "unresolved-reference", value, source });
         });
     }
     return {

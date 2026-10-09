@@ -42,6 +42,8 @@ Discover tracked and eligible untracked files respecting git ignores, plus expli
 
 After collecting all nodes, recursively inspect scalar field values. Exact matches to known node aliases yield edges named by field path; arrays include precise originating pointer. No substring matches. With no lens, unresolved `*Id`/`*Ids` fields and broken relative links yield inferred-reference diagnostics; arbitrary unmatched prose does not. Distinguish unresolved external references from internal broken ones. Re-resolve references after additions/deletions, even for unchanged parse shards.
 
+For data references, known aliases take precedence over locator syntax, including URL-shaped node IDs. An unmatched ID field containing an explicit HTTP(S), protocol-relative, mailto or tel locator yields `external-reference`; it is recorded without fetching the address or creating a placeholder node. Other unmatched ID values retain `unresolved-reference`. Opaque namespaces such as `service:missing` do not prove external ownership. This distinction describes syntax and resolution within the selected input scope, not network reachability or proof that an excluded target does not exist elsewhere. Duplicate/ambiguous IDs keep their own diagnostics.
+
 ## Lens v1 contract
 
 `.lattice/lens.yaml` is JSON-compatible declarative YAML, validated before scanning. Top-level fields: `schemaVersion`, `name`, `description`, `include`, `exclude`, `kinds`, `derived`, `synthetics`, `edges`, `facets`, `codeLinks`, `views`, `findings`, optional `presentation`. Reject unknown fields and invalid cross-references with path/line diagnostics. `presentation` allows labels/descriptions, kind order and one accent only.

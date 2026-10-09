@@ -61,6 +61,37 @@ test('duplicate aliases are disambiguated without choosing an arbitrary referenc
     assert.deepEqual(lattice.resolveRecords([...records].reverse()), result);
 });
 
+test('reference diagnostics distinguish explicit external locators after exact and ambiguous IDs', () => {
+    const records = lattice.extractJson(input('references.json', JSON.stringify([
+        {
+            id: 'source', note: 'https://known.example/id', nested: {
+                targetIds: [
+                    'https://external.example/item', '//external.example/item', 'mailto:help@example.com', 'tel:+1234567',
+                    'core:missing', 'missing', 'https:garbage', 'https://', 'https://duplicate.example/id',
+                ]
+            }
+        },
+        { id: 'https://known.example/id' },
+        { id: 'https://duplicate.example/id' },
+        { id: 'https://duplicate.example/id' },
+    ])));
+    const result = lattice.resolveRecords(records);
+    assert.deepEqual(result.edges.map(({ source, target, field }) => ({ source, target, field })), [
+        { source: 'source', target: 'https://known.example/id', field: '/note' },
+    ]);
+    const references = result.diagnostics.filter(({ code }) => code !== 'duplicate-id');
+    assert.deepEqual(references.map(({ code, source }) => [source.pointer, code]).sort(), [
+        ...[0, 1, 2, 3].map(index => [`/0/nested/targetIds/${index}`, 'external-reference']),
+        ...[4, 5, 6, 7].map(index => [`/0/nested/targetIds/${index}`, 'unresolved-reference']),
+        ['/0/nested/targetIds/8', 'ambiguous-reference'],
+    ]);
+    assert.ok(references.every(({ source }) => source.path === 'references.json' && source.line === 1));
+    assert.deepEqual(lattice.resolveRecords([...records].reverse()), result);
+    const disabled = lattice.resolveRecords(records.map(record => ({ ...record, references: false })));
+    assert.equal(disabled.edges.length, 0);
+    assert.ok(disabled.diagnostics.every(({ code }) => code === 'duplicate-id'));
+});
+
 test('source boundaries reject traversal, invalid digests and oversized UTF-8 text', () => {
     for (const extract of [lattice.extractJson, lattice.extractCsv]) {
         assert.throws(() => extract(input('../outside.json', '{}')), { name: 'DataInputError' });
