@@ -1,4 +1,5 @@
 import { verifyHistory } from './history-smoke.mjs';
+import { verifyIncremental } from './incremental-smoke.mjs';
 import { fileURLToPath } from 'node:url';
 import assert from 'node:assert/strict';
 import { execFileSync, spawnSync } from 'node:child_process';
@@ -90,4 +91,5 @@ try {
   assert.equal(check().status, 2);
   console.log('Installed check: pass=0, edited input fail=1, unknown evidence=1, invalid config=2.');
   verifyHistory(cli, join(temporary, 'history'));
+  verifyIncremental(cli, join(temporary, 'incremental'));
 } finally { rmSync(temporary, { recursive: true, force: true }); }

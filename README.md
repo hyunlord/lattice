@@ -28,6 +28,8 @@ node bin/lattice.mjs diff HEAD~1 --root /path/to/repository --json
 
 `diff <ref>` compares a Git commit with current files, including uncommitted additions, edits and deletions. It reads Git objects without checking out the reference. Text output lists changed identities; `--json` returns full before/after records. Historical lenses are preserved, and using a current lens on an older tree is explicitly labeled. Clean builds and comparisons retain commit snapshots; export includes their catalog and graphs. See [history evidence and limits](docs/review/l1-history.md).
 
+Builds reuse raw per-file extraction when content, path, selection and adapter implementation match. Every build still verifies file contents and recomputes references and lens results. CLI counters show parsed/reused files; `.lattice/cache/build.json` and `inputs.json` record the latest counters and input manifest. See [incremental build verification](docs/review/l1-incremental.md).
+
 Use [the bs-mobile lens](examples/bs-mobile/lens.json) for that repository, or a JSON lens with your own file patterns and rules. Serve the export directory with a static HTTP server. Installed packages provide the `lattice` command. Git is required. Without a lens, build discovers JSON, CSV, Markdown and code files, extracts records/headings/ADR metadata and resolves references/document links plus static JS/TS/Python imports. A default `.lattice/lens.json` is used when present. Explicit lenses limit input to their patterns. Other recognized code languages provide file-only modules. YAML and optional Graft import are still pending. See [document extraction evidence and limits](docs/review/l1-markdown.md).
 
 [Open the published bs-mobile map](https://hyunlord.github.io/bs-mobile/).

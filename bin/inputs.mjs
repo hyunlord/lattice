@@ -7,7 +7,7 @@ export function inside(root, path) {
   return offset !== '..' && !offset.startsWith(`..${sep}`) && !isAbsolute(offset);
 }
 
-export function collectInputs({ paths, readText, lens, digest, sourceLink }) {
+export function collectInputs({ paths, readText, lens, digest, sourceLink, cache }) {
   const records = [], documents = [], modules = [], files = [], inputs = [], diagnostics = [];
   for (const path of paths) {
     if (/^(?:\.lattice|\.omo|\.omx|\.codex|\.agents|\.git)\//u.test(path)) continue;
@@ -25,13 +25,14 @@ export function collectInputs({ paths, readText, lens, digest, sourceLink }) {
     if (text === undefined) continue;
     const input = { path, text, contentHash: digest(text) };
     inputs.push({ path, contentHash: input.contentHash });
+    const extract = parse => cache.extract(input, { format, selector: format === 'json' ? kind?.records ?? '' : '' }, parse);
     if (format === 'code') {
-      const module = extractCode(input);
+      const module = extract(() => extractCode(input));
       modules.push({ ...module, node: { ...module.node, sources: module.node.sources.map(sourceLink) }, imports: module.imports.map(reference => ({ ...reference, source: sourceLink(reference.source) })) });
       continue;
     }
     if (format === 'md' || format === 'markdown') {
-      const doc = extractMarkdown(input);
+      const doc = extract(() => extractMarkdown(input));
       documents.push({
         nodes: doc.nodes.map(node => ({ ...node, sources: node.sources.map(sourceLink) })),
         edges: doc.edges.map(edge => ({ ...edge, sources: edge.sources.map(sourceLink) })),
@@ -41,7 +42,7 @@ export function collectInputs({ paths, readText, lens, digest, sourceLink }) {
     }
     let extracted;
     try {
-      extracted = format === 'csv' ? extractCsv(input) : extractJson(input, kind?.records ?? '');
+      extracted = extract(() => format === 'csv' ? extractCsv(input) : extractJson(input, kind?.records ?? ''));
     } catch (error) {
       if (lens || !(error instanceof DataInputError)) throw error;
       diagnostics.push({ code: 'unparsed-file', path, line: error.line, message: error.reason });
