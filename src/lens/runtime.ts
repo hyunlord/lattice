@@ -22,6 +22,11 @@ export function comparable(value: RuntimeValue): value is JsonValue {
 function equal(left: RuntimeValue, right: RuntimeValue): boolean {
     return comparable(left) && comparable(right) && canonicalJson(left) === canonicalJson(right);
 }
+function finiteKey(value: JsonValue): boolean {
+    if (typeof value === "number") return Number.isFinite(value);
+    if (Array.isArray(value)) return value.every(finiteKey);
+    return !isObject(value) || Object.values(value).every(finiteKey);
+}
 function valueKey(value: RuntimeValue): string {
     if (value === undefined) return "missing";
     if (Array.isArray(value)) return `array:${JSON.stringify(value.map(valueKey))}`;
@@ -140,6 +145,31 @@ export function evaluate(expression: JsonValue | undefined, env: Environment): R
             return evaluate(expr["value"], { ...env, vars });
         }
         case "unique": { const value = run(expr["value"]); return Array.isArray(value) ? [...new Map(value.map(child => [valueKey(child), child])).values()] : undefined; }
+        case "groupBy": {
+            const input = run(expr["input"]);
+            if (!isRuntimeArray(input)) return undefined;
+            const groups = new Map<string, { readonly key: JsonValue; readonly items: RuntimeValue[]; }>();
+            for (const item of input) {
+                const key = evaluate(expr["key"], { ...env, item });
+                if (!comparable(key) || !finiteKey(key)) return undefined;
+                const encoded = canonicalJson(key);
+                const group = groups.get(encoded);
+                if (group) group.items.push(item);
+                else groups.set(encoded, { key, items: [item] });
+            }
+            return [...groups.entries()].sort(([left], [right]) => left < right ? -1 : left > right ? 1 : 0).map(([, group]) => group);
+        }
+        case "join": {
+            const separator = string(expr["separator"]);
+            const input = run(expr["input"]);
+            if (!isRuntimeArray(input)) return undefined;
+            const values: string[] = [];
+            for (const item of input) {
+                if (item === undefined || typeof item === "object" && item !== null || typeof item === "number" && !Number.isFinite(item)) return undefined;
+                values.push(String(item));
+            }
+            return values.join(separator);
+        }
         case "filter": case "map": case "any": case "all": {
             const input = run(expr["input"]);
             if (!Array.isArray(input)) return op === "any" || op === "all" ? false : undefined;

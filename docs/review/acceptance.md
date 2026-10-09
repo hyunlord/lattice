@@ -88,3 +88,5 @@ L1 unified graph: [mixed installed CLI and actual repository evidence](l1-unifie
 L1 input scope: [installed CLI and actual manifest projection](l1-input-scope.md) verifies top-level include/exclude for ordinary and code-support inputs. L1-06 remains pending for full schema/expression compliance.
 
 L1 expression correctness: [missing-value propagation and classification evidence](l1-expression-missing.md) verifies missing/null distinctions and nonvacuous all through real CLI findings. Remaining expression operators and full L1-06/07 acceptance stay pending.
+
+L1 collection expressions: [installed ownership and real repository grouping](l1-collections.md) proves groupBy/join composition in findings and export. L1-06/07 remain pending for source provenance and remaining contracts.

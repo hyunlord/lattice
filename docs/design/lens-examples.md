@@ -304,3 +304,11 @@ Missing is an internal value distinct from authored JSON `null`. Wildcard reads,
 Equality, inequality, membership and lookup do not turn absent values into null matches. Equality or inequality involving missing data is false, including nested missing array/object members. Membership compares each candidate independently, so an authored null can still match a null in a collection that also contains missing members. Explicit null remains a comparable literal. `all` requires a nonempty array; `any` and `all` return false for a missing input. Thus an absent operation cannot prove a non-stat implementation, and an empty effect list cannot prove all effects are implemented. Missing results from map/filter remain missing rather than becoming empty successful collections.
 
 Numeric `sum` retains its existing finite-number-only contract. Complete aggregation coverage reporting and the remaining expression operators have separate acceptance work; this change does not claim those requirements complete.
+
+## Collection grouping and scalar joining
+
+`groupBy` evaluates `input` once, then evaluates `key` with each member bound to `item` while preserving the outer `node` and variables. Its result is an array of `{key, items}` groups. Keys retain their JSON types, so the number `1` and string `"1"` are distinct; keys sort by canonical JSON text, and members retain input order. Empty input yields `[]`. Missing/non-array input or any key containing missing/non-finite data yields missing for the whole result instead of dropping members or merging missing with null.
+
+`join` evaluates `input` and uses a literal string `separator`. Strings, finite numbers, booleans and explicit null become their string representations (`null` becomes `"null"`). Empty input produces `""`. Missing/non-array input or an array/object/missing/non-finite member produces missing, never implicit `[object Object]` text. An invalid separator is a configuration error.
+
+Both operators compose with derived fields, map, findings and existing view expressions; they do not add domain-specific groupings or screens.
