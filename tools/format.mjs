@@ -9,11 +9,11 @@ async function sources(directory) {
   for (const entry of await readdir(directory, { withFileTypes: true })) {
     const path = resolve(directory, entry.name);
     if (entry.isDirectory()) files.push(...await sources(path));
-    else if (/\.(ts|mjs)$/.test(path)) files.push(path);
+    else if (/\.(ts|mts|mjs)$/.test(path)) files.push(path);
   }
   return files;
 }
-const files = (await Promise.all(['src', 'tests'].map(path => sources(resolve(root, path))))).flat();
+const files = (await Promise.all(['src', 'cli', 'viewer', 'browser', 'tests'].map(path => sources(resolve(root, path))))).flat();
 const texts = new Map(await Promise.all(files.map(async path => [path, await readFile(path, 'utf8')])));
 const host = {
   getScriptFileNames: () => files,

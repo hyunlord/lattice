@@ -10,3 +10,7 @@ dist/
 graft/
 site/
 .lattice/site/
+build/
+bin/*.mjs
+bin/live-client.js
+viewer/*.js

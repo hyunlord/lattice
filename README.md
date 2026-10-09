@@ -2,7 +2,7 @@
 
 A repository-neutral system map for people and agents. Deterministic extraction creates one graph for a static browser viewer and MCP tools; declarative lenses add repository-specific meaning.
 
-**Status: first published map is live; document-aware builds are available.** JSON/YAML/CSV/Markdown/code → optional declarative lens → CLI build/export → home/list/node detail. Full L1/L2 and later milestones remain pending. See [delivery scope and evidence](docs/review/first-published-map.md).
+**Status: first published map is live; document-aware builds are available.** JSON/YAML/CSV/Markdown/code → optional declarative lens → CLI build/export → home/list/node detail. L1 core and CLI are complete; full L2 and later milestones remain pending. See [delivery scope and evidence](docs/review/first-published-map.md).
 
 - [Original v0.1 brief](docs/design/brief-v0.1.md)
 - [Architecture and lens contract](docs/design/lattice-v0.md)
@@ -71,4 +71,4 @@ npm run test:package
 git diff --check
 ```
 
-Node >=20 is supported; CI runs Node 20, 22 and 24. The strict library test/format/typecheck pipeline is present; the remaining CLI commands are still L1 deliverables. bs-mobile integration is PR-only; Charter & Kin is read-only. No Graft implementation is copied. Licensed under MIT.
+Node >=20 is supported; CI runs Node 20, 22 and 24. The library, CLI, static viewer and live-refresh client are checked with strict TypeScript. Authored sources live in `src/`, `cli/`, `viewer/*.ts` and `browser/`; `npm run build` emits the existing `dist/`, `bin/` and `viewer/*.js` runtime paths. Generated JavaScript is included in npm packages and excluded from Git. `@types/node` supplies development-only Node 20 API declarations; browser builds use DOM types without Node globals. bs-mobile integration is PR-only; Charter & Kin is read-only. No Graft implementation is copied. Licensed under MIT.

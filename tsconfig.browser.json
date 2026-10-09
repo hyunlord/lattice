@@ -1,0 +1,18 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "rootDir": "browser",
+    "outDir": "bin",
+    "module": "None",
+    "moduleResolution": "Classic",
+    "moduleDetection": "legacy",
+    "lib": [
+      "ES2023",
+      "DOM"
+    ],
+    "declaration": false
+  },
+  "include": [
+    "browser/**/*.ts"
+  ]
+}
