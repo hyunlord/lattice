@@ -4,7 +4,7 @@ import { GraphInputError } from "../core/errors.js";
 import type { Edge, Source, View } from "../core/model.js";
 import type { ExtractedRecord } from "../adapters/types.js";
 export { prepareRecords } from "./records.js";
-import { addSources, array, evaluate, getPath, object, pathSegment, recordView, string } from "./runtime.js";
+import { addSources, array, comparable, evaluate, getPath, materializeValue, object, pathSegment, recordView, string } from "./runtime.js";
 import type { Environment } from "./runtime.js";
 
 export type LensContext = {
@@ -34,7 +34,7 @@ function targetRecord(context: LensContext, rule: JsonObject, alias: JsonValue, 
         if (!matchesQuery(query, environment(context, candidate))) return false;
         if (field.length === 1 && field[0] === "id") return candidate.node.id === alias || candidate.node.attributes["id"] === alias || candidate.node.attributes["originalId"] === alias;
         const value = getPath(recordView(candidate.node), field);
-        return value !== undefined && canonicalJson(value) === canonicalJson(alias);
+        return comparable(value) && canonicalJson(value) === canonicalJson(alias);
     });
     if (candidates.length !== 1) throw new GraphInputError(pointer, `${candidates.length ? "Ambiguous" : "Unknown"} edge target ${canonicalJson(alias)}`);
     const target = candidates[0];
@@ -43,8 +43,10 @@ function targetRecord(context: LensContext, rule: JsonObject, alias: JsonValue, 
 }
 function matrixEdges({ context, rule, record, env, pointer }: { readonly context: LensContext; readonly rule: JsonObject; readonly record: ExtractedRecord; readonly env: Environment; readonly pointer: string; }): readonly Edge[] {
     const matrix = object(rule["matrix"]), id = string(rule["id"]);
-    const ids = array(evaluate(matrix["ids"], env));
-    const rows = array(evaluate(matrix["cells"], env));
+    const evaluatedIds = evaluate(matrix["ids"], env), evaluatedRows = evaluate(matrix["cells"], env);
+    if (!comparable(evaluatedIds) || !comparable(evaluatedRows)) throw new GraphInputError(pointer, "Matrix expression produced a missing value");
+    const ids = array(evaluatedIds);
+    const rows = array(evaluatedRows);
     if (rows.length !== ids.length || new Set(ids.map(canonicalJson)).size !== ids.length) throw new GraphInputError(pointer, "Matrix requires distinct IDs and matching square cells");
     const targets = ids.map(alias => targetRecord(context, rule, alias, pointer));
     const result: Edge[] = [];
@@ -113,7 +115,7 @@ export function materializeViews(context: LensContext, edges: readonly Edge[]): 
         const evaluateValue = (expression: JsonValue | undefined, env: Environment): JsonValue => {
             const result = evaluate(expression, env);
             if (result === undefined) throw new GraphInputError(pointer, "View expression produced a missing value");
-            return result;
+            return materializeValue(result);
         };
         let data: JsonObject;
         switch (type) {
