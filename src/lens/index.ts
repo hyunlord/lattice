@@ -1,3 +1,4 @@
+import { evaluateGate } from "./gates.js";
 import { canonicalJson } from "../core/canonical.js";
 import type { JsonObject, JsonValue } from "../core/canonical.js";
 import type { NodeDraft, Source, Facet, Finding } from "../core/model.js";
@@ -163,7 +164,8 @@ export function applyLens(records: readonly ExtractedRecord[], lens: Lens, input
         if (severity !== "info" && severity !== "warning" && severity !== "error") throw new Error("Invalid finding severity");
         const basis = rule["basis"] ?? "computed";
         if (basis !== "computed" && basis !== "authored-interpretation" && basis !== "source-support") throw new Error("Invalid finding basis");
-        return { id: string(rule["id"]), ruleId: string(rule["id"]), severity, basis, targetIds: targets.map(record => record.node.id), metrics, message: string(rule["template"]).replace(/\{([^{}]+)\}/g, (_, key: string) => String(metrics[key] ?? "?")), sources: [...sources.values()], ...(typeof rule["intent"] === "string" ? { intent: rule["intent"] } : {}), ...(typeof rule["implementation"] === "string" ? { implementation: rule["implementation"] } : {}) };
+        const gate = evaluateGate(rule["gate"], metrics);
+        return { ...(gate ? { gate } : {}), id: string(rule["id"]), ruleId: string(rule["id"]), severity, basis, targetIds: targets.map(record => record.node.id), metrics, message: string(rule["template"]).replace(/\{([^{}]+)\}/g, (_, key: string) => String(metrics[key] ?? "?")), sources: [...sources.values()], ...(typeof rule["intent"] === "string" ? { intent: rule["intent"] } : {}), ...(typeof rule["implementation"] === "string" ? { implementation: rule["implementation"] } : {}) };
     });
     return { nodes: records.map(record => record.node), facets, findings, presentation: object(lens.config["presentation"] ?? {}) };
 }

@@ -1,6 +1,6 @@
 import { fileURLToPath } from 'node:url';
 import assert from 'node:assert/strict';
-import { execFileSync } from 'node:child_process';
+import { execFileSync, spawnSync } from 'node:child_process';
 import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
@@ -70,4 +70,22 @@ try {
   run(['export', site]);
   assert.equal(JSON.parse(readFileSync(join(site, 'graph.json'), 'utf8')).hash, first.hash);
   console.log('Installed zero-config JSON/CSV/Markdown/code build, cross-file references, ADR metadata, deterministic rebuild and export passed.');
+  const lens = { schemaVersion: 1, name: 'Service coverage', kinds: [{id:'service',label:'Service',files:['records.json']}], findings: [{id:'service-count',query:{kinds:['service']},metrics:{count:{op:'count',value:{op:'get',from:'vars',path:['targets']}}},template:'Services: {count}',gate:{metric:'count',comparator:'eq',threshold:2}}] };
+  const lensPath = join(repository, '.lattice/lens.json');
+  const saveLens = () => writeFileSync(lensPath, JSON.stringify(lens));
+  const check = () => spawnSync(process.execPath, [cli,'check','--root',repository], {encoding:'utf8'});
+  saveLens();
+  assert.equal(check().status, 0);
+  assert.equal(JSON.parse(readFileSync(graphPath,'utf8')).findings[0].gate.status, 'pass');
+  writeFileSync(join(repository, 'records.json'), '[{"id":"service:a","name":"API"}]');
+  assert.equal(check().status, 1);
+  assert.equal(JSON.parse(readFileSync(graphPath,'utf8')).findings[0].gate.status, 'fail');
+  lens.findings[0].metrics.count = {op:'get',from:'vars',path:['missing']};
+  saveLens();
+  assert.equal(check().status, 1);
+  assert.equal(JSON.parse(readFileSync(graphPath,'utf8')).findings[0].gate.status, 'unknown');
+  lens.findings[0].gate.threshold = 'two';
+  saveLens();
+  assert.equal(check().status, 2);
+  console.log('Installed check: pass=0, edited input fail=1, unknown evidence=1, invalid config=2.');
 } finally { rmSync(temporary, { recursive: true, force: true }); }
