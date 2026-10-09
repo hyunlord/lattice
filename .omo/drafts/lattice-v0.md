@@ -1,8 +1,8 @@
 ---
 slug: lattice-v0
-status: executing-l0
+status: executing-l1
 intent: clear
-pending-action: L0 independent review, documentation CI and PR; then L1
+pending-action: finish L1 foundation PR/CI, then adapters and lens implementation under issue 5
 approach: one graph, declarative lenses, generic viewer and shared MCP query service
 ---
 
