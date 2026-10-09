@@ -11,11 +11,12 @@ import type { JsonObject, JsonValue } from "../core/canonical.js";
 import type { NodeDraft, Source, Facet, Finding, Edge, View } from "../core/model.js";
 import { extractYamlDocument } from "../adapters/yaml.js";
 import { extractJson } from "../adapters/json.js";
+import { DataInputError } from "../adapters/types.js";
 import type { ExtractedRecord, SourceInput } from "../adapters/types.js";
 
 export type LensSelection = { readonly namespaceFrom?: string; readonly idField?: string; readonly nameField?: string; readonly files: readonly string[]; readonly records?: string; readonly kindField?: string; readonly layer?: string; readonly references?: boolean; };
 export type LensKind = { readonly namespaceFrom?: string; readonly selections?: readonly LensSelection[]; readonly kindField?: string; readonly layer?: string; readonly references?: boolean; readonly id: string; readonly label: string; readonly files: readonly string[]; readonly records?: string; readonly idField?: string; readonly nameField?: string; readonly columns?: readonly string[]; readonly hidden?: boolean; };
-export type Lens = { readonly name: string; readonly kinds: readonly LensKind[]; readonly config: JsonObject; readonly derived: DerivedPlan; readonly codeLinks: readonly CodeLinkRule[]; };
+export type Lens = { readonly include?: readonly string[]; readonly exclude?: readonly string[]; readonly name: string; readonly kinds: readonly LensKind[]; readonly config: JsonObject; readonly derived: DerivedPlan; readonly codeLinks: readonly CodeLinkRule[]; };
 function boolean(value: JsonValue): boolean { if (typeof value !== "boolean") throw new Error("Lens expected a boolean"); return value; }
 function lensRecord(input: SourceInput): ExtractedRecord | undefined {
     return /\.ya?ml$/iu.test(input.path) ? extractYamlDocument(input) : extractJson(input)[0];
@@ -24,6 +25,18 @@ export function parseLens(input: SourceInput): Lens {
     const definition = lensRecord(input);
     const config = definition?.node.attributes;
     if (!definition || !config || config["schemaVersion"] !== 1) throw new Error("Expected lens schemaVersion 1");
+    const patterns = (key: "include" | "exclude"): readonly string[] | undefined => {
+        const value = config[key];
+        if (value === undefined) return undefined;
+        const fail = (pointer: string): never => {
+            const source = definition.fields[pointer] ?? definition.fields[`/${key}`] ?? definition.node.sources[0];
+            throw new DataInputError(input.path, source?.line ?? 1, `${pointer}: Expected an array of string patterns`);
+        };
+        if (!Array.isArray(value)) return fail(`/${key}`);
+        return value.map((pattern, index) => typeof pattern === "string" ? pattern : fail(`/${key}/${index}`));
+    };
+    const include = patterns("include");
+    const exclude = patterns("exclude");
     const kinds = array(config["kinds"]).map(value => {
         const kind = object(value);
         return {
@@ -56,7 +69,7 @@ export function parseLens(input: SourceInput): Lens {
     });
     if (new Set(kinds.map(kind => kind.id)).size !== kinds.length) throw new Error("Duplicate lens kind");
     const codeLinks = parseCodeLinks(definition);
-    return { name: string(config["name"]), kinds, config, codeLinks, derived: compileDerived(definition, codeLinks) };
+    return { ...(include === undefined ? {} : { include }), ...(exclude === undefined ? {} : { exclude }), name: string(config["name"]), kinds, config, codeLinks, derived: compileDerived(definition, codeLinks) };
 }
 export function matchesGlob(path: string, pattern: string): boolean {
     let expression = "^";

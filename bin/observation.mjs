@@ -2,7 +2,7 @@ import { existsSync, readFileSync } from 'node:fs';
 import { basename, relative, resolve, sep } from 'node:path';
 import { canonicalJson } from '../dist/index.js';
 import { matchesGlob, parseLens } from '../dist/lens/index.js';
-import { inside, selectedInputs } from './inputs.mjs';
+import { inside, inInputScope, selectedInputs } from './inputs.mjs';
 import { workingRepository } from './repository.mjs';
 import { digest } from './storage.mjs';
 import { observeGraft } from './graft.mjs';
@@ -35,7 +35,7 @@ export function observeRepository(options, historical) {
     if (text !== undefined) selected.push({ ...selection, input: { path: selection.path, text, contentHash: digest(text) } });
   }
   const codeInputs = [];
-  for (const path of repository.paths.filter(path => lens?.codeLinks.some(rule => rule.files.some(pattern => matchesGlob(path, pattern))))) {
+  for (const path of repository.paths.filter(path => inInputScope(path, lens) && lens?.codeLinks.some(rule => rule.files.some(pattern => matchesGlob(path, pattern))))) {
     if (!contents.has(path)) contents.set(path, repository.readText(path));
     const text = contents.get(path);
     if (text !== undefined) codeInputs.push({ path, text, contentHash: digest(text) });
