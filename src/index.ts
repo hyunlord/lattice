@@ -16,3 +16,7 @@ export { extractMarkdown } from "./adapters/markdown.js";
 export type { MarkdownDocument, DocumentLink } from "./adapters/markdown.js";
 export { resolveDocumentLinks } from "./adapters/document-links.js";
 export type { LinkedDocuments, DocumentDiagnostic } from "./adapters/document-links.js";
+export { extractCode, codeLanguage } from "./adapters/code.js";
+export type { CodeModule, ModuleImport } from "./adapters/code.js";
+export { resolveModuleLinks } from "./adapters/module-links.js";
+export type { ModuleDiagnostic } from "./adapters/module-links.js";
