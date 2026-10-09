@@ -12,7 +12,7 @@ function sourceIdentity(source: Source): Omit<Source, "revision" | "url"> {
     const { revision: _revision, url: _url, ...semantic } = source;
     return semantic;
 }
-function semanticRecord<T extends { readonly sources: readonly Source[]; }>(record: T) {
+export function semanticRecord<T extends { readonly sources: readonly Source[]; }>(record: T) {
     return { ...record, sources: record.sources.map(sourceIdentity).sort((a, b) => compare(canonicalJson(a), canonicalJson(b))) };
 }
 function freezeTree(value: unknown): void {

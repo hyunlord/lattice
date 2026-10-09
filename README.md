@@ -21,11 +21,14 @@ node bin/lattice.mjs build --root /path/to/repository
 node bin/lattice.mjs build --root /path/to/repository --lens /absolute/path/to/lens.json
 node bin/lattice.mjs export /path/to/site --root /path/to/repository
 node bin/lattice.mjs check --root /path/to/repository
+node bin/lattice.mjs diff HEAD~1 --root /path/to/repository --json
 ```
 
 `check` rebuilds from current inputs and evaluates findings with an explicit `gate`. Exit codes are 0 when all gates pass (or none are configured), 1 for failed or unknown gates, and 2 for invalid configuration or build errors. Informational findings without gates do not fail the command. See [gate syntax and verification](docs/review/l1-check.md).
 
-Use [the bs-mobile lens](examples/bs-mobile/lens.json) for that repository, or a JSON lens with your own file patterns and rules. Serve the export directory with a static HTTP server. Installed packages provide the `lattice` command. Git is required. Without a lens, build discovers JSON, CSV, Markdown and code files, extracts records/headings/ADR metadata and resolves references/document links plus static JS/TS/Python imports. A default `.lattice/lens.json` is used when present. Explicit lenses limit input to their patterns. Other recognized code languages provide file-only modules. YAML, optional Graft import and Git history are still pending. See [document extraction evidence and limits](docs/review/l1-markdown.md).
+`diff <ref>` compares a Git commit with current files, including uncommitted additions, edits and deletions. It reads Git objects without checking out the reference. Text output lists changed identities; `--json` returns full before/after records. Historical lenses are preserved, and using a current lens on an older tree is explicitly labeled. Clean builds and comparisons retain commit snapshots; export includes their catalog and graphs. See [history evidence and limits](docs/review/l1-history.md).
+
+Use [the bs-mobile lens](examples/bs-mobile/lens.json) for that repository, or a JSON lens with your own file patterns and rules. Serve the export directory with a static HTTP server. Installed packages provide the `lattice` command. Git is required. Without a lens, build discovers JSON, CSV, Markdown and code files, extracts records/headings/ADR metadata and resolves references/document links plus static JS/TS/Python imports. A default `.lattice/lens.json` is used when present. Explicit lenses limit input to their patterns. Other recognized code languages provide file-only modules. YAML and optional Graft import are still pending. See [document extraction evidence and limits](docs/review/l1-markdown.md).
 
 [Open the published bs-mobile map](https://hyunlord.github.io/bs-mobile/).
 

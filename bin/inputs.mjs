@@ -1,5 +1,4 @@
-import { readFileSync, realpathSync, statSync } from 'node:fs';
-import { isAbsolute, join, relative, sep } from 'node:path';
+import { isAbsolute, relative, sep } from 'node:path';
 import { extractJson, extractCsv, extractMarkdown, extractCode, codeLanguage, DataInputError } from '../dist/index.js';
 import { matchesGlob } from '../dist/lens/index.js';
 
@@ -8,7 +7,7 @@ export function inside(root, path) {
   return offset !== '..' && !offset.startsWith(`..${sep}`) && !isAbsolute(offset);
 }
 
-export function collectInputs({ root, paths, lens, digest, sourceLink }) {
+export function collectInputs({ paths, readText, lens, digest, sourceLink }) {
   const records = [], documents = [], modules = [], files = [], inputs = [], diagnostics = [];
   for (const path of paths) {
     if (/^(?:\.lattice|\.omo|\.omx|\.codex|\.agents|\.git)\//u.test(path)) continue;
@@ -22,11 +21,8 @@ export function collectInputs({ root, paths, lens, digest, sourceLink }) {
       if (lens) throw new Error(`No adapter for selected input: ${path}`);
       continue;
     }
-    const absolute = realpathSync(join(root, path));
-    if (!inside(root, absolute)) throw new Error(`Input resolves outside repository: ${path}`);
-    if (!statSync(absolute).isFile()) continue;
-    if (statSync(absolute).size > 10 * 1024 * 1024) throw new Error(`Input exceeds 10 MiB: ${path}`);
-    const text = readFileSync(absolute, 'utf8');
+    const text = readText(path);
+    if (text === undefined) continue;
     const input = { path, text, contentHash: digest(text) };
     inputs.push({ path, contentHash: input.contentHash });
     if (format === 'code') {
