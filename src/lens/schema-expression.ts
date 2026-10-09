@@ -22,7 +22,7 @@ export function expressionCheck(schema: LensSchema, codeRule: Check): Check {
         lookup: operation({ kind: schema.id, field: schema.path, equals: expression }),
         at: operation({ object: expression, key: expression }),
         coalesce: many, and: many, or: many, concat: many,
-        not: unary, exists: unary, count: unary, flatten: unary, sum: unary, unique: unary,
+        not: unary, exists: unary, count: unary, flatten: unary, sum: unary, aggregate: unary, unique: unary,
         eq: binary, ne: binary, gt: binary, gte: binary, lt: binary, lte: binary,
         in: operation({ value: expression, collection: expression }),
         indexOf: operation({ input: expression, value: expression }),

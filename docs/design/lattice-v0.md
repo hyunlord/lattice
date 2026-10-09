@@ -56,7 +56,7 @@ Expression values are literal JSON or objects with one explicit `op` and typed o
 | --- | --- |
 | Read | `get`, `literal`, `coalesce`, `lookup` (kind + field equality), `at` (dynamic object key), `flatten` |
 | Predicate | `eq`, `ne`, `in`, `exists`, `and`, `or`, `not`, `gt`, `gte`, `lt`, `lte` |
-| Collection | `filter`, `map`, `any`, `all`, `count`, `unique`, `groupBy`, `sum`, `concat` |
+| Collection | `filter`, `map`, `any`, `all`, `count`, `unique`, `groupBy`, `sum`, `aggregate`, `concat` |
 | Branch/string | ordered `case`, `join`, exact placeholder template rendering |
 | Evidence | `codeSupport` refers to a named code-link result; `source` refers to located input facts |
 

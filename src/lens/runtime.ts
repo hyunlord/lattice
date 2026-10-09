@@ -1,6 +1,7 @@
 import { addSources, collected, collectionSources, itemEnvironment, locatedPath, locatedRecord, pathSegment } from "./provenance.js";
 import type { Provenance } from "./provenance.js";
 export { addSources, pathSegment } from "./provenance.js";
+import { numericAggregate } from "./aggregation.js";
 import { canonicalJson } from "../core/canonical.js";
 import type { JsonObject, JsonValue } from "../core/canonical.js";
 import type { NodeDraft, Source } from "../core/model.js";
@@ -124,12 +125,11 @@ export function evaluate(expression: JsonValue | undefined, env: Environment): R
             if (!isRuntimeArray(value)) return undefined;
             return collected(value.flatMap((child, index) => isRuntimeArray(child) ? child.map((value, childIndex) => ({ value, sources: collectionSources(env, child, childIndex) })) : [{ value: child, sources: collectionSources(env, value, index) }]), env);
         }
-        case "sum": {
+        case "sum": case "aggregate": {
             const value = run(expr["value"]);
-            if (!Array.isArray(value)) return undefined;
-            let total = 0;
-            for (const item of value) { if (typeof item !== "number" || !Number.isFinite(item)) return undefined; total += item; }
-            return Number.isFinite(total) ? total : undefined;
+            if (!isRuntimeArray(value)) return undefined;
+            const result = numericAggregate(value);
+            return op === "sum" ? result.sum : result;
         }
         case "concat": {
             const values = list().map(run);

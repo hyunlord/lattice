@@ -13,7 +13,7 @@ Statuses: **designed** means a reviewed contract exists, not implementation; **p
 | L1-04 | Optional Graft import + own file/module fallback | validated real sample; missing/malformed schema fixture | verified: [optional import and actual source graph](l1-graft.md) |
 | L1-05 | Git metadata and reference auto-join | [alias priority, external diagnostics, unchanged-referrer refresh, history and source evidence](l1-references.md) | verified |
 | L1-06 | Lens schema, kinds, fields, edges, facet expressions | [static configuration validation, installed CLI and actual consumer compatibility](l1-lens-schema.md) | verified |
-| L1-07 | Views/findings/gates/code-link rules | non-game rules + unsupported/unknown/real dispatch fixtures | pending |
+| L1-07 | Views/findings/gates/code-link rules | [aggregation coverage and combined views/findings/gates/code-link evidence](l1-aggregation.md) | verified |
 | L1-08 | init skeleton, idempotence | real CLI temp-repo invocation and unchanged unrelated files | verified: [installed init workflow](l1-yaml-init.md) |
 | L1-09 | Incremental build / content hashes | parse/reuse counters plus add/edit/delete/rename/lens/code changes | verified: [installed incremental/cold equivalence](l1-incremental.md) |
 | L1-10 | check exit status | real CLI pass=0/fail=1/unknown gate=1/config error=2 | verified: [installed CLI scenario](l1-check.md) |
