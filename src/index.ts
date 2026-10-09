@@ -10,3 +10,5 @@ export { extractJson } from "./adapters/json.js";
 export { extractCsv } from "./adapters/csv.js";
 export { resolveRecords } from "./adapters/resolve.js";
 export type { ReferenceDiagnostic, ResolvedRecords } from "./adapters/resolve.js";
+export { parseLens, matchesGlob, applyLens } from "./lens/index.js";
+export type { Lens, LensKind } from "./lens/index.js";

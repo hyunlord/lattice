@@ -1,6 +1,12 @@
 node_modules/
 dist/
 .lattice/cache/
-.omo/evidence/
 *.log
 .DS_Store
+.omo/
+.omx/
+.codex/
+.agents/
+graft/
+site/
+.lattice/site/

@@ -4,9 +4,9 @@
   "description": "Deterministic repository system maps with declarative lenses",
   "type": "module",
   "private": true,
-  "license": "UNLICENSED",
+  "license": "MIT",
   "engines": {
-    "node": ">=24 <25"
+    "node": ">=20"
   },
   "exports": {
     ".": {
@@ -16,7 +16,11 @@
   },
   "files": [
     "dist",
-    "README.md"
+    "bin",
+    "viewer",
+    "examples",
+    "README.md",
+    "LICENSE"
   ],
   "scripts": {
     "build": "tsc",
@@ -30,5 +34,8 @@
   },
   "devDependencies": {
     "typescript": "5.9.3"
+  },
+  "bin": {
+    "lattice": "bin/lattice.mjs"
   }
 }
