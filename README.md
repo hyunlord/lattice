@@ -2,7 +2,7 @@
 
 A repository-neutral system map for people and agents. Deterministic extraction creates one graph for a static browser viewer and MCP tools; declarative lenses add repository-specific meaning.
 
-**Status: L0 merged; L1 core foundation implemented.** The ESM graph library can be built and tested; the CLI, viewer, MCP server and reusable action remain pending. See [foundation evidence](docs/review/l1-foundation.md).
+**Status: L0 merged; L1 graph foundation and JSON/CSV library extraction implemented.** The ESM graph library can be built and tested; the CLI, viewer, MCP server and reusable action remain pending. See [foundation evidence](docs/review/l1-foundation.md) and [extraction evidence](docs/review/l1-data-extraction.md).
 
 - [Original v0.1 brief](docs/design/brief-v0.1.md)
 - [Architecture and lens contract](docs/design/lattice-v0.md)
