@@ -20,7 +20,7 @@ export function verifyFindingDescriptions(cli, repository) {
   const graph = path => JSON.parse(readFileSync(join(repository, path), 'utf8'));
   run(['check']);
   const before = graph('.lattice/cache/graph.json');
-  const finding = before.findings[0];
+  const finding = before.findings.find(item => item.ruleId === 'comparison');
   assert.equal(finding.intent, 'Serve requests');
   assert.equal(finding.implementation, 'Queued handler');
   for (const pointer of ['/0/intent', '/0/implementation']) assert.ok(finding.sources.some(source => source.path === 'services.json' && source.pointer === pointer));
@@ -30,7 +30,7 @@ export function verifyFindingDescriptions(cli, repository) {
   save('services.json', data);
   run(['check']);
   const after = graph('.lattice/cache/graph.json');
-  assert.equal(after.findings[0].implementation, 'Direct handler');
+  assert.equal(after.findings.find(item => item.ruleId === 'comparison').implementation, 'Direct handler');
   assert.notEqual(after.hash, before.hash);
   console.log('Installed finding descriptions: derived intent/implementation, retained input evidence, source refresh and export passed.');
 }

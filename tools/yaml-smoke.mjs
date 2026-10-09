@@ -19,7 +19,7 @@ export function verifyYaml(cli, repository) {
   assert.equal(initial.nodes.length, 2);
   assert.equal(initial.edges.length, 1);
   assert.equal(initial.facets.length, 2);
-  assert.equal(initial.findings[0].gate.status, 'pass');
+  assert.equal(initial.findings.find(item => item.ruleId === 'count').gate.status, 'pass');
   assert.ok(initial.facets[0].sources.some(source => source.path === '.lattice/lens.yaml' && source.line > 1));
   assert.equal(initial.nodes.find(node => node.id === 'service:api').sources[0].line, 2);
   run(['build']);
