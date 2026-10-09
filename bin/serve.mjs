@@ -4,13 +4,14 @@ import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { buildRepository } from './build.mjs';
 import { observeRepository } from './observation.mjs';
-import { persistBuild, readGraph, withCacheLock } from './storage.mjs';
+import { cacheDirectory, persistBuild, readGraph, withCacheLock } from './storage.mjs';
 
 const packageRoot = fileURLToPath(new URL('..', import.meta.url));
 export async function serve(options) {
   const port = options.port === undefined ? 4173 : Number(options.port);
   if (!Number.isInteger(port) || port < 0 || port > 65535) throw new Error('Port must be an integer from 0 to 65535');
-  if (options.output !== undefined || options.json || options.force) throw new Error('serve accepts --root, --lens and --port');
+  if (options.output !== undefined || options.json || options.force) throw new Error('serve accepts --root, --lens, --cache-dir and --port');
+  const cache = cacheDirectory(options.root, options.cacheDir);
   const generations = new Map();
   const clients = new Set();
   const assets = new Map(['app.js', 'styles.css'].map(file => [`/${file}`, readFileSync(join(packageRoot, 'viewer', file))]));
@@ -26,11 +27,11 @@ export async function serve(options) {
       if (observed.fingerprint !== fingerprint) {
         const next = withCacheLock(options.root, () => {
           const result = buildRepository(options, undefined, observed);
-          const graph = persistBuild(options.root, result);
+          const graph = persistBuild(options.root, result, options.cacheDir);
           const files = new Map([['/graph.json', JSON.stringify(graph)], ['/presentation.json', JSON.stringify(result.presentation)], ['/snapshots.json', JSON.stringify(graph.snapshots)]]);
-          for (const snapshot of graph.snapshots) files.set(`/${snapshot.artifactPath}`, JSON.stringify(readGraph(join(options.root, '.lattice/cache', snapshot.artifactPath))));
+          for (const snapshot of graph.snapshots) files.set(`/${snapshot.artifactPath}`, JSON.stringify(readGraph(join(cache, snapshot.artifactPath))));
           return files;
-        });
+        }, options.cacheDir);
         generation++; builds++;
         generations.set(String(generation), next);
         while (generations.size > 4) generations.delete(generations.keys().next().value);

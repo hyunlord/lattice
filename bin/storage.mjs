@@ -19,8 +19,11 @@ export function readGraph(path) {
   if (stored.hash !== graph.hash) throw new Error(`Graph hash mismatch: ${path}`);
   return graph;
 }
-export function withCacheLock(root, run) {
-  const cache = join(root, '.lattice/cache');
+export function cacheDirectory(root, cacheDir) {
+  return cacheDir ?? join(root, '.lattice/cache');
+}
+export function withCacheLock(root, run, cacheDir) {
+  const cache = cacheDirectory(root, cacheDir);
   mkdirSync(cache, { recursive: true });
   const lock = join(cache, 'writer.lock');
   try { writeFileSync(lock, String(process.pid), { flag: 'wx' }); }
@@ -28,7 +31,19 @@ export function withCacheLock(root, run) {
     if (error.code === 'EEXIST') throw new Error(`Cache writer lock exists: ${lock}; retry after the active build finishes (remove only if its recorded process has stopped)`);
     throw error;
   }
-  try { return run(); }
+  try {
+    if (cacheDir !== undefined) {
+      const ownerPath = join(cache, 'repository.json');
+      if (existsSync(ownerPath)) {
+        const owner = JSON.parse(readFileSync(ownerPath, 'utf8'));
+        if (owner.root !== root) throw new Error(`Cache belongs to another repository: ${cache}`);
+      } else {
+        if (existsSync(join(cache, 'graph.json')) || existsSync(join(cache, 'snapshots.json'))) throw new Error(`Existing cache has no repository identity: ${cache}; choose an empty directory`);
+        atomic(ownerPath, { root });
+      }
+    }
+    return run();
+  }
   finally { rmSync(lock); }
 }
 export function readSnapshots(cache) {
@@ -55,8 +70,8 @@ export function saveSnapshot(cache, graph, coverage) {
   return createGraph({ ...graph, snapshots }, digest);
 }
 
-export function persistBuild(root, result) {
-  const cache = join(root, '.lattice/cache');
+export function persistBuild(root, result, cacheDir) {
+  const cache = cacheDirectory(root, cacheDir);
   const graph = saveSnapshot(cache, result.graph, result.coverage);
   atomic(join(cache, 'presentation.json'), result.presentation);
   atomic(join(cache, 'diagnostics.json'), result.diagnostics);

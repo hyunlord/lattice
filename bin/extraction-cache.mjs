@@ -2,7 +2,7 @@ import { readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { canonicalJson, GraphInputError } from '../dist/index.js';
-import { atomic, digest } from './storage.mjs';
+import { atomic, cacheDirectory, digest } from './storage.mjs';
 
 function implementationFingerprint() {
   const root = fileURLToPath(new URL('../dist/', import.meta.url));
@@ -19,7 +19,7 @@ function implementationFingerprint() {
   const manifest = JSON.parse(readFileSync(new URL('../package.json', import.meta.url), 'utf8'));
   return digest(canonicalJson({ sources, dependencies: manifest.dependencies ?? {} }));
 }
-export function extractionCache(root) {
+export function extractionCache(root, cacheDir) {
   const implementation = implementationFingerprint();
   const stats = { mode: 'strict-content', files: 0, bytes: 0, parsed: 0, reused: 0, discarded: 0, implementation };
   const manifest = [];
@@ -28,7 +28,7 @@ export function extractionCache(root) {
     extract(input, selection, parse) {
       const identity = { schemaVersion: 1, implementation, path: input.path, contentHash: input.contentHash, ...selection };
       const key = digest(canonicalJson(identity));
-      const path = join(root, '.lattice/cache/extractions', `${key}.json`);
+      const path = join(cacheDirectory(root, cacheDir), 'extractions', `${key}.json`);
       stats.files++;
       stats.bytes += Buffer.byteLength(input.text, 'utf8');
       manifest.push({ ...identity, key });

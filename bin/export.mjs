@@ -1,7 +1,7 @@
 import { copyFileSync, existsSync, lstatSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, realpathSync, renameSync, rmSync, writeFileSync } from 'node:fs';
 import { basename, dirname, join, relative, resolve, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { readGraph, readSnapshots } from './storage.mjs';
+import { cacheDirectory, readGraph, readSnapshots } from './storage.mjs';
 
 const packageRoot = realpathSync(fileURLToPath(new URL('..', import.meta.url)));
 const marker = '.lattice-export.json';
@@ -15,11 +15,12 @@ function physicalPath(path) {
   return resolve(realpathSync(ancestor), relative(ancestor, path));
 }
 function destination(options) {
-  const requested = resolve(options.output ?? join(options.root, '.lattice/site'));
+  const cache = physicalPath(cacheDirectory(options.root, options.cacheDir));
+  const root = realpathSync(options.root);
+  const requested = resolve(options.output ?? (within(root, cache) ? join(root, '.lattice/site') : `${cache}-site`));
   if (lstatSync(requested, { throwIfNoEntry: false })?.isSymbolicLink()) throw new Error('Export directory must not be a symbolic link');
   const output = physicalPath(requested);
-  const root = realpathSync(options.root);
-  const protectedPaths = [join(root, '.lattice/cache'), join(root, '.git'), ...['bin', 'dist', 'src', 'viewer', 'node_modules'].map(path => join(packageRoot, path))];
+  const protectedPaths = [cache, physicalPath(join(root, '.lattice/cache')), join(root, '.git'), ...['bin', 'dist', 'src', 'viewer', 'node_modules'].map(path => join(packageRoot, path))];
   if (within(output, root) || within(output, packageRoot) || protectedPaths.some(path => within(output, path) || within(path, output))) throw new Error('Choose a dedicated export directory outside source, package and cache directories');
   const status = lstatSync(output, { throwIfNoEntry: false });
   if (status && !status.isDirectory()) throw new Error('Export destination must be a directory');
@@ -37,7 +38,7 @@ function destination(options) {
 
 export function exportSite(options) {
   if (options.json) throw new Error('--json is supported by diff');
-  const cache = join(options.root, '.lattice/cache');
+  const cache = cacheDirectory(options.root, options.cacheDir);
   const graphPath = join(cache, 'graph.json');
   if (!existsSync(graphPath)) throw new Error('Run lattice build before export');
   readGraph(graphPath);

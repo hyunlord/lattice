@@ -9,7 +9,7 @@ import { observeGraft } from './graft.mjs';
 
 export function observeRepository(options, historical) {
   const { root } = options;
-  const repository = historical ?? workingRepository(root);
+  const repository = historical ?? workingRepository(root, options.cacheDir);
   const graft = observeGraft(repository);
   const names = ['.lattice/lens.yaml', '.lattice/lens.yml', '.lattice/lens.json'];
   const select = paths => {
@@ -41,7 +41,7 @@ export function observeRepository(options, historical) {
     if (text !== undefined) codeInputs.push({ path, text, contentHash: digest(text) });
   }
   if (!historical) {
-    const after = workingRepository(root);
+    const after = workingRepository(root, options.cacheDir);
     if (repository.commit !== after.commit || repository.dirty !== after.dirty || repository.remoteUrl !== after.remoteUrl || canonicalJson(repository.paths) !== canonicalJson(after.paths)) throw new Error('Repository changed while reading inputs; retry the build');
   }
   const fingerprint = digest(canonicalJson({ repository: { name: repository.name, remoteUrl: repository.remoteUrl ?? null, commit: repository.commit ?? null, dirty: repository.dirty }, lens: lensInput ?? null, inputs: selected.map(({ input }) => ({ path: input.path, contentHash: input.contentHash })), ...(lens?.codeLinks.length ? { codeInputs: codeInputs.map(({ path, contentHash }) => ({ path, contentHash })) } : {}), ...(graft ? { graft: graft.input ? { path: graft.input.path, contentHash: graft.input.contentHash } : graft.diagnostic } : {}) }));
