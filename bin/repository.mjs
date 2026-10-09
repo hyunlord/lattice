@@ -1,6 +1,6 @@
 import { execFileSync } from 'node:child_process';
 import { readFileSync, realpathSync, statSync } from 'node:fs';
-import { basename, join } from 'node:path';
+import { basename, join, relative, sep } from 'node:path';
 import { inside } from './inputs.mjs';
 
 export function git(root, args) {
@@ -16,12 +16,14 @@ function identity(root) {
   const github = /^(?:https:\/\/github\.com\/|git@github\.com:)([^/]+\/[^/]+?)(?:\.git)?$/u.exec(origin)?.[1];
   return { name: github?.split('/').at(-1) ?? basename(root), ...(github ? { remoteUrl: `https://github.com/${github}` } : {}) };
 }
-export function workingRepository(root) {
+export function workingRepository(root, cacheDir) {
   const commit = optionalGit(root, ['rev-parse', '--verify', 'HEAD']);
+  const cachePath = cacheDir && inside(root, cacheDir) ? relative(root, cacheDir).split(sep).join('/') : undefined;
+  const cacheExclusion = cachePath ? [`:(exclude,literal)${cachePath}`] : [];
   return {
     ...identity(root), ...(commit ? { commit } : {}),
-    dirty: git(root, ['status', '--porcelain', '--untracked-files=all', '--', '.', ':(exclude).lattice/cache', ':(exclude).lattice/site']).trimEnd() !== '',
-    paths: [...new Set(git(root, ['ls-files', '-z', '--cached', '--others', '--exclude-standard']).split('\0').filter(Boolean))].sort(),
+    dirty: git(root, ['status', '--porcelain', '--untracked-files=all', '--', '.', ':(exclude).lattice/cache', ':(exclude).lattice/site', ...cacheExclusion]).trimEnd() !== '',
+    paths: [...new Set(git(root, ['ls-files', '-z', '--cached', '--others', '--exclude-standard']).split('\0').filter(path => path && (!cachePath || (path !== cachePath && !path.startsWith(cachePath + '/')))))].sort(),
     readText(path) {
       let absolute;
       try { absolute = realpathSync(join(root, path)); }

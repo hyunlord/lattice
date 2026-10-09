@@ -12,7 +12,7 @@ export function buildRepository(options, historical, observed) {
   const { root } = options;
   const { repository, lens, lensInput, coverage, selected, codeInputs, fingerprint, graft: graftObservation } = observed ?? observeRepository(options, historical);
   const sourceLink = source => !repository.dirty && repository.remoteUrl && repository.commit ? { ...source, revision: repository.commit, url: `${repository.remoteUrl}/blob/${repository.commit}/${source.path.split('/').map(encodeURIComponent).join('/')}#L${source.line}` } : source;
-  const cache = extractionCache(root);
+  const cache = extractionCache(root, options.cacheDir);
   const { records, documents, modules, files, inputs: recordInputs, diagnostics } = collectInputs({ selected, lens, sourceLink, cache });
   const graft = buildGraft(graftObservation, selected, sourceLink);
   const inputs = [...new Map([...recordInputs, ...codeInputs.map(({ path, contentHash }) => ({ path, contentHash })), ...(graftObservation?.input ? [{ path: graftObservation.input.path, contentHash: graftObservation.input.contentHash }] : [])].map(input => [input.path, input])).values()].sort((a, b) => a.path < b.path ? -1 : a.path > b.path ? 1 : 0);

@@ -90,3 +90,5 @@ L1 input scope: [installed CLI and actual manifest projection](l1-input-scope.md
 L1 expression correctness: [missing-value propagation and classification evidence](l1-expression-missing.md) verifies missing/null distinctions and nonvacuous all through real CLI findings. Remaining expression operators and full L1-06/07 acceptance stay pending.
 
 L1 collection expressions: [installed ownership and real repository grouping](l1-collections.md) proves groupBy/join composition in findings and export. L1-06/07 remain pending for source provenance and remaining contracts.
+
+L1 external cache: [read-only fixture and actual source evidence](l1-external-cache.md) proves the cache path across build/check/diff/export/serve. This enables later read-only consumer acceptance but does not itself complete L5-06.

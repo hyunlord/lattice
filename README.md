@@ -38,11 +38,27 @@ Builds reuse raw per-file extraction when content, path, selection and adapter i
 
 `export` builds a complete staging directory before replacing its destination. Repeated exports replace Lattice-owned output and remove obsolete assets. A nonempty unowned directory is refused unless `--force` is explicit; use a dedicated output directory. The replacement uses two directory renames, so a static server may observe a brief missing-directory interval. Use `serve` for a live local map.
 
-Use [the bs-mobile lens](examples/bs-mobile/lens.json) for that repository, or a YAML/JSON lens with your own file patterns and rules. Use `serve` for local source watching, or host the export directory with any static HTTP server. Installed packages provide the `lattice` command. Git is required. Without a lens, build discovers JSON, YAML, CSV, Markdown and code files, extracts records/headings/ADR metadata and resolves references/document links plus static JS/TS/Python imports. A single `.lattice/lens.yaml`, `.lattice/lens.yml` or `.lattice/lens.json` is used when present; multiple defaults require an explicit `--lens`. Explicit lenses limit input to their patterns. Other recognized code languages provide file-only modules. Unity tagged YAML and optional Graft import are still pending. See [document extraction evidence and limits](docs/review/l1-markdown.md).
+Use [the bs-mobile lens](examples/bs-mobile/lens.json) for that repository, or a YAML/JSON lens with your own file patterns and rules. Use `serve` for local source watching, or host the export directory with any static HTTP server. Installed packages provide the `lattice` command. Git is required. Without a lens, build discovers JSON, YAML, CSV, Markdown and code files, extracts records/headings/ADR metadata and resolves references/document links plus static JS/TS/Python imports. A single `.lattice/lens.yaml`, `.lattice/lens.yml` or `.lattice/lens.json` is used when present; multiple defaults require an explicit `--lens`. Explicit lenses limit input to their patterns. Other recognized code languages provide file-only modules. Unity tagged YAML is not supported. Optional Graft import uses validated source hashes and falls back to standalone extraction. See [document extraction evidence and limits](docs/review/l1-markdown.md).
 
 [Open the published bs-mobile map](https://hyunlord.github.io/bs-mobile/).
 
 See [module extraction evidence and limits](docs/review/l1-modules.md).
+
+## Read-only source repositories
+
+Skip `init` when the source must remain unchanged. Supply the same dedicated cache path to each command:
+
+```sh
+lattice build --root /path/to/source --cache-dir /path/to/external-cache
+lattice check --root /path/to/source --cache-dir /path/to/external-cache
+lattice diff HEAD~1 --root /path/to/source --cache-dir /path/to/external-cache --json
+lattice export /path/to/site --root /path/to/source --cache-dir /path/to/external-cache
+lattice serve --root /path/to/source --cache-dir /path/to/external-cache --port 4173
+```
+
+An external `--lens` can add meaning without creating source configuration. Relative cache paths resolve from the calling directory; existing symlink ancestors are canonicalized. Graphs, extraction shards, diagnostics, snapshots, diff output and writer locks all use that directory. Explicit caches bind to one canonical repository root and reject mixed histories. Choose an empty dedicated directory when starting a new explicit cache.
+
+Without an export destination, a cache physically outside the repository uses its sibling `<cache-dir>-site`; a cache inside the repository retains `.lattice/site` so exports are not collected as source. Custom in-repository cache files are excluded from working-input discovery and dirty observation. `init` rejects `--cache-dir` because it intentionally writes source configuration. See [external cache verification](docs/review/l1-external-cache.md).
 
 ## Current verification
 

@@ -5,6 +5,7 @@ import { verifyUnifiedGraph } from './unified-smoke.mjs';
 import { verifyInputScope } from './input-scope-smoke.mjs';
 import { verifyExpressionMissing } from './expression-missing-smoke.mjs';
 import { verifyCollections } from './collections-smoke.mjs';
+import { verifyExternalCache } from './external-cache-smoke.mjs';
 import { verifyYaml } from './yaml-smoke.mjs';
 import { verifyExport } from './export-smoke.mjs';
 import { verifyServe } from './serve-smoke.mjs';
@@ -110,6 +111,7 @@ try {
   verifyInputScope(cli, join(temporary, 'input-scope'));
   verifyExpressionMissing(cli, join(temporary, 'expression-missing'));
   verifyCollections(cli, join(temporary, 'collections'));
+  await verifyExternalCache(cli, join(temporary, 'external-source'));
   verifyExport(cli, join(temporary, 'export'));
   await verifyServe(cli, join(temporary, 'serve'));
 } finally { rmSync(temporary, { recursive: true, force: true }); }
