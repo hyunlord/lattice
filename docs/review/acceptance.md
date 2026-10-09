@@ -7,7 +7,7 @@ Statuses: **designed** means a reviewed contract exists, not implementation; **p
 | L0-01 | Full brief, model, adapters, references, lens, storage | Design + original brief hash + review PR | designed |
 | L0-02 | Viewer wireframes + neutral tokens before code | viewer.md + DESIGN.md commit predating implementation | designed |
 | L0-03 | Determinism / core-domain separation / evidence ADRs | ADR 0001–0004 and review | designed |
-| L1-01 | Strict TypeScript, Node LTS, npm package | clean install/build/typecheck/format/test CI + installed package CLI | pending |
+| L1-01 | Strict TypeScript, Node LTS, npm package | clean install/build/typecheck/format/test CI + installed package CLI | verified: [strict runtime and installed/browser evidence](l1-strict-runtime.md) |
 | L1-02 | JSON/YAML/CSV records with source lines | quoted multiline/array/duplicate-key/malformed fixtures, real builds | verified: [YAML and prior data extraction](l1-yaml-init.md) |
 | L1-03 | Markdown headings/links/ADRs | [Existing 12 fixtures, real docs, installed CLI and browser](l1-markdown.md) | verified |
 | L1-04 | Optional Graft import + own file/module fallback | validated real sample; missing/malformed schema fixture | verified: [optional import and actual source graph](l1-graft.md) |
@@ -98,3 +98,5 @@ L1 source expressions: [located and derived input evidence](l1-source-provenance
 L1 structured output and descriptions: [six-command installed CLI and actual repository evidence](l1-structured-cli.md) verifies JSON automation and expression-based finding narratives with retained sources. Existing bs-mobile graph output remains identical.
 
 L1 evidence audit at `d0db6affb20ba0c910c7900deac69cbcd12a7cc1`: L1-01 has clean npm installation, Node 20/22/24 checks and installed-package evidence in [CI](https://github.com/hyunlord/lattice/actions/runs/37996533086). It remains pending because strict TypeScript currently covers `src/**/*.ts`, while shipping CLI/viewer JavaScript is outside that check. L1-05 already has exact arbitrary-field references, alias/layer collision handling, source pointers, historical metadata and dirty/index preservation evidence in the data/unified-graph tests and history/code-link smoke scenarios. It remains pending for the designed external/internal unresolved-reference distinction and explicit unchanged-referrer refresh evidence.
+
+L1 completion: [strict runtime migration and combined evidence](l1-strict-runtime.md) closes the last L1-01 gap. All L1 rows are verified; full L2–L5 remain pending.

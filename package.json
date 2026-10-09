@@ -17,14 +17,16 @@
   "files": [
     "dist",
     "bin",
-    "viewer",
+    "viewer/*.js",
+    "viewer/*.html",
+    "viewer/*.css",
     "examples",
     "README.md",
     "LICENSE"
   ],
   "scripts": {
-    "build": "tsc",
-    "typecheck": "tsc --noEmit",
+    "build": "tsc && tsc -p tsconfig.cli.json && tsc -p tsconfig.viewer.json && tsc -p tsconfig.browser.json && node tools/build-viewer.mjs",
+    "typecheck": "tsc --noEmit && tsc && tsc -p tsconfig.cli.json --noEmit && tsc -p tsconfig.viewer.json --noEmit && tsc -p tsconfig.browser.json --noEmit",
     "test": "npm run build && node --test tests/*.test.mjs",
     "format": "node tools/format.mjs --write",
     "format:check": "node tools/format.mjs",
@@ -33,6 +35,7 @@
     "test:package": "npm run build && node tools/package-smoke.mjs"
   },
   "devDependencies": {
+    "@types/node": "20.19.43",
     "typescript": "5.9.3"
   },
   "bin": {

@@ -33,6 +33,11 @@ export async function verifyServe(cli, repository) {
     assert.equal(first.builds, 1);
     const html = await (await fetch(base)).text();
     assert.match(html, /lattice-generation/u);
+    for (const module of ['app.js', 'data.js']) {
+      const response = await fetch(new URL(module, base));
+      assert.equal(response.status, 200);
+      assert.match(response.headers.get('content-type'), /javascript/u);
+    }
     const stable = await until(async () => { const state = await json('__lattice/status'); return state.checks >= first.checks + 2 && state; });
     assert.equal(stable.builds, first.builds);
     const graph = await json(`graph.json?generation=${first.generation}`);
