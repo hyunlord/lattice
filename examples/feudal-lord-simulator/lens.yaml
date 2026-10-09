@@ -1,0 +1,61 @@
+schemaVersion: 1
+name: Charter & Kin · module dependencies
+include: [src/**/*.ts, src/**/*.tsx, public/assets/world_asset_manifest.json]
+kinds:
+  - id: module
+    label: Source module
+    files: [src/**/*.ts, src/**/*.tsx]
+    columns: [language, 'facet:importCount']
+  - id: accepted-asset
+    label: Accepted asset reference
+    files: [public/assets/world_asset_manifest.json]
+    records: /acceptedReferences
+    idField: key
+    nameField: key
+    columns: [width, height, path]
+facets:
+  - id: module-language
+    key: language
+    kinds: [module]
+    value: {op: get, from: node, path: [language]}
+  - id: import-count
+    key: importCount
+    kinds: [module]
+    value: {op: count, value: {op: get, from: node, path: [imports]}}
+views:
+  - id: import-distribution
+    type: distribution
+    label: Imports per module
+    query: {kinds: [module]}
+    groupBy: {op: count, value: {op: get, from: node, path: [imports]}}
+  - id: language-imports
+    type: matrix
+    label: Language and import count
+    query: {kinds: [module]}
+    row: {op: get, from: node, path: [language]}
+    column: {op: count, value: {op: get, from: node, path: [imports]}}
+  - id: imports
+    type: cycle
+    label: Module dependencies
+    query: {kinds: [module]}
+    edgeKinds: [imports]
+findings:
+  - id: many-imports
+    query:
+      kinds: [module]
+      where:
+        op: gte
+        left: {op: count, value: {op: get, from: node, path: [imports]}}
+        right: 10
+    metrics:
+      count: {op: count, value: {op: get, from: vars, path: [targets]}}
+    severity: info
+    basis: computed
+    template: '{count} source modules declare at least 10 imports.'
+    implementation: Static import declarations include external modules. This review threshold is descriptive, not a quality gate or runtime-use claim.
+presentation:
+  name: Charter & Kin
+  description: Read-only TypeScript module map. Static imports show source dependencies, not gameplay or runtime acceptance. Tracked src TypeScript modules and manifest accepted-reference metadata are selected. Asset approval is the manifest claim; images are not visually validated by this map.
+  facets:
+    language: {label: Source language}
+    importCount: {label: Declared imports}

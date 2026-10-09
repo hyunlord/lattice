@@ -19,16 +19,16 @@ Statuses: **designed** means a reviewed contract exists, not implementation; **p
 | L1-10 | check exit status | real CLI pass=0/fail=1/unknown gate=1/config error=2 | verified: [installed CLI scenario](l1-check.md) |
 | L1-11 | diff nodes/edges/facets/findings incl changes | real two-commit repo, before/after and dirty worktree preservation | verified: [installed historical comparison](l1-history.md) |
 | L1-12 | Static export + graph / serve watch | package-installed CLI, static HTTP load, source change refresh, SIGINT cleanup | verified: [local serving and staged export](l1-serve.md) |
-| L2-01 | Home counts, freshness, automatic findings + lens facets | real three-repository screens with meaningful data | pending: [Home implementation and fixture evidence](l2-home.md); full three-repository acceptance remains |
+| L2-01 | Home counts, freshness, automatic findings + lens facets | real three-repository screens with meaningful data | verified: [three-repository browser and screen evidence](l2-acceptance.md) |
 | L2-02 | Graph kinds/neighbors/path/facets/hubs | browser inputs and asserted matching graph results | verified: [Explore browser and query evidence](l2-explore.md) |
 | L2-03 | List inferred/configured columns search/sort/filter/intent | browser checks and source-linked comparison | verified: [typed filters, computed evidence and browser checks](l2-list.md) |
 | L2-04 | Auto matrix + distribution; four generic lens view types | browser matrix drill-down/cycle/distribution/table | verified: [four-template browser and layer evidence](l2-views.md) |
-| L2-05 | History list/two snapshot compare/facet trend/finding changes | [History implementation and bounded evidence](l2-history.md); full real-repository acceptance remains | pending |
-| L2-06 | Node properties/source/edges/history/facets/findings | [Node timeline and comparison links](l2-history.md); full detail acceptance remains | pending |
+| L2-05 | History list/two snapshot compare/facet trend/finding changes | [History implementation and bounded evidence](l2-history.md); full real-repository acceptance remains | verified: [three-repository browser and screen evidence](l2-acceptance.md) |
+| L2-06 | Node properties/source/edges/history/facets/findings | [Node timeline and comparison links](l2-history.md); full detail acceptance remains | verified: [three-repository browser and screen evidence](l2-acceptance.md) |
 | L2-07 | Stable node/view/diff URLs + MCP-ready links | static Pages reload and route identity assertions | pending |
 | L2-08 | Thousands of nodes aggregate → expand | 5,000-node browser QA with counted clusters and responsive controls | verified: [complete paginated traversal and expansion](l2-explore.md) |
-| L2-09 | Neutral theme/mobile/keyboard/color-vision access | light/dark, 375/768/1280 screenshots + contrast and keyboard checks | pending |
-| L2-10 | Three repositories × six screenshots attached to PR | 18 route-indexed real screenshots + interaction evidence | pending |
+| L2-09 | Neutral theme/mobile/keyboard/color-vision access | light/dark, 375/768/1280 screenshots + contrast and keyboard checks | verified: [three-repository browser and screen evidence](l2-acceptance.md) |
+| L2-10 | Three repositories × six screenshots attached to PR | 18 route-indexed real screenshots + interaction evidence | verified: [three-repository browser and screen evidence](l2-acceptance.md) |
 | L2-11 | bs-mobile Pages URL reported FIRST when L2 ends | consumer PR merge + successful deployment + HTTP/browser verification | pending |
 | L3-01 | stdio MCP lifecycle and freshness before every tool | protocol client + changed-input rebuild on all 8 tools, stdout purity | pending |
 | L3-02 | overview/find/node/trace | typed results/filter/path/impact/source/link parity with exported graph | pending |

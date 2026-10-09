@@ -5,6 +5,8 @@ import { renderList } from './list.js';
 import { renderHome } from './home.js';
 import { renderChanges } from './changes.js';
 import { renderNodeHistory } from './node-history.js';
+import { valueKey } from './list-model.js';
+import { pager } from './explore-controls.js';
 import { parseGraph, parsePresentation, parseSnapshots, type BrowserGraph, type Presentation } from './data.js';
 function required<T extends Element>(value: T | null): T { if (!value) throw new Error('Required viewer element is missing'); return value; }
 function errorMessage(error: unknown): string { return error instanceof Error ? error.message : String(error); }
@@ -152,14 +154,34 @@ function detail(id: string, version: number) {
     pageHeading(node.name, kindLabel(node.kind) + (layerOf(node) ? ' · ' + layerLabel(layerOf(node)) : '')); main.append(el('code', node.id, 'detail-id'));
     const actions = el('div', undefined, 'actions'); const status = el('span', '', 'meta'); status.setAttribute('role', 'status');
     actions.append(link('이웃 탐색', routeHref('/explore', { from: id, mode: 'neighbors', hops: '1', direction: 'both' })), button('링크 복사', async () => { try { await navigator.clipboard.writeText(location.href); status.textContent = '링크를 복사했습니다.'; } catch { status.textContent = '주소 표시줄의 URL을 복사하세요.'; } }), status); main.append(actions);
-    const chips = el('div', undefined, 'facet-list'); for (const facet of facets.get(id) || []) chips.append(link(facetLabel(facet.key) + ': ' + valueLabel(facet.key, facet.value), listHref({ facet: facet.key, value: display(facet.value) }), 'badge')); main.append(chips);
+    const chips = el('div', undefined, 'facet-list'); for (const facet of facets.get(id) || []) chips.append(link(facetLabel(facet.key) + ': ' + valueLabel(facet.key, facet.value), listHref({ facet: facet.key, value: valueKey(facet.value), valueType: 'json' }), 'badge')); main.append(chips);
     const provenance = section('원본 출처'); provenance.append(sources(node.sources)); main.append(provenance);
     const attributes = section('속성'); const values = el('dl', undefined, 'attributes');
     for (const [key, value] of Object.entries(node.attributes)) { const row = el('div', undefined, 'attribute'); row.append(el('dt', key)); const dd = el('dd'); dd.append(typeof value === 'object' && value !== null ? el('pre', JSON.stringify(value, null, 2)) : el('span', display(value))); row.append(dd); values.append(row); }
     attributes.append(values); if (!Object.keys(node.attributes).length) attributes.append(empty('기록된 속성이 없습니다.')); main.append(attributes);
     const related = graph.findings.filter(finding => finding.targetIds.includes(id));
     const findings = section('관련 발견', 'panel section detail-findings'); for (const finding of related) findings.append(findingView(finding, true)); if (!related.length) findings.append(empty('이 노드를 대상으로 한 발견은 없습니다.')); main.append(findings);
-    const edges = graph.edges.filter(edge => edge.source === id || edge.target === id); if (edges.length) { const neighbors = section('연결된 노드'); const list = el('ul', undefined, 'neighbors'); for (const edge of edges) { const target = edge.source === id ? edge.target : edge.source; const row = el('li'); row.append(el('span', (edge.source === id ? '→ ' : '← ') + (edge.attributes?.['label'] || edge.kind || edge.field) + ' · '), link(nodes.get(target)?.name || target, nodeHref(target))); if (nodes.has(target) && layerOf(nodes.get(target) ?? node) !== layerOf(node)) row.append(el('span', ' · ' + layerLabel(layerOf(nodes.get(target) ?? node)), 'badge')); list.append(row); } neighbors.append(list); main.append(neighbors); }
+    const edges = graph.edges.filter(edge => edge.source === id || edge.target === id);
+    for (const [label, matches] of [
+        ['나가는 연결', edges.filter(edge => edge.directed && edge.source === id)],
+        ['들어오는 연결', edges.filter(edge => edge.directed && edge.target === id)],
+        ['방향 없는 연결', edges.filter(edge => !edge.directed)],
+    ] as const) {
+        const neighbors = section(label + ' · ' + matches.length); const area = el('div'); neighbors.append(area);
+        const draw = (page: number, focus = false) => {
+            area.replaceChildren(); const list = el('ul', undefined, 'neighbors');
+            for (const edge of matches.slice(page * 20, (page + 1) * 20)) {
+                const target = edge.source === id ? edge.target : edge.source; const row = el('li');
+                row.append(el('span', String(edge.attributes?.['label'] || edge.kind || edge.field) + ' · '), link(nodes.get(target)?.name || target, nodeHref(target)));
+                const neighbor = nodes.get(target); if (neighbor && layerOf(neighbor) !== layerOf(node)) row.append(el('span', ' · ' + layerLabel(layerOf(neighbor)), 'badge'));
+                const evidence = el('details'); evidence.append(el('summary', '연결 출처'), sources(edge.sources)); row.append(evidence); list.append(row);
+            }
+            area.append(list); if (!matches.length) area.append(empty('이 방향의 연결은 없습니다.'));
+            if (matches.length > 20) pager(area, { total: matches.length, page, size: 20, change: next => draw(next, true) });
+            if (focus) { list.tabIndex = -1; list.focus(); }
+        };
+        draw(0); main.append(neighbors);
+    }
     void renderNodeHistory(main, { node, snapshots, readSnapshot, isCurrent: () => version === renderVersion, sources, changesHref: (base, head, identity) => routeHref('/changes', { base, head, node: identity }) });
 }
 function views(id: string, params: URLSearchParams) {
