@@ -154,3 +154,103 @@ For `switch-case`, parse the named method's bounded body, find a switch whose no
 Unsupported means the specified complete dispatch surface was successfully parsed and contained no matching selector value. Unknown means a required source is missing, language/syntax unsupported, method/selector surface not found, ambiguous, or incomplete. If any selector required for coverage is unknown and there is no positive handler, report unknown rather than unsupported. Matched handler with other coverage gaps is supported **with partial-coverage diagnostics**, not a whole-surface success. Invalid selector configuration fails lens validation.
 
 The lexer/adapters know C# token syntax and generic selector kinds, not `stat-add` or product names. No schema/enum string alone establishes support. A future handler refactor that changes method shapes must visibly change coverage and invalidate the dependent cache.
+
+## Synthetic relationships and materialized views
+
+`synthetics[]` creates records before ordinary ID reference resolution and all lens calculations. Each record has `id`, `kind`, `name`, and optional literal `attributes`. A synthetic ID collision is an error. Extracted duplicate aliases are disambiguated before per-node environments are built, so separate records retain separate facets and findings. Ordinary data fields can reference a synthetic ID.
+
+`edges[]` uses the following concrete syntax:
+
+```yaml
+edges:
+  - id: supplies
+    source: {kinds: [producer]}
+    target: {op: get, from: node, path: [destination]}
+    targetKind: resource
+    targetField: [alias]
+    label: Supplies
+    direction: forward
+    display: emphasis
+```
+
+`source` is the standard `{kinds?, where?}` query. `target` evaluates once per selected source with its derived `vars`; it returns one scalar alias or an array of scalar aliases. An empty array explicitly means no relationship. Missing/null/object aliases fail; absent or ambiguous target matches fail with the edge rule pointer. `targetKind` optionally limits the alias namespace. `targetField` is a static attribute path, default `[id]`; default ID lookup accepts resolved IDs and original aliases, but does not choose an ambiguous original alias. `direction` is `forward` (default), `reverse`, or `undirected`. The rule ID is the edge kind, and label/display are presentation attributes. Edge identity includes rule/source/target/direction and excludes mutable label/display. Evidence retains source/target records and the exact lens rule span.
+
+Graph and node derived values are prepared before explicit edges because target expressions may depend on them. Facets, findings, and views run after edges; their `get from: graph, path: [edges]` includes inferred and lens-defined edges. Edge-dependent derived definitions are not supported in this phase; put those expressions directly in facets/findings/views.
+
+Every `views[]` entry has `id`, `type`, `label`, optional `description`, and optional standard `query`. Omitted query selects every interpreted record, including synthetics. The four view types use expressions evaluated with each selected record's node/derived environment:
+
+```yaml
+views:
+  - id: categories
+    type: matrix
+    label: Group by implementation
+    query: {kinds: [producer]}
+    row: {op: get, from: node, path: [group]}
+    column: {op: get, from: vars, path: [implementation]}
+  - id: groups
+    type: distribution
+    label: Group totals
+    groupBy: {op: get, from: node, path: [group]}
+  - id: flow
+    type: cycle
+    label: Resource flow
+    edgeKinds: [supplies]
+  - id: inventory
+    type: table
+    label: Inventory
+    columns:
+      - id: name
+        label: Name
+        value: {op: get, from: node, path: [name]}
+```
+
+The graph stores materialized view data in `View.query`: common `nodeIds`; matrix `cells[{row,column,count,nodeIds}]`; distribution `buckets[{value,count,nodeIds}]`; cycle `edgeIds`; table `columns[{id,label}]` and `rows[{nodeId,values}]`. Matrix/distribution groups sort by canonical JSON value, retaining exact value types. Missing expression values fail rather than becoming zero; explicit null remains null. Table column IDs must be unique. A cycle view selects the induced relationship graph, optionally filtered by edge kinds; it does not invent edges or claim that every selected node belongs to a graph-theoretic cycle. All outputs retain selected records' evidence and the exact view definition span. Rendering these materialized definitions is a generic viewer responsibility.
+
+## Layered projections and adjacency matrices
+
+A kind may use `files: []` plus `selections[]` to project multiple collections. Each selection requires `files` and optionally sets `records`, `idField`, `nameField`, `kindField`, `layer`, and `references`. Selection-level ID/name fields override their kind defaults; for example a catalog root can use `idField: revision` and `nameField: title`. The same optional properties may appear on the kind as defaults. `kindField` chooses each record's kind from an attribute; `layer` adds a literal classification and qualifies graph IDs as `layer:originalId`. The original identifier remains in `attributes.originalId`; `node.id` in expressions remains the unique graph ID. Selector metadata retains selector provenance.
+
+Inferred ID references resolve only within the source record's layer. Unlayered records retain the original behavior. `references: false` suppresses inference from that selected record, while the record remains an available target and participates in explicit lens rules. This is useful for a catalog root that embeds the same records already projected separately. Synthetic records may set literal `attributes.layer` too. Layer namespaces are applied once, and conflicting final graph IDs fail visibly.
+
+Queries support literal `layer` in addition to `kinds` and `where`. Findings, explicit edge source queries, and views use the same predicate; node-derived and facet rules may also declare `layer`. Explicit edges may set `targetQuery: {layer, kinds, where}` to choose a target namespace independently of the source. Its `where` expression runs in the target record's environment. `targetField: [id]` accepts a qualified graph ID or an original alias; an ambiguous original alias remains an error. A cross-layer correspondence is an explicit edge, never an inferred implementation claim.
+
+```yaml
+edges:
+  - id: corresponds
+    source: {layer: implemented, kinds: [component]}
+    target: {op: coalesce, values: [{op: get, from: node, path: [designRef]}, {op: get, from: node, path: [originalId]}]}
+    targetKind: component
+    targetQuery: {layer: designed}
+    label: Corresponds
+  - id: compatibility
+    source: {layer: designed, kinds: [catalog]}
+    targetKind: component
+    targetQuery: {layer: designed}
+    matrix:
+      ids: {op: get, from: node, path: [compatibility, ids]}
+      cells: {op: get, from: node, path: [compatibility, cells]}
+      empty: none
+views:
+  - id: compatibility-grid
+    type: matrix
+    label: Directed compatibility
+    query: {layer: designed, kinds: [component]}
+    edgeKinds: [compatibility]
+```
+
+The matrix edge rule evaluates one distinct ID array and a matching square cell array per source record. Each nonempty scalar cell creates a directed row-ID → column-ID edge, with its value as the label. Null, empty string, and the configured literal `empty` sentinel produce no edge. Object cells, mismatched dimensions, and unknown/ambiguous endpoints fail; opposing cells are independent. The exact cell source is retained for direct node-path expressions. Matrix rules are always directed; use ordinary edge rules for other directions.
+
+A matrix view with `edgeKinds` selects adjacency mode instead of grouping expressions. Its materialized query contains `nodeIds`, `rows` and `columns` (node-ID arrays), `edgeKinds`, and `cells[{source,target,label,edgeIds}]`. Multiple selected edges between a pair retain all IDs and combined labels. Undirected edges occupy both directions. Missing cells remain empty; the viewer must not infer symmetry. Matrices without `edgeKinds` retain the row/column grouping contract above.
+
+Additional reusable operators implemented for these projections:
+
+| Operator | Operands | Semantics |
+| --- | --- | --- |
+| `count` | `value` | Array length or string Unicode code-point length; unsupported/missing input is missing. |
+| `flatten` | `value` | Flatten one array level; unsupported/missing input is missing. |
+| `sum` | `value` | Finite numeric array sum; empty array is zero, missing/nonnumeric/nonfinite input is missing. |
+| `concat` | `values` | Concatenate all-string operands or concatenate all-array operands one level; mixed types are missing. |
+| `indexOf` | `input`, `value` | First exact array-value match or string substring index; no match is -1, unsupported inputs are missing. |
+| `let` | `bindings`, `value` | Evaluate ordered named bindings into a local copy of `vars`, then evaluate `value`; outer `node`/`item` remain available and the outer environment is unchanged. |
+
+`get.path` accepts nonnegative integer array indices as well as strings and `*`. A `let` binding preserves an outer item while nested `filter`/`map` binds another item; it adds no product-specific operator. `get from: graph, path: [edges]` is available in facets, findings, and views after edge materialization.

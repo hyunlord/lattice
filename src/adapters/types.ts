@@ -1,7 +1,7 @@
 import type { NodeDraft, Source } from "../core/model.js";
 
 export type SourceInput = { readonly path: string; readonly text: string; readonly contentHash: string; };
-export type ExtractedRecord = { readonly node: NodeDraft; readonly fields: Readonly<Record<string, Source>>; };
+export type ExtractedRecord = { readonly references?: boolean; readonly node: NodeDraft; readonly fields: Readonly<Record<string, Source>>; };
 export class DataInputError extends Error {
     override readonly name = "DataInputError";
     constructor(readonly path: string, readonly line: number, readonly reason: string) {

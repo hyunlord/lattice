@@ -26,8 +26,10 @@ export function observeRepository(options, historical) {
   const lens = lensInput ? parseLens(lensInput) : undefined;
   const coverage = !lens ? 'no-lens' : historical ? historicalText === undefined ? 'current-lens-projection' : 'repository-lens' : inside(root, lensPath) ? 'repository-lens' : 'current-lens-projection';
   const selected = [];
+  const contents = new Map();
   for (const selection of selectedInputs(repository.paths, lens)) {
-    const text = repository.readText(selection.path);
+    if (!contents.has(selection.path)) contents.set(selection.path, repository.readText(selection.path));
+    const text = contents.get(selection.path);
     if (text !== undefined) selected.push({ ...selection, input: { path: selection.path, text, contentHash: digest(text) } });
   }
   if (!historical) {
