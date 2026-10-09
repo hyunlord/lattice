@@ -96,7 +96,7 @@ export function automaticFindings(nodes: readonly NodeDraft[], edges: readonly E
             const targets = [...new Set(broken.flatMap(item => item.owners.filter(node => layerOf(node) === layer).map(node => node.id)))].sort(compare);
             const references = broken.map(({ diagnostic }) => ({ code: diagnostic.code, reference: diagnostic.value ?? diagnostic.target ?? diagnostic.specifier ?? diagnostic.message ?? "", ...(diagnostic.source ? { path: diagnostic.source.path, pointer: diagnostic.source.pointer, line: diagnostic.source.line } : {}) }));
             const sources = broken.flatMap(item => item.diagnostic.source ? [item.diagnostic.source] : []);
-            results.push(finding("broken-references", layer, targets, { count: broken.length, ownerCount: targets.length, references }, `${broken.length} unresolved, ambiguous or invalid references in this layer.`, sources, digest));
+            results.push(finding("broken-references", layer, targets, { count: broken.length, ownerCount: targets.length, references }, `${broken.length} unresolved, ambiguous or invalid references within the selected graph in this layer. Targets may be outside extraction coverage; this does not prove a repository file is missing.`, sources, digest));
         }
     }
     return results;

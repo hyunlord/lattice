@@ -1,5 +1,6 @@
 import { canonicalJson } from "../core/canonical.js";
 import type { Edge, Source } from "../core/model.js";
+import { codeLanguage } from "./code.js";
 import type { CodeModule, ModuleImport } from "./code.js";
 
 export type ModuleDiagnostic = { readonly code: "external-or-unresolved-module" | "unresolved-local-module" | "ambiguous-module"; readonly specifier: string; readonly source: Source; };
@@ -32,7 +33,7 @@ function candidates(module: CodeModule, reference: ModuleImport): readonly (read
         const replacement = path.endsWith(".mjs") ? ".mts" : path.endsWith(".cjs") ? ".cts" : ".ts";
         return [[path], [path.replace(/\.[mc]?js$/u, replacement), ...(path.endsWith(".js") ? [path.slice(0, -3) + ".tsx"] : [])]];
     }
-    if (/\.[^/]+$/u.test(path)) return [[path]];
+    if (codeLanguage(path) !== undefined) return [[path]];
     return [[path], ["ts", "tsx", "js", "jsx", "mts", "mjs", "cts", "cjs"].flatMap(extension => [`${path}.${extension}`, `${path}/index.${extension}`])];
 }
 export function resolveModuleLinks(modules: readonly CodeModule[]): { readonly edges: readonly Edge[]; readonly diagnostics: readonly ModuleDiagnostic[]; } {

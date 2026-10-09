@@ -14,6 +14,7 @@ A compact repository workbench: precise, quiet and readable. Its signature is pe
 | `--text` | `#202630` | `#edf0f4` | Primary text |
 | `--muted` | `#505d6d` | `#b0bccb` | Supporting text |
 | `--border` | `#bbc3ce` | `#596677` | Structural divisions |
+| `--control-border` | `#7b8796` | `#8491a3` | Input, select and button boundaries; at least 3:1 against adjacent surfaces |
 | `--accent` | `#275dad` | `#9dbfff` | Links/selection |
 | `--focus` | `#164695` | `#b8d0ff` | 2px focus outline |
 | `--gate-fail` | `#a31536` | `#ffb3c3` | Failure text + octagonal stop mark |
