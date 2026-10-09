@@ -68,6 +68,19 @@ function build(options) {
   console.log(`Input/reference diagnostics: ${allDiagnostics.length} (selected input scope).`);
   if (!lens) console.log('Coverage: JSON, CSV, Markdown and code files; JS/TS/Python static imports. YAML and git history are not yet included.');
   console.log(`Graph ${graph.hash}\n${join(cache, 'graph.json')}`);
+  return graph;
+}
+function check(options) {
+  const graph = build(options);
+  const gated = graph.findings.filter(finding => finding.gate);
+  if (!gated.length) { console.log('No gates configured; findings are informational.'); return; }
+  for (const finding of gated) {
+    const gate = finding.gate;
+    console.log(`${gate.status.toUpperCase()} ${finding.ruleId}: ${gate.metric}=${JSON.stringify(finding.metrics[gate.metric] ?? null)} ${gate.comparator} ${gate.threshold}`);
+  }
+  const failed = gated.filter(finding => finding.gate.status !== 'pass');
+  console.log(`Gates: ${gated.length - failed.length}/${gated.length} passed; ${failed.length} failed or unknown.`);
+  if (failed.length) process.exitCode = 1;
 }
 function exportSite(options) {
   const cache = join(options.root, '.lattice/cache');
@@ -84,8 +97,9 @@ function exportSite(options) {
 try {
   const [command, ...args] = process.argv.slice(2);
   if (!command || command === '--help' || command === 'help') {
-    console.log('Lattice\n  lattice build --root <repository> [--lens <lens.json>]\n  lattice export <directory> --root <repository>\n\nJSON/CSV/Markdown/code build; optional declarative JSON lens; static home/list/detail.');
+    console.log('Lattice\n  lattice build --root <repository> [--lens <lens.json>]\n  lattice check --root <repository> [--lens <lens.json>]\n  lattice export <directory> --root <repository>\n\nJSON/CSV/Markdown/code build; optional declarative JSON lens; static home/list/detail.');
   } else if (command === 'build') build(options(args));
+  else if (command === 'check') check(options(args));
   else if (command === 'export') exportSite(options(args));
   else throw new Error(`Unknown command: ${command}`);
 } catch (error) {
