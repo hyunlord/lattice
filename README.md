@@ -2,7 +2,7 @@
 
 A repository-neutral system map for people and agents. Deterministic extraction creates one graph for a static browser viewer and MCP tools; declarative lenses add repository-specific meaning.
 
-**Status: first published-map path implemented.** JSON → declarative lens → CLI build/export → home/list/node detail. Full L1/L2 and later milestones remain pending. See [delivery scope and evidence](docs/review/first-published-map.md).
+**Status: first published map is live; document-aware builds are available.** JSON/CSV/Markdown → optional declarative lens → CLI build/export → home/list/node detail. Full L1/L2 and later milestones remain pending. See [delivery scope and evidence](docs/review/first-published-map.md).
 
 - [Original v0.1 brief](docs/design/brief-v0.1.md)
 - [Architecture and lens contract](docs/design/lattice-v0.md)
@@ -16,11 +16,15 @@ A repository-neutral system map for people and agents. Deterministic extraction 
 ```sh
 npm ci --ignore-scripts
 npm run build
+node bin/lattice.mjs build --root /path/to/repository
+# Optional domain interpretation:
 node bin/lattice.mjs build --root /path/to/repository --lens /absolute/path/to/lens.json
 node bin/lattice.mjs export /path/to/site --root /path/to/repository
 ```
 
-Use [the bs-mobile lens](examples/bs-mobile/lens.json) for that repository, or a JSON lens with your own file patterns and rules. Serve the export directory with a static HTTP server. Installed packages provide the `lattice` command. This first path requires Git and a JSON lens; YAML and zero-config discovery follow.
+Use [the bs-mobile lens](examples/bs-mobile/lens.json) for that repository, or a JSON lens with your own file patterns and rules. Serve the export directory with a static HTTP server. Installed packages provide the `lattice` command. Git is required. Without a lens, build discovers JSON, CSV and Markdown files, extracts records/headings/ADR metadata and resolves references/document links. A default `.lattice/lens.json` is used when present. Explicit lenses limit input to their patterns. YAML, code-module discovery and Git history are still pending. See [document extraction evidence and limits](docs/review/l1-markdown.md).
+
+[Open the published bs-mobile map](https://hyunlord.github.io/bs-mobile/).
 
 ## Current verification
 
