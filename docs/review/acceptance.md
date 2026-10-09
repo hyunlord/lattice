@@ -21,7 +21,7 @@ Statuses: **designed** means a reviewed contract exists, not implementation; **p
 | L1-12 | Static export + graph / serve watch | package-installed CLI, static HTTP load, source change refresh, SIGINT cleanup | verified: [local serving and staged export](l1-serve.md) |
 | L2-01 | Home counts, freshness, automatic findings + lens facets | real three-repository screens with meaningful data | pending |
 | L2-02 | Graph kinds/neighbors/path/facets/hubs | browser inputs and asserted matching graph results | verified: [Explore browser and query evidence](l2-explore.md) |
-| L2-03 | List inferred/configured columns search/sort/filter/intent | browser checks and source-linked comparison | pending |
+| L2-03 | List inferred/configured columns search/sort/filter/intent | browser checks and source-linked comparison | verified: [typed filters, computed evidence and browser checks](l2-list.md) |
 | L2-04 | Auto matrix + distribution; four generic lens view types | browser matrix drill-down/cycle/distribution/table | verified: [four-template browser and layer evidence](l2-views.md) |
 | L2-05 | History list/two snapshot compare/facet trend/finding changes | actual historical exports, live selectors and added/resolved violations | pending |
 | L2-06 | Node properties/source/edges/history/facets/findings | browser deep-link reload incl non-ASCII IDs | pending |

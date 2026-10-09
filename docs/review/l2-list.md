@@ -1,0 +1,20 @@
+# Generic searchable and sortable lists
+
+The List route uses the active layer's real nodes, attributes and exported classifications. It infers two scalar columns when a kind has no configured columns, and honors authored column order or an explicit empty list. Column inference runs before text/value filters so narrowing results does not rearrange the table. Built-in identity columns are not duplicated; explicitly prefixed raw identity attributes remain available.
+
+Kind presentation defaults now survive export. Explicit presentation entries override individual defaults without copying extraction selectors or changing graph identity. Computed intent/implementation comparisons use ordinary facet columns with their actual source evidence; there are no domain-specific renderer branches.
+
+Search, kind, classification and exact attribute filters combine through reloadable URLs. JSON types remain distinct, including numeric/string values, empty strings, false, null and absent attributes. Existing untyped classification links retain their original matching behavior until the user explicitly selects a typed value. Numbers sort numerically; null and absent values remain last in both directions. Header buttons expose sorting to keyboard and assistive technology. Results paginate at 40 rows, with the identity column pinned inside a keyboard-scrollable region.
+
+## Verification
+
+- `npm run check`: strict builds/typechecks, formatting, 97 tests and documentation validation passed. Model tests cover typed values, stable inferred/configured columns, numeric and missing-value ordering, legacy links and computed evidence. Presentation tests cover default/override behavior and exact preservation of fully explicit existing metadata.
+- `npm run test:package`: installed CLI/build/export/history/live-server scenarios passed with the new list modules packaged.
+- Chrome passed 14 interaction scenarios: stable lensless columns, configured computed columns and source disclosures, explicit empty columns, all 96 runtime records in ascending/descending numeric order, keyboard header sorting/page reset, typed classifications, legacy ambiguous links, exact attribute filters, combined text/tag/computed search, layer changes and punctuated Korean IDs, unsupported/empty-result recovery, actual bs-mobile membership/source links, pinned-column keyboard scrolling and mobile disclosure keyboard/reload behavior.
+- The actual CLI fixture contains 108 authored records: 96 runtime and 12 designed. Its graph hash is `2494240209d646c070c460bf6079508c585a69651946ead15ea8a4f03797908f`. Baseline and candidate graph hashes match; only the intended presentation defaults change. No fabricated browser payload was used for these list scenarios.
+- Actual bs-mobile source `1c153cf7cb467e6e229106fe9e079b11e97d9d31`, graph `44b8fe20c5cc6ccc6fafe26aa9b8f3df49360bb2f0b313410c9931602a1b4317`, retains all 176 designed nodes, separate runtime navigation and original source links.
+- Eighteen full-page captures cover configured, inferred and bs-mobile lists at 375/768/1280 pixels in light/dark. No document overflow, page errors or failed network requests were observed. Baseline comparisons have matching dimensions/intact alpha; changed pixels reflect added controls, explanatory text, column ordering and table layout, not pixel-equivalence. Mobile differs in 114241/337500 pixels; desktop in 236970/1152000.
+
+Evidence scripts, source facts, browser results and screenshots are under `/tmp/lattice-browser-qa/list-evidence/`. Initial visual review found excessive mobile filter height and duplicate raw name columns. Advanced controls now use a native disclosure, closed on narrow screens unless active; duplicate built-in columns are removed. Rejected captures remain in `before-compact-filters/`. Final independent review results and asset matching are recorded alongside the captures.
+
+This verifies L2-03 only. Remaining home/history/detail requirements, three real repositories across six screens, comprehensive accessibility evidence and the consumer Pages update remain pending. No consumer source, domain rule, dependency, ADR or held device work changed.

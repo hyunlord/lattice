@@ -1,6 +1,7 @@
 import type { Node as GraphNode, Edge, Facet, Finding, Source, Snapshot } from '../dist/core/model.js';
 import { renderExplore } from './explore.js';
 import { renderViews } from './views.js';
+import { renderList } from './list.js';
 import { object, parseGraph, parsePresentation, parseSnapshots, type BrowserGraph, type Presentation } from './data.js';
 function required<T extends Element>(value: T | null): T { if (!value) throw new Error('Required viewer element is missing'); return value; }
 function errorMessage(error: unknown): string { return error instanceof Error ? error.message : String(error); }
@@ -156,47 +157,11 @@ function selectControl(label: string, name: string, values: readonly (readonly s
     wrapper.append(select); return wrapper;
 }
 function listing(params: URLSearchParams) {
-    pageHeading('노드 목록', '이름과 ID를 검색하고 종류·분류를 좁혀 보세요.');
-    const form = el('form', undefined, 'filters'); form.setAttribute('role', 'search');
-    const search = el('label', '검색', 'search'); const input = el('input'); input.type = 'search'; input.name = 'q'; input.value = params.get('q') || ''; input.placeholder = '이름, ID, 속성 검색'; search.append(input); form.append(search);
-    form.append(selectControl('종류', 'kind', [['', '전체 종류'], ...kinds.filter(kind => !kind.hidden).map(kind => [kind.id, kind.label || kind.id])], params.get('kind') || ''));
-    const keys = [...new Set(graph.facets.map(facet => facet.key))];
-    form.append(selectControl('분류', 'facet', [['', '분류 없음'], ...keys.map(key => [key, facetLabel(key)])], params.get('facet') || ''));
-    const key = params.get('facet');
-    if (key) form.append(selectControl('분류 값', 'value', [['', '모든 값'], ...[...new Set(graph.facets.filter(facet => facet.key === key).map(facet => display(facet.value)))].map(value => [value, presentation.facets?.[key]?.values?.[value] || value])], params.get('value') || ''));
-    form.append(selectControl('정렬', 'sort', [['name', '이름 오름차순'], ['name-desc', '이름 내림차순'], ['kind', '종류 오름차순'], ['id', 'ID 오름차순']], params.get('sort') || 'name'));
-    const submit = el('button', '적용'); submit.type = 'submit'; form.append(submit, link('초기화', listHref()));
-    const apply = () => { const query = new URLSearchParams(); for (const [name, value] of new FormData(form)) if (typeof value === 'string' && value) query.set(name, value); if (query.get('facet') !== params.get('facet')) query.delete('value'); location.hash = listHref(Object.fromEntries(query)); };
-    form.addEventListener('submit', event => { event.preventDefault(); apply(); });
-    form.addEventListener('change', event => { if (event.target instanceof HTMLSelectElement) apply(); }); main.append(form);
-    const q = (params.get('q') || '').toLocaleLowerCase();
-    const matching = visibleNodes.filter(node => (!params.get('kind') || node.kind === params.get('kind')) && (!q || (node.name + ' ' + node.id + ' ' + JSON.stringify(node.attributes)).toLocaleLowerCase().includes(q)) && (!key || (facets.get(node.id) || []).some(facet => facet.key === key && (!params.get('value') || display(facet.value) === params.get('value')))));
-    const sort = params.get('sort') || 'name';
-    matching.sort((a, b) => { const field = sort === 'kind' ? 'kind' : sort === 'id' ? 'id' : 'name'; const order = String(a[field]).localeCompare(String(b[field]), 'ko') || a.id.localeCompare(b.id); return sort === 'name-desc' ? -order : order; });
-    const size = 40; const pages = Math.max(1, Math.ceil(matching.length / size)); const page = Math.min(pages, Math.max(1, Number.parseInt(params.get('page') || '1', 10) || 1));
-    if (!matching.length) { main.append(empty('조건에 맞는 노드가 없습니다. 검색어나 필터를 바꿔 보세요.')); return; }
-    const region = el('div', undefined, 'table-region'); region.tabIndex = 0; region.setAttribute('role', 'region'); region.setAttribute('aria-label', '검색 결과 표');
-    const table = el('table'); table.append(el('caption', `${matching.length}개 중 ${(page - 1) * size + 1}–${Math.min(page * size, matching.length)}개`));
-    const configuredColumns = kinds.filter(kind => !kind.hidden && (!params.get('kind') || kind.id === params.get('kind'))).flatMap(kind => kind.columns || []);
-    const columns = [...new Set(configuredColumns)].filter(field => !['id', 'name', 'kind'].includes(field));
-    if (!columns.length) {
-        const prevalence = new Map<string, number>();
-        for (const node of matching) for (const [field, value] of Object.entries(node.attributes)) if (!['id', 'name', 'kind'].includes(field) && value !== null && typeof value !== 'object' && String(value).length <= 100) prevalence.set(field, (prevalence.get(field) || 0) + 1);
-        columns.push(...[...prevalence].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0])).slice(0, 2).map(([field]) => field));
-    }
-    const head = el('thead'); const header = el('tr'); for (const title of ['이름 / ID', '종류', ...columns, '분류', '출처']) { const th = el('th', title); th.scope = 'col'; header.append(th); } head.append(header); table.append(head);
-    const body = el('tbody');
-    for (const node of matching.slice((page - 1) * size, page * size)) {
-        const row = el('tr'); const name = el('td', undefined, 'node-name'); name.append(link(node.name, nodeHref(node.id)), el('code', node.id, 'node-id'));
-        const classification = el('td'); for (const facet of facets.get(node.id) || []) classification.append(el('div', facetLabel(facet.key) + ': ' + valueLabel(facet.key, facet.value), 'meta'));
-        const source = el('td'); source.append(sources(node.sources)); row.append(name, el('td', kindLabel(node.kind)));
-        for (const field of columns) { const value = node.attributes[field]; const cell = el('td'); if (typeof value === 'object' && value !== null) { const detail = el('details'); detail.append(el('summary', field), el('pre', JSON.stringify(value, null, 2))); cell.append(detail); } else cell.textContent = value === undefined ? '—' : display(value); row.append(cell); }
-        row.append(classification, source); body.append(row);
-    }
-    table.append(body); region.append(table); main.append(region);
-    const pagination = el('div', undefined, 'pagination'); pagination.append(el('span', `${page} / ${pages} 페이지`, 'meta')); const controls = el('div');
-    for (const [label, next] of [['이전', page - 1], ['다음', page + 1]] as const) { const b = button(label, () => { const nextParams = new URLSearchParams(params); nextParams.set('page', String(next)); location.hash = listHref(Object.fromEntries(nextParams)); }); b.disabled = next < 1 || next > pages; controls.append(b); }
-    pagination.append(controls); main.append(pagination);
+    const visibleIds = new Set(visibleNodes.map(node => node.id));
+    renderList(main, {
+        nodes: visibleNodes, facets: graph.facets.filter(facet => visibleIds.has(facet.nodeId)), kinds, params,
+        kindLabel, facetLabel, valueLabel, sources, nodeHref, href: listHref, heading: pageHeading
+    });
 }
 function detail(id: string) {
     const node = nodes.get(id);
