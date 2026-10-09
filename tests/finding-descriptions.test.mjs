@@ -28,8 +28,8 @@ test('finding descriptions compose target-derived expressions and retain their i
 test('finding descriptions preserve literals and omit unknown expression results', () => {
     const results = run([
         { ...finding, intent: 'Literal intent', implementation: '' },
-        { ...finding, intent: get('vars', 'missing'), implementation: { op: 'literal', value: null } },
-        { ...finding, intent: null },
+        { ...finding, id: 'missing', intent: get('vars', 'missing'), implementation: { op: 'literal', value: null } },
+        { ...finding, id: 'null', intent: null },
     ]).findings;
     assert.equal(results[0].intent, 'Literal intent');
     assert.equal(results[0].implementation, '');

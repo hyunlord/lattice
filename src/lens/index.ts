@@ -1,6 +1,7 @@
 import { createProvenance, locatedRecord, retainSources } from "./provenance.js";
 import { parseCodeLinks, prepareCodeLinks, evaluateCodeLink } from "./code-links.js";
 import type { CodeLinkRule, CodeSupportEvaluation } from "./code-links.js";
+import { validateLens } from "./schema.js";
 import { compileDerived } from "./derived.js";
 import type { DerivedPlan } from "./derived.js";
 import { materializeEdges, materializeViews, matchesQuery, prepareRecords } from "./structure.js";
@@ -20,12 +21,16 @@ export type LensKind = { readonly namespaceFrom?: string; readonly selections?: 
 export type Lens = { readonly include?: readonly string[]; readonly exclude?: readonly string[]; readonly name: string; readonly kinds: readonly LensKind[]; readonly config: JsonObject; readonly derived: DerivedPlan; readonly codeLinks: readonly CodeLinkRule[]; };
 function boolean(value: JsonValue): boolean { if (typeof value !== "boolean") throw new Error("Lens expected a boolean"); return value; }
 function lensRecord(input: SourceInput): ExtractedRecord | undefined {
-    return /\.ya?ml$/iu.test(input.path) ? extractYamlDocument(input) : extractJson(input)[0];
+    if (/\.ya?ml$/iu.test(input.path)) return extractYamlDocument(input);
+    const record = extractJson(input)[0];
+    if (record && record.node.sources[0]?.pointer !== "") throw new DataInputError(input.path, 1, "/: Expected lens object, not a record array");
+    return record;
 }
 export function parseLens(input: SourceInput): Lens {
     const definition = lensRecord(input);
     const config = definition?.node.attributes;
-    if (!definition || !config || config["schemaVersion"] !== 1) throw new Error("Expected lens schemaVersion 1");
+    if (!definition || !config) throw new DataInputError(input.path, 1, "/: Expected lens object");
+    validateLens(definition);
     const patterns = (key: "include" | "exclude"): readonly string[] | undefined => {
         const value = config[key];
         if (value === undefined) return undefined;

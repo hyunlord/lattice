@@ -9,6 +9,7 @@ import { verifySources } from './source-smoke.mjs';
 import { verifyJson } from './json-smoke.mjs';
 import { verifyFindingDescriptions } from './finding-descriptions-smoke.mjs';
 import { verifyReferences } from './reference-smoke.mjs';
+import { verifyLensSchema } from './lens-schema-smoke.mjs';
 import { verifyExternalCache } from './external-cache-smoke.mjs';
 import { verifyYaml } from './yaml-smoke.mjs';
 import { verifyExport } from './export-smoke.mjs';
@@ -119,6 +120,7 @@ try {
   await verifyJson(cli, join(temporary, 'json-output'));
   verifyFindingDescriptions(cli, join(temporary, 'finding-descriptions'));
   verifyReferences(cli, join(temporary, 'references'));
+  verifyLensSchema(cli, join(temporary, 'lens-schema'));
   await verifyExternalCache(cli, join(temporary, 'external-source'));
   verifyExport(cli, join(temporary, 'export'));
   await verifyServe(cli, join(temporary, 'serve'));

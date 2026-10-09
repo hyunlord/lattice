@@ -294,6 +294,10 @@ The library accepts `knownNodes` in `resolveRecords` and in the `applyLens` opti
 
 ## Input scope
 
+Lens configuration is checked before selected content is read. JSON and YAML use the same schema: unknown configuration properties, wrong types, unsupported expression operators and duplicate declaration IDs fail with the lens path, source line and field pointer, including rules whose queries currently select no records. A missing required field points to its closest authored parent. Literal expression payloads and synthetic attributes remain ordinary JSON, not nested configuration.
+
+Kind names and attribute paths are open-ended: selectors can read kinds from data, structural adapters contribute their own kinds, and library callers can supply records without kind declarations. An empty selection or a currently absent attribute is therefore not a schema error. Derived/code-link dependencies retain their existing named-reference and cycle checks; ordinary missing variable reads in findings remain missing, and an unavailable/non-numeric gate metric remains an unknown gate. Actual edge targets, matrix dimensions and evaluated result types are checked when data is materialized.
+
 Top-level `include` and `exclude` are arrays of repository-relative glob strings, using the same matching rules as kind `files`. Omitted `include` imposes no extra restriction; `include: []` selects nothing. A file must match at least one include pattern when that array is present. Any exclude match wins. Kind file/collection selectors still determine the records projected from eligible files.
 
 These scope rules also apply to code-link source files. An excluded dispatch file contributes no evidence: support may consequently be unknown, rather than supported by a file outside the requested scope. Generated Lattice/agent/Graft directories remain excluded regardless of lens patterns. Changing scope changes the lens digest and refreshes the graph; edits to excluded files do not enter the selected-input content fingerprint.
