@@ -3,7 +3,8 @@ import { renderExplore } from './explore.js';
 import { renderViews } from './views.js';
 import { renderList } from './list.js';
 import { renderHome } from './home.js';
-import { semantic, snapshotComparisons, compareRecords } from './history-model.js';
+import { renderChanges } from './changes.js';
+import { renderNodeHistory } from './node-history.js';
 import { parseGraph, parsePresentation, parseSnapshots, type BrowserGraph, type Presentation } from './data.js';
 function required<T extends Element>(value: T | null): T { if (!value) throw new Error('Required viewer element is missing'); return value; }
 function errorMessage(error: unknown): string { return error instanceof Error ? error.message : String(error); }
@@ -144,7 +145,7 @@ function listing(params: URLSearchParams) {
         kindLabel, facetLabel, valueLabel, sources, nodeHref, href: listHref, heading: pageHeading
     });
 }
-function detail(id: string) {
+function detail(id: string, version: number) {
     const node = nodes.get(id);
     main.append(link('← 목록으로', listHref(), 'breadcrumb'));
     if (!node) { pageHeading('노드를 찾을 수 없습니다', id); main.append(empty('ID가 변경되었거나 현재 내보내기에 없는 노드입니다. 목록에서 다시 검색하세요.')); return; }
@@ -157,8 +158,9 @@ function detail(id: string) {
     for (const [key, value] of Object.entries(node.attributes)) { const row = el('div', undefined, 'attribute'); row.append(el('dt', key)); const dd = el('dd'); dd.append(typeof value === 'object' && value !== null ? el('pre', JSON.stringify(value, null, 2)) : el('span', display(value))); row.append(dd); values.append(row); }
     attributes.append(values); if (!Object.keys(node.attributes).length) attributes.append(empty('기록된 속성이 없습니다.')); main.append(attributes);
     const related = graph.findings.filter(finding => finding.targetIds.includes(id));
-    const findings = section('관련 발견'); for (const finding of related) findings.append(findingView(finding)); if (!related.length) findings.append(empty('이 노드를 대상으로 한 발견은 없습니다.')); main.append(findings);
+    const findings = section('관련 발견', 'panel section detail-findings'); for (const finding of related) findings.append(findingView(finding, true)); if (!related.length) findings.append(empty('이 노드를 대상으로 한 발견은 없습니다.')); main.append(findings);
     const edges = graph.edges.filter(edge => edge.source === id || edge.target === id); if (edges.length) { const neighbors = section('연결된 노드'); const list = el('ul', undefined, 'neighbors'); for (const edge of edges) { const target = edge.source === id ? edge.target : edge.source; const row = el('li'); row.append(el('span', (edge.source === id ? '→ ' : '← ') + (edge.attributes?.['label'] || edge.kind || edge.field) + ' · '), link(nodes.get(target)?.name || target, nodeHref(target))); if (nodes.has(target) && layerOf(nodes.get(target) ?? node) !== layerOf(node)) row.append(el('span', ' · ' + layerLabel(layerOf(nodes.get(target) ?? node)), 'badge')); list.append(row); } neighbors.append(list); main.append(neighbors); }
+    void renderNodeHistory(main, { node, snapshots, readSnapshot, isCurrent: () => version === renderVersion, sources, changesHref: (base, head, identity) => routeHref('/changes', { base, head, node: identity }) });
 }
 function views(id: string, params: URLSearchParams) {
     const visibleIds = new Set(visibleNodes.map(node => node.id));
@@ -175,39 +177,12 @@ async function readSnapshot(snapshot: Snapshot): Promise<BrowserGraph> {
     const data = parseGraph(await response.json()); if (data.schemaVersion !== 1 || data.hash !== snapshot.graphHash || !Array.isArray(data.nodes) || !Array.isArray(data.findings)) throw new Error('스냅샷의 형식 또는 해시가 일치하지 않습니다.');
     snapshotGraphs.set(snapshot.id, data); return data;
 }
-async function changes(params: URLSearchParams, version: number) {
-    pageHeading('스냅샷 변화', '기록된 두 시점의 노드 속성과 발견을 비교합니다. 같은 층·종류·원본 ID로 대응시킵니다. 출처와 식별 네임스페이스만 달라진 경우는 내용 변경에 포함하지 않습니다.');
-    if (snapshots.length < 2) { main.append(empty('비교할 스냅샷이 두 개 이상 필요합니다. Git 이력을 비교한 뒤 다시 내보내세요.')); return; }
-    const baseId = params.get('base') || snapshots[0]?.id || '', headId = params.get('head') || snapshots.at(-1)?.id || '';
-    const base = snapshots.find(item => item.id === baseId), head = snapshots.find(item => item.id === headId);
-    const choices = snapshots.map(item => [item.id, `${item.commit?.slice(0, 12) || '커밋 없음'} · ${item.graphHash.slice(0, 8)}`]);
-    const form = el('form', undefined, 'filters'); form.append(selectControl('이전', 'base', choices, baseId), selectControl('이후', 'head', choices, headId));
-    const submit = el('button', '비교'); submit.type = 'submit'; form.append(submit); form.addEventListener('submit', event => { event.preventDefault(); location.hash = routeHref('/changes', Object.fromEntries([...new FormData(form)].filter((entry): entry is [string, string] => typeof entry[1] === 'string'))); }); main.append(form);
-    if (!base || !head) { main.append(empty('이 주소의 스냅샷이 내보내기에 없습니다. 이전·이후를 다시 선택하세요.')); return; }
-    const loading = el('p', '스냅샷을 불러오고 있습니다…', 'muted'); loading.setAttribute('role', 'status'); main.append(loading);
-    const layer = activeLayer;
-    try {
-        const [before, after] = await Promise.all([readSnapshot(base), readSnapshot(head)]); if (version !== renderVersion) return; loading.remove();
-        const beforeNodes = before.nodes.filter(node => layerOf(node) === layer && !kinds.find(kind => kind.id === node.kind)?.hidden), afterNodes = after.nodes.filter(node => layerOf(node) === layer && !kinds.find(kind => kind.id === node.kind)?.hidden);
-        const previous = snapshotComparisons(before, beforeNodes, layer), current = snapshotComparisons(after, afterNodes, layer);
-        const nodeChanges = compareRecords(previous.nodes, current.nodes), findingChanges = compareRecords(previous.findings, current.findings);
-        const edgeChanges = compareRecords(previous.edges, current.edges), facetChanges = compareRecords(previous.facets, current.facets);
-        const historicNodes = new Map([...before.nodes, ...after.nodes].map(node => [node.id, node]));
-        const counts = section('층별 개수 변화');
-        for (const kind of [...new Set([...beforeNodes, ...afterNodes].map(node => node.kind))].sort()) { const row = el('div', undefined, 'count-row'); row.append(el('span', kindLabel(kind)), el('code', `${beforeNodes.filter(node => node.kind === kind).length} → ${afterNodes.filter(node => node.kind === kind).length}`)); counts.append(row); } main.append(counts);
-        for (const [title, records] of [['발견 변화', findingChanges], ['노드 변화', nodeChanges], ['연결 변화', edgeChanges], ['분류 변화', facetChanges]] as const) {
-            const box = section(title + ' · ' + records.length); if (!records.length) box.append(empty('내용 변화가 없습니다.'));
-            for (const record of records) {
-                const value = record.current || record.previous;
-                if (!value) continue;
-                const label = 'source' in value && 'target' in value ? `${historicNodes.get(value.source)?.name || value.source} → ${historicNodes.get(value.target)?.name || value.target} · ${value.attributes?.['label'] || value.kind}` : 'nodeId' in value && 'key' in value ? `${historicNodes.get(value.nodeId)?.name || value.nodeId} · ${facetLabel(value.key)}: ${valueLabel(value.key, value.value)}` : 'name' in value ? value.name : record.id;
-                const disclosure = el('details', undefined, 'change-record'); disclosure.append(el('summary', `${record.status} · ${label}`));
-                if (title === '노드 변화' && record.current && nodes.has(record.current.id)) disclosure.append(link('현재 노드 보기', nodeHref(record.current.id)));
-                const pair = el('div', undefined, 'two-column');
-                for (const [label, value] of [['이전', record.previous], ['이후', record.current]] as const) { const column = el('div'); column.append(el('h3', label), value ? el('pre', JSON.stringify(semantic(value), null, 2)) : el('p', '없음', 'muted')); pair.append(column); } disclosure.append(pair); box.append(disclosure);
-            } main.append(box);
-        }
-    } catch (error) { if (version !== renderVersion) return; loading.remove(); main.append(empty('비교를 불러오지 못했습니다: ' + errorMessage(error)), button('다시 시도', render)); }
+function changes(params: URLSearchParams, version: number) {
+    void renderChanges(main, {
+        nodes: visibleNodes, kinds, layer: activeLayer, snapshots, params, readSnapshot,
+        isCurrent: () => version === renderVersion, heading: pageHeading, kindLabel, facetLabel,
+        valueLabel, nodeHref, sources, href: values => routeHref('/changes', values),
+    });
 }
 
 function render() {
@@ -223,7 +198,7 @@ function render() {
     visibleNodes = allVisibleNodes.filter(node => layerOf(node) === activeLayer);
     const route = path === '/explore' ? 'explore' : path.startsWith('/views') ? 'views' : path.startsWith('/changes') ? 'changes' : path === '/home' ? 'home' : 'list';
     document.querySelectorAll<HTMLAnchorElement>('[data-route]').forEach(item => { item.href = routeHref('/' + item.dataset['route']); if (item.dataset['route'] === route) item.setAttribute('aria-current', 'page'); else item.removeAttribute('aria-current'); });
-    if (path === '/home') home(version); else if (path === '/explore') { pageHeading('관계 탐색', '종류와 분류로 좁히고, 방향 경로와 이웃을 따라 출처까지 탐색합니다.'); const visibleIds = new Set(visibleNodes.map(node => node.id)); disposeScreen = renderExplore(main, { nodes: visibleNodes, edges: graph.edges.filter(edge => visibleIds.has(edge.source) && visibleIds.has(edge.target)), facets: graph.facets.filter(facet => visibleIds.has(facet.nodeId)), params, kindLabel, facetLabel, valueLabel, nodeHref, href: values => routeHref('/explore', values) }); } else if (path === '/list') listing(params); else if (path.startsWith('/views')) views(path.slice(7), params); else if (path.startsWith('/changes')) changes(params, version); else if (path.startsWith('/node/')) { try { detail(decodeURIComponent(path.slice(6))); } catch { pageHeading('잘못된 노드 주소'); main.append(link('목록으로 돌아가기', listHref())); } } else { pageHeading('화면을 찾을 수 없습니다'); main.append(link('홈으로 돌아가기', routeHref('/home'))); }
+    if (path === '/home') home(version); else if (path === '/explore') { pageHeading('관계 탐색', '종류와 분류로 좁히고, 방향 경로와 이웃을 따라 출처까지 탐색합니다.'); const visibleIds = new Set(visibleNodes.map(node => node.id)); disposeScreen = renderExplore(main, { nodes: visibleNodes, edges: graph.edges.filter(edge => visibleIds.has(edge.source) && visibleIds.has(edge.target)), facets: graph.facets.filter(facet => visibleIds.has(facet.nodeId)), params, kindLabel, facetLabel, valueLabel, nodeHref, href: values => routeHref('/explore', values) }); } else if (path === '/list') listing(params); else if (path.startsWith('/views')) views(path.slice(7), params); else if (path.startsWith('/changes')) changes(params, version); else if (path.startsWith('/node/')) { try { detail(decodeURIComponent(path.slice(6)), version); } catch { pageHeading('잘못된 노드 주소'); main.append(link('목록으로 돌아가기', listHref())); } } else { pageHeading('화면을 찾을 수 없습니다'); main.append(link('홈으로 돌아가기', routeHref('/home'))); }
     document.title = `${main.querySelector('h1')?.textContent || '지도'} · Lattice`;
     main.querySelector('h1')?.focus({ preventScroll: true });
 }
