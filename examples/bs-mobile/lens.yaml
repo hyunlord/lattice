@@ -1,0 +1,553 @@
+# Repository-specific classifications; generic Lattice core interprets these rules.
+schemaVersion: 1
+name: Sow & Siege · 콘텐츠 지도
+kinds:
+  - id: weapon
+    label: 무기
+    files:
+      - data/weapons/*.json
+    columns:
+      - name
+      - concept
+  - id: tool
+    label: 도구
+    files:
+      - data/tools/*.json
+    columns:
+      - name
+      - concept
+  - id: charter
+    label: 특허장
+    files:
+      - data/charters/*.json
+    columns:
+      - name
+      - concept
+  - id: item
+    label: 물품
+    files:
+      - data/items/*.json
+    columns:
+      - name
+      - concept
+  - id: evolution
+    label: 진화
+    files:
+      - data/evolutions/*.json
+    columns:
+      - name
+      - concept
+  - id: enemy
+    label: 적
+    files:
+      - data/enemies/*.json
+    columns:
+      - name
+      - concept
+  - id: vassal
+    label: 가신
+    files:
+      - data/vassals/*.json
+    columns:
+      - name
+      - concept
+  - id: profile
+    label: 실행 프로필
+    files:
+      - data/profiles/first-playable.json
+    hidden: true
+derived:
+  - id: profile
+    scope: graph
+    value:
+      op: lookup
+      kind: profile
+      field:
+        - id
+      equals: core:first_playable
+  - id: selected
+    scope: node
+    kinds:
+      - weapon
+      - tool
+      - charter
+      - item
+      - evolution
+      - enemy
+      - vassal
+    value:
+      op: case
+      cases:
+        - when:
+            op: eq
+            left:
+              op: get
+              from: node
+              path:
+                - kind
+            right: weapon
+          value:
+            op: in
+            value:
+              op: get
+              from: node
+              path:
+                - id
+            collection:
+              op: get
+              from: vars
+              path:
+                - profile
+                - selection
+                - weapons
+        - when:
+            op: eq
+            left:
+              op: get
+              from: node
+              path:
+                - kind
+            right: tool
+          value:
+            op: in
+            value:
+              op: get
+              from: node
+              path:
+                - id
+            collection:
+              op: get
+              from: vars
+              path:
+                - profile
+                - selection
+                - tools
+        - when:
+            op: eq
+            left:
+              op: get
+              from: node
+              path:
+                - kind
+            right: charter
+          value:
+            op: in
+            value:
+              op: get
+              from: node
+              path:
+                - id
+            collection:
+              op: get
+              from: vars
+              path:
+                - profile
+                - runtime
+                - charters
+        - when:
+            op: eq
+            left:
+              op: get
+              from: node
+              path:
+                - kind
+            right: item
+          value:
+            op: in
+            value:
+              op: get
+              from: node
+              path:
+                - id
+            collection:
+              op: get
+              from: vars
+              path:
+                - profile
+                - runtime
+                - items
+        - when:
+            op: eq
+            left:
+              op: get
+              from: node
+              path:
+                - kind
+            right: evolution
+          value:
+            op: in
+            value:
+              op: get
+              from: node
+              path:
+                - id
+            collection:
+              op: get
+              from: vars
+              path:
+                - profile
+                - runtime
+                - evolutions
+        - when:
+            op: eq
+            left:
+              op: get
+              from: node
+              path:
+                - kind
+            right: enemy
+          value:
+            op: in
+            value:
+              op: get
+              from: node
+              path:
+                - id
+            collection:
+              op: get
+              from: vars
+              path:
+                - profile
+                - selection
+                - enemies
+        - when:
+            op: eq
+            left:
+              op: get
+              from: node
+              path:
+                - kind
+            right: vassal
+          value:
+            op: in
+            value:
+              op: get
+              from: node
+              path:
+                - id
+            collection:
+              op: literal
+              value: []
+      default: false
+  - id: depth
+    scope: node
+    kinds:
+      - weapon
+      - tool
+      - charter
+      - item
+      - evolution
+      - enemy
+      - vassal
+    value:
+      op: case
+      cases:
+        - when:
+            op: not
+            value:
+              op: get
+              from: vars
+              path:
+                - selected
+          value: design
+        - when:
+            op: any
+            input:
+              op: get
+              from: node
+              path:
+                - runtimeProjection
+                - effects
+            where:
+              op: ne
+              left:
+                op: get
+                from: item
+                path:
+                  - operation
+              right: stat-add
+          value: unique
+        - when:
+            op: in
+            value:
+              op: get
+              from: node
+              path:
+                - kind
+            collection:
+              op: literal
+              value:
+                - weapon
+                - tool
+                - enemy
+          value: base
+        - when:
+            op: and
+            values:
+              - op: gt
+                left:
+                  op: count
+                  value:
+                    op: get
+                    from: node
+                    path:
+                      - runtimeProjection
+                      - effects
+                right: 0
+              - op: all
+                input:
+                  op: get
+                  from: node
+                  path:
+                    - runtimeProjection
+                    - effects
+                where:
+                  op: eq
+                  left:
+                    op: get
+                    from: item
+                    path:
+                      - operation
+                  right: stat-add
+          value: stat
+      default: design
+facets:
+  - id: selected
+    key: selected
+    kinds:
+      - weapon
+      - tool
+      - charter
+      - item
+      - evolution
+      - enemy
+      - vassal
+    value:
+      op: get
+      from: vars
+      path:
+        - selected
+  - id: reference-depth
+    key: referenceDepth
+    kinds:
+      - weapon
+      - tool
+      - charter
+      - item
+      - evolution
+      - enemy
+      - vassal
+    value:
+      op: get
+      from: vars
+      path:
+        - depth
+findings:
+  - id: item-stat-projection
+    query:
+      kinds:
+        - item
+      where:
+        op: get
+        from: vars
+        path:
+          - selected
+    metrics:
+      selected:
+        op: count
+        value:
+          op: get
+          from: vars
+          path:
+            - targets
+      stat:
+        op: count
+        value:
+          op: filter
+          input:
+            op: get
+            from: vars
+            path:
+              - targets
+          where:
+            op: and
+            values:
+              - op: gt
+                left:
+                  op: count
+                  value:
+                    op: get
+                    from: item
+                    path:
+                      - runtimeProjection
+                      - effects
+                right: 0
+              - op: all
+                input:
+                  op: get
+                  from: item
+                  path:
+                    - runtimeProjection
+                    - effects
+                where:
+                  op: eq
+                  left:
+                    op: get
+                    from: item
+                    path:
+                      - operation
+                  right: stat-add
+    template: 선택 물품 {selected}개 중 {stat}개는 원본 효과가 수치 덧셈입니다.
+    severity: warning
+    basis: computed
+    intent: 설계 의도와 원본 효과의 차이를 살펴보세요. 수치 덧셈 분류는 재미나 실제 실행의 판정이 아닙니다.
+    implementation: first-playable 선택과 각 물품 runtimeProjection.effects의 operation을 집계합니다.
+  - id: tool-unique-projection
+    query:
+      kinds:
+        - tool
+      where:
+        op: get
+        from: vars
+        path:
+          - selected
+    metrics:
+      selected:
+        op: count
+        value:
+          op: get
+          from: vars
+          path:
+            - targets
+      unique:
+        op: count
+        value:
+          op: filter
+          input:
+            op: get
+            from: vars
+            path:
+              - targets
+          where:
+            op: any
+            input:
+              op: get
+              from: item
+              path:
+                - runtimeProjection
+                - effects
+            where:
+              op: ne
+              left:
+                op: get
+                from: item
+                path:
+                  - operation
+              right: stat-add
+    template: 선택 도구 {selected}개 중 {unique}개에 수치 덧셈 이외의 원본 효과가 있습니다.
+    severity: info
+    basis: computed
+    implementation: 원본 runtimeProjection 투영이며 코드 지원 또는 실행 빈도를 증명하지 않습니다.
+  - id: weapon-base-shapes
+    query:
+      kinds:
+        - weapon
+      where:
+        op: get
+        from: vars
+        path:
+          - selected
+    metrics:
+      selected:
+        op: count
+        value:
+          op: get
+          from: vars
+          path:
+            - targets
+      forms:
+        op: count
+        value:
+          op: unique
+          value:
+            op: map
+            input:
+              op: get
+              from: vars
+              path:
+                - targets
+            value:
+              op: coalesce
+              values:
+                - op: get
+                  from: item
+                  path:
+                    - growth
+                    - attackModel
+                - op: get
+                  from: item
+                  path:
+                    - activation
+                    - shape
+    template: 선택 무기 {selected}개의 기본 데이터 공격 형태는 {forms}가지입니다.
+    severity: info
+    basis: computed
+    implementation: growth.attackModel / activation.shape 집계입니다. 실제
+      firstPlayable.weapons의 10가지 form과 다른 투영이며, 연쇄 공격 부재를 뜻하지 않습니다.
+presentation:
+  name: Sow & Siege
+  description: JSON 원본과 first-playable 선택을 읽은 콘텐츠 지도입니다. 구현 깊이는 원본
+    runtimeProjection 기준 분류이며 실기 실행 증거가 아닙니다. 프로필 override를 적용하면 특허장 4개의 분류가
+    달라집니다. 기본 무기 형태 4개와 프로필 형태 10개는 서로 다른 투영입니다.
+  kinds:
+    - id: weapon
+      label: 무기
+      columns:
+        - name
+        - concept
+    - id: tool
+      label: 도구
+      columns:
+        - name
+        - concept
+    - id: charter
+      label: 특허장
+      columns:
+        - name
+        - concept
+    - id: item
+      label: 물품
+      columns:
+        - name
+        - concept
+    - id: evolution
+      label: 진화
+      columns:
+        - name
+        - concept
+    - id: enemy
+      label: 적
+      columns:
+        - name
+        - concept
+    - id: vassal
+      label: 가신
+      columns:
+        - name
+        - concept
+    - id: profile
+      label: 실행 프로필
+      hidden: true
+  facets:
+    referenceDepth:
+      label: 원본 구현 깊이
+      values:
+        design: 설계
+        stat: 수치 효과
+        base: 기본 동작
+        unique: 고유 효과
+    selected:
+      label: 첫 플레이 선택
+      values:
+        "true": 선택됨
+        "false": 미선택

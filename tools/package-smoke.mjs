@@ -1,3 +1,5 @@
+import { verifyInit } from './init-smoke.mjs';
+import { verifyYaml } from './yaml-smoke.mjs';
 import { verifyExport } from './export-smoke.mjs';
 import { verifyServe } from './serve-smoke.mjs';
 import { verifyHistory } from './history-smoke.mjs';
@@ -21,7 +23,7 @@ try {
   writeFileSync(join(temporary, 'package.json'), JSON.stringify({ private: true, type: 'module' }));
   execFileSync('npm', ['install', '--ignore-scripts', '--no-audit', '--no-fund', join(temporary, entry.filename)], { cwd: temporary, stdio: 'pipe' });
   const manifest = JSON.parse(readFileSync(join(temporary, 'node_modules/@hyunlord/lattice/package.json'), 'utf8'));
-  assert.equal(manifest.dependencies, undefined);
+  assert.deepEqual(manifest.dependencies, {yaml:'2.9.1'});
   const output = execFileSync(process.execPath, ['--input-type=module', '-e', `
     import assert from 'node:assert/strict';
     import { createHash } from 'node:crypto';
@@ -92,6 +94,8 @@ try {
   saveLens();
   assert.equal(check().status, 2);
   console.log('Installed check: pass=0, edited input fail=1, unknown evidence=1, invalid config=2.');
+  verifyInit(cli, join(temporary, 'init'));
+  verifyYaml(cli, join(temporary, 'yaml'));
   verifyHistory(cli, join(temporary, 'history'));
   verifyIncremental(cli, join(temporary, 'incremental'));
   verifyExport(cli, join(temporary, 'export'));

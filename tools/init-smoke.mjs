@@ -1,0 +1,42 @@
+import assert from 'node:assert/strict';
+import { execFileSync, spawnSync } from 'node:child_process';
+import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { join } from 'node:path';
+
+export function verifyInit(cli, repository) {
+  mkdirSync(join(repository, '.lattice'), { recursive: true });
+  execFileSync('git', ['init', '--quiet', repository]);
+  writeFileSync(join(repository, 'records.yaml'), '- id: service:yaml\n  name: YAML service\n');
+  writeFileSync(join(repository, 'records.json'), '[{"id":"service:json","name":"JSON service"}]');
+  writeFileSync(join(repository, 'owners.csv'), 'id,name\nowner:one,Owner\n');
+  writeFileSync(join(repository, 'README.md'), '# Repository map\n');
+  writeFileSync(join(repository, 'main.ts'), 'export const service = 1;\n');
+  writeFileSync(join(repository, 'unrelated.txt'), 'Keep this file byte-for-byte.\n');
+  writeFileSync(join(repository, '.lattice/.gitignore'), '# Local notes\n/notes/');
+  const run = args => execFileSync(process.execPath, [cli, ...args, '--root', repository], { encoding: 'utf8' });
+  const read = path => readFileSync(join(repository, path), 'utf8');
+  run(['init', '--no-global']);
+  const lens = read('.lattice/lens.yaml');
+  const ignore = read('.lattice/.gitignore');
+  assert.match(ignore, /^# Local notes\n\/notes\/\n/u);
+  assert.match(ignore, /\/cache\/\n\/site\/\n$/u);
+  run(['init']);
+  assert.equal(read('.lattice/lens.yaml'), lens);
+  assert.equal(read('.lattice/.gitignore'), ignore);
+  run(['build']); run(['check']); run(['export']);
+  const graph = JSON.parse(read('.lattice/site/graph.json'));
+  for (const id of ['service:yaml', 'service:json', 'owner:one', 'document:README.md', 'module:main.ts']) assert.ok(graph.nodes.some(node => node.id === id), id);
+  const edited = lens.replace(/^name:.*$/mu, 'name: "Edited repository map"');
+  writeFileSync(join(repository, '.lattice/lens.yaml'), edited);
+  run(['init', '--no-global']);
+  assert.equal(read('.lattice/lens.yaml'), edited);
+  assert.equal(read('unrelated.txt'), 'Keep this file byte-for-byte.\n');
+  assert.equal(read('.lattice/.gitignore'), ignore);
+  writeFileSync(join(repository, '.lattice/lens.json'), '{"schemaVersion":1,"name":"Ambiguous","kinds":[]}');
+  const ambiguous = spawnSync(process.execPath, [cli, 'init', '--root', repository], { encoding: 'utf8' });
+  assert.equal(ambiguous.status, 2);
+  assert.match(ambiguous.stderr, /Multiple default lenses/u);
+  assert.equal(read('.lattice/lens.yaml'), edited);
+  assert.equal(read('.lattice/.gitignore'), ignore);
+  console.log('Installed init: usable mixed-source YAML lens, build/check/export, byte-stable repeat, edited lens and unrelated content preservation, ambiguous lens refusal passed.');
+}

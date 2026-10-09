@@ -1,5 +1,5 @@
 import { isAbsolute, relative, sep } from 'node:path';
-import { extractJson, extractCsv, extractMarkdown, extractCode, codeLanguage, DataInputError } from '../dist/index.js';
+import { extractJson, extractYaml, extractCsv, extractMarkdown, extractCode, codeLanguage, DataInputError } from '../dist/index.js';
 import { matchesGlob } from '../dist/lens/index.js';
 
 export function inside(root, path) {
@@ -16,7 +16,7 @@ export function selectedInputs(paths, lens) {
     if (kinds.length > 1) throw new Error(`Ambiguous kind patterns: ${path}`);
     const kind = kinds[0];
     const language = codeLanguage(path);
-    const format = language ? 'code' : /\.(json|csv|md|markdown)$/iu.exec(path)?.[1]?.toLowerCase();
+    const format = language ? 'code' : /\.(json|yaml|yml|csv|md|markdown)$/iu.exec(path)?.[1]?.toLowerCase();
     if (!format) {
       if (lens) throw new Error(`No adapter for selected input: ${path}`);
       continue;
@@ -31,7 +31,7 @@ export function collectInputs({ selected, lens, sourceLink, cache }) {
   for (const { input, kind, format } of selected) {
     const { path } = input;
     inputs.push({ path, contentHash: input.contentHash });
-    const extract = parse => cache.extract(input, { format, selector: format === 'json' ? kind?.records ?? '' : '' }, parse);
+    const extract = parse => cache.extract(input, { format, selector: ['json', 'yaml', 'yml'].includes(format) ? kind?.records ?? '' : '' }, parse);
     if (format === 'code') {
       const module = extract(() => extractCode(input));
       modules.push({ ...module, node: { ...module.node, sources: module.node.sources.map(sourceLink) }, imports: module.imports.map(reference => ({ ...reference, source: sourceLink(reference.source) })) });
@@ -48,7 +48,7 @@ export function collectInputs({ selected, lens, sourceLink, cache }) {
     }
     let extracted;
     try {
-      extracted = extract(() => format === 'csv' ? extractCsv(input) : extractJson(input, kind?.records ?? ''));
+      extracted = extract(() => format === 'csv' ? extractCsv(input) : ['yaml', 'yml'].includes(format) ? extractYaml(input, kind?.records ?? '') : extractJson(input, kind?.records ?? ''));
     } catch (error) {
       if (lens || !(error instanceof DataInputError)) throw error;
       diagnostics.push({ code: 'unparsed-file', path, line: error.line, message: error.reason });
