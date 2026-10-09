@@ -10,7 +10,7 @@ Statuses: **designed** means a reviewed contract exists, not implementation; **p
 | L1-01 | Strict TypeScript, Node LTS, npm package | clean install/build/typecheck/format/test CI + installed package CLI | pending |
 | L1-02 | JSON/YAML/CSV records with source lines | quoted multiline/array/duplicate-key/malformed fixtures, real builds | verified: [YAML and prior data extraction](l1-yaml-init.md) |
 | L1-03 | Markdown headings/links/ADRs | [Existing 12 fixtures, real docs, installed CLI and browser](l1-markdown.md) | verified |
-| L1-04 | Optional Graft import + own file/module fallback | validated real sample; missing/malformed schema fixture | pending |
+| L1-04 | Optional Graft import + own file/module fallback | validated real sample; missing/malformed schema fixture | verified: [optional import and actual source graph](l1-graft.md) |
 | L1-05 | Git metadata and reference auto-join | alias collisions/missing IDs/add/delete/source-pointer assertions | pending |
 | L1-06 | Lens schema, kinds, fields, edges, facet expressions | valid/invalid lens integration tests, zero domain branches | pending |
 | L1-07 | Views/findings/gates/code-link rules | non-game rules + unsupported/unknown/real dispatch fixtures | pending |
@@ -73,7 +73,7 @@ L1 module integration: [own-module extraction and CLI evidence](l1-modules.md) s
 
 - MIT license approved by the user on 2026-10-10; [decision issue #3](https://github.com/hyunlord/lattice/issues/3) is resolved by the first published-map change.
 - Prototype 4 base forms / 20 unique classifications must coexist with 10 effective profile forms / 16 unique effective projections. See [source audit](../reference/bs-mobile-oracle.md).
-- A documented Graft JSON schema has not yet been verified; importer cannot guess it.
+- Graft wiring-v1 is an observed compatibility contract pinned to upstream source, not a promised stable public API. Unknown versions use standalone extraction; see [supported import contract](../design/graft-import.md).
 - The 50ms freshness target is not proven, especially cold strict content checks. Correctness is required even if the performance gate fails.
 - L2 needs early consumer Pages plumbing before the L4 reusable Action; [ADR 0004](../adr/0004-delivery-and-permissions.md) sequences this without declaring L4 early.
 

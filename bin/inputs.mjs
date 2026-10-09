@@ -10,7 +10,7 @@ export function inside(root, path) {
 export function selectedInputs(paths, lens) {
   const selected = [];
   for (const path of paths) {
-    if (/^(?:\.lattice|\.omo|\.omx|\.codex|\.agents|\.git)\//u.test(path)) continue;
+    if (/^(?:\.lattice|\.omo|\.omx|\.codex|\.agents|\.git|graft)\//u.test(path)) continue;
     const kinds = lens?.kinds.flatMap(kind => [kind, ...(kind.selections ?? []).map(selection => ({ ...kind, ...selection }))].filter(selection => selection.files.some(pattern => matchesGlob(path, pattern)))) ?? [];
     if (lens && kinds.length === 0) continue;
     if (new Set(kinds.map(kind => kind.records ?? '')).size !== kinds.length) throw new Error(`Ambiguous kind patterns: ${path}`);
