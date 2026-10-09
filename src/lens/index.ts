@@ -1,3 +1,4 @@
+import { createProvenance, locatedRecord, retainSources } from "./provenance.js";
 import { parseCodeLinks, prepareCodeLinks, evaluateCodeLink } from "./code-links.js";
 import type { CodeLinkRule, CodeSupportEvaluation } from "./code-links.js";
 import { compileDerived } from "./derived.js";
@@ -5,7 +6,7 @@ import type { DerivedPlan } from "./derived.js";
 import { materializeEdges, materializeViews, matchesQuery, prepareRecords } from "./structure.js";
 import type { ReferenceDiagnostic } from "../adapters/resolve.js";
 import { evaluateGate } from "./gates.js";
-import { addSources, array, evaluate, materializeValue, object, recordView, string } from "./runtime.js";
+import { addSources, array, evaluate, evaluateLocated, materializeValue, object, string } from "./runtime.js";
 import type { Environment, RuntimeValue } from "./runtime.js";
 import type { JsonObject, JsonValue } from "../core/canonical.js";
 import type { NodeDraft, Source, Facet, Finding, Edge, View } from "../core/model.js";
@@ -90,26 +91,48 @@ export function applyLens(base: readonly ExtractedRecord[], lens: Lens, input: S
     const resolved = prepareRecords(base, lens.config, definition, options.knownNodes);
     const records = resolved.records;
     const initialEdges = [...resolved.edges, ...(options.structuralEdges?.(resolved.nodes) ?? [])];
-    const graph: Record<string, JsonValue> = { nodes: records.map(record => recordView(record.node)), edges: initialEdges.map(edge => ({ ...edge, sources: edge.sources.map(source => ({ ...source })) })) };
+    const provenance = createProvenance();
+    const edgeView = (edge: Edge): JsonObject => {
+        const view = { ...edge, sources: edge.sources.map(source => ({ ...source })) };
+        provenance.roots.set(view, edge.sources);
+        provenance.locations.set(view, new Map(Object.keys(view).map(key => [key, edge.sources])));
+        return view;
+    };
+    const nodeSources = records.flatMap(record => record.node.sources);
+    const edgeArray = (edges: readonly Edge[]): readonly JsonObject[] => retainSources(edges.map(edgeView), edges.flatMap(edge => edge.sources), provenance);
+    const graph: Record<string, JsonValue> = { nodes: retainSources(records.map(record => locatedRecord(record, provenance)), nodeSources, provenance), edges: edgeArray(initialEdges) };
+    retainSources(graph, [...nodeSources, ...initialEdges.flatMap(edge => edge.sources)], provenance);
     const derived = lens.derived;
     const codeLinks = prepareCodeLinks(lens.codeLinks, options.codeInputs ?? [], matchesGlob);
     const expressionSource = definition.node.sources[0];
-    const supportContext = { ...(expressionSource ? { expressionSource } : {}), ...(options.sourceLink ? { sourceLink: options.sourceLink } : {}) };
+    const supportContext = { provenance, ...(expressionSource ? { expressionSource } : {}), ...(options.sourceLink ? { sourceLink: options.sourceLink } : {}) };
     const graphVars: Record<string, RuntimeValue> = {};
     const graphSources = new Map<string, Source>();
-    for (const rule of derived.graph) graphVars[rule.id] = evaluate(rule.value, { ...supportContext, ...(rule.source ? { expressionSource: rule.source } : {}), vars: graphVars, records, sources: graphSources, graph });
+    const graphDependencies = new Map<string, readonly Source[]>();
+    provenance.dependencies.set(graphVars, graphDependencies);
+    for (const rule of derived.graph) {
+        const result = evaluateLocated(rule.value, { ...supportContext, ...(rule.source ? { expressionSource: rule.source } : {}), vars: graphVars, records, sources: graphSources, graph });
+        graphVars[rule.id] = result.value;
+        graphDependencies.set(rule.id, result.sources);
+    }
     const environments = new Map<string, Environment>();
     const facets: Facet[] = [];
     const applies = (rule: JsonObject, node: NodeDraft): boolean => (rule["layer"] === undefined || rule["layer"] === node.attributes["layer"]) && (rule["kinds"] === undefined || array(rule["kinds"]).includes(node.kind));
     for (const record of records) {
         const vars = { ...graphVars };
+        const dependencies = new Map(graphDependencies);
+        provenance.dependencies.set(vars, dependencies);
         const support = new Map<string, CodeSupportEvaluation>();
-        const env: Environment = { ...supportContext, node: recordView(record.node), vars, records, sources: new Map(graphSources), graph, codeSupport: support };
+        const env: Environment = { ...supportContext, node: locatedRecord(record, provenance), vars, records, sources: new Map(graphSources), graph, codeSupport: support };
         addSources(env, record.node.sources);
         for (const rule of derived.node) {
             switch (rule.type) {
                 case "derived":
-                    if ((rule.layer === undefined || rule.layer === record.node.attributes["layer"]) && (rule.kinds === undefined || rule.kinds.includes(record.node.kind))) vars[rule.id] = evaluate(rule.value, { ...env, ...(rule.source ? { expressionSource: rule.source } : {}) });
+                    if ((rule.layer === undefined || rule.layer === record.node.attributes["layer"]) && (rule.kinds === undefined || rule.kinds.includes(record.node.kind))) {
+                        const result = evaluateLocated(rule.value, { ...env, ...(rule.source ? { expressionSource: rule.source } : {}) });
+                        vars[rule.id] = result.value;
+                        dependencies.set(rule.id, result.sources);
+                    }
                     break;
                 case "codeLink": {
                     const prepared = codeLinks.get(rule.id);
@@ -125,7 +148,8 @@ export function applyLens(base: readonly ExtractedRecord[], lens: Lens, input: S
     }
     const context = { config: lens.config, definition, records, environments };
     const edges = [...initialEdges, ...materializeEdges(context)];
-    graph["edges"] = edges.map(edge => ({ ...edge, sources: edge.sources.map(source => ({ ...source })) }));
+    graph["edges"] = edgeArray(edges);
+    retainSources(graph, [...nodeSources, ...edges.flatMap(edge => edge.sources)], provenance);
     for (const record of records) {
         const env = environments.get(record.node.id);
         if (!env) throw new Error("Missing node environment");
@@ -141,7 +165,16 @@ export function applyLens(base: readonly ExtractedRecord[], lens: Lens, input: S
         const rule = object(value); const query = object(rule["query"] ?? {});
         const targets = records.filter(record => matchesQuery(query, environments.get(record.node.id) ?? { vars: graphVars, records, sources: graphSources, graph }));
         const sources = new Map<string, Source>();
-        const env: Environment = { ...supportContext, ...(definition.fields[`/findings/${index}`] ? { expressionSource: definition.fields[`/findings/${index}`] } : {}), vars: { ...graphVars, targets: targets.map(record => recordView(record.node)), targetValues: targets.map(record => ({ node: recordView(record.node), derived: environments.get(record.node.id)?.vars ?? {} })) }, records, sources, graph };
+        const targetNodes = retainSources(targets.map(record => locatedRecord(record, provenance)), targets.flatMap(record => record.node.sources), provenance);
+        const targetValues = targets.map(record => {
+            const derived = environments.get(record.node.id)?.vars ?? {};
+            const inputs = [...(provenance.dependencies.get(derived)?.values() ?? [])].flat();
+            retainSources(derived, inputs, provenance);
+            return retainSources({ node: locatedRecord(record, provenance), derived }, [...record.node.sources, ...inputs], provenance);
+        });
+        retainSources(targetValues, targetValues.flatMap(value => provenance.roots.get(value) ?? []), provenance);
+        const env: Environment = { ...supportContext, ...(definition.fields[`/findings/${index}`] ? { expressionSource: definition.fields[`/findings/${index}`] } : {}), vars: { ...graphVars, targets: targetNodes, targetValues }, records, sources, graph };
+        provenance.dependencies.set(env.vars, graphDependencies);
         for (const target of targets) addSources(env, [...(environments.get(target.node.id)?.sources.values() ?? target.node.sources)]);
         const lensSource = definition?.fields[`/findings/${index}`];
         if (lensSource) addSources(env, [lensSource]);

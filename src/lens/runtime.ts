@@ -1,3 +1,6 @@
+import { addSources, collected, collectionSources, itemEnvironment, locatedPath, locatedRecord, pathSegment } from "./provenance.js";
+import type { Provenance } from "./provenance.js";
+export { addSources, pathSegment } from "./provenance.js";
 import { canonicalJson } from "../core/canonical.js";
 import type { JsonObject, JsonValue } from "../core/canonical.js";
 import type { NodeDraft, Source } from "../core/model.js";
@@ -46,14 +49,17 @@ export function string(value: RuntimeValue): string {
     if (typeof value !== "string") throw new Error("Lens expected a string");
     return value;
 }
-export type Environment = { readonly codeSupport?: ReadonlyMap<string, CodeSupportEvaluation>; readonly expressionSource?: Source; readonly sourceLink?: (source: Source) => Source; readonly node?: JsonObject; readonly item?: RuntimeValue; readonly vars: RuntimeObject; readonly records: readonly ExtractedRecord[]; readonly sources: Map<string, Source>; readonly graph?: JsonObject; };
+export type Environment = { readonly provenance?: Provenance; readonly itemSources?: readonly Source[]; readonly codeSupport?: ReadonlyMap<string, CodeSupportEvaluation>; readonly expressionSource?: Source; readonly sourceLink?: (source: Source) => Source; readonly node?: JsonObject; readonly item?: RuntimeValue; readonly vars: RuntimeObject; readonly records: readonly ExtractedRecord[]; readonly sources: Map<string, Source>; readonly graph?: JsonObject; };
 export function recordView(node: NodeDraft): JsonObject { return { ...node.attributes, id: node.id, kind: node.kind, name: node.name }; }
-export function addSources(env: Environment, sources: readonly Source[]): void {
-    for (const source of sources) env.sources.set(`${source.path}#${source.pointer}`, source);
-}
-export function pathSegment(value: JsonValue | undefined): string {
-    if (typeof value === "number" && Number.isInteger(value) && value >= 0) return String(value);
-    return string(value);
+export function evaluateLocated(expression: JsonValue | undefined, env: Environment): { readonly value: RuntimeValue; readonly sources: readonly Source[]; } {
+    const sources = new Map<string, Source>();
+    const value = evaluate(expression, { ...env, sources });
+    const retained = [...sources.values()].sort((left, right) => {
+        const a = `${left.path}#${left.pointer}`, b = `${right.path}#${right.pointer}`;
+        return a < b ? -1 : a > b ? 1 : 0;
+    });
+    addSources(env, retained);
+    return { value, sources: retained };
 }
 export function getPath(value: RuntimeValue, path: readonly JsonValue[]): RuntimeValue {
     if (!path.length) return value;
@@ -72,6 +78,7 @@ export function evaluate(expression: JsonValue | undefined, env: Environment): R
     const list = (): readonly JsonValue[] => array(expr["values"]);
     switch (op) {
         case "literal": return expr["value"];
+        case "source": return evaluateLocated(expr["value"], env).sources.map(source => ({ ...source }));
         case "codeSupport": {
             const rule = expr["rule"];
             const result = typeof rule === "string" ? env.codeSupport?.get(rule) : undefined;
@@ -85,17 +92,10 @@ export function evaluate(expression: JsonValue | undefined, env: Environment): R
         case "get": {
             const from = string(expr["from"]);
             const path = array(expr["path"]);
-            const sourceValue = from === "node" ? env.node : from === "item" ? env.item : from === "vars" && typeof path[0] === "string" ? env.vars[path[0]] : undefined;
-            if (isRuntimeObject(sourceValue) && typeof sourceValue["id"] === "string") {
-                const record = env.records.find(record => record.node.id === sourceValue["id"]);
-                const sourcePath = from === "vars" ? path.slice(1) : path;
-                const pointer = sourcePath.length ? "/" + sourcePath.map(part => pathSegment(part).replaceAll("~", "~0").replaceAll("/", "~1")).join("/") : "";
-                const source = record?.fields[pointer];
-                if (source) addSources(env, [source]);
-            }
             const root = from === "node" ? env.node : from === "item" ? env.item : from === "vars" ? env.vars : from === "graph" ? env.graph ?? { nodes: env.records.map(record => recordView(record.node)) } : undefined;
             if (!["node", "item", "vars", "graph"].includes(from)) throw new Error(`Unknown expression scope ${from}`);
-            return getPath(root, path);
+            if (from === "item" && !path.length) addSources(env, env.itemSources ?? []);
+            return locatedPath(root, path, env);
         }
         case "lookup": {
             const expected = run(expr["equals"]);
@@ -103,9 +103,9 @@ export function evaluate(expression: JsonValue | undefined, env: Environment): R
             if (matches.length > 1) throw new Error("Ambiguous lens lookup");
             const match = matches[0];
             if (match) addSources(env, match.node.sources);
-            return match ? recordView(match.node) : undefined;
+            return match ? env.provenance ? locatedRecord(match, env.provenance) : recordView(match.node) : undefined;
         }
-        case "at": { const key = run(expr["key"]); return typeof key === "string" || typeof key === "number" ? getPath(run(expr["object"]), [String(key)]) : undefined; }
+        case "at": { const key = run(expr["key"]); return typeof key === "string" || typeof key === "number" ? locatedPath(run(expr["object"]), [String(key)], env) : undefined; }
         case "coalesce": { for (const value of list()) { const result = run(value); if (result !== null && result !== undefined) return result; } return undefined; }
         case "and": return list().every(value => run(value) === true);
         case "or": return list().some(value => run(value) === true);
@@ -119,7 +119,11 @@ export function evaluate(expression: JsonValue | undefined, env: Environment): R
         }
         case "in": { const values = run(expr["collection"]); const value = run(expr["value"]); return Array.isArray(values) && values.some(child => equal(child, value)); }
         case "count": { const value = run(expr["value"]); return typeof value === "string" ? Array.from(value).length : Array.isArray(value) ? value.length : undefined; }
-        case "flatten": { const value = run(expr["value"]); return Array.isArray(value) ? value.flat(1) : undefined; }
+        case "flatten": {
+            const value = run(expr["value"]);
+            if (!isRuntimeArray(value)) return undefined;
+            return collected(value.flatMap((child, index) => isRuntimeArray(child) ? child.map((value, childIndex) => ({ value, sources: collectionSources(env, child, childIndex) })) : [{ value: child, sources: collectionSources(env, value, index) }]), env);
+        }
         case "sum": {
             const value = run(expr["value"]);
             if (!Array.isArray(value)) return undefined;
@@ -130,9 +134,12 @@ export function evaluate(expression: JsonValue | undefined, env: Environment): R
         case "concat": {
             const values = list().map(run);
             if (values.every(value => typeof value === "string")) return values.join("");
-            const result: RuntimeValue[] = [];
-            for (const value of values) { if (!Array.isArray(value)) return undefined; result.push(...value); }
-            return result;
+            const entries: { readonly value: RuntimeValue; readonly sources: readonly Source[]; }[] = [];
+            for (const value of values) {
+                if (!isRuntimeArray(value)) return undefined;
+                entries.push(...value.map((child, index) => ({ value: child, sources: collectionSources(env, value, index) })));
+            }
+            return collected(entries, env);
         }
         case "indexOf": {
             const input = run(expr["input"]), value = run(expr["value"]);
@@ -141,23 +148,49 @@ export function evaluate(expression: JsonValue | undefined, env: Environment): R
         }
         case "let": {
             const vars: Record<string, RuntimeValue> = { ...env.vars };
-            for (const [key, expression] of Object.entries(object(expr["bindings"]))) vars[key] = evaluate(expression, { ...env, vars });
+            const dependencies = new Map(env.provenance?.dependencies.get(env.vars));
+            env.provenance?.dependencies.set(vars, dependencies);
+            for (const [key, expression] of Object.entries(object(expr["bindings"]))) {
+                const result = evaluateLocated(expression, { ...env, vars });
+                vars[key] = result.value;
+                dependencies.set(key, result.sources);
+            }
             return evaluate(expr["value"], { ...env, vars });
         }
-        case "unique": { const value = run(expr["value"]); return Array.isArray(value) ? [...new Map(value.map(child => [valueKey(child), child])).values()] : undefined; }
+        case "unique": {
+            const value = run(expr["value"]);
+            if (!isRuntimeArray(value)) return undefined;
+            const entries = new Map<string, { value: RuntimeValue; readonly sources: Map<string, Source>; }>();
+            for (const [index, child] of value.entries()) {
+                const key = valueKey(child);
+                const entry = entries.get(key) ?? { value: child, sources: new Map<string, Source>() };
+                entry.value = child;
+                for (const source of collectionSources(env, value, index)) entry.sources.set(`${source.path}#${source.pointer}`, source);
+                entries.set(key, entry);
+            }
+            return collected([...entries.values()].map(entry => ({ value: entry.value, sources: [...entry.sources.values()] })), env);
+        }
         case "groupBy": {
             const input = run(expr["input"]);
             if (!isRuntimeArray(input)) return undefined;
-            const groups = new Map<string, { readonly key: JsonValue; readonly items: RuntimeValue[]; }>();
-            for (const item of input) {
-                const key = evaluate(expr["key"], { ...env, item });
+            const groups = new Map<string, { readonly value: { readonly key: JsonValue; readonly items: RuntimeValue[]; }; readonly members: Map<string, readonly Source[]>; readonly keys: Source[]; }>();
+            for (const [index, item] of input.entries()) {
+                const locatedKey = evaluateLocated(expr["key"], itemEnvironment(env, input, index));
+                const key = locatedKey.value;
                 if (!comparable(key) || !finiteKey(key)) return undefined;
                 const encoded = canonicalJson(key);
                 const group = groups.get(encoded);
-                if (group) group.items.push(item);
-                else groups.set(encoded, { key, items: [item] });
+                const target = group ?? { value: { key, items: [] }, members: new Map<string, readonly Source[]>(), keys: [] };
+                target.members.set(String(target.value.items.length), collectionSources(env, input, index));
+                target.value.items.push(item);
+                target.keys.push(...locatedKey.sources);
+                if (!group) {
+                    env.provenance?.dependencies.set(target.value.items, target.members);
+                    env.provenance?.dependencies.set(target.value, new Map([["key", target.keys]]));
+                    groups.set(encoded, target);
+                }
             }
-            return [...groups.entries()].sort(([left], [right]) => left < right ? -1 : left > right ? 1 : 0).map(([, group]) => group);
+            return [...groups.entries()].sort(([left], [right]) => left < right ? -1 : left > right ? 1 : 0).map(([, group]) => group.value);
         }
         case "join": {
             const separator = string(expr["separator"]);
@@ -173,9 +206,18 @@ export function evaluate(expression: JsonValue | undefined, env: Environment): R
         case "filter": case "map": case "any": case "all": {
             const input = run(expr["input"]);
             if (!Array.isArray(input)) return op === "any" || op === "all" ? false : undefined;
-            const predicate = (item: RuntimeValue): boolean => evaluate(expr["where"], { ...env, item }) === true;
-            if (op === "map") return input.map(item => evaluate(expr["value"], { ...env, item }));
-            if (op === "filter") return input.filter(predicate);
+            const predicate = (_item: RuntimeValue, index: number): boolean => evaluate(expr["where"], itemEnvironment(env, input, index)) === true;
+            if (op === "map") {
+                const dependencies = new Map<string, readonly Source[]>();
+                const result = input.map((_item, index) => {
+                    const child = evaluateLocated(expr["value"], itemEnvironment(env, input, index));
+                    dependencies.set(String(index), child.sources);
+                    return child.value;
+                });
+                env.provenance?.dependencies.set(result, dependencies);
+                return result;
+            }
+            if (op === "filter") return collected(input.flatMap((item, index) => predicate(item, index) ? [{ value: item, sources: collectionSources(env, input, index) }] : []), env);
             return op === "any" ? input.some(predicate) : input.length > 0 && input.every(predicate);
         }
         case "case": {
