@@ -40,7 +40,7 @@ cluster ◇ 300 ─── 120 references ─── cluster ○ 230
 Accessible cluster/node/edge list below graph
 ```
 
-Start aggregated when more than 250 visible nodes; show counts of nodes and edges in each group. Expand only chosen groups with a bounded per-page node list; preserve the rest as clusters. A 5,000-node fixture must stay navigable through expansion, never truncate silently or render thousands of labels at once. Click/Enter selects; keyboard buttons provide expand, zoom, pan and reset equivalents. Lens hub pinning is expressed by node/query metadata, not special IDs in renderer. Shapes combine kind with facet outline/pattern and textual legend. Show direction, edge kinds and lens labels. No path displays a clear result rather than a blank graph.
+Start aggregated when more than 250 visible nodes; the implementation also aggregates above 50 nodes to keep actual consumer labels legible. Use a viewport in screen-sized coordinates, readable labels and pan/zoom for expanded content instead of shrinking every label to fit. Show counts of nodes and edges in each group. Expand only chosen groups with a bounded per-page node list; preserve the rest as clusters. A 5,000-node fixture must stay navigable through expansion, never truncate silently or render thousands of labels at once. Click/Enter selects; keyboard buttons provide expand, zoom, pan and reset equivalents. Lens hub pinning is expressed by node/query metadata, not special IDs in renderer. Shapes combine kind with facet outline/pattern and textual legend. Show direction, edge kinds and lens labels. No path displays a clear result rather than a blank graph.
 
 ## List: `#/list?kind=...&q=...`
 

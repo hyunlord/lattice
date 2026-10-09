@@ -20,13 +20,13 @@ Statuses: **designed** means a reviewed contract exists, not implementation; **p
 | L1-11 | diff nodes/edges/facets/findings incl changes | real two-commit repo, before/after and dirty worktree preservation | verified: [installed historical comparison](l1-history.md) |
 | L1-12 | Static export + graph / serve watch | package-installed CLI, static HTTP load, source change refresh, SIGINT cleanup | verified: [local serving and staged export](l1-serve.md) |
 | L2-01 | Home counts, freshness, automatic findings + lens facets | real three-repository screens with meaningful data | pending |
-| L2-02 | Graph kinds/neighbors/path/facets/hubs | browser inputs and asserted matching graph results | pending |
+| L2-02 | Graph kinds/neighbors/path/facets/hubs | browser inputs and asserted matching graph results | verified: [Explore browser and query evidence](l2-explore.md) |
 | L2-03 | List inferred/configured columns search/sort/filter/intent | browser checks and source-linked comparison | pending |
 | L2-04 | Auto matrix + distribution; four generic lens view types | browser matrix drill-down/cycle/distribution/table | pending |
 | L2-05 | History list/two snapshot compare/facet trend/finding changes | actual historical exports, live selectors and added/resolved violations | pending |
 | L2-06 | Node properties/source/edges/history/facets/findings | browser deep-link reload incl non-ASCII IDs | pending |
 | L2-07 | Stable node/view/diff URLs + MCP-ready links | static Pages reload and route identity assertions | pending |
-| L2-08 | Thousands of nodes aggregate → expand | 5,000-node browser QA with counted clusters and responsive controls | pending |
+| L2-08 | Thousands of nodes aggregate → expand | 5,000-node browser QA with counted clusters and responsive controls | verified: [complete paginated traversal and expansion](l2-explore.md) |
 | L2-09 | Neutral theme/mobile/keyboard/color-vision access | light/dark, 375/768/1280 screenshots + contrast and keyboard checks | pending |
 | L2-10 | Three repositories × six screenshots attached to PR | 18 route-indexed real screenshots + interaction evidence | pending |
 | L2-11 | bs-mobile Pages URL reported FIRST when L2 ends | consumer PR merge + successful deployment + HTTP/browser verification | pending |

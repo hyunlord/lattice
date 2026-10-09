@@ -2,7 +2,7 @@
 
 A repository-neutral system map for people and agents. Deterministic extraction creates one graph for a static browser viewer and MCP tools; declarative lenses add repository-specific meaning.
 
-**Status: first published map is live; document-aware builds are available.** JSON/YAML/CSV/Markdown/code → optional declarative lens → CLI build/export → home/list/node detail. L1 core and CLI are complete; full L2 and later milestones remain pending. See [delivery scope and evidence](docs/review/first-published-map.md).
+**Status: first published map is live; document-aware builds are available.** JSON/YAML/CSV/Markdown/code → optional declarative lens → CLI build/export → home/explore/list/node detail. L1 core and CLI are complete; full L2 and later milestones remain pending. See [delivery scope and evidence](docs/review/first-published-map.md).
 
 - [Original v0.1 brief](docs/design/brief-v0.1.md)
 - [Architecture and lens contract](docs/design/lattice-v0.md)
@@ -45,6 +45,10 @@ Use [the bs-mobile lens](examples/bs-mobile/lens.json) for that repository, or a
 [Open the published bs-mobile map](https://hyunlord.github.io/bs-mobile/).
 
 See [module extraction evidence and limits](docs/review/l1-modules.md).
+
+## Explore relationships
+
+The Explore screen filters node/edge kinds, text and facets; follows directed shortest paths or incoming/outgoing N-hop neighborhoods; and ranks connected hubs. Layers stay separate. Kind/folder groups expand into paginated members, with exact totals and complete accessible node/relationship lists. Large maps aggregate above 50 nodes; readable diagram labels, keyboard pan/zoom and explicit paging keep all 5,000-node test members reachable. A lens can derive the generic boolean node attribute `pinned` to select initial hubs; URL pins override it. See [Explore behavior and browser evidence](docs/review/l2-explore.md).
 
 ## Read-only source repositories
 

@@ -1,4 +1,5 @@
 import type { Node as GraphNode, Edge, Facet, Finding, Source, Snapshot } from '../dist/core/model.js';
+import { renderExplore } from './explore.js';
 import { object, parseGraph, parsePresentation, parseSnapshots, matrixData, type BrowserGraph, type Presentation } from './data.js';
 function required<T extends Element>(value: T | null): T { if (!value) throw new Error('Required viewer element is missing'); return value; }
 function errorMessage(error: unknown): string { return error instanceof Error ? error.message : String(error); }
@@ -53,6 +54,7 @@ let allVisibleNodes: GraphNode[];
 let activeLayer = '';
 let snapshots: Snapshot[] = [];
 let renderVersion = 0;
+let disposeExplore: (() => void) | undefined;
 const snapshotGraphs = new Map<string, BrowserGraph>();
 const layerOf = (node: GraphNode) => String(node.attributes['layer'] ?? '');
 const layerLabel = (layer: string) => (Array.isArray(presentation.layers) ? presentation.layers.find(item => item.id === layer)?.label : presentation.layers?.[layer]?.label) || layer || '층 미지정';
@@ -201,7 +203,7 @@ function detail(id: string) {
     if (!node) { pageHeading('노드를 찾을 수 없습니다', id); main.append(empty('ID가 변경되었거나 현재 내보내기에 없는 노드입니다. 목록에서 다시 검색하세요.')); return; }
     pageHeading(node.name, kindLabel(node.kind) + (layerOf(node) ? ' · ' + layerLabel(layerOf(node)) : '')); main.append(el('code', node.id, 'detail-id'));
     const actions = el('div', undefined, 'actions'); const status = el('span', '', 'meta'); status.setAttribute('role', 'status');
-    actions.append(button('링크 복사', async () => { try { await navigator.clipboard.writeText(location.href); status.textContent = '링크를 복사했습니다.'; } catch { status.textContent = '주소 표시줄의 URL을 복사하세요.'; } }), status); main.append(actions);
+    actions.append(link('이웃 탐색', routeHref('/explore', { from: id, mode: 'neighbors', hops: '1', direction: 'both' })), button('링크 복사', async () => { try { await navigator.clipboard.writeText(location.href); status.textContent = '링크를 복사했습니다.'; } catch { status.textContent = '주소 표시줄의 URL을 복사하세요.'; } }), status); main.append(actions);
     const chips = el('div', undefined, 'facet-list'); for (const facet of facets.get(id) || []) chips.append(link(facetLabel(facet.key) + ': ' + valueLabel(facet.key, facet.value), listHref({ facet: facet.key, value: display(facet.value) }), 'badge')); main.append(chips);
     const provenance = section('원본 출처'); provenance.append(sources(node.sources)); main.append(provenance);
     const attributes = section('속성'); const values = el('dl', undefined, 'attributes');
@@ -330,6 +332,7 @@ async function changes(params: URLSearchParams, version: number) {
 
 function render() {
     const version = ++renderVersion;
+    disposeExplore?.(); disposeExplore = undefined;
     main.replaceChildren();
     const [path = '/home', search = ''] = (location.hash.slice(1) || '/home').split('?');
     const params = new URLSearchParams(search);
@@ -338,9 +341,9 @@ function render() {
     if (path.startsWith('/node/')) { try { node = nodes.get(decodeURIComponent(path.slice(6))); } catch { } }
     activeLayer = node ? layerOf(node) : params.has('layer') ? (params.get('layer') || '') : layers.includes(presentation.defaultLayer || '') ? presentation.defaultLayer || '' : layers[0] || '';
     visibleNodes = allVisibleNodes.filter(node => layerOf(node) === activeLayer);
-    const route = path.startsWith('/views') ? 'views' : path.startsWith('/changes') ? 'changes' : path === '/home' ? 'home' : 'list';
+    const route = path === '/explore' ? 'explore' : path.startsWith('/views') ? 'views' : path.startsWith('/changes') ? 'changes' : path === '/home' ? 'home' : 'list';
     document.querySelectorAll<HTMLAnchorElement>('[data-route]').forEach(item => { item.href = routeHref('/' + item.dataset['route']); if (item.dataset['route'] === route) item.setAttribute('aria-current', 'page'); else item.removeAttribute('aria-current'); });
-    if (path === '/home') home(); else if (path === '/list') listing(params); else if (path.startsWith('/views')) matrix(path.slice(7), params); else if (path.startsWith('/changes')) changes(params, version); else if (path.startsWith('/node/')) { try { detail(decodeURIComponent(path.slice(6))); } catch { pageHeading('잘못된 노드 주소'); main.append(link('목록으로 돌아가기', listHref())); } } else { pageHeading('화면을 찾을 수 없습니다'); main.append(link('홈으로 돌아가기', routeHref('/home'))); }
+    if (path === '/home') home(); else if (path === '/explore') { pageHeading('관계 탐색', '종류와 분류로 좁히고, 방향 경로와 이웃을 따라 출처까지 탐색합니다.'); layerControl(); const visibleIds = new Set(visibleNodes.map(node => node.id)); disposeExplore = renderExplore(main, { nodes: visibleNodes, edges: graph.edges.filter(edge => visibleIds.has(edge.source) && visibleIds.has(edge.target)), facets: graph.facets.filter(facet => visibleIds.has(facet.nodeId)), params, kindLabel, facetLabel, valueLabel, nodeHref, href: values => routeHref('/explore', values) }); } else if (path === '/list') listing(params); else if (path.startsWith('/views')) matrix(path.slice(7), params); else if (path.startsWith('/changes')) changes(params, version); else if (path.startsWith('/node/')) { try { detail(decodeURIComponent(path.slice(6))); } catch { pageHeading('잘못된 노드 주소'); main.append(link('목록으로 돌아가기', listHref())); } } else { pageHeading('화면을 찾을 수 없습니다'); main.append(link('홈으로 돌아가기', routeHref('/home'))); }
     document.title = `${main.querySelector('h1')?.textContent || '지도'} · Lattice`;
     main.querySelector('h1')?.focus({ preventScroll: true });
 }
