@@ -32,13 +32,13 @@ export function verifyUnifiedGraph(cli, repository) {
   const baseline = git(['rev-parse', 'HEAD']);
   run(['check']);
   const before = graph();
-  assert.equal(before.findings[0].gate.status, 'pass');
-  assert.deepEqual(before.findings[0].metrics, { count: 4, connections: 4 });
+  assert.equal(before.findings.find(item => item.ruleId === 'coverage').gate.status, 'pass');
+  assert.deepEqual(before.findings.find(item => item.ruleId === 'coverage').metrics, { count: 4, connections: 4 });
   assert.equal(before.facets.length, 4);
   assert.equal(before.views[0].query.nodeIds.length, 4);
   assert.equal(before.views[0].query.edgeIds.length, 4);
-  assert.ok(before.findings[0].targetIds.includes('module:main.ts'));
-  assert.ok(before.findings[0].targetIds.includes('document:README.md'));
+  assert.ok(before.findings.find(item => item.ruleId === 'coverage').targetIds.includes('module:main.ts'));
+  assert.ok(before.findings.find(item => item.ruleId === 'coverage').targetIds.includes('document:README.md'));
   assert.ok(!read('.lattice/cache/diagnostics.json').some(value => value.code === 'unresolved-reference'));
   run(['build']); assert.equal(graph().hash, before.hash);
   run(['export', join(repository, '.lattice/site')]);

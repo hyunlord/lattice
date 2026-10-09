@@ -41,7 +41,7 @@ export function verifyAggregation(cli, repository) {
   const complete = run('check');
   assert.deepEqual(graph().findings.find(finding => finding.id === 'coverage').metrics, { sum: 10, count: 2, total: 2, missing: 0, invalid: 0, coverage: 'complete' });
   const delta = run('diff', [before]);
-  assert.equal(delta.findings.changed.length, 2);
+  assert.deepEqual(delta.findings.changed.filter(change => change.after.gate).map(change => change.id).sort(), ['capacity', 'coverage']);
   records[1].capacity = null;
   save('services.json', records);
   run('check', [], 1);

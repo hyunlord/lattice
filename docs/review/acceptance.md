@@ -19,7 +19,7 @@ Statuses: **designed** means a reviewed contract exists, not implementation; **p
 | L1-10 | check exit status | real CLI pass=0/fail=1/unknown gate=1/config error=2 | verified: [installed CLI scenario](l1-check.md) |
 | L1-11 | diff nodes/edges/facets/findings incl changes | real two-commit repo, before/after and dirty worktree preservation | verified: [installed historical comparison](l1-history.md) |
 | L1-12 | Static export + graph / serve watch | package-installed CLI, static HTTP load, source change refresh, SIGINT cleanup | verified: [local serving and staged export](l1-serve.md) |
-| L2-01 | Home counts, freshness, automatic findings + lens facets | real three-repository screens with meaningful data | pending |
+| L2-01 | Home counts, freshness, automatic findings + lens facets | real three-repository screens with meaningful data | pending: [Home implementation and fixture evidence](l2-home.md); full three-repository acceptance remains |
 | L2-02 | Graph kinds/neighbors/path/facets/hubs | browser inputs and asserted matching graph results | verified: [Explore browser and query evidence](l2-explore.md) |
 | L2-03 | List inferred/configured columns search/sort/filter/intent | browser checks and source-linked comparison | verified: [typed filters, computed evidence and browser checks](l2-list.md) |
 | L2-04 | Auto matrix + distribution; four generic lens view types | browser matrix drill-down/cycle/distribution/table | verified: [four-template browser and layer evidence](l2-views.md) |

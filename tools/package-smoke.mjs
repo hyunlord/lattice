@@ -95,14 +95,14 @@ try {
   const check = () => spawnSync(process.execPath, [cli,'check','--root',repository], {encoding:'utf8'});
   saveLens();
   assert.equal(check().status, 0);
-  assert.equal(JSON.parse(readFileSync(graphPath,'utf8')).findings[0].gate.status, 'pass');
+  assert.equal(JSON.parse(readFileSync(graphPath,'utf8')).findings.find(item => item.ruleId === 'service-count').gate.status, 'pass');
   writeFileSync(join(repository, 'records.json'), '[{"id":"service:a","name":"API"}]');
   assert.equal(check().status, 1);
-  assert.equal(JSON.parse(readFileSync(graphPath,'utf8')).findings[0].gate.status, 'fail');
+  assert.equal(JSON.parse(readFileSync(graphPath,'utf8')).findings.find(item => item.ruleId === 'service-count').gate.status, 'fail');
   lens.findings[0].metrics.count = {op:'get',from:'vars',path:['missing']};
   saveLens();
   assert.equal(check().status, 1);
-  assert.equal(JSON.parse(readFileSync(graphPath,'utf8')).findings[0].gate.status, 'unknown');
+  assert.equal(JSON.parse(readFileSync(graphPath,'utf8')).findings.find(item => item.ruleId === 'service-count').gate.status, 'unknown');
   lens.findings[0].gate.threshold = 'two';
   saveLens();
   assert.equal(check().status, 2);

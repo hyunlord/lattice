@@ -1,6 +1,6 @@
 import type { Options, RepositoryReader, SourceLink } from './types.mjs';
 import type { DocumentDiagnostic, NodeDraft } from '../dist/index.js';
-import { canonicalJson, createGraph, resolveRecords, resolveDocumentLinks, resolveModuleLinks } from '../dist/index.js';
+import { canonicalJson, createGraph, resolveRecords, resolveDocumentLinks, resolveModuleLinks, automaticFindings } from '../dist/index.js';
 import { applyLens } from '../dist/lens/index.js';
 import { collectInputs } from './inputs.mjs';
 import { observeRepository } from './observation.mjs';
@@ -36,6 +36,8 @@ export function buildRepository(options: Options, historical?: RepositoryReader,
         const references = resolveRecords(records, knownNodes);
         interpreted = { ...references, edges: [...references.edges, ...structuralEdges(references.nodes)], facets: [], findings: [], views: [], presentation: { description: "JSON·YAML·CSV·문서·코드 파일에서 추출한 지도입니다. 코드 연결은 정적 분석이며 실행 증거가 아닙니다. Unity 직렬화 YAML은 포함하지 않습니다." } };
     }
-    const graph = createGraph({ repository: { name: repository.name, ...(repository.remoteUrl ? { remoteUrl: repository.remoteUrl } : {}), ...(repository.commit ? { commit: repository.commit } : {}), dirty: repository.dirty, sourceFingerprint: digest(canonicalJson(inputs)) }, nodes: interpreted.nodes, edges: interpreted.edges, facets: interpreted.facets, findings: interpreted.findings, views: interpreted.views ?? [], snapshots: [], lensDigest: lensInput?.contentHash ?? null, adapterVersions: { json: '0.1', ...(inputs.some(input => /\.ya?ml$/iu.test(input.path)) ? { yaml: '0.1' } : {}), ...(inputs.some(input => /\.csv$/iu.test(input.path)) ? { csv: '0.1' } : {}), ...(documents.length ? { markdown: '0.1' } : {}), ...(modules.length ? { code: '0.1' } : {}), ...(lens?.codeLinks.length ? { codeSupport: '0.1' } : {}), ...(lens ? { lens: '0.1' } : {}), ...(graftObservation ? { graft: graftAdapterVersion } : {}), references: '0.1' }, inputs }, digest);
-    return { fingerprint, extraction: { stats: cache.stats, manifest: cache.manifest }, graph, presentation: interpreted.presentation, diagnostics: [...diagnostics, ...interpreted.diagnostics, ...documentDiagnostics, ...moduleLinks.diagnostics, ...graft.diagnostics], coverage };
+    const allDiagnostics = [...diagnostics, ...interpreted.diagnostics, ...documentDiagnostics, ...moduleLinks.diagnostics, ...graft.diagnostics];
+    const findings = [...interpreted.findings, ...automaticFindings(interpreted.nodes, interpreted.edges, allDiagnostics, digest)];
+    const graph = createGraph({ repository: { name: repository.name, ...(repository.remoteUrl ? { remoteUrl: repository.remoteUrl } : {}), ...(repository.commit ? { commit: repository.commit } : {}), dirty: repository.dirty, sourceFingerprint: digest(canonicalJson(inputs)) }, nodes: interpreted.nodes, edges: interpreted.edges, facets: interpreted.facets, findings, views: interpreted.views ?? [], snapshots: [], lensDigest: lensInput?.contentHash ?? null, adapterVersions: { automaticFindings: '0.1', json: '0.1', ...(inputs.some(input => /\.ya?ml$/iu.test(input.path)) ? { yaml: '0.1' } : {}), ...(inputs.some(input => /\.csv$/iu.test(input.path)) ? { csv: '0.1' } : {}), ...(documents.length ? { markdown: '0.1' } : {}), ...(modules.length ? { code: '0.1' } : {}), ...(lens?.codeLinks.length ? { codeSupport: '0.1' } : {}), ...(lens ? { lens: '0.1' } : {}), ...(graftObservation ? { graft: graftAdapterVersion } : {}), references: '0.1' }, inputs }, digest);
+    return { fingerprint, extraction: { stats: cache.stats, manifest: cache.manifest }, graph, presentation: interpreted.presentation, diagnostics: allDiagnostics, coverage };
 }

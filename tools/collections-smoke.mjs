@@ -22,12 +22,12 @@ export function verifyCollections(cli, repository) {
   const read = path => JSON.parse(readFileSync(join(repository, path), 'utf8'));
   run(['check']);
   const before = read('.lattice/cache/graph.json');
-  assert.deepEqual(before.findings[0].metrics, { count: 2, names: 'app, platform', members: ['b', 'a/c'] });
-  assert.equal(before.findings[0].message, '2 owners: app, platform');
+  assert.deepEqual(before.findings.find(item => item.ruleId === 'ownership').metrics, { count: 2, names: 'app, platform', members: ['b', 'a/c'] });
+  assert.equal(before.findings.find(item => item.ruleId === 'ownership').message, '2 owners: app, platform');
   run(['export', join(repository, '.lattice/site')]);
   assert.equal(read('.lattice/site/graph.json').hash, before.hash);
   save('services.json', [{ id: 'a', owner: 'platform' }, { id: 'b', owner: 'app' }, { id: 'c', owner: 'app' }]);
   run(['check']);
-  assert.deepEqual(read('.lattice/cache/graph.json').findings[0].metrics.members, ['b/c', 'a']);
+  assert.deepEqual(read('.lattice/cache/graph.json').findings.find(item => item.ruleId === 'ownership').metrics.members, ['b/c', 'a']);
   console.log('Installed collection expressions: grouped ownership, ordered joined members, finding text, gates, source edits and export passed.');
 }
