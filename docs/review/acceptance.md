@@ -92,3 +92,5 @@ L1 expression correctness: [missing-value propagation and classification evidenc
 L1 collection expressions: [installed ownership and real repository grouping](l1-collections.md) proves groupBy/join composition in findings and export. L1-06/07 remain pending for source provenance and remaining contracts.
 
 L1 external cache: [read-only fixture and actual source evidence](l1-external-cache.md) proves the cache path across build/check/diff/export/serve. This enables later read-only consumer acceptance but does not itself complete L5-06.
+
+L1 source expressions: [located and derived input evidence](l1-source-provenance.md) records exact field reads, isolated dependencies, installed CLI behavior and actual consumer semantic parity. Full schema and aggregation coverage remain pending.
