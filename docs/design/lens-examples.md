@@ -329,3 +329,32 @@ For example, a wildcard selecting capacities `3`, absent, `7` gives `{sum:10,cou
 `join` evaluates `input` and uses a literal string `separator`. Strings, finite numbers, booleans and explicit null become their string representations (`null` becomes `"null"`). Empty input produces `""`. Missing/non-array input or an array/object/missing/non-finite member produces missing, never implicit `[object Object]` text. An invalid separator is a configuration error.
 
 Both operators compose with derived fields, map, findings and existing view expressions; they do not add domain-specific groupings or screens.
+
+## List columns and computed comparisons
+
+Kind `label`, `columns` and `hidden` are exported as presentation defaults. Entries in `presentation.kinds` override those fields independently; an explicit `columns: []` requests no extra columns. Only metadata is copied, never record selection rules.
+
+List column strings name an attribute by default (`cost`). Bare `id`, `name` and `kind` reuse the built-in columns; use `attribute:id`, `attribute:name` or `attribute:kind` when a separate raw attribute is intended. `attribute:<name>` reads an exact attribute name, including names containing punctuation or a reserved prefix. `facet:<key>` reads the node's exported classification values and retains their evidence. Multiple distinct values remain a deterministic array, not an arbitrary first match.
+
+To show a computed comparison, materialize derived expressions as facets, then configure their columns:
+
+```yaml
+kinds:
+  - id: entry
+    label: Entries
+    files: [records.json]
+    columns: [cost, 'facet:intent', 'facet:implementation']
+derived:
+  - id: intended
+    scope: node
+    value: {op: get, from: node, path: [description]}
+facets:
+  - id: intent
+    key: intent
+    value: {op: get, from: vars, path: [intended]}
+  - id: implementation
+    key: implementation
+    value: {op: get, from: node, path: [status]}
+```
+
+Names in this example are authored labels; the renderer has no intent/implementation domain branches and does not interpret transient derived variables as exported fields. The same columns participate in text search and sorting. Missing and null sort after present values in both directions, and numeric values sort numerically. Unconfigured kinds share a two-column budget, ranked by scalar-field prevalence within the active layer/kind scope, before text/value filters.

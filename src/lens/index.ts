@@ -207,5 +207,18 @@ export function applyLens(base: readonly ExtractedRecord[], lens: Lens, input: S
         const gate = evaluateGate(rule["gate"], metrics);
         return { ...(gate ? { gate } : {}), id: string(rule["id"]), ruleId: string(rule["id"]), severity, basis, targetIds: targets.map(record => record.node.id), metrics, message: string(rule["template"]).replace(/\{([^{}]+)\}/g, (_, key: string) => String(metrics[key] ?? "?")), sources: [...sources.values()], ...(intent === undefined ? {} : { intent }), ...(implementation === undefined ? {} : { implementation }) };
     });
-    return { nodes: records.map(record => record.node), edges, views: materializeViews(context, edges), diagnostics: resolved.diagnostics, facets, findings, presentation: object(lens.config["presentation"] ?? {}) };
+    const presentation = object(lens.config["presentation"] ?? {});
+    const kindDefaults = new Map<string, JsonObject>(lens.kinds.map(kind => [kind.id, {
+        id: kind.id, label: kind.label,
+        ...(kind.columns === undefined ? {} : { columns: kind.columns }),
+        ...(kind.hidden === undefined ? {} : { hidden: kind.hidden }),
+    }]));
+    const presentationKinds = array(presentation["kinds"] ?? []).map(value => {
+        const kind = object(value); const id = string(kind["id"]);
+        const defaults = kindDefaults.get(id) ?? {};
+        kindDefaults.delete(id);
+        return { ...kind, ...Object.fromEntries(Object.entries(defaults).filter(([key]) => kind[key] === undefined)) };
+    });
+    presentationKinds.push(...kindDefaults.values());
+    return { nodes: records.map(record => record.node), edges, views: materializeViews(context, edges), diagnostics: resolved.diagnostics, facets, findings, presentation: presentationKinds.length ? { ...presentation, kinds: presentationKinds } : presentation };
 }
