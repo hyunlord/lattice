@@ -5,10 +5,12 @@ import { matchesGlob, parseLens } from '../dist/lens/index.js';
 import { inside, selectedInputs } from './inputs.mjs';
 import { workingRepository } from './repository.mjs';
 import { digest } from './storage.mjs';
+import { observeGraft } from './graft.mjs';
 
 export function observeRepository(options, historical) {
   const { root } = options;
   const repository = historical ?? workingRepository(root);
+  const graft = observeGraft(repository);
   const names = ['.lattice/lens.yaml', '.lattice/lens.yml', '.lattice/lens.json'];
   const select = paths => {
     const candidates = names.filter(path => paths.includes(path));
@@ -42,6 +44,6 @@ export function observeRepository(options, historical) {
     const after = workingRepository(root);
     if (repository.commit !== after.commit || repository.dirty !== after.dirty || repository.remoteUrl !== after.remoteUrl || canonicalJson(repository.paths) !== canonicalJson(after.paths)) throw new Error('Repository changed while reading inputs; retry the build');
   }
-  const fingerprint = digest(canonicalJson({ repository: { name: repository.name, remoteUrl: repository.remoteUrl ?? null, commit: repository.commit ?? null, dirty: repository.dirty }, lens: lensInput ?? null, inputs: selected.map(({ input }) => ({ path: input.path, contentHash: input.contentHash })), ...(lens?.codeLinks.length ? { codeInputs: codeInputs.map(({ path, contentHash }) => ({ path, contentHash })) } : {}) }));
-  return { repository, lens, lensInput, coverage, selected, codeInputs, fingerprint };
+  const fingerprint = digest(canonicalJson({ repository: { name: repository.name, remoteUrl: repository.remoteUrl ?? null, commit: repository.commit ?? null, dirty: repository.dirty }, lens: lensInput ?? null, inputs: selected.map(({ input }) => ({ path: input.path, contentHash: input.contentHash })), ...(lens?.codeLinks.length ? { codeInputs: codeInputs.map(({ path, contentHash }) => ({ path, contentHash })) } : {}), ...(graft ? { graft: graft.input ? { path: graft.input.path, contentHash: graft.input.contentHash } : graft.diagnostic } : {}) }));
+  return { repository, lens, lensInput, coverage, selected, codeInputs, fingerprint, graft };
 }

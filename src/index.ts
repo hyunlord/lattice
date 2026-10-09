@@ -23,3 +23,5 @@ export { extractCode, codeLanguage } from "./adapters/code.js";
 export type { CodeModule, ModuleImport } from "./adapters/code.js";
 export { resolveModuleLinks } from "./adapters/module-links.js";
 export type { ModuleDiagnostic } from "./adapters/module-links.js";
+export { importGraft, graftAdapterVersion } from "./adapters/graft.js";
+export type { GraftImport, GraftDiagnostic } from "./adapters/graft.js";
