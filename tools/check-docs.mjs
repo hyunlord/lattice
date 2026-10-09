@@ -1,10 +1,11 @@
+import { fileURLToPath } from 'node:url';
 import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
 import { readFile, readdir, stat } from 'node:fs/promises';
 import { dirname, resolve } from 'node:path';
 
-const root = resolve(import.meta.dirname, '..');
-const required = ['AGENTS.md', 'DESIGN.md', 'docs/design/brief-v0.1.md', 'docs/design/lattice-v0.md', 'docs/design/viewer.md', 'docs/design/lens-examples.md', 'docs/review/acceptance.md', 'docs/reference/bs-mobile-oracle.md', '.omo/plans/lattice-v0.md'];
+const root = resolve(fileURLToPath(new URL('..', import.meta.url)));
+const required = ['AGENTS.md', 'DESIGN.md', 'docs/design/brief-v0.1.md', 'docs/design/lattice-v0.md', 'docs/design/viewer.md', 'docs/design/lens-examples.md', 'docs/review/acceptance.md', 'docs/reference/bs-mobile-oracle.md'];
 for (const file of required) assert.ok((await stat(resolve(root, file))).isFile(), file);
 const brief = await readFile(resolve(root, 'docs/design/brief-v0.1.md'));
 assert.equal(createHash('sha256').update(brief).digest('hex'), '05c5555feb777ae8f64780536a0ce10a15787918608fc2c1dbd2aa933412c01b', 'Original brief must remain byte-identical');
@@ -23,7 +24,7 @@ assert.deepEqual(oracle.baseWeaponShapes, { disk: 3, rays: 5, sector180: 1, sect
 async function markdownFiles(directory) {
   const paths = [];
   for (const entry of await readdir(directory, { withFileTypes: true })) {
-    if (['.git', 'node_modules', 'dist', 'evidence'].includes(entry.name)) continue;
+    if (['.git', '.omo', '.omx', '.codex', '.agents', '.lattice', 'node_modules', 'dist', 'site', 'evidence'].includes(entry.name)) continue;
     const path = resolve(directory, entry.name);
     if (entry.isDirectory()) paths.push(...await markdownFiles(path));
     else if (entry.name.endsWith('.md')) paths.push(path);

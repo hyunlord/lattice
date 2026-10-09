@@ -2,15 +2,25 @@
 
 A repository-neutral system map for people and agents. Deterministic extraction creates one graph for a static browser viewer and MCP tools; declarative lenses add repository-specific meaning.
 
-**Status: L0 merged; L1 graph foundation and JSON/CSV library extraction implemented.** The ESM graph library can be built and tested; the CLI, viewer, MCP server and reusable action remain pending. See [foundation evidence](docs/review/l1-foundation.md) and [extraction evidence](docs/review/l1-data-extraction.md).
+**Status: first published-map path implemented.** JSON → declarative lens → CLI build/export → home/list/node detail. Full L1/L2 and later milestones remain pending. See [delivery scope and evidence](docs/review/first-published-map.md).
 
 - [Original v0.1 brief](docs/design/brief-v0.1.md)
 - [Architecture and lens contract](docs/design/lattice-v0.md)
 - [Viewer wireframes](docs/design/viewer.md) and [design system](DESIGN.md)
 - [Prototype content oracle and source corrections](docs/reference/bs-mobile-oracle.md)
-- [L0–L5 execution plan](.omo/plans/lattice-v0.md)
 - [Requirement and evidence ledger](docs/review/acceptance.md)
 - [Contributor boundaries](AGENTS.md)
+
+## Build a map
+
+```sh
+npm ci --ignore-scripts
+npm run build
+node bin/lattice.mjs build --root /path/to/repository --lens /absolute/path/to/lens.json
+node bin/lattice.mjs export /path/to/site --root /path/to/repository
+```
+
+Use [the bs-mobile lens](examples/bs-mobile/lens.json) for that repository, or a JSON lens with your own file patterns and rules. Serve the export directory with a static HTTP server. Installed packages provide the `lattice` command. This first path requires Git and a JSON lens; YAML and zero-config discovery follow.
 
 ## Current verification
 
@@ -21,4 +31,4 @@ npm run test:package
 git diff --check
 ```
 
-Node 24 LTS is the target. The strict library test/format/typecheck pipeline is present; the complete CLI is still an L1 deliverable. bs-mobile integration is PR-only; Charter & Kin is read-only. No Graft implementation is copied. Licensing is tracked separately before a license or public package release is claimed.
+Node >=20 is supported; CI runs Node 20, 22 and 24. The strict library test/format/typecheck pipeline is present; the remaining CLI commands are still L1 deliverables. bs-mobile integration is PR-only; Charter & Kin is read-only. No Graft implementation is copied. Licensed under MIT.

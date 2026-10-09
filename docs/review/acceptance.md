@@ -63,9 +63,11 @@ L1 foundation: typed model, canonical graph construction and npm library packagi
 
 L1 JSON/CSV slice: strict source-aware parsing and deterministic reference resolution have [library and actual read-only source evidence](l1-data-extraction.md). YAML, full repository discovery, lens classifications and CLI remain pending; no acceptance row is upgraded by this partial slice.
 
+The user approved a [thin first publication](first-published-map.md) before broader adapters/screens. Home/list/detail and build/export are being delivered first; full milestone rows remain pending until their complete contracts are proven.
+
 ## Open decisions and risks
 
-- License recommendation is MIT; [decision issue #3](https://github.com/hyunlord/lattice/issues/3) records it before a license is granted or npm publication is claimed. Development and local package validation can continue.
+- MIT license approved by the user on 2026-10-10; [decision issue #3](https://github.com/hyunlord/lattice/issues/3) is resolved by the first published-map change.
 - Prototype 4 base forms / 20 unique classifications must coexist with 10 effective profile forms / 16 unique effective projections. See [source audit](../reference/bs-mobile-oracle.md).
 - A documented Graft JSON schema has not yet been verified; importer cannot guess it.
 - The 50ms freshness target is not proven, especially cold strict content checks. Correctness is required even if the performance gate fails.

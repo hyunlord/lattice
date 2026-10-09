@@ -1,8 +1,9 @@
+import { fileURLToPath } from 'node:url';
 import { readFile, readdir, writeFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import ts from 'typescript';
 
-const root = resolve(import.meta.dirname, '..');
+const root = resolve(fileURLToPath(new URL('..', import.meta.url)));
 async function sources(directory) {
   const files = [];
   for (const entry of await readdir(directory, { withFileTypes: true })) {

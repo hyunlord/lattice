@@ -1,10 +1,11 @@
+import { fileURLToPath } from 'node:url';
 import assert from 'node:assert/strict';
 import { execFileSync } from 'node:child_process';
 import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 
-const root = resolve(import.meta.dirname, '..');
+const root = resolve(fileURLToPath(new URL('..', import.meta.url)));
 const temporary = mkdtempSync(join(tmpdir(), 'lattice-package-'));
 try {
   const packed = JSON.parse(execFileSync('npm', ['pack', '--ignore-scripts', '--json', '--pack-destination', temporary], { cwd: root, encoding: 'utf8' }));
@@ -32,4 +33,9 @@ try {
     console.log('Installed ESM exports, graph construction, hash and rejection path passed.');
   `], { cwd: temporary, encoding: 'utf8' });
   console.log(output.trim());
+  const help = execFileSync(process.execPath, [join(temporary, 'node_modules/@hyunlord/lattice/bin/lattice.mjs'), '--help'], { cwd: temporary, encoding: 'utf8' });
+  assert.match(help, /lattice build/);
+  assert.ok(entry.files.some(file => file.path === 'viewer/app.js'));
+  assert.equal(manifest.license, 'MIT');
+  console.log('Installed CLI launch and static viewer packaging passed.');
 } finally { rmSync(temporary, { recursive: true, force: true }); }
