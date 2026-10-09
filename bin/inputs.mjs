@@ -27,9 +27,28 @@ export function selectedInputs(paths, lens) {
 
 export function collectInputs({ selected, lens, sourceLink, cache }) {
   const records = [], documents = [], modules = [], files = [], inputs = [], diagnostics = [];
+  const roots = new Map();
   for (const { input, kind, format } of selected) {
     const { path } = input;
     inputs.push({ path, contentHash: input.contentHash });
+    let namespace, namespaceSource;
+    if (kind?.namespaceFrom !== undefined) {
+      const pointer = kind.namespaceFrom;
+      if (!['json', 'yaml', 'yml'].includes(format) || !pointer.startsWith('/') || /~(?:[^01]|$)/u.test(pointer)) throw new Error(`namespaceFrom requires a JSON/YAML root pointer: ${path}`);
+      const rootKey = `${path}:${input.contentHash}:${format}`;
+      if (!roots.has(rootKey)) roots.set(rootKey, cache.extract(input, { format, selector: '' }, () => format === 'json' ? extractJson(input) : extractYaml(input)));
+      const root = roots.get(rootKey);
+      if (root.length !== 1 || root[0].node.sources[0]?.pointer !== '') throw new Error(`namespaceFrom requires a single root mapping: ${path}`);
+      let value = root[0].node.attributes;
+      for (const token of pointer.slice(1).split('/')) {
+        const key = token.replaceAll('~1', '/').replaceAll('~0', '~');
+        value = value !== null && typeof value === 'object' && Object.hasOwn(value, key) ? value[key] : undefined;
+      }
+      if (typeof value !== 'string' || !value) throw new Error(`namespaceFrom must select a nonempty string: ${path}${pointer}`);
+      namespace = value;
+      namespaceSource = root[0].fields[pointer];
+      if (!namespaceSource) throw new Error(`Missing namespace source: ${path}${pointer}`);
+    }
     const extract = parse => cache.extract(input, { format, selector: ['json', 'yaml', 'yml'].includes(format) ? kind?.records ?? '' : '' }, parse);
     if (format === 'code') {
       const module = extract(() => extractCode(input));
@@ -59,11 +78,12 @@ export function collectInputs({ selected, lens, sourceLink, cache }) {
       const originalId = typeof id === 'string' && id ? id : record.node.id;
       const selectedKind = kind?.kindField ? record.node.attributes[kind.kindField] : kind?.id ?? record.node.kind;
       if (typeof selectedKind !== 'string' || !selectedKind) throw new Error(`Missing kind field in ${path}: ${record.node.sources[0]?.pointer}`);
-      const attributes = kind?.layer ? { ...record.node.attributes, layer: kind.layer, originalId } : record.node.attributes;
+      const identityNamespace = namespace ?? kind?.layer;
+      const attributes = identityNamespace !== undefined ? { ...record.node.attributes, ...(kind?.layer ? { layer: kind.layer } : {}), originalId, ...(namespace !== undefined ? { identityNamespace: namespace } : {}) } : record.node.attributes;
       records.push({
-        node: { ...record.node, id: kind?.layer ? `${kind.layer}:${originalId}` : originalId, name: typeof name === 'string' && name ? name : record.node.name, kind: selectedKind, attributes, sources: record.node.sources.map(sourceLink) },
+        node: { ...record.node, id: identityNamespace !== undefined ? `${identityNamespace}:${originalId}` : originalId, name: typeof name === 'string' && name ? name : record.node.name, kind: selectedKind, attributes, sources: [...record.node.sources, ...(namespaceSource ? [namespaceSource] : [])].map(sourceLink) },
         ...(kind?.references === false ? { references: false } : {}),
-        fields: Object.fromEntries(Object.entries(record.fields).map(([key, value]) => [key, sourceLink(value)])),
+        fields: Object.fromEntries(Object.entries({ ...record.fields, ...(namespaceSource ? { '/identityNamespace': namespaceSource } : {}) }).map(([key, value]) => [key, sourceLink(value)])),
       });
     }
     if (!lens && !extracted.some(record => record.node.sources.some(source => source.pointer === ''))) {

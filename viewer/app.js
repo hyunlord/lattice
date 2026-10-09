@@ -254,12 +254,31 @@ function semantic(value, record = true) {
     if (value && typeof value === 'object') return Object.fromEntries(Object.keys(value).sort().filter(key => !record || !['sources', 'contentHash'].includes(key)).map(key => [key, semantic(value[key], false)]));
     return value;
 }
-function compareRecords(before, after, key = 'id') {
-    const left = new Map(before.map(item => [item[key], item])); const right = new Map(after.map(item => [item[key], item]));
+function nodeIdentity(node) { return JSON.stringify([layerOf(node), node.kind, node.attributes.originalId ?? node.id]); }
+function comparisonRecords(records, identity, normalize) { return records.map(record => ({ key: identity(record), record, value: normalize(record) })); }
+function snapshotComparisons(data, selectedNodes, layer) {
+    const identities = new Map(data.nodes.map(node => [node.id, nodeIdentity(node)]));
+    const endpoint = id => identities.get(id) || id;
+    const selectedIds = new Set(selectedNodes.map(node => node.id));
+    const edgeIdentity = edge => JSON.stringify([endpoint(edge.source), endpoint(edge.target), edge.kind, edge.field, edge.directed, edge.attributes?.ruleId ?? '']);
+    const facetIdentity = facet => JSON.stringify([endpoint(facet.nodeId), facet.key, facet.ruleId]);
+    return {
+        nodes: comparisonRecords(selectedNodes, nodeIdentity, node => {
+            const attributes = { ...node.attributes };
+            if (attributes.originalId !== undefined) delete attributes.identityNamespace;
+            return { ...node, id: nodeIdentity(node), attributes };
+        }),
+        findings: comparisonRecords(layerFindings(data, layer), finding => finding.ruleId, finding => ({ ...finding, id: finding.ruleId, targetIds: finding.targetIds.map(endpoint).sort() })),
+        edges: comparisonRecords((data.edges || []).filter(edge => selectedIds.has(edge.source) || selectedIds.has(edge.target)), edgeIdentity, edge => ({ ...edge, id: edgeIdentity(edge), source: endpoint(edge.source), target: endpoint(edge.target) })),
+        facets: comparisonRecords((data.facets || []).filter(facet => selectedIds.has(facet.nodeId)), facetIdentity, facet => ({ ...facet, id: facetIdentity(facet), nodeId: endpoint(facet.nodeId) })),
+    };
+}
+function compareRecords(before, after) {
+    const left = new Map(before.map(item => [item.key, item])); const right = new Map(after.map(item => [item.key, item]));
     return [...new Set([...left.keys(), ...right.keys()])].sort().flatMap(id => {
         const previous = left.get(id), current = right.get(id);
-        if (previous && current && JSON.stringify(semantic(previous)) === JSON.stringify(semantic(current))) return [];
-        return [{ id, previous, current, status: !previous ? '추가' : !current ? '삭제' : '변경' }];
+        if (previous && current && JSON.stringify(semantic(previous.value)) === JSON.stringify(semantic(current.value))) return [];
+        return [{ id, previous: previous?.record, current: current?.record, status: !previous ? '추가' : !current ? '삭제' : '변경' }];
     });
 }
 async function readSnapshot(snapshot) {
@@ -269,7 +288,7 @@ async function readSnapshot(snapshot) {
     snapshotGraphs.set(snapshot.id, data); return data;
 }
 async function changes(params, version) {
-    pageHeading('스냅샷 변화', '기록된 두 시점의 노드 속성과 발견을 비교합니다. 출처 위치만 달라진 경우는 내용 변경에 포함하지 않습니다.');
+    pageHeading('스냅샷 변화', '기록된 두 시점의 노드 속성과 발견을 비교합니다. 같은 층·종류·원본 ID로 대응시킵니다. 출처와 식별 네임스페이스만 달라진 경우는 내용 변경에 포함하지 않습니다.');
     if (snapshots.length < 2) { main.append(empty('비교할 스냅샷이 두 개 이상 필요합니다. Git 이력을 비교한 뒤 다시 내보내세요.')); return; }
     const baseId = params.get('base') || snapshots[0].id, headId = params.get('head') || snapshots.at(-1).id;
     const base = snapshots.find(item => item.id === baseId), head = snapshots.find(item => item.id === headId);
@@ -282,10 +301,9 @@ async function changes(params, version) {
     try {
         const [before, after] = await Promise.all([readSnapshot(base), readSnapshot(head)]); if (version !== renderVersion) return; loading.remove();
         const beforeNodes = before.nodes.filter(node => layerOf(node) === layer && !kinds.find(kind => kind.id === node.kind)?.hidden), afterNodes = after.nodes.filter(node => layerOf(node) === layer && !kinds.find(kind => kind.id === node.kind)?.hidden);
-        const nodeChanges = compareRecords(beforeNodes, afterNodes), findingChanges = compareRecords(layerFindings(before, layer), layerFindings(after, layer), 'ruleId');
-        const beforeIds = new Set(beforeNodes.map(node => node.id)), afterIds = new Set(afterNodes.map(node => node.id));
-        const edgeChanges = compareRecords((before.edges || []).filter(edge => beforeIds.has(edge.source) || beforeIds.has(edge.target)), (after.edges || []).filter(edge => afterIds.has(edge.source) || afterIds.has(edge.target)));
-        const facetChanges = compareRecords((before.facets || []).filter(facet => beforeIds.has(facet.nodeId)), (after.facets || []).filter(facet => afterIds.has(facet.nodeId)));
+        const previous = snapshotComparisons(before, beforeNodes, layer), current = snapshotComparisons(after, afterNodes, layer);
+        const nodeChanges = compareRecords(previous.nodes, current.nodes), findingChanges = compareRecords(previous.findings, current.findings);
+        const edgeChanges = compareRecords(previous.edges, current.edges), facetChanges = compareRecords(previous.facets, current.facets);
         const historicNodes = new Map([...before.nodes, ...after.nodes].map(node => [node.id, node]));
         const counts = section('층별 개수 변화');
         for (const kind of [...new Set([...beforeNodes, ...afterNodes].map(node => node.kind))].sort()) { const row = el('div', undefined, 'count-row'); row.append(el('span', kindLabel(kind)), el('code', `${beforeNodes.filter(node => node.kind === kind).length} → ${afterNodes.filter(node => node.kind === kind).length}`)); counts.append(row); } main.append(counts);
@@ -295,7 +313,7 @@ async function changes(params, version) {
                 const value = record.current || record.previous;
                 const label = title === '연결 변화' ? `${historicNodes.get(value.source)?.name || value.source} → ${historicNodes.get(value.target)?.name || value.target} · ${value.attributes?.label || value.kind}` : title === '분류 변화' ? `${historicNodes.get(value.nodeId)?.name || value.nodeId} · ${facetLabel(value.key)}: ${valueLabel(value.key, value.value)}` : value.name || record.id;
                 const disclosure = el('details', undefined, 'change-record'); disclosure.append(el('summary', `${record.status} · ${label}`));
-                if (title === '노드 변화' && nodes.has(record.id)) disclosure.append(link('현재 노드 보기', nodeHref(record.id)));
+                if (title === '노드 변화' && record.current && nodes.has(record.current.id)) disclosure.append(link('현재 노드 보기', nodeHref(record.current.id)));
                 const pair = el('div', undefined, 'two-column');
                 for (const [label, value] of [['이전', record.previous], ['이후', record.current]]) { const column = el('div'); column.append(el('h3', label), value ? el('pre', JSON.stringify(semantic(value), null, 2)) : el('p', '없음', 'muted')); pair.append(column); } disclosure.append(pair); box.append(disclosure);
             } main.append(box);

@@ -254,3 +254,9 @@ Additional reusable operators implemented for these projections:
 | `let` | `bindings`, `value` | Evaluate ordered named bindings into a local copy of `vars`, then evaluate `value`; outer `node`/`item` remain available and the outer environment is unchanged. |
 
 `get.path` accepts nonnegative integer array indices as well as strings and `*`. A `let` binding preserves an outer item while nested `filter`/`map` binds another item; it adds no product-specific operator. `get from: graph, path: [edges]` is available in facets, findings, and views after edge materialization.
+
+### Revision-derived identity namespaces
+
+A JSON/YAML kind or selection may set `namespaceFrom: /revision` (or another escaped JSON pointer into its single root mapping). The selected root field must be a nonempty string. The adapter reads it from the same observed input bytes through the extraction cache, qualifies each graph ID as `namespace:originalId`, and exposes `attributes.identityNamespace` with exact field provenance. `attributes.layer` remains the independently configured family. The namespace changes with the source revision without rewriting the layer label or lens. Original IDs remain in `attributes.originalId`.
+
+Inferred aliases are partitioned by both layer and identity namespace, so two revisions cannot acquire implicit cross-revision links. Explicit lens queries can still compare them. Without `namespaceFrom`, qualification remains `layer:originalId`; unlayered/runtime inputs retain their prior identity behavior. The namespace option is supported only for JSON/YAML records and rejects absent, ambiguous, or nonscalar root values rather than silently falling back to the layer.
