@@ -1,3 +1,5 @@
+import { parseCodeLinks, prepareCodeLinks, evaluateCodeLink } from "./code-links.js";
+import type { CodeLinkRule, CodeSupportEvaluation } from "./code-links.js";
 import { compileDerived } from "./derived.js";
 import type { DerivedPlan } from "./derived.js";
 import { materializeEdges, materializeViews, matchesQuery, prepareRecords } from "./structure.js";
@@ -13,7 +15,7 @@ import type { ExtractedRecord, SourceInput } from "../adapters/types.js";
 
 export type LensSelection = { readonly namespaceFrom?: string; readonly idField?: string; readonly nameField?: string; readonly files: readonly string[]; readonly records?: string; readonly kindField?: string; readonly layer?: string; readonly references?: boolean; };
 export type LensKind = { readonly namespaceFrom?: string; readonly selections?: readonly LensSelection[]; readonly kindField?: string; readonly layer?: string; readonly references?: boolean; readonly id: string; readonly label: string; readonly files: readonly string[]; readonly records?: string; readonly idField?: string; readonly nameField?: string; readonly columns?: readonly string[]; readonly hidden?: boolean; };
-export type Lens = { readonly name: string; readonly kinds: readonly LensKind[]; readonly config: JsonObject; readonly derived: DerivedPlan; };
+export type Lens = { readonly name: string; readonly kinds: readonly LensKind[]; readonly config: JsonObject; readonly derived: DerivedPlan; readonly codeLinks: readonly CodeLinkRule[]; };
 function boolean(value: JsonValue): boolean { if (typeof value !== "boolean") throw new Error("Lens expected a boolean"); return value; }
 function lensRecord(input: SourceInput): ExtractedRecord | undefined {
     return /\.ya?ml$/iu.test(input.path) ? extractYamlDocument(input) : extractJson(input)[0];
@@ -53,7 +55,8 @@ export function parseLens(input: SourceInput): Lens {
         };
     });
     if (new Set(kinds.map(kind => kind.id)).size !== kinds.length) throw new Error("Duplicate lens kind");
-    return { name: string(config["name"]), kinds, config, derived: compileDerived(definition) };
+    const codeLinks = parseCodeLinks(definition);
+    return { name: string(config["name"]), kinds, config, codeLinks, derived: compileDerived(definition, codeLinks) };
 }
 export function matchesGlob(path: string, pattern: string): boolean {
     let expression = "^";
@@ -68,25 +71,41 @@ export function matchesGlob(path: string, pattern: string): boolean {
     }
     return new RegExp(`${expression}$`, "u").test(path);
 }
-export function applyLens(base: readonly ExtractedRecord[], lens: Lens, input: SourceInput): { readonly nodes: readonly NodeDraft[]; readonly facets: readonly Facet[]; readonly findings: readonly Finding[]; readonly presentation: JsonObject; readonly edges: readonly Edge[]; readonly views: readonly View[]; readonly diagnostics: readonly ReferenceDiagnostic[]; } {
+export function applyLens(base: readonly ExtractedRecord[], lens: Lens, input: SourceInput, options: { readonly codeInputs?: readonly SourceInput[]; readonly sourceLink?: (source: Source) => Source; } = {}): { readonly nodes: readonly NodeDraft[]; readonly facets: readonly Facet[]; readonly findings: readonly Finding[]; readonly presentation: JsonObject; readonly edges: readonly Edge[]; readonly views: readonly View[]; readonly diagnostics: readonly ReferenceDiagnostic[]; } {
     const definition = lensRecord(input);
     if (!definition) throw new Error("Missing lens definition");
     const resolved = prepareRecords(base, lens.config, definition);
     const records = resolved.records;
     const graph: Record<string, JsonValue> = { nodes: records.map(record => recordView(record.node)), edges: resolved.edges.map(edge => ({ ...edge, sources: edge.sources.map(source => ({ ...source })) })) };
     const derived = lens.derived;
+    const codeLinks = prepareCodeLinks(lens.codeLinks, options.codeInputs ?? [], matchesGlob);
+    const expressionSource = definition.node.sources[0];
+    const supportContext = { ...(expressionSource ? { expressionSource } : {}), ...(options.sourceLink ? { sourceLink: options.sourceLink } : {}) };
     const graphVars: Record<string, JsonValue> = {};
     const graphSources = new Map<string, Source>();
-    for (const rule of derived.graph) graphVars[rule.id] = evaluate(rule.value, { vars: graphVars, records, sources: graphSources, graph }) ?? null;
+    for (const rule of derived.graph) graphVars[rule.id] = evaluate(rule.value, { ...supportContext, ...(rule.source ? { expressionSource: rule.source } : {}), vars: graphVars, records, sources: graphSources, graph }) ?? null;
     const environments = new Map<string, Environment>();
     const facets: Facet[] = [];
     const applies = (rule: JsonObject, node: NodeDraft): boolean => (rule["layer"] === undefined || rule["layer"] === node.attributes["layer"]) && (rule["kinds"] === undefined || array(rule["kinds"]).includes(node.kind));
     for (const record of records) {
         const vars = { ...graphVars };
-        const env: Environment = { node: recordView(record.node), vars, records, sources: new Map(graphSources), graph };
+        const support = new Map<string, CodeSupportEvaluation>();
+        const env: Environment = { ...supportContext, node: recordView(record.node), vars, records, sources: new Map(graphSources), graph, codeSupport: support };
         addSources(env, record.node.sources);
         for (const rule of derived.node) {
-            if ((rule.layer === undefined || rule.layer === record.node.attributes["layer"]) && (rule.kinds === undefined || rule.kinds.includes(record.node.kind))) vars[rule.id] = evaluate(rule.value, env) ?? null;
+            switch (rule.type) {
+                case "derived":
+                    if ((rule.layer === undefined || rule.layer === record.node.attributes["layer"]) && (rule.kinds === undefined || rule.kinds.includes(record.node.kind))) vars[rule.id] = evaluate(rule.value, { ...env, ...(rule.source ? { expressionSource: rule.source } : {}) }) ?? null;
+                    break;
+                case "codeLink": {
+                    const prepared = codeLinks.get(rule.id);
+                    if (!prepared) throw new Error("Missing prepared code-link surface");
+                    const result = evaluateCodeLink(rule.rule, env, prepared);
+                    support.set(rule.id, result);
+                    if (result.applicable) facets.push({ id: `codeSupport:${rule.id}:${record.node.id}`, nodeId: record.node.id, key: `codeSupport:${rule.id}`, ruleId: rule.id, value: result.value, sources: result.sources });
+                    break;
+                }
+            }
         }
         environments.set(record.node.id, env);
     }
@@ -99,8 +118,8 @@ export function applyLens(base: readonly ExtractedRecord[], lens: Lens, input: S
         array(lens.config["facets"] ?? []).forEach((value, index) => {
             const rule = object(value);
             if (!applies(rule, record.node)) return;
-            const result = evaluate(rule["value"] ?? { op: "case", cases: rule["cases"] ?? [], default: rule["default"] ?? null }, env) ?? null;
-            const source = definition?.fields[`/facets/${index}`];
+            const source = definition.fields[`/facets/${index}`];
+            const result = evaluate(rule["value"] ?? { op: "case", cases: rule["cases"] ?? [], default: rule["default"] ?? null }, { ...env, ...(source ? { expressionSource: source } : {}) }) ?? null;
             facets.push({ id: `${string(rule["id"])}:${record.node.id}`, nodeId: record.node.id, key: string(rule["key"]), value: result, ruleId: string(rule["id"]), sources: [...env.sources.values(), ...(source ? [source] : [])] });
         });
     }
@@ -108,7 +127,7 @@ export function applyLens(base: readonly ExtractedRecord[], lens: Lens, input: S
         const rule = object(value); const query = object(rule["query"] ?? {});
         const targets = records.filter(record => matchesQuery(query, environments.get(record.node.id) ?? { vars: graphVars, records, sources: graphSources, graph }));
         const sources = new Map<string, Source>();
-        const env: Environment = { vars: { ...graphVars, targets: targets.map(record => recordView(record.node)) }, records, sources, graph };
+        const env: Environment = { ...supportContext, ...(definition.fields[`/findings/${index}`] ? { expressionSource: definition.fields[`/findings/${index}`] } : {}), vars: { ...graphVars, targets: targets.map(record => recordView(record.node)), targetValues: targets.map(record => ({ node: recordView(record.node), derived: environments.get(record.node.id)?.vars ?? {} })) }, records, sources, graph };
         for (const target of targets) addSources(env, [...(environments.get(target.node.id)?.sources.values() ?? target.node.sources)]);
         const lensSource = definition?.fields[`/findings/${index}`];
         if (lensSource) addSources(env, [lensSource]);
