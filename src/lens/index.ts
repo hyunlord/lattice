@@ -184,8 +184,23 @@ export function applyLens(base: readonly ExtractedRecord[], lens: Lens, input: S
         if (severity !== "info" && severity !== "warning" && severity !== "error") throw new Error("Invalid finding severity");
         const basis = rule["basis"] ?? "computed";
         if (basis !== "computed" && basis !== "authored-interpretation" && basis !== "source-support") throw new Error("Invalid finding basis");
+        const description = (key: "intent" | "implementation"): string | undefined => {
+            const pointer = `/findings/${index}/${key}`;
+            const source = definition.fields[pointer] ?? lensSource;
+            const fail = (reason: string): never => { throw new DataInputError(input.path, source?.line ?? 1, `${pointer}: ${reason}`); };
+            let result: RuntimeValue;
+            try { result = evaluate(rule[key], { ...env, ...(source ? { expressionSource: source } : {}) }); }
+            catch (error) {
+                if (error instanceof Error) return fail(error.message);
+                throw error;
+            }
+            if (result === undefined || result === null) return undefined;
+            return typeof result === "string" ? result : fail("Expected a string or missing description result");
+        };
+        const intent = description("intent");
+        const implementation = description("implementation");
         const gate = evaluateGate(rule["gate"], metrics);
-        return { ...(gate ? { gate } : {}), id: string(rule["id"]), ruleId: string(rule["id"]), severity, basis, targetIds: targets.map(record => record.node.id), metrics, message: string(rule["template"]).replace(/\{([^{}]+)\}/g, (_, key: string) => String(metrics[key] ?? "?")), sources: [...sources.values()], ...(typeof rule["intent"] === "string" ? { intent: rule["intent"] } : {}), ...(typeof rule["implementation"] === "string" ? { implementation: rule["implementation"] } : {}) };
+        return { ...(gate ? { gate } : {}), id: string(rule["id"]), ruleId: string(rule["id"]), severity, basis, targetIds: targets.map(record => record.node.id), metrics, message: string(rule["template"]).replace(/\{([^{}]+)\}/g, (_, key: string) => String(metrics[key] ?? "?")), sources: [...sources.values()], ...(intent === undefined ? {} : { intent }), ...(implementation === undefined ? {} : { implementation }) };
     });
     return { nodes: records.map(record => record.node), edges, views: materializeViews(context, edges), diagnostics: resolved.diagnostics, facets, findings, presentation: object(lens.config["presentation"] ?? {}) };
 }

@@ -37,11 +37,10 @@ function destination(options) {
 }
 
 export function exportSite(options) {
-  if (options.json) throw new Error('--json is supported by diff');
   const cache = cacheDirectory(options.root, options.cacheDir);
   const graphPath = join(cache, 'graph.json');
   if (!existsSync(graphPath)) throw new Error('Run lattice build before export');
-  readGraph(graphPath);
+  const graph = readGraph(graphPath);
   const snapshots = readSnapshots(cache);
   const output = destination(options);
   mkdirSync(dirname(output), { recursive: true });
@@ -63,6 +62,6 @@ export function exportSite(options) {
     catch (error) { if (backedUp) { renameSync(backup, output); backedUp = false; } throw error; }
     if (backedUp) rmSync(backup, { recursive: true });
   } finally { rmSync(staging, { recursive: true, force: true }); }
-  console.log(`Exported static map to ${output}`);
-  return output;
+  if (!options.json) console.log(`Exported static map to ${output}`);
+  return options.json ? { outputPath: output, hash: graph.hash } : output;
 }

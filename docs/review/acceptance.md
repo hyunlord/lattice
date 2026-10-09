@@ -94,3 +94,7 @@ L1 collection expressions: [installed ownership and real repository grouping](l1
 L1 external cache: [read-only fixture and actual source evidence](l1-external-cache.md) proves the cache path across build/check/diff/export/serve. This enables later read-only consumer acceptance but does not itself complete L5-06.
 
 L1 source expressions: [located and derived input evidence](l1-source-provenance.md) records exact field reads, isolated dependencies, installed CLI behavior and actual consumer semantic parity. Full schema and aggregation coverage remain pending.
+
+L1 structured output and descriptions: [six-command installed CLI and actual repository evidence](l1-structured-cli.md) verifies JSON automation and expression-based finding narratives with retained sources. Existing bs-mobile graph output remains identical.
+
+L1 evidence audit at `d0db6affb20ba0c910c7900deac69cbcd12a7cc1`: L1-01 has clean npm installation, Node 20/22/24 checks and installed-package evidence in [CI](https://github.com/hyunlord/lattice/actions/runs/37996533086). It remains pending because strict TypeScript currently covers `src/**/*.ts`, while shipping CLI/viewer JavaScript is outside that check. L1-05 already has exact arbitrary-field references, alias/layer collision handling, source pointers, historical metadata and dirty/index preservation evidence in the data/unified-graph tests and history/code-link smoke scenarios. It remains pending for the designed external/internal unresolved-reference distinction and explicit unchanged-referrer refresh evidence.

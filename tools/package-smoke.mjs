@@ -6,6 +6,8 @@ import { verifyInputScope } from './input-scope-smoke.mjs';
 import { verifyExpressionMissing } from './expression-missing-smoke.mjs';
 import { verifyCollections } from './collections-smoke.mjs';
 import { verifySources } from './source-smoke.mjs';
+import { verifyJson } from './json-smoke.mjs';
+import { verifyFindingDescriptions } from './finding-descriptions-smoke.mjs';
 import { verifyExternalCache } from './external-cache-smoke.mjs';
 import { verifyYaml } from './yaml-smoke.mjs';
 import { verifyExport } from './export-smoke.mjs';
@@ -113,6 +115,8 @@ try {
   verifyExpressionMissing(cli, join(temporary, 'expression-missing'));
   verifyCollections(cli, join(temporary, 'collections'));
   verifySources(cli, join(temporary, 'sources'));
+  await verifyJson(cli, join(temporary, 'json-output'));
+  verifyFindingDescriptions(cli, join(temporary, 'finding-descriptions'));
   await verifyExternalCache(cli, join(temporary, 'external-source'));
   verifyExport(cli, join(temporary, 'export'));
   await verifyServe(cli, join(temporary, 'serve'));

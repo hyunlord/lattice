@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 import { realpathSync } from 'node:fs';
+import { performance } from 'node:perf_hooks';
 import { basename, dirname, join, resolve } from 'node:path';
 import { diffGraphs } from '../dist/index.js';
 import { exportSite } from './export.mjs';
@@ -37,16 +38,30 @@ function options(args) {
   }
   return options;
 }
-function build(options) {
-  if (options.json) throw new Error('--json is supported by diff');
+function graphSummary(graph) {
+  return { hash: graph.hash, repository: graph.repository, counts: Object.fromEntries(['nodes', 'edges', 'facets', 'findings', 'views'].map(key => [key, graph[key].length])) };
+}
+function gates(graph) {
+  return graph.findings.filter(finding => finding.gate).map(finding => ({ findingId: finding.id, ruleId: finding.ruleId, ...finding.gate, value: finding.metrics[finding.gate.metric] ?? null }));
+}
+const startedAt = performance.now();
+function output(command, result, ok = true) {
+  console.log(JSON.stringify({ schemaVersion: 1, command, ok, result: { ...result, durationMs: performance.now() - startedAt } }));
+}
+function build(options, command = 'build') {
   return withCacheLock(options.root, () => {
     const result = buildRepository(options);
     const graph = persistBuild(options.root, result, options.cacheDir);
-    console.log(`Built ${graph.nodes.length} nodes, ${graph.edges.length} edges, ${graph.facets.length} facets, ${graph.findings.length} findings.`);
-    console.log(`Extraction: ${result.extraction.stats.parsed} parsed, ${result.extraction.stats.reused} reused, ${result.extraction.stats.discarded} discarded; ${result.extraction.stats.files} files content-verified.`);
-    console.log(`Input/reference diagnostics: ${result.diagnostics.length} (selected input scope).`);
-    if (graph.lensDigest === null) console.log('Coverage: JSON, YAML, CSV, Markdown and code files; JS/TS/Python static imports. Unity tagged YAML is not included.');
-    console.log(`Graph ${graph.hash}\n${join(cacheDirectory(options.root, options.cacheDir), 'graph.json')}`);
+    if (options.json) {
+      const statuses = gates(graph);
+      output(command, { graph: graphSummary(graph), extraction: result.extraction.stats, diagnostics: result.diagnostics, coverage: result.coverage, cachePath: cacheDirectory(options.root, options.cacheDir), gates: statuses }, command !== 'check' || statuses.every(gate => gate.status === 'pass'));
+    } else {
+      console.log(`Built ${graph.nodes.length} nodes, ${graph.edges.length} edges, ${graph.facets.length} facets, ${graph.findings.length} findings.`);
+      console.log(`Extraction: ${result.extraction.stats.parsed} parsed, ${result.extraction.stats.reused} reused, ${result.extraction.stats.discarded} discarded; ${result.extraction.stats.files} files content-verified.`);
+      console.log(`Input/reference diagnostics: ${result.diagnostics.length} (selected input scope).`);
+      if (graph.lensDigest === null) console.log('Coverage: JSON, YAML, CSV, Markdown and code files; JS/TS/Python static imports. Unity tagged YAML is not included.');
+      console.log(`Graph ${graph.hash}\n${join(cacheDirectory(options.root, options.cacheDir), 'graph.json')}`);
+    }
     return graph;
   }, options.cacheDir);
 }
@@ -77,8 +92,9 @@ function diff(options) {
   }, options.cacheDir);
 }
 function check(options) {
-  const graph = build(options);
+  const graph = build(options, 'check');
   const gated = graph.findings.filter(finding => finding.gate);
+  if (options.json) { if (gated.some(finding => finding.gate.status !== 'pass')) process.exitCode = 1; return; }
   if (!gated.length) { console.log('No gates configured; findings are informational.'); return; }
   for (const finding of gated) {
     const gate = finding.gate;
@@ -88,22 +104,31 @@ function check(options) {
   console.log(`Gates: ${gated.length - failed.length}/${gated.length} passed; ${failed.length} failed or unknown.`);
   if (failed.length) process.exitCode = 1;
 }
+const argv = process.argv.slice(2);
+const leadingJson = argv[0] === '--json';
+if (leadingJson) argv.shift();
+const [command, ...args] = argv;
+if (leadingJson) args.push('--json');
+const jsonRequested = args.includes('--json');
 try {
-  const [command, ...args] = process.argv.slice(2);
   if (command === 'init' && args.includes('--cache-dir')) throw new Error('--cache-dir is not supported by init; init writes repository configuration');
   if (command !== 'init' && args.includes('--no-global')) throw new Error('--no-global is supported by init');
   if (command !== 'serve' && args.includes('--port')) throw new Error('--port is supported by serve');
   if (command !== 'export' && args.includes('--force')) throw new Error('--force is supported by export');
   if (!command || command === '--help' || command === 'help') {
-    console.log('Lattice\n  lattice init --root <repository> [--no-global]\n  lattice build --root <repository> [--lens <lens.yaml|lens.json>] [--cache-dir <directory>]\n  lattice check --root <repository> [--lens <lens.yaml|lens.json>] [--cache-dir <directory>]\n  lattice diff <ref> --root <repository> [--lens <lens.yaml|lens.json>] [--json] [--cache-dir <directory>]\n  lattice export <directory> --root <repository> [--force] [--cache-dir <directory>]\n  lattice serve --root <repository> [--lens <lens.yaml|lens.json>] [--port <number>] [--cache-dir <directory>]\n\nJSON/YAML/CSV/Markdown/code build; optional declarative YAML/JSON lens; static home/list/detail.');
-  } else if (command === 'init') initialize(options(args));
+    const help = 'Lattice\n  lattice init --root <repository> [--no-global] [--json]\n  lattice build --root <repository> [--lens <lens.yaml|lens.json>] [--cache-dir <directory>] [--json]\n  lattice check --root <repository> [--lens <lens.yaml|lens.json>] [--cache-dir <directory>] [--json]\n  lattice diff <ref> --root <repository> [--lens <lens.yaml|lens.json>] [--cache-dir <directory>] [--json]\n  lattice export <directory> --root <repository> [--force] [--cache-dir <directory>] [--json]\n  lattice serve --root <repository> [--lens <lens.yaml|lens.json>] [--port <number>] [--cache-dir <directory>] [--json]\n\nJSON/YAML/CSV/Markdown/code build; optional declarative YAML/JSON lens; static home/list/detail.';
+    if (jsonRequested) output('help', { text: help });
+    else console.log(help);
+  } else if (command === 'init') { const opts = options(args); const result = initialize(opts); if (opts.json) output(command, result); }
   else if (command === 'build') build(options(args));
   else if (command === 'check') check(options(args));
   else if (command === 'diff') diff(options(args));
   else if (command === 'serve') await serve(options(args));
-  else if (command === 'export') { const opts = options(args); withCacheLock(opts.root, () => exportSite(opts), opts.cacheDir); }
+  else if (command === 'export') { const opts = options(args); withCacheLock(opts.root, () => { const result = exportSite(opts); if (opts.json) output(command, result); }, opts.cacheDir); }
   else throw new Error(`Unknown command: ${command}`);
 } catch (error) {
-  console.error(`lattice: ${error instanceof Error ? error.message : String(error)}`);
+  const message = error instanceof Error ? error.message : String(error);
+  if (jsonRequested) console.log(JSON.stringify({ schemaVersion: 1, command: command ?? null, ok: false, ...(command === 'serve' ? { event: 'error' } : {}), error: { message } }));
+  else console.error(`lattice: ${message}`);
   process.exitCode = 2;
 }
