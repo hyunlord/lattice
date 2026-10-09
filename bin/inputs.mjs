@@ -1,6 +1,6 @@
 import { readFileSync, realpathSync, statSync } from 'node:fs';
 import { isAbsolute, join, relative, sep } from 'node:path';
-import { extractJson, extractCsv, extractMarkdown, DataInputError } from '../dist/index.js';
+import { extractJson, extractCsv, extractMarkdown, extractCode, codeLanguage, DataInputError } from '../dist/index.js';
 import { matchesGlob } from '../dist/lens/index.js';
 
 export function inside(root, path) {
@@ -9,14 +9,15 @@ export function inside(root, path) {
 }
 
 export function collectInputs({ root, paths, lens, digest, sourceLink }) {
-  const records = [], documents = [], files = [], inputs = [], diagnostics = [];
+  const records = [], documents = [], modules = [], files = [], inputs = [], diagnostics = [];
   for (const path of paths) {
     if (/^(?:\.lattice|\.omo|\.omx|\.codex|\.agents|\.git)\//u.test(path)) continue;
     const kinds = lens?.kinds.filter(kind => kind.files.some(pattern => matchesGlob(path, pattern))) ?? [];
     if (lens && kinds.length === 0) continue;
     if (kinds.length > 1) throw new Error(`Ambiguous kind patterns: ${path}`);
     const kind = kinds[0];
-    const format = /\.(json|csv|md|markdown)$/iu.exec(path)?.[1]?.toLowerCase();
+    const language = codeLanguage(path);
+    const format = language ? 'code' : /\.(json|csv|md|markdown)$/iu.exec(path)?.[1]?.toLowerCase();
     if (!format) {
       if (lens) throw new Error(`No adapter for selected input: ${path}`);
       continue;
@@ -28,6 +29,11 @@ export function collectInputs({ root, paths, lens, digest, sourceLink }) {
     const text = readFileSync(absolute, 'utf8');
     const input = { path, text, contentHash: digest(text) };
     inputs.push({ path, contentHash: input.contentHash });
+    if (format === 'code') {
+      const module = extractCode(input);
+      modules.push({ ...module, node: { ...module.node, sources: module.node.sources.map(sourceLink) }, imports: module.imports.map(reference => ({ ...reference, source: sourceLink(reference.source) })) });
+      continue;
+    }
     if (format === 'md' || format === 'markdown') {
       const doc = extractMarkdown(input);
       documents.push({
@@ -57,5 +63,5 @@ export function collectInputs({ root, paths, lens, digest, sourceLink }) {
       files.push({ id: `file:${path}`, kind: 'file', name: path, attributes: { format }, sources: [sourceLink({ path, pointer: '', line: 1, contentHash: input.contentHash })] });
     }
   }
-  return { records, documents, files, inputs, diagnostics };
+  return { records, documents, modules, files, inputs, diagnostics };
 }

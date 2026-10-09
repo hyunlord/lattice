@@ -4,7 +4,7 @@ import { execFileSync } from 'node:child_process';
 import { existsSync, mkdirSync, readFileSync, realpathSync, writeFileSync, renameSync, copyFileSync } from 'node:fs';
 import { basename, dirname, join, relative, resolve, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { canonicalJson, createGraph, resolveRecords, resolveDocumentLinks } from '../dist/index.js';
+import { canonicalJson, createGraph, resolveRecords, resolveDocumentLinks, resolveModuleLinks } from '../dist/index.js';
 import { parseLens, applyLens } from '../dist/lens/index.js';
 
 import { collectInputs, inside } from './inputs.mjs';
@@ -51,21 +51,22 @@ function build(options) {
   const remoteUrl = github ? `https://github.com/${github}` : undefined;
   const paths = [...new Set(git(root, ['ls-files', '-z', '--cached', '--others', '--exclude-standard']).split('\0').filter(Boolean))].sort();
   const sourceLink = source => !dirty && remoteUrl && commit ? { ...source, revision: commit, url: `${remoteUrl}/blob/${commit}/${source.path.split('/').map(encodeURIComponent).join('/')}#L${source.line}` } : source;
-  const { records, documents, files, inputs, diagnostics } = collectInputs({ root, paths, lens, digest, sourceLink });
-  if (records.length === 0 && documents.length === 0 && files.length === 0) throw new Error('No supported JSON, CSV or Markdown inputs');
-  const interpreted = lens && lensInput ? applyLens(records, lens, lensInput) : { nodes: records.map(record => record.node), facets: [], findings: [], presentation: { description: "JSON·CSV·Markdown에서 추출한 지도입니다. YAML·코드·Git 이력은 아직 포함하지 않습니다." } };
+  const { records, documents, modules, files, inputs, diagnostics } = collectInputs({ root, paths, lens, digest, sourceLink });
+  if (records.length === 0 && documents.length === 0 && modules.length === 0 && files.length === 0) throw new Error('No supported data, document or code inputs');
+  const interpreted = lens && lensInput ? applyLens(records, lens, lensInput) : { nodes: records.map(record => record.node), facets: [], findings: [], presentation: { description: "JSON·CSV·문서·코드 파일에서 추출한 지도입니다. 코드 연결은 JS/TS·Python의 정적 import이며 실행 증거가 아닙니다. YAML·Git 이력은 아직 포함하지 않습니다." } };
   const nodes = new Map(interpreted.nodes.map(node => [node.id, node]));
   const references = resolveRecords(lens ? records.map(record => ({ ...record, node: nodes.get(record.node.id) ?? record.node })) : records);
-  const linked = resolveDocumentLinks(documents, [...references.nodes, ...files]);
-  const graph = createGraph({ repository: { name: github?.split("/").at(-1) ?? basename(root), ...(remoteUrl ? { remoteUrl } : {}), ...(commit ? { commit } : {}), dirty, sourceFingerprint: digest(canonicalJson(inputs)) }, nodes: linked.nodes, edges: [...references.edges, ...linked.edges], facets: interpreted.facets, findings: interpreted.findings, views: [], snapshots: [], lensDigest: lensInput?.contentHash ?? null, adapterVersions: { json: '0.1', ...(inputs.some(input => /\.csv$/iu.test(input.path)) ? { csv: '0.1' } : {}), ...(documents.length ? { markdown: '0.1' } : {}), ...(lens ? { lens: '0.1' } : {}), references: '0.1' }, inputs }, digest);
+  const linked = resolveDocumentLinks(documents, [...references.nodes, ...modules.map(module => module.node), ...files]);
+  const moduleLinks = resolveModuleLinks(modules);
+  const graph = createGraph({ repository: { name: github?.split("/").at(-1) ?? basename(root), ...(remoteUrl ? { remoteUrl } : {}), ...(commit ? { commit } : {}), dirty, sourceFingerprint: digest(canonicalJson(inputs)) }, nodes: linked.nodes, edges: [...references.edges, ...linked.edges, ...moduleLinks.edges], facets: interpreted.facets, findings: interpreted.findings, views: [], snapshots: [], lensDigest: lensInput?.contentHash ?? null, adapterVersions: { json: '0.1', ...(inputs.some(input => /\.csv$/iu.test(input.path)) ? { csv: '0.1' } : {}), ...(documents.length ? { markdown: '0.1' } : {}), ...(modules.length ? { code: '0.1' } : {}), ...(lens ? { lens: '0.1' } : {}), references: '0.1' }, inputs }, digest);
   const cache = join(root, '.lattice/cache');
   atomic(join(cache, 'graph.json'), graph);
   atomic(join(cache, 'presentation.json'), interpreted.presentation);
-  const allDiagnostics = [...diagnostics, ...references.diagnostics, ...linked.diagnostics];
+  const allDiagnostics = [...diagnostics, ...references.diagnostics, ...linked.diagnostics, ...moduleLinks.diagnostics];
   atomic(join(cache, 'diagnostics.json'), allDiagnostics);
   console.log(`Built ${graph.nodes.length} nodes, ${graph.edges.length} edges, ${graph.facets.length} facets, ${graph.findings.length} findings.`);
   console.log(`Input/reference diagnostics: ${allDiagnostics.length} (selected input scope).`);
-  if (!lens) console.log('Coverage: JSON, CSV and Markdown. YAML/code/git-history adapters are not yet included.');
+  if (!lens) console.log('Coverage: JSON, CSV, Markdown and code files; JS/TS/Python static imports. YAML and git history are not yet included.');
   console.log(`Graph ${graph.hash}\n${join(cache, 'graph.json')}`);
 }
 function exportSite(options) {
@@ -83,7 +84,7 @@ function exportSite(options) {
 try {
   const [command, ...args] = process.argv.slice(2);
   if (!command || command === '--help' || command === 'help') {
-    console.log('Lattice\n  lattice build --root <repository> [--lens <lens.json>]\n  lattice export <directory> --root <repository>\n\nJSON/CSV/Markdown build; optional declarative JSON lens; static home/list/detail.');
+    console.log('Lattice\n  lattice build --root <repository> [--lens <lens.json>]\n  lattice export <directory> --root <repository>\n\nJSON/CSV/Markdown/code build; optional declarative JSON lens; static home/list/detail.');
   } else if (command === 'build') build(options(args));
   else if (command === 'export') exportSite(options(args));
   else throw new Error(`Unknown command: ${command}`);

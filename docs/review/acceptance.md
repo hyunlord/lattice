@@ -67,6 +67,8 @@ The user approved a [thin first publication](first-published-map.md) before broa
 
 L1 document integration: [Markdown extraction and zero-config CLI evidence](l1-markdown.md) verifies L1-03. Other L1 rows remain pending.
 
+L1 module integration: [own-module extraction and CLI evidence](l1-modules.md) supplies static JS/TS/Python dependencies and other-language file nodes. L1-04 remains pending until validated Graft import is implemented.
+
 ## Open decisions and risks
 
 - MIT license approved by the user on 2026-10-10; [decision issue #3](https://github.com/hyunlord/lattice/issues/3) is resolved by the first published-map change.
