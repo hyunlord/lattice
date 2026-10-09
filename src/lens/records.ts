@@ -11,8 +11,8 @@ function sourceAt(definition: ExtractedRecord, pointer: string): Source {
     if (!source) throw new GraphInputError(pointer, "Missing lens source span");
     return source;
 }
-export function prepareRecords(base: readonly ExtractedRecord[], config: JsonObject, definition: ExtractedRecord) {
-    const ids = new Set(base.map(record => record.node.id));
+export function prepareRecords(base: readonly ExtractedRecord[], config: JsonObject, definition: ExtractedRecord, knownNodes: readonly NodeDraft[] = []) {
+    const ids = new Set([...base.map(record => record.node.id), ...knownNodes.map(node => node.id)]);
     const synthetics = array(config["synthetics"] ?? []).map((value, index): ExtractedRecord => {
         const rule = object(value), id = string(rule["id"]), pointer = `/synthetics/${index}`;
         if (!id || ids.has(id)) throw new GraphInputError(pointer, `Synthetic ID collides: ${id}`);
@@ -22,17 +22,21 @@ export function prepareRecords(base: readonly ExtractedRecord[], config: JsonObj
         return { node: { id, kind: string(rule["kind"]), name: string(rule["name"]), attributes, sources: [sourceAt(definition, pointer)] }, fields };
     });
     const original = [...base, ...synthetics];
-    const resolved = resolveLayered(original);
+    const resolved = resolveLayered(original, knownNodes);
     const identity = (sources: readonly Source[]): string => canonicalJson(sources.map(source => [source.path, source.pointer]));
     const fields = new Map(original.map(record => [identity(record.node.sources), record.fields]));
-    const records = resolved.nodes.map(node => {
+    const knownIds = new Set(knownNodes.map(node => node.id));
+    const records: ExtractedRecord[] = resolved.nodes.map(node => {
+        if (knownIds.has(node.id)) return { node, fields: {}, references: false };
         const mapped = fields.get(identity(node.sources));
         if (!mapped) throw new GraphInputError(node.id, "Missing resolved record fields");
         return { node, fields: mapped };
     });
     return { ...resolved, records };
 }
-function resolveLayered(records: readonly ExtractedRecord[]) {
+function resolveLayered(records: readonly ExtractedRecord[], knownNodes: readonly NodeDraft[]) {
+    const validated = resolveRecords([], knownNodes);
+    const knownIds = new Set(knownNodes.map(node => node.id));
     const groups = new Map<string, { readonly namespace: string | undefined; readonly records: ExtractedRecord[]; }>();
     for (const record of records) {
         const layer = typeof record.node.attributes["layer"] === "string" ? record.node.attributes["layer"] : undefined;
@@ -41,7 +45,7 @@ function resolveLayered(records: readonly ExtractedRecord[]) {
         const group = groups.get(key) ?? { namespace, records: [] };
         group.records.push(record); groups.set(key, group);
     }
-    const nodes: NodeDraft[] = [], edges: Edge[] = [], diagnostics: ReferenceDiagnostic[] = [];
+    const nodes: NodeDraft[] = [...validated.nodes], edges: Edge[] = [], diagnostics: ReferenceDiagnostic[] = [];
     for (const { namespace, records: group } of groups.values()) {
         const originals = new Map(group.map(record => [canonicalJson(record.node.sources), record]));
         const inputs = group.map(record => {
@@ -50,15 +54,38 @@ function resolveLayered(records: readonly ExtractedRecord[]) {
             const { layer: _layer, originalId: _originalId, identityNamespace: _namespace, ...attributes } = record.node.attributes;
             return { ...record, node: { ...record.node, id, attributes: record.references === false ? {} : namespace === undefined ? record.node.attributes : attributes } };
         });
-        const resolved = resolveRecords(inputs);
+        const resolved = resolveRecords(inputs, knownNodes);
+        const qualified = new Map<string, string>();
         const qualify = (id: string): string => namespace === undefined ? id : `${namespace}:${id}`;
+        const dataNodes = resolved.nodes.filter(node => !knownIds.has(node.id));
+        const reserved = new Set([...knownIds, ...dataNodes.map(node => qualify(node.id))]);
+        for (const node of dataNodes) {
+            let id = qualify(node.id);
+            if (knownIds.has(id)) {
+                const source = node.sources[0];
+                if (!source) throw new GraphInputError(node.id, "Missing record source");
+                const base = qualify(`record:${encodeURIComponent(source.path)}#${encodeURIComponent(source.pointer)}`);
+                id = base;
+                let suffix = 1;
+                while (reserved.has(id)) id = `${base}:${suffix++}`;
+                reserved.add(id);
+                diagnostics.push({ code: "duplicate-id", value: qualify(node.id), source });
+            }
+            qualified.set(node.id, id);
+        }
+        const dataId = (id: string): string => {
+            const value = qualified.get(id);
+            if (value === undefined) throw new GraphInputError(id, "Missing qualified record ID");
+            return value;
+        };
         for (const node of resolved.nodes) {
+            if (knownIds.has(node.id)) continue;
             const original = originals.get(canonicalJson(node.sources));
             if (!original) throw new GraphInputError(node.id, "Missing original record");
-            nodes.push({ ...node, id: qualify(node.id), attributes: original.node.attributes });
+            nodes.push({ ...node, id: dataId(node.id), attributes: original.node.attributes });
         }
         for (const edge of resolved.edges) {
-            const source = qualify(edge.source), target = qualify(edge.target);
+            const source = dataId(edge.source), target = knownIds.has(edge.target) ? edge.target : dataId(edge.target);
             edges.push({ ...edge, id: `reference:${canonicalJson([source, target, edge.field])}`, source, target });
         }
         diagnostics.push(...resolved.diagnostics);
