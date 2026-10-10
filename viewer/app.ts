@@ -179,7 +179,7 @@ function detail(id: string, version: number) {
     if (human) {
         const context = { nodes: graph.nodes, nodeHref };
         const summary = section('요약');
-        for (const field of human.summaryFields) { let value: unknown = { ...node.attributes, facet: Object.fromEntries((facets.get(id) ?? []).map(facet => [facet.key, facet.value])) }; for (const part of field.path) value = value !== null && typeof value === 'object' ? Reflect.get(value, part) : undefined; if (value === undefined || value === null || value === '') continue; const row = el('div', undefined, 'record-field'); row.append(el('strong', field.label), humanValue(value, context)); summary.append(row); }
+        for (const field of human.summaryFieldsByKind?.[node.kind] ?? human.summaryFields) { let value: unknown = { ...node.attributes, facet: Object.fromEntries((facets.get(id) ?? []).map(facet => [facet.key, facet.value])) }; for (const part of field.path) value = value !== null && typeof value === 'object' ? Reflect.get(value, part) : undefined; if (value === undefined || value === null || value === '') continue; const row = el('div', undefined, 'record-field'); row.append(el('strong', field.label), humanValue(value, context)); summary.append(row); }
         main.append(summary);
         for (const relation of human.relationships) {
             const matches = graph.edges.filter(edge => relation.edgeKinds.includes(edge.kind) && ((relation.direction !== 'incoming' && edge.source === id) || (relation.direction !== 'outgoing' && edge.target === id)));

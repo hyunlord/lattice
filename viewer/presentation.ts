@@ -1,6 +1,7 @@
 export type HomePresentation = { viewIds: string[]; findings?: boolean; inventory?: boolean; distributions?: boolean; };
 export type DetailPresentation = {
     summaryFields: { label: string; path: string[]; }[];
+    summaryFieldsByKind?: Record<string, { label: string; path: string[]; }[]>;
     relationships: { label: string; edgeKinds: string[]; direction: 'incoming' | 'outgoing' | 'both'; }[];
     rawAttributes: 'collapsed' | 'expanded';
 };
@@ -23,5 +24,10 @@ export function detailPresentation(value: unknown): DetailPresentation | undefin
         const direction = relation['direction'];
         if (direction === 'incoming' || direction === 'outgoing' || direction === 'both') relationships.push({ label: relation['label'], edgeKinds: relation['edgeKinds'], direction });
     }
-    return { summaryFields, relationships, rawAttributes: value['rawAttributes'] === 'expanded' ? 'expanded' : 'collapsed' };
+    const summaryFieldsByKind: NonNullable<DetailPresentation['summaryFieldsByKind']> = {};
+    if (object(value['summaryFieldsByKind'])) for (const [kind, fields] of Object.entries(value['summaryFieldsByKind'])) {
+        if (!Array.isArray(fields)) continue;
+        summaryFieldsByKind[kind] = fields.flatMap(field => object(field) && typeof field['label'] === 'string' && strings(field['path']) ? [{ label: field['label'], path: field['path'] }] : []);
+    }
+    return { summaryFields, summaryFieldsByKind, relationships, rawAttributes: value['rawAttributes'] === 'expanded' ? 'expanded' : 'collapsed' };
 }

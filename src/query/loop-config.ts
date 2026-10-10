@@ -5,8 +5,8 @@ export type LoopConfig = {
     stages: { id: string; title: string; summary: string; unit: string; kinds: string[]; systemIds: string[]; groupBy?: string; }[];
     flows: LoopFlow[]; strips: { title: string; description: string; kinds: string[]; }[];
     places?: { title: string; description: string; kinds: string[]; };
-    relationGroups: { label: string; side: 'left' | 'right'; kinds?: string[]; steps: { edgeKinds: string[]; direction: 'in' | 'out'; }[]; }[];
-    kindStyles?: Record<string, { shape?: LoopShape; color?: LoopTone; }>;
+    relationGroups: { label: string; displayStep?: number; viaPrefix?: string; side: 'left' | 'right'; kinds?: string[]; steps: { edgeKinds: string[]; direction: 'in' | 'out'; }[]; }[];
+    kindStyles?: Record<string, { label?: string; shape?: LoopShape; color?: LoopTone; variants?: readonly { readonly field: string; readonly value: string | number | boolean; readonly shape?: LoopShape; readonly color?: LoopTone; readonly label?: string; }[]; }>;
 };
 const object = (v: unknown): v is Record<string, unknown> => !!v && typeof v === 'object' && !Array.isArray(v);
 const text = (v: unknown, fallback = '') => typeof v === 'string' ? v : fallback;
@@ -22,7 +22,8 @@ export function loopConfig(value: unknown): LoopConfig | undefined {
         const shape = style['shape'], color = style['color'];
         const shapes: LoopShape[] = ['diamond', 'square', 'circle', 'pill', 'star', 'triangle', 'flag', 'target', 'hexagon', 'house'];
         const colors: LoopTone[] = ['blue', 'green', 'amber', 'red', 'purple', 'gray', 'teal'];
-        styles[kind] = { ...shapes.flatMap(s => s === shape ? [{ shape: s }] : [])[0], ...colors.flatMap(c => c === color ? [{ color: c }] : [])[0] };
+        const variants = objects(style['variants']).flatMap(v => { const field = v['field'], value = v['value']; return typeof field === 'string' && (typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean') ? [{ field, value, ...(typeof v['label'] === 'string' ? { label: v['label'] } : {}), ...shapes.flatMap(shape => shape === v['shape'] ? [{ shape }] : [])[0], ...colors.flatMap(color => color === v['color'] ? [{ color }] : [])[0] }] : []; });
+        styles[kind] = { ...(typeof style['label'] === 'string' ? { label: style['label'] } : {}), ...(variants.length ? { variants } : {}), ...shapes.flatMap(s => s === shape ? [{ shape: s }] : [])[0], ...colors.flatMap(c => c === color ? [{ color: c }] : [])[0] };
     }
     return {
         ...(typeof value['subtitle'] === 'string' ? { subtitle: value['subtitle'] } : {}),
@@ -35,6 +36,6 @@ export function loopConfig(value: unknown): LoopConfig | undefined {
         stages: objects(value['stages']).map(s => ({ id: text(s['id']), title: text(s['title']), summary: text(s['summary']), unit: text(s['unit']), kinds: strings(s['kinds']), systemIds: strings(s['systemIds']), ...(typeof s['groupBy'] === 'string' ? { groupBy: s['groupBy'] } : {}) })),
         flows: objects(value['flows']).map(f => ({ source: text(f['source']), target: text(f['target']), label: text(f['label']), tone: f['tone'] === 'warning' ? 'warning' : 'normal', auxiliary: f['auxiliary'] === true })),
         strips: objects(value['strips']).map(group), ...(object(value['places']) ? { places: group(value['places']) } : {}), kindStyles: styles,
-        relationGroups: objects(value['relationGroups']).map(g => ({ label: text(g['label']), side: g['side'] === 'left' ? 'left' : 'right', ...(Array.isArray(g['kinds']) ? { kinds: strings(g['kinds']) } : {}), steps: objects(g['steps']).map(s => ({ edgeKinds: strings(s['edgeKinds']), direction: s['direction'] === 'in' ? 'in' : 'out' })) })),
+        relationGroups: objects(value['relationGroups']).map(g => ({ label: text(g['label']), ...(typeof g['displayStep'] === 'number' ? { displayStep: g['displayStep'] } : {}), ...(typeof g['viaPrefix'] === 'string' ? { viaPrefix: g['viaPrefix'] } : {}), side: g['side'] === 'left' ? 'left' : 'right', ...(Array.isArray(g['kinds']) ? { kinds: strings(g['kinds']) } : {}), steps: objects(g['steps']).map(s => ({ edgeKinds: strings(s['edgeKinds']), direction: s['direction'] === 'in' ? 'in' : 'out' })) })),
     };
 }

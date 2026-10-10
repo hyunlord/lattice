@@ -3,7 +3,7 @@ export type LoopShape = 'diamond' | 'square' | 'circle' | 'pill' | 'star' | 'tri
 export type LoopTone = 'blue' | 'green' | 'amber' | 'red' | 'purple' | 'gray' | 'teal';
 export type LoopInterpretation = { readonly summary: string; readonly stale: boolean; readonly evidence: readonly { readonly path: string; readonly line?: number; readonly url?: string; }[]; };
 export type LoopMedia = { readonly url: string; readonly frame?: { readonly x: number; readonly y: number; readonly width: number; readonly height: number; }; readonly alt?: string; readonly sourcePath: string; readonly sourceHash: string; };
-export type LoopItem = { readonly id: string; readonly note?: string; };
+export type LoopItem = { readonly id: string; readonly note?: string; readonly via?: readonly { readonly id: string; readonly name: string; }[]; };
 export type LoopRelationGroup = { readonly side: 'incoming' | 'outgoing'; readonly label: string; readonly items: readonly LoopItem[]; };
 export type LoopNode = {
     readonly id: string; readonly name: string; readonly kind: string; readonly kindLabel?: string;
