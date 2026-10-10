@@ -1,8 +1,8 @@
 # Generic viewer specification and wireframes
 
-L0 design; no UI implementation or visual gate is claimed. [Tokens and component states](../../DESIGN.md) are the single visual source. All six screens render graph kinds/edges/facets/findings/views/snapshots. A lens can name/order/describe data and choose one accent, never inject CSS, layouts or domain screens.
+Design contract, updated for the approved L7 picture-map home; this document is not visual-gate evidence. [Tokens and component states](../../DESIGN.md) are the single visual source. All six screens render graph kinds/edges/facets/findings/views/snapshots. A lens can name/order/describe data and choose one accent, never inject CSS, layouts or domain screens.
 
-## Shared desktop shell
+## Detailed workbench shell
 
 ```text
 ┌ Repository / commit / dirty + freshness ───── search ─ theme ┐
@@ -19,16 +19,20 @@ The node page is a deep link, not a sixth unrelated navigation mode. Every navig
 ## Home: `#/home`
 
 ```text
-Repository name     source commit       [fresh / stale / unknown]
-Kinds                 count      facet distribution (if present)
-module                128        each segment labeled + counted
-record                 96
-Findings: gate result | rule | metric | explanation | evidence
-Automatic: isolated records / broken references / highest-degree hubs
-Recent change concentration: directory + changed-node count + compare link
+Repository name                                  [근거 보기] [자세히]
+┌ Large hub name ─────┐      influence →      ┌ Large hub name ─────┐
+│ ○ △ ◇ content      │                      │ □ ○ content        │
+└────────────────────┘                      └────────────────────┘
+One-line legend: kind shapes · status · arrow meaning
 ```
 
-Without lens, derive kinds from adapters, resolve references and show computed structural findings. Recent concentration uses available commit history; if history is absent state its absence and show current source inventory, not a fabricated zero-diff trend. Lens findings appear in the same finding table with authored/computed basis and gate text.
+The first screen is a full-width picture map. A lens selects hub kinds, content→hub membership edge kinds and hub→hub influence edge kinds in `presentation.pictureMap`. A primary facet selects the one area in which a multiply affiliated content point is drawn; its anchored card retains other memberships. Empty hubs are retained. Arrow thickness follows aggregated connection count and hover/focus reveals influence text. A status facet supplies colors with explicit legend labels; program presence is not a claim of observed execution or finished gameplay.
+
+Without a configured picture map, the same renderer groups modules/files into folder areas and resolves static import arrows. This applies both to lensless repositories such as requests and lenses without hub configuration such as the Charter & Kin example. No fake nodes, fabricated connections or execution states fill missing input.
+
+Selecting a point opens only a small anchored card: name, short text and three to five connections, plus 자세히 for the node detail. The existing list, matrices, galleries, status board and findings remain behind 자세히. The layer selector, source snapshot, graph hash, input scope and provenance text are initially hidden under 근거 보기, which restores the detailed workbench evidence.
+
+At 1280×800 all hub names must be visible without document scrolling; mobile titles must be readable without zoom. Verify these and the absence of engineering metadata on the initial screen in a real browser. The user checks 30-second comprehension on public Pages; automated checks and screenshots do not substitute for that judgment.
 
 ## Explore: `#/explore`
 
@@ -101,4 +105,4 @@ Measure text/non-text contrast and run color-deficiency simulations for category
 
 ## Curated human presentation
 
-A lens may select home viewIds, findings, inventory and distributions. Empty-layer views are hidden; direct links offer the layers containing their inputs. Detail summaryFields use attribute paths (or `facet` followed by a facet key), and relationship groups provide human labels and directions. Raw attributes can be collapsed. Row membership follows the selected layer; referenced identities and relationships resolve against the complete graph. Program presence and static support remain distinct from observed execution.
+A lens may select viewIds, findings, inventory and distributions for the detailed home disclosure; the picture map is the initial surface. Empty-layer views are hidden; direct links offer the layers containing their inputs. Detail summaryFields use attribute paths (or `facet` followed by a facet key), and relationship groups provide human labels and directions. Raw attributes can be collapsed. Row membership follows the selected layer; referenced identities and relationships resolve against the complete graph. Program presence and static support remain distinct from observed execution.

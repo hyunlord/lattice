@@ -17,7 +17,7 @@ export async function serve(options: Options) {
     const cache = cacheDirectory(options.root, options.cacheDir);
     const generations = new Map<string, Map<string, string>>();
     const clients = new Set<ServerResponse>();
-    const assets = new Map(readdirSync(join(packageRoot, 'viewer')).filter(file => file.endsWith('.js') || file === 'styles.css').map(file => [`/${file}`, readFileSync(join(packageRoot, 'viewer', file))]));
+    const assets = new Map(readdirSync(join(packageRoot, 'viewer')).filter(file => file.endsWith('.js') || file.endsWith('.css')).map(file => [`/${file}`, readFileSync(join(packageRoot, 'viewer', file))]));
     assets.set('/__lattice/live-client.js', readFileSync(join(packageRoot, 'bin/live-client.js')));
     const template = readFileSync(join(packageRoot, 'viewer/index.html'), 'utf8');
     let ready = false;

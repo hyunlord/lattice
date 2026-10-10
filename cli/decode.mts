@@ -32,7 +32,8 @@ export function parseModule(value: unknown): CodeModule {
         node: node(item['node']), language: text(item['language']), imports: list(item['imports'], entry => {
             const imported = record(entry);
             const member = optional(imported['member'], text);
-            return { specifier: text(imported['specifier']), source: source(imported['source']), ...(member === undefined ? {} : { member }) };
+            const scope = optional(imported['scope'], text), form = optional(imported['form'], text);
+            return { specifier: text(imported['specifier']), source: source(imported['source']), ...(member === undefined ? {} : { member }), ...(scope === undefined ? {} : { scope }), ...(form === undefined ? {} : { form }) };
         })
     };
 }

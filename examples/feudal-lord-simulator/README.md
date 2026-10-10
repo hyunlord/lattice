@@ -27,7 +27,13 @@ historical commit is not evidence that this lens existed in that commit.
 
 The CSS import in `src/main.tsx` is outside this lens's selected module coverage. Its unresolved-reference finding does not mean the stylesheet is missing from the repository. The original specifier and source line remain available.
 
-The curated home opens **Source module cards**, using the same generic `gallery`
+The first screen uses the generic folder picture map: folders are areas, selected
+modules/files are points, and resolved static imports are directed arrows. This
+lens deliberately has no domain hub configuration, so it exercises the same
+fallback used by a lensless repository. No execution status is inferred from
+source structure.
+
+**Source module cards** remain under 자세히, using the same generic `gallery`
 view as consumer content catalogs. Cards show source language, import counts,
 and declared dependency links. Human-first detail labels the incoming/outgoing
 imports and keeps raw attributes in a disclosure. No game-specific renderer or

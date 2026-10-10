@@ -80,7 +80,7 @@ try {
   assert.equal(first.lensDigest, null);
   assert.equal(first.edges.filter(edge => edge.kind === 'imports').length, 5);
   assert.ok(first.edges.some(edge => edge.source === 'module:pkg/__init__.py' && edge.target === 'module:pkg/worker.py'));
-  assert.equal(first.nodes.find(node => node.id === 'module:Worker.cs').attributes.extraction, 'file-only');
+  assert.equal(first.nodes.find(node => node.id === 'module:Worker.cs').attributes.extraction, 'static-imports');
   assert.ok(first.edges.some(edge => edge.source === 'owner:a' && edge.target === 'service:a'));
   assert.ok(first.edges.some(edge => edge.kind === 'link' && edge.target === 'document:decision.md#decision'));
   assert.equal(first.nodes.find(node => node.id === 'document:decision.md').attributes.status, 'Accepted');

@@ -358,3 +358,28 @@ facets:
 ```
 
 Names in this example are authored labels; the renderer has no intent/implementation domain branches and does not interpret transient derived variables as exported fields. The same columns participate in text search and sorting. Missing and null sort after present values in both directions, and numeric values sort numerically. Unconfigured kinds share a two-column budget, ranked by scalar-field prevalence within the active layer/kind scope, before text/value filters.
+
+## Picture home
+
+`presentation.pictureMap` selects a generic hub map. `hubKinds` selects region
+nodes; `membershipEdgeKinds` reads content → hub edges; `influenceEdgeKinds`
+selects directed hub arrows. All selected hubs remain visible, including empty
+ones. `hubOrder` optionally lists hub IDs in display order. Unlisted hubs follow
+by name. Multiple memberships remain in the card, but each content node is drawn
+only in the hub named by its `primaryFacet` value (otherwise the first stable
+membership). `summaryFields` lists text attributes in priority order.
+
+`statusFacet` reads `present`, `absent`, or `unknown`; `statusLabels` can give those
+values domain-appropriate names. Missing evidence remains unknown, never absent.
+The lens defines what presence means: a program declaration is not proof of
+runtime behavior or completion. Card relationship names reuse
+`presentation.detail.relationships`; raw kind identifiers are not displayed as
+fallback prose.
+
+Without this configuration, or when the selected layer contains none of its hub
+kinds, the same renderer groups modules/files by source folder and aggregates
+resolved import arrows. Non-file layers fall back to kind regions. The first
+screen hides source/layer metadata inside **근거 보기**. **자세히** opens the
+existing summary, list, matrix, status, exploration and history screens. A point
+opens a nearby card without leaving the map; its detail link retains the full
+source evidence.

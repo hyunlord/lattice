@@ -1,10 +1,14 @@
 import type { NodeDraft, Source } from "../core/model.js";
+import type { JsonObject } from "../core/canonical.js";
 import { makeSource, validateSourceInput } from "./types.js";
 import type { SourceInput } from "./types.js";
 import { codeTokens } from "./code-tokens.js";
 import type { CodeToken } from "./code-tokens.js";
 
-export type ModuleImport = { readonly specifier: string; readonly member?: string; readonly source: Source; };
+import { csharpImports } from "./csharp-imports.js";
+import { rustImports } from "./rust-imports.js";
+
+export type ModuleImport = { readonly specifier: string; readonly member?: string; readonly scope?: string; readonly form?: string; readonly source: Source; };
 export type CodeModule = { readonly node: NodeDraft; readonly language: string; readonly imports: readonly ModuleImport[]; };
 const languages: Readonly<Record<string, string>> = {
     ts: "typescript", tsx: "typescript", mts: "typescript", cts: "typescript",
@@ -84,14 +88,19 @@ function pythonImports(tokens: readonly CodeToken[], add: (specifier: string, li
 export function extractCode(input: SourceInput): CodeModule {
     validateSourceInput(input);
     const language = codeLanguage(input.path) ?? "unknown";
-    const imports: ModuleImport[] = [];
+    let imports: ModuleImport[] = [];
+    let attributes: JsonObject = {};
     const add = (specifier: string, line: number, member?: string): void => {
         imports.push({ specifier, ...(member === undefined ? {} : { member }), source: makeSource(input, `/imports/${imports.length}`, line) });
     };
     if (language === "python") pythonImports(codeTokens(input.text.replace(/\r\n|\r/gu, "\n"), true), add);
     else if (language === "typescript" || language === "javascript") javascriptImports(codeTokens(input.text.replace(/\r\n|\r/gu, "\n"), false), add);
+    else if (language === "csharp" || language === "rust") {
+        const native = language === "csharp" ? csharpImports(input) : rustImports(input);
+        imports = [...native.imports]; attributes = native.attributes;
+    }
     return {
         language, imports,
-        node: { id: `module:${input.path}`, kind: "module", name: input.path, attributes: { language, extraction: ["typescript", "javascript", "python"].includes(language) ? "static-imports" : "file-only", imports: imports.map(item => item.specifier) }, sources: [makeSource(input, "", 1, input.text.split(/\r\n|\r|\n/u).length)] },
+        node: { id: `module:${input.path}`, kind: "module", name: input.path, attributes: { ...attributes, language, extraction: ["typescript", "javascript", "python", "csharp", "rust"].includes(language) ? "static-imports" : "file-only", imports: imports.map(item => item.specifier) }, sources: [makeSource(input, "", 1, input.text.split(/\r\n|\r|\n/u).length)] },
     };
 }

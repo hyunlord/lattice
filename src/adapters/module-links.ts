@@ -1,5 +1,6 @@
 import { canonicalJson } from "../core/canonical.js";
 import type { Edge, Source } from "../core/model.js";
+import { nativeResolver } from "./native-links.js";
 import { codeLanguage } from "./code.js";
 import type { CodeModule, ModuleImport } from "./code.js";
 
@@ -37,17 +38,22 @@ function candidates(module: CodeModule, reference: ModuleImport): readonly (read
     return [[path], ["ts", "tsx", "js", "jsx", "mts", "mjs", "cts", "cjs"].flatMap(extension => [`${path}.${extension}`, `${path}/index.${extension}`])];
 }
 export function resolveModuleLinks(modules: readonly CodeModule[]): { readonly edges: readonly Edge[]; readonly diagnostics: readonly ModuleDiagnostic[]; } {
+    const nativeMatches = nativeResolver(modules);
     const paths = new Map(modules.map(module => [module.node.sources[0]?.path, module.node.id]));
     const edges: Edge[] = [];
     const diagnostics: ModuleDiagnostic[] = [];
     for (const module of modules) {
         for (const reference of module.imports) {
-            const possible = candidates(module, reference);
+            const native = nativeMatches(module, reference);
+            const possible = native ? [native.paths] : candidates(module, reference);
             const matches = possible.map(group => [...new Set(group.filter(path => paths.has(path)))]).find(group => group.length > 0) ?? [];
-            const target = matches[0] === undefined ? undefined : paths.get(matches[0]);
-            if (matches.length === 1 && target !== undefined) {
-                edges.push({ id: `import:${canonicalJson([module.node.id, target, reference.source.pointer])}`, kind: "imports", source: module.node.id, target, directed: true, field: reference.source.pointer, sources: [reference.source], attributes: { specifier: reference.specifier, ...(reference.member ? { member: reference.member } : {}) } });
-            } else diagnostics.push({ code: matches.length > 1 ? "ambiguous-module" : reference.specifier.startsWith(".") ? "unresolved-local-module" : "external-or-unresolved-module", specifier: reference.specifier, source: reference.source });
+            if (matches.length === 1 || (matches.length > 1 && native?.multiple)) {
+                for (const path of matches) {
+                    const target = paths.get(path);
+                    if (target === undefined) continue;
+                    edges.push({ id: `import:${canonicalJson([module.node.id, target, reference.source.pointer])}`, kind: "imports", source: module.node.id, target, directed: true, field: reference.source.pointer, sources: [reference.source], attributes: { specifier: reference.specifier, ...(reference.member ? { member: reference.member } : {}) } });
+                }
+            } else diagnostics.push({ code: matches.length > 1 ? "ambiguous-module" : (reference.specifier.startsWith(".") || reference.form?.startsWith("mod") || /^(?:crate|self|super)::/u.test(reference.specifier)) ? "unresolved-local-module" : "external-or-unresolved-module", specifier: reference.specifier, source: reference.source });
         }
     }
     return { edges, diagnostics };

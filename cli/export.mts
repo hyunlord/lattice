@@ -50,7 +50,7 @@ export function exportSite(options: Options) {
     const backup = `${staging}.previous`;
     let backedUp = false;
     try {
-        for (const file of ['index.html', 'styles.css', ...readdirSync(join(packageRoot, 'viewer')).filter(file => file.endsWith('.js'))]) copyFileSync(join(packageRoot, 'viewer', file), join(staging, file));
+        for (const file of ['index.html', 'styles.css', ...readdirSync(join(packageRoot, 'viewer')).filter(file => (file.endsWith('.js') || file.endsWith('.css')))]) copyFileSync(join(packageRoot, 'viewer', file), join(staging, file));
         for (const file of ['graph.json', 'presentation.json']) copyFileSync(join(cache, file), join(staging, file));
         writeFileSync(join(staging, 'snapshots.json'), JSON.stringify(snapshots, null, 2) + '\n');
         for (const snapshot of snapshots) {
