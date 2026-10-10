@@ -184,3 +184,19 @@ test('qualified Java annotations preserve authored package documentation', () =>
     const value = attributes('package-info.java', '/** Streams structured data efficiently. */\n@com.example.annotations.CheckReturnValue\npackage example.stream;');
     assert.deepEqual(value.sourceDescription, { text: 'Streams structured data efficiently.', kind: 'module-doc', line: 1, endLine: 1 });
 });
+
+test('grouped Go types preserve public declarations and balanced bodies without field inventions', () => {
+    const text = 'package task\ntype (\n ExecutorOption interface { Apply(*Executor) }\n Executor struct { Handler func(int) (string, error); Nested struct { Value int } }\n Alias = map[string]func(int) (string, error)\n hidden []Executor\n)\nfunc (e *Executor) RunTask() {}';
+    const value = attributes('executor.go', text);
+    assert.deepEqual(value.definitions.map(item => item.name), ['ExecutorOption', 'Executor', 'Alias', 'hidden', 'RunTask']);
+    assert.equal(value.definitions.find(item => item.name === 'Executor').line, 4);
+    assert.equal(value.definitions.find(item => item.name === 'hidden').public, false);
+    assert.ok(value.publicNames.some(item => item.name === 'Executor'));
+});
+
+test('JavaDoc inline links render readable labels and keep first sentence evidence', () => {
+    for (const [link, rendered] of [['{@link example.Parser}', 'example.Parser'], ['{@link example.Parser parser API}', 'parser API'], ['{@linkplain example.Parser parser API}', 'parser API']]) {
+        const value = attributes('package-info.java', `/** This package provides ${link} to parse structured data. More detail. */\npackage example;`).sourceDescription;
+        assert.deepEqual(value, { text: `This package provides ${rendered} to parse structured data.`, kind: 'module-doc', line: 1, endLine: 1 });
+    }
+});

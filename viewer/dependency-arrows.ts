@@ -1,5 +1,5 @@
 import type { DependencyView, Obstacle, Point } from './dependency-layout.js';
-import { dependencyLabelLines, dependencyLabelRowHeight, dependencyPort, orthogonalRoute, reserveDependencyRoute } from './dependency-layout.js';
+import { dependencyLabelLines, dependencyLabelRowHeight, dependencyPort, clearDependencyPort, orthogonalRoute, reserveDependencyRoute } from './dependency-layout.js';
 import { svg } from './loop-map-shared.js';
 
 type ArrowScene = { readonly host: HTMLElement; readonly graph: SVGSVGElement; readonly view: DependencyView; readonly boxes: ReadonlyMap<string, HTMLElement>; };
@@ -21,15 +21,15 @@ export function drawDependencyArrows(scene: ArrowScene): void {
         const label: Obstacle = { x: 24 + (slot % columns) * 240, y: Math.ceil((rowBounds.bottom - bounds.top + 32) / 8) * 8 + Math.floor(slot / columns) * rowHeight, width: 192, height: rowHeight - 20 };
         return [{ flow, source, target, label, index }];
     });
-    const obstacles = [...rectangles.values()].map(box => ({ x: box.x - 4, y: box.y - 4, width: box.width + 8, height: box.height + 8 }));
+    const cardObstacles = new Map([...rectangles].map(([id, box]) => [id, { x: box.x - 4, y: box.y - 4, width: box.width + 8, height: box.height + 8 }])); const obstacles = [...cardObstacles.values()];
     for (const caption of host.querySelectorAll('.lm-folder-prefix, .lm-cycle-caption')) { const rect = caption.getBoundingClientRect(); obstacles.push({ x: rect.left - bounds.left - 2, y: rect.top - bounds.top - 2, width: rect.width + 4, height: rect.height + 4 }); }
     for (const entry of labels) {
         const { source, target, flow, label } = entry;
         const ports = (id: string) => view.flows.filter(item => item.source === id || item.target === id);
         const sourcePorts = ports(flow.source), targetPorts = ports(flow.target);
-        const sx = dependencyPort(source, sourcePorts.indexOf(flow), sourcePorts.length), tx = dependencyPort(target, targetPorts.indexOf(flow), targetPorts.length);
+        const targetAbove = target.y > source.y; const sx = clearDependencyPort(source, dependencyPort(source, sourcePorts.indexOf(flow), sourcePorts.length), false, obstacles, cardObstacles.get(flow.source)), tx = clearDependencyPort(target, dependencyPort(target, targetPorts.indexOf(flow), targetPorts.length), targetAbove, obstacles, cardObstacles.get(flow.target));
         const sourcePoint: Point = { x: sx, y: Math.ceil((source.y + source.height + 16) / 8) * 8 };
-        const targetAbove = target.y > source.y; const targetPoint: Point = { x: tx, y: targetAbove ? Math.floor((target.y - 16) / 8) * 8 : Math.ceil((target.y + target.height + 16) / 8) * 8 };
+        const targetPoint: Point = { x: tx, y: targetAbove ? Math.floor((target.y - 16) / 8) * 8 : Math.ceil((target.y + target.height + 16) / 8) * 8 };
         const labelStart = { x: label.x - 16, y: label.y + 16 }, labelEnd = { x: label.x + label.width + 16, y: label.y + 16 };
         const space = { width: bounds.width, height: bounds.height, obstacles: [...obstacles, ...labels.map(item => ({ x: item.label.x - 2, y: item.label.y - 2, width: item.label.width + 4, height: item.label.height + 4 }))] };
         const route = (start: Point, end: Point): readonly Point[] => { const separate = orthogonalRoute(start, end, { ...space, occupied }); if (!separate.length) graph.dataset['sharedFallbacks'] = String(Number(graph.dataset['sharedFallbacks']) + 1); const result = separate.length ? separate : orthogonalRoute(start, end, space); reserveDependencyRoute(result, bounds.width, occupied); return result; };

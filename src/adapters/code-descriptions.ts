@@ -26,7 +26,7 @@ export function publicDeclaration(tokens: readonly CodeToken[], index: number, l
 }
 
 function sentence(value: string): string {
-    const clean = value.replace(/<[^>]*>/gu, " ").replace(/\s+/gu, " ").trim();
+    const clean = value.replace(/\{@(?:link|linkplain)\s+([^}]+)\}/gu, (_match, target: string) => target.trim().replace(/^\S+\s+(.+)$/u, "$1")).replace(/<[^>]*>/gu, " ").replace(/\s+/gu, " ").trim();
     return (/^.*?[.!?](?:\s|$)/u.exec(clean)?.[0] ?? clean).trim().slice(0, 320);
 }
 

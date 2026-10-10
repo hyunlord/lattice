@@ -44,3 +44,7 @@
 @media(min-width:701px){.lm-structural .lm-dependency-mode{margin-bottom:4px}}
 @media(min-width:701px){.lm-dependency-aggregate>.lm-cycle-caption{top:-22px;left:auto;right:0}}
 @media(max-width:700px){.lm-dependency-aggregate>.lm-cycle-caption{position:static;align-self:flex-start}}
+
+.lm-scope[hidden],.lm-scope button[hidden]{display:none}.lm-scope{flex-wrap:wrap}.lm-scope button{font:inherit;padding:0 6px;line-height:18px;border:1px solid var(--lm-line);border-radius:4px;background:var(--lm-panel)}@media(min-width:701px){.lm-scope button{min-height:24px}}
+
+@media(min-width:701px){.lm-structural .lm-wrap{padding-top:4px}.lm-structural .lm-dependency-map .lm-station{padding-block:4px}.lm-structural .lm-dependency-mode{margin-bottom:0}}

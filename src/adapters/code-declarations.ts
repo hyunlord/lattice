@@ -31,6 +31,31 @@ export function codeDeclarations(input: SourceInput, language: string): readonly
         while (typeOwners.length && index > (typeOwners.at(-1)?.end ?? -1)) typeOwners.pop();
         const token = tokens[index];
         if (!token || token.kind !== "word") continue;
+        if (language === "go" && token.value === "type" && tokens[index + 1]?.value === "(") {
+            const groupEnd = close(tokens, index + 1, "(", ")");
+            if (groupEnd <= index + 1) continue;
+            let cursor = index + 2;
+            while (cursor < groupEnd) {
+                const name = tokens[cursor];
+                if (name?.kind !== "word") { cursor++; continue; }
+                const nameIndex = cursor++;
+                while (cursor < groupEnd) {
+                    const current = tokens[cursor], previous = tokens[cursor - 1];
+                    if (current?.value === ";") break;
+                    if (cursor > nameIndex + 1 && (current?.line ?? 0) > (previous?.line ?? 0) && !["=", ",", "|"].includes(previous?.value ?? "")) break;
+                    const closing = current?.value === "{" ? "}" : current?.value === "[" ? "]" : current?.value === "(" ? ")" : undefined;
+                    if (closing) {
+                        const boundary = close(tokens, cursor, current?.value ?? "", closing);
+                        if (boundary > cursor && boundary < groupEnd) { cursor = boundary + 1; continue; }
+                    }
+                    cursor++;
+                }
+                declarations.push({ name: name.value, kind: "type", line: name.line, endLine: tokens[cursor - 1]?.line ?? name.line, public: publicDeclaration(tokens, nameIndex, language), uses: Math.max(0, (occurrences.get(name.value) ?? 1) - 1) });
+                if (tokens[cursor]?.value === ";") cursor++;
+            }
+            index = groupEnd;
+            continue;
+        }
         let nameIndex = index + 1, kind = "";
         if (typeWords.includes(token.value) || (language === "kotlin" && token.value === "object")) {
             kind = "type";

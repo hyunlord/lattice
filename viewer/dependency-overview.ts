@@ -27,6 +27,7 @@ export function renderDependencyOverview(host: HTMLElement, ui: LoopUI): () => v
     const renderPanel = (stage: LoopStage): void => {
         selected = stage.id; for (const button of diagram.querySelectorAll<HTMLButtonElement>('[data-stage]')) button.setAttribute('aria-pressed', String(button.dataset['stage'] === selected));
         panel.replaceChildren(); const header = element('div', '', 'lm-panel-head'); header.append(pathText('h2', stage.title), element('p', stage.summary, 'lm-muted')); panel.append(header);
+        if (stage.scopePaths?.length) { const scope = element('details', '', 'lm-group'); scope.append(element('summary', `포함한 폴더 ${stage.scopePaths.length}개`)); const paths = element('ul'); for (const path of stage.scopePaths) paths.append(pathText('li', path)); scope.append(paths); panel.append(scope); }
         if (stage.childIds?.length) { const expand = element('button', `하위 덩어리 ${stage.childIds.length}개 펼치기`, 'lm-dependency-expand'); expand.type = 'button'; expand.onclick = () => { parentId = stage.id; page = 0; selected = stage.childIds?.[0]; render(); if (selected) writeLoopRoute({ view: 'loop', stage: selected }); }; panel.append(expand); }
         const columns = element('div', '', 'lm-cols'); const content = element('div');
         for (const group of stage.groups) { const block = element('details', '', 'lm-group'); block.open = false; block.append(element('summary', `${group.title} ${group.items.length}`)); const items = element('div', '', 'lm-chips'); for (const item of group.items) { const button = chip(item.id, ui); if (button) items.append(button); } block.append(items); content.append(block); }
@@ -51,6 +52,7 @@ export function renderDependencyOverview(host: HTMLElement, ui: LoopUI): () => v
         const connectionList = element('ul', '', 'lm-influence'); for (const flow of view.flows) { const item = element('li'); item.append(pathText('span', byId.get(flow.source)?.title ?? flow.source), document.createTextNode(' → '), pathText('span', byId.get(flow.target)?.title ?? flow.target), document.createTextNode(` — ${dependencyFlowDescription(flow)}`)); connectionList.append(item); } connections.append(connectionList);
         const drawingView = { ...view, stages: view.stages.map(stage => { const node = stage.nodeIds.length === 1 ? ui.byId.get(stage.nodeIds[0] ?? '') : undefined; return node?.kind === 'package' ? { ...stage, title: node.name } : stage; }) };
         const levels = dependencyLevels({ ...view, flows: displayedDependencyFlows(view, selected, showAll) }); const boxes = new Map<string, HTMLElement>();
+        const probe = pathTitle(''); diagram.append(probe); const titleFont = getComputedStyle(probe).font; probe.remove(); const measure = document.createElement('canvas').getContext('2d'); if (measure) measure.font = titleFont;
         const commonPrefix = sharedFolderPrefix(view.stages.filter(stage => !stage.nodeIds.some(id => ui.byId.get(id)?.kind === 'package')).map(stage => stage.title));
         for (const level of [...new Set(levels.map(group => group.level))]) {
             const row = element('div', '', 'lm-dependency-level'); row.dataset['level'] = String(level); const groups = levels.filter(group => group.level === level);
@@ -66,7 +68,7 @@ export function renderDependencyOverview(host: HTMLElement, ui: LoopUI): () => v
                     const fullName = namespace?.name ?? stage.title; const factored = factoredTitle(fullName, drawingView.stages.map(item => item.title));
                     if (factored.prefix) box.append(element('span', `${factored.prefix}…`, 'lm-stage-category'));
                     const displayName = factored.prefix ? factored.name : namespace?.name ?? (prefix && stage.title.startsWith(`${prefix}/`) ? stage.title.slice(prefix.length + 1) : stage.title);
-                    const minimum = `min(100%, calc(${Math.max(...displayName.split('/').map(part => part.length))} * .6rem + 26px))`; box.style.minWidth = minimum; if (!group.cyclic && !group.foldedCycle) region.style.minWidth = minimum;
+                    const minimum = `min(100%, calc(${Math.ceil(Math.max(...displayName.split('/').map(part => measure?.measureText(part).width ?? part.length * 10))) + 26}px))`; box.style.minWidth = minimum; if (!group.cyclic && !group.foldedCycle) region.style.minWidth = minimum;
                     box.title = stage.title;
                     box.append(pathTitle(displayName), element('span', stage.summary, 'lm-station-line'), element('span', `${stage.nodeIds.length}개 모듈${stage.childIds?.length ? ` · 하위 ${stage.childIds.length}덩어리` : ''}`, 'lm-station-meta'));
                     box.onclick = () => { selected = stage.id; render(); writeLoopRoute({ view: 'loop', stage: stage.id }); }; region.append(box); boxes.set(stage.id, box);

@@ -71,3 +71,24 @@ test('repository namespace metadata labels logical groups without changing ident
     assert.equal(m.stages.find(s => s.nodeIds.includes('Acme.Logging')).id, 'folder:패키지 Acme.Logging');
     assert.equal(m.nodes[0].name, 'Acme.Logging');
 });
+
+test('production and full trees retain original folder note identity and catalog IDs', () => {
+    const nodes = [node('app', 'module', {}, 'src/app.go'), node('test', 'module', {}, 'src/app_test.go')];
+    const m = buildLoopMap(nodes, [], [], { kinds: [], interpretations: [{ targetId: 'folder:src', summary: 'Source-linked summary', status: 'stale', sources: [{ path: 'src/app.go', line: 7 }] }] }, 'example');
+    for (const id of ['folder:src', 'all:folder:src']) {
+        const stage = m.stages.find(s => s.id === id);
+        assert.equal(stage.summary, 'Source-linked summary');
+        assert.equal(stage.interpretation.stale, true);
+        assert.equal(stage.interpretation.evidence[0].path, 'src/app.go');
+    }
+    assert.deepEqual(m.nodes.map(n => n.id), ['app', 'test']);
+});
+
+
+test('production folder notes cannot borrow evidence from omitted same-folder tests', () => {
+    const nodes = [node('app', 'module', {}, 'src/app.go'), node('test', 'module', {}, 'src/app_test.go')];
+    const m = buildLoopMap(nodes, [], [], { kinds: [], interpretations: [{ targetId: 'folder:src', summary: 'Runtime and test behavior', status: 'fresh', sources: [{ path: 'src/app.go', line: 1 }, { path: 'src/app_test.go', line: 4 }] }] }, 'example');
+    assert.equal(m.stages.find(s => s.id === 'folder:src').interpretation, undefined);
+    assert.notEqual(m.stages.find(s => s.id === 'folder:src').summary, 'Runtime and test behavior');
+    assert.equal(m.stages.find(s => s.id === 'all:folder:src').interpretation.summary, 'Runtime and test behavior');
+});

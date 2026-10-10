@@ -1,5 +1,16 @@
 import type { LoopFlow, LoopMap, LoopStage } from './loop-map-types.js';
 
+
+export function structuralScopeModel(model: LoopMap, requested?: 'production' | 'all'): LoopMap {
+    const scope = model.structuralScope; if (!scope) return model;
+    const all = !scope.productionCount || (requested ?? scope.default) === 'all';
+    const roots = all ? scope.allRootStageIds : model.rootStageIds ?? [];
+    const stageById = new Map(model.stages.map(stage => [stage.id, stage])); const included = new Set<string>();
+    const visit = (id: string): void => { if (included.has(id)) return; included.add(id); for (const child of stageById.get(id)?.childIds ?? []) visit(child); };
+    for (const id of roots) visit(id);
+    return { ...model, rootStageIds: roots, ...(all ? { defaultStage: scope.allDefaultStage } : {}), stages: model.stages.filter(stage => included.has(stage.id)), flows: model.flows.filter(flow => included.has(flow.source) && included.has(flow.target)), ...(model.verifiedCycleStageGroups ? { verifiedCycleStageGroups: model.verifiedCycleStageGroups.filter(group => group.every(id => included.has(id))) } : {}) };
+}
+
 export type DependencyView = { readonly stages: readonly LoopStage[]; readonly flows: readonly LoopFlow[]; readonly actualCycles?: readonly (readonly string[])[]; };
 export function dependencyView(model: LoopMap, ids: readonly string[]): DependencyView {
     const stages = ids.flatMap(id => { const stage = model.stages.find(item => item.id === id); return stage ? [stage] : []; });
@@ -100,13 +111,29 @@ export function uniqueDependencyNames(stages: readonly LoopStage[]): ReadonlyMap
         const parts = (stage.title === '.' ? '루트' : stage.title).split('/');
         for (let length = 1; length <= parts.length; length++) {
             const name = parts.slice(-length).join('/');
-            if (stages.every(other => other.id === stage.id || other.title.split('/').slice(-length).join('/') !== name)) return [stage.id, name];
+            if (stages.every(other => other.id === stage.id || other.title.split('/').slice(-length).join('/') !== name)) {
+                if (name.length > 24 && parts.length > 2) {
+                    const candidates: string[] = [];
+                    for (let prefix = 1; prefix < parts.length - 1; prefix++) for (let suffix = 1; suffix < parts.length - prefix; suffix++) {
+                        const shorten = (value: string): string => `${value.split('/').slice(0, prefix).join('/')}/…/${value.split('/').slice(-suffix).join('/')}`;
+                        const shortened = shorten(stage.title);
+                        if (stages.every(other => other.id === stage.id || shorten(other.title) !== shortened)) candidates.push(shortened);
+                    }
+                    const shortest = candidates.sort((a, b) => a.length - b.length || a.localeCompare(b))[0]; if (shortest) return [stage.id, shortest];
+                }
+                return [stage.id, name];
+            }
         }
         return [stage.id, stage.title];
     }));
 }
 export function dependencyPort(box: Obstacle, index: number, count: number): number {
     return Math.round((box.x + box.width / 2 + (index - (count - 1) / 2) * Math.min(8, (box.width - 24) / Math.max(1, count))) / 8) * 8;
+}
+export function clearDependencyPort(box: Obstacle, preferred: number, above: boolean, obstacles: readonly Obstacle[], ownObstacle?: Obstacle): number {
+    const edge = above ? box.y - 3 : box.y + box.height + 2; const outer = above ? Math.floor((box.y - 16) / 8) * 8 : Math.ceil((box.y + box.height + 16) / 8) * 8;
+    const candidates = Array.from({ length: Math.max(0, Math.floor((box.width - 24) / 8)) }, (_, index) => Math.ceil((box.x + 12) / 8) * 8 + index * 8).sort((a, b) => Math.abs(a - preferred) - Math.abs(b - preferred));
+    return [preferred, ...candidates].find(x => obstacles.every(r => r === ownObstacle || x <= r.x || x >= r.x + r.width || Math.max(edge, outer) <= r.y || Math.min(edge, outer) >= r.y + r.height)) ?? preferred;
 }
 export function reserveDependencyRoute(points: readonly Point[], width: number, occupied: Set<string>): void {
     const columns = Math.ceil(width / 8) + 1;

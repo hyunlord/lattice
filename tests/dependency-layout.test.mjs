@@ -148,3 +148,44 @@ test('an unrelated repository root does not erase a useful shared path prefix', 
     assert.equal(paths[0].startsWith(`${prefix}/`), false);
     assert.ok(paths.slice(1).every(path => path.startsWith(`${prefix}/`)));
 });
+
+test('structural scope selects one tree while preserving complete catalog nodes', async () => {
+    const { structuralScopeModel } = await import('../viewer/dependency-layout.js');
+    const stages = [{ id: 'src', childIds: ['child'] }, { id: 'child', parentId: 'src' }, { id: 'all:src', childIds: ['all:test'] }, { id: 'all:test', parentId: 'all:src' }];
+    const nodes = [{ id: 'production' }, { id: 'test' }];
+    const model = { stages, nodes, flows: [{ source: 'src', target: 'child' }, { source: 'all:src', target: 'all:test' }], rootStageIds: ['src'], defaultStage: 'src', structuralScope: { default: 'production', productionCount: 1, auxiliaryCount: 1, allRootStageIds: ['all:src'], allDefaultStage: 'all:src' }, verifiedCycleStageGroups: [['src', 'child'], ['all:src', 'all:test']] };
+    const production = structuralScopeModel(model);
+    assert.deepEqual(production.stages.map(stage => stage.id), ['src', 'child']);
+    assert.equal(production.nodes, nodes);
+    assert.equal(production.flows.length, 1);
+    const all = structuralScopeModel(model, 'all');
+    assert.deepEqual(all.stages.map(stage => stage.id), ['all:src', 'all:test']);
+    assert.deepEqual(all.rootStageIds, ['all:src']);
+    assert.equal(all.defaultStage, 'all:src');
+    assert.deepEqual(all.verifiedCycleStageGroups, [['all:src', 'all:test']]);
+    const auxiliaryOnly = { ...model, structuralScope: { ...model.structuralScope, productionCount: 0, default: 'all' } };
+    assert.deepEqual(structuralScopeModel(auxiliaryOnly, 'production').rootStageIds, ['all:src']);
+    const configured = { ...model, structuralScope: undefined };
+    assert.equal(structuralScopeModel(configured, 'all'), configured);
+});
+
+test('long repeated residual suffixes retain unique short scope labels', async () => {
+    const { uniqueDependencyNames } = await import('../viewer/dependency-layout.js');
+    const names = uniqueDependencyNames([stage('a'), stage('b')].map((s, i) => ({ ...s, title: `${i ? 'extras' : 'gson'}/src/main/java/com/google/gson/나머지 하위 폴더` })));
+    assert.equal(names.get('a'), 'gson/…/나머지 하위 폴더');
+    assert.equal(names.get('b'), 'extras/…/나머지 하위 폴더');
+});
+
+test('caption outside a card moves its short arrow port clear of the caption', async () => {
+    const { clearDependencyPort } = await import('../viewer/dependency-layout.js');
+    const box = { x: 0, y: 40, width: 200, height: 80 }, caption = { x: 50, y: 15, width: 90, height: 24 };
+    const x = clearDependencyPort(box, 100, true, [caption]);
+    assert.ok(x < 50 || x > 140);
+});
+
+test('port selection excludes only its own padded card while retaining other obstacles', async () => {
+    const { clearDependencyPort } = await import('../viewer/dependency-layout.js');
+    const box = { x: 0, y: 40, width: 200, height: 80 }, own = { x: -4, y: 36, width: 208, height: 88 }, caption = { x: 50, y: 15, width: 90, height: 24 }, neighbor = { x: 140, y: 10, width: 70, height: 30 };
+    const x = clearDependencyPort(box, 100, true, [own, caption, neighbor], own);
+    assert.ok(x < 50);
+});

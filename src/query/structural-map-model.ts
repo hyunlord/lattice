@@ -1,4 +1,5 @@
 import type { Node, Edge } from '../core/model.js';
+import { structuralFrontier } from './structural-frontier.js';
 import type { LoopStage, LoopFlow } from './loop-map-types.js';
 
 const parent = (path: string): string => path.includes('/') ? path.slice(0, path.lastIndexOf('/')) : '.';
@@ -7,7 +8,7 @@ const within = (path: string, directory: string): boolean => directory === '.' |
 const strings = (value: unknown): string[] => Array.isArray(value) ? value.filter((v): v is string => typeof v === 'string') : [];
 const auxiliaryDirectory = (path: string): string | undefined => {
     const parts = path.split('/');
-    const index = parts.findIndex(part => part.toLowerCase().split(/[._-]+/u).some(token => /^(?:tests?|specs?|examples?|samples?|docs?|documentation|benchmarks?|bench)$/u.test(token)));
+    const index = parts.findIndex(part => part.toLowerCase().split(/[._-]+/u).some(token => /^(?:tests?|specs?|examples?|samples?|docs?|documentation|testdata|fixtures|vitepress|benchmarks?|bench)$/u.test(token)));
     return index < 0 ? undefined : parts.slice(0, index + 1).join('/');
 };
 export const productionSource = (path: string): boolean => auxiliaryDirectory(path) === undefined && !/(?:_test\.go|(?:^|[._-])(?:test|spec)\.[cm]?[jt]sx?|(?:^|\/)test_[^/]+\.py|[^/]*Tests?\.(?:java|cs))$/u.test(path);
@@ -16,11 +17,25 @@ const descriptionText = (node: Node): string => { const value = node.attributes[
 export const structuralCategoryLabel = (node: Node): string => `${node.attributes['scope'] === 'repository' ? '저장소 ' : ''}${node.attributes['category'] === 'namespace' ? '네임스페이스' : '패키지'}`;
 const sentence = (value: string): string => value.replace(/\s+/gu, ' ').trim().split(/(?<=[.!?。])\s/u)[0] ?? '';
 
+const publicEntries = (node: Node) => {
+    const definitions = node.attributes['definitions'], listed = node.attributes['publicNames'];
+    const full = Array.isArray(definitions) ? definitions.filter(v => v && typeof v === 'object' && !Array.isArray(v) && v['public'] === true) : [];
+    const names = new Set(full.flatMap(v => v && typeof v === 'object' && !Array.isArray(v) && typeof v['name'] === 'string' ? [v['name']] : []));
+    const entries = [...full, ...(Array.isArray(listed) ? listed.filter(v => v && typeof v === 'object' && !Array.isArray(v) && !names.has(String(v['name']))) : [])];
+    const unique = new Map<string, (typeof entries)[number]>();
+    for (const entry of entries) if (entry && typeof entry === 'object' && !Array.isArray(entry) && typeof entry['name'] === 'string') {
+        const prior = unique.get(entry['name']);
+        if (!prior || typeof prior !== 'object' || Array.isArray(prior) || Number(entry['uses'] ?? 0) > Number(prior['uses'] ?? 0)) unique.set(entry['name'], entry);
+    }
+    return [...unique.values()];
+};
+
 export function structuralSummary(members: readonly Node[], documents: readonly Node[], path: string): string {
+    const productionMembers = members.filter(n => productionSource(n.sources[0]?.path ?? n.name));
+    if (productionMembers.length) members = productionMembers;
     const rootReadme = path === '.' ? [/^readme(?:\.[^/]*)?$/iu, /^\.github\/readme(?:\.[^/]*)?$/iu].map(pattern => documents.find(n => n.kind === 'document' && pattern.test(n.sources[0]?.path ?? '') && descriptionKind(n) === 'readme' && sentence(descriptionText(n)))).find(n => n !== undefined) : undefined;
     if (rootReadme) return sentence(descriptionText(rootReadme));
     const section = documents.filter(n => n.kind === 'heading' && /(?:^|\/)readme(?:\.[^/]*)?$/iu.test(n.sources[0]?.path ?? '') && within(path, parent(n.sources[0]?.path ?? ''))).sort((a, b) => parent(b.sources[0]?.path ?? '').length - parent(a.sources[0]?.path ?? '').length).find(n => n.kind === 'heading' && /(?:^|\/)readme(?:\.[^/]*)?$/iu.test(n.sources[0]?.path ?? '') && n.name.toLowerCase() === (path.split('/').at(-1) ?? '').toLowerCase() && descriptionKind(n) === 'readme' && descriptionText(n));
-    if (section) return sentence(descriptionText(section));
     const documented = members.filter(n => folder(n) === path).sort((a, b) => Number(/(?:__init__|doc|lib|mod|index)\./u.test(b.name)) - Number(/(?:__init__|doc|lib|mod|index)\./u.test(a.name)) || a.name.localeCompare(b.name)).find(n => {
         const value = n.attributes['sourceDescription'];
         return descriptionKind(n) === 'module-doc' && value && typeof value === 'object' && !Array.isArray(value) && typeof Reflect.get(value, 'text') === 'string';
@@ -28,12 +43,13 @@ export function structuralSummary(members: readonly Node[], documents: readonly 
     const source = documented?.attributes['sourceDescription'];
     const description: unknown = source && typeof source === 'object' ? Reflect.get(source, 'text') : undefined;
     if (typeof description === 'string') return sentence(description);
+    if (section) return sentence(descriptionText(section));
     const readme = documents.filter(n => /(?:^|\/)readme(?:\.[^/]*)?$/iu.test(n.sources[0]?.path ?? '') && descriptionText(n) !== '');
     const relevant = readme.find(n => n.kind === 'document' && parent(n.sources[0]?.path ?? '') === path);
     if (relevant) return sentence(descriptionText(relevant));
     const names = new Map<string, number>();
     for (const node of members) {
-        const values = node.attributes['publicNames'];
+        const values = publicEntries(node);
         if (!Array.isArray(values)) continue;
         for (const value of values) if (value && typeof value === 'object' && !Array.isArray(value) && typeof value['name'] === 'string') names.set(value['name'], (names.get(value['name']) ?? 0) + (typeof value['uses'] === 'number' ? value['uses'] : 0));
     }
@@ -106,36 +122,12 @@ export function buildStructuralMap(nodes: readonly Node[], edges: readonly Edge[
         value.files.add(file); if (edge.attributes?.['importScope'] === 'project') value.projectFiles.add(file); grouped.set(key, value);
     }
     const flows: LoopFlow[] = [...grouped.values()].map(e => ({ source: `folder:${e.source}`, target: `folder:${e.target}`, count: e.files.size, sourceFiles: [...e.files].sort(), ...(e.projectFiles.size ? { projectSourceFiles: [...e.projectFiles].sort() } : {}), label: [e.files.size > e.projectFiles.size ? `${e.files.size - e.projectFiles.size}개 파일 사용` : '', e.projectFiles.size ? `프로젝트 선언 ${e.projectFiles.size}개` : ''].filter(Boolean).join(' · ') }));
-    const connectivityCache = new Map<string, number>();
-    const connectivity = (path: string): number => {
-        const cached = connectivityCache.get(path);
-        if (cached !== undefined) return cached;
-        const score = new Set(flows.filter(e => within(e.source.slice(7), path) !== within(e.target.slice(7), path) && productionSource(e.target.slice(7))).flatMap(e => (e.sourceFiles ?? []).filter(productionSource))).size;
-        connectivityCache.set(path, score);
-        return score;
-    };
-    const foldOrder = (a: string, b: string) => Number(productionSource(a)) - Number(productionSource(b)) || connectivity(a) - connectivity(b) || a.localeCompare(b);
-    while (roots.size > 9) {
-        const candidates = [...directories].flatMap(path => {
-            const needed = roots.has(path) ? 1 : 2;
-            const folded = [...roots].filter(p => p !== path && within(p, path)).sort(foldOrder).slice(0, needed);
-            if (folded.length < needed) return [];
-            return [{ path, folded, cost: folded.reduce((sum, p) => sum + (productionSource(p) ? connectivity(p) : 0), 0), production: folded.filter(productionSource).length }];
-        }).sort((a, b) => a.cost - b.cost || a.production - b.production || (b.path === '.' ? 0 : b.path.split('/').length) - (a.path === '.' ? 0 : a.path.split('/').length) || a.path.localeCompare(b.path));
-        const choice = candidates[0];
-        if (!choice) break;
-        for (const path of choice.folded) roots.delete(path);
-        roots.add(choice.path);
-    }
-    const owner = (id: string) => [...roots].filter(p => within(id.slice(7), p)).sort((a, b) => b.length - a.length)[0];
-    const degree = (path: string): number => flows.filter(e => owner(e.source) !== owner(e.target) && (owner(e.source) === path || owner(e.target) === path)).reduce((sum, e) => sum + (e.count ?? 0), 0);
-    const productionDegree = (path: string): number => flows.filter(e => productionSource(e.target.slice(7)) && owner(e.source) !== owner(e.target) && (owner(e.source) === path || owner(e.target) === path)).reduce((sum, e) => sum + (e.sourceFiles ?? []).filter(productionSource).length, 0);
-    const orderedRoots = [...roots].sort((a, b) => Number(productionSource(b)) - Number(productionSource(a)) || productionDegree(b) - productionDegree(a) || degree(b) - degree(a) || a.localeCompare(b));
     const groupedNodes = [...sourceNodes, ...packages.values()];
     const stages: LoopStage[] = [...directories].sort((a, b) => Number(roots.has(b)) - Number(roots.has(a)) || a.localeCompare(b)).map(path => {
         const descendants = groupedNodes.filter(n => within(paths.get(n.id) ?? folder(n), path));
         const members = groupedNodes.filter(n => (paths.get(n.id) ?? folder(n)) === path);
-        const summaryMembers = (members.length ? members : descendants).flatMap(n => n.kind === 'package' ? strings(n.attributes['memberIds']).flatMap(id => byId.get(id) ?? []) : [n]);
+        const summaryCandidates = (members.length ? members : descendants).flatMap(n => n.kind === 'package' ? strings(n.attributes['memberIds']).flatMap(id => byId.get(id) ?? []) : [n]);
+        const productionMembers = summaryCandidates.filter(n => productionSource(n.sources[0]?.path ?? n.name)), summaryMembers = productionMembers.length ? productionMembers : summaryCandidates;
         const packageDirectories = members.filter(n => n.kind === 'package').flatMap(n => strings(n.attributes['directories']));
         const summaryPath = packageDirectories.find(directory => productionSource(directory)) ?? packageDirectories[0] ?? path;
         const summary = structuralSummary(summaryMembers, nodes, summaryPath);
@@ -143,7 +135,7 @@ export function buildStructuralMap(nodes: readonly Node[], edges: readonly Edge[
             const source = n.sources[0]; if (!source) return [];
             const namedField = [['publicNames', '공개 이름: '], ['entryPoints', '실행 진입점: '], ['verificationNames', '검증 항목: ']].find(([, label]) => label !== undefined && summary.startsWith(label));
             if (namedField?.[0] && namedField[1]) {
-                const names = summary.slice(namedField[1].length).split(' · '), values = n.attributes[namedField[0]];
+                const names = summary.slice(namedField[1].length).split(' · '), values = namedField[0] === 'publicNames' ? publicEntries(n) : n.attributes[namedField[0]];
                 return Array.isArray(values) ? values.flatMap(value => value && typeof value === 'object' && !Array.isArray(value) && typeof value['name'] === 'string' && names.includes(value['name']) ? [{ path: source.path, line: typeof value['line'] === 'number' ? value['line'] : source.line }] : []) : [];
             }
             if (!['module-doc', 'readme'].includes(String(descriptionKind(n))) || !descriptionText(n) || sentence(descriptionText(n)) !== summary) return [];
@@ -156,5 +148,42 @@ export function buildStructuralMap(nodes: readonly Node[], edges: readonly Edge[
         const related = (direction: 'incoming' | 'outgoing') => flows.filter(e => (direction === 'incoming' ? e.target : e.source) === `folder:${path}`).map(e => ({ name: (direction === 'incoming' ? e.source : e.target).slice(7), description: description(e) }));
         return { id: `folder:${path}`, title: path === '.' ? '루트' : packageNode ? `${structuralCategoryLabel(packageNode)} ${String(packageNode.attributes['packageName'] ?? packageNode.name)}` : path, summary, summaryEvidence: summarySources, unit: '모듈', nodeIds: members.map(n => n.id), descendantNodeIds: descendants.map(n => n.id), groups: [{ title: '모듈', items: members.map(n => ({ id: n.id })) }], incoming: related('incoming'), outgoing: related('outgoing'), ...(directories.has(parent(path)) && path !== '.' ? { parentId: `folder:${parent(path)}` } : {}), ...(childIds.length ? { childIds } : {}) };
     });
-    return { stages, flows, verifiedCycleStageGroups: verifiedCycles(nodes, edges), rootStageIds: orderedRoots.map(p => `folder:${p}`), defaultStage: `folder:${orderedRoots[0] ?? '.'}` };
+    const frontier = structuralFrontier(stages, flows, productionSource);
+    const scopedStages = frontier.stages.map(stage => {
+        if (!stage.scopePaths) return stage;
+        const included = (stage.descendantNodeIds ?? []).flatMap(id => byId.get(id) ?? []);
+        const productionMembers = included.filter(n => productionSource(n.sources[0]?.path ?? n.name)), members = productionMembers.length ? productionMembers : included;
+        const summary = structuralSummary(members, [], '\0');
+        const names = summary.startsWith('공개 이름: ') ? summary.slice('공개 이름: '.length).split(' · ') : [];
+        const summaryEvidence = members.flatMap(n => publicEntries(n).flatMap(v => v && typeof v === 'object' && !Array.isArray(v) && typeof v['name'] === 'string' && names.includes(v['name']) && n.sources[0] ? [{ path: n.sources[0].path, line: typeof v['line'] === 'number' ? v['line'] : n.sources[0].line }] : []));
+        return { ...stage, summary: names.length ? summary : '', summaryEvidence };
+    });
+    return { ...frontier, stages: scopedStages, flows, verifiedCycleStageGroups: verifiedCycles(nodes, edges) };
+}
+
+
+export function buildStructuralOverview(nodes: readonly Node[], edges: readonly Edge[]) {
+    const modules = nodes.filter(n => n.kind === 'module'), sources = modules.length ? modules : nodes.filter(n => n.kind === 'file');
+    const productionCount = sources.filter(n => productionSource(n.sources[0]?.path ?? n.name)).length, auxiliaryCount = sources.length - productionCount;
+    const all = buildStructuralMap(nodes, edges);
+    if (!productionCount || !auxiliaryCount) return { ...all, structuralScope: { default: productionCount ? 'production' as const : 'all' as const, productionCount, auxiliaryCount, allRootStageIds: all.rootStageIds, allDefaultStage: all.defaultStage } };
+    const allowed = new Set(nodes.filter(n => n.kind !== 'package' && productionSource(n.sources[0]?.path ?? n.name)).map(n => n.id));
+    const byId = new Map(nodes.map(n => [n.id, n]));
+    const scopedNodes = nodes.flatMap(n => {
+        if (n.kind !== 'package') return allowed.has(n.id) ? [n] : [];
+        const recorded = strings(n.attributes['memberIds']), memberIds = recorded.filter(id => allowed.has(id));
+        if (!recorded.length) return productionSource(n.sources[0]?.path ?? n.name) ? [n] : [];
+        if (!memberIds.length) return [];
+        const directories = [...new Set(memberIds.flatMap(id => { const member = byId.get(id); return member ? [folder(member)] : []; }))];
+        return [{ ...n, attributes: { ...n.attributes, memberIds, directories } }];
+    });
+    const ids = new Set(scopedNodes.map(n => n.id)), scopedEdges = edges.filter(e => ids.has(e.source) && ids.has(e.target));
+    const primary = buildStructuralMap(scopedNodes, scopedEdges), prefix = (id: string) => `all:${id}`;
+    return {
+        ...primary,
+        stages: [...primary.stages, ...all.stages.map(stage => ({ ...stage, id: prefix(stage.id), ...(stage.parentId ? { parentId: prefix(stage.parentId) } : {}), ...(stage.childIds ? { childIds: stage.childIds.map(prefix) } : {}) }))],
+        flows: [...primary.flows, ...all.flows.map(flow => ({ ...flow, source: prefix(flow.source), target: prefix(flow.target) }))],
+        verifiedCycleStageGroups: [...primary.verifiedCycleStageGroups, ...all.verifiedCycleStageGroups.map(group => group.map(prefix))],
+        structuralScope: { default: 'production' as const, productionCount, auxiliaryCount, allRootStageIds: all.rootStageIds.map(prefix), allDefaultStage: prefix(all.defaultStage) },
+    };
 }
