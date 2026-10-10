@@ -1,0 +1,774 @@
+{
+  "url": "https://hyunlord.github.io/bs-mobile/",
+  "observedAt": "2026-10-10T01:03:04.635Z",
+  "errors": [],
+  "responses": [
+    {
+      "path": "graph.json",
+      "status": 200,
+      "etag": "W/\"6ac98eb2-4b9d7d5\""
+    },
+    {
+      "path": "presentation.json",
+      "status": 200,
+      "etag": "W/\"6ac98eb2-abb\""
+    },
+    {
+      "path": "snapshots.json",
+      "status": 200,
+      "etag": "W/\"6ac98eb1-670\""
+    },
+    {
+      "path": "snapshots/d135b1e349f4a2a8d6c44230f5b389a6973e077f5317cb7b6b56c20540e57de1.json",
+      "status": 200,
+      "etag": "W/\"6ac98eb2-4808fee\""
+    },
+    {
+      "path": "snapshots/87e0890034bfad9c2d0200b70fd8a9a090f40fa2a57b03248266feb3376ec070.json",
+      "status": 200,
+      "etag": "W/\"6ac98eb2-4b9d130\""
+    },
+    {
+      "path": "snapshots/a90d0b0a5dc0e4ff39f7f958cbc093cf3d1de4cf9432b4e5d7a3a7e42f67ea52.json",
+      "status": 200,
+      "etag": "W/\"6ac98eb2-4b9d130\""
+    },
+    {
+      "path": "app.js",
+      "status": 200,
+      "etag": "W/\"6ac98eb2-53a1\""
+    },
+    {
+      "path": "changes-evidence.js",
+      "status": 200,
+      "etag": "W/\"6ac98eb1-1809\""
+    },
+    {
+      "path": "changes-shared.js",
+      "status": 200,
+      "etag": "W/\"6ac98eb1-425\""
+    },
+    {
+      "path": "changes-trends.js",
+      "status": 200,
+      "etag": "W/\"6ac98eb1-d18\""
+    },
+    {
+      "path": "changes.js",
+      "status": 200,
+      "etag": "W/\"6ac98eb2-1991\""
+    },
+    {
+      "path": "data.js",
+      "status": 200,
+      "etag": "W/\"6ac98eb1-186c\""
+    },
+    {
+      "path": "explore-canvas.js",
+      "status": 200,
+      "etag": "W/\"6ac98eb1-3402\""
+    },
+    {
+      "path": "explore-controls.js",
+      "status": 200,
+      "etag": "W/\"6ac98eb1-1643\""
+    },
+    {
+      "path": "explore-model.js",
+      "status": 200,
+      "etag": "W/\"6ac98eb1-170e\""
+    },
+    {
+      "path": "explore.js",
+      "status": 200,
+      "etag": "W/\"6ac98eb2-32bd\""
+    },
+    {
+      "path": "history-model.js",
+      "status": 200,
+      "etag": "W/\"6ac98eb1-1a31\""
+    },
+    {
+      "path": "history-projections.js",
+      "status": 200,
+      "etag": "W/\"6ac98eb2-10a5\""
+    },
+    {
+      "path": "home.js",
+      "status": 200,
+      "etag": "W/\"6ac98eb1-2b50\""
+    },
+    {
+      "path": "index.html",
+      "status": 200,
+      "etag": "W/\"6ac98eb1-647\""
+    },
+    {
+      "path": "list-controls.js",
+      "status": 200,
+      "etag": "W/\"6ac98eb1-1912\""
+    },
+    {
+      "path": "list-model.js",
+      "status": 200,
+      "etag": "W/\"6ac98eb1-1c4c\""
+    },
+    {
+      "path": "list.js",
+      "status": 200,
+      "etag": "W/\"6ac98eb1-13e5\""
+    },
+    {
+      "path": "node-history.js",
+      "status": 200,
+      "etag": "W/\"6ac98eb1-187f\""
+    },
+    {
+      "path": "styles.css",
+      "status": 200,
+      "etag": "W/\"6ac98eb1-4754\""
+    },
+    {
+      "path": "views-data.js",
+      "status": 200,
+      "etag": "W/\"6ac98eb1-16d5\""
+    },
+    {
+      "path": "views-matrix.js",
+      "status": 200,
+      "etag": "W/\"6ac98eb1-13b5\""
+    },
+    {
+      "path": "views-model.js",
+      "status": 200,
+      "etag": "W/\"6ac98eb2-2adf\""
+    },
+    {
+      "path": "views-shared.js",
+      "status": 200,
+      "etag": "W/\"6ac98eb1-bb5\""
+    },
+    {
+      "path": "views.js",
+      "status": 200,
+      "etag": "W/\"6ac98eb1-1347\""
+    }
+  ],
+  "screens": [
+    {
+      "name": "home",
+      "route": "/home?layer=designed-v1",
+      "width": 375,
+      "headings": [
+        "Sow & Siege",
+        "종류별 목록",
+        "분류 분포",
+        "발견과 근거",
+        "최근 변화 집중도"
+      ],
+      "geometry": {
+        "width": 375,
+        "scroll": 375
+      }
+    },
+    {
+      "name": "home",
+      "route": "/home?layer=designed-v1",
+      "width": 1280,
+      "headings": [
+        "Sow & Siege",
+        "종류별 목록",
+        "분류 분포",
+        "발견과 근거",
+        "최근 변화 집중도"
+      ],
+      "geometry": {
+        "width": 1280,
+        "scroll": 1280
+      }
+    },
+    {
+      "name": "explore",
+      "route": "/explore?layer=designed-v1",
+      "width": 375,
+      "headings": [
+        "관계 탐색",
+        "관계 지도",
+        "그룹 11개",
+        "전체 노드 목록",
+        "전체 관계 208개"
+      ],
+      "geometry": {
+        "width": 375,
+        "scroll": 375
+      }
+    },
+    {
+      "name": "explore",
+      "route": "/explore?layer=designed-v1",
+      "width": 1280,
+      "headings": [
+        "관계 탐색",
+        "관계 지도",
+        "그룹 11개",
+        "전체 노드 목록",
+        "전체 관계 208개"
+      ],
+      "geometry": {
+        "width": 1280,
+        "scroll": 1280
+      }
+    },
+    {
+      "name": "list",
+      "route": "/list?layer=designed-v1",
+      "width": 375,
+      "headings": [
+        "노드 목록"
+      ],
+      "geometry": {
+        "width": 375,
+        "scroll": 375
+      }
+    },
+    {
+      "name": "list",
+      "route": "/list?layer=designed-v1",
+      "width": 1280,
+      "headings": [
+        "노드 목록"
+      ],
+      "geometry": {
+        "width": 1280,
+        "scroll": 1280
+      }
+    },
+    {
+      "name": "views",
+      "route": "/views/designed-influence?origin=lens&layer=designed-v1",
+      "width": 375,
+      "headings": [
+        "설계 시스템 영향 행렬"
+      ],
+      "geometry": {
+        "width": 375,
+        "scroll": 375
+      }
+    },
+    {
+      "name": "views",
+      "route": "/views/designed-influence?origin=lens&layer=designed-v1",
+      "width": 1280,
+      "headings": [
+        "설계 시스템 영향 행렬"
+      ],
+      "geometry": {
+        "width": 1280,
+        "scroll": 1280
+      }
+    },
+    {
+      "name": "changes",
+      "route": "/changes?base=d135b1e349f4a2a8d6c44230f5b389a6973e077f5317cb7b6b56c20540e57de1&head=a90d0b0a5dc0e4ff39f7f958cbc093cf3d1de4cf9432b4e5d7a3a7e42f67ea52&layer=designed-v1",
+      "width": 375,
+      "headings": [
+        "스냅샷 변화",
+        "층별 개수 변화",
+        "발견 변화 · 9",
+        "노드 변화 · 163",
+        "연결 변화 · 48",
+        "분류 변화 · 109",
+        "분류별 스냅샷 추이",
+        "내보낸 스냅샷 · 3"
+      ],
+      "geometry": {
+        "width": 375,
+        "scroll": 375
+      }
+    },
+    {
+      "name": "changes",
+      "route": "/changes?base=d135b1e349f4a2a8d6c44230f5b389a6973e077f5317cb7b6b56c20540e57de1&head=a90d0b0a5dc0e4ff39f7f958cbc093cf3d1de4cf9432b4e5d7a3a7e42f67ea52&layer=designed-v1",
+      "width": 1280,
+      "headings": [
+        "스냅샷 변화",
+        "층별 개수 변화",
+        "발견 변화 · 9",
+        "노드 변화 · 163",
+        "연결 변화 · 48",
+        "분류 변화 · 109",
+        "분류별 스냅샷 추이",
+        "내보낸 스냅샷 · 3"
+      ],
+      "geometry": {
+        "width": 1280,
+        "scroll": 1280
+      }
+    },
+    {
+      "name": "detail",
+      "route": "/node/designed-v1.1%3Acore%3Acarpenter_hammer",
+      "width": 375,
+      "headings": [
+        "목수 망치",
+        "원본 출처",
+        "속성",
+        "관련 발견",
+        "나가는 연결 · 4",
+        "들어오는 연결 · 6",
+        "방향 없는 연결 · 1",
+        "노드 변경 이력"
+      ],
+      "geometry": {
+        "width": 375,
+        "scroll": 375
+      }
+    },
+    {
+      "name": "detail",
+      "route": "/node/designed-v1.1%3Acore%3Acarpenter_hammer",
+      "width": 1280,
+      "headings": [
+        "목수 망치",
+        "원본 출처",
+        "속성",
+        "관련 발견",
+        "나가는 연결 · 4",
+        "들어오는 연결 · 6",
+        "방향 없는 연결 · 1",
+        "노드 변경 이력"
+      ],
+      "geometry": {
+        "width": 1280,
+        "scroll": 1280
+      }
+    }
+  ],
+  "checks": [
+    "designed-v1 home visible nodes exactly176",
+    "13x13 influence matrix selected cell evidence survives reload",
+    "explicit snapshot pair survives reload",
+    "Korean-named encoded detail reload directions4/6/1 and original source links"
+  ],
+  "currentOracle": {
+    "baseline": false,
+    "revision": "designed-v1.1",
+    "content": 163,
+    "systems": 13,
+    "influenceEdges": 41,
+    "findings": [
+      {
+        "id": "designed-bespoke",
+        "metrics": {
+          "count": 44,
+          "layer": "designed-v1",
+          "entries": 44
+        }
+      },
+      {
+        "id": "designed-later-wave-input",
+        "metrics": {
+          "count": 0,
+          "layer": "designed-v1"
+        }
+      },
+      {
+        "id": "designed-long-card-text",
+        "metrics": {
+          "count": 0,
+          "layer": "designed-v1"
+        }
+      },
+      {
+        "id": "designed-many-items-tool",
+        "metrics": {
+          "count": 0,
+          "layer": "designed-v1"
+        }
+      },
+      {
+        "id": "designed-many-items-weapon",
+        "metrics": {
+          "count": 0,
+          "layer": "designed-v1"
+        }
+      },
+      {
+        "id": "designed-missing-primitives",
+        "metrics": {
+          "count": 0,
+          "layer": "designed-v1",
+          "primitiveReferences": 400
+        }
+      },
+      {
+        "id": "designed-no-evolution-tool",
+        "metrics": {
+          "count": 0,
+          "layer": "designed-v1"
+        }
+      },
+      {
+        "id": "designed-no-evolution-weapon",
+        "metrics": {
+          "count": 0,
+          "layer": "designed-v1"
+        }
+      },
+      {
+        "id": "designed-no-item-tool",
+        "metrics": {
+          "count": 0,
+          "layer": "designed-v1"
+        }
+      },
+      {
+        "id": "designed-no-item-weapon",
+        "metrics": {
+          "count": 0,
+          "layer": "designed-v1"
+        }
+      },
+      {
+        "id": "designed-no-xp-return",
+        "metrics": {
+          "count": 0,
+          "layer": "designed-v1"
+        }
+      },
+      {
+        "id": "designed-wave-one-evolutions",
+        "metrics": {
+          "count": 3,
+          "layer": "designed-v1"
+        }
+      }
+    ],
+    "observed": {
+      "noEvolutionWeapons": 0,
+      "noItemWeapons": 0,
+      "seedBagLinkedItems": 2,
+      "carpenterHammerLinkedItems": 2,
+      "noXpReturnTools": 0,
+      "waveOneEvolutions": 3
+    }
+  },
+  "graph": {
+    "hash": "76253be0d1545f2c7467849e25792212f0bd2d33e1b1381d3600fe89365d1c48",
+    "repository": {
+      "name": "bs-mobile",
+      "remoteUrl": "https://github.com/hyunlord/bs-mobile",
+      "commit": "7aebd2e9046c4926d14fcb2d6f597dd02c5744f8",
+      "dirty": false,
+      "sourceFingerprint": "426d906cb67ca5cb07185c9f62d08ad9767ce113e8cb8a94bf6e19301f46c935"
+    },
+    "nodes": 443,
+    "edges": 800
+  },
+  "snapshots": [
+    {
+      "id": "d135b1e349f4a2a8d6c44230f5b389a6973e077f5317cb7b6b56c20540e57de1",
+      "graphHash": "63b7764e4c77d9202bf6f3468d4aa052000a6887b39d6108a821753d1d4c0412",
+      "lensHash": "db8fb8c1d892535918202f8889c750aee83b02ae30d26d8d83e5646db41071bc",
+      "inputFingerprint": "db94b6066f3fbba1f29658d195f28930a8e18df69bdab1db1404789ec847be53",
+      "coverage": "current-lens-projection",
+      "artifactPath": "snapshots/d135b1e349f4a2a8d6c44230f5b389a6973e077f5317cb7b6b56c20540e57de1.json",
+      "commit": "de2a5713ce7c9d9c9f38a663e0a1cae66bbfe5b5"
+    },
+    {
+      "id": "87e0890034bfad9c2d0200b70fd8a9a090f40fa2a57b03248266feb3376ec070",
+      "graphHash": "76253be0d1545f2c7467849e25792212f0bd2d33e1b1381d3600fe89365d1c48",
+      "lensHash": "db8fb8c1d892535918202f8889c750aee83b02ae30d26d8d83e5646db41071bc",
+      "inputFingerprint": "426d906cb67ca5cb07185c9f62d08ad9767ce113e8cb8a94bf6e19301f46c935",
+      "coverage": "current-lens-projection",
+      "artifactPath": "snapshots/87e0890034bfad9c2d0200b70fd8a9a090f40fa2a57b03248266feb3376ec070.json",
+      "commit": "7aebd2e9046c4926d14fcb2d6f597dd02c5744f8"
+    },
+    {
+      "id": "a90d0b0a5dc0e4ff39f7f958cbc093cf3d1de4cf9432b4e5d7a3a7e42f67ea52",
+      "graphHash": "76253be0d1545f2c7467849e25792212f0bd2d33e1b1381d3600fe89365d1c48",
+      "lensHash": "db8fb8c1d892535918202f8889c750aee83b02ae30d26d8d83e5646db41071bc",
+      "inputFingerprint": "426d906cb67ca5cb07185c9f62d08ad9767ce113e8cb8a94bf6e19301f46c935",
+      "coverage": "repository-lens",
+      "artifactPath": "snapshots/a90d0b0a5dc0e4ff39f7f958cbc093cf3d1de4cf9432b4e5d7a3a7e42f67ea52.json",
+      "commit": "7aebd2e9046c4926d14fcb2d6f597dd02c5744f8"
+    }
+  ],
+  "snapshotGraphs": [
+    {
+      "id": "d135b1e349f4a2a8d6c44230f5b389a6973e077f5317cb7b6b56c20540e57de1",
+      "hash": "63b7764e4c77d9202bf6f3468d4aa052000a6887b39d6108a821753d1d4c0412",
+      "repository": {
+        "name": "bs-mobile",
+        "remoteUrl": "https://github.com/hyunlord/bs-mobile",
+        "commit": "de2a5713ce7c9d9c9f38a663e0a1cae66bbfe5b5",
+        "dirty": false,
+        "sourceFingerprint": "db94b6066f3fbba1f29658d195f28930a8e18df69bdab1db1404789ec847be53"
+      },
+      "coverage": "current-lens-projection",
+      "lensHash": "db8fb8c1d892535918202f8889c750aee83b02ae30d26d8d83e5646db41071bc"
+    },
+    {
+      "id": "87e0890034bfad9c2d0200b70fd8a9a090f40fa2a57b03248266feb3376ec070",
+      "hash": "76253be0d1545f2c7467849e25792212f0bd2d33e1b1381d3600fe89365d1c48",
+      "repository": {
+        "name": "bs-mobile",
+        "remoteUrl": "https://github.com/hyunlord/bs-mobile",
+        "commit": "7aebd2e9046c4926d14fcb2d6f597dd02c5744f8",
+        "dirty": false,
+        "sourceFingerprint": "426d906cb67ca5cb07185c9f62d08ad9767ce113e8cb8a94bf6e19301f46c935"
+      },
+      "coverage": "current-lens-projection",
+      "lensHash": "db8fb8c1d892535918202f8889c750aee83b02ae30d26d8d83e5646db41071bc"
+    },
+    {
+      "id": "a90d0b0a5dc0e4ff39f7f958cbc093cf3d1de4cf9432b4e5d7a3a7e42f67ea52",
+      "hash": "76253be0d1545f2c7467849e25792212f0bd2d33e1b1381d3600fe89365d1c48",
+      "repository": {
+        "name": "bs-mobile",
+        "remoteUrl": "https://github.com/hyunlord/bs-mobile",
+        "commit": "7aebd2e9046c4926d14fcb2d6f597dd02c5744f8",
+        "dirty": false,
+        "sourceFingerprint": "426d906cb67ca5cb07185c9f62d08ad9767ce113e8cb8a94bf6e19301f46c935"
+      },
+      "coverage": "repository-lens",
+      "lensHash": "db8fb8c1d892535918202f8889c750aee83b02ae30d26d8d83e5646db41071bc"
+    }
+  ],
+  "baselineOracle": {
+    "baseline": true,
+    "revision": "designed-v1",
+    "content": 151,
+    "systems": 13,
+    "influenceEdges": 41,
+    "findings": [
+      {
+        "id": "designed-bespoke",
+        "metrics": {
+          "count": 0,
+          "layer": "designed-v1",
+          "entries": 0
+        }
+      },
+      {
+        "id": "designed-later-wave-input",
+        "metrics": {
+          "count": 0,
+          "layer": "designed-v1"
+        }
+      },
+      {
+        "id": "designed-long-card-text",
+        "metrics": {
+          "count": 0,
+          "layer": "designed-v1"
+        }
+      },
+      {
+        "id": "designed-many-items-tool",
+        "metrics": {
+          "count": 3,
+          "layer": "designed-v1"
+        }
+      },
+      {
+        "id": "designed-many-items-weapon",
+        "metrics": {
+          "count": 0,
+          "layer": "designed-v1"
+        }
+      },
+      {
+        "id": "designed-missing-primitives",
+        "metrics": {
+          "count": 0,
+          "layer": "designed-v1",
+          "primitiveReferences": 0
+        }
+      },
+      {
+        "id": "designed-no-evolution-tool",
+        "metrics": {
+          "count": 0,
+          "layer": "designed-v1"
+        }
+      },
+      {
+        "id": "designed-no-evolution-weapon",
+        "metrics": {
+          "count": 6,
+          "layer": "designed-v1"
+        }
+      },
+      {
+        "id": "designed-no-item-tool",
+        "metrics": {
+          "count": 0,
+          "layer": "designed-v1"
+        }
+      },
+      {
+        "id": "designed-no-item-weapon",
+        "metrics": {
+          "count": 15,
+          "layer": "designed-v1"
+        }
+      },
+      {
+        "id": "designed-no-xp-return",
+        "metrics": {
+          "count": 12,
+          "layer": "designed-v1"
+        }
+      },
+      {
+        "id": "designed-wave-one-evolutions",
+        "metrics": {
+          "count": 0,
+          "layer": "designed-v1"
+        }
+      }
+    ],
+    "observed": {
+      "noEvolutionWeapons": 6,
+      "noItemWeapons": 15,
+      "seedBagLinkedItems": 11,
+      "carpenterHammerLinkedItems": 7,
+      "noXpReturnTools": 12,
+      "waveOneEvolutions": 0
+    }
+  },
+  "node": {
+    "id": "designed-v1.1:core:carpenter_hammer",
+    "name": "목수 망치",
+    "edges": {
+      "outgoing": 4,
+      "incoming": 6,
+      "undirected": 1
+    }
+  },
+  "routes": {
+    "home": "/home?layer=designed-v1",
+    "explore": "/explore?layer=designed-v1",
+    "list": "/list?layer=designed-v1",
+    "views": "/views/designed-influence?origin=lens&layer=designed-v1",
+    "changes": "/changes?base=d135b1e349f4a2a8d6c44230f5b389a6973e077f5317cb7b6b56c20540e57de1&head=a90d0b0a5dc0e4ff39f7f958cbc093cf3d1de4cf9432b4e5d7a3a7e42f67ea52&layer=designed-v1",
+    "detail": "/node/designed-v1.1%3Acore%3Acarpenter_hammer"
+  },
+  "selectedCell": "건물 성장 → 사람 역할: 1",
+  "expectedViewerCommit": "b6e65efe6eed4771dcd220897b7ecfe06829c8cc",
+  "assets": [
+    {
+      "file": "app.js",
+      "sha256": "a99c6267489b82e0cf21a6106e3f9ce0dfcc8bf8efadb59e84e2be21f87cbb31"
+    },
+    {
+      "file": "changes-evidence.js",
+      "sha256": "e4dd778081839569d863e92399b2ea9d699f11cd129e493d5d3a9273ef9ce5c9"
+    },
+    {
+      "file": "changes-shared.js",
+      "sha256": "44712008b69fc420aff570143199ef50e411a626f9c3b757ba8cd1dfff42c9c0"
+    },
+    {
+      "file": "changes-trends.js",
+      "sha256": "703bc2d63bc32e551ca26be01dee64773dd03887aad479cb4c1abc1c7523f902"
+    },
+    {
+      "file": "changes.js",
+      "sha256": "410020f40ddea3664a4dbf9eb1278049e22d0e83b907ba4f500ba4f1e2362ac4"
+    },
+    {
+      "file": "data.js",
+      "sha256": "0360736dcfd33a51bf5f218008d138073d0b480036d3ebb59d871eff4f3323b6"
+    },
+    {
+      "file": "explore-canvas.js",
+      "sha256": "f7e8d65f9acd9298ee3aee95f619e612cd746abcd76ca7b0f9e59f950ede336a"
+    },
+    {
+      "file": "explore-controls.js",
+      "sha256": "aa940a7161382d1231640715761924f461425a060e9af47dd13aea68abc4b63c"
+    },
+    {
+      "file": "explore-model.js",
+      "sha256": "6bd60fc5019397190829ecb8d29543b8947dd0e7f7684b6f47074f8e3f5c52c8"
+    },
+    {
+      "file": "explore.js",
+      "sha256": "83592501bc21e1fe9c9b69dbd95b16ecbb9544d4da32cd99b9b9e76d81d3758e"
+    },
+    {
+      "file": "history-model.js",
+      "sha256": "9aef445f3c97812b4abc6857d673dbce301fc3caf7c7556a4d0baf3de27548f4"
+    },
+    {
+      "file": "history-projections.js",
+      "sha256": "3c9d8eecf8bb368e94168e4e50987482a32c5fd1246718f4acf9eafa0cdeada6"
+    },
+    {
+      "file": "home.js",
+      "sha256": "99b82b0df08be4b19bd65c15fa03d571139cfba3dbf93d5f7f9fd6b056c26ae0"
+    },
+    {
+      "file": "index.html",
+      "sha256": "bb75a572600ca4d4ddc200c1c145957a514bcba8065972f62adb953c46a60a59"
+    },
+    {
+      "file": "list-controls.js",
+      "sha256": "bbe06c1c5a3cde96833e4228fbaeccca7a11272e4e83d8ca52574e1bb7d8d4f5"
+    },
+    {
+      "file": "list-model.js",
+      "sha256": "fe2d957549096ede7467224c5e369566a2502e2a673770cd31a8f209ebb5ea6e"
+    },
+    {
+      "file": "list.js",
+      "sha256": "3463ceceb20a85eeab7823306cb42eb02c1fb1e87937f4d35b646be0c6923f12"
+    },
+    {
+      "file": "node-history.js",
+      "sha256": "aca77e0504a2abd04ef8524b2cb34837869cbb4f892fb17043ea222719325c75"
+    },
+    {
+      "file": "styles.css",
+      "sha256": "04c94f252c3dda50169740161008c3fca71f25850ad9b3378249546cc5fd76f0"
+    },
+    {
+      "file": "views-data.js",
+      "sha256": "702624ab78a1fe571a9e0dc6a7d27627379c4e33017d91f47e3d6f5d31db5005"
+    },
+    {
+      "file": "views-matrix.js",
+      "sha256": "c3fbc1122890ad38695e434afdfa7ae8b4d15a9be953712afadd5e74e16bfd67"
+    },
+    {
+      "file": "views-model.js",
+      "sha256": "031a55839d1fa6a39521b5c22f4bc5d5c2e269bc865813c42c3f71990675e307"
+    },
+    {
+      "file": "views-shared.js",
+      "sha256": "658cb5891d64ccdd3dcd9e771f5589bf306984f5db67fde0c1ad7cd8afe9d9bb"
+    },
+    {
+      "file": "views.js",
+      "sha256": "b5f622f2a6eede8d3e5f5e35a9f31e163dd600f852f8f5ef0f81c18f772feaf1"
+    }
+  ],
+  "sourceLinkCount": 1110,
+  "sourceLinkSampleSelection": "First three rendered source links; full capture retained locally.",
+  "sourceLinkSamples": [
+    {
+      "text": "data/system-design-v1.json:1835–1967",
+      "href": "https://github.com/hyunlord/bs-mobile/blob/7aebd2e9046c4926d14fcb2d6f597dd02c5744f8/data/system-design-v1.json#L1835"
+    },
+    {
+      "text": "data/system-design-v1.json:3",
+      "href": "https://github.com/hyunlord/bs-mobile/blob/7aebd2e9046c4926d14fcb2d6f597dd02c5744f8/data/system-design-v1.json#L3"
+    },
+    {
+      "text": "data/system-design-v1.json:10177",
+      "href": "https://github.com/hyunlord/bs-mobile/blob/7aebd2e9046c4926d14fcb2d6f597dd02c5744f8/data/system-design-v1.json#L10177"
+    }
+  ]
+}

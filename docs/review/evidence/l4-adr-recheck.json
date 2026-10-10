@@ -1,0 +1,63 @@
+{
+  "checkedAt": "2026-10-10T00:58:17.452094+00:00",
+  "originMain": "87487248c9d265f6d9d7ffa206ea4d64c41c52c3",
+  "mainAdrPaths": [
+    "docs/adr/0001-unity-f2p.md",
+    "docs/adr/0002-pure-csharp-core.md",
+    "docs/adr/0003-data-driven-content.md",
+    "docs/adr/0004-one-default-extensible-model.md",
+    "docs/adr/0005-fantasy-consistent-causality.md",
+    "docs/adr/0006-layout-and-tooling.md",
+    "docs/adr/0007-durable-evidence.md",
+    "docs/adr/0008-complete-commit-evidence.md",
+    "docs/adr/0009-headless-world-and-controlled-experiments.md",
+    "docs/adr/0010-candidate-pool-and-explicit-runtime-profiles.md",
+    "docs/adr/0011-executable-prototypes-and-auditable-league.md",
+    "docs/adr/0012-external-evidence-and-tree-budget.md",
+    "docs/adr/0013-dependency-policy.md",
+    "docs/adr/0013-dependency-pr-51.md",
+    "docs/adr/0014-controlled-league-experiment.md",
+    "docs/adr/0015-local-remains-loop.md",
+    "docs/adr/0016-concise-evidence-and-retrospective-gates.md",
+    "docs/adr/0017-core-target-contracts.md",
+    "docs/adr/0018-unity-66-urp-baseline.md",
+    "docs/adr/0019-people-ablation-diagnostics.md",
+    "docs/adr/0020-test-sdk-18.md",
+    "docs/adr/0021-xunit-adapter-4.md",
+    "docs/adr/0022-weapon-level-tables-and-facing-sectors.md",
+    "docs/adr/0023-production-data-and-experiment-boundary.md",
+    "docs/adr/0024-generated-core-and-canonical-unity-bridge.md",
+    "docs/adr/0025-interactive-core-and-portable-replay.md",
+    "docs/adr/0026-portrait-fold-layout-and-local-unity-ci.md",
+    "docs/adr/0027-player-build-identity-and-frame-metrics.md",
+    "docs/adr/0028-urp2d-instanced-graybox-rendering.md",
+    "docs/adr/0029-first-playable-contract-and-historical-isolation.md",
+    "docs/adr/0030-authored-art-validation-and-lfs-ci.md",
+    "docs/adr/0031-first-playable-ui-state-and-local-preferences.md",
+    "docs/adr/0032-device-performance-evidence.md",
+    "docs/adr/0033-mac-playable-and-editor-capture.md",
+    "docs/adr/0034-bounded-meta-progression.md",
+    "docs/adr/0035-opt-in-native-mac-capture.md",
+    "docs/adr/0036-content-metadata-without-runtime-redesign.md",
+    "docs/adr/0037-lattice-map.md",
+    "docs/adr/0038-docs-only-ci.md",
+    "docs/adr/0039-versioned-design-catalog.md",
+    "docs/adr/0040-layered-lattice-catalog.md",
+    "docs/adr/0041-approved-design-primitives.md",
+    "docs/adr/0042-wave1a-runtime-isolation.md"
+  ],
+  "openPullRequests": [
+    {
+      "headRefOid": "d8a12fa5d4a8724483051bd85f3efbe2334d2b4b",
+      "number": 161,
+      "title": "feat(lattice): keep catalog maps and PR differences current",
+      "adrFiles": [
+        {
+          "path": "docs/adr/0040-layered-lattice-catalog.md",
+          "status": "modified"
+        }
+      ]
+    }
+  ],
+  "decision": "Existing ADR0040 update only; no new ADR number allocated."
+}

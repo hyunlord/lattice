@@ -1,0 +1,241 @@
+{
+  "artifactRun": "https://github.com/hyunlord/lattice/actions/runs/38010313321",
+  "graphHash": "1f1c2caeb651e130361b3e95ea642406604fff71c92c5a352fdd924ad0494839",
+  "source": {
+    "name": "lattice",
+    "remoteUrl": "https://github.com/hyunlord/lattice",
+    "commit": "34185e4deb9664f40531bfa14efe881f8e3ff597",
+    "dirty": false,
+    "sourceFingerprint": "1b2d88c4f7536ddcd9c4ca6534406198ca21006ef822e3dcd2303634cd0c57b5"
+  },
+  "reportMatchesGraph": true,
+  "counts": {
+    "nodes": 447,
+    "edges": 673,
+    "facets": 0,
+    "findings": 3,
+    "views": 0
+  },
+  "snapshots": [
+    {
+      "id": "f0fe664b3fd6877ceabce0041f92ad3b03a8659132db2c1f146dec463a199dfc",
+      "graphHash": "c833aa865360b454c81bca1b5ec53228170b7cfcb4e83e4c1c74db579f93ff8d",
+      "lensHash": null,
+      "inputFingerprint": "d7a5c2422fdf09d0c021dcff731b1468929df7fafbb5ba828a92df73d588826c",
+      "coverage": "no-lens",
+      "artifactPath": "snapshots/f0fe664b3fd6877ceabce0041f92ad3b03a8659132db2c1f146dec463a199dfc.json",
+      "commit": "d5b716e4b5b9e4fb5c2aa2f95b8357753877e002"
+    },
+    {
+      "id": "b1fd97ba0e33a1810d6475ce5e43742d99f78646f7bf00371b014ca7f5871d60",
+      "graphHash": "1f1c2caeb651e130361b3e95ea642406604fff71c92c5a352fdd924ad0494839",
+      "lensHash": null,
+      "inputFingerprint": "1b2d88c4f7536ddcd9c4ca6534406198ca21006ef822e3dcd2303634cd0c57b5",
+      "coverage": "no-lens",
+      "artifactPath": "snapshots/b1fd97ba0e33a1810d6475ce5e43742d99f78646f7bf00371b014ca7f5871d60.json",
+      "commit": "34185e4deb9664f40531bfa14efe881f8e3ff597"
+    }
+  ],
+  "errors": [],
+  "screens": [
+    {
+      "name": "home",
+      "route": "/home",
+      "width": 375,
+      "dimensions": {
+        "width": 375,
+        "scroll": 375
+      },
+      "headings": [
+        "lattice",
+        "종류별 목록",
+        "분류 분포",
+        "발견과 근거",
+        "최근 변화 집중도"
+      ]
+    },
+    {
+      "name": "home",
+      "route": "/home",
+      "width": 1280,
+      "dimensions": {
+        "width": 1280,
+        "scroll": 1280
+      },
+      "headings": [
+        "lattice",
+        "종류별 목록",
+        "분류 분포",
+        "발견과 근거",
+        "최근 변화 집중도"
+      ]
+    },
+    {
+      "name": "explore",
+      "route": "/explore",
+      "width": 375,
+      "dimensions": {
+        "width": 375,
+        "scroll": 375
+      },
+      "headings": [
+        "관계 탐색",
+        "관계 지도",
+        "그룹 5개",
+        "전체 노드 목록",
+        "전체 관계 673개"
+      ]
+    },
+    {
+      "name": "explore",
+      "route": "/explore",
+      "width": 1280,
+      "dimensions": {
+        "width": 1280,
+        "scroll": 1280
+      },
+      "headings": [
+        "관계 탐색",
+        "관계 지도",
+        "그룹 5개",
+        "전체 노드 목록",
+        "전체 관계 673개"
+      ]
+    },
+    {
+      "name": "list",
+      "route": "/list",
+      "width": 375,
+      "dimensions": {
+        "width": 375,
+        "scroll": 375
+      },
+      "headings": [
+        "노드 목록"
+      ]
+    },
+    {
+      "name": "list",
+      "route": "/list",
+      "width": 1280,
+      "dimensions": {
+        "width": 1280,
+        "scroll": 1280
+      },
+      "headings": [
+        "노드 목록"
+      ]
+    },
+    {
+      "name": "views",
+      "route": "/views/auto-kind-matrix?origin=auto",
+      "width": 375,
+      "dimensions": {
+        "width": 375,
+        "scroll": 375
+      },
+      "headings": [
+        "종류 간 연결"
+      ]
+    },
+    {
+      "name": "views",
+      "route": "/views/auto-kind-matrix?origin=auto",
+      "width": 1280,
+      "dimensions": {
+        "width": 1280,
+        "scroll": 1280
+      },
+      "headings": [
+        "종류 간 연결"
+      ]
+    },
+    {
+      "name": "changes",
+      "route": "/changes?base=f0fe664b3fd6877ceabce0041f92ad3b03a8659132db2c1f146dec463a199dfc&head=b1fd97ba0e33a1810d6475ce5e43742d99f78646f7bf00371b014ca7f5871d60",
+      "width": 375,
+      "dimensions": {
+        "width": 375,
+        "scroll": 375
+      },
+      "headings": [
+        "스냅샷 변화",
+        "층별 개수 변화",
+        "발견 변화 · 3",
+        "노드 변화 · 25",
+        "연결 변화 · 40",
+        "분류 변화 · 0",
+        "분류별 스냅샷 추이",
+        "내보낸 스냅샷 · 2"
+      ]
+    },
+    {
+      "name": "changes",
+      "route": "/changes?base=f0fe664b3fd6877ceabce0041f92ad3b03a8659132db2c1f146dec463a199dfc&head=b1fd97ba0e33a1810d6475ce5e43742d99f78646f7bf00371b014ca7f5871d60",
+      "width": 1280,
+      "dimensions": {
+        "width": 1280,
+        "scroll": 1280
+      },
+      "headings": [
+        "스냅샷 변화",
+        "층별 개수 변화",
+        "발견 변화 · 3",
+        "노드 변화 · 25",
+        "연결 변화 · 40",
+        "분류 변화 · 0",
+        "분류별 스냅샷 추이",
+        "내보낸 스냅샷 · 2"
+      ]
+    },
+    {
+      "name": "node",
+      "route": "/node/module%3Asrc%2Fcore%2Fgraph.ts",
+      "width": 375,
+      "dimensions": {
+        "width": 375,
+        "scroll": 375
+      },
+      "headings": [
+        "src/core/graph.ts",
+        "원본 출처",
+        "속성",
+        "관련 발견",
+        "나가는 연결 · 3",
+        "들어오는 연결 · 2",
+        "방향 없는 연결 · 0",
+        "노드 변경 이력"
+      ]
+    },
+    {
+      "name": "node",
+      "route": "/node/module%3Asrc%2Fcore%2Fgraph.ts",
+      "width": 1280,
+      "dimensions": {
+        "width": 1280,
+        "scroll": 1280
+      },
+      "headings": [
+        "src/core/graph.ts",
+        "원본 출처",
+        "속성",
+        "관련 발견",
+        "나가는 연결 · 3",
+        "들어오는 연결 · 2",
+        "방향 없는 연결 · 0",
+        "노드 변경 이력"
+      ]
+    }
+  ],
+  "checks": [
+    "Home shows447 actual nodes",
+    "Automatic matrix actual connection evidence",
+    "Two real commit snapshots and pair route",
+    "Node original source links include exact action source commit"
+  ],
+  "mode": "Downloaded Actions artifact served on loopback; no public Pages availability claim.",
+  "cleanup": {
+    "browserClosed": true,
+    "loopbackServerClosed": true
+  }
+}

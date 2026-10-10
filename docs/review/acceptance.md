@@ -35,10 +35,10 @@ Statuses: **designed** means a reviewed contract exists, not implementation; **p
 | L3-03 | matrix/findings/diff/freshness | query parity/gates/history/current fingerprint and stale handling | verified: [protocol, installed package and actual client evidence](l3-mcp.md) |
 | L3-04 | init AGENTS + Claude skill + MCP JSON + Codex | coexistence with Graft, invalid-config atomicity, repeated init byte equality | verified: [protocol, installed package and actual client evidence](l3-mcp.md) |
 | L3-05 | --no-global + workflow skill instructions | home sentinel unchanged; before-work overview and after-work diff instructions | verified: [protocol, installed package and actual client evidence](l3-mcp.md) |
-| L4-01 | Reusable lattice-action build/check/export | external consumer workflow run from pinned release | pending |
-| L4-02 | Default-branch Pages publication | deployment URL at exact source SHA and direct browser read | pending |
-| L4-03 | PR system-diff comment | real PR marker comment with graph differences, update idempotence | pending |
-| L4-04 | Pages unavailable artifact + documented limitation | tested artifact fallback; fork-token limitation and safe permissions | pending |
+| L4-01 | Reusable lattice-action build/check/export | external consumer workflow run from pinned release | verified: [hosted consumer, comment, Pages and artifact evidence](l4-action.md) |
+| L4-02 | Default-branch Pages publication | deployment URL at exact source SHA and direct browser read | verified: [hosted consumer, comment, Pages and artifact evidence](l4-action.md) |
+| L4-03 | PR system-diff comment | real PR marker comment with graph differences, update idempotence | verified: [hosted consumer, comment, Pages and artifact evidence](l4-action.md) |
+| L4-04 | Pages unavailable artifact + documented limitation | tested artifact fallback; fork-token limitation and safe permissions | verified: [hosted consumer, comment, Pages and artifact evidence](l4-action.md) |
 | L5-01 | bs-mobile 216/77/20 | actual YAML-lens graph assertions and per-ID oracle comparison | pending |
 | L5-02 | Items 24/30; forms 4; boss 1; sinks 10/10 all 4 | lens metrics at prototype source commit, source evidence and labels | pending |
 | L5-03 | All 8 findings, classifications and intent comparisons | actual YAML rules, rendered text, metrics/targets/provenance match | pending |
@@ -104,3 +104,5 @@ L1 completion: [strict runtime migration and combined evidence](l1-strict-runtim
 L2 completion: [three-repository and public Pages acceptance](l2-acceptance.md) verifies every L2 row through Lattice PR38 and bs-mobile PR159. All six generic screens, eighteen attached real-source screenshots and exact public-source browser checks passed. L3–L5 remain pending.
 
 L3 completion: [shared graph MCP and agent setup evidence](l3-mcp.md) verifies all five L3 rows. Actual Claude/Codex calls retain the published graph identity and lens-authored 24/30 result. L4 reusable automation and L5 combined acceptance remain pending.
+
+L4 completion: [actual reusable delivery acceptance](l4-action.md) verifies all four L4 rows through Lattice PR43 and bs-mobile PR161, including same-comment rerun, default-branch Pages and downloaded artifact browser checks. L5 remains pending.
