@@ -154,7 +154,7 @@ export function renderDependencyOverview(host: HTMLElement, ui: LoopUI): () => v
         }
         const initial = view.stages.find(stage => stage.id === selected); panel.hidden = !initial; panel.replaceChildren(); if (initial) renderPanel(initial);
         redraw = () => {
-            const flows = displayedDependencyFlows(view, selected, false).slice(0, 5); roles.style.maxHeight = !inlineRoles && window.innerWidth > 900 ? `${Math.max(200, window.innerHeight - roles.getBoundingClientRect().top - 12)}px` : ''; roleHint.hidden = window.innerWidth <= 900 || roles.scrollHeight <= roles.clientHeight + 1;
+            const flows = displayedDependencyFlows(view, selected, false).slice(0, 5); const sidebarRoles = roles.parentElement === overview; roles.style.maxHeight = sidebarRoles && window.innerWidth > 900 ? `${Math.max(200, window.innerHeight - roles.getBoundingClientRect().top - 12)}px` : ''; roleHint.hidden = !sidebarRoles || window.innerWidth <= 900 || roles.scrollHeight <= roles.clientHeight + 1;
             mode.replaceChildren(); mode.hidden = false;
             const flatStage = flat ? view.stages[0] : undefined; const coverage = dependencyCoverage(view, drawDependencyArrows({ host: diagram, graph, flows, boxes, view }));
             const status = element('span', flatStage ? `한 폴더의 파일 구성 · 파일 ${flatStage.nodeIds.length}개 중 ${flatStage.filePreviews?.length ?? 0}개 미리보기` : `${selected ? '선택한 폴더 · ' : ''}외부 화살표 ${coverage.externalArrows}개 · 묶음 내부 ${coverage.internalDirections}방향 · 생략한 외부 화살표 ${coverage.hiddenExternalArrows}개`); mode.append(status);
