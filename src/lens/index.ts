@@ -142,7 +142,9 @@ export function applyLens(base: readonly ExtractedRecord[], lens: Lens, input: S
                 case "codeLink": {
                     const prepared = codeLinks.get(rule.id);
                     if (!prepared) throw new Error("Missing prepared code-link surface");
-                    const result = evaluateCodeLink(rule.rule, env, prepared);
+                    const ruleEnv = { ...env, sources: new Map<string, Source>() };
+                    addSources(ruleEnv, record.node.sources);
+                    const result = evaluateCodeLink(rule.rule, ruleEnv, prepared);
                     support.set(rule.id, result);
                     if (result.applicable) facets.push({ id: `codeSupport:${rule.id}:${record.node.id}`, nodeId: record.node.id, key: `codeSupport:${rule.id}`, ruleId: rule.id, value: result.value, sources: result.sources });
                     break;

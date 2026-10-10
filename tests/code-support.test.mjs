@@ -40,6 +40,21 @@ test('missing required source remains unknown and fails the support finding gate
     assert.equal(result.findings[0].gate.status, 'fail');
 });
 
+test('code support retains consumed dependencies without unrelated graph-derived evidence', () => {
+    const data = extractJson(input('data.json', [{ id: 'document', operations: ['trim'], unrelated: 'unused' }]));
+    for (const values of [get('node', 'operations'), get('vars', 'operations')]) {
+        const definition = config();
+        definition.derived.unshift({ id: 'unused', scope: 'graph', value: get('graph', 'nodes', 0, 'unrelated') });
+        definition.codeLinks[0].values = values;
+        const source = input('.lattice/lens.json', definition);
+        const result = applyLens(data, parseLens(source), source, { codeInputs: [code] });
+        const support = result.facets.find(facet => facet.key === 'codeSupport:dispatch');
+        assert.equal(support.value.status, 'supported');
+        assert.deepEqual(support.sources.filter(value => value.path === 'data.json').map(value => value.pointer).sort(), ['/0', '/0/operations']);
+        assert.equal(result.findings[0].gate.status, 'pass');
+    }
+});
+
 test('combined code-link and derived dependency cycles fail at the lens source', () => {
     // Given support values depending on their own classification.
     const definition = config(); definition.codeLinks[0].values = get('vars', 'classification');
