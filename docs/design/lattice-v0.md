@@ -105,7 +105,7 @@ All eight tools use the same service `ensureFresh()` before querying, including 
 - `lattice_diff`: safe commit ref, same engine as CLI/browser comparisons.
 - `lattice_freshness`: checked inputs, previous/current fingerprints, rebuilt/unknown status and timing.
 
-Choose and document one client-supported protocol baseline at L3 (2025-11-25 initialization compatibility is a candidate), test negotiation, input errors, tool errors and EOF. Do not claim unsupported newer protocol semantics. `init` creates a Lattice section in AGENTS.md, `.claude/skills/lattice/SKILL.md`, `.mcp.json`, and project/global Codex config as requested; `--no-global` performs no home config writes. Preserve Graft servers and unrelated TOML/JSON entries; repeated init is byte-stable. The generated skill explicitly tells agents to inspect overview/findings before design/implementation and diff afterward.
+The implemented [MCP contract](mcp.md) uses legacy 2025-11-25 with 2025-06-18 and 2024-11-05 negotiation, tested input/tool errors and EOF. Filesystem services remain in `cli/`; pure viewer/MCP projections live in `src/query/`. Do not claim unsupported newer protocol semantics. `init` creates a Lattice section in AGENTS.md, `.claude/skills/lattice/SKILL.md`, `.mcp.json`, and project/global Codex config as requested; `--no-global` performs no home config writes. Preserve Graft servers and unrelated TOML/JSON entries; repeated init is byte-stable. The generated skill explicitly tells agents to inspect overview/findings before design/implementation and diff afterward.
 
 ## Delivery and acceptance sequencing
 

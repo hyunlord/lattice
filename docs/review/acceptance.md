@@ -30,11 +30,11 @@ Statuses: **designed** means a reviewed contract exists, not implementation; **p
 | L2-09 | Neutral theme/mobile/keyboard/color-vision access | light/dark, 375/768/1280 screenshots + contrast and keyboard checks | verified: [three-repository browser and screen evidence](l2-acceptance.md) |
 | L2-10 | Three repositories × six screenshots attached to PR | 18 route-indexed real screenshots + interaction evidence | verified: [three-repository browser and screen evidence](l2-acceptance.md) |
 | L2-11 | bs-mobile Pages URL reported FIRST when L2 ends | consumer PR merge + successful deployment + HTTP/browser verification | verified: [public Pages, exact source and live browser evidence](l2-acceptance.md) |
-| L3-01 | stdio MCP lifecycle and freshness before every tool | protocol client + changed-input rebuild on all 8 tools, stdout purity | pending |
-| L3-02 | overview/find/node/trace | typed results/filter/path/impact/source/link parity with exported graph | pending |
-| L3-03 | matrix/findings/diff/freshness | query parity/gates/history/current fingerprint and stale handling | pending |
-| L3-04 | init AGENTS + Claude skill + MCP JSON + Codex | coexistence with Graft, invalid-config atomicity, repeated init byte equality | pending |
-| L3-05 | --no-global + workflow skill instructions | home sentinel unchanged; before-work overview and after-work diff instructions | pending |
+| L3-01 | stdio MCP lifecycle and freshness before every tool | protocol client + changed-input rebuild on all 8 tools, stdout purity | verified: [protocol, installed package and actual client evidence](l3-mcp.md) |
+| L3-02 | overview/find/node/trace | typed results/filter/path/impact/source/link parity with exported graph | verified: [protocol, installed package and actual client evidence](l3-mcp.md) |
+| L3-03 | matrix/findings/diff/freshness | query parity/gates/history/current fingerprint and stale handling | verified: [protocol, installed package and actual client evidence](l3-mcp.md) |
+| L3-04 | init AGENTS + Claude skill + MCP JSON + Codex | coexistence with Graft, invalid-config atomicity, repeated init byte equality | verified: [protocol, installed package and actual client evidence](l3-mcp.md) |
+| L3-05 | --no-global + workflow skill instructions | home sentinel unchanged; before-work overview and after-work diff instructions | verified: [protocol, installed package and actual client evidence](l3-mcp.md) |
 | L4-01 | Reusable lattice-action build/check/export | external consumer workflow run from pinned release | pending |
 | L4-02 | Default-branch Pages publication | deployment URL at exact source SHA and direct browser read | pending |
 | L4-03 | PR system-diff comment | real PR marker comment with graph differences, update idempotence | pending |
@@ -102,3 +102,5 @@ L1 evidence audit at `d0db6affb20ba0c910c7900deac69cbcd12a7cc1`: L1-01 has clean
 L1 completion: [strict runtime migration and combined evidence](l1-strict-runtime.md) closes the last L1-01 gap. All L1 rows are verified; full L2–L5 remain pending.
 
 L2 completion: [three-repository and public Pages acceptance](l2-acceptance.md) verifies every L2 row through Lattice PR38 and bs-mobile PR159. All six generic screens, eighteen attached real-source screenshots and exact public-source browser checks passed. L3–L5 remain pending.
+
+L3 completion: [shared graph MCP and agent setup evidence](l3-mcp.md) verifies all five L3 rows. Actual Claude/Codex calls retain the published graph identity and lens-authored 24/30 result. L4 reusable automation and L5 combined acceptance remain pending.

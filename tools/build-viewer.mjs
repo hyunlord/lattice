@@ -6,4 +6,7 @@ const root = fileURLToPath(new URL('..', import.meta.url));
 for (const file of readdirSync(join(root, 'build/viewer'))) {
   if (file.endsWith('.js')) copyFileSync(join(root, 'build/viewer', file), join(root, 'viewer', file));
 }
+for (const file of ['explore-model.js', 'views-model.js', 'history-model.js']) {
+  copyFileSync(join(root, 'dist/query', file), join(root, 'viewer', file));
+}
 chmodSync(join(root, 'bin/lattice.mjs'), 0o755);

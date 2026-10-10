@@ -2,7 +2,7 @@
 
 A repository-neutral system map for people and agents. Deterministic extraction creates one graph for a static browser viewer and MCP tools; declarative lenses add repository-specific meaning.
 
-**Status: first published map is live; document-aware builds are available.** JSON/YAML/CSV/Markdown/code → optional declarative lens → CLI build/export → home/explore/list/node detail. L1 core and CLI are complete; full L2 and later milestones remain pending. See [delivery scope and evidence](docs/review/first-published-map.md).
+**Status: L1 core/CLI and L2 generic viewer are verified; L3 MCP and agent setup are available.** All six web screens share graph evidence with eight stdio tools. L4 reusable CI automation and L5 final acceptance remain pending. See the [acceptance ledger](docs/review/acceptance.md).
 
 - [Original v0.1 brief](docs/design/brief-v0.1.md)
 - [Architecture and lens contract](docs/design/lattice-v0.md)
@@ -26,13 +26,13 @@ node bin/lattice.mjs diff HEAD~1 --root /path/to/repository --json
 node bin/lattice.mjs serve --root /path/to/repository --port 4173
 ```
 
-`init` creates a generic YAML lens and `.lattice/.gitignore` entries for cache/site output. Repeating it preserves an existing lens and unrelated files. It writes no home configuration; agent wiring remains L3 work. YAML 1.2 mappings, sequences, multiline scalars, multiple documents and bounded aliases carry original source lines. See [YAML/init evidence and format limits](docs/review/l1-yaml-init.md).
+`init` creates a generic YAML lens and `.lattice/.gitignore` entries for cache/site output. Repeating it preserves an existing lens and unrelated files. It also installs managed AGENTS/Claude instructions and MCP/Codex settings alongside existing Graft configuration. Use `--no-global` to leave home configuration untouched; default init additionally registers this repository in global Codex settings. See [MCP setup and preservation limits](docs/design/mcp.md). YAML 1.2 mappings, sequences, multiline scalars, multiple documents and bounded aliases carry original source lines. See [YAML/init evidence and format limits](docs/review/l1-yaml-init.md).
 
 `check` rebuilds from current inputs and evaluates findings with an explicit `gate`. Exit codes are 0 when all gates pass (or none are configured), 1 for failed or unknown gates, and 2 for invalid configuration or build errors. Informational findings without gates do not fail the command. See [gate syntax and verification](docs/review/l1-check.md).
 
 `diff <ref>` compares a Git commit with current files, including uncommitted additions, edits and deletions. It reads Git objects without checking out the reference. Text output lists changed identities; `--json` returns full before/after records. Historical lenses are preserved, and using a current lens on an older tree is explicitly labeled. Clean builds and comparisons retain commit snapshots; export includes their catalog and graphs. See [history evidence and limits](docs/review/l1-history.md).
 
-All six CLI commands accept `--json` for automation. Build/check report graph identity, extraction counters, diagnostics and gate results; init/export report their output paths. Serve emits newline-delimited ready/rebuild/error/recovery/shutdown events. Check retains exit 1 for failed or unknown gates, and operational errors exit 2 with a JSON error. Diff preserves its existing deterministic payload. See the [structured output contract](docs/design/cli-json.md).
+The six original CLI commands accept `--json` for automation. Build/check report graph identity, extraction counters, diagnostics and gate results; init/export report their output paths. Serve emits newline-delimited ready/rebuild/error/recovery/shutdown events. Check retains exit 1 for failed or unknown gates, and operational errors exit 2 with a JSON error. Diff preserves its existing deterministic payload. See the [structured output contract](docs/design/cli-json.md).
 
 Builds reuse raw per-file extraction when content, path, selection and adapter implementation match. Every build still verifies file contents and recomputes references and lens results. CLI counters show parsed/reused files; `.lattice/cache/build.json` and `inputs.json` record the latest counters and input manifest. See [incremental build verification](docs/review/l1-incremental.md).
 
@@ -45,6 +45,10 @@ Use [the bs-mobile lens](examples/bs-mobile/lens.json) for that repository, or a
 [Open the published bs-mobile map](https://hyunlord.github.io/bs-mobile/).
 
 See [module extraction evidence and limits](docs/review/l1-modules.md).
+
+## Query from agents
+
+Run `lattice mcp --root /path/to/repository` for stdio MCP, or use `init` to configure installed clients. The eight tools inspect overview, filtered nodes, detail, paths, matrices, findings, Git differences and freshness. Each query checks actual file contents before serving graph evidence. [Protocol, pagination, viewer links and setup](docs/design/mcp.md) describe the contract.
 
 ## Explore relationships
 

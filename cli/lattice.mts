@@ -5,13 +5,13 @@ import type { Graph } from '../dist/index.js';
 import { realpathSync } from 'node:fs';
 import { performance } from 'node:perf_hooks';
 import { basename, dirname, join, resolve } from 'node:path';
-import { diffGraphs } from '../dist/index.js';
 import { exportSite } from './export.mjs';
 import { initialize } from './init.mjs';
 import { serve } from './serve.mjs';
 import { buildRepository } from './build.mjs';
-import { historicalRepository } from './repository.mjs';
-import { atomic, cacheDirectory, persistBuild, saveSnapshot, withCacheLock } from './storage.mjs';
+import { compareRepository } from './history.mjs';
+import { mcp } from './mcp.mjs';
+import { cacheDirectory, persistBuild, withCacheLock } from './storage.mjs';
 
 function canonicalDirectory(path: string): string {
     try { return realpathSync(path); }
@@ -25,12 +25,13 @@ function options(args: readonly string[]) {
     for (let index = 0; index < args.length; index++) {
         const arg = args[index];
         if (arg === undefined) continue;
-        if (arg === '--root' || arg === '--lens' || arg === '--port' || arg === '--cache-dir') {
+        if (arg === '--root' || arg === '--lens' || arg === '--port' || arg === '--cache-dir' || arg === '--viewer-url') {
             const value = args[++index];
             if (!value || value.startsWith('--')) throw new Error(`Missing value for ${arg}`);
             if (arg === '--cache-dir') options.cacheDir = value;
             else if (arg === '--root') options.root = value;
             else if (arg === '--lens') options.lens = value;
+            else if (arg === '--viewer-url') options.viewerUrl = value;
             else options.port = value;
         } else if (arg === '--json') options.json = true;
         else if (arg === '--no-global') options.noGlobal = true;
@@ -73,30 +74,19 @@ function build(options: Options, command = 'build') {
     }, options.cacheDir);
 }
 function diff(options: Options) {
-    const historical = historicalRepository(options.root, options.output);
-    return withCacheLock(options.root, () => {
-        const buildOptions = { ...options, output: undefined };
-        const before = buildRepository(buildOptions, historical);
-        const after = buildRepository(buildOptions);
-        const metadata = (result: ReturnType<typeof buildRepository>) => ({ ...result.graph.repository, graphHash: result.graph.hash, lensHash: result.graph.lensDigest, coverage: result.coverage });
-        const difference = { schemaVersion: 1, before: metadata(before), after: metadata(after), ...diffGraphs(before.graph, after.graph) };
-        const cache = cacheDirectory(options.root, options.cacheDir);
-        saveSnapshot(cache, before.graph, before.coverage);
-        persistBuild(options.root, after, options.cacheDir);
-        atomic(join(cache, 'diff.json'), difference);
-        if (options.json) console.log(JSON.stringify(difference, null, 2));
-        else {
-            console.log(`Compared ${historical.commit} (${before.coverage}) → ${after.graph.repository.dirty ? 'working tree' : after.graph.repository.commit ?? 'uncommitted'} (${after.coverage})`);
-            for (const key of (['nodes', 'edges', 'facets', 'findings', 'views'] as const)) {
-                const change = difference[key];
-                console.log(`${key}: +${change.added.length} -${change.removed.length} ~${change.changed.length}`);
-                for (const item of change.added) console.log(`  + ${item.id}`);
-                for (const item of change.removed) console.log(`  - ${item.id}`);
-                for (const item of change.changed) console.log(`  ~ ${item.id}`);
-            }
-            console.log(`Before/after records: ${join(cache, 'diff.json')}`);
+    const { difference } = compareRepository(options, options.output);
+    if (options.json) console.log(JSON.stringify(difference, null, 2));
+    else {
+        console.log(`Compared ${difference.before.commit} (${difference.before.coverage}) → ${difference.after.dirty ? 'working tree' : difference.after.commit ?? 'uncommitted'} (${difference.after.coverage})`);
+        for (const key of (['nodes', 'edges', 'facets', 'findings', 'views'] as const)) {
+            const change = difference[key];
+            console.log(`${key}: +${change.added.length} -${change.removed.length} ~${change.changed.length}`);
+            for (const item of change.added) console.log(`  + ${item.id}`);
+            for (const item of change.removed) console.log(`  - ${item.id}`);
+            for (const item of change.changed) console.log(`  ~ ${item.id}`);
         }
-    }, options.cacheDir);
+        console.log(`Before/after records: ${join(cacheDirectory(options.root, options.cacheDir), 'diff.json')}`);
+    }
 }
 function check(options: Options) {
     const graph = build(options, 'check');
@@ -120,22 +110,24 @@ const jsonRequested = args.includes('--json');
 try {
     if (command === 'init' && args.includes('--cache-dir')) throw new Error('--cache-dir is not supported by init; init writes repository configuration');
     if (command !== 'init' && args.includes('--no-global')) throw new Error('--no-global is supported by init');
+    if (command !== 'mcp' && args.includes('--viewer-url')) throw new Error('--viewer-url is supported by mcp');
     if (command !== 'serve' && args.includes('--port')) throw new Error('--port is supported by serve');
     if (command !== 'export' && args.includes('--force')) throw new Error('--force is supported by export');
     if (!command || command === '--help' || command === 'help') {
-        const help = 'Lattice\n  lattice init --root <repository> [--no-global] [--json]\n  lattice build --root <repository> [--lens <lens.yaml|lens.json>] [--cache-dir <directory>] [--json]\n  lattice check --root <repository> [--lens <lens.yaml|lens.json>] [--cache-dir <directory>] [--json]\n  lattice diff <ref> --root <repository> [--lens <lens.yaml|lens.json>] [--cache-dir <directory>] [--json]\n  lattice export <directory> --root <repository> [--force] [--cache-dir <directory>] [--json]\n  lattice serve --root <repository> [--lens <lens.yaml|lens.json>] [--port <number>] [--cache-dir <directory>] [--json]\n\nJSON/YAML/CSV/Markdown/code build; optional declarative YAML/JSON lens; static home/list/detail.';
+        const help = 'Lattice\n  lattice init --root <repository> [--no-global] [--json]\n  lattice build --root <repository> [--lens <lens.yaml|lens.json>] [--cache-dir <directory>] [--json]\n  lattice check --root <repository> [--lens <lens.yaml|lens.json>] [--cache-dir <directory>] [--json]\n  lattice diff <ref> --root <repository> [--lens <lens.yaml|lens.json>] [--cache-dir <directory>] [--json]\n  lattice export <directory> --root <repository> [--force] [--cache-dir <directory>] [--json]\n  lattice serve --root <repository> [--lens <lens.yaml|lens.json>] [--port <number>] [--cache-dir <directory>] [--json]\n  lattice mcp --root <repository> [--lens <lens>] [--cache-dir <directory>] [--viewer-url <URL>]\n\nJSON/YAML/CSV/Markdown/code build; optional declarative YAML/JSON lens; static home/list/detail.';
         if (jsonRequested) output('help', { text: help });
         else console.log(help);
     } else if (command === 'init') { const opts = options(args); const result = initialize(opts); if (opts.json) output(command, result); }
     else if (command === 'build') build(options(args));
     else if (command === 'check') check(options(args));
     else if (command === 'diff') diff(options(args));
+    else if (command === 'mcp') await mcp(options(args));
     else if (command === 'serve') await serve(options(args));
     else if (command === 'export') { const opts = options(args); withCacheLock(opts.root, () => { const result = exportSite(opts); if (opts.json) output(command, result); }, opts.cacheDir); }
     else throw new Error(`Unknown command: ${command}`);
 } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
-    if (jsonRequested) console.log(JSON.stringify({ schemaVersion: 1, command: command ?? null, ok: false, ...(command === 'serve' ? { event: 'error' } : {}), error: { message } }));
+    if (jsonRequested && command !== 'mcp') console.log(JSON.stringify({ schemaVersion: 1, command: command ?? null, ok: false, ...(command === 'serve' ? { event: 'error' } : {}), error: { message } }));
     else console.error(`lattice: ${message}`);
     process.exitCode = 2;
 }
