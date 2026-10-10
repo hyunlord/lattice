@@ -1,0 +1,173 @@
+{
+  "schemaVersion": 1,
+  "verification": "Actual installed client MCP tool calls, not shell substitutes",
+  "repositoryCommit": "2338b53970e5cc55f027b65ca3c0fbfe6517adcb",
+  "configuration": "Temporary explicit MCP configuration; no host configuration edits; sequential clients with shared external cache",
+  "clients": [
+    {
+      "client": "claude",
+      "version": "2.1.280",
+      "success": true,
+      "discoveredTools": [
+        "mcp__lattice__lattice_diff",
+        "mcp__lattice__lattice_find",
+        "mcp__lattice__lattice_findings",
+        "mcp__lattice__lattice_freshness",
+        "mcp__lattice__lattice_matrix",
+        "mcp__lattice__lattice_node",
+        "mcp__lattice__lattice_overview",
+        "mcp__lattice__lattice_trace"
+      ],
+      "calls": [
+        {
+          "id": "toolu_01McgnPLC5tF51vTGpoyuk1H",
+          "tool": "mcp__lattice__lattice_overview",
+          "arguments": {
+            "layer": "runtime"
+          },
+          "graphHash": "76253be0d1545f2c7467849e25792212f0bd2d33e1b1381d3600fe89365d1c48",
+          "contentCharacters": 3957,
+          "freshness": "fresh",
+          "counts": {
+            "nodes": 244,
+            "edges": 361,
+            "facets": 726,
+            "findings": 6
+          }
+        },
+        {
+          "id": "toolu_01FSemkWypnK1kyHs48t5GTc",
+          "tool": "mcp__lattice__lattice_find",
+          "arguments": {
+            "layer": "runtime",
+            "kind": "item",
+            "facets": {
+              "selected": true,
+              "referenceDepth": "stat"
+            },
+            "limit": 2
+          },
+          "graphHash": "76253be0d1545f2c7467849e25792212f0bd2d33e1b1381d3600fe89365d1c48",
+          "contentCharacters": 5257,
+          "freshness": "fresh",
+          "total": 24,
+          "itemIds": [
+            "runtime:core:ash_gathering_charm",
+            "runtime:core:bitter_seed_dust"
+          ]
+        },
+        {
+          "id": "toolu_015RuWqQ5Lutgy8tfWLUnxEB",
+          "tool": "mcp__lattice__lattice_findings",
+          "arguments": {
+            "layer": "runtime",
+            "rule": "item-stat-projection"
+          },
+          "graphHash": "76253be0d1545f2c7467849e25792212f0bd2d33e1b1381d3600fe89365d1c48",
+          "contentCharacters": 20571,
+          "freshness": "fresh",
+          "total": 1,
+          "findings": [
+            {
+              "id": "item-stat-projection",
+              "intent": "설계 의도와 원본 효과의 차이를 살펴보세요. 수치 덧셈 분류는 재미나 실제 실행의 판정이 아닙니다.",
+              "metrics": {
+                "selected": 30,
+                "stat": 24,
+                "layer": "runtime"
+              },
+              "gate": null
+            }
+          ]
+        }
+      ],
+      "onlyMcpCalls": true
+    },
+    {
+      "client": "codex",
+      "version": "0.162.0",
+      "success": true,
+      "discoveredTools": null,
+      "calls": [
+        {
+          "id": "item_1",
+          "tool": "lattice_overview",
+          "arguments": {
+            "layer": "runtime"
+          },
+          "status": "completed",
+          "graphHash": "76253be0d1545f2c7467849e25792212f0bd2d33e1b1381d3600fe89365d1c48",
+          "contentCharacters": 3970,
+          "freshness": "fresh",
+          "counts": {
+            "nodes": 244,
+            "edges": 361,
+            "facets": 726,
+            "findings": 6
+          }
+        },
+        {
+          "id": "item_2",
+          "tool": "lattice_find",
+          "arguments": {
+            "layer": "runtime",
+            "kind": "item",
+            "facets": {
+              "selected": true,
+              "referenceDepth": "stat"
+            },
+            "limit": 2
+          },
+          "status": "completed",
+          "graphHash": "76253be0d1545f2c7467849e25792212f0bd2d33e1b1381d3600fe89365d1c48",
+          "contentCharacters": 5259,
+          "freshness": "fresh",
+          "total": 24,
+          "itemIds": [
+            "runtime:core:ash_gathering_charm",
+            "runtime:core:bitter_seed_dust"
+          ]
+        },
+        {
+          "id": "item_3",
+          "tool": "lattice_findings",
+          "arguments": {
+            "layer": "runtime",
+            "rule": "item-stat-projection"
+          },
+          "status": "completed",
+          "graphHash": "76253be0d1545f2c7467849e25792212f0bd2d33e1b1381d3600fe89365d1c48",
+          "contentCharacters": 20573,
+          "freshness": "fresh",
+          "total": 1,
+          "findings": [
+            {
+              "id": "item-stat-projection",
+              "intent": "설계 의도와 원본 효과의 차이를 살펴보세요. 수치 덧셈 분류는 재미나 실제 실행의 판정이 아닙니다.",
+              "metrics": {
+                "selected": 30,
+                "stat": 24,
+                "layer": "runtime"
+              },
+              "gate": null
+            }
+          ]
+        }
+      ],
+      "onlyMcpCalls": true
+    }
+  ],
+  "regression": {
+    "observed": "Claude rejected original default overview at 161185 characters",
+    "fixed": "Final default overview delivered in both clients without oversize errors"
+  },
+  "limitations": [
+    "No L5 performance claim",
+    "Source repository remained clean",
+    "Codex transcript does not expose complete discovery catalog; Claude does"
+  ],
+  "commands": {
+    "claude": "claude -p --strict-mcp-config --mcp-config <temporary-config.json> --tools \"\" --allowedTools \"mcp__lattice__*\" --permission-mode dontAsk --no-session-persistence --output-format stream-json --verbose < <prompt.txt>",
+    "codex": "codex --no-daemon -a never exec --ignore-user-config --ephemeral --sandbox read-only --skip-git-repo-check -C <temporary-client-directory> -c mcp_servers.lattice.command=<node> -c mcp_servers.lattice.args=[<lattice-bin>,mcp,--root,<repository>,--cache-dir,<external-cache>,--viewer-url,<pages-url>] -c mcp_servers.lattice.required=true --json < <prompt.txt>"
+  }
+}

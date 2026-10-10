@@ -1,3 +1,4 @@
+import { verifyMcp } from './mcp-smoke.mjs';
 import { verifyInit } from './init-smoke.mjs';
 import { verifyCodeLinks } from './code-links-smoke.mjs';
 import { verifyGraft } from './graft-smoke.mjs';
@@ -107,6 +108,7 @@ try {
   saveLens();
   assert.equal(check().status, 2);
   console.log('Installed check: pass=0, edited input fail=1, unknown evidence=1, invalid config=2.');
+  await verifyMcp(cli, join(temporary, 'mcp'));
   verifyInit(cli, join(temporary, 'init'));
   verifyYaml(cli, join(temporary, 'yaml'));
   verifyHistory(cli, join(temporary, 'history'));

@@ -5,6 +5,7 @@ export interface Options {
     output?: string | undefined;
     cacheDir?: string | undefined;
     port?: string | undefined;
+    viewerUrl?: string | undefined;
     json?: boolean;
     noGlobal?: boolean;
     force?: boolean;

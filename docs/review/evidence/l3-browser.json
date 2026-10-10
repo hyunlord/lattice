@@ -1,0 +1,198 @@
+{
+  "hash": "bab5f988f60e8ab7594650ce596edfc9fdf4f0b74f3cfd1ae55943195e62a3a1",
+  "snapshots": [
+    "f8d025f2374a5878cb1d85e96d84dd22d60c0ec6dafa9dc8219736ec24311c9b",
+    "9f5d4b5f94245a7c82349852124b044844892861f9d625bb33cf00d8e54df800"
+  ],
+  "checks": [
+    {
+      "name": "home",
+      "width": 1280,
+      "scroll": 1280,
+      "characters": 2487,
+      "h1": "Sow & Siege"
+    },
+    {
+      "name": "list",
+      "width": 1280,
+      "scroll": 1280,
+      "characters": 12385,
+      "h1": "노드 목록"
+    },
+    {
+      "name": "detail",
+      "width": 1280,
+      "scroll": 1280,
+      "characters": 4626,
+      "h1": "목수 망치"
+    },
+    {
+      "name": "explore",
+      "width": 1280,
+      "scroll": 1280,
+      "characters": 5504,
+      "h1": "관계 탐색"
+    },
+    {
+      "name": "matrix",
+      "width": 1280,
+      "scroll": 1280,
+      "characters": 1001,
+      "h1": "설계 시스템 영향 행렬"
+    },
+    {
+      "name": "auto",
+      "width": 1280,
+      "scroll": 1280,
+      "characters": 783,
+      "h1": "종류 간 연결"
+    },
+    {
+      "name": "changes",
+      "width": 1280,
+      "scroll": 1280,
+      "characters": 3854,
+      "h1": "스냅샷 변화"
+    },
+    {
+      "name": "home",
+      "width": 375,
+      "scroll": 375,
+      "characters": 2487,
+      "h1": "Sow & Siege"
+    },
+    {
+      "name": "list",
+      "width": 375,
+      "scroll": 375,
+      "characters": 11453,
+      "h1": "노드 목록"
+    },
+    {
+      "name": "detail",
+      "width": 375,
+      "scroll": 375,
+      "characters": 4626,
+      "h1": "목수 망치"
+    },
+    {
+      "name": "explore",
+      "width": 375,
+      "scroll": 375,
+      "characters": 5504,
+      "h1": "관계 탐색"
+    },
+    {
+      "name": "matrix",
+      "width": 375,
+      "scroll": 375,
+      "characters": 1001,
+      "h1": "설계 시스템 영향 행렬"
+    },
+    {
+      "name": "auto",
+      "width": 375,
+      "scroll": 375,
+      "characters": 783,
+      "h1": "종류 간 연결"
+    },
+    {
+      "name": "changes",
+      "width": 375,
+      "scroll": 375,
+      "characters": 3854,
+      "h1": "스냅샷 변화"
+    }
+  ],
+  "errors": [],
+  "jsResponses": [
+    {
+      "path": "/app.js",
+      "status": 200
+    },
+    {
+      "path": "/explore.js",
+      "status": 200
+    },
+    {
+      "path": "/views.js",
+      "status": 200
+    },
+    {
+      "path": "/list.js",
+      "status": 200
+    },
+    {
+      "path": "/home.js",
+      "status": 200
+    },
+    {
+      "path": "/changes.js",
+      "status": 200
+    },
+    {
+      "path": "/node-history.js",
+      "status": 200
+    },
+    {
+      "path": "/list-model.js",
+      "status": 200
+    },
+    {
+      "path": "/explore-controls.js",
+      "status": 200
+    },
+    {
+      "path": "/views-model.js",
+      "status": 200
+    },
+    {
+      "path": "/data.js",
+      "status": 200
+    },
+    {
+      "path": "/views-data.js",
+      "status": 200
+    },
+    {
+      "path": "/explore-model.js",
+      "status": 200
+    },
+    {
+      "path": "/views-matrix.js",
+      "status": 200
+    },
+    {
+      "path": "/explore-canvas.js",
+      "status": 200
+    },
+    {
+      "path": "/list-controls.js",
+      "status": 200
+    },
+    {
+      "path": "/history-model.js",
+      "status": 200
+    },
+    {
+      "path": "/changes-shared.js",
+      "status": 200
+    },
+    {
+      "path": "/changes-evidence.js",
+      "status": 200
+    },
+    {
+      "path": "/changes-trends.js",
+      "status": 200
+    },
+    {
+      "path": "/history-projections.js",
+      "status": 200
+    },
+    {
+      "path": "/views-shared.js",
+      "status": 200
+    }
+  ]
+}

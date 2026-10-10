@@ -1,15 +1,12 @@
 import type { Options } from './types.mjs';
-import { lstatSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
-import { basename, join } from 'node:path';
+import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { basename, dirname, join } from 'node:path';
 import { codeLanguage, parseLens } from '../dist/index.js';
 import { workingRepository } from './repository.mjs';
 import { digest } from './storage.mjs';
+import { regular } from './init-files.mjs';
+import { agentFiles } from './init-agents.mjs';
 
-function regular(path: string, directory = false) {
-    const status = lstatSync(path, { throwIfNoEntry: false });
-    if (status && (status.isSymbolicLink() || (directory ? !status.isDirectory() : !status.isFile()))) throw new Error(`Init requires a regular ${directory ? 'directory' : 'file'}: ${path}`);
-    return status !== undefined;
-}
 function skeleton(name: string) {
     const code = 'ts tsx mts cts js jsx mjs cjs py pyi cs go rs java c h cpp hpp rb swift kt sh'.split(' ').filter(extension => codeLanguage(`source.${extension}`));
     const kinds = [
@@ -40,10 +37,16 @@ export function initialize(options: Options) {
     const lines = previous.split(/\r?\n/u);
     const missing = ['/cache/', '/site/'].filter(pattern => !lines.includes(pattern));
     const next = previous + (missing.length && previous && !previous.endsWith('\n') ? newline : '') + missing.map(pattern => pattern + newline).join('');
+    const agents = agentFiles(root, !options.noGlobal);
     mkdirSync(directory, { recursive: true });
     if (!candidates.length) writeFileSync(lensPath, text, { flag: 'wx' });
     if (next !== previous) writeFileSync(ignorePath, next);
     mkdirSync(join(directory, 'cache'), { recursive: true });
-    if (!options.json) console.log(`Initialized Lattice lens: ${lensPath}\nCache/site ignores: ${ignorePath}\nAgent wiring is planned for L3; no global configuration was changed.`);
-    return { lensPath, ignorePath, cachePath: join(directory, 'cache'), globalConfigurationChanged: false };
+    for (const file of agents) if (file.next !== file.previous) {
+        mkdirSync(dirname(file.path), { recursive: true });
+        writeFileSync(file.path, file.next);
+    }
+    const globalConfigurationChanged = !options.noGlobal && agents.at(-1)?.next !== agents.at(-1)?.previous;
+    if (!options.json) console.log(`Initialized Lattice lens: ${lensPath}\nAgent configurations installed; restart clients to discover Lattice. Global configuration changed: ${globalConfigurationChanged}`);
+    return { lensPath, ignorePath, cachePath: join(directory, 'cache'), agentPaths: agents.map(file => file.path), globalConfigurationChanged };
 }
