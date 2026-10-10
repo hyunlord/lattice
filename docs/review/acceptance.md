@@ -25,11 +25,11 @@ Statuses: **designed** means a reviewed contract exists, not implementation; **p
 | L2-04 | Auto matrix + distribution; four generic lens view types | browser matrix drill-down/cycle/distribution/table | verified: [four-template browser and layer evidence](l2-views.md) |
 | L2-05 | History list/two snapshot compare/facet trend/finding changes | [History implementation and bounded evidence](l2-history.md); full real-repository acceptance remains | verified: [three-repository browser and screen evidence](l2-acceptance.md) |
 | L2-06 | Node properties/source/edges/history/facets/findings | [Node timeline and comparison links](l2-history.md); full detail acceptance remains | verified: [three-repository browser and screen evidence](l2-acceptance.md) |
-| L2-07 | Stable node/view/diff URLs + MCP-ready links | static Pages reload and route identity assertions | pending |
+| L2-07 | Stable node/view/diff URLs + MCP-ready links | static Pages reload and route identity assertions | verified: [public Pages, exact source and live browser evidence](l2-acceptance.md) |
 | L2-08 | Thousands of nodes aggregate → expand | 5,000-node browser QA with counted clusters and responsive controls | verified: [complete paginated traversal and expansion](l2-explore.md) |
 | L2-09 | Neutral theme/mobile/keyboard/color-vision access | light/dark, 375/768/1280 screenshots + contrast and keyboard checks | verified: [three-repository browser and screen evidence](l2-acceptance.md) |
 | L2-10 | Three repositories × six screenshots attached to PR | 18 route-indexed real screenshots + interaction evidence | verified: [three-repository browser and screen evidence](l2-acceptance.md) |
-| L2-11 | bs-mobile Pages URL reported FIRST when L2 ends | consumer PR merge + successful deployment + HTTP/browser verification | pending |
+| L2-11 | bs-mobile Pages URL reported FIRST when L2 ends | consumer PR merge + successful deployment + HTTP/browser verification | verified: [public Pages, exact source and live browser evidence](l2-acceptance.md) |
 | L3-01 | stdio MCP lifecycle and freshness before every tool | protocol client + changed-input rebuild on all 8 tools, stdout purity | pending |
 | L3-02 | overview/find/node/trace | typed results/filter/path/impact/source/link parity with exported graph | pending |
 | L3-03 | matrix/findings/diff/freshness | query parity/gates/history/current fingerprint and stale handling | pending |
@@ -100,3 +100,5 @@ L1 structured output and descriptions: [six-command installed CLI and actual rep
 L1 evidence audit at `d0db6affb20ba0c910c7900deac69cbcd12a7cc1`: L1-01 has clean npm installation, Node 20/22/24 checks and installed-package evidence in [CI](https://github.com/hyunlord/lattice/actions/runs/37996533086). It remains pending because strict TypeScript currently covers `src/**/*.ts`, while shipping CLI/viewer JavaScript is outside that check. L1-05 already has exact arbitrary-field references, alias/layer collision handling, source pointers, historical metadata and dirty/index preservation evidence in the data/unified-graph tests and history/code-link smoke scenarios. It remains pending for the designed external/internal unresolved-reference distinction and explicit unchanged-referrer refresh evidence.
 
 L1 completion: [strict runtime migration and combined evidence](l1-strict-runtime.md) closes the last L1-01 gap. All L1 rows are verified; full L2–L5 remain pending.
+
+L2 completion: [three-repository and public Pages acceptance](l2-acceptance.md) verifies every L2 row through Lattice PR38 and bs-mobile PR159. All six generic screens, eighteen attached real-source screenshots and exact public-source browser checks passed. L3–L5 remain pending.
