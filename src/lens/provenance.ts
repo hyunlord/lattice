@@ -12,6 +12,7 @@ function sourceKey(source: Source): string {
     return key;
 }
 export function addSources(env: Environment, sources: readonly Source[]): void {
+    if (env.collectSources === false) return;
     for (const source of sources) env.sources.set(sourceKey(source), source);
 }
 export type Provenance = { readonly roots: WeakMap<object, readonly Source[]>; readonly locations: WeakMap<object, ReadonlyMap<string, readonly Source[]>>; readonly dependencies: WeakMap<object, ReadonlyMap<string, readonly Source[]>>; };

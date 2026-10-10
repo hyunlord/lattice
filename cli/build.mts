@@ -31,7 +31,8 @@ export function buildRepository(options: Options, historical?: RepositoryReader,
         return [...linked.edges, ...ownEdges, ...graft.edges];
     };
     let interpreted;
-    if (lens && lensInput) interpreted = applyLens(records, lens, lensInput, { knownNodes, structuralEdges, codeInputs, sourceLink: codeSourceLink });
+    // Adapter records and parsed lenses are data-only; library callers retain one-pass queries by default.
+    if (lens && lensInput) interpreted = applyLens(records, lens, lensInput, { queryProbe: true, knownNodes, structuralEdges, codeInputs, sourceLink: codeSourceLink });
     else {
         const references = resolveRecords(records, knownNodes);
         interpreted = { ...references, edges: [...references.edges, ...structuralEdges(references.nodes)], facets: [], findings: [], views: [], presentation: { description: "JSON·YAML·CSV·문서·코드 파일에서 추출한 지도입니다. 코드 연결은 정적 분석이며 실행 증거가 아닙니다. Unity 직렬화 YAML은 포함하지 않습니다." } };

@@ -90,7 +90,14 @@ export function matchesGlob(path: string, pattern: string): boolean {
     }
     return new RegExp(`${expression}$`, "u").test(path);
 }
-export function applyLens(base: readonly ExtractedRecord[], lens: Lens, input: SourceInput, options: { readonly knownNodes?: readonly NodeDraft[]; readonly structuralEdges?: (nodes: readonly NodeDraft[]) => readonly Edge[]; readonly codeInputs?: readonly SourceInput[]; readonly sourceLink?: (source: Source) => Source; } = {}): { readonly nodes: readonly NodeDraft[]; readonly facets: readonly Facet[]; readonly findings: readonly Finding[]; readonly presentation: JsonObject; readonly edges: readonly Edge[]; readonly views: readonly View[]; readonly diagnostics: readonly ReferenceDiagnostic[]; } {
+function probeSafe(value: JsonValue): boolean {
+    if (value === null || typeof value !== "object") return true;
+    if (Array.isArray(value)) return value.every(probeSafe);
+    const expression = object(value);
+    return expression["op"] !== "source" && expression["op"] !== "lookup" && Object.values(expression).every(probeSafe);
+}
+/** queryProbe is opt-in for parsed data-only inputs without accessors or observable property reads. */
+export function applyLens(base: readonly ExtractedRecord[], lens: Lens, input: SourceInput, options: { readonly queryProbe?: boolean; readonly knownNodes?: readonly NodeDraft[]; readonly structuralEdges?: (nodes: readonly NodeDraft[]) => readonly Edge[]; readonly codeInputs?: readonly SourceInput[]; readonly sourceLink?: (source: Source) => Source; } = {}): { readonly nodes: readonly NodeDraft[]; readonly facets: readonly Facet[]; readonly findings: readonly Finding[]; readonly presentation: JsonObject; readonly edges: readonly Edge[]; readonly views: readonly View[]; readonly diagnostics: readonly ReferenceDiagnostic[]; } {
     const definition = lensRecord(input);
     if (!definition) throw new Error("Missing lens definition");
     const resolved = prepareRecords(base, lens.config, definition, options.knownNodes);
@@ -172,12 +179,17 @@ export function applyLens(base: readonly ExtractedRecord[], lens: Lens, input: S
     }
     const findings: Finding[] = array(lens.config["findings"] ?? []).map((value, index) => {
         const rule = object(value); const query = object(rule["query"] ?? {});
-        const selected = records.map(record => {
+        const probe = options.queryProbe === true && probeSafe(query);
+        const selected = records.flatMap(record => {
             const base = environments.get(record.node.id) ?? { vars: graphVars, records, sources: graphSources, graph };
+            if (probe) {
+                const { provenance: _provenance, ...valueEnvironment } = base;
+                if (!matchesQuery(query, { ...valueEnvironment, collectSources: false })) return [];
+            }
             const env = { ...base, sources: new Map<string, Source>() };
             addSources(env, record.node.sources);
-            return { record, env };
-        }).filter(({ env }) => matchesQuery(query, env));
+            return matchesQuery(query, env) ? [{ record, env }] : [];
+        });
         const targets = selected.map(({ record }) => record);
         const sources = new Map<string, Source>();
         const targetNodes = retainSources(targets.map(record => locatedRecord(record, provenance)), targets.flatMap(record => record.node.sources), provenance);
