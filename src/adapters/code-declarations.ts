@@ -1,6 +1,6 @@
 import type { JsonObject } from "../core/canonical.js";
 import type { CodeToken } from "./code-tokens.js";
-import { publicDeclaration } from "./code-descriptions.js";
+import { publicDeclaration, publicTypeDocumentation } from "./code-descriptions.js";
 import { codeTokens } from "./code-tokens.js";
 import { nativeTokens } from "./native-tokens.js";
 import type { SourceInput } from "./types.js";
@@ -107,5 +107,5 @@ export function codeDeclarations(input: SourceInput, language: string): readonly
         if (kind === "function") functionEnd = end;
         index = nameIndex;
     }
-    return declarations;
+    return publicTypeDocumentation(lines, language, declarations);
 }

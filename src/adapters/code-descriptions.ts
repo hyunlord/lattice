@@ -26,7 +26,7 @@ export function publicDeclaration(tokens: readonly CodeToken[], index: number, l
 }
 
 function sentence(value: string): string {
-    const clean = value.replace(/\{@(?:link|linkplain)\s+([^}]+)\}/gu, (_match, target: string) => target.trim().replace(/^\S+\s+(.+)$/u, "$1")).replace(/<[^>]*>/gu, " ").replace(/\s+/gu, " ").trim();
+    const clean = value.replace(/\{@(?:code|literal)\s+([^}]+)\}/gu, "$1").replace(/<see\s+cref=["']([^"']+)["']\s*\/>/gu, "$1").replace(/\{@(?:link|linkplain)\s+([^}]+)\}/gu, (_match, target: string) => target.trim().replace(/^\S+\s+(.+)$/u, "$1")).replace(/<[^>]*>/gu, " ").replace(/\s+/gu, " ").trim();
     return (/^.*?[.!?](?:\s|$)/u.exec(clean)?.[0] ?? clean).trim().slice(0, 320);
 }
 
@@ -127,4 +127,46 @@ export function descriptionAttributes(text: string, language: string, definition
     }
     names.sort((a, b) => Number(b.uses) - Number(a.uses) || String(a.name).localeCompare(String(b.name)));
     return { ...(description ? { sourceDescription: description } : {}), publicNames: names.slice(0, 3), entryPoints: entryPoints(text, language, definitions), verificationNames: evidence.verificationNames };
+}
+
+
+/** Public type prose is attributed to its declaration, never promoted to module documentation. */
+export function publicTypeDocumentation(lines: readonly string[], language: string, definitions: readonly JsonObject[]): readonly JsonObject[] {
+    const selected = new Set(definitions.filter(value => value["kind"] === "type" && value["public"] === true)
+        .sort((a, b) => Number(b["uses"] ?? 0) - Number(a["uses"] ?? 0) || String(a["name"]).localeCompare(String(b["name"]))).slice(0, 3));
+    return definitions.map(definition => {
+        if (!selected.has(definition)) return definition;
+        const escapedName = String(definition["name"] ?? "").replace(/[.*+?^${}()|[\]\\]/gu, "\\$&");
+        const modifiers = "(?:(?:public|export|default|internal|protected|private|abstract|final|sealed|static|partial|open|data|value|inline|pub)\\s+)*";
+        const typePrefix = language === "go" ? "(?:type\\s+)?" : `${modifiers}(?:class|struct|interface|enum|trait|protocol|record|union|typealias|type|object)(?:\\s+(?:class|struct))?\\s+`;
+        const declarationLine = lines[Number(definition["line"] ?? 1) - 1] ?? "";
+        if (!new RegExp(`^\\s*${typePrefix}${escapedName}\\b`, "u").test(declarationLine)) return definition;
+
+        let cursor = Number(definition["line"] ?? 1) - 2;
+        const lower = Math.max(0, cursor - 255);
+        while (cursor >= lower && ((language === "java" && /^\s*@\w+(?:\.\w+)*(?:\([^)]*\))?\s*$/u.test(lines[cursor] ?? "")) || (language === "csharp" && /^\s*\[[^\]]+\]\s*$/u.test(lines[cursor] ?? "")))) cursor--;
+        const end = cursor;
+        const last = (lines[cursor] ?? "").trim();
+        const parts: string[] = [];
+        if (last.endsWith("*/")) {
+            while (cursor >= lower) {
+                const line = (lines[cursor] ?? "").trim();
+                parts.unshift(line);
+                if (line.startsWith("/**") || (language === "go" && line.startsWith("/*"))) break;
+                if (line.includes("/*")) return definition;
+                cursor--;
+            }
+            if (cursor < lower) return definition;
+        } else {
+            const marker = language === "go" ? /^\s*\/\//u : /^\s*\/\/\//u;
+            while (cursor >= lower && marker.test(lines[cursor] ?? "")) { parts.unshift(lines[cursor] ?? ""); cursor--; }
+            cursor++;
+            if (!parts.length || (cursor === lower && marker.test(lines[cursor - 1] ?? ""))) return definition;
+        }
+        const body = parts.map(part => part.trim().replace(/^\/\*+|\*\/$/gu, "").replace(/^(?:\/{2,3}|\*)\s?/u, "")).join(" ");
+        if (!descriptiveProse(body)) return definition;
+        const text = sentence(body);
+        if (!text || /^@|^<inheritdoc\b/iu.test(text)) return definition;
+        return { ...definition, declarationDescription: { text, kind: "type-doc", line: cursor + 1, endLine: end + 1 } };
+    });
 }

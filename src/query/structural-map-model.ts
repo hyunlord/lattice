@@ -30,12 +30,19 @@ const publicEntries = (node: Node) => {
     return [...unique.values()];
 };
 
+const typeDescriptions = (members: readonly Node[]) => members.flatMap(node => publicEntries(node).flatMap(value => {
+    if (!value || typeof value !== 'object' || Array.isArray(value) || value['kind'] !== 'type' || typeof value['name'] !== 'string') return [];
+    const doc = value['declarationDescription'], source = node.sources[0];
+    if (!doc || typeof doc !== 'object' || Array.isArray(doc) || doc['kind'] !== 'type-doc' || typeof doc['text'] !== 'string' || !source) return [];
+    return [{ summary: `주요 타입 ${value['name']} — ${sentence(doc['text'])}`, uses: Number(value['uses'] ?? 0), source: { path: source.path, line: typeof doc['line'] === 'number' ? doc['line'] : source.line } }];
+})).sort((a, b) => b.uses - a.uses || a.summary.localeCompare(b.summary));
+
 export function structuralSummary(members: readonly Node[], documents: readonly Node[], path: string): string {
     const productionMembers = members.filter(n => productionSource(n.sources[0]?.path ?? n.name));
     if (productionMembers.length) members = productionMembers;
-    const rootReadme = path === '.' ? [/^readme(?:\.[^/]*)?$/iu, /^\.github\/readme(?:\.[^/]*)?$/iu].map(pattern => documents.find(n => n.kind === 'document' && pattern.test(n.sources[0]?.path ?? '') && descriptionKind(n) === 'readme' && sentence(descriptionText(n)))).find(n => n !== undefined) : undefined;
+    const rootReadme = path === '.' && !members.length ? [/^readme(?:\.[^/]*)?$/iu, /^\.github\/readme(?:\.[^/]*)?$/iu].map(pattern => documents.find(n => n.kind === 'document' && pattern.test(n.sources[0]?.path ?? '') && descriptionKind(n) === 'readme' && sentence(descriptionText(n)))).find(n => n !== undefined) : undefined;
     if (rootReadme) return sentence(descriptionText(rootReadme));
-    const section = documents.filter(n => n.kind === 'heading' && /(?:^|\/)readme(?:\.[^/]*)?$/iu.test(n.sources[0]?.path ?? '') && within(path, parent(n.sources[0]?.path ?? ''))).sort((a, b) => parent(b.sources[0]?.path ?? '').length - parent(a.sources[0]?.path ?? '').length).find(n => n.kind === 'heading' && /(?:^|\/)readme(?:\.[^/]*)?$/iu.test(n.sources[0]?.path ?? '') && n.name.toLowerCase() === (path.split('/').at(-1) ?? '').toLowerCase() && descriptionKind(n) === 'readme' && descriptionText(n));
+
     const documented = members.filter(n => folder(n) === path).sort((a, b) => Number(/(?:__init__|doc|lib|mod|index)\./u.test(b.name)) - Number(/(?:__init__|doc|lib|mod|index)\./u.test(a.name)) || a.name.localeCompare(b.name)).find(n => {
         const value = n.attributes['sourceDescription'];
         return descriptionKind(n) === 'module-doc' && value && typeof value === 'object' && !Array.isArray(value) && typeof Reflect.get(value, 'text') === 'string';
@@ -43,10 +50,12 @@ export function structuralSummary(members: readonly Node[], documents: readonly 
     const source = documented?.attributes['sourceDescription'];
     const description: unknown = source && typeof source === 'object' ? Reflect.get(source, 'text') : undefined;
     if (typeof description === 'string') return sentence(description);
-    if (section) return sentence(descriptionText(section));
     const readme = documents.filter(n => /(?:^|\/)readme(?:\.[^/]*)?$/iu.test(n.sources[0]?.path ?? '') && descriptionText(n) !== '');
     const relevant = readme.find(n => n.kind === 'document' && parent(n.sources[0]?.path ?? '') === path);
-    if (relevant) return sentence(descriptionText(relevant));
+    const intro = members.length ? structuralSummary([], documents, '.') : '';
+    if (relevant && sentence(descriptionText(relevant)) !== intro) return sentence(descriptionText(relevant));
+    const type = typeDescriptions(members)[0];
+    if (type) return type.summary;
     const names = new Map<string, number>();
     for (const node of members) {
         const values = publicEntries(node);
@@ -133,6 +142,7 @@ export function buildStructuralMap(nodes: readonly Node[], edges: readonly Edge[
         const summary = structuralSummary(summaryMembers, nodes, summaryPath);
         const summarySources = [...summaryMembers, ...nodes.filter(n => /(?:^|\/)readme(?:\.[^/]*)?$/iu.test(n.sources[0]?.path ?? ''))].flatMap(n => {
             const source = n.sources[0]; if (!source) return [];
+            if (summary.startsWith('주요 타입 ')) return typeDescriptions([n]).filter(type => type.summary === summary).map(type => type.source);
             const namedField = [['publicNames', '공개 이름: '], ['entryPoints', '실행 진입점: '], ['verificationNames', '검증 항목: ']].find(([, label]) => label !== undefined && summary.startsWith(label));
             if (namedField?.[0] && namedField[1]) {
                 const names = summary.slice(namedField[1].length).split(' · '), values = namedField[0] === 'publicNames' ? publicEntries(n) : n.attributes[namedField[0]];
@@ -156,7 +166,8 @@ export function buildStructuralMap(nodes: readonly Node[], edges: readonly Edge[
         const summary = structuralSummary(members, [], '\0');
         const names = summary.startsWith('공개 이름: ') ? summary.slice('공개 이름: '.length).split(' · ') : [];
         const summaryEvidence = members.flatMap(n => publicEntries(n).flatMap(v => v && typeof v === 'object' && !Array.isArray(v) && typeof v['name'] === 'string' && names.includes(v['name']) && n.sources[0] ? [{ path: n.sources[0].path, line: typeof v['line'] === 'number' ? v['line'] : n.sources[0].line }] : []));
-        return { ...stage, summary: names.length ? summary : '', summaryEvidence };
+        const typeEvidence = typeDescriptions(members).filter(type => type.summary === summary).map(type => type.source);
+        return { ...stage, summary: names.length || typeEvidence.length ? summary : '', summaryEvidence: typeEvidence.length ? typeEvidence : summaryEvidence };
     });
     return { ...frontier, stages: scopedStages, flows, verifiedCycleStageGroups: verifiedCycles(nodes, edges) };
 }

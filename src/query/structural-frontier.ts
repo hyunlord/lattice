@@ -40,10 +40,21 @@ export function structuralFrontier(input: readonly LoopStage[], flows: readonly 
         const ids = [...new Set(proposed.values())], projected = flows.flatMap(flow => { const source = proposed.get(flow.source), destination = proposed.get(flow.target); return source && destination && source !== destination ? [{ source, target: destination }] : []; });
         return components(ids, projected).every(group => group.length < 2 || new Set([...proposed].filter(([, root]) => group.includes(root)).map(([leaf]) => component.get(leaf))).size === 1);
     };
-    const merge = (id: string, folded: readonly string[], title: string) => {
+    const merge = (id: string, folded: readonly string[]) => {
         const prior = stages.get(id), children = [...new Set(folded.flatMap(child => child === id ? prior?.childIds ?? [] : [child]))];
         const contents = [...new Set(folded.flatMap(child => members.get(child) ?? []))];
         const scopePaths = contents.map(pathOf).sort(), nodeIds = contents.flatMap(leaf => leafById.get(leaf)?.nodeIds ?? []);
+        const included = new Set(contents), boundary = new Map<string, Set<string>>();
+        for (const flow of flows) if (included.has(flow.source) !== included.has(flow.target)) {
+            const leaf = included.has(flow.source) ? flow.source : flow.target;
+            if (!boundary.has(leaf)) boundary.set(leaf, new Set());
+            for (const file of flow.sourceFiles ?? []) if (production(file)) boundary.get(leaf)?.add(file);
+        }
+        const ordered = [...contents].sort((a, b) => (boundary.get(b)?.size ?? 0) - (boundary.get(a)?.size ?? 0) || (weight.get(b) ?? 0) - (weight.get(a) ?? 0) || a.localeCompare(b)).map(pathOf);
+        const common = (scopePaths[0]?.split('/') ?? []).filter((_part, index, parts) => scopePaths.every(path => path.split('/').slice(0, index + 1).join('/') === parts.slice(0, index + 1).join('/'))).join('/');
+        const prefix = common && !scopePaths.includes(common) ? common + '/' : '';
+        const names = ordered.slice(0, 2).map(path => prefix ? path.slice(prefix.length) : path);
+        const title = scopePaths.length === 1 ? scopePaths[0] ?? id : `${prefix}${names.join(' · ')}${scopePaths.length > 2 ? ` 외 ${scopePaths.length - 2}개 폴더` : ''}`;
         stages.set(id, { id, title, summary: '', scopePaths, unit: '모듈', nodeIds: [], descendantNodeIds: nodeIds, childIds: children, groups: [], incoming: [], outgoing: [] });
         for (const child of children) { const stage = stages.get(child); if (stage) stages.set(child, { ...stage, parentId: id }); }
         for (const root of folded) roots.delete(root);
@@ -52,7 +63,7 @@ export function structuralFrontier(input: readonly LoopStage[], flows: readonly 
     const directories = input.filter(stage => stage.childIds?.length).map(stage => pathOf(stage.id));
     for (const path of directories.filter(path => !production(path) && production(path.includes('/') ? path.slice(0, path.lastIndexOf('/')) : '.')).sort((a, b) => a.split('/').length - b.split('/').length || a.localeCompare(b))) {
         const folded = [...roots].filter(root => belongs(root, path) || root === `folder:${path}`);
-        if (folded.length && safe(folded, `auxiliary:${path}`)) merge(`auxiliary:${path}`, folded, `${path}/보조 코드`);
+        if (folded.length && safe(folded, `auxiliary:${path}`)) merge(`auxiliary:${path}`, folded);
     }
     let attempts = 0;
     while (roots.size > 9 && attempts++ < 128) {
@@ -64,7 +75,7 @@ export function structuralFrontier(input: readonly LoopStage[], flows: readonly 
         }).sort((a, b) => a.cost - b.cost || (b.path === '.' ? 0 : b.path.split('/').length) - (a.path === '.' ? 0 : a.path.split('/').length) || a.path.localeCompare(b.path));
         const choice = candidates.slice(0, 24).find(candidate => safe(candidate.folded, candidate.id));
         if (!choice) break;
-        merge(choice.id, choice.folded, choice.path === '.' ? '나머지 최상위 폴더' : `${choice.path}/나머지 하위 폴더`);
+        merge(choice.id, choice.folded);
     }
     if (roots.size > 9) {
         // Keep named production anchors; only merge contiguous condensation intervals between them.
@@ -90,8 +101,7 @@ export function structuralFrontier(input: readonly LoopStage[], flows: readonly 
         let ordinal = 0;
         const foldInterval = (group: readonly string[]) => {
             if (group.length < 2) return;
-            const names = group.map(id => leafById.get(id)?.title ?? pathOf(id)).sort();
-            merge(`layer:${ordinal++}`, group, `${names.slice(0, 2).join(' · ')}${names.length > 2 ? ` 외 ${names.length - 2}개 폴더` : ''}`);
+            merge(`layer:${ordinal++}`, group);
         };
         let interval: string[] = [];
         for (const group of original) {
@@ -104,6 +114,6 @@ export function structuralFrontier(input: readonly LoopStage[], flows: readonly 
 
     const owners = owner();
     const degree = (root: string) => flows.filter(flow => owners.get(flow.source) !== owners.get(flow.target) && (owners.get(flow.source) === root || owners.get(flow.target) === root)).reduce((sum, flow) => sum + (flow.sourceFiles ?? []).filter(production).length, 0);
-    const rootStageIds = [...roots].sort((a, b) => degree(b) - degree(a) || a.localeCompare(b));
+    const rootStageIds = [...roots].sort((a, b) => degree(b) / Math.max(1, stages.get(b)?.scopePaths?.length ?? 1) - degree(a) / Math.max(1, stages.get(a)?.scopePaths?.length ?? 1) || a.localeCompare(b));
     return { stages: [...stages.values()], rootStageIds, defaultStage: rootStageIds[0] ?? '' };
 }

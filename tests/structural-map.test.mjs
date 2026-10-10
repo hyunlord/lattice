@@ -125,8 +125,9 @@ test('GitHub README fallback retains its exact evidence without borrowing nested
     const nested = node('nested', 'packages/component/README.md', { sourceDescription: { kind: 'readme', text: 'Component introduction.', line: 5 } }, 'document');
     const model = buildStructuralMap([node('root', 'main.cs'), node('assembly', 'src/CommonAssemblyInfo.cs'), github, nested], []);
     const root = model.stages.find(s => s.id === 'folder:.');
-    assert.equal(root.summary, 'Repository introduction.');
-    assert.deepEqual(root.summaryEvidence, [{ path: '.github/README.md', line: 9 }]);
+    assert.equal(root.summary, '');
+    assert.equal(structuralSummary([], [github, nested], '.'), 'Repository introduction.');
+    assert.deepEqual(root.summaryEvidence, []);
     assert.equal(model.stages.find(s => s.id === 'folder:src').summary, '');
     assert.equal(structuralSummary([], [nested], '.'), '');
 });
@@ -235,4 +236,25 @@ test('scope public names aggregate full definitions once per source instead of t
     assert.equal(structuralSummary([n], [], 'src'), '공개 이름: Reader · Executor · ExportedValue');
     const model = buildStructuralMap([n], []);
     assert.deepEqual(model.stages[0].summaryEvidence.map(e => e.line), [4, 10, 14]);
+});
+
+test('scoped cards label representative type prose and preserve its comment evidence', () => {
+    const doc = { text: 'Processes manifests and runs their actions. More detail.', kind: 'type-doc', line: 4, endLine: 5 };
+    const member = node('runner', 'runner.go', { definitions: [{ name: 'Runner', kind: 'type', public: true, uses: 20, line: 6, declarationDescription: doc }] });
+    const readme = node('readme', 'README.md', { sourceDescription: { kind: 'readme', text: 'Repository purpose.', line: 1 } }, 'document');
+    assert.equal(structuralSummary([], [readme], '.'), 'Repository purpose.');
+    const model = buildStructuralMap([member, readme], []);
+    assert.equal(model.stages[0].summary, '주요 타입 Runner — Processes manifests and runs their actions.');
+    assert.deepEqual(model.stages[0].summaryEvidence, [{ path: 'runner.go', line: 4 }]);
+    const copy = node('copy', 'src/README.md', readme.attributes, 'document');
+    assert.equal(structuralSummary([{ ...member, sources: [{ ...member.sources[0], path: 'src/runner.go' }] }], [readme, copy], 'src'), '주요 타입 Runner — Processes manifests and runs their actions.');
+    const module = { ...member, attributes: { ...member.attributes, sourceDescription: { kind: 'module-doc', text: 'Package runner evaluates input.' } } };
+    assert.equal(structuralSummary([module], [readme], '.'), 'Package runner evaluates input.');
+});
+test('residual cards keep actual folder names and label member type prose without broadening its claim', () => {
+    const nodes = [node('a', 'examples/alpha/a.ts', { definitions: [{ name: 'Alpha', kind: 'type', public: true, uses: 3, line: 10, declarationDescription: { kind: 'type-doc', text: 'Renders an example.', line: 8, endLine: 9 } }] }), node('b', 'examples/beta/b.ts')];
+    const model = buildStructuralMap(nodes, []), group = model.stages.find(s => s.scopePaths);
+    assert.equal(group.title, 'examples/alpha · beta');
+    assert.equal(group.summary, '주요 타입 Alpha — Renders an example.');
+    assert.deepEqual(group.summaryEvidence, [{ path: 'examples/alpha/a.ts', line: 8 }]);
 });

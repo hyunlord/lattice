@@ -200,3 +200,33 @@ test('JavaDoc inline links render readable labels and keep first sentence eviden
         assert.deepEqual(value, { text: `This package provides ${rendered} to parse structured data.`, kind: 'module-doc', line: 1, endLine: 1 });
     }
 });
+
+test('major public type docs preserve authored prose and exact declaration evidence', () => {
+    for (const [path, text, name, expected, line, endLine] of [
+        ['executor.go', 'package task\ntype (\n // Executor processes task files. More detail.\n Executor struct {}\n)', 'Executor', 'Executor processes task files.', 3, 3],
+        ['reader.go', 'package taskfile\n// Reader recursively reads task files\n// and builds a graph.\ntype Reader struct {}', 'Reader', 'Reader recursively reads task files and builds a graph.', 2, 3],
+        ['ast.go', 'package ast\n// Taskfile is the syntax tree for a task file\ntype Taskfile struct {}', 'Taskfile', 'Taskfile is the syntax tree for a task file', 2, 2],
+        ['Reader.cs', 'using System;\n/// <summary>\n/// Reads data from <see cref="IParser" />.\n/// </summary>\npublic class Reader {}', 'Reader', 'Reads data from IParser.', 2, 4],
+        ['Writer.cs', 'using System;\n/// <summary>Writes CSV files.</summary>\npublic class Writer {}', 'Writer', 'Writes CSV files.', 2, 2],
+        ['Parser.java', 'package example;\n/** Converts {@code Parser} values. More detail. */\n@example.CheckReturnValue\npublic class Parser {}', 'Parser', 'Converts Parser values.', 2, 2],
+    ]) assert.deepEqual(attributes(path, text).definitions.find(value => value.name === name).declarationDescription, { text: expected, kind: 'type-doc', line, endLine });
+});
+test('type docs require adjacent comments and select most used public types, not first three', () => {
+    const text = 'package example\n// A purpose.\ntype A struct {}\n// B purpose.\ntype B struct {}\n// C purpose.\ntype C struct {}\n// D purpose.\ntype D struct {}\nvar _ D\nvar _ D\nvar _ B';
+    const definitions = attributes('types.go', text).definitions;
+    assert.deepEqual(definitions.filter(value => value.declarationDescription).map(value => value.name), ['A', 'B', 'D']);
+    assert.equal(attributes('types.go', 'package example\n// Unrelated comment.\nvar x = 1\ntype Public struct {}').definitions.find(value => value.name === 'Public').declarationDescription, undefined);
+});
+
+test('type documentation stops at non-doc comments and bounded incomplete blocks', () => {
+    assert.equal(attributes('Type.java', '/** Earlier class description. */\nclass Earlier {}\n/* ordinary implementation note */\npublic class Visible {}').definitions.find(value => value.name === 'Visible').declarationDescription, undefined);
+    const text = `/** Start.\n${' * More details.\n'.repeat(260)} */\npublic class Visible {}`;
+    assert.equal(attributes('Type.java', text).definitions.find(value => value.name === 'Visible').declarationDescription, undefined);
+});
+
+test('type documentation attaches only to the declaration owning the preceding line', () => {
+    const value = attributes('Types.cs', 'namespace Demo;\n/// <summary>Represents the first type.</summary>\npublic class First {} public class Second {}');
+    assert.equal(value.definitions.find(item => item.name === 'First').declarationDescription.text, 'Represents the first type.');
+    assert.equal(value.definitions.find(item => item.name === 'Second').declarationDescription, undefined);
+    for (const text of ['/// <summary>A namespace description.</summary>\nnamespace Demo { public class Nested {} }', '/// <summary>A containing type.</summary>\npublic class Outer { public class Nested {} }']) assert.equal(attributes('Types.cs', text).definitions.find(item => item.name === 'Nested').declarationDescription, undefined);
+});
