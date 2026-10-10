@@ -1,5 +1,5 @@
-import { lstatSync, readFileSync } from 'node:fs';
-import { dirname } from 'node:path';
+import { lstatSync, readFileSync, realpathSync } from 'node:fs';
+import { basename, dirname, isAbsolute, join, relative, sep } from 'node:path';
 
 export function regular(path: string, directory = false): boolean {
     const status = lstatSync(path, { throwIfNoEntry: false });
@@ -13,6 +13,48 @@ export function existingText(path: string, boundary: string): string {
         parent = dirname(parent);
     }
     return regular(path) ? readFileSync(path, 'utf8') : '';
+}
+export interface ProjectDestination { readonly path: string; readonly validate: () => void; }
+export function projectDestination(requested: string, root: string): ProjectDestination {
+    const boundary = realpathSync(root);
+    const inside = (path: string): boolean => {
+        const part = relative(boundary, path);
+        return !isAbsolute(part) && part !== '..' && !part.startsWith(`..${sep}`);
+    };
+    if (!inside(requested)) throw new Error(`Init destination outside repository: ${requested}`);
+    const identities = new Map<string, string>();
+    const rootStatus = lstatSync(boundary);
+    const resolve = (record: boolean): string => {
+        const currentRoot = lstatSync(boundary);
+        if (currentRoot.isSymbolicLink() || currentRoot.dev !== rootStatus.dev || currentRoot.ino !== rootStatus.ino) throw new Error(`Init repository changed after planning: ${boundary}`);
+        let parent = boundary;
+        for (const part of relative(boundary, dirname(requested)).split(sep).filter(Boolean)) {
+            const entry = join(parent, part);
+            const status = lstatSync(entry, { throwIfNoEntry: false });
+            if (status) {
+                const canonical = realpathSync(entry);
+                if (!inside(canonical)) throw new Error(`Init destination outside repository: ${entry}`);
+                regular(canonical, true);
+                const target = lstatSync(canonical);
+                const identity = `${status.dev}:${status.ino}:${canonical}:${target.dev}:${target.ino}`;
+                if (record) identities.set(entry, identity);
+                else if (identities.has(entry) && identities.get(entry) !== identity) throw new Error(`Init destination changed after planning: ${entry}`);
+                parent = canonical;
+            } else {
+                if (!record && identities.has(entry)) throw new Error(`Init destination changed after planning: ${entry}`);
+                parent = entry;
+            }
+        }
+        const path = join(parent, basename(requested));
+        regular(path);
+        return path;
+    };
+    const path = resolve(true);
+    return {
+        path, validate: () => {
+            if (resolve(false) !== path) throw new Error(`Init destination changed after planning: ${requested}`);
+        }
+    };
 }
 export function managed(text: string, name: string, body: string, markdown = false): string {
     const start = markdown ? `<!-- lattice:${name}:start -->` : `# lattice:${name}:start`;

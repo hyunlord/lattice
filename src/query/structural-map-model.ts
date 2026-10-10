@@ -1,4 +1,5 @@
 import type { Node, Edge } from '../core/model.js';
+import { structuralFilePreviews } from './structural-file-previews.js';
 import { structuralFrontier } from './structural-frontier.js';
 import type { LoopStage, LoopFlow } from './loop-map-types.js';
 
@@ -8,7 +9,7 @@ const within = (path: string, directory: string): boolean => directory === '.' |
 const strings = (value: unknown): string[] => Array.isArray(value) ? value.filter((v): v is string => typeof v === 'string') : [];
 const auxiliaryDirectory = (path: string): string | undefined => {
     const parts = path.split('/');
-    const index = parts.findIndex(part => part.toLowerCase().split(/[._-]+/u).some(token => /^(?:tests?|specs?|examples?|samples?|docs?|documentation|testdata|fixtures|vitepress|benchmarks?|bench)$/u.test(token)));
+    const index = parts.findIndex(part => part.replace(/([a-z0-9])([A-Z])/gu, '$1-$2').replace(/([A-Z])([A-Z][a-z])/gu, '$1-$2').toLowerCase().split(/[._-]+/u).some(token => /^(?:tests?|specs?|examples?|samples?|docs?|documentation|testdata|fixtures|vitepress|benchmarks?|bench)$/u.test(token)));
     return index < 0 ? undefined : parts.slice(0, index + 1).join('/');
 };
 export const productionSource = (path: string): boolean => auxiliaryDirectory(path) === undefined && !/(?:_test\.go|(?:^|[._-])(?:test|spec)\.[cm]?[jt]sx?|(?:^|\/)test_[^/]+\.py|[^/]*Tests?\.(?:java|cs))$/u.test(path);
@@ -156,7 +157,8 @@ export function buildStructuralMap(nodes: readonly Node[], edges: readonly Edge[
     }).map(folder));
     if (!entryPaths.size && sourceNodes.some(node => folder(node) === source)) entryPaths.add(source);
     const entries = [...entryPaths].sort().map(path => `folder:${path}`);
-    return { ...frontier, flows, structuralSourceRoot: source, structuralEntryStageIds: entries, verifiedCycleStageGroups: verifiedCycles(nodes, edges) };
+    const previewStages = frontier.rootStageIds.length <= 2 ? frontier.stages.map(stage => stage.nodeIds.length ? { ...stage, filePreviews: structuralFilePreviews(sourceNodes.filter(node => stage.nodeIds.includes(node.id))) } : stage) : frontier.stages;
+    return { ...frontier, stages: previewStages, flows, structuralSourceRoot: source, structuralEntryStageIds: entries, verifiedCycleStageGroups: verifiedCycles(nodes, edges) };
 }
 
 

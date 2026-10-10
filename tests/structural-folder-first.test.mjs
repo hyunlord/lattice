@@ -95,3 +95,32 @@ test('root introduction remains header-only while dedicated package documentatio
     assert.equal(java.stages.find(s => s.id === 'folder:src').summary, 'The public API for loading and parsing documents.');
     assert.equal(structuralSummary([], [readme], '.'), 'Acme is a compact framework.');
 });
+
+test('flat repositories preview actual files without inventing roles or same-package edges', () => {
+    const nodes = [
+        node('api', 'api.go', { entryPoints: ['main'], sourceDescription: { kind: 'module-doc', text: 'Starts the application.', line: 2 } }),
+        node('command', 'command.go', { publicNames: [{ name: 'Command', uses: 40 }], definitions: [{ name: 'Command', public: true, line: 12, declarationDescription: { text: 'Command executes an action.', line: 10 } }] }),
+        node('completion', 'completion.go', { publicNames: [{ name: 'Complete', uses: 10 }] }),
+        node('platform', 'platform.go', { sourceDescription: { kind: 'module-doc', text: '+build windows' } }),
+    ];
+    const model = buildStructuralMap(nodes, []), root = model.stages.find(s => s.id === model.rootStageIds[0]);
+    assert.deepEqual(root.filePreviews?.map(file => file.id), ['api', 'command', 'completion']);
+    assert.equal(root.filePreviews[0].summary, 'Starts the application.');
+    assert.equal(root.filePreviews[1].summary, '파일 설명 없음 — 요약 실행 필요');
+    assert.equal(root.filePreviews[1].definition.name, 'Command');
+    assert.equal(root.filePreviews[1].definition.summary, 'Command executes an action.');
+    assert.equal(root.summary, '역할 설명 없음 — 요약 실행 필요');
+    assert.deepEqual(model.flows, []);
+    assert.deepEqual(new Set(root.descendantNodeIds), new Set(nodes.map(n => n.id)));
+});
+
+test('CamelCase test project paths leave the primary source scope but remain in all scope', () => {
+    const product = Array.from({ length: 6 }, (_, i) => node(`p${i}`, `src/Library/Part${i}.cs`));
+    const auxiliary = ['UnitTests', 'IntegrationTests', 'TestApp', 'Library.Tests'].flatMap(dir => Array.from({ length: 8 }, (_, i) => node(`${dir}${i}`, `src/${dir}/Part${i}.cs`)));
+    const model = buildStructuralOverview([...product, ...auxiliary], []);
+    assert.equal(model.structuralSourceRoot, 'src/Library');
+    assert.equal(model.structuralScope.productionCount, product.length);
+    assert.equal(model.structuralScope.auxiliaryCount, auxiliary.length);
+    const all = model.stages.filter(s => model.structuralScope.allRootStageIds.includes(s.id));
+    assert.deepEqual(new Set(all.flatMap(s => s.descendantNodeIds)), new Set([...product, ...auxiliary].map(n => n.id)));
+});

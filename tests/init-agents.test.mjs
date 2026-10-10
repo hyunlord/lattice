@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { mkdtempSync, mkdirSync, writeFileSync, readFileSync, existsSync, rmSync, symlinkSync, realpathSync } from 'node:fs';
+import { mkdtempSync, mkdirSync, writeFileSync, readFileSync, existsSync, rmSync, symlinkSync, realpathSync, readlinkSync, unlinkSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 import { execFileSync, spawnSync } from 'node:child_process';
@@ -82,4 +82,80 @@ test('init preflights global config before creating project files', t => {
     assert.notEqual(f.run().status, 0);
     assert.equal(existsSync(join(f.root, '.lattice')), false);
     assert.equal(existsSync(join(f.root, 'AGENTS.md')), false);
+});
+test('init preserves internal shared skill directories and unmanaged siblings', t => {
+    const f = fixture(t);
+    mkdirSync(join(f.root, '.claude/skills'), { recursive: true });
+    mkdirSync(join(f.root, '.codex'));
+    writeFileSync(join(f.root, '.claude/skills/existing.md'), 'owned by repository\n');
+    symlinkSync('../.claude/skills', join(f.root, '.codex/skills'));
+    const first = f.run('--no-global');
+    assert.equal(first.status, 0, first.stderr);
+    const skill = readFileSync(join(f.root, '.claude/skills/lattice-init/SKILL.md'), 'utf8');
+    assert.match(skill, /lattice_interpretation_context/);
+    assert.equal(readlinkSync(join(f.root, '.codex/skills')), '../.claude/skills');
+    assert.equal(f.run('--no-global').status, 0);
+    assert.equal(readFileSync(join(f.root, '.claude/skills/lattice-init/SKILL.md'), 'utf8'), skill);
+    assert.equal(readFileSync(join(f.root, '.claude/skills/existing.md'), 'utf8'), 'owned by repository\n');
+});
+test('init rejects linked skill files and dangling directory aliases before writes', t => {
+    for (const leaf of [true, false]) {
+        const f = fixture(t);
+        mkdirSync(join(f.root, '.claude/skills/lattice'), { recursive: true });
+        writeFileSync(join(f.root, 'owned.md'), 'repository text');
+        if (leaf) symlinkSync('../../../owned.md', join(f.root, '.claude/skills/lattice/SKILL.md'));
+        else { mkdirSync(join(f.root, '.codex')); symlinkSync('../missing', join(f.root, '.codex/skills')); }
+        assert.notEqual(f.run('--no-global').status, 0);
+        assert.equal(existsSync(join(f.root, '.lattice')), false);
+        assert.equal(readFileSync(join(f.root, 'owned.md'), 'utf8'), 'repository text');
+    }
+});
+test('init refuses unmanaged skills through internal aliases without other writes', t => {
+    const f = fixture(t);
+    mkdirSync(join(f.root, '.claude/skills/lattice-init'), { recursive: true });
+    mkdirSync(join(f.root, '.codex'));
+    symlinkSync('../.claude/skills', join(f.root, '.codex/skills'));
+    const path = join(f.root, '.claude/skills/lattice-init/SKILL.md');
+    writeFileSync(path, 'unmanaged skill');
+    assert.notEqual(f.run('--no-global').status, 0);
+    assert.equal(readFileSync(path, 'utf8'), 'unmanaged skill');
+    assert.equal(existsSync(join(f.root, '.lattice')), false);
+});
+test('planned project destinations reject directory alias retargeting', async t => {
+    const { projectDestination } = await import('../bin/init-files.mjs');
+    const f = fixture(t);
+    for (const path of ['.codex', 'first', 'second']) mkdirSync(join(f.root, path));
+    const alias = join(f.root, '.codex/skills');
+    symlinkSync('../first', alias);
+    const plan = projectDestination(join(alias, 'lattice-init/SKILL.md'), f.root);
+    plan.validate();
+    unlinkSync(alias);
+    symlinkSync('../second', alias);
+    assert.throws(() => plan.validate(), /changed after planning/);
+    assert.equal(existsSync(join(f.root, 'second/lattice-init')), false);
+});
+test('init starter maps code and documents without selecting unrelated invalid data', t => {
+    const f = fixture(t);
+    writeFileSync(join(f.root, 'settings.json'), '// editor configuration\n{"enabled": true}\n');
+    writeFileSync(join(f.root, 'broken.json'), '{');
+    writeFileSync(join(f.root, 'main.ts'), 'export const ready = true;\n');
+    writeFileSync(join(f.root, 'player.gd'), 'extends Node\nfunc ready():\n    pass\n');
+    writeFileSync(join(f.root, 'README.md'), '# Example\n');
+    assert.equal(f.run('--no-global').status, 0);
+    const build = () => spawnSync(process.execPath, [cli, 'build', '--root', f.root, '--json'], { encoding: 'utf8' });
+    const first = build();
+    assert.equal(first.status, 0, first.stdout + first.stderr);
+    const graph = JSON.parse(readFileSync(join(f.root, '.lattice/cache/graph.json'), 'utf8'));
+    assert.ok(graph.nodes.some(node => node.id === 'module:main.ts'));
+    assert.ok(graph.nodes.some(node => node.id === 'module:player.gd'));
+    assert.ok(graph.nodes.some(node => node.id === 'document:README.md'));
+    assert.ok(!graph.inputs.some(input => ['settings.json', 'broken.json'].includes(input.path)));
+    const lensPath = join(f.root, '.lattice/lens.yaml');
+    const lens = readFileSync(lensPath, 'utf8');
+    for (const path of ['broken.json', 'settings.json']) {
+        writeFileSync(lensPath, lens.replace('kinds:\n', `kinds:\n  - id: record\n    label: Records\n    files: ["${path}"]\n`));
+        const explicit = build();
+        assert.equal(explicit.status, 2);
+        assert.ok(explicit.stdout.includes(path));
+    }
 });

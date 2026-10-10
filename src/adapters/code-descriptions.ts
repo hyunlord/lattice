@@ -161,15 +161,16 @@ export function descriptionAttributes(text: string, language: string, definition
 }
 
 
-/** Public type prose is attributed to its declaration, never promoted to module documentation. */
-export function publicTypeDocumentation(lines: readonly string[], language: string, definitions: readonly JsonObject[]): readonly JsonObject[] {
+/** Public declaration prose stays attached to its own definition, never to its module. */
+export function publicDeclarationDocumentation(lines: readonly string[], language: string, definitions: readonly JsonObject[]): readonly JsonObject[] {
     return definitions.map(definition => {
-        if (definition["kind"] !== "type" || definition["public"] !== true) return definition;
+        if (!["type", "function"].includes(String(definition["kind"])) || definition["public"] !== true) return definition;
         const escapedName = String(definition["name"] ?? "").replace(/[.*+?^${}()|[\]\\]/gu, "\\$&");
         const modifiers = "(?:(?:public|export|default|internal|protected|private|abstract|final|sealed|static|partial|open|data|value|inline|pub)\\s+)*";
         const typePrefix = language === "go" ? "(?:type\\s+)?" : `${modifiers}(?:class|struct|interface|enum|trait|protocol|record|union|typealias|type|object)(?:\\s+(?:class|struct))?\\s+`;
         const declarationLine = lines[Number(definition["line"] ?? 1) - 1] ?? "";
-        if (!new RegExp(`^\\s*${typePrefix}${escapedName}\\b`, "u").test(declarationLine)) return definition;
+        if (definition["kind"] === "function" && !new RegExp(`^[^{};=]*\\b${escapedName}(?:\\s*<[^>]*>)?\\s*\\(`, "u").test(declarationLine)) return definition;
+        if (definition["kind"] === "type" && !new RegExp(`^\\s*${typePrefix}${escapedName}\\b`, "u").test(declarationLine)) return definition;
 
         let cursor = Number(definition["line"] ?? 1) - 2;
         const lower = Math.max(0, cursor - 255);
@@ -197,6 +198,6 @@ export function publicTypeDocumentation(lines: readonly string[], language: stri
         if (!descriptiveProse(body)) return definition;
         const text = sentence(body);
         if (!text || /^@|^<inheritdoc\b/iu.test(text)) return definition;
-        return { ...definition, declarationDescription: { text, kind: "type-doc", line: cursor + 1, endLine: end + 1 } };
+        return { ...definition, declarationDescription: { text, kind: definition["kind"] === "type" ? "type-doc" : "function-doc", line: cursor + 1, endLine: end + 1 } };
     });
 }

@@ -1,5 +1,5 @@
 import type { Options } from './types.mjs';
-import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { closeSync, constants, mkdirSync, openSync, readFileSync, writeFileSync } from 'node:fs';
 import { basename, dirname, join } from 'node:path';
 import { codeLanguage, parseLens } from '../dist/index.js';
 import { workingRepository } from './repository.mjs';
@@ -8,13 +8,12 @@ import { regular } from './init-files.mjs';
 import { agentFiles } from './init-agents.mjs';
 
 function skeleton(name: string) {
-    const code = 'ts tsx mts cts js jsx mjs cjs py pyi cs go rs java c h cpp hpp rb swift kt sh'.split(' ').filter(extension => codeLanguage(`source.${extension}`));
+    const code = 'ts tsx mts cts js jsx mjs cjs py pyi cs go rs java c h cpp hpp rb swift kt kts gd sh'.split(' ').filter(extension => codeLanguage(`source.${extension}`));
     const kinds = [
-        { id: 'record', label: 'Records', files: ['json', 'yaml', 'yml', 'csv'].map(extension => `**/*.${extension}`) },
         { id: 'document', label: 'Documents', files: ['**/*.md', '**/*.markdown'] },
-        { id: 'module', label: 'Modules', files: code.map(extension => `**/*.${extension}`) },
+        { id: 'module', label: 'Modules', files: [...code.map(extension => `**/*.${extension}`), '**/go.mod'] },
     ];
-    return `schemaVersion: 1\nname: ${JSON.stringify(name)}\nkinds:\n${kinds.map(kind => `  - id: ${kind.id}\n    label: ${kind.label}\n    files: ${JSON.stringify(kind.files)}\n`).join('')}facets: []\nfindings: []\n`;
+    return `schemaVersion: 1\nname: ${JSON.stringify(name)}\nkinds:\n${kinds.map(kind => `  - id: ${kind.id}\n    label: ${kind.label}\n    files: ${JSON.stringify(kind.files)}\n`).join('')}  # Opt in to domain data with explicit repository paths:\n  # - id: record\n  #   label: Records\n  #   files: [\"data/**/*.json\", \"data/**/*.yaml\", \"data/**/*.yml\", \"data/**/*.csv\"]\nfacets: []\nfindings: []\n`;
 }
 
 export function initialize(options: Options) {
@@ -38,13 +37,17 @@ export function initialize(options: Options) {
     const missing = ['/cache/', '/site/'].filter(pattern => !lines.includes(pattern));
     const next = previous + (missing.length && previous && !previous.endsWith('\n') ? newline : '') + missing.map(pattern => pattern + newline).join('');
     const agents = agentFiles(root, !options.noGlobal);
+    for (const file of agents) file.validate?.();
     mkdirSync(directory, { recursive: true });
     if (!candidates.length) writeFileSync(lensPath, text, { flag: 'wx' });
     if (next !== previous) writeFileSync(ignorePath, next);
     mkdirSync(join(directory, 'cache'), { recursive: true });
     for (const file of agents) if (file.next !== file.previous) {
         mkdirSync(dirname(file.path), { recursive: true });
-        writeFileSync(file.path, file.next);
+        file.validate?.();
+        if ((regular(file.path) ? readFileSync(file.path, 'utf8') : '') !== file.previous) throw new Error(`Init file changed after planning: ${file.path}`);
+        const descriptor = openSync(file.path, constants.O_WRONLY | constants.O_CREAT | constants.O_NOFOLLOW | (regular(file.path) ? constants.O_TRUNC : constants.O_EXCL));
+        try { writeFileSync(descriptor, file.next); } finally { closeSync(descriptor); }
     }
     const globalConfigurationChanged = !options.noGlobal && agents.at(-1)?.next !== agents.at(-1)?.previous;
     if (!options.json) console.log(`Initialized Lattice lens: ${lensPath}\nAgent configurations installed; restart clients to discover Lattice. Global configuration changed: ${globalConfigurationChanged}`);

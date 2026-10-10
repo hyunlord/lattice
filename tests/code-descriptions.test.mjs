@@ -258,3 +258,59 @@ test('documentation block metadata without sentence punctuation cannot leak into
     const text = '/**\n * Parses structured values\n * @example\n * new Parser().parse("value")\n * @returns parsed data\n */\npublic class Parser {}';
     assert.equal(attributes('Parser.java', text).definitions[0].declarationDescription.text, 'Parses structured values');
 });
+
+test('README purpose can begin under an explicit introductory heading after badges', async () => {
+    const { extractMarkdown } = await import('../dist/index.js');
+    for (const heading of ['What is Example Mapper?', 'Overview', 'Introduction', 'About Example Mapper']) {
+        const text = `![Logo](logo.svg)\n\n[![CI](badge.svg)](/ci)\n\n### ${heading}\n\nA library for mapping one object to another. More detail.\n\n### Getting started\n\nFirst, configure the library.`;
+        const value = extractMarkdown({ path: 'README.md', text, contentHash: createHash('sha256').update(text).digest('hex') }).nodes[0].attributes.sourceDescription;
+        assert.equal(value.text, 'A library for mapping one object to another.'); assert.equal(value.line, 7);
+    }
+    const text = '![Logo](logo.svg)\n\n### Getting started\n\nFirst, configure the library.';
+    assert.equal(extractMarkdown({ path: 'README.md', text, contentHash: createHash('sha256').update(text).digest('hex') }).nodes[0].attributes.sourceDescription, undefined);
+});
+
+test('public function prose stays on its declaration with exact adjacent evidence', () => {
+    const value = attributes('args.go', 'package demo\n\n// ExactArgs rejects a wrong argument count. More detail.\nfunc ExactArgs(n int) error { return nil }\n\n// hidden is not public API.\nfunc hidden() {}\n');
+    assert.deepEqual(value.definitions.find(d => d.name === 'ExactArgs').declarationDescription, { text: 'ExactArgs rejects a wrong argument count.', kind: 'function-doc', line: 3, endLine: 3 });
+    assert.equal(value.definitions.find(d => d.name === 'hidden').declarationDescription, undefined);
+    assert.notEqual(value.sourceDescription?.kind, 'module-doc');
+});
+test('adjacent public methods retain authored prose without claiming undocumented functions', () => {
+    for (const [path, source, name] of [
+        ['api.go', 'package demo\ntype Command struct{}\n// Run executes this command.\nfunc (c *Command) Run() {}', 'Run'],
+        ['api.ts', 'import x from "x";\n/** Execute a request. */\nexport function request() {}', 'request'],
+        ['api.cs', 'public class Api {\n/// <summary>Execute a request.</summary>\npublic void Run() {}\n}', 'Run'],
+        ['api.java', 'public class Api {\n/** Execute a request. */\npublic void run() {}\n}', 'run'],
+        ['api.rs', 'use std::fmt;\n/// Execute a request.\npub fn run() {}', 'run'],
+    ]) {
+        const value = attributes(path, source), declaration = value.definitions.find(d => d.name === name);
+        assert.equal(declaration.declarationDescription.kind, 'function-doc', path);
+        assert(!/[<>*`]/u.test(declaration.declarationDescription.text), path);
+        assert.notEqual(value.sourceDescription?.kind, 'module-doc', path);
+    }
+    const value = attributes('api.go', 'package demo\n// Explanation for an unrelated statement.\nvar x = 1\nfunc Run() {}');
+    assert.equal(value.definitions.find(d => d.name === 'Run').declarationDescription, undefined);
+});
+
+test('function evidence does not inherit documentation from another declaration on the same line', () => {
+    const value = attributes('api.cs', '/// <summary>The API container.</summary>\npublic class Api { public void Run() {} }');
+    assert.equal(value.definitions.find(d => d.name === 'Run').declarationDescription, undefined);
+    assert.equal(value.definitions.find(d => d.name === 'Api').declarationDescription.kind, 'type-doc');
+});
+
+test('function documentation appears only as a labelled file definition, never a file or folder role', async () => {
+    const { buildStructuralMap } = await import('../dist/query/structural-map-model.js');
+    const path = 'src/args.go', text = 'package demo\n\n// ExactArgs rejects the wrong argument count.\nfunc ExactArgs(n int) error { return nil }';
+    const node = extractCode({ path, text, contentHash: createHash('sha256').update(text).digest('hex') }).node;
+    const model = buildStructuralMap([node], []), stage = model.stages.find(s => s.id === model.rootStageIds[0]);
+    assert.equal(stage.summary, '역할 설명 없음 — 요약 실행 필요');
+    assert.deepEqual(stage.summaryEvidence, []);
+    assert.equal(stage.filePreviews[0].summary, '파일 설명 없음 — 요약 실행 필요');
+    assert.deepEqual(stage.filePreviews[0].summaryEvidence, []);
+    assert.deepEqual(stage.filePreviews[0].definition, { name: 'ExactArgs', summary: 'ExactArgs rejects the wrong argument count.', line: 3 });
+});
+test('public function docs retain the bounded adjacent-comment scan', () => {
+    const text = 'package demo\n' + Array.from({ length: 300 }, () => '// Older discussion.').join('\n') + '\nfunc Run() {}';
+    assert.equal(attributes('api.go', text).definitions.find(d => d.name === 'Run').declarationDescription, undefined);
+});

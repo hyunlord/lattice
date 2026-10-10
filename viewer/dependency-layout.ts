@@ -188,6 +188,14 @@ export function dependencyLabelRowHeight(flows: readonly LoopFlow[], lines: Read
     return flows.some(flow => (lines.get(JSON.stringify([flow.source, flow.target]))?.length ?? 0) > 2) ? 64 : 48;
 }
 
+export function internalDependencyFacts(view: DependencyView, memberIds: readonly string[]): readonly LoopFlow[] {
+    const members = new Set(memberIds);
+    return view.flows.filter(flow => flow.source !== flow.target && members.has(flow.source) && members.has(flow.target)).map(flow => {
+        const sourceFiles = [...new Set(flow.sourceFiles ?? [])].sort();
+        return { ...flow, sourceFiles, count: sourceFiles.length };
+    }).sort((a, b) => b.count - a.count || a.source.localeCompare(b.source) || a.target.localeCompare(b.target)).slice(0, 3);
+}
+
 export function dependencyFlowDescription(flow: LoopFlow): string {
     const project = new Set(flow.projectSourceFiles ?? []), files = flow.sourceFiles ?? [];
     const names = (values: readonly string[]) => values.map(file => file.split('/').at(-1)).join(', ');

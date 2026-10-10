@@ -12,6 +12,7 @@ export type LoopNode = {
     readonly relationGroups: readonly LoopRelationGroup[]; readonly catalogSummary?: string; readonly ordinal?: number;
     readonly interpretation?: LoopInterpretation; readonly media?: LoopMedia;
 };
+export type LoopFilePreview = { readonly id: string; readonly name: string; readonly summary: string; readonly summaryEvidence: readonly { readonly path: string; readonly line: number; }[]; readonly definition?: { readonly name: string; readonly summary: string; readonly line: number; }; };
 export type LoopStage = {
     readonly id: string; readonly title: string; readonly summary: string; readonly unit: string; readonly nodeIds: readonly string[];
     readonly groups: readonly { readonly title: string; readonly items: readonly LoopItem[]; }[];
@@ -20,7 +21,7 @@ export type LoopStage = {
     readonly interpretation?: LoopInterpretation;
     readonly parentId?: string; readonly childIds?: readonly string[]; readonly descendantNodeIds?: readonly string[];
     readonly scopePaths?: readonly string[];
-    readonly directoryPath?: string; readonly folderCount?: number;
+    readonly directoryPath?: string; readonly folderCount?: number; readonly filePreviews?: readonly LoopFilePreview[];
     readonly headingParts?: readonly string[]; readonly headingRemainder?: number;
     readonly summaryDetails?: readonly { readonly label: string; readonly text: string; }[];
     readonly summaryDetail?: { readonly label: string; readonly text: string; };
