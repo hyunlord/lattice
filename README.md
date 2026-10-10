@@ -42,6 +42,8 @@ Builds reuse raw per-file extraction when content, path, selection and adapter i
 
 Use [the bs-mobile lens](examples/bs-mobile/lens.json) for that repository, or a YAML/JSON lens with your own file patterns and rules. Use `serve` for local source watching, or host the export directory with any static HTTP server. Installed packages provide the `lattice` command. Git is required. Without a lens, build discovers JSON, YAML, CSV, Markdown and code files, extracts records/headings/ADR metadata and resolves references/document links plus static JS/TS/Python/C#/Rust/Go/Java/Kotlin/Swift/GDScript imports and named definitions. A single `.lattice/lens.yaml`, `.lattice/lens.yml` or `.lattice/lens.json` is used when present; multiple defaults require an explicit `--lens`. Explicit lenses limit input to their patterns. Unsupported code languages retain file-only modules. Static extraction is not compiler or runtime verification. Unity tagged YAML is not supported. Optional Graft import uses validated source hashes and falls back to standalone extraction. See [document extraction evidence and limits](docs/review/l1-markdown.md).
 
+Go files also expose conservative same-package declaration-type references with exact use and definition locations. These are separate from imports and do not change importing-file counts. Qualified, shadowed, ambiguous or unsupported declarations are omitted; this is not a complete call graph or execution-order analysis. Flat-folder previews can use these references without inventing connections from AI prose.
+
 [Open the published bs-mobile map](https://hyunlord.github.io/bs-mobile/).
 
 See [module extraction evidence and limits](docs/review/l1-modules.md).

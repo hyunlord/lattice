@@ -1,7 +1,7 @@
 import type { LoopStage, LoopUI } from './loop-map-types.js';
-import { chip, element, interpretation, svg } from './loop-map-shared.js';
+import { anchor, chip, element, interpretation, svg } from './loop-map-shared.js';
 import { readLoopRoute, writeLoopRoute } from './loop-map-route.js';
-import { dependencyFlowDescription, dependencyCardRole, featuredDependencyRoles, internalDependencyFacts, dependencyLevels, dependencyView, displayedDependencyFlows, dependencyHeadingParts } from './dependency-layout.js';
+import { dependencyFlowDescription, dependencyCoverage, dependencyCardRole, featuredDependencyRoles, internalDependencyFacts, dependencyLevels, dependencyView, displayedDependencyFlows, dependencyHeadingParts } from './dependency-layout.js';
 import { drawDependencyArrows } from './dependency-arrows.js';
 
 function pathText<K extends keyof HTMLElementTagNameMap>(tag: K, value: string, className = ''): HTMLElementTagNameMap[K] {
@@ -64,10 +64,10 @@ export function renderDependencyOverview(host: HTMLElement, ui: LoopUI): () => v
         const connectionList = element('ul', '', 'lm-influence'); for (const flow of view.flows) { const item = element('li'); item.append(pathText('span', byId.get(flow.source)?.title ?? flow.source), document.createTextNode(' → '), pathText('span', byId.get(flow.target)?.title ?? flow.target), document.createTextNode(` — ${dependencyFlowDescription(flow)}`)); connectionList.append(item); } connections.append(connectionList);
 
         const levels = dependencyLevels(view); const boxes = new Map<string, HTMLElement>();
-        const probe = pathTitle(''); probe.classList.add('lm-member-title'); const probeBox = element('div', '', 'lm-station'); probeBox.append(probe); diagram.append(probeBox); const titleFont = getComputedStyle(probe).font; probeBox.remove(); const measure = document.createElement('canvas').getContext('2d'); if (measure) measure.font = titleFont;
+        const probe = pathTitle(''); probe.classList.add('lm-member-title'); const probeBox = element('div', '', 'lm-station'); probeBox.append(probe); diagram.append(probeBox); const titleFont = getComputedStyle(probe).font; probeBox.remove(); const measure = document.createElement('canvas').getContext('2d'); if (measure) measure.font = titleFont; const dependencyProbe = element('p', '', 'lm-card-dependencies'); diagram.append(dependencyProbe); const dependencyFont = getComputedStyle(dependencyProbe).font; dependencyProbe.remove(); const dependencyMeasure = document.createElement('canvas').getContext('2d'); if (dependencyMeasure) dependencyMeasure.font = dependencyFont;
         roles.replaceChildren(roleHint);
         const entryIds = view.stages.filter(stage => model.structuralEntryStageIds?.some(id => { let current: string | undefined = id; while (current) { if (current === stage.id) return true; current = byId.get(current)?.parentId; } return false; })).map(stage => stage.id);
-        const curated = view.stages.some(stage => stage.interpretation && !stage.interpretation.stale); const flatFileNotes = view.stages.some(stage => stage.filePreviews?.some(file => file.interpretation && !file.interpretation.stale)); const inlineRoles = (curated && view.stages.length > 1) || flatFileNotes; overview.classList.toggle('lm-flat-file-notes', flatFileNotes); overview.classList.toggle('lm-inline-roles', inlineRoles); if (inlineRoles) { roleDetails.append(roles); overview.append(roleDetails); } else { overview.append(roles); roleDetails.remove(); }
+        const curated = view.stages.some(stage => stage.interpretation && !stage.interpretation.stale); const flatFileNotes = view.stages.some(stage => stage.filePreviews?.some(file => file.interpretation && !file.interpretation.stale)); const inlineRoles = (curated && view.stages.length > 1) || flatFileNotes; const missingRoles = view.stages.every(stage => !dependencyCardRole(stage).label); overview.classList.toggle('lm-wide-structure', missingRoles); overview.classList.toggle('lm-flat-files', flat); overview.classList.toggle('lm-inline-roles', inlineRoles); if (inlineRoles || missingRoles) { roleDetails.append(roles); overview.append(roleDetails); } else { overview.append(roles); roleDetails.remove(); }
         const featured = curated ? featuredDependencyRoles(view, entryIds) : view.stages;
         const featuredIds = new Set(featured.map(stage => stage.id));
         const remaining = view.stages.filter(stage => !featuredIds.has(stage.id));
@@ -79,34 +79,42 @@ export function renderDependencyOverview(host: HTMLElement, ui: LoopUI): () => v
         for (const level of [...new Set(levels.map(group => group.level))]) {
             const row = element('div', '', 'lm-dependency-level'); row.dataset['level'] = String(level); const groups = levels.filter(group => group.level === level);
             for (const group of groups) {
-                const region = element('div', '', `lm-dependency-group${group.cyclic ? ' lm-dependency-cycle' : group.foldedCycle ? ' lm-dependency-aggregate' : ''}`); if (inlineRoles) { region.style.flexGrow = String(group.stages.length); region.style.minWidth = group.stages.length > 1 ? `${(group.stages.length > 3 ? 3 : 2) * 150 + 40}px` : '150px'; } if (group.cyclic || group.foldedCycle) region.append(element('span', '상호 참조 · 위아래 없음 · 사용: 폴더·파일 수', 'lm-cycle-caption'));
+                const region = element('div', '', `lm-dependency-group${group.cyclic ? ' lm-dependency-cycle' : group.foldedCycle ? ' lm-dependency-aggregate' : ''}`); if (inlineRoles) { region.style.flexGrow = String(group.stages.length); region.style.minWidth = group.stages.length > 1 ? `${(group.stages.length > 3 ? 3 : 2) * 150 + 40}px` : '150px'; } if (group.cyclic || group.foldedCycle) region.append(element('span', '상호 참조 · 이 카드 → 사용하는 폴더 (파일 수)', 'lm-cycle-caption'));
                 const internal = internalDependencyFacts(view, group.stages.map(stage => stage.id));
                 for (const stage of group.stages) {
                     const box = stage.filePreviews?.length ? element('article', '', 'lm-station lm-folder-files') : element('button', '', 'lm-station'); if (box instanceof HTMLButtonElement) box.type = 'button'; box.dataset['stage'] = stage.id; if (box instanceof HTMLButtonElement) box.setAttribute('aria-pressed', String(stage.id === selected));
                     box.dataset['entry'] = String(model.structuralEntryStageIds?.some(id => { let current: string | undefined = id; while (current) { if (current === stage.id) return true; current = byId.get(current)?.parentId; } return false; }) ?? false);
-                    const parts = dependencyHeadingParts(stage, view.stages); const fullName = parts[0] ?? stage.title;
-                    const minimum = `min(100%, calc(${Math.ceil(Math.max(...(fullName.match(/[^/]+\/?/g) ?? [fullName]).map(part => measure?.measureText(part).width ?? part.length * 10))) + 26}px))`; box.style.minWidth = minimum; if (!group.cyclic && !group.foldedCycle) region.style.minWidth = minimum;
+                    const parts = dependencyHeadingParts(stage, view.stages); const fullName = parts[0] ?? stage.title; const outgoing = internal.filter(flow => flow.source === stage.id); const targetWidths = outgoing.flatMap(flow => ((byId.get(flow.target)?.title ?? flow.target).match(/[^/]+\/?/g) ?? []).map(part => dependencyMeasure?.measureText(part).width ?? part.length * 8));
+                    const minimum = `min(100%, calc(${Math.ceil(Math.max(...targetWidths, ...(fullName.match(/[^/]+\/?/g) ?? [fullName]).map(part => measure?.measureText(part).width ?? part.length * 10))) + 26}px))`; box.style.minWidth = minimum; if (!group.cyclic && !group.foldedCycle) region.style.minWidth = minimum;
                     const counts = `${stage.nodeIds.length}개 파일${stage.folderCount ? ` · 하위 폴더 ${stage.folderCount}개` : ''}`; box.title = `${stage.title} — ${counts}`;
                     const metadata = element('span', counts, 'lm-station-meta');
-                    const heading = element('h3', '', 'lm-path-title lm-member-title'); appendPathParts(heading, parts); box.append(heading, metadata); if (inlineRoles && !stage.filePreviews?.length) { const role = dependencyCardRole(stage); const summary = element('p', role.text, 'lm-inline-role'); summary.title = stage.summary; if (role.label) box.append(element('span', role.label, 'lm-inline-ai-label')); box.append(summary); }
+                    const heading = element('h3', '', 'lm-path-title lm-member-title'); appendPathParts(heading, parts); box.append(heading, metadata); if (inlineRoles && !stage.filePreviews?.length) { const role = dependencyCardRole(stage); const summary = element('p', role.text, 'lm-inline-role'); summary.title = stage.summary; if (role.label) metadata.append(document.createTextNode(' · '), element('span', role.label, 'lm-inline-ai-label')); box.append(summary); }
                     const selectFolder = (): void => { selected = stage.id; render(); saveRoute(); };
                     if (stage.filePreviews?.length) {
-                        const select = element('button', '', 'lm-folder-select'); select.type = 'button'; select.setAttribute('aria-pressed', String(stage.id === selected)); select.append(heading, metadata); select.onclick = selectFolder; box.append(select); if (flatFileNotes) { const role = dependencyCardRole(stage); if (role.label) box.append(element('span', role.label, 'lm-inline-ai-label')); box.append(element('p', role.text, 'lm-inline-role')); }
+                        const select = element('button', '', 'lm-folder-select'); select.type = 'button'; select.setAttribute('aria-pressed', String(stage.id === selected)); select.append(heading, metadata); select.onclick = selectFolder; box.append(select); if (flatFileNotes) { const role = dependencyCardRole(stage); if (role.label) metadata.append(document.createTextNode(' · '), element('span', role.label, 'lm-inline-ai-label')); box.append(element('p', role.text, 'lm-inline-role')); }
                         const files = element('ul', '', 'lm-file-previews');
                         for (const file of stage.filePreviews) {
                             const item = element('li'); const open = element('button', file.name, 'lm-file-open'); open.type = 'button'; open.title = file.name; open.dataset['node'] = file.id; open.onclick = () => ui.openFocus(file.id); item.append(open, element('p', file.summary, 'lm-file-role'));
-                            if (file.definition) item.append(element('p', `정의: ${file.definition.name} — ${file.definition.summary}`, 'lm-file-definition'));
+                            if (file.definition && (!file.interpretation || file.interpretation.stale)) item.append(element('p', `정의: ${file.definition.name} — ${file.definition.summary}`, 'lm-file-definition'));
+                            if (file.references?.length) {
+                                const references = element('div', '', 'lm-file-references'); references.append(element('span', '이 파일이 타입을 참조 →', 'lm-role-source'));
+                                const referenceEvidence = element('details', '', 'lm-file-evidence'); referenceEvidence.append(element('summary', '타입 참조 근거'));
+                                for (const reference of file.references) {
+                                    const row = element('p', '', 'lm-file-reference'); row.dataset['target'] = reference.targetId; const target = element('button', reference.targetName, 'lm-file-reference-target'); target.type = 'button'; target.onclick = () => ui.openFocus(reference.targetId); row.append(target, document.createTextNode(` (${reference.names.join(' · ')})`)); references.append(row);
+                                    for (const source of reference.evidence) { const label = `${source.role === 'use' ? '사용' : '정의'} ${source.name}: ${source.path}:${source.line}`; referenceEvidence.append(source.url ? anchor(label, source.url) : pathText('span', label)); }
+                                }
+                                references.append(referenceEvidence); item.append(references);
+                            }
                             const evidence = element('details', '', 'lm-file-evidence'); evidence.append(element('summary', '근거'));
                             for (const source of file.summaryEvidence) evidence.append(pathText('span', `${source.path}:${source.line}`));
-                            if (file.definition) { const path = stage.directoryPath && stage.directoryPath !== '.' ? `${stage.directoryPath}/${file.name}` : file.name; evidence.append(pathText('span', `${path}:${file.definition.line}`)); }
+                            if (file.definition) { evidence.append(element('p', `정의: ${file.definition.name} — ${file.definition.summary}`)); const path = stage.directoryPath && stage.directoryPath !== '.' ? `${stage.directoryPath}/${file.name}` : file.name; evidence.append(pathText('span', `${path}:${file.definition.line}`)); }
                             if (evidence.childElementCount > 1) item.append(evidence); const note = interpretation(file.interpretation); if (note) { note.classList.add('lm-file-ai'); item.append(note); } files.append(item);
                         }
                         const allFiles = element('button', `파일 ${stage.nodeIds.length}개 모두 보기`, 'lm-file-all'); allFiles.type = 'button'; allFiles.onclick = () => { selectFolder(); for (const group of panel.querySelectorAll<HTMLDetailsElement>('details.lm-group')) group.open = true; panel.scrollIntoView({ block: 'start', behavior: 'smooth' }); }; box.append(files, allFiles);
                     } else box.onclick = selectFolder;
-                    const outgoing = internal.filter(flow => flow.source === stage.id);
                     if (outgoing.length) {
-                        const dependencies = element('p', '사용: ', 'lm-card-dependencies');
-                        outgoing.forEach((flow, index) => { if (index) dependencies.append(document.createTextNode(' · ')); const target = pathText('span', byId.get(flow.target)?.title ?? flow.target, 'lm-card-dependency'); target.dataset['target'] = flow.target; target.dataset['count'] = String(flow.count ?? 0); const projectCount = new Set(flow.projectSourceFiles ?? []).size; target.append(document.createTextNode(` ${(flow.count ?? 0) - projectCount}${projectCount ? ` (+공통 ${projectCount})` : ''}`)); target.title = dependencyFlowDescription(flow); dependencies.append(target); });
+                        const dependencies = element('p', '→ ', 'lm-card-dependencies');
+                        outgoing.forEach((flow, index) => { if (index) dependencies.append(document.createTextNode(' · ')); const target = pathText('span', byId.get(flow.target)?.title ?? flow.target, 'lm-card-dependency'); target.dataset['target'] = flow.target; target.dataset['count'] = String(flow.count ?? 0); const projectCount = new Set(flow.projectSourceFiles ?? []).size; target.append(document.createTextNode(' '), element('span', `(${(flow.count ?? 0) - projectCount}개 파일${projectCount ? ` + 공통 ${projectCount}` : ''})`, 'lm-relation-count')); target.title = dependencyFlowDescription(flow); dependencies.append(target); });
                         box.append(dependencies);
                     }
                     region.append(box); boxes.set(stage.id, box);
@@ -120,8 +128,8 @@ export function renderDependencyOverview(host: HTMLElement, ui: LoopUI): () => v
         redraw = () => {
             const flows = displayedDependencyFlows(view, selected, false).slice(0, 5); roles.style.maxHeight = !inlineRoles && window.innerWidth > 900 ? `${Math.max(200, window.innerHeight - roles.getBoundingClientRect().top - 12)}px` : ''; roleHint.hidden = window.innerWidth <= 900 || roles.scrollHeight <= roles.clientHeight + 1;
             mode.replaceChildren(); mode.hidden = false;
-            const flatStage = flat ? view.stages[0] : undefined;
-            const status = element('span', flatStage ? `한 폴더의 파일 구성 · 파일 ${flatStage.nodeIds.length}개 중 ${flatStage.filePreviews?.length ?? 0}개 미리보기` : selected ? `선택한 폴더의 연결 ${flows.length}개` : `전체 구조 · 바깥 연결 ${flows.length}개 표시 · 전체 폴더 연결 ${view.flows.length}개`); mode.append(status);
+            const flatStage = flat ? view.stages[0] : undefined; const coverage = dependencyCoverage(view, flows);
+            const status = element('span', flatStage ? `한 폴더의 파일 구성 · 파일 ${flatStage.nodeIds.length}개 중 ${flatStage.filePreviews?.length ?? 0}개 미리보기` : `${selected ? '선택한 폴더 · ' : ''}외부 화살표 ${coverage.externalArrows}개 · 카드 안 방향 ${coverage.internalDirections}개 · 생략한 외부 화살표 ${coverage.hiddenExternalArrows}개`); mode.append(status);
             if (selected) { const reset = element('button', '전체 구조'); reset.type = 'button'; reset.onclick = () => { selected = undefined; render(); saveRoute(); }; mode.append(reset); }
             if (view.flows.length > 5) { const toggle = element('button', '전체 연결'); toggle.type = 'button'; toggle.onclick = () => { connections.open = true; connections.scrollIntoView({ block: 'start', behavior: 'smooth' }); }; mode.append(toggle); }
             for (const gap of diagram.querySelectorAll<HTMLElement>('.lm-dependency-gap')) gap.style.height = window.innerWidth > 700 ? '48px' : '72px';

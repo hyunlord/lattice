@@ -213,6 +213,11 @@ export function internalDependencyFacts(view: DependencyView, memberIds: readonl
     return ranked;
 }
 
+export function dependencyCoverage(view: DependencyView, shown: readonly DependencyPair[]): { readonly externalArrows: number; readonly internalDirections: number; readonly hiddenExternalArrows: number; } {
+    const internalDirections = dependencyLevels(view).reduce((sum, group) => sum + internalDependencyFacts(view, group.stages.map(stage => stage.id)).length, 0);
+    return { externalArrows: shown.length, internalDirections, hiddenExternalArrows: displayedDependencyFlows(view, undefined, true).length - shown.length };
+}
+
 export function dependencyFlowDescription(flow: LoopFlow): string {
     const project = new Set(flow.projectSourceFiles ?? []), files = flow.sourceFiles ?? [];
     const names = (values: readonly string[]) => values.map(file => file.split('/').at(-1)).join(', ');

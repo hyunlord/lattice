@@ -157,7 +157,7 @@ export function buildStructuralMap(nodes: readonly Node[], edges: readonly Edge[
     }).map(folder));
     if (!entryPaths.size && sourceNodes.some(node => folder(node) === source)) entryPaths.add(source);
     const entries = [...entryPaths].sort().map(path => `folder:${path}`);
-    const previewStages = frontier.rootStageIds.length <= 2 ? frontier.stages.map(stage => stage.nodeIds.length ? { ...stage, filePreviews: structuralFilePreviews(sourceNodes.filter(node => stage.nodeIds.includes(node.id))) } : stage) : frontier.stages;
+    const previewStages = frontier.rootStageIds.length <= 2 ? frontier.stages.map(stage => stage.nodeIds.length ? { ...stage, filePreviews: structuralFilePreviews(sourceNodes.filter(node => stage.nodeIds.includes(node.id)), edges) } : stage) : frontier.stages;
     return { ...frontier, stages: previewStages, flows, structuralSourceRoot: source, structuralEntryStageIds: entries, verifiedCycleStageGroups: verifiedCycles(nodes, edges) };
 }
 

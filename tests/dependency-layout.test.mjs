@@ -294,3 +294,11 @@ test('collapsed-arrow attribution names actual members rather than the represent
     const view = { stages: ['root', 'configuration', 'license'].map(id => stage(id)), flows: [{ source: 'root', target: 'configuration' }, { source: 'configuration', target: 'root' }, { source: 'configuration', target: 'license' }] };
     assert.deepEqual(dependencyPairSources(view, { source: 'root', target: 'license' }), ['configuration']);
 });
+
+test('coverage separates rendered external pairs from internal directed connections', async () => {
+    const { dependencyCoverage, displayedDependencyFlows } = await import('../viewer/dependency-layout.js');
+    const view = { stages: ['a', 'b', 'c', 'd'].map(id => stage(id)), flows: [{ source: 'a', target: 'b', sourceFiles: ['a'] }, { source: 'b', target: 'a', sourceFiles: ['b'] }, { source: 'a', target: 'c', sourceFiles: ['a'] }, { source: 'b', target: 'c', sourceFiles: ['b'] }, { source: 'c', target: 'd', sourceFiles: ['c'] }] };
+    const shown = displayedDependencyFlows(view, 'a', false);
+    assert.deepEqual(dependencyCoverage(view, shown), { externalArrows: 1, internalDirections: 2, hiddenExternalArrows: 1 });
+    assert.deepEqual(dependencyCoverage(view, displayedDependencyFlows(view, undefined, true)), { externalArrows: 2, internalDirections: 2, hiddenExternalArrows: 0 });
+});

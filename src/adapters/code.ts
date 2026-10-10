@@ -1,3 +1,4 @@
+import { goTypeEvidence } from "./go-type-references.js";
 import { descriptionAttributes } from "./code-descriptions.js";
 import type { NodeDraft, Source } from "../core/model.js";
 import type { JsonObject } from "../core/canonical.js";
@@ -119,7 +120,7 @@ export function extractCode(input: SourceInput): CodeModule {
         const native = languageImports(input, language); imports = [...native.imports]; attributes = native.attributes;
     }
     const definitions = codeDeclarations(input, language);
-    attributes = { ...attributes, definitions, ...descriptionAttributes(input.text, language, definitions) };
+    attributes = { ...attributes, ...(language === "go" ? goTypeEvidence(input.text) : {}), definitions, ...descriptionAttributes(input.text, language, definitions) };
     return {
         language, imports,
         node: { id: `module:${input.path}`, kind: "module", name: input.path, attributes: { ...attributes, language, extraction: ["typescript", "javascript", "python", "csharp", "rust", "go", "java", "kotlin", "swift", "gdscript"].includes(language) ? "static-imports" : "file-only", imports: imports.map(item => item.specifier) }, sources: [makeSource(input, "", 1, input.text.split(/\r\n|\r|\n/u).length)] },
