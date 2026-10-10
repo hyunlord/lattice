@@ -796,6 +796,1228 @@
         }
       },
       "limitation": "Actual merged default-lens source and public browser agree. Cold MCP and maximum unchanged freshness still fail; p95 does not replace maximum. Earlier actual-client records remain historical and were not rerun for this graph. Tool remains pinned to d8a689, not subsequent Lattice main changes."
+    },
+    {
+      "name": "validation-candidate",
+      "toolCommit": "a5ad874b044d28834d9647a986dc59deb5ba99cd",
+      "toolPullRequest": "https://github.com/hyunlord/lattice/pull/53",
+      "packageSha256": "1ad6d48539c0a2f936b79c9c143e094883b609d96bafbe5e03689c1cc48c28ff",
+      "compiledAggregateSha256": "001217a9181a52b7d5b38ab99ef67c4e3138c10eaecc69748a1b9ab4d4a1806a",
+      "sourceCommit": "03c5f22f528ad005f6367b66ba0878c95ae142fb",
+      "sourceCleanBefore": true,
+      "sourceCleanAfter": true,
+      "optionalGraft": false,
+      "node": "v24.21.0",
+      "coverage": "default repository lens on merged source",
+      "lensSha256": "17ca9377c761d2a326d45b51555ff5d9e3a91cf9c20302145bc707a13879b6d5",
+      "graphHash": "c4fa05cc00a6fdc5b0d11099b6e612868463f28c857b65add5156954223c7393",
+      "sourceFingerprint": "bdd4b67f706d37e107191319a7de8da774dc2b9ad4acc3ec7631161bf463a098",
+      "checkedInputs": 230,
+      "builds": {
+        "n": 3,
+        "minMs": 1891.5568750000002,
+        "p50Ms": 1907.5324580000001,
+        "p95Ms": 1988.1170410000002,
+        "maxMs": 1988.1170410000002
+      },
+      "coldMcpMs": 1921.259583,
+      "unchangedFreshness": {
+        "n": 20,
+        "minMs": 41.54358300000058,
+        "p50Ms": 42.731040999999095,
+        "p95Ms": 44.93170800000007,
+        "maxMs": 47.08166600000004
+      },
+      "tools": {
+        "lattice_overview": {
+          "n": 3,
+          "minMs": 76.23533400000088,
+          "p50Ms": 77.08866699999999,
+          "p95Ms": 81.22612499999923,
+          "maxMs": 81.22612499999923
+        },
+        "lattice_find": {
+          "n": 3,
+          "minMs": 48.106582999998864,
+          "p50Ms": 48.57112500000039,
+          "p95Ms": 50.8851250000007,
+          "maxMs": 50.8851250000007
+        },
+        "lattice_node": {
+          "n": 3,
+          "minMs": 43.94012500000099,
+          "p50Ms": 45.639624999999796,
+          "p95Ms": 49.03179199999977,
+          "maxMs": 49.03179199999977
+        },
+        "lattice_trace": {
+          "n": 3,
+          "minMs": 41.016082999998616,
+          "p50Ms": 43.20991700000013,
+          "p95Ms": 44.16541599999982,
+          "maxMs": 44.16541599999982
+        },
+        "lattice_matrix": {
+          "n": 3,
+          "minMs": 49.954124999998385,
+          "p50Ms": 51.60845799999879,
+          "p95Ms": 59.859958999999435,
+          "maxMs": 59.859958999999435
+        },
+        "lattice_findings": {
+          "n": 3,
+          "minMs": 43.85845900000095,
+          "p50Ms": 47.22716700000092,
+          "p95Ms": 48.19445799999994,
+          "maxMs": 48.19445799999994
+        },
+        "lattice_diff": {
+          "n": 3,
+          "minMs": 485.9212499999994,
+          "p50Ms": 497.88916699999936,
+          "p95Ms": 502.0790840000009,
+          "maxMs": 502.0790840000009
+        },
+        "lattice_freshness": {
+          "n": 3,
+          "minMs": 41.55683300000055,
+          "p50Ms": 43.04691699999967,
+          "p95Ms": 44.3265420000007,
+          "maxMs": 44.3265420000007
+        }
+      },
+      "gates": {
+        "buildUnder10s": true,
+        "deterministicFirstTwo": true,
+        "unchangedFreshnessUnder50ms": true,
+        "mcpUnder1s": false,
+        "allToolCallsSuccessful": true,
+        "allThreeBuildHashesEqual": true
+      },
+      "toolCallCount": 45,
+      "mcpExitCode": 0,
+      "mcpStderr": "",
+      "startedAt": "2026-10-10T03:12:43.563Z",
+      "finishedAt": "2026-10-10T03:12:55.190Z",
+      "rawResultsSha256": "d3ed03315952986597df7e780a1caaf5db1b91ad399ad02dd0b7772d7c75ea98",
+      "limitation": "PR51 changes provenance; non-source collections equal published PR165. Full graph equality begins at this candidate."
+    },
+    {
+      "name": "buffer-candidate",
+      "toolCommit": "3d720f0dfc93b08c35f9c0b35f863950390a43e0",
+      "toolPullRequest": "https://github.com/hyunlord/lattice/pull/54",
+      "packageSha256": "2ed5424b5c47dd54423b0b0d0c3170afcd0edc7d47ae7301b33cf22c0be4af6a",
+      "compiledAggregateSha256": "dafccdd2acdfc6876dc14fc0cbcc93b65f2db4b08925e3d1bee89ab41e23bf4b",
+      "sourceCommit": "03c5f22f528ad005f6367b66ba0878c95ae142fb",
+      "sourceCleanBefore": true,
+      "sourceCleanAfter": true,
+      "optionalGraft": false,
+      "node": "v24.21.0",
+      "coverage": "default repository lens on merged source",
+      "lensSha256": "17ca9377c761d2a326d45b51555ff5d9e3a91cf9c20302145bc707a13879b6d5",
+      "graphHash": "c4fa05cc00a6fdc5b0d11099b6e612868463f28c857b65add5156954223c7393",
+      "sourceFingerprint": "bdd4b67f706d37e107191319a7de8da774dc2b9ad4acc3ec7631161bf463a098",
+      "checkedInputs": 230,
+      "builds": {
+        "n": 3,
+        "minMs": 1847.9961670000002,
+        "p50Ms": 1861.3304580000001,
+        "p95Ms": 1881.6543749999998,
+        "maxMs": 1881.6543749999998
+      },
+      "coldMcpMs": 1761.9810829999997,
+      "unchangedFreshness": {
+        "n": 20,
+        "minMs": 42.351832999999715,
+        "p50Ms": 45.54620900000009,
+        "p95Ms": 52.09483399999954,
+        "maxMs": 60.00866700000006
+      },
+      "tools": {
+        "lattice_overview": {
+          "n": 3,
+          "minMs": 82.05025000000023,
+          "p50Ms": 86.52041700000154,
+          "p95Ms": 97.70108299999993,
+          "maxMs": 97.70108299999993
+        },
+        "lattice_find": {
+          "n": 3,
+          "minMs": 51.444000000001324,
+          "p50Ms": 60.38787500000035,
+          "p95Ms": 61.23604200000045,
+          "maxMs": 61.23604200000045
+        },
+        "lattice_node": {
+          "n": 3,
+          "minMs": 52.57749999999942,
+          "p50Ms": 54.85933300000033,
+          "p95Ms": 90.8794999999991,
+          "maxMs": 90.8794999999991
+        },
+        "lattice_trace": {
+          "n": 3,
+          "minMs": 51.38329200000044,
+          "p50Ms": 65.14466700000048,
+          "p95Ms": 142.39829099999952,
+          "maxMs": 142.39829099999952
+        },
+        "lattice_matrix": {
+          "n": 3,
+          "minMs": 362.66212500000074,
+          "p50Ms": 480.082124999999,
+          "p95Ms": 608.0795419999995,
+          "maxMs": 608.0795419999995
+        },
+        "lattice_findings": {
+          "n": 3,
+          "minMs": 403.87066699999923,
+          "p50Ms": 454.68091599999934,
+          "p95Ms": 631.2650410000006,
+          "maxMs": 631.2650410000006
+        },
+        "lattice_diff": {
+          "n": 3,
+          "minMs": 739.1362500000032,
+          "p50Ms": 1467.519374999998,
+          "p95Ms": 2921.2694169999995,
+          "maxMs": 2921.2694169999995
+        },
+        "lattice_freshness": {
+          "n": 3,
+          "minMs": 59.131084000000556,
+          "p50Ms": 59.65337500000169,
+          "p95Ms": 81.79662500000268,
+          "maxMs": 81.79662500000268
+        }
+      },
+      "gates": {
+        "buildUnder10s": true,
+        "deterministicFirstTwo": true,
+        "unchangedFreshnessUnder50ms": false,
+        "mcpUnder1s": false,
+        "allToolCallsSuccessful": true,
+        "allThreeBuildHashesEqual": true
+      },
+      "toolCallCount": 45,
+      "mcpExitCode": 0,
+      "mcpStderr": "",
+      "startedAt": "2026-10-10T03:19:03.107Z",
+      "finishedAt": "2026-10-10T03:19:21.114Z",
+      "rawResultsSha256": "f09bdcc5763d61837cb4078376222b06a0e684e3da6b2b85240ae94e33402149",
+      "limitation": "External tests and Graft build contended; initial process sample timestamp unavailable. Preserved failure.",
+      "sameGraphAs": "validation-candidate"
+    },
+    {
+      "name": "buffer-candidate-idle",
+      "toolCommit": "3d720f0dfc93b08c35f9c0b35f863950390a43e0",
+      "toolPullRequest": "https://github.com/hyunlord/lattice/pull/54",
+      "packageSha256": "2ed5424b5c47dd54423b0b0d0c3170afcd0edc7d47ae7301b33cf22c0be4af6a",
+      "compiledAggregateSha256": "dafccdd2acdfc6876dc14fc0cbcc93b65f2db4b08925e3d1bee89ab41e23bf4b",
+      "sourceCommit": "03c5f22f528ad005f6367b66ba0878c95ae142fb",
+      "sourceCleanBefore": true,
+      "sourceCleanAfter": true,
+      "optionalGraft": false,
+      "node": "v24.21.0",
+      "coverage": "default repository lens on merged source",
+      "lensSha256": "17ca9377c761d2a326d45b51555ff5d9e3a91cf9c20302145bc707a13879b6d5",
+      "graphHash": "c4fa05cc00a6fdc5b0d11099b6e612868463f28c857b65add5156954223c7393",
+      "sourceFingerprint": "bdd4b67f706d37e107191319a7de8da774dc2b9ad4acc3ec7631161bf463a098",
+      "checkedInputs": 230,
+      "builds": {
+        "n": 3,
+        "minMs": 1835.5128750000001,
+        "p50Ms": 1870.0867079999998,
+        "p95Ms": 1968.8542499999994,
+        "maxMs": 1968.8542499999994
+      },
+      "coldMcpMs": 1913.7077920000002,
+      "unchangedFreshness": {
+        "n": 20,
+        "minMs": 44.508458000000246,
+        "p50Ms": 46.956583999999566,
+        "p95Ms": 49.37012499999946,
+        "maxMs": 49.382958000001054
+      },
+      "tools": {
+        "lattice_overview": {
+          "n": 3,
+          "minMs": 80.22991700000057,
+          "p50Ms": 82.43391700000029,
+          "p95Ms": 92.6208749999987,
+          "maxMs": 92.6208749999987
+        },
+        "lattice_find": {
+          "n": 3,
+          "minMs": 50.63245800000004,
+          "p50Ms": 51.19800000000032,
+          "p95Ms": 51.24804100000074,
+          "maxMs": 51.24804100000074
+        },
+        "lattice_node": {
+          "n": 3,
+          "minMs": 47.242458000000624,
+          "p50Ms": 47.37495800000033,
+          "p95Ms": 47.492166,
+          "maxMs": 47.492166
+        },
+        "lattice_trace": {
+          "n": 3,
+          "minMs": 45.80212500000016,
+          "p50Ms": 47.62804200000028,
+          "p95Ms": 48.93591699999888,
+          "maxMs": 48.93591699999888
+        },
+        "lattice_matrix": {
+          "n": 3,
+          "minMs": 52.44787499999984,
+          "p50Ms": 54.632667000001675,
+          "p95Ms": 60.6674579999999,
+          "maxMs": 60.6674579999999
+        },
+        "lattice_findings": {
+          "n": 3,
+          "minMs": 44.523583000000144,
+          "p50Ms": 46.09916699999849,
+          "p95Ms": 48.24604200000067,
+          "maxMs": 48.24604200000067
+        },
+        "lattice_diff": {
+          "n": 3,
+          "minMs": 350.86341600000014,
+          "p50Ms": 355.11920800000007,
+          "p95Ms": 356.1520419999997,
+          "maxMs": 356.1520419999997
+        },
+        "lattice_freshness": {
+          "n": 3,
+          "minMs": 44.134500000000116,
+          "p50Ms": 46.73741699999846,
+          "p95Ms": 46.97983299999942,
+          "maxMs": 46.97983299999942
+        }
+      },
+      "gates": {
+        "buildUnder10s": true,
+        "deterministicFirstTwo": true,
+        "unchangedFreshnessUnder50ms": true,
+        "mcpUnder1s": false,
+        "allToolCallsSuccessful": true,
+        "allThreeBuildHashesEqual": true
+      },
+      "toolCallCount": 45,
+      "mcpExitCode": 0,
+      "mcpStderr": "",
+      "startedAt": "2026-10-10T03:20:29.689Z",
+      "finishedAt": "2026-10-10T03:20:41.051Z",
+      "rawResultsSha256": "48f734f0c2135a8c831e836b14eb65344a64b48683ed8471550b3738fdf5f2af",
+      "limitation": "Separate authorized case after original processes ended; new rsync/ssh/Tailscale activity appeared. Directory name does not prove idle.",
+      "sameGraphAs": "validation-candidate"
+    },
+    {
+      "name": "query-probe-candidate",
+      "toolCommit": "505161bf73264b882d6021d4df2d567b5fa61bdd",
+      "toolPullRequest": "https://github.com/hyunlord/lattice/pull/55",
+      "packageSha256": "c8bab0bf8f00f3a97c5b3d4779601515463979daf8ee5509afa01a5e8aadd897",
+      "compiledAggregateSha256": "fe59c96ea1246ca82012e1f105691f2290848e8269e93efa21daeb5fd33d12f6",
+      "sourceCommit": "03c5f22f528ad005f6367b66ba0878c95ae142fb",
+      "sourceCleanBefore": true,
+      "sourceCleanAfter": true,
+      "optionalGraft": false,
+      "node": "v24.21.0",
+      "coverage": "default repository lens on merged source",
+      "lensSha256": "17ca9377c761d2a326d45b51555ff5d9e3a91cf9c20302145bc707a13879b6d5",
+      "graphHash": "c4fa05cc00a6fdc5b0d11099b6e612868463f28c857b65add5156954223c7393",
+      "sourceFingerprint": "bdd4b67f706d37e107191319a7de8da774dc2b9ad4acc3ec7631161bf463a098",
+      "checkedInputs": 230,
+      "builds": {
+        "n": 3,
+        "minMs": 1538.681083,
+        "p50Ms": 1540.514291,
+        "p95Ms": 1571.871625,
+        "maxMs": 1571.871625
+      },
+      "coldMcpMs": 1441.7438750000001,
+      "unchangedFreshness": {
+        "n": 20,
+        "minMs": 39.13112500000079,
+        "p50Ms": 41.766624999999294,
+        "p95Ms": 42.95804099999987,
+        "maxMs": 43.2685419999998
+      },
+      "tools": {
+        "lattice_overview": {
+          "n": 3,
+          "minMs": 74.5520830000005,
+          "p50Ms": 74.856041,
+          "p95Ms": 75.39408399999957,
+          "maxMs": 75.39408399999957
+        },
+        "lattice_find": {
+          "n": 3,
+          "minMs": 45.98499999999967,
+          "p50Ms": 47.00445899999977,
+          "p95Ms": 49.13566699999956,
+          "maxMs": 49.13566699999956
+        },
+        "lattice_node": {
+          "n": 3,
+          "minMs": 42.488624999999956,
+          "p50Ms": 43.49512499999946,
+          "p95Ms": 45.45825000000059,
+          "maxMs": 45.45825000000059
+        },
+        "lattice_trace": {
+          "n": 3,
+          "minMs": 41.49641700000029,
+          "p50Ms": 42.574499999999716,
+          "p95Ms": 42.82362499999999,
+          "maxMs": 42.82362499999999
+        },
+        "lattice_matrix": {
+          "n": 3,
+          "minMs": 49.7489170000008,
+          "p50Ms": 49.99920799999927,
+          "p95Ms": 57.998499999999694,
+          "maxMs": 57.998499999999694
+        },
+        "lattice_findings": {
+          "n": 3,
+          "minMs": 42.99499999999898,
+          "p50Ms": 43.74962500000038,
+          "p95Ms": 45.61804099999972,
+          "maxMs": 45.61804099999972
+        },
+        "lattice_diff": {
+          "n": 3,
+          "minMs": 327.18441600000006,
+          "p50Ms": 333.8864999999987,
+          "p95Ms": 346.73725000000013,
+          "maxMs": 346.73725000000013
+        },
+        "lattice_freshness": {
+          "n": 3,
+          "minMs": 46.315999999998894,
+          "p50Ms": 46.51625000000058,
+          "p95Ms": 47.46562499999891,
+          "maxMs": 47.46562499999891
+        }
+      },
+      "gates": {
+        "buildUnder10s": true,
+        "deterministicFirstTwo": true,
+        "unchangedFreshnessUnder50ms": true,
+        "mcpUnder1s": false,
+        "allToolCallsSuccessful": true,
+        "allThreeBuildHashesEqual": true
+      },
+      "toolCallCount": 45,
+      "mcpExitCode": 0,
+      "mcpStderr": "",
+      "startedAt": "2026-10-10T03:38:28.250Z",
+      "finishedAt": "2026-10-10T03:38:37.847Z",
+      "rawResultsSha256": "ae8757268789d36bd2c8d07e7f519b57d894ea48b6b07f6783c7a702198dd13f",
+      "limitation": "Desktop and clawdbot activity observed; no zero-load claim.",
+      "sameGraphAs": "validation-candidate"
+    },
+    {
+      "name": "glob-candidate",
+      "toolCommit": "0621942fd6edbb4f9bde97e0ae244292426a84f3",
+      "toolPullRequest": "https://github.com/hyunlord/lattice/pull/56",
+      "packageSha256": "19b4b4e6e14bb9f35180aafff18ba43a19c2de042ea4364f95b5fc737b282363",
+      "compiledAggregateSha256": "f876d289f253c6ec8e0c0f4786224dcb49b495c97ab07c7f5b108133dc5e1842",
+      "sourceCommit": "03c5f22f528ad005f6367b66ba0878c95ae142fb",
+      "sourceCleanBefore": true,
+      "sourceCleanAfter": true,
+      "optionalGraft": false,
+      "node": "v24.21.0",
+      "coverage": "default repository lens on merged source",
+      "lensSha256": "17ca9377c761d2a326d45b51555ff5d9e3a91cf9c20302145bc707a13879b6d5",
+      "graphHash": "c4fa05cc00a6fdc5b0d11099b6e612868463f28c857b65add5156954223c7393",
+      "sourceFingerprint": "bdd4b67f706d37e107191319a7de8da774dc2b9ad4acc3ec7631161bf463a098",
+      "checkedInputs": 230,
+      "builds": {
+        "n": 3,
+        "minMs": 1928.6276669999997,
+        "p50Ms": 2004.9542499999998,
+        "p95Ms": 4464.175042,
+        "maxMs": 4464.175042
+      },
+      "coldMcpMs": 1403.5178750000014,
+      "unchangedFreshness": {
+        "n": 20,
+        "minMs": 40.26624999999876,
+        "p50Ms": 43.09795800000029,
+        "p95Ms": 45.15583399999923,
+        "maxMs": 45.56195800000023
+      },
+      "tools": {
+        "lattice_overview": {
+          "n": 3,
+          "minMs": 75.0891249999986,
+          "p50Ms": 75.71199999999953,
+          "p95Ms": 86.12408300000061,
+          "maxMs": 86.12408300000061
+        },
+        "lattice_find": {
+          "n": 3,
+          "minMs": 46.95087500000045,
+          "p50Ms": 48.421540999999706,
+          "p95Ms": 49.230209000001196,
+          "maxMs": 49.230209000001196
+        },
+        "lattice_node": {
+          "n": 3,
+          "minMs": 44.341457999998966,
+          "p50Ms": 45.12154199999895,
+          "p95Ms": 49.06745899999987,
+          "maxMs": 49.06745899999987
+        },
+        "lattice_trace": {
+          "n": 3,
+          "minMs": 43.03924999999981,
+          "p50Ms": 43.53379099999984,
+          "p95Ms": 43.83966700000019,
+          "maxMs": 43.83966700000019
+        },
+        "lattice_matrix": {
+          "n": 3,
+          "minMs": 47.78904199999852,
+          "p50Ms": 48.54079199999978,
+          "p95Ms": 61.03495799999837,
+          "maxMs": 61.03495799999837
+        },
+        "lattice_findings": {
+          "n": 3,
+          "minMs": 41.7010420000006,
+          "p50Ms": 43.124000000001615,
+          "p95Ms": 44.25004199999967,
+          "maxMs": 44.25004199999967
+        },
+        "lattice_diff": {
+          "n": 3,
+          "minMs": 253.12620799999968,
+          "p50Ms": 259.80291699999907,
+          "p95Ms": 272.119917,
+          "maxMs": 272.119917
+        },
+        "lattice_freshness": {
+          "n": 3,
+          "minMs": 40.80491599999914,
+          "p50Ms": 42.68837499999972,
+          "p95Ms": 43.44641700000102,
+          "maxMs": 43.44641700000102
+        }
+      },
+      "gates": {
+        "buildUnder10s": true,
+        "deterministicFirstTwo": true,
+        "unchangedFreshnessUnder50ms": true,
+        "mcpUnder1s": false,
+        "allToolCallsSuccessful": true,
+        "allThreeBuildHashesEqual": true
+      },
+      "toolCallCount": 45,
+      "mcpExitCode": 0,
+      "mcpStderr": "",
+      "startedAt": "2026-10-10T03:47:36.702Z",
+      "finishedAt": "2026-10-10T03:47:50.004Z",
+      "rawResultsSha256": "f8d3541f247fe645ffb390de04399c2efc70994d538774e7f07c3ca43bce3ec0",
+      "limitation": "External Node process activity observed; no retry. Rejected encoder changes absent.",
+      "sameGraphAs": "validation-candidate"
+    },
+    {
+      "name": "direct-correspondence-projection-baseline",
+      "toolCommit": "0621942fd6edbb4f9bde97e0ae244292426a84f3",
+      "toolPullRequest": "https://github.com/hyunlord/lattice/pull/56",
+      "packageSha256": "19b4b4e6e14bb9f35180aafff18ba43a19c2de042ea4364f95b5fc737b282363",
+      "compiledAggregateSha256": "f876d289f253c6ec8e0c0f4786224dcb49b495c97ab07c7f5b108133dc5e1842",
+      "sourceCommit": "03c5f22f528ad005f6367b66ba0878c95ae142fb",
+      "sourceCleanBefore": true,
+      "sourceCleanAfter": true,
+      "optionalGraft": true,
+      "node": "v24.21.0",
+      "coverage": "explicit external current-lens-projection, not default published result",
+      "lensSha256": "17ca9377c761d2a326d45b51555ff5d9e3a91cf9c20302145bc707a13879b6d5",
+      "graphHash": "c6aa82448cfea434bb5b890652f354f8e072eeca91052e76767c057c0dc4e797",
+      "sourceFingerprint": "edfeba288770323bcd26929c3dda2ce7aec805307b5554a2403924e39ab59f81",
+      "checkedInputs": 230,
+      "builds": {
+        "n": 3,
+        "minMs": 1547.9208749999998,
+        "p50Ms": 1560.6062909999998,
+        "p95Ms": 1585.0542910000001,
+        "maxMs": 1585.0542910000001
+      },
+      "coldMcpMs": 1476.5033750000002,
+      "unchangedFreshness": {
+        "n": 20,
+        "minMs": 44.22187499999927,
+        "p50Ms": 45.49895900000047,
+        "p95Ms": 47.163666000000376,
+        "maxMs": 48.508874999999534
+      },
+      "tools": {
+        "lattice_overview": {
+          "n": 3,
+          "minMs": 79.7604169999995,
+          "p50Ms": 82.31545800000004,
+          "p95Ms": 96.42450000000008,
+          "maxMs": 96.42450000000008
+        },
+        "lattice_find": {
+          "n": 3,
+          "minMs": 50.0463749999999,
+          "p50Ms": 50.10112500000014,
+          "p95Ms": 51.891583999999966,
+          "maxMs": 51.891583999999966
+        },
+        "lattice_node": {
+          "n": 3,
+          "minMs": 46.74883399999999,
+          "p50Ms": 47.55083299999933,
+          "p95Ms": 48.00062499999967,
+          "maxMs": 48.00062499999967
+        },
+        "lattice_trace": {
+          "n": 3,
+          "minMs": 45.252958999999464,
+          "p50Ms": 45.29670799999985,
+          "p95Ms": 46.02891600000112,
+          "maxMs": 46.02891600000112
+        },
+        "lattice_matrix": {
+          "n": 3,
+          "minMs": 50.73854200000096,
+          "p50Ms": 51.119832999998835,
+          "p95Ms": 62.49262500000077,
+          "maxMs": 62.49262500000077
+        },
+        "lattice_findings": {
+          "n": 3,
+          "minMs": 44.56450000000041,
+          "p50Ms": 45.68070799999987,
+          "p95Ms": 45.8679170000014,
+          "maxMs": 45.8679170000014
+        },
+        "lattice_diff": {
+          "n": 3,
+          "minMs": 569.6912920000013,
+          "p50Ms": 1636.8811669999996,
+          "p95Ms": 1886.2014169999984,
+          "maxMs": 1886.2014169999984
+        },
+        "lattice_freshness": {
+          "n": 3,
+          "minMs": 44.18449999999939,
+          "p50Ms": 46.69949999999881,
+          "p95Ms": 47.2515829999993,
+          "maxMs": 47.2515829999993
+        }
+      },
+      "gates": {
+        "buildUnder10s": true,
+        "deterministicFirstTwo": true,
+        "unchangedFreshnessUnder50ms": true,
+        "mcpUnder1s": false,
+        "allToolCallsSuccessful": true,
+        "allThreeBuildHashesEqual": true
+      },
+      "toolCallCount": 45,
+      "mcpExitCode": 0,
+      "mcpStderr": "",
+      "startedAt": "2026-10-10T03:55:09.820Z",
+      "finishedAt": "2026-10-10T03:55:22.707Z",
+      "rawResultsSha256": "46d2e7363b1c6fbeb649e4d5a52c1330f7eb551fb08943a9ab8ea66c862a598c",
+      "limitation": "Explicit external lens projection on clean source; not default published acceptance."
+    },
+    {
+      "name": "direct-correspondence-projection-candidate",
+      "toolCommit": "0621942fd6edbb4f9bde97e0ae244292426a84f3",
+      "toolPullRequest": "https://github.com/hyunlord/lattice/pull/56",
+      "packageSha256": "19b4b4e6e14bb9f35180aafff18ba43a19c2de042ea4364f95b5fc737b282363",
+      "compiledAggregateSha256": "f876d289f253c6ec8e0c0f4786224dcb49b495c97ab07c7f5b108133dc5e1842",
+      "sourceCommit": "03c5f22f528ad005f6367b66ba0878c95ae142fb",
+      "sourceCleanBefore": true,
+      "sourceCleanAfter": true,
+      "optionalGraft": true,
+      "node": "v24.21.0",
+      "coverage": "explicit external current-lens-projection, not default published result",
+      "lensSha256": "92312715cb9c3428b5b28d3a81e997b791c91ad6d33906e3089257d78d91e5f5",
+      "graphHash": "6677a00b3c82e476225f93937d30789849040e24cd62b1f501629e79ada61c2a",
+      "sourceFingerprint": "edfeba288770323bcd26929c3dda2ce7aec805307b5554a2403924e39ab59f81",
+      "checkedInputs": 230,
+      "builds": {
+        "n": 3,
+        "minMs": 1349.6845839999999,
+        "p50Ms": 1350.183666,
+        "p95Ms": 1395.5805,
+        "maxMs": 1395.5805
+      },
+      "coldMcpMs": 1312.0128750000003,
+      "unchangedFreshness": {
+        "n": 20,
+        "minMs": 45.00699999999961,
+        "p50Ms": 46.94266599999992,
+        "p95Ms": 64.16266700000051,
+        "maxMs": 82.83204099999966
+      },
+      "tools": {
+        "lattice_overview": {
+          "n": 3,
+          "minMs": 79.50091699999939,
+          "p50Ms": 79.91949999999997,
+          "p95Ms": 80.31520799999998,
+          "maxMs": 80.31520799999998
+        },
+        "lattice_find": {
+          "n": 3,
+          "minMs": 50.24449999999979,
+          "p50Ms": 51.03058300000066,
+          "p95Ms": 51.285249999999905,
+          "maxMs": 51.285249999999905
+        },
+        "lattice_node": {
+          "n": 3,
+          "minMs": 45.37324999999964,
+          "p50Ms": 46.86275000000023,
+          "p95Ms": 48.06462499999998,
+          "maxMs": 48.06462499999998
+        },
+        "lattice_trace": {
+          "n": 3,
+          "minMs": 45.75233399999979,
+          "p50Ms": 46.43995799999993,
+          "p95Ms": 46.52600000000075,
+          "maxMs": 46.52600000000075
+        },
+        "lattice_matrix": {
+          "n": 3,
+          "minMs": 58.241124999999556,
+          "p50Ms": 61.25933400000031,
+          "p95Ms": 62.85224999999991,
+          "maxMs": 62.85224999999991
+        },
+        "lattice_findings": {
+          "n": 3,
+          "minMs": 46.3267909999995,
+          "p50Ms": 48.86845799999992,
+          "p95Ms": 52.15399999999954,
+          "maxMs": 52.15399999999954
+        },
+        "lattice_diff": {
+          "n": 3,
+          "minMs": 439.47008300000016,
+          "p50Ms": 1303.2443749999993,
+          "p95Ms": 1495.5564159999994,
+          "maxMs": 1495.5564159999994
+        },
+        "lattice_freshness": {
+          "n": 3,
+          "minMs": 43.33845800000017,
+          "p50Ms": 45.56791700000031,
+          "p95Ms": 45.7224159999987,
+          "maxMs": 45.7224159999987
+        }
+      },
+      "gates": {
+        "buildUnder10s": true,
+        "deterministicFirstTwo": true,
+        "unchangedFreshnessUnder50ms": false,
+        "mcpUnder1s": false,
+        "allToolCallsSuccessful": true,
+        "allThreeBuildHashesEqual": true
+      },
+      "toolCallCount": 45,
+      "mcpExitCode": 0,
+      "mcpStderr": "",
+      "startedAt": "2026-10-10T03:55:30.066Z",
+      "finishedAt": "2026-10-10T03:55:41.377Z",
+      "rawResultsSha256": "6c1d482eee3fb845ee2fc5b35228953568e8c5cca0dced6f2be8b9f623cb0193",
+      "limitation": "Explicit external lens projection; external TypeScript/Node activity observed. No causal timing improvement claim."
+    },
+    {
+      "name": "published-pr174",
+      "toolCommit": "a334b026e91120c1aaa2fc649a0141d908476c6d",
+      "toolPullRequest": "https://github.com/hyunlord/lattice/pull/57",
+      "packageSha256": "e165b5cdf9493b70a0019871458ae52a60c1d6cc1b6a6bb4ce4aa8e993ef5aec",
+      "compiledAggregateSha256": "1c66fb380f924d6296c17493e69ddc1787513a8d5d28427f95d030f58a395036",
+      "sourceCommit": "8bf662918b57d4bff95707c2fd55fc2933ace195",
+      "sourceCleanBefore": true,
+      "sourceCleanAfter": true,
+      "optionalGraft": true,
+      "node": "v24.21.0",
+      "coverage": "default repository lens on merged source",
+      "lensSha256": "f88b7eef3b298fb7af244be97b1c0995571c22762ea9abdb221712422e8ecee4",
+      "graphHash": "615287e66fdebd003f796af95fe5a5d77d393f6cf9bd14cab3bae8bc9ace605b",
+      "sourceFingerprint": "a42caa7497f2c3400d3b1e3449eff153dec80c0ae9ffa371aecd594e29092017",
+      "checkedInputs": 233,
+      "builds": {
+        "n": 3,
+        "minMs": 1699.33275,
+        "p50Ms": 1700.6201249999997,
+        "p95Ms": 1756.627166,
+        "maxMs": 1756.627166
+      },
+      "coldMcpMs": 1630.6080000000002,
+      "unchangedFreshness": {
+        "n": 20,
+        "minMs": 44.78008299999965,
+        "p50Ms": 47.19616700000006,
+        "p95Ms": 50.80500000000029,
+        "maxMs": 50.80920800000058
+      },
+      "tools": {
+        "lattice_overview": {
+          "n": 3,
+          "minMs": 78.2273750000004,
+          "p50Ms": 79.63283299999966,
+          "p95Ms": 89.8276249999999,
+          "maxMs": 89.8276249999999
+        },
+        "lattice_find": {
+          "n": 3,
+          "minMs": 52.30991699999868,
+          "p50Ms": 54.1491670000014,
+          "p95Ms": 54.48670800000036,
+          "maxMs": 54.48670800000036
+        },
+        "lattice_node": {
+          "n": 3,
+          "minMs": 47.41637499999888,
+          "p50Ms": 48.10566699999981,
+          "p95Ms": 48.3252080000002,
+          "maxMs": 48.3252080000002
+        },
+        "lattice_trace": {
+          "n": 3,
+          "minMs": 47.81241599999885,
+          "p50Ms": 48.12183300000106,
+          "p95Ms": 48.982082999998966,
+          "maxMs": 48.982082999998966
+        },
+        "lattice_matrix": {
+          "n": 3,
+          "minMs": 53.60045899999932,
+          "p50Ms": 54.80945799999972,
+          "p95Ms": 67.75833299999977,
+          "maxMs": 67.75833299999977
+        },
+        "lattice_findings": {
+          "n": 3,
+          "minMs": 48.12316699999974,
+          "p50Ms": 50.46708299999955,
+          "p95Ms": 53.65716699999939,
+          "maxMs": 53.65716699999939
+        },
+        "lattice_diff": {
+          "n": 3,
+          "minMs": 667.4273330000015,
+          "p50Ms": 1806.2400419999994,
+          "p95Ms": 2112.534958,
+          "maxMs": 2112.534958
+        },
+        "lattice_freshness": {
+          "n": 3,
+          "minMs": 47.54233299999942,
+          "p50Ms": 47.85433399999965,
+          "p95Ms": 50.24620799999866,
+          "maxMs": 50.24620799999866
+        }
+      },
+      "gates": {
+        "buildUnder10s": true,
+        "deterministicFirstTwo": true,
+        "unchangedFreshnessUnder50ms": false,
+        "mcpUnder1s": false,
+        "allToolCallsSuccessful": true,
+        "allThreeBuildHashesEqual": true
+      },
+      "toolCallCount": 45,
+      "mcpExitCode": 0,
+      "mcpStderr": "",
+      "startedAt": "2026-10-10T04:34:03.409Z",
+      "finishedAt": "2026-10-10T04:34:17.543Z",
+      "rawResultsSha256": "530d1bce9c82f52fc13f9a3f343779b36df93ae9c1f6dadac08b7a9d25ee8d84",
+      "limitation": "Git-clean but ignored optional Graft wiring present. Augmented-input failure retained; not CI-equivalent.",
+      "graphBytes": 62488672,
+      "graphInputCount": 225,
+      "counts": {
+        "nodes": 516,
+        "edges": 1503,
+        "facets": 2065,
+        "findings": 27,
+        "views": 7
+      }
+    },
+    {
+      "name": "published-pr174-pristine",
+      "toolCommit": "a334b026e91120c1aaa2fc649a0141d908476c6d",
+      "toolPullRequest": "https://github.com/hyunlord/lattice/pull/57",
+      "packageSha256": "e165b5cdf9493b70a0019871458ae52a60c1d6cc1b6a6bb4ce4aa8e993ef5aec",
+      "compiledAggregateSha256": "1c66fb380f924d6296c17493e69ddc1787513a8d5d28427f95d030f58a395036",
+      "sourceCommit": "8bf662918b57d4bff95707c2fd55fc2933ace195",
+      "sourceCleanBefore": true,
+      "sourceCleanAfter": true,
+      "optionalGraft": false,
+      "node": "v24.21.0",
+      "coverage": "default repository lens on merged source",
+      "lensSha256": "f88b7eef3b298fb7af244be97b1c0995571c22762ea9abdb221712422e8ecee4",
+      "graphHash": "0b7c27c5a87966160dd636ea1bf512c49bbaae36eef96066ef57483a00e2a9f2",
+      "sourceFingerprint": "9fcdcbc5fa04393ce69640f62553ac45ab26b7ad094dd175899ab4811fad4a14",
+      "checkedInputs": 233,
+      "builds": {
+        "n": 3,
+        "minMs": 1868.7098749999996,
+        "p50Ms": 1896.7889589999997,
+        "p95Ms": 1905.8769590000002,
+        "maxMs": 1905.8769590000002
+      },
+      "coldMcpMs": 1831.0636250000007,
+      "unchangedFreshness": {
+        "n": 20,
+        "minMs": 315.9359170000007,
+        "p50Ms": 319.6979999999985,
+        "p95Ms": 329.4267910000017,
+        "maxMs": 348.75966700000026
+      },
+      "tools": {
+        "lattice_overview": {
+          "n": 3,
+          "minMs": 346.94916700000067,
+          "p50Ms": 348.7704999999987,
+          "p95Ms": 357.2626250000012,
+          "maxMs": 357.2626250000012
+        },
+        "lattice_find": {
+          "n": 3,
+          "minMs": 333.47454199999993,
+          "p50Ms": 340.753917,
+          "p95Ms": 345.62112499999967,
+          "maxMs": 345.62112499999967
+        },
+        "lattice_node": {
+          "n": 3,
+          "minMs": 317.676958,
+          "p50Ms": 324.06483300000036,
+          "p95Ms": 345.90437499999825,
+          "maxMs": 345.90437499999825
+        },
+        "lattice_trace": {
+          "n": 3,
+          "minMs": 316.2914579999997,
+          "p50Ms": 319.68754100000297,
+          "p95Ms": 336.56745800000135,
+          "maxMs": 336.56745800000135
+        },
+        "lattice_matrix": {
+          "n": 3,
+          "minMs": 322.31925000000047,
+          "p50Ms": 330.37379200000214,
+          "p95Ms": 338.86575000000084,
+          "maxMs": 338.86575000000084
+        },
+        "lattice_findings": {
+          "n": 3,
+          "minMs": 313.3987500000003,
+          "p50Ms": 314.760291999999,
+          "p95Ms": 318.8561669999981,
+          "maxMs": 318.8561669999981
+        },
+        "lattice_diff": {
+          "n": 3,
+          "minMs": 568.7194579999996,
+          "p50Ms": 574.9866249999977,
+          "p95Ms": 575.5437090000014,
+          "maxMs": 575.5437090000014
+        },
+        "lattice_freshness": {
+          "n": 3,
+          "minMs": 316.04804100000183,
+          "p50Ms": 320.5544169999994,
+          "p95Ms": 331.2820419999989,
+          "maxMs": 331.2820419999989
+        }
+      },
+      "gates": {
+        "buildUnder10s": true,
+        "deterministicFirstTwo": true,
+        "unchangedFreshnessUnder50ms": false,
+        "mcpUnder1s": false,
+        "allToolCallsSuccessful": true,
+        "allThreeBuildHashesEqual": true
+      },
+      "toolCallCount": 45,
+      "mcpExitCode": 0,
+      "mcpStderr": "",
+      "startedAt": "2026-10-10T04:36:23.647Z",
+      "finishedAt": "2026-10-10T04:36:47.169Z",
+      "rawResultsSha256": "ad593944a5cc46594dd21385f7293cebadb8c34ce0d95ad969b8124ce2317491",
+      "limitation": "Fresh detached source; optional Graft absence asserted around all builds and after MCP. Same graph as public CI. Observation slowdown cause unproven; mediaanalysis/Unity/clawdbot activity observed.",
+      "graphBytes": 62488040,
+      "graphInputCount": 224,
+      "counts": {
+        "nodes": 516,
+        "edges": 1503,
+        "facets": 2065,
+        "findings": 27,
+        "views": 7
+      }
     }
-  ]
+  ],
+  "finalPublishedAcceptance": {
+    "sourceCommit": "8bf662918b57d4bff95707c2fd55fc2933ace195",
+    "packageSha256": "e165b5cdf9493b70a0019871458ae52a60c1d6cc1b6a6bb4ce4aa8e993ef5aec",
+    "compiledAggregateSha256": "1c66fb380f924d6296c17493e69ddc1787513a8d5d28427f95d030f58a395036",
+    "graphHash": "0b7c27c5a87966160dd636ea1bf512c49bbaae36eef96066ef57483a00e2a9f2",
+    "performanceCase": "published-pr174-pristine",
+    "pages": "https://hyunlord.github.io/bs-mobile/",
+    "consumerPullRequest": "https://github.com/hyunlord/bs-mobile/pull/174",
+    "deployment": "https://github.com/hyunlord/bs-mobile/actions/runs/38024501827/attempts/2",
+    "publicationFailurePreserved": "Attempt 1 returned HTTP 403; cause unconfirmed. Attempt 2 succeeded with unchanged code/settings.",
+    "browser": {
+      "routeWidthCases": 22,
+      "graphResponses": 31,
+      "errors": [],
+      "allGraphResponsesMatch": true,
+      "assets": [
+        {
+          "path": "app.js",
+          "sha256": "a99c6267489b82e0cf21a6106e3f9ce0dfcc8bf8efadb59e84e2be21f87cbb31",
+          "publicSha256": "a99c6267489b82e0cf21a6106e3f9ce0dfcc8bf8efadb59e84e2be21f87cbb31"
+        },
+        {
+          "path": "changes-evidence.js",
+          "sha256": "e4dd778081839569d863e92399b2ea9d699f11cd129e493d5d3a9273ef9ce5c9",
+          "publicSha256": "e4dd778081839569d863e92399b2ea9d699f11cd129e493d5d3a9273ef9ce5c9"
+        },
+        {
+          "path": "changes-shared.js",
+          "sha256": "44712008b69fc420aff570143199ef50e411a626f9c3b757ba8cd1dfff42c9c0",
+          "publicSha256": "44712008b69fc420aff570143199ef50e411a626f9c3b757ba8cd1dfff42c9c0"
+        },
+        {
+          "path": "changes-trends.js",
+          "sha256": "703bc2d63bc32e551ca26be01dee64773dd03887aad479cb4c1abc1c7523f902",
+          "publicSha256": "703bc2d63bc32e551ca26be01dee64773dd03887aad479cb4c1abc1c7523f902"
+        },
+        {
+          "path": "changes.js",
+          "sha256": "410020f40ddea3664a4dbf9eb1278049e22d0e83b907ba4f500ba4f1e2362ac4",
+          "publicSha256": "410020f40ddea3664a4dbf9eb1278049e22d0e83b907ba4f500ba4f1e2362ac4"
+        },
+        {
+          "path": "data.js",
+          "sha256": "0360736dcfd33a51bf5f218008d138073d0b480036d3ebb59d871eff4f3323b6",
+          "publicSha256": "0360736dcfd33a51bf5f218008d138073d0b480036d3ebb59d871eff4f3323b6"
+        },
+        {
+          "path": "explore-canvas.js",
+          "sha256": "f7e8d65f9acd9298ee3aee95f619e612cd746abcd76ca7b0f9e59f950ede336a",
+          "publicSha256": "f7e8d65f9acd9298ee3aee95f619e612cd746abcd76ca7b0f9e59f950ede336a"
+        },
+        {
+          "path": "explore-controls.js",
+          "sha256": "aa940a7161382d1231640715761924f461425a060e9af47dd13aea68abc4b63c",
+          "publicSha256": "aa940a7161382d1231640715761924f461425a060e9af47dd13aea68abc4b63c"
+        },
+        {
+          "path": "explore-model.js",
+          "sha256": "6bd60fc5019397190829ecb8d29543b8947dd0e7f7684b6f47074f8e3f5c52c8",
+          "publicSha256": "6bd60fc5019397190829ecb8d29543b8947dd0e7f7684b6f47074f8e3f5c52c8"
+        },
+        {
+          "path": "explore.js",
+          "sha256": "83592501bc21e1fe9c9b69dbd95b16ecbb9544d4da32cd99b9b9e76d81d3758e",
+          "publicSha256": "83592501bc21e1fe9c9b69dbd95b16ecbb9544d4da32cd99b9b9e76d81d3758e"
+        },
+        {
+          "path": "history-model.js",
+          "sha256": "9aef445f3c97812b4abc6857d673dbce301fc3caf7c7556a4d0baf3de27548f4",
+          "publicSha256": "9aef445f3c97812b4abc6857d673dbce301fc3caf7c7556a4d0baf3de27548f4"
+        },
+        {
+          "path": "history-projections.js",
+          "sha256": "3c9d8eecf8bb368e94168e4e50987482a32c5fd1246718f4acf9eafa0cdeada6",
+          "publicSha256": "3c9d8eecf8bb368e94168e4e50987482a32c5fd1246718f4acf9eafa0cdeada6"
+        },
+        {
+          "path": "home.js",
+          "sha256": "99b82b0df08be4b19bd65c15fa03d571139cfba3dbf93d5f7f9fd6b056c26ae0",
+          "publicSha256": "99b82b0df08be4b19bd65c15fa03d571139cfba3dbf93d5f7f9fd6b056c26ae0"
+        },
+        {
+          "path": "index.html",
+          "sha256": "bb75a572600ca4d4ddc200c1c145957a514bcba8065972f62adb953c46a60a59",
+          "publicSha256": "bb75a572600ca4d4ddc200c1c145957a514bcba8065972f62adb953c46a60a59"
+        },
+        {
+          "path": "list-controls.js",
+          "sha256": "bbe06c1c5a3cde96833e4228fbaeccca7a11272e4e83d8ca52574e1bb7d8d4f5",
+          "publicSha256": "bbe06c1c5a3cde96833e4228fbaeccca7a11272e4e83d8ca52574e1bb7d8d4f5"
+        },
+        {
+          "path": "list-model.js",
+          "sha256": "fe2d957549096ede7467224c5e369566a2502e2a673770cd31a8f209ebb5ea6e",
+          "publicSha256": "fe2d957549096ede7467224c5e369566a2502e2a673770cd31a8f209ebb5ea6e"
+        },
+        {
+          "path": "list.js",
+          "sha256": "3463ceceb20a85eeab7823306cb42eb02c1fb1e87937f4d35b646be0c6923f12",
+          "publicSha256": "3463ceceb20a85eeab7823306cb42eb02c1fb1e87937f4d35b646be0c6923f12"
+        },
+        {
+          "path": "node-history.js",
+          "sha256": "aca77e0504a2abd04ef8524b2cb34837869cbb4f892fb17043ea222719325c75",
+          "publicSha256": "aca77e0504a2abd04ef8524b2cb34837869cbb4f892fb17043ea222719325c75"
+        },
+        {
+          "path": "styles.css",
+          "sha256": "04c94f252c3dda50169740161008c3fca71f25850ad9b3378249546cc5fd76f0",
+          "publicSha256": "04c94f252c3dda50169740161008c3fca71f25850ad9b3378249546cc5fd76f0"
+        },
+        {
+          "path": "views-data.js",
+          "sha256": "702624ab78a1fe571a9e0dc6a7d27627379c4e33017d91f47e3d6f5d31db5005",
+          "publicSha256": "702624ab78a1fe571a9e0dc6a7d27627379c4e33017d91f47e3d6f5d31db5005"
+        },
+        {
+          "path": "views-matrix.js",
+          "sha256": "c3fbc1122890ad38695e434afdfa7ae8b4d15a9be953712afadd5e74e16bfd67",
+          "publicSha256": "c3fbc1122890ad38695e434afdfa7ae8b4d15a9be953712afadd5e74e16bfd67"
+        },
+        {
+          "path": "views-model.js",
+          "sha256": "031a55839d1fa6a39521b5c22f4bc5d5c2e269bc865813c42c3f71990675e307",
+          "publicSha256": "031a55839d1fa6a39521b5c22f4bc5d5c2e269bc865813c42c3f71990675e307"
+        },
+        {
+          "path": "views-shared.js",
+          "sha256": "658cb5891d64ccdd3dcd9e771f5589bf306984f5db67fde0c1ad7cd8afe9d9bb",
+          "publicSha256": "658cb5891d64ccdd3dcd9e771f5589bf306984f5db67fde0c1ad7cd8afe9d9bb"
+        },
+        {
+          "path": "views.js",
+          "sha256": "b5f622f2a6eede8d3e5f5e35a9f31e163dd600f852f8f5ef0f81c18f772feaf1",
+          "publicSha256": "b5f622f2a6eede8d3e5f5e35a9f31e163dd600f852f8f5ef0f81c18f772feaf1"
+        }
+      ],
+      "primitiveSupportVerification": "PASS: upstream positive verification and six false-claim mutations rejected",
+      "limitations": [
+        "Prototype content216 is an authored cohort metric, not total current-layer list count: referenceDepth facets222 include six extra meta-vassals; layers also separate16candidate records.",
+        "Long object-valued facet JSON distributions remain a readability limitation, not a browser error."
+      ]
+    },
+    "portability": [
+      {
+        "repository": "Charter & Kin",
+        "sourceCommit": "251f397eb6646b81fd1dda0597255ee474806b49",
+        "sourceUnchanged": true,
+        "packageSha256": "e165b5cdf9493b70a0019871458ae52a60c1d6cc1b6a6bb4ce4aa8e993ef5aec",
+        "graphHash": "15eb1182925ae4940aa6bd208a0a6e4a1d499423b4b21ff20bec617ff67424f0",
+        "fullCollectionsIncludingProvenance": {
+          "nodes": true,
+          "edges": true,
+          "facets": true,
+          "findings": true,
+          "views": true
+        },
+        "browserRouteCount": 3,
+        "scope": "build/check/export and home/list/detail; not new full six-screen or runtime acceptance"
+      },
+      {
+        "repository": "Click",
+        "sourceCommit": "2247b35ea1c47c727d7a06e51fa280e12a863ff6",
+        "sourceUnchanged": true,
+        "packageSha256": "e165b5cdf9493b70a0019871458ae52a60c1d6cc1b6a6bb4ce4aa8e993ef5aec",
+        "graphHash": "9edcf7569873b8da06f64cd7cc4b5553ea523c30d3bcddda8d5c8c0d96224073",
+        "fullCollectionsIncludingProvenance": {
+          "nodes": true,
+          "edges": true,
+          "facets": true,
+          "findings": true,
+          "views": true
+        },
+        "browserRouteCount": 3,
+        "scope": "build/check/export and home/list/detail; not new full six-screen or runtime acceptance"
+      }
+    ],
+    "clients": [
+      {
+        "client": "claude",
+        "version": "2.1.280 (Claude Code)",
+        "success": true,
+        "discoveredTools": [
+          "lattice_overview",
+          "lattice_find",
+          "lattice_node",
+          "lattice_trace",
+          "lattice_matrix",
+          "lattice_findings",
+          "lattice_diff",
+          "lattice_freshness"
+        ],
+        "onlyMcpCalls": true,
+        "exactAuthoredIntentInFinalAnswer": true,
+        "wireCaptureSha256": "919a5248aac3a4a4ec46d952e7461ce1575fed675b6cef9f8bcb3d7e3a5dbf93",
+        "rawTranscriptSha256": "fb67074f3396cd4f5ed4f6bfe4a4d3402c4b96d9fe807f8ba181004cfd0bc9e7",
+        "sourceBefore": {
+          "sha": "8bf662918b57d4bff95707c2fd55fc2933ace195",
+          "optionalInputs": [],
+          "status": ""
+        },
+        "sourceAfter": {
+          "sha": "8bf662918b57d4bff95707c2fd55fc2933ace195",
+          "status": "",
+          "optionalInputs": []
+        },
+        "callCount": 3,
+        "allCallsSuccessful": true,
+        "allGraphsMatch": true,
+        "itemStatMetrics": {
+          "stat": 24,
+          "selected": 30
+        },
+        "scope": "overview, find and findings; Codex repeated sequence retained"
+      },
+      {
+        "client": "codex",
+        "version": "codex-cli 0.162.0",
+        "success": true,
+        "discoveredTools": [
+          "lattice_overview",
+          "lattice_find",
+          "lattice_node",
+          "lattice_trace",
+          "lattice_matrix",
+          "lattice_findings",
+          "lattice_diff",
+          "lattice_freshness"
+        ],
+        "onlyMcpCalls": true,
+        "exactAuthoredIntentInFinalAnswer": true,
+        "wireCaptureSha256": "aeba0748645a281d4f512c2f6fe3ddaa080f5ee86be9d01b3c5990425ec7a3cf",
+        "rawTranscriptSha256": "813463382793f79a3b0dbe98a5ebb706eac363830aaa7e605ed1f0c5606d7af1",
+        "sourceBefore": {
+          "sha": "8bf662918b57d4bff95707c2fd55fc2933ace195",
+          "optionalInputs": [],
+          "status": ""
+        },
+        "sourceAfter": {
+          "sha": "8bf662918b57d4bff95707c2fd55fc2933ace195",
+          "status": "",
+          "optionalInputs": []
+        },
+        "callCount": 6,
+        "allCallsSuccessful": true,
+        "allGraphsMatch": true,
+        "itemStatMetrics": {
+          "stat": 24,
+          "selected": 30
+        },
+        "scope": "overview, find and findings; Codex repeated sequence retained"
+      }
+    ],
+    "status": "partial; L5-08 and REPORT pending; cold MCP and maximum freshness failed"
+  }
 }

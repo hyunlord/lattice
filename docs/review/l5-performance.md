@@ -4,7 +4,7 @@ Status: partial. This report records an improvement, not completion of L5. [Issu
 
 ## Method
 
-Measurements use Node 24.21.0 on macOS Darwin 27 arm64, Apple M4 Max (14 cores, 38,654,705,664 bytes memory). Each build starts with a distinct empty external cache. The MCP process starts with another empty cache, receives its first query, twenty unchanged freshness queries and three calls to each of the eight tools. Every timing includes the actual response; the first query's rebuild is not excluded. Other builds and tests are stopped during measurement. Timings are machine observations, not a platform-wide guarantee.
+Measurements use Node 24.21.0 on macOS Darwin 27 arm64, Apple M4 Max (14 cores, 38,654,705,664 bytes memory). Each build starts with a distinct empty external cache. The MCP process starts with another empty cache, receives its first query, twenty unchanged freshness queries and three calls to each of the eight tools. Every timing includes the actual response; the first query's rebuild is not excluded. Coordinated builds and tests are paused during measurement. Unrelated desktop processes can still run; later cases preserve host samples outside timed spans and do not claim an idle machine. Timings are machine observations, not a platform-wide guarantee.
 
 The original consumer is clean bs-mobile `7aebd2e9046c4926d14fcb2d6f597dd02c5744f8`, with JSON lens digest `db8fb8c1d892535918202f8889c750aee83b02ae30d26d8d83e5646db41071bc`. It has 443 nodes, 800 edges, 1,140 facets and 22 findings. Baseline tool `7d45e88ce9a2546c915f1261cf473ce86998736e` takes 13.174–13.353 seconds for three cold builds, 13.305 seconds for the first MCP query, 353 ms p95 for unchanged freshness, and 41.597–45.496 seconds for warm HEAD comparison.
 
@@ -16,7 +16,7 @@ Repository observations overlap independent Git queries, reuse parsing only for 
 
 Storage retains atomic writes and complete-byte validation. It reuses serialization of immutable graph fields and avoids repeated UTF-8 encoding. Snapshot metadata does not require rebuilding an unchanged graph. Identity-based diff shortcuts never trust digest equality alone.
 
-The full check passes strict TypeScript, formatting, 151 tests and documentation validation. Independent reviews found no blocking semantic, provenance, scope or dependency issues. The complete optimized baseline graph, including source/repository metadata and snapshots, equals the original graph; its hash remains `76253be0d1545f2c7467849e25792212f0bd2d33e1b1381d3600fe89365d1c48`.
+The initial optimization checkpoint passed strict TypeScript, formatting, 151 tests and documentation validation. Independent reviews found no blocking semantic, provenance, scope or dependency issues. The complete optimized baseline graph, including source/repository metadata and snapshots, equals the original graph; its hash remains `76253be0d1545f2c7467849e25792212f0bd2d33e1b1381d3600fe89365d1c48`.
 
 A faster direct macOS Git binary was investigated but rejected: `/usr/bin/git` also establishes SDK-related environment variables. Bypassing that shim would change subprocess semantics. Reported measurements retain the selected Git command and environment.
 
@@ -65,7 +65,6 @@ The controlled pair uses the same installed `d8a689` package, clean consumer `c1
 
 Both runs retain deterministic builds and all45 successful tool calls. The candidate passes the recorded freshness maximum and reduces graph bytes by15.38%; **cold MCP still fails one second**. These are controlled projections, not final published-consumer acceptance. The subsequent published-source run below records PR165 CI, publication, browser and performance separately. L5-08 and the overall milestone report remain incomplete; all earlier failures are retained.
 
-
 ## Published linked-item lens follow-up
 
 [PR165](https://github.com/hyunlord/bs-mobile/pull/165) merged as `03c5f22f528ad005f6367b66ba0878c95ae142fb` after [full CI38018070629](https://github.com/hyunlord/bs-mobile/actions/runs/38018070629) and [map CI38018070918](https://github.com/hyunlord/bs-mobile/actions/runs/38018070918) passed. [Pages deployment38018970891](https://github.com/hyunlord/bs-mobile/actions/runs/38018970891) succeeded. This run uses the actual default repository lens on that clean merged source, with no optional Graft input, and the same installed `d8a689` package89a188a7. Later Lattice main `8709844` is not the tool measured or published here.
@@ -73,3 +72,36 @@ Both runs retain deterministic builds and all45 successful tool calls. The candi
 Three empty-cache builds reached **1.970s maximum**. The first cold MCP request took **1.828s**, still failing one second. Twenty unchanged freshness calls reached **48.004ms p95 / 53.439ms maximum**; the maximum fails50ms. The controlled external projection's passing maximum does not supersede this failure. All45 tool calls succeeded; all eight warm tools passed, including HEAD diff at **0.489s maximum**. Build determinism passed.
 
 The public browser and local performance graph match exactly at `3c5e5e544e9d1b3e8e3e66660e549cb4f764143b8c35261ecbb44646aecf23b1`. Browser verification passed22 route/width cases and8 interaction groups with zero errors or overflow, including historical comparison and reload. [Compact evidence](evidence/l5-performance.json) appends this actual default-lens case, publication links and the premerge ADR scan. Earlier external projections, actual-client observations and all timing failures remain historical evidence. L5-08 and REPORT remain pending; cold MCP and maximum freshness are not waived.
+
+## Installed PR53–PR57 follow-up
+
+[PR53](https://github.com/hyunlord/lattice/pull/53), [PR54](https://github.com/hyunlord/lattice/pull/54), [PR55](https://github.com/hyunlord/lattice/pull/55) and [PR56](https://github.com/hyunlord/lattice/pull/56) were measured as independent installed packages on clean `03c5f22`, using its default lens without optional Graft input. Exact candidate commits, package/compiled digests, all eight tool summaries and failed gates are appended to [the evidence record](evidence/l5-performance.json). Each case retains three empty-cache builds and all 45 successful tool calls; no passing warm result waives the first cold call.
+
+| Installed candidate / condition | Build maximum | First cold MCP | Freshness maximum | HEAD diff maximum |
+| --- | --- | --- | --- | --- |
+| PR53 validation traversal | 1.988 s | 1.921 s | 47.082 ms | 0.502 s |
+| PR54 buffers, external tests/Graft active | 1.882 s | 1.762 s | 60.009 ms | 2.921 s |
+| PR54 separate case, later transfer activity | 1.969 s | 1.914 s | 49.383 ms | 0.356 s |
+| PR55 query probe | 1.572 s | 1.442 s | 43.269 ms | 0.347 s |
+| PR56 glob cache | 4.464 s | 1.404 s | 45.562 ms | 0.272 s |
+
+PR53 includes PR51 provenance changes relative to published `d8a689`; its hash difference is not merely metadata. The five non-source collections remain equal, while PR54–PR56 retain the exact PR53 graph `c4fa05cc00a6fdc5b0d11099b6e612868463f28c857b65add5156954223c7393`. The PR54 second directory's `idle` name describes an intended condition only: new rsync/ssh/Tailscale activity appeared. PR56 also captured unrelated Node activity. These observations remain recorded without attributing timing changes to a single cause or discarding busy failures.
+
+A separate direct-correspondence lens pair used the same PR56 package and clean `03c5f22`, with explicit external copies both named `lens.yaml`. It reduced graph bytes from 47,154,025 to 28,800,020. Baseline/candidate cold MCP was 1.477/1.312s, freshness maximum 48.509/82.832ms and diff maximum 1.886/1.496s. Both are projections, not published default-lens acceptance; candidate TypeScript/Node contention was observed. Both failed the aggregate MCP gate. The rejected encoder experiment was not included in these installed candidates.
+
+## Final PR174 publication and retained failures
+
+[bs-mobile PR174](https://github.com/hyunlord/bs-mobile/pull/174) merged as `8bf662918b57d4bff95707c2fd55fc2933ace195`. The measured installed [PR57](https://github.com/hyunlord/lattice/pull/57) candidate is `a334b026e91120c1aaa2fc649a0141d908476c6d`, merged into Lattice as `c5f026c`. Package SHA-256 is `e165b5cdf9493b70a0019871458ae52a60c1d6cc1b6a6bb4ce4aa8e993ef5aec`; compiled aggregate is `1c66fb380f924d6296c17493e69ddc1787513a8d5d28427f95d030f58a395036`. The default lens digest is `f88b7eef3b298fb7af244be97b1c0995571c22762ea9abdb221712422e8ecee4`. This source includes PR172 content changes, so older graph counts are not a same-source comparison.
+
+The first final-source run was Git-clean but contained ignored optional Graft wiring. Its failure remains a distinct augmented-input case. A fresh detached checkout then established CI-equivalent input provenance, asserting optional Graft absence before/after each build and after MCP. This was a separate input condition, not a replacement of failed evidence.
+
+| Final default-lens input condition | Build maximum | First cold MCP | Freshness p95 / maximum | HEAD diff maximum |
+| --- | --- | --- | --- | --- |
+| Ignored optional Graft wiring present | 1.757 s | 1.631 s | 50.805 / 50.809 ms | 2.113 s |
+| Pristine, optional Graft absent | 1.906 s | **1.831 s FAIL** | **329.427 / 348.760 ms FAIL** | 0.576 s |
+
+Both cases retain45 successful calls, three equal build hashes, exit code 0 and empty MCP stderr. Both observed 233 checked inputs; the graph input manifests contain 225 versus 224 entries, differing by optional wiring. Their graph sizes are 62,488,672 versus 62,488,040 bytes, with 516 nodes, 1,503 edges, 2,065 facets, 27 findings and 7 views. The pristine slow warm calls spend most time observing inputs without rebuilding. A later instrumented diagnostic observed a 44.6 ms warm response and did not reproduce the slowdown; it is not an acceptance rerun or a passing replacement case. The cause is unproven; host mediaanalysis/Unity/clawdbot activity does not establish causality. Cold build passes ten seconds, but **cold MCP and maximum unchanged freshness still fail**. L5-08 and REPORT remain pending under [issue46](https://github.com/hyunlord/lattice/issues/46).
+
+[Pages deployment attempt 2](https://github.com/hyunlord/bs-mobile/actions/runs/38024501827/attempts/2) succeeded. Attempt 1's HTTP 403 is retained as an unexplained publication failure; the same code/settings succeeded on retry. The [public map](https://hyunlord.github.io/bs-mobile/) and pristine measurement have exact graph hash `0b7c27c5a87966160dd636ea1bf512c49bbaae36eef96066ef57483a00e2a9f2` and source commit `8bf662918b57d4bff95707c2fd55fc2933ace195`. The pristine measurement records source fingerprint `9fcdcbc5fa04393ce69640f62553ac45ab26b7ad094dd175899ab4811fad4a14`. Public browser evidence covers 22 route/width cases, 31 matching graph responses and 24 byte-identical assets, with no browser errors or overflow; current/history and upstream primitive-support checks pass. Long object-valued facet distributions remain a readability limitation.
+
+The same installed package also passes Charter & Kin and Click build/check/export plus home/list/detail browser checks, with unchanged sources and exact equality of all five graph collections including provenance against their earlier graphs. These bounded reruns establish three-repository artifact portability, not new gameplay or Python runtime execution evidence. Actual Claude Code 2.1.280 and Codex 0.162.0 each discover all 8 tools; their 3 and 6 recorded calls respectively succeed on the final public graph, retaining the exact authored interpretation and 24/30 item statistic. Codex's repeated sequence is preserved. These scenarios invoke overview/find/findings only; functional client success does not supersede the strict performance failures.
