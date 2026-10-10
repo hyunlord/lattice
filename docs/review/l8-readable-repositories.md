@@ -1,6 +1,20 @@
 # L8 repository map acceptance
 
-Status: implementation verification in progress; Claude's held-out review and final user acceptance remain separate. Maintenance is deferred under the approved L8 scope.
+![Original three repositories before and after, each panel 1280 by 800](screens/l8/three-repositories-before-after.png)
+
+Status: **partial** at `d14c5f8`. No-config comprehension is **3/3/3** and the actual external-agent summary flow is **4/4/3** for Cobra/Zod/AutoMapper. The required AI score of 4 for every repository remains unmet; PR 76 stays draft and the consumer pin is unchanged. Maintenance remains deferred.
+
+The current collective region exposes every member role and observed direction without inventing an internal execution hierarchy. The AutoMapper reader recovered the roles and all16 directions, but judged the text tracing too slow for30 seconds. Independent code and contract reviews found no factual hierarchy to add from these import relationships. Failed answers remain intact; final user judgment is pending.
+
+All390 tests, Node20/22/24 and the other two CI jobs pass. Independent checks cover18 structural screens, all visible and expanded text/relations, and16 accepted bs-mobile/C&K screens plus disclosure interactions. The same23 externally authored notes retain310 source anchors. Build code is identical to measured `cc493ae`: fzf0.595s and bs-mobile9.500/9.552/8.729s; no new timing claim is made.
+
+| Source | No AI | Actual agent summary |
+| --- | --- | --- |
+| Cobra | [3/5](screens/l8/cobra-baseline.png) | [4/5](screens/l8/cobra-with-ai.png) |
+| Zod | [3/5](screens/l8/zod-baseline.png) | [4/5](screens/l8/zod-with-ai.png) |
+| AutoMapper | [3/5](screens/l8/automapper-baseline.png) | [3/5](screens/l8/automapper-with-ai.png) |
+
+[Exact source revisions and screenshot hashes](screens/l8/provenance.json). Frozen original [baseline answers](screens/l8/baseline-frozen-verdict.md) and [AI answers](screens/l8/ai-frozen-verdict.md) map image1 to Zod and image2 to AutoMapper; unchanged Cobra images retain their prior answers. Published answer copies add only a terminal newline required by the documentation checker. The same fixed samples are corrective reviews, not newly unseen acceptance. [Separate source comparison and factual corrections](screens/l8/source-corrections.md) distinguish reader omissions, namespace projection and remaining semantic-analysis limits. The chronological record below preserves earlier failures and decisions.
 
 ## Prototype restoration (A)
 
@@ -165,3 +179,5 @@ R15 freezes `ef91df7`. All 390 tests and five CI jobs pass; 18 collapsed and exp
 R15 source comparison retains two reviewer corrections separately from the original answers: Zod's apparent 107/106 discrepancy is the excluded `core/doc.ts` documentation file, and Licensing does contain an `IGlobalConfiguration` use. Missing compiler-resolved C# implicit references remains a real analysis limitation. A displayed absence of extracted connections must not be read as proof of semantic independence. All 23 original external notes and 310 source anchors remain unchanged.
 
 R16 restores first-screen member roles and every actual internal direction as continuous rows inside one collective region. It reuses the existing literal first-complete-sentence role preview and preserves full source-bound notes through disclosure; no notes or dependency facts change. Local checks pass390 tests. Owner verification passes18 collapsed and expanded painted/text checks, with all16 AutoMapper and6 Zod internal directions initially visible. Frozen independent regression and comprehension review remain pending.
+
+Frozen R16 independent checks pass all18 structural screens and the accepted16-screen bs-mobile/C&K regression, including expanded-role pointer/keyboard controls. Original screenshot answers score **3/3/3 without AI and4/4/3 with AI**. AutoMapper's member roles and all16 directions are recovered correctly, but tracing them exceeds the reviewer's30-second target. Separate source comparison preserves those answers and records reader omissions/overstatements and C# semantic-reference limits independently. No actual internal execution hierarchy is inferred. Code and contract audits find no new blocking defect, but cannot override the failed comprehension threshold. The candidate remains draft for explicit user judgment.
