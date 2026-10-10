@@ -32,6 +32,7 @@ test('source retains exact fields across derived scopes, lexical bindings, neste
             scalar: map(get('node', 'steps', '*', 'cost'), source(get('item'))),
             missing: source(get('node', 'missing')),
             constant: source(literal({ id: 'b', cost: 20 })),
+            conditional: { op: 'case', cases: [{ when: { op: 'gt', left: get('node', 'unrelated'), right: 0 }, value: get('node', 'budget') }], default: 0 },
         }).map(([id, value]) => ({ id, key: id, value })),
         findings: [{ id: 'evidence', severity: 'warning', query: {}, metrics: { chosen: map(get('vars', 'targetValues'), source(get('item', 'derived', 'chosen'))), targets: source({ op: 'count', value: get('vars', 'targets') }), targetValues: source({ op: 'count', value: get('vars', 'targetValues') }) }, template: 'Evidence' }],
     });
@@ -50,6 +51,12 @@ test('source retains exact fields across derived scopes, lexical bindings, neste
     assert.deepEqual(result.findings[0].metrics.chosen.map(pointers), [['/0/budget'], ['/1/budget']]);
     assert.equal(facets.direct[0].contentHash, data.contentHash);
     assert.equal(facets.direct[0].path, 'records.json');
+    const evidence = key => result.facets.find(facet => facet.nodeId === 'a' && facet.key === key).sources;
+    for (const key of ['direct', 'derived', 'repeated']) {
+        assert.deepEqual(pointers(evidence(key).filter(entry => entry.path === data.path)).sort(), ['/0', '/0/budget']);
+        assert.equal(evidence(key).filter(entry => entry.path === lensInput.path).length, 1);
+    }
+    assert.deepEqual(pointers(evidence('conditional').filter(entry => entry.path === data.path)).sort(), ['/0', '/0/budget', '/0/unrelated']);
 });
 
 test('source follows scalar collection membership through filter, unique, flatten and concat', () => {
