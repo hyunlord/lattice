@@ -139,3 +139,12 @@ test('folder SCCs without file-level proof never claim a verified file cycle', (
         const group = dependencyLevels(view)[0]; assert.equal(group.cyclic, false); assert.equal(group.foldedCycle, true);
     }
 });
+
+test('an unrelated repository root does not erase a useful shared path prefix', async () => {
+    const { sharedFolderPrefix } = await import('../viewer/dependency-layout.js');
+    const paths = ['.', 'lib/src/main/java/acme/core', 'lib/src/main/java/acme/core/stream', 'lib/src/main/java/acme/core/internal'];
+    const prefix = sharedFolderPrefix(paths);
+    assert.equal(prefix, 'lib/src/main/java/acme');
+    assert.equal(paths[0].startsWith(`${prefix}/`), false);
+    assert.ok(paths.slice(1).every(path => path.startsWith(`${prefix}/`)));
+});

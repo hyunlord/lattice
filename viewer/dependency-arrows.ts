@@ -22,7 +22,7 @@ export function drawDependencyArrows(scene: ArrowScene): void {
         return [{ flow, source, target, label, index }];
     });
     const obstacles = [...rectangles.values()].map(box => ({ x: box.x - 4, y: box.y - 4, width: box.width + 8, height: box.height + 8 }));
-    for (const caption of host.querySelectorAll('.lm-folder-prefix')) { const rect = caption.getBoundingClientRect(); obstacles.push({ x: rect.left - bounds.left - 2, y: rect.top - bounds.top - 2, width: rect.width + 4, height: rect.height + 4 }); }
+    for (const caption of host.querySelectorAll('.lm-folder-prefix, .lm-cycle-caption')) { const rect = caption.getBoundingClientRect(); obstacles.push({ x: rect.left - bounds.left - 2, y: rect.top - bounds.top - 2, width: rect.width + 4, height: rect.height + 4 }); }
     for (const entry of labels) {
         const { source, target, flow, label } = entry;
         const ports = (id: string) => view.flows.filter(item => item.source === id || item.target === id);

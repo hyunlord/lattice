@@ -91,7 +91,7 @@ export function sourceDescription(text: string, language: string): JsonObject | 
         } else if (/^(?:package |namespace )[^;{}]+;?$/u.test(line)) { cursor++; continue; }
         else return undefined;
         cursor++;
-        const next = lines.slice(cursor).find(value => value.trim() && !(language === "java" && /^\s*@\w+(?:\([^)]*\))?\s*$/u.test(value)))?.trim() ?? "";
+        const next = lines.slice(cursor).find(value => value.trim() && !(language === "java" && /^\s*@\w+(?:\.\w+)*(?:\([^)]*\))?\s*$/u.test(value)))?.trim() ?? "";
         const directive = (part: string): boolean => /^(?:eslint-(?:disable|enable)|@ts-(?:check|nocheck|ignore|expect-error)|prettier-ignore|biome-ignore|ruff:|pylint:|nolint\b|go:|ReSharper\s+(?:disable|restore)|noinspection\b)/iu.test(part.trim()) || (/^(?:import |from |using )/u.test(next) && /^(?:types?\s+only|type-only(?:\s+imports?)?|imports?\s+only)[!.\s]*$/iu.test(part.trim()));
         const prose = parts.map((part, index) => ({ part, index })).filter(({ part, index }) => !directive(part) && !/^\s*[-=]{3,}\s*$/u.test(part) && !/^\s*[-=]{3,}\s*$/u.test(parts[index + 1] ?? ""));
         const content = prose.map(value => value.part).join(" ");

@@ -18,6 +18,7 @@ export function extractMarkdown(input: SourceInput): MarkdownDocument {
     let fenceCharacter = "";
     let fenceLength = 0;
     let commentOpen = false;
+    let paragraphOpen = false;
     for (const rawLine of lines) {
         let line = rawLine;
         if (fenceLength === 0) {
@@ -54,7 +55,10 @@ export function extractMarkdown(input: SourceInput): MarkdownDocument {
             fenceLength = marker.length;
             visible.push("");
         } else {
-            visible.push(/^(?: {4}|\t)/u.test(line) ? "" : line);
+            const indented = /^(?: {4}|\t)/u.test(line);
+            const visibleParagraph = paragraphOpen || (!indented && /<p(?:\s[^>]*)?>/iu.test(line));
+            visible.push(indented && !paragraphOpen ? "" : line);
+            if (visibleParagraph) paragraphOpen = !/<\/p\s*>/iu.test(line);
         }
     }
     const definitions = new Map<string, string>();

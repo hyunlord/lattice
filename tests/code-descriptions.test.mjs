@@ -167,3 +167,20 @@ test('purpose prose about generated code is preserved while actual banners are e
     assert.equal(attributes('parser.ts', `// ${text}\nimport x from './x';`).sourceDescription.text, text);
     assert.equal(attributes('parser.ts', '// API functions are subject to change without notice.\nimport x from "./x";').sourceDescription, undefined);
 });
+
+test('indented HTML paragraph prose stays visible while code remains excluded', async () => {
+    const { extractMarkdown } = await import('../dist/index.js');
+    const text = '<div align="center">\n  <p>\n    A cross-platform build tool.\n  </p>\n</div>';
+    const value = extractMarkdown({ path: 'README.md', text, contentHash: createHash('sha256').update(text).digest('hex') }).nodes[0].attributes.sourceDescription;
+    assert.equal(value.text, 'A cross-platform build tool.'); assert.equal(value.line, 3);
+    for (const code of ['    <p>Fake code description.</p>', '```html\n<p>Fake code description.</p>\n```']) {
+        const text = `${code}\n\nA genuine description.`;
+        assert.equal(extractMarkdown({ path: 'README.md', text, contentHash: createHash('sha256').update(text).digest('hex') }).nodes[0].attributes.sourceDescription.text, 'A genuine description.');
+    }
+});
+
+
+test('qualified Java annotations preserve authored package documentation', () => {
+    const value = attributes('package-info.java', '/** Streams structured data efficiently. */\n@com.example.annotations.CheckReturnValue\npackage example.stream;');
+    assert.deepEqual(value.sourceDescription, { text: 'Streams structured data efficiently.', kind: 'module-doc', line: 1, endLine: 1 });
+});

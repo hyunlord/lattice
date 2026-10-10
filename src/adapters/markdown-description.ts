@@ -15,7 +15,7 @@ export function markdownDescription(sourceLines: readonly string[], start: numbe
     let notice = false;
     for (let index = start; index < end; index++) {
         if (index + 1 < lines.length && /^\s*(?:=+|-+)\s*$/u.test(lines[index + 1] ?? "")) { index++; continue; }
-        const first = index;
+        let first = index;
         let raw = (lines[index] ?? "").trim();
         if (/^>\s*\[!/u.test(raw)) { notice = true; continue; }
         if (notice && raw.startsWith(">")) continue;
@@ -38,6 +38,7 @@ export function markdownDescription(sourceLines: readonly string[], start: numbe
         if (htmlParagraph) {
             while (!/<\/p\s*>/iu.test(raw) && index + 1 < end) {
                 const next = lines[++index] ?? "";
+                if (!raw.replace(/<[^>]*>/gu, " ").trim() && next.replace(/<[^>]*>/gu, " ").trim()) first = index;
                 for (const tag of next.matchAll(/<(\/?)(div|kbd|table|details|section|aside|figure|p)(?:\s[^>]*)?>/giu)) htmlDepth = Math.max(0, htmlDepth + (tag[1] ? -1 : 1));
                 raw += ` ${next}`;
             }

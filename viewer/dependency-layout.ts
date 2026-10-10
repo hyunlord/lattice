@@ -91,10 +91,8 @@ export function factoredTitle(title: string, titles: readonly string[]): { reado
 }
 
 export function sharedFolderPrefix(paths: readonly string[]): string {
-    if (paths.length < 2) return '';
-    const parts = paths.map(path => path.split('/')); const first = parts[0] ?? []; let length = 0;
-    while (length < first.length - 1 && parts.every(path => path.length > length + 1 && path[length] === first[length])) length++;
-    return first.slice(0, length).join('/');
+    const candidates = new Set(paths.flatMap(path => { const parts = path.split('/'); return parts.slice(0, -1).map((_, index) => parts.slice(0, index + 1).join('/')); }));
+    return [...candidates].map(prefix => ({ prefix, count: paths.filter(path => path.startsWith(`${prefix}/`)).length })).filter(item => item.count >= 2).sort((a, b) => b.count * b.prefix.length - a.count * a.prefix.length || a.prefix.localeCompare(b.prefix))[0]?.prefix ?? '';
 }
 
 export function uniqueDependencyNames(stages: readonly LoopStage[]): ReadonlyMap<string, string> {
