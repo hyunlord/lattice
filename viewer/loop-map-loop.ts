@@ -1,5 +1,6 @@
 import type { LoopStage, LoopUI } from './loop-map-types.js';
 import { chip, element, interpretation, svg } from './loop-map-shared.js';
+import { readLoopRoute, writeLoopRoute } from './loop-map-route.js';
 
 export function renderLoopOverview(host: HTMLElement, ui: LoopUI): () => void {
     const model = ui.model; if (model.lead) host.append(element('p', model.lead, 'lm-lead'));
@@ -25,8 +26,8 @@ export function renderLoopOverview(host: HTMLElement, ui: LoopUI): () => void {
         const influence = element('div'); for (const [title, values] of [['이 단계가 영향을 주는 곳', stage.outgoing], ['이 단계가 영향을 받는 곳', stage.incoming]] as const) { const block = element('div', '', 'lm-group'); block.append(element('h4', title)); const list = element('ul', '', 'lm-influence'); for (const value of values) { const row = element('li'); row.append(element('b', value.name), element('p', value.description)); list.append(row); } block.append(values.length ? list : element('p', '없음', 'lm-muted')); influence.append(block); }
         columns.append(content, influence); panel.append(columns); const note = interpretation(stage.interpretation); if (note) panel.append(note);
     };
-    for (const stage of model.stages) { const button = buttons.get(stage.id); if (button) button.onclick = () => renderStage(stage); }
-    const initial = model.stages.find(stage => stage.id === model.defaultStage) ?? model.stages[0]; if (initial) renderStage(initial);
+    for (const stage of model.stages) { const button = buttons.get(stage.id); if (button) button.onclick = () => { renderStage(stage); writeLoopRoute({ view: 'loop', stage: stage.id }); }; }
+    const selected = readLoopRoute().stage ?? model.defaultStage; const initial = model.stages.find(stage => stage.id === selected) ?? model.stages[0]; if (initial) renderStage(initial);
     for (const strip of model.strips ?? []) {
         const section = element('section', '', 'lm-strip'); section.append(element('h2', strip.title), element('p', strip.description)); const groups = element('div', '', 'lm-after');
         for (const [index, group] of strip.groups.entries()) { if (index) groups.append(element('span', '→', 'lm-after-arrow')); const box = element('div', '', 'lm-after-box'); box.append(element('h3', group.title)); const chips = element('div', '', 'lm-chips'); for (const id of group.nodeIds) { const button = chip(id, ui); if (button) chips.append(button); } box.append(chips); groups.append(box); } section.append(groups); host.append(section);

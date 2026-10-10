@@ -7,7 +7,7 @@ The user-approved [reference HTML](l7-prototype.html) is preserved verbatim. It 
 - `title`, `subtitle`, `lead`, `center: {title,description}`, and `defaultStage` control headings and initial selection.
 - `stages: [{id,title,summary,unit,kinds,systemIds,groupBy?}]` selects member kinds and related system IDs. Original IDs are accepted across data revisions. Group values use presentation facet labels. Empty stages remain visible.
 - `flows: [{source,target,label,tone?,auxiliary?}]` names directed primary and auxiliary arrows. These are authored lens interpretations, not inferred execution.
-- `relationGroups: [{label,side,kinds?,steps:[{edgeKinds,direction}]}]` selects focus groups. `side` is left/right; each traversal step is in/out. Multi-step traversal supports shared inputs without domain logic. Results exclude the focus node and deduplicate identities. A group shows six nodes then an explicit remainder control and full list.
+- `relationGroups: [{label,side,kinds?,steps:[{edgeKinds,direction}]}]` selects focus groups. `side` is left/right; each traversal step is in/out. Multi-step traversal supports shared inputs without domain logic. Results exclude the focus node and deduplicate complete paths, preserving different routes to the same identity. Intermediate nodes remain in `via` and appear as subtitles. Optional `displayStep` selects the zero-based traversal result to show (default: final step); other path nodes become context. Out-of-range steps produce no result. `viaPrefix` controls the subtitle connector (default: →). A group shows six nodes then an explicit remainder control and full list.
 - `catalogKinds`, `summaryFields`, `statusFacet`, `statusLabels`, and `kindStyles` control catalog membership, summaries, status, and shape/color. Status defaults to unknown. A program-presence marker is not runtime observation.
 - `strips: [{title,description,kinds}]` and `places: {title,description,kinds}` provide optional supporting lists from the same nodes.
 
@@ -16,3 +16,9 @@ Without stage configuration, code-module folders become stages (file folders whe
 The evidence disclosure holds source revision, graph hash, input scope, layers, and raw views. AI summaries carry attribution, source links, and stale status; they never replace source facts. See [interpretation workflow](../review/l7-interpretation.md) and [image references](media-references.md).
 
 The approved prototype's 163 content records and 28 program bindings are an oracle for its pinned source revision, not permanent data-count gates. Consumer verification compares exact IDs and focus connections when given the reference. Data changes must update the comparison evidence instead of changing expectations silently.
+
+## Kind-specific detail and navigation
+
+`presentation.detail.summaryFieldsByKind` maps a kind to labeled attribute or facet paths and overrides the shared `summaryFields` for that kind. Missing values are omitted. Both the focused view and the detailed evidence screen use this configuration. A loop kind style can declare ordered `variants: [{field, value, color?, shape?}]`; the first matching scalar attribute overrides the base style. Domain values and labels belong in the consumer lens.
+
+The home URL retains `view=loop|focus|catalog`, the selected `item`, and selected `stage`, alongside the layer parameter. Selecting a view or item adds a browser history entry; reload, copied URLs, back and forward restore the selection. Invalid selections fall back to an available item or stage.
