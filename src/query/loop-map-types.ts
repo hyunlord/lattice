@@ -18,10 +18,13 @@ export type LoopStage = {
     readonly incoming: readonly { readonly name: string; readonly description: string; }[];
     readonly outgoing: readonly { readonly name: string; readonly description: string; }[];
     readonly interpretation?: LoopInterpretation;
+    readonly parentId?: string; readonly childIds?: readonly string[]; readonly descendantNodeIds?: readonly string[];
+    readonly summaryEvidence?: readonly { readonly path: string; readonly line: number; }[];
 };
-export type LoopFlow = { readonly source: string; readonly target: string; readonly label: string; readonly tone?: 'normal' | 'warning'; readonly auxiliary?: boolean; };
+export type LoopFlow = { readonly source: string; readonly target: string; readonly label: string; readonly tone?: 'normal' | 'warning'; readonly auxiliary?: boolean; readonly count?: number; readonly sourceFiles?: readonly string[]; };
 export type LoopMap = {
     readonly title?: string; readonly subtitle?: string; readonly lead: string;
+    readonly structural?: boolean; readonly rootStageIds?: readonly string[]; readonly showStatus?: boolean;
     readonly center?: { readonly title: string; readonly description: string; };
     readonly stages: readonly LoopStage[]; readonly flows: readonly LoopFlow[]; readonly nodes: readonly LoopNode[];
     readonly strips?: readonly { readonly title: string; readonly description: string; readonly groups: readonly { readonly title: string; readonly nodeIds: readonly string[]; }[]; }[];

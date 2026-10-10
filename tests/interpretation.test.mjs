@@ -22,7 +22,9 @@ function note(target) { return { schemaVersion: 1, targetId: target.id, summary:
 test('source-bound notes stale on source edit and cluster additions; notes trigger observation refresh', t => {
     const { root, graph } = fixture(t);
     const before = observeRepository({ root }).fingerprint;
-    const targets = interpretationContext(root, graph).items;
+    const context = interpretationContext(root, graph);
+    assert.equal(context.summaryLanguage, 'ko');
+    const targets = context.items;
     for (const target of targets) writeInterpretation(root, graph, note(target));
     assert.notEqual(observeRepository({ root }).fingerprint, before);
     assert.ok(readInterpretations(root, graph).every(note => note.status === 'fresh'));
@@ -39,7 +41,7 @@ test('external CI runner skips absent key and current targets, refreshes changed
     const { root, graph } = fixture(t);
     mkdirSync(join(root, '.lattice'), { recursive: true });
     const runner = join(root, '.lattice/runner.mjs');
-    writeFileSync(runner, `let text='';for await(const c of process.stdin)text+=c;const {targets}=JSON.parse(text);process.stdout.write(JSON.stringify(targets.map(t=>({schemaVersion:1,targetId:t.id,summary:'Fixture runner summary.',author:'fixture-external',sources:t.sources.map(({path,contentHash,line})=>({path,contentHash,line}))}))));`);
+    writeFileSync(runner, `let text='';for await(const c of process.stdin)text+=c;const {targets,summaryLanguage}=JSON.parse(text);if(summaryLanguage!=='ko')throw new Error('Viewer language missing');process.stdout.write(JSON.stringify(targets.map(t=>({schemaVersion:1,targetId:t.id,summary:'Fixture runner summary.',author:'fixture-external',sources:t.sources.map(({path,contentHash,line})=>({path,contentHash,line}))}))));`);
     delete process.env['LATTICE_TEST_KEY'];
     assert.equal((await runInterpretationCommand(root, graph, [process.execPath, runner], 'LATTICE_TEST_KEY')).updated, 0);
     process.env['LATTICE_TEST_KEY'] = 'fixture-only';

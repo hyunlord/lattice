@@ -5,26 +5,26 @@ import { extractCode, resolveModuleLinks } from '../dist/index.js';
 import { codeStructure } from '../dist/adapters/code-structure.js';
 const module = (path, text = '') => extractCode({ path, text, contentHash: createHash('sha256').update(text).digest('hex') });
 
-test('Go module roots resolve selected local package files without inventing standard-library dependencies', () => {
+test('Go module roots resolve local packages without inventing standard-library dependencies', () => {
     const modules = [module('go.mod', 'module example.org/app\n'), module('main.go', 'package main\nimport ("example.org/app/model"; "fmt")\nfunc main() {}'), module('model/model.go', 'package model\ntype Model struct {}\nfunc (m Model) Run() {}')];
     const graph = resolveModuleLinks(modules);
-    assert.deepEqual(graph.edges.map(edge => edge.target), ['module:model/model.go']);
+    assert.deepEqual(graph.edges.map(edge => edge.target), ['package:go:model']);
     assert.deepEqual(graph.diagnostics.map(value => value.specifier), ['fmt']);
     assert.deepEqual(codeStructure(modules).nodes.map(node => node.name), ['main', 'Model', 'Run']);
 });
 
-test('Java and Kotlin package/type imports support aliases and explicit wildcard fanout', () => {
+test('Java and Kotlin package/type imports support aliases and explicit package wildcard targets', () => {
     const modules = [module('App.java', 'package app;\nimport demo.Model;\nclass App { public void run() { consume(); } }'), module('Model.kt', 'package demo\ndata class Model(val x: Int)\nfun build(): Model { return Model(1) }'), module('Use.kt', 'package app\nimport demo.build as make\nimport demo.*\nfun launch() {}')];
     const graph = resolveModuleLinks(modules);
     assert.deepEqual(graph.diagnostics, []);
-    assert.deepEqual(graph.edges.map(edge => edge.target), ['module:Model.kt', 'module:Model.kt', 'module:Model.kt']);
+    assert.deepEqual(graph.edges.map(edge => edge.target), ['module:Model.kt', 'module:Model.kt', 'package:jvm:demo']);
     assert.deepEqual(codeStructure(modules).nodes.map(node => node.name), ['App', 'run', 'Model', 'build', 'launch']);
 });
 
 test('Swift conventional source modules and GDScript resource references remain static links', () => {
     const modules = [module('Sources/App/App.swift', 'import Domain\nstruct App { func run() {} }'), module('Sources/Domain/Model.swift', 'public struct Model {}'), module('main.gd', 'extends "res://base.gd"\nconst Thing = preload("res://thing.gd")\nfunc run():\n    print("func fake():")'), module('base.gd', 'class_name Base\nextends Node\nfunc start():\n    pass'), module('thing.gd', 'class_name Thing\nextends Base')];
     const graph = resolveModuleLinks(modules);
-    assert.deepEqual(graph.edges.map(edge => edge.target), ['module:Sources/Domain/Model.swift', 'module:base.gd', 'module:thing.gd', 'module:base.gd']);
+    assert.deepEqual(graph.edges.map(edge => edge.target), ['package:swift:Sources/Domain', 'module:base.gd', 'module:thing.gd', 'module:base.gd']);
     assert.deepEqual(graph.diagnostics.map(value => value.specifier), ['Node']);
     const definitions = codeStructure(modules);
     assert.deepEqual(definitions.nodes.map(node => node.name), ['App', 'run', 'Model', 'run', 'Base', 'start', 'Thing']);
@@ -62,7 +62,7 @@ test('ambiguous symbols and missing Go module manifests remain unresolved', () =
 
 test('Go excludes external test package files and Swift does not cross separate Sources roots', () => {
     const modules = [module('go.mod', 'module example.org/app'), module('app.go', 'package app\nimport "example.org/app/model"'), module('model/a.go', 'package model'), module('model/a_test.go', 'package model_test'), module('Sources/App/A.swift', 'import Domain'), module('Sources/Domain/D.swift', 'struct D {}'), module('examples/Other/Sources/Domain/D.swift', 'struct Other {}')];
-    assert.deepEqual(resolveModuleLinks(modules).edges.map(edge => edge.target), ['module:model/a.go', 'module:Sources/Domain/D.swift']);
+    assert.deepEqual(resolveModuleLinks(modules).edges.map(edge => edge.target), ['package:go:model', 'package:swift:Sources/Domain']);
 });
 
 test('definition provenance links point at the declaration rather than the containing file start', () => {

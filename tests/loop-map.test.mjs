@@ -15,7 +15,7 @@ test('no lens uses actual folder dependencies without fabricating a cycle or run
     const nodes = [node('a', 'module', {}, 'src/a.py'), node('b', 'module', {}, 'lib/b.py'), node('f', 'function', {}, 'src/a.py')];
     const m = buildLoopMap(nodes, [edge('i', 'imports', 'a', 'b'), edge('i2', 'imports', 'a', 'b'), edge('c', 'contains', 'a', 'f')], [], { kinds: [] }, 'example');
     assert.equal(m.nodes.find(n => n.id === 'a').relationGroups.find(g => g.label === '참조하는 모듈').items.length, 1);
-    assert.equal(m.stages.length, 2); assert.deepEqual(m.flows, [{ source: 'folder:src', target: 'folder:lib', label: '2개 참조' }]); assert(m.nodes.every(n => n.status === 'unknown')); assert.equal(m.nodes.find(n => n.id === 'a').relationGroups.find(g => g.label === '정의한 타입·함수').items[0].id, 'f');
+    assert.equal(m.stages.length, 2); assert.deepEqual(m.flows, [{ source: 'folder:src', target: 'folder:lib', label: '1개 파일 사용', count: 1, sourceFiles: ['src/a.py'] }]); assert(m.nodes.every(n => n.status === 'unknown')); assert.equal(m.nodes.find(n => n.id === 'a').relationGroups.find(g => g.label === '정의한 타입·함수').items[0].id, 'f');
 });
 test('notes retain stale AI attribution and media stays attached to its actual node', () => {
     const m = buildLoopMap([node('a', 'module', {}, 'src/a.py')], [], [], { kinds: [], interpretations: [{ targetId: 'folder:src', summary: 'Evidence-backed explanation', status: 'stale', sources: [{ path: 'src/a.py', line: 1 }] }], mediaManifest: { a: { status: 'available', url: 'media/hash.png', sourcePath: 'art.png', sourceHash: 'hash', frame: { x: 1, y: 2, width: 3, height: 4 } } } }, 'example');

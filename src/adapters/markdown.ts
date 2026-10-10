@@ -1,3 +1,4 @@
+import { markdownDescription } from "./markdown-description.js";
 import { label, plain, maskCode, bracketMatches, destination, inlineEnd } from "./markdown-inline.js";
 import type { Edge, NodeDraft, Source } from "../core/model.js";
 import { DataInputError, makeSource, validateSourceInput } from "./types.js";
@@ -97,7 +98,8 @@ export function extractMarkdown(input: SourceInput): MarkdownDocument {
         const body = visible.slice(heading.endLine, next === undefined ? visible.length : next.line - 1).filter((_, offset) => !definitionLines.has(heading.endLine + offset)).join("\n").trim();
         if (body !== "") metadata[key] = body;
     }
-    const nodes: NodeDraft[] = [{ id: documentId, kind: "document", name: title, attributes: metadata, sources: [makeSource(input, "", 1, lines.length)] }];
+    const documentDescription = markdownDescription(visible, 0, headings.find(heading => heading.level > 1)?.line ?? visible.length);
+    const nodes: NodeDraft[] = [{ id: documentId, kind: "document", name: title, attributes: { ...metadata, ...(documentDescription ? { sourceDescription: documentDescription } : {}) }, sources: [makeSource(input, "", 1, lines.length)] }];
     const edges: Edge[] = [];
     const usedAnchors = new Set<string>();
     const suffixes = new Map<string, number>();
@@ -116,7 +118,8 @@ export function extractMarkdown(input: SourceInput): MarkdownDocument {
         const source = makeSource(input, pointer, heading.line, heading.endLine);
         while (stack.length > 0 && (stack[stack.length - 1]?.level ?? 0) >= heading.level) stack.pop();
         const parentId = stack[stack.length - 1]?.id ?? documentId;
-        nodes.push({ id, kind: "heading", name: heading.text, attributes: { level: heading.level, anchor, text: heading.text }, sources: [source] });
+        const description = markdownDescription(visible, heading.endLine, (headings[index + 1]?.line ?? (visible.length + 1)) - 1);
+        nodes.push({ id, kind: "heading", name: heading.text, attributes: { level: heading.level, anchor, text: heading.text, ...(description ? { sourceDescription: description } : {}) }, sources: [source] });
         edges.push({ id: `contains:${JSON.stringify([parentId, id])}`, kind: "contains", source: parentId, target: id, directed: true, field: pointer, sources: [source] });
         stack.push({ level: heading.level, id });
     }

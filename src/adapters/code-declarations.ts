@@ -1,5 +1,6 @@
 import type { JsonObject } from "../core/canonical.js";
 import type { CodeToken } from "./code-tokens.js";
+import { publicDeclaration } from "./code-descriptions.js";
 import { codeTokens } from "./code-tokens.js";
 import { nativeTokens } from "./native-tokens.js";
 import type { SourceInput } from "./types.js";
@@ -20,6 +21,8 @@ export function codeDeclarations(input: SourceInput, language: string): readonly
     const supported = ["csharp", "rust", "go", "java", "kotlin", "swift", "gdscript", "javascript", "typescript", "python"];
     if (!supported.includes(language)) return [];
     const tokens = declarationTokens(input.text, language), lines = input.text.split(/\r\n|\r|\n/u), declarations: JsonObject[] = [];
+    const occurrences = new Map<string, number>();
+    for (const token of tokens) if (token.kind === "word") occurrences.set(token.value, (occurrences.get(token.value) ?? 0) + 1);
     const typeWords = ["class", "class_name", "struct", "interface", "enum", "trait", "protocol", "record", "union", "typealias"];
     let functionEnd = -1;
     for (let index = 0; index < tokens.length; index++) {
@@ -72,7 +75,7 @@ export function codeDeclarations(input: SourceInput, language: string): readonly
             else end = nameIndex;
             if (kind === "function" && tokens[cursor]?.value === ";" && !["csharp", "java", "typescript", "rust"].includes(language)) continue;
         }
-        declarations.push({ name: name.value, kind, line: token.line, endLine: tokens[end]?.line ?? token.line });
+        declarations.push({ name: name.value, kind, line: token.line, endLine: tokens[end]?.line ?? token.line, public: publicDeclaration(tokens, nameIndex, language), uses: Math.max(0, (occurrences.get(name.value) ?? 1) - 1) });
         if (kind === "function") functionEnd = end;
         index = nameIndex;
     }

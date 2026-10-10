@@ -25,15 +25,15 @@ export function buildRepository(options: Options, historical?: RepositoryReader,
     const codeSourceLink: SourceLink = source => codeHashes.get(source.path) === source.contentHash ? sourceLink(source) : source;
     const coveredPaths = new Set(graft.coveredPaths);
     const structure = codeStructure(modules.filter(module => !module.node.sources.some(source => coveredPaths.has(source.path))));
-    const knownNodes = [...documents.flatMap(document => document.nodes), ...modules.map(module => module.node), ...structure.nodes, ...files, ...graft.nodes];
     const moduleLinks = resolveModuleLinks(modules);
+    const knownNodes = [...documents.flatMap(document => document.nodes), ...modules.map(module => module.node), ...structure.nodes, ...files, ...graft.nodes, ...moduleLinks.nodes];
     const importedLinks = new Set(graft.edges.map(edge => canonicalJson([edge.source, edge.target, edge.kind])));
     const ownEdges = moduleLinks.edges.filter(edge => !importedLinks.has(canonicalJson([edge.source, edge.target, edge.kind])));
     let documentDiagnostics: readonly DocumentDiagnostic[] = [];
     const structuralEdges = (nodes: readonly NodeDraft[]) => {
         const linked = resolveDocumentLinks(documents.map(document => ({ ...document, nodes: [] })), nodes);
         documentDiagnostics = linked.diagnostics;
-        return [...linked.edges, ...ownEdges, ...structure.edges, ...graft.edges];
+        return [...linked.edges, ...ownEdges, ...moduleLinks.membershipEdges, ...structure.edges, ...graft.edges];
     };
     let interpreted;
     // Adapter records and parsed lenses are data-only; library callers retain one-pass queries by default.

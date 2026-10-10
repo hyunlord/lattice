@@ -4,7 +4,7 @@ import test from 'node:test';
 import { extractCode, resolveModuleLinks } from '../dist/index.js';
 const module = (path, text = '') => extractCode({ path, text, contentHash: createHash('sha256').update(text).digest('hex') });
 
-test('C# namespace imports fan out over declarations with alias/static and scoped namespace provenance', () => {
+test('C# namespace imports target packages with alias/static and scoped namespace provenance', () => {
     const result = resolveModuleLinks([
         module('App.cs', 'global using Game.Model;\nusing Alias = global::Game.Model.Hero;\nusing static Game.Model.Tools;\nnamespace Game { using Model; class App {} }'),
         module('Hero.cs', 'namespace Game.Model; public class Hero {}'),
@@ -12,7 +12,7 @@ test('C# namespace imports fan out over declarations with alias/static and scope
     ]);
     assert.deepEqual(result.diagnostics, []);
     assert.deepEqual(result.edges.map(edge => [edge.target, edge.sources[0].line]), [
-        ['module:Hero.cs', 1], ['module:Tools.cs', 1], ['module:Hero.cs', 2], ['module:Tools.cs', 3], ['module:Hero.cs', 4], ['module:Tools.cs', 4],
+        ['package:csharp:Game.Model', 1], ['module:Hero.cs', 2], ['module:Tools.cs', 3], ['package:csharp:Game.Model', 4],
     ]);
 });
 

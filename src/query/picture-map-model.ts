@@ -1,4 +1,5 @@
 import type { Node, Edge, Facet } from '../core/model.js';
+import { buildStructuralMap } from './structural-map-model.js';
 export type PictureStatus = 'present' | 'absent' | 'unknown';
 export type PictureMapConfig = { readonly hubKinds: readonly string[]; readonly membershipEdgeKinds: readonly string[]; readonly influenceEdgeKinds: readonly string[]; readonly primaryFacet?: string; readonly statusFacet?: string; readonly statusLabels?: Partial<Record<PictureStatus, string>>; readonly summaryFields?: readonly string[]; readonly hubOrder?: readonly string[]; };
 export type PictureNode = { readonly id: string; readonly name: string; readonly kind: string; readonly summary: string; readonly status: PictureStatus; readonly memberships: readonly { id: string; name: string; }[]; readonly relations: readonly { id: string; name: string; label: string; }[]; };
@@ -17,6 +18,30 @@ export function pictureMapConfig(value: unknown): PictureMapConfig | undefined {
 }
 export function buildPictureMap(nodes: readonly Node[], edges: readonly Edge[], facets: readonly Facet[], config?: PictureMapConfig, relationshipLabels: Readonly<Record<string, string>> = {}): PictureMap {
     if (config && !nodes.some(node => config?.hubKinds.includes(node.kind))) config = undefined;
+    if (!config && nodes.some(n => ['module', 'file'].includes(n.kind))) {
+        const structural = buildStructuralMap(nodes, edges);
+        const byId = new Map(nodes.map(n => [n.id, n]));
+        const roots = structural.stages.filter(s => structural.rootStageIds.includes(s.id));
+        const owner = (id: string) => roots.filter(s => id === s.id || s.id === 'folder:.' || id.startsWith(s.id + '/')).sort((a, b) => b.id.length - a.id.length)[0];
+        const hubs = roots.map(s => ({
+            id: s.id, name: s.title, nodes: (s.descendantNodeIds ?? s.nodeIds).flatMap(id => {
+                const n = byId.get(id); if (!n) return [];
+                const path = n.sources[0]?.path ?? n.name;
+                const folder = path.includes('/') ? path.slice(0, path.lastIndexOf('/')) : '.';
+                if (owner('folder:' + folder)?.id !== s.id) return [];
+                return [{ id: n.id, name: n.name, kind: n.kind, summary: '', status: 'unknown' as const, memberships: [{ id: s.id, name: s.title }], relations: [] }];
+            })
+        }));
+        const grouped = new Map<string, { source: string; target: string; files: Set<string>; }>();
+        for (const flow of structural.flows) {
+            const source = owner(flow.source)?.id, target = owner(flow.target)?.id;
+            if (!source || !target || source === target) continue;
+            const key = JSON.stringify([source, target]), value = grouped.get(key) ?? { source, target, files: new Set<string>() };
+            for (const file of flow.sourceFiles ?? []) value.files.add(file);
+            grouped.set(key, value);
+        }
+        return { hubs, edges: [...grouped.values()].map(e => ({ source: e.source, target: e.target, count: e.files.size, descriptions: [...e.files].sort() })), statusLabels: { present: '실행 있음', absent: '설계만 있음', unknown: '상태 미판정' } };
+    }
     const byId = new Map(nodes.map(node => [node.id, node]));
     const labels = { present: '실행 있음', absent: '설계만 있음', unknown: '상태 미판정', ...config?.statusLabels };
     const hubs = new Map<string, { id: string; name: string; nodes: PictureNode[]; }>();
