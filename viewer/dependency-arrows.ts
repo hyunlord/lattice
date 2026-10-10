@@ -6,6 +6,9 @@ type ArrowScene = { readonly view: DependencyView; readonly host: HTMLElement; r
 function labelSegment(points: readonly Point[]): { readonly center: Point; readonly vertical: boolean; readonly length: number; } | undefined {
     return points.slice(1).flatMap((point, index) => { const before = points[index]; return before ? [{ center: { x: (point.x + before.x) / 2, y: (point.y + before.y) / 2 }, vertical: point.x === before.x, length: Math.hypot(point.x - before.x, point.y - before.y) }] : []; }).sort((a, b) => b.length - a.length)[0];
 }
+export function dependencyLabelFitsSegment(size: { readonly width: number; readonly height: number; }, segment: { readonly vertical: boolean; readonly length: number; }): boolean {
+    return (segment.vertical ? size.height : size.width) + 8 <= segment.length;
+}
 export function drawDependencyArrows(scene: ArrowScene): readonly DependencyPair[] {
     const { host, graph, flows, boxes, view } = scene; const bounds = host.getBoundingClientRect(); if (!bounds.width) return [];
     graph.replaceChildren(); graph.dataset['unrouted'] = '0'; graph.dataset['unplacedLabels'] = '0'; graph.dataset['sharedFallbacks'] = '0'; graph.dataset['unroutedPairs'] = ''; graph.setAttribute('viewBox', `0 0 ${bounds.width} ${bounds.height}`); graph.setAttribute('width', String(bounds.width)); graph.setAttribute('height', String(bounds.height));
@@ -65,16 +68,13 @@ export function drawDependencyArrows(scene: ArrowScene): readonly DependencyPair
     const selectedRoutes = selectDependencyRoutes(rendered);
     for (const route of rendered) if (!selectedRoutes.includes(route)) route.path.remove();
     const labelHalos: Obstacle[] = []; const labeledFlows: DependencyPair[] = [];
-    for (const { flow, points, routeId, path, start, end } of selectedRoutes) {
+    for (const { flow, points, routeId, path } of selectedRoutes) {
         const segment = labelSegment(points); if (!segment) continue;
         const text = svg('text'); text.classList.add('lm-flow-label', 'lm-dependency-label'); text.dataset['route'] = routeId; text.dataset['source'] = flow.source; text.dataset['target'] = flow.target; text.dataset['count'] = String(flow.count ?? 0);
         text.setAttribute('x', String(segment.center.x)); text.setAttribute('y', String(segment.center.y)); text.setAttribute('text-anchor', 'middle'); text.setAttribute('dominant-baseline', 'central'); const actualSources = dependencyPairSources(view, flow);
         const attribution = actualSources.join('·');
         text.textContent = flow.reverseCount ? `${attribution} → ${flow.count ?? 0} · ← ${flow.reverseCount}` : `${attribution} · ${flow.count ?? 0}`;
-        if (segment.vertical) text.textContent = flow.reverseCount ? `→ ${flow.count ?? 0} · ← ${flow.reverseCount}` : String(flow.count ?? 0);
         graph.append(text); text.dataset['sourceMembers'] = JSON.stringify(actualSources);
-        const available = segment.length || Math.max(0, Math.hypot(end.x - start.x, end.y - start.y) - 8);
-        if (text.getComputedTextLength() + 8 > available) text.textContent = flow.reverseCount ? `→ ${flow.count ?? 0} · ← ${flow.reverseCount}` : String(flow.count ?? 0);
         const candidates = points.slice(1).flatMap((point, index) => {
             const before = points[index]; if (!before) return [];
             const length = Math.hypot(point.x - before.x, point.y - before.y);
@@ -82,7 +82,7 @@ export function drawDependencyArrows(scene: ArrowScene): readonly DependencyPair
         }).sort((a, b) => b.length - a.length);
         const position = (): Obstacle | undefined => {
             for (const candidate of candidates) {
-                if (text.getComputedTextLength() + 8 > candidate.length) continue;
+                if (!dependencyLabelFitsSegment(text.getBBox(), candidate)) continue;
                 text.setAttribute('x', String(candidate.center.x)); text.setAttribute('y', String(candidate.center.y));
                 text.removeAttribute('transform');
                 const rect = text.getBoundingClientRect(); const halo = { x: rect.left - bounds.left - 3, y: rect.top - bounds.top - 3, width: rect.width + 6, height: rect.height + 6 };

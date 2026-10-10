@@ -333,3 +333,10 @@ test('scope switching keeps only interpretations for that exact structural scope
     assert.deepEqual(structuralScopeModel(model).structuralDependencyGroups.map(group => group.id), ['production']);
     assert.deepEqual(structuralScopeModel(model, 'all').structuralDependencyGroups.map(group => group.id), ['all']);
 });
+
+test('horizontal member labels fit vertical routes by height, without discarding source names', async () => {
+    const { dependencyLabelFitsSegment } = await import('../viewer/dependency-arrows.js');
+    assert.equal(dependencyLabelFitsSegment({ width: 140, height: 14 }, { vertical: true, length: 43 }), true);
+    assert.equal(dependencyLabelFitsSegment({ width: 140, height: 14 }, { vertical: false, length: 43 }), false);
+    assert.equal(dependencyLabelFitsSegment({ width: 140, height: 14 }, { vertical: true, length: 20 }), false);
+});
