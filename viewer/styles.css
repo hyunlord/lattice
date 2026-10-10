@@ -90,3 +90,27 @@
 .node-history summary,.detail-findings summary { display:list-item; }
 
 .neighbors summary { display:list-item; }
+
+/* Human-facing views share the workbench tokens. */
+.record-gallery { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,20rem),1fr)); gap:var(--space-4); }
+.record-card { min-width:0; overflow-wrap:anywhere; }
+.record-card h2 { margin-top:0; }
+.record-field { display:grid; gap:var(--space-1); margin-block:var(--space-3); }
+.record-tag { display:flex; flex-wrap:wrap; gap:var(--space-2); margin-block:var(--space-2); }
+.human-value ul { padding-left:var(--space-4); margin:0; }
+.human-value dl { margin:0; }
+.human-value dd { margin-left:var(--space-4); }
+.home-entries article { padding-block:var(--space-3); border-bottom:1px solid var(--border); }
+.home-entries article > a { font-size:var(--type-section); font-weight:600; }
+.text-matrix td { min-width:12rem; max-width:20rem; white-space:normal; text-align:left; }
+.text-matrix .matrix-cell { white-space:normal; text-align:left; overflow-wrap:anywhere; }
+.text-matrix thead th { position:sticky; top:0; z-index:2; background:var(--surface); }
+.text-matrix tbody th, .status-table tbody th { position:sticky; left:0; background:var(--surface); z-index:1; }
+.text-matrix thead th:first-child { left:0; z-index:3; }
+.table-region:has(.text-matrix) { max-height:70vh; overflow:auto; }
+
+.focused-matrix { min-width:0; width:100%; table-layout:fixed; }
+.focused-matrix th:first-child { width:36%; min-width:0; }
+.focused-matrix td, .focused-matrix th { min-width:0; max-width:none; overflow-wrap:anywhere; }
+.text-matrix .matrix-cell { font-family:inherit; padding:var(--space-2); justify-content:flex-start; }
+.focused-matrix caption { white-space:normal; }

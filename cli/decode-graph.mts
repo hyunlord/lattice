@@ -27,7 +27,7 @@ function finding(value: unknown): Finding {
 function view(value: unknown): View {
     const item = record(value);
     const description = optional(item['description'], text);
-    return { id: text(item['id']), type: choice(item['type'], ['matrix', 'cycle', 'distribution', 'table']), label: text(item['label']), query: jsonObject(item['query']), sources: list(item['sources'], source), ...(description === undefined ? {} : { description }) };
+    return { id: text(item['id']), type: choice(item['type'], ['matrix', 'cycle', 'distribution', 'table', 'gallery', 'status', 'graph']), label: text(item['label']), query: jsonObject(item['query']), sources: list(item['sources'], source), ...(description === undefined ? {} : { description }) };
 }
 function snapshot(value: unknown): Snapshot {
     const item = record(value);

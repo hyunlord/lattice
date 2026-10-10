@@ -119,6 +119,17 @@ export async function renderHome(container: HTMLElement, context: HomeContext): 
     for (const [count, label] of [[context.nodes.length, '노드'], [new Set(context.nodes.map(node => node.kind)).size, '종류'], [context.findings.length, '발견']] as const) {
         const item = element('span'); item.append(element('strong', String(count)), document.createTextNode(label)); summary.append(item);
     }
-    container.append(summary); const columns = element('div', '', 'two-column home-overview'); columns.append(inventory(context), distributions(context)); container.append(columns, findings(context));
+    container.append(summary);
+    const curated = context.presentation.home;
+    if (curated) {
+        const entries = section('지도에서 알아보기'); entries.classList.add('home-entries'); const ids = new Set(context.nodes.map(node => node.id));
+        for (const id of curated.viewIds) {
+            const view = context.graph.views.find(view => view.id === id); const inputs = view?.query['nodeIds']; if (!view || !Array.isArray(inputs) || !inputs.some(id => typeof id === 'string' && ids.has(id))) continue;
+            const entry = element('article'); entry.append(anchor(view.label, '#/views/' + encodeURIComponent(id) + '?' + new URLSearchParams({ origin: 'lens', layer: context.layer })));
+            if (view.description) entry.append(element('p', view.description)); entries.append(entry);
+        }
+        container.append(entries); if (curated.inventory !== false) container.append(inventory(context)); if (curated.distributions === true) container.append(distributions(context)); if (curated.findings !== false) container.append(findings(context)); return;
+    }
+    const columns = element('div', '', 'two-column home-overview'); columns.append(inventory(context), distributions(context)); container.append(columns, findings(context));
     const changes = section('최근 변화 집중도'); container.append(changes); await recent(changes, context);
 }

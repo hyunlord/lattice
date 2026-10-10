@@ -23,6 +23,21 @@ facets:
     kinds: [module]
     value: {op: count, value: {op: get, from: node, path: [imports]}}
 views:
+  - id: module-gallery
+    type: gallery
+    label: Source module cards
+    description: Browse source language and declared imports, then follow a dependency to its source. Static declarations do not prove runtime execution.
+    query: {kinds: [module]}
+    edgeKinds: [imports]
+    columns:
+      - id: language
+        label: Source language
+        role: badge
+        value: {op: get, from: node, path: [language]}
+      - id: imports
+        label: Declared imports
+        role: badge
+        value: {op: count, value: {op: get, from: node, path: [imports]}}
   - id: import-distribution
     type: distribution
     label: Imports per module
@@ -56,6 +71,18 @@ findings:
 presentation:
   name: Charter & Kin
   description: Read-only TypeScript module map. Static imports show source dependencies, not gameplay or runtime acceptance. Tracked src TypeScript modules and manifest accepted-reference metadata are selected. Asset approval is the manifest claim; images are not visually validated by this map.
+  home:
+    viewIds: [module-gallery, imports, import-distribution]
+    findings: true
+    inventory: true
+    distributions: false
+  detail:
+    summaryFields:
+      - {label: Source language, path: [language]}
+    relationships:
+      - {label: Declared dependencies, edgeKinds: [imports], direction: outgoing}
+      - {label: Imported by, edgeKinds: [imports], direction: incoming}
+    rawAttributes: collapsed
   facets:
     language: {label: Source language}
     importCount: {label: Declared imports}

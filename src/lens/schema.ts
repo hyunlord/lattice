@@ -38,14 +38,14 @@ export function validateLens(definition: ExtractedRecord): void {
     };
     const view: Check = (value, pointer) => {
         const rule = s.record(value, pointer);
-        const common = { id: s.id, type: s.choice(["matrix", "distribution", "cycle", "table"]), label: s.text, description: s.text, query };
+        const common = { id: s.id, type: s.choice(["matrix", "distribution", "cycle", "table", "gallery", "status", "graph"]), label: s.text, description: s.text, query };
         switch (rule["type"]) {
-            case "cycle": s.shape({ ...common, edgeKinds: texts }, ["id", "label"])(value, pointer); break;
-            case "table": s.shape({ ...common, columns: s.keyed(s.shape({ id: s.id, label: s.text, value: expression }, ["id", "label", "value"])) }, ["id", "label", "columns"])(value, pointer); break;
+            case "graph": case "cycle": s.shape({ ...common, edgeKinds: texts }, ["id", "label"])(value, pointer); break;
+            case "gallery": case "status": case "table": s.shape({ ...common, ...(rule["type"] === "table" ? {} : { edgeKinds: texts }), columns: s.keyed(s.shape({ id: s.id, label: s.text, value: expression, role: s.choice(["summary", "badge", "status"]) }, ["id", "label", "value"])) }, ["id", "label", "columns"])(value, pointer); break;
             case "distribution": s.shape({ ...common, groupBy: expression }, ["id", "label", "groupBy"])(value, pointer); break;
             case "matrix":
-                if (rule["edgeKinds"] === undefined) s.shape({ ...common, row: expression, column: expression }, ["id", "label", "row", "column"])(value, pointer);
-                else s.shape({ ...common, edgeKinds: texts }, ["id", "label"])(value, pointer);
+                if (rule["edgeKinds"] === undefined) s.shape({ ...common, cellDisplay: s.choice(["count", "label"]), row: expression, column: expression }, ["id", "label", "row", "column"])(value, pointer);
+                else s.shape({ ...common, cellDisplay: s.choice(["count", "label"]), edgeKinds: texts }, ["id", "label"])(value, pointer);
                 break;
             default: s.fail(`${pointer}/type`, "Invalid view type");
         }
@@ -63,6 +63,6 @@ export function validateLens(definition: ExtractedRecord): void {
         codeLinks: s.list(s.shape({ id: s.id, query, values: expression, language: s.id, files: texts, selectors: s.list(selector) }, ["id", "values", "language", "files", "selectors"])),
         facets, edges: s.keyed(edges), views: s.keyed(view),
         findings: s.keyed(s.shape({ id: s.id, query, severity: s.choice(["info", "warning", "error"]), basis: s.choice(["computed", "authored-interpretation", "source-support"]), metrics: s.entries(expression), template: s.text, gate, intent: expression, implementation: expression }, ["id", "metrics", "template"])),
-        presentation: s.shape({ name: s.text, description: s.text, defaultLayer: s.text, layers: layer, kinds: s.keyed(presentationKind), facets: s.entries(s.shape({ label: s.text, values: s.entries(s.text) })) }),
+        presentation: s.shape({ home: s.shape({ viewIds: texts, findings: s.boolean, inventory: s.boolean, distributions: s.boolean }, ["viewIds"]), detail: s.shape({ summaryFields: s.list(s.shape({ label: s.text, path: texts }, ["label", "path"])), relationships: s.list(s.shape({ label: s.text, edgeKinds: texts, direction: s.choice(["incoming", "outgoing", "both"]) }, ["label", "edgeKinds", "direction"])), rawAttributes: s.choice(["collapsed", "expanded"]) }), name: s.text, description: s.text, defaultLayer: s.text, layers: layer, kinds: s.keyed(presentationKind), facets: s.entries(s.shape({ label: s.text, values: s.entries(s.text) })) }),
     }, ["schemaVersion", "name", "kinds"])(definition.node.attributes, "");
 }

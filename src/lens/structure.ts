@@ -110,7 +110,7 @@ export function materializeViews(context: LensContext, edges: readonly Edge[]): 
         if (!id || ids.has(id)) throw new GraphInputError(pointer, "Duplicate or empty view ID");
         ids.add(id);
         const type = rule["type"];
-        if (type !== "matrix" && type !== "cycle" && type !== "distribution" && type !== "table") throw new GraphInputError(pointer, "Invalid view type");
+        if (type !== "matrix" && type !== "cycle" && type !== "distribution" && type !== "table" && type !== "gallery" && type !== "status" && type !== "graph") throw new GraphInputError(pointer, "Invalid view type");
         const sources = new Map<string, Source>();
         const selected = context.records.map(record => ({ record, env: environment(context, record) })).filter(({ env }) => matchesQuery(object(rule["query"] ?? {}), env));
         const nodeIds = selected.map(({ record }) => record.node.id);
@@ -121,18 +121,18 @@ export function materializeViews(context: LensContext, edges: readonly Edge[]): 
         };
         let data: JsonObject;
         switch (type) {
-            case "cycle": {
+            case "graph": case "cycle": {
                 const kinds = rule["edgeKinds"] === undefined ? undefined : array(rule["edgeKinds"]);
                 const selectedIds = new Set(nodeIds);
                 const links = edges.filter(edge => selectedIds.has(edge.source) && selectedIds.has(edge.target) && (!kinds || kinds.includes(edge.kind)));
                 for (const edge of links) for (const source of edge.sources) sources.set(canonicalJson(source), source);
                 data = { edgeIds: links.map(edge => edge.id) }; break;
             }
-            case "table": {
+            case "gallery": case "status": case "table": {
                 const columns = array(rule["columns"]).map(value => object(value));
                 const names = columns.map(column => string(column["id"]));
                 if (new Set(names).size !== names.length) throw new GraphInputError(pointer, "Duplicate table column ID");
-                data = { columns: columns.map(column => ({ id: string(column["id"]), label: string(column["label"]) })), rows: selected.map(({ record, env }) => ({ nodeId: record.node.id, values: Object.fromEntries(columns.map(column => [string(column["id"]), evaluateValue(column["value"], env)])) })) }; break;
+                data = { columns: columns.map(column => ({ id: string(column["id"]), label: string(column["label"]), ...(column["role"] === undefined ? {} : { role: string(column["role"]) }) })), rows: selected.map(({ record, env }) => ({ nodeId: record.node.id, values: Object.fromEntries(columns.map(column => [string(column["id"]), evaluateValue(column["value"], env)])) })) }; break;
             }
             case "distribution": case "matrix": {
                 if (type === "matrix" && rule["edgeKinds"] !== undefined) {
@@ -164,6 +164,6 @@ export function materializeViews(context: LensContext, edges: readonly Edge[]): 
         }
         for (const { env } of selected) for (const source of env.sources.values()) sources.set(canonicalJson(source), source);
         const lensSource = sourceAt(context.definition, pointer); sources.set(canonicalJson(lensSource), lensSource);
-        return { id, type, label: string(rule["label"]), ...(rule["description"] === undefined ? {} : { description: string(rule["description"]) }), query: { nodeIds, ...data }, sources: [...sources.values()] };
+        return { id, type, label: string(rule["label"]), ...(rule["description"] === undefined ? {} : { description: string(rule["description"]) }), query: { nodeIds, ...data, ...((type === "gallery" || type === "status") && rule["edgeKinds"] !== undefined ? { edgeKinds: rule["edgeKinds"] } : {}), ...(type === "matrix" && rule["cellDisplay"] !== undefined ? { cellDisplay: rule["cellDisplay"] } : {}) }, sources: [...sources.values()] };
     });
 }

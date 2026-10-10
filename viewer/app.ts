@@ -1,5 +1,6 @@
 import type { Node as GraphNode, Facet, Finding, Source, Snapshot } from '../dist/core/model.js';
 import { renderExplore } from './explore.js';
+import { humanValue } from './views-records.js';
 import { renderViews } from './views.js';
 import { renderList } from './list.js';
 import { renderHome } from './home.js';
@@ -154,11 +155,24 @@ function detail(id: string, version: number) {
     pageHeading(node.name, kindLabel(node.kind) + (layerOf(node) ? ' · ' + layerLabel(layerOf(node)) : '')); main.append(el('code', node.id, 'detail-id'));
     const actions = el('div', undefined, 'actions'); const status = el('span', '', 'meta'); status.setAttribute('role', 'status');
     actions.append(link('이웃 탐색', routeHref('/explore', { from: id, mode: 'neighbors', hops: '1', direction: 'both' })), button('링크 복사', async () => { try { await navigator.clipboard.writeText(location.href); status.textContent = '링크를 복사했습니다.'; } catch { status.textContent = '주소 표시줄의 URL을 복사하세요.'; } }), status); main.append(actions);
-    const chips = el('div', undefined, 'facet-list'); for (const facet of facets.get(id) || []) chips.append(link(facetLabel(facet.key) + ': ' + valueLabel(facet.key, facet.value), listHref({ facet: facet.key, value: valueKey(facet.value), valueType: 'json' }), 'badge')); main.append(chips);
+    const human = presentation.detail;
+    if (human) {
+        const context = { nodes: graph.nodes, nodeHref };
+        const summary = section('요약');
+        for (const field of human.summaryFields) { let value: unknown = { ...node.attributes, facet: Object.fromEntries((facets.get(id) ?? []).map(facet => [facet.key, facet.value])) }; for (const part of field.path) value = value !== null && typeof value === 'object' ? Reflect.get(value, part) : undefined; if (value === undefined || value === null || value === '') continue; const row = el('div', undefined, 'record-field'); row.append(el('strong', field.label), humanValue(value, context)); summary.append(row); }
+        main.append(summary);
+        for (const relation of human.relationships) {
+            const matches = graph.edges.filter(edge => relation.edgeKinds.includes(edge.kind) && ((relation.direction !== 'incoming' && edge.source === id) || (relation.direction !== 'outgoing' && edge.target === id)));
+            if (!matches.length) continue; const block = section(relation.label); const list = el('ul', undefined, 'neighbors');
+            for (const edge of matches) { const target = edge.source === id ? edge.target : edge.source, row = el('li'); row.append(link(nodes.get(target)?.name ?? target, nodeHref(target))); const text = edge.attributes?.['label']; if (text && text !== edge.kind) row.append(el('p', text)); list.append(row); }
+            block.append(list); main.append(block);
+        }
+    }
+    const chips = el('div', undefined, 'facet-list'); for (const facet of facets.get(id) || []) chips.append(link(facetLabel(facet.key) + ': ' + valueLabel(facet.key, facet.value), listHref({ facet: facet.key, value: valueKey(facet.value), valueType: 'json' }), 'badge')); if (!human) main.append(chips);
     const provenance = section('원본 출처'); provenance.append(sources(node.sources)); main.append(provenance);
     const attributes = section('속성'); const values = el('dl', undefined, 'attributes');
     for (const [key, value] of Object.entries(node.attributes)) { const row = el('div', undefined, 'attribute'); row.append(el('dt', key)); const dd = el('dd'); dd.append(typeof value === 'object' && value !== null ? el('pre', JSON.stringify(value, null, 2)) : el('span', display(value))); row.append(dd); values.append(row); }
-    attributes.append(values); if (!Object.keys(node.attributes).length) attributes.append(empty('기록된 속성이 없습니다.')); main.append(attributes);
+    attributes.append(values); if (!Object.keys(node.attributes).length) attributes.append(empty('기록된 속성이 없습니다.')); if (human?.rawAttributes === 'collapsed') { const raw = el('details', undefined, 'section'); raw.append(el('summary', '원시 속성 및 분류'), chips, attributes); main.append(raw); } else main.append(attributes);
     const related = graph.findings.filter(finding => finding.targetIds.includes(id));
     const findings = section('관련 발견', 'panel section detail-findings'); for (const finding of related) findings.append(findingView(finding, true)); if (!related.length) findings.append(empty('이 노드를 대상으로 한 발견은 없습니다.')); main.append(findings);
     const edges = graph.edges.filter(edge => edge.source === id || edge.target === id);
@@ -187,7 +201,7 @@ function detail(id: string, version: number) {
 function views(id: string, params: URLSearchParams) {
     const visibleIds = new Set(visibleNodes.map(node => node.id));
     disposeScreen = renderViews(main, {
-        views: graph.views, nodes: visibleNodes,
+        views: graph.views, nodes: visibleNodes, allNodes: graph.nodes, allEdges: graph.edges, layerLabel,
         edges: graph.edges.filter(edge => visibleIds.has(edge.source) && visibleIds.has(edge.target)),
         id, params, heading: pageHeading, kindLabel, nodeHref, sources,
         href: (viewId, values) => routeHref('/views/' + encodeURIComponent(viewId), values),

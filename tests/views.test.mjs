@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { automaticViews, distributionFields, normalizeView } from '../viewer/views-model.js';
+import { automaticViews, distributionFields, normalizeView } from '../dist/query/views-model.js';
 const source = { path: 'records.json', line: 1, pointer: '', contentHash: 'hash' };
 const node = (id, kind, attributes = {}) => ({ id, kind, name: id, attributes, sources: [source], contentHash: id });
 const edge = (id, from, to, directed = true) => ({ id, source: from, target: to, directed, kind: 'uses', field: '', sources: [source] });
@@ -62,4 +62,17 @@ test('all four templates consume actual lens materialization outputs', async () 
     assert.equal(projections.find(item => item.type === 'distribution').buckets.length, 2);
     assert.equal(projections.find(item => item.type === 'cycle').edges.length, 1);
     assert.equal(projections.find(item => item.type === 'table').rows.length, 2);
+});
+
+test('human views retain column roles and cross-layer row references while filtering rows', () => {
+    for (const type of ['gallery', 'status']) {
+        const result = normalizeView(view(type, { nodeIds: ['a', 'b'], edgeKinds: ['uses'], columns: [{ id: 'support', label: 'Support', role: 'status' }], rows: [{ nodeId: 'a', values: { support: ['outside-layer'] } }, { nodeId: 'b', values: { support: [] } }] }), [nodes[0]], []);
+        assert.equal(result.type, type); assert.equal(result.columns[0].role, 'status');
+        assert.deepEqual(result.rows, [{ nodeId: 'a', values: { support: ['outside-layer'] } }]);
+        assert.deepEqual(result.edgeKinds, ['uses']);
+    }
+    const graph = normalizeView(view('graph', { nodeIds: ['a', 'b'], edgeIds: ['ab'] }), nodes, [edge('ab', 'a', 'b')]);
+    assert.equal(graph.type, 'graph'); assert.equal(graph.edges.length, 1);
+    const matrix = normalizeView(view('matrix', { nodeIds: [], cellDisplay: 'label', cells: [] }), [], []);
+    assert.equal(matrix.cellDisplay, 'label');
 });
