@@ -47,3 +47,12 @@ test('an intermediate display step keeps the final partner as context', () => {
     const result = buildLoopMap(nodes, [edge('a', 'input', 'a', 'x'), edge('b', 'input', 'b', 'x')], [], { kinds: [], loop }, 'example');
     assert.deepEqual(result.nodes[0].relationGroups[0].items, [{ id: 'x', via: [{ id: 'b', name: 'b' }], note: '+ b' }]);
 });
+
+test('structural focus starts on the most connected module and leaves configured views unchanged', () => {
+    const nodes = [node('isolated', 'module', {}, 'source-manifest.csv'), node('a', 'module', {}, 'src/a.ts'), node('b', 'module', {}, 'src/b.ts'), node('c', 'module', {}, 'src/c.ts')];
+    const edges = [edge('a', 'imports', 'a', 'b'), edge('b', 'imports', 'a', 'c'), edge('duplicate', 'imports', 'a', 'b')];
+    const automatic = buildLoopMap(nodes, edges, [], { kinds: [] }, 'example');
+    assert.equal(automatic.defaultFocus, 'a');
+    const configured = buildLoopMap(nodes, edges, [], { kinds: [], loop: loopConfig({ stages: [{ id: 's', title: 'Modules', kinds: ['module'] }] }) }, 'example');
+    assert.equal(configured.defaultFocus, undefined);
+});

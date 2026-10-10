@@ -47,3 +47,18 @@ test('declaration descriptions do not masquerade as folder purpose', () => {
     const model = buildStructuralMap([module], []);
     assert.equal(model.stages[0].summary, '공개 이름: Run');
 });
+
+test('thirteen sibling folders preserve connected chunks and aggregate only the remainder', () => {
+    const nodes = Array.from({ length: 13 }, (_, i) => node(`m${i}`, `src/feature${i}/index.ts`));
+    const edges = Array.from({ length: 7 }, (_, i) => edge(`e${i}`, `m${i}`, `m${i + 1}`));
+    const model = buildStructuralMap(nodes, edges);
+    assert.equal(model.rootStageIds.length, 9);
+    assert(model.rootStageIds.includes('folder:src'));
+    assert(model.flows.some(flow => model.rootStageIds.includes(flow.source) && model.rootStageIds.includes(flow.target)));
+    assert.equal(model.rootStageIds.filter(id => /feature[0-7]$/.test(id)).length, 8);
+    const visible = model.stages.filter(s => model.rootStageIds.includes(s.id));
+    const coveredChildren = new Set(visible.filter(s => s.id !== 'folder:src').flatMap(s => s.descendantNodeIds));
+    const effective = visible.flatMap(s => s.id === 'folder:src' ? s.descendantNodeIds.filter(id => !coveredChildren.has(id)) : s.descendantNodeIds);
+    assert.equal(effective.length, nodes.length);
+    assert.equal(new Set(effective).size, nodes.length);
+});

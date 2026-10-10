@@ -31,3 +31,19 @@ test('an off-page dependency stays in the selected chunk explanation', () => {
     assert.equal(view.flows.length, 0);
     assert.deepEqual(view.stages[0].outgoing, [{ name: 'folder:src/feature9', description: '1개 파일이 사용: index.ts' }]);
 });
+test('dense maps disclose a selected neighborhood and can restore every dependency', async () => {
+    const { displayedDependencyFlows } = await import('../viewer/dependency-layout.js');
+    const flows = Array.from({ length: 18 }, (_, index) => ({ source: `source${index}`, target: 'foundation', sourceFiles: [`source${index}.ts`] }));
+    const view = { stages: [], flows };
+    assert.equal(displayedDependencyFlows(view, 'source4', false).length, 1);
+    assert.equal(displayedDependencyFlows(view, 'source4', true).length, 18);
+    assert.equal(displayedDependencyFlows({ stages: [], flows: flows.slice(0, 7) }, 'source4', false).length, 7);
+});
+test('label bands leave a free routing cell between a rounded label and the next card', async () => {
+    const { dependencyBandHeight } = await import('../viewer/dependency-layout.js');
+    assert.equal(dependencyBandHeight(5, 1100), 88);
+    const label = { x: 310, y: 158, width: 92, height: 20 };
+    const card = { x: 170, y: 206, width: 368, height: 102 };
+    const points = orthogonalRoute({ x: 416, y: 168 }, { x: 352, y: 192 }, { width: 1100, height: 500, obstacles: [label, card] });
+    assert.ok(points.length > 1);
+});

@@ -16,7 +16,13 @@ export function buildRepository(options: Options, historical?: RepositoryReader,
     if (options.output !== undefined) throw new Error('build takes --root and --lens, not an output directory');
     const { root } = options;
     const { repository, lens, lensInput, coverage, selected, codeInputs, fingerprint, graft: graftObservation } = observed ?? observeRepository(options, historical);
-    const sourceLink: SourceLink = source => !repository.dirty && repository.remoteUrl && repository.commit ? { ...source, revision: repository.commit, url: `${repository.remoteUrl}/blob/${repository.commit}/${source.path.split('/').map(encodeURIComponent).join('/')}#L${source.line}` } : source;
+    const sourceUrls = new Map<string, string>();
+    const sourceLink: SourceLink = source => {
+        if (repository.dirty || !repository.remoteUrl || !repository.commit) return source;
+        let url = sourceUrls.get(source.path);
+        if (url === undefined) { url = `${repository.remoteUrl}/blob/${repository.commit}/${source.path.split('/').map(encodeURIComponent).join('/')}`; sourceUrls.set(source.path, url); }
+        return { ...source, revision: repository.commit, url: `${url}#L${source.line}` };
+    };
     const cache = extractionCache(root, options.cacheDir);
     const { records, documents, modules, files, inputs: recordInputs, diagnostics } = collectInputs({ selected, lens, sourceLink, cache });
     const graft = buildGraft(graftObservation, selected, sourceLink);

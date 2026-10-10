@@ -51,13 +51,6 @@ export function buildStructuralMap(nodes: readonly Node[], edges: readonly Edge[
     for (const leaf of leaves) { let p = parent(leaf); while (p !== '.') { directories.add(p); p = parent(p); } }
     if (leaves.size > 9 || leaves.has('.')) directories.add('.');
     const roots = new Set(leaves);
-    while (roots.size > 9) {
-        const candidates = [...directories].map(path => ({ path, descendants: [...roots].filter(p => within(p, path)) })).filter(c => c.descendants.length > 1).sort((a, b) => (b.path === '.' ? 0 : b.path.split('/').length) - (a.path === '.' ? 0 : a.path.split('/').length) || a.descendants.length - b.descendants.length || a.path.localeCompare(b.path));
-        const choice = candidates[0];
-        if (!choice) break;
-        for (const path of choice.descendants) roots.delete(path);
-        roots.add(choice.path);
-    }
     const byId = new Map(nodes.map(n => [n.id, n]));
     const grouped = new Map<string, { source: string; target: string; files: Set<string>; }>();
     for (const edge of edges) {
@@ -69,6 +62,16 @@ export function buildStructuralMap(nodes: readonly Node[], edges: readonly Edge[
         value.files.add(file); grouped.set(key, value);
     }
     const flows: LoopFlow[] = [...grouped.values()].map(e => ({ source: `folder:${e.source}`, target: `folder:${e.target}`, count: e.files.size, sourceFiles: [...e.files].sort(), label: `${e.files.size}개 파일 사용` }));
+    const connectivity = (path: string): number => flows.filter(e => e.source === `folder:${path}` || e.target === `folder:${path}`).reduce((sum, e) => sum + (e.count ?? 0), 0);
+    while (roots.size > 9) {
+        const candidates = [...directories].map(path => ({ path, descendants: [...roots].filter(p => p !== path && within(p, path)) })).filter(c => c.descendants.length > (roots.has(c.path) ? 0 : 1)).sort((a, b) => (b.path === '.' ? 0 : b.path.split('/').length) - (a.path === '.' ? 0 : a.path.split('/').length) || a.descendants.length - b.descendants.length || a.path.localeCompare(b.path));
+        const choice = candidates[0];
+        if (!choice) break;
+        const needed = roots.size - 9 + (roots.has(choice.path) ? 0 : 1);
+        const folded = choice.descendants.sort((a, b) => connectivity(a) - connectivity(b) || a.localeCompare(b)).slice(0, needed);
+        for (const path of folded) roots.delete(path);
+        roots.add(choice.path);
+    }
     const owner = (id: string) => [...roots].filter(p => within(id.slice(7), p)).sort((a, b) => b.length - a.length)[0];
     const degree = (path: string): number => flows.filter(e => owner(e.source) !== owner(e.target) && (owner(e.source) === path || owner(e.target) === path)).reduce((sum, e) => sum + (e.count ?? 0), 0);
     const orderedRoots = [...roots].sort((a, b) => degree(b) - degree(a) || a.localeCompare(b));

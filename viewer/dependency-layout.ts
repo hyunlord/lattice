@@ -70,3 +70,12 @@ export function dependencyLevels(view: DependencyView): readonly { readonly stag
     }
     return groups.sort((a, b) => a.level - b.level);
 }
+
+export function displayedDependencyFlows(view: DependencyView, selected: string | undefined, showAll: boolean): readonly LoopFlow[] {
+    return view.flows.length <= 12 || showAll ? view.flows : view.flows.filter(flow => flow.source === selected || flow.target === selected);
+}
+
+export function dependencyBandHeight(flowCount: number, width: number): number {
+    const columns = Math.max(1, Math.floor((width - 48) / 144));
+    return flowCount ? 48 + Math.ceil(flowCount / columns) * 40 : 16;
+}
