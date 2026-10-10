@@ -16,7 +16,7 @@ function failure(id: RequestId, code: number, message: string): Promise<void> {
     return send({ jsonrpc: '2.0', id, error: { code, message } });
 }
 
-/** Serve a fixed read-only tool catalog using the legacy MCP stdio lifecycle. */
+/** Serve a fixed tool catalog with per-tool write annotations using the legacy MCP stdio lifecycle. */
 export async function runStdio(handler: Handler): Promise<void> {
     let version: string | undefined;
     let initialized = false;

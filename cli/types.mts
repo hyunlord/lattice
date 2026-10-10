@@ -8,6 +8,7 @@ export interface Options {
     viewerUrl?: string | undefined;
     json?: boolean;
     noGlobal?: boolean;
+    noLens?: boolean;
     force?: boolean;
 }
 export interface RepositoryReader {

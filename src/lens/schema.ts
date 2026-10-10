@@ -50,6 +50,17 @@ export function validateLens(definition: ExtractedRecord): void {
             default: s.fail(`${pointer}/type`, "Invalid view type");
         }
     };
+    const loopGroup = s.shape({ title: s.text, description: s.text, kinds: texts }, ["title", "kinds"]);
+    const loop = s.shape({
+        defaultStage: s.text, subtitle: s.text,
+        title: s.text, lead: s.text, center: s.shape({ title: s.text, description: s.text }, ["title", "description"]), statusFacet: s.text, statusLabels: s.shape({ present: s.text, absent: s.text, unknown: s.text }), catalogKinds: texts, summaryFields: texts,
+        kindStyles: s.entries(s.shape({ shape: s.choice(["diamond", "square", "circle", "pill", "star", "triangle", "flag", "target", "hexagon", "house"]), color: s.choice(["blue", "green", "amber", "red", "purple", "gray", "teal"]) })),
+        stages: s.list(s.shape({ id: s.id, title: s.text, summary: s.text, unit: s.text, kinds: texts, systemIds: texts, groupBy: s.text }, ["id", "title", "kinds"])),
+        flows: s.list(s.shape({ source: s.id, target: s.id, label: s.text, tone: s.choice(["normal", "warning"]), auxiliary: s.boolean }, ["source", "target", "label"])),
+        strips: s.list(loopGroup), places: loopGroup,
+        relationGroups: s.list(s.shape({ label: s.text, side: s.choice(["left", "right"]), kinds: texts, steps: s.list(s.shape({ edgeKinds: texts, direction: s.choice(["in", "out"]) }, ["edgeKinds", "direction"])) }, ["label", "side", "steps"]))
+    });
+    const mediaReference: Check = (value, pointer) => { if (typeof value === "string") s.text(value, pointer); else s.shape({ path: s.text, alt: s.text, frame: s.shape({ x: s.number, y: s.number, width: s.number, height: s.number }, ["x", "y", "width", "height"]) }, ["path"])(value, pointer); };
     const presentationKind = s.shape({ id: s.id, label: s.text, columns: texts, hidden: s.boolean }, ["id"]);
     const layer: Check = (value, pointer) => {
         if (Array.isArray(value)) s.keyed(s.shape({ id: s.id, label: s.text }, ["id"]))(value, pointer);
@@ -63,6 +74,6 @@ export function validateLens(definition: ExtractedRecord): void {
         codeLinks: s.list(s.shape({ id: s.id, query, values: expression, language: s.id, files: texts, selectors: s.list(selector) }, ["id", "values", "language", "files", "selectors"])),
         facets, edges: s.keyed(edges), views: s.keyed(view),
         findings: s.keyed(s.shape({ id: s.id, query, severity: s.choice(["info", "warning", "error"]), basis: s.choice(["computed", "authored-interpretation", "source-support"]), metrics: s.entries(expression), template: s.text, gate, intent: expression, implementation: expression }, ["id", "metrics", "template"])),
-        presentation: s.shape({ pictureMap: s.shape({ hubKinds: texts, membershipEdgeKinds: texts, influenceEdgeKinds: texts, primaryFacet: s.text, statusFacet: s.text, summaryFields: texts, hubOrder: texts, statusLabels: s.shape({ present: s.text, absent: s.text, unknown: s.text }) }, ["hubKinds", "membershipEdgeKinds", "influenceEdgeKinds"]), home: s.shape({ viewIds: texts, findings: s.boolean, inventory: s.boolean, distributions: s.boolean }, ["viewIds"]), detail: s.shape({ summaryFields: s.list(s.shape({ label: s.text, path: texts }, ["label", "path"])), relationships: s.list(s.shape({ label: s.text, edgeKinds: texts, direction: s.choice(["incoming", "outgoing", "both"]) }, ["label", "edgeKinds", "direction"])), rawAttributes: s.choice(["collapsed", "expanded"]) }), name: s.text, description: s.text, defaultLayer: s.text, layers: layer, kinds: s.keyed(presentationKind), facets: s.entries(s.shape({ label: s.text, values: s.entries(s.text) })) }),
+        presentation: s.shape({ loop, media: s.shape({ field: s.text, nodes: s.entries(mediaReference) }), pictureMap: s.shape({ hubKinds: texts, membershipEdgeKinds: texts, influenceEdgeKinds: texts, primaryFacet: s.text, statusFacet: s.text, summaryFields: texts, hubOrder: texts, statusLabels: s.shape({ present: s.text, absent: s.text, unknown: s.text }) }, ["hubKinds", "membershipEdgeKinds", "influenceEdgeKinds"]), home: s.shape({ viewIds: texts, findings: s.boolean, inventory: s.boolean, distributions: s.boolean }, ["viewIds"]), detail: s.shape({ summaryFields: s.list(s.shape({ label: s.text, path: texts }, ["label", "path"])), relationships: s.list(s.shape({ label: s.text, edgeKinds: texts, direction: s.choice(["incoming", "outgoing", "both"]) }, ["label", "edgeKinds", "direction"])), rawAttributes: s.choice(["collapsed", "expanded"]) }), name: s.text, description: s.text, defaultLayer: s.text, layers: layer, kinds: s.keyed(presentationKind), facets: s.entries(s.shape({ label: s.text, values: s.entries(s.text) })) }),
     }, ["schemaVersion", "name", "kinds"])(definition.node.attributes, "");
 }

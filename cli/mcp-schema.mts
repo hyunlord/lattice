@@ -1,5 +1,5 @@
 import { canonicalJson } from '../dist/core/canonical.js';
-export const toolNames = ['lattice_overview', 'lattice_find', 'lattice_node', 'lattice_trace', 'lattice_matrix', 'lattice_findings', 'lattice_diff', 'lattice_freshness'] as const;
+export const toolNames = ['lattice_overview', 'lattice_find', 'lattice_node', 'lattice_trace', 'lattice_matrix', 'lattice_findings', 'lattice_diff', 'lattice_freshness', 'lattice_interpretation_context', 'lattice_write_interpretation', 'lattice_draft_lens'] as const;
 export type ToolName = typeof toolNames[number];
 export function isToolName(value: unknown): value is ToolName { return toolNames.some(name => name === value); }
 export class McpArgumentError extends Error {
@@ -11,6 +11,9 @@ const paging = { offset: { type: 'integer', minimum: 0, maximum: 10000000, defau
 const scope = { layer: { type: 'string', description: 'Exact layer; empty string selects unlayered nodes. Omission uses the viewer default layer.' } } as const;
 const filters = { ...scope, kind: text, q: text, tags: { type: 'array', items: text, maxItems: 50, description: 'Every tag must occur in node attributes.tags.' }, facets: { type: 'object', additionalProperties: true, description: 'AND filters of facet keys to exact typed JSON values; 1 differs from "1".' } } as const;
 const definitions = {
+    lattice_interpretation_context: { description: 'Read module and folder targets, exact source hashes and source excerpts for agent-authored summaries; includes fresh/stale notes.', properties: { ...paging }, required: [] },
+    lattice_write_interpretation: { description: 'Write an AI-attributed summary into .lattice/notes only. Sources must exactly match current target hashes. No source code is modified. Supply exactly one of record or records (1 to 500); batches validate before writing individual atomic files.', properties: { records: { type: 'array', minItems: 1, maxItems: 500, items: { type: 'object' } }, record: { type: 'object', description: 'schemaVersion=1, targetId, summary (one or two sentences), author, sources [{path,contentHash,line}]' } }, required: [] },
+    lattice_draft_lens: { description: 'Validate and save a draft lens without activating it. Replacing an existing draft requires its SHA-256 expectedHash.', properties: { yaml: { type: 'string', maxLength: 1000000 }, expectedHash: text }, required: ['yaml'] },
     lattice_overview: { description: 'Summarize the same visible layer as the web home: counts, kind distribution, findings and views, with source provenance.', properties: { ...scope, ...paging }, required: [] },
     lattice_find: { description: 'Find visible nodes using AND-combined kind, text, tags and typed facet filters. Stable ID order and bounded pagination.', properties: { ...filters, ...paging }, required: [] },
     lattice_node: { description: 'Read one exact node ID, its source evidence, facets, findings and incoming/outgoing/undirected connections. Each collection is paginated independently.', properties: { ...scope, ...paging, id: text }, required: ['id'] },
@@ -20,14 +23,18 @@ const definitions = {
     lattice_diff: { description: 'Compare the graph at a Git revision to the current repository graph and return semantic changes with source evidence.', properties: { ...scope, ...paging, ref: text }, required: ['ref'] },
     lattice_freshness: { description: 'Check cache freshness against repository inputs and lens without inventing a current result from stale data.', properties: {}, required: [] },
 } satisfies Record<ToolName, { description: string; properties: Record<string, unknown>; required: string[]; }>;
-export const toolDefinitions = toolNames.map(name => ({ name, description: definitions[name].description, inputSchema: { type: 'object', properties: definitions[name].properties, required: definitions[name].required, additionalProperties: false }, annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false } }));
+export const toolDefinitions = toolNames.map(name => ({ name, description: definitions[name].description, inputSchema: { type: 'object', properties: definitions[name].properties, required: definitions[name].required, additionalProperties: false, ...(name === 'lattice_write_interpretation' ? { oneOf: [{ required: ['record'] }, { required: ['records'] }] } : {}) }, annotations: { readOnlyHint: !['lattice_write_interpretation', 'lattice_draft_lens'].includes(name), destructiveHint: false, idempotentHint: true, openWorldHint: false } }));
 export function parseArguments(name: ToolName, input: unknown): Record<string, unknown> {
     if (!object(input)) throw new McpArgumentError('arguments', 'expected an object');
     const definition = definitions[name];
+    if (name === 'lattice_write_interpretation' && Object.hasOwn(input, 'record') === Object.hasOwn(input, 'records')) throw new McpArgumentError('arguments', 'supply exactly one of record or records');
     for (const required of definition.required) if (!(required in input)) throw new McpArgumentError(required, 'required');
     for (const [key, value] of Object.entries(input)) {
         if (!Object.hasOwn(definition.properties, key)) throw new McpArgumentError(key, 'unknown argument');
         switch (key) {
+            case 'records': if (!Array.isArray(value) || !value.length || value.length > 500 || !value.every(object)) throw new McpArgumentError(key, 'expected 1 to 500 interpretation objects'); break;
+            case 'record': if (!object(value)) throw new McpArgumentError(key, 'expected interpretation object'); break;
+            case 'yaml': if (typeof value !== 'string' || !value.length || value.length > 1000000) throw new McpArgumentError(key, 'expected bounded YAML text'); break;
             case 'offset': case 'limit': case 'hops': {
                 const minimum = key === 'limit' ? 1 : 0, maximum = key === 'limit' ? 200 : key === 'hops' ? 10 : 10000000;
                 if (typeof value !== 'number' || !Number.isInteger(value) || value < minimum || value > maximum) throw new McpArgumentError(key, `expected integer ${minimum}..${maximum}`);

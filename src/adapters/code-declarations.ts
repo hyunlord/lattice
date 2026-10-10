@@ -1,0 +1,80 @@
+import type { JsonObject } from "../core/canonical.js";
+import type { CodeToken } from "./code-tokens.js";
+import { codeTokens } from "./code-tokens.js";
+import { nativeTokens } from "./native-tokens.js";
+import type { SourceInput } from "./types.js";
+
+export function declarationTokens(text: string, language: string): readonly CodeToken[] {
+    const normalized = text.replace(/\r\n|\r/gu, "\n");
+    return (["python", "gdscript"].includes(language) ? codeTokens(normalized, true) : ["javascript", "typescript"].includes(language) ? codeTokens(normalized, false) : nativeTokens(normalized, language === "rust", { language })).filter(token => token.kind !== "string" && token.kind !== "newline");
+}
+function close(tokens: readonly CodeToken[], start: number, opening: string, ending: string): number {
+    let depth = 0;
+    for (let index = start; index < tokens.length; index++) {
+        if (tokens[index]?.value === opening) depth++;
+        else if (tokens[index]?.value === ending && --depth === 0) return index;
+    }
+    return start;
+}
+export function codeDeclarations(input: SourceInput, language: string): readonly JsonObject[] {
+    const supported = ["csharp", "rust", "go", "java", "kotlin", "swift", "gdscript", "javascript", "typescript", "python"];
+    if (!supported.includes(language)) return [];
+    const tokens = declarationTokens(input.text, language), lines = input.text.split(/\r\n|\r|\n/u), declarations: JsonObject[] = [];
+    const typeWords = ["class", "class_name", "struct", "interface", "enum", "trait", "protocol", "record", "union", "typealias"];
+    let functionEnd = -1;
+    for (let index = 0; index < tokens.length; index++) {
+        if (index <= functionEnd) continue;
+        const token = tokens[index];
+        if (!token || token.kind !== "word") continue;
+        let nameIndex = index + 1, kind = "";
+        if (typeWords.includes(token.value) || (language === "kotlin" && token.value === "object")) {
+            kind = "type";
+            if (["record", "enum"].includes(token.value) && ["class", "struct"].includes(tokens[nameIndex]?.value ?? "")) nameIndex++;
+        } else if (token.value === "type" && ["go", "typescript", "rust"].includes(language)) kind = "type";
+        else if (["fn", "fun", "func", "def", "function"].includes(token.value)) {
+            kind = "function";
+            if (language === "go" && tokens[nameIndex]?.value === "(") nameIndex = close(tokens, nameIndex, "(", ")") + 1;
+            if (tokens[nameIndex]?.value === "*") nameIndex++;
+            if (language === "kotlin") {
+                let cursor = nameIndex;
+                while (cursor < tokens.length && !["(", "{", ";", "="].includes(tokens[cursor]?.value ?? "")) cursor++;
+                if (tokens[cursor]?.value === "(" && tokens[cursor - 1]?.kind === "word") nameIndex = cursor - 1;
+            }
+        } else if (["csharp", "java"].includes(language) && tokens[index + 1]?.value === "(" && tokens[index - 1]?.kind === "word" && !["new", "return", "throw", "await"].includes(tokens[index - 1]?.value ?? "")) {
+            kind = "function"; nameIndex = index;
+        }
+        const name = tokens[nameIndex];
+        if (!kind || name?.kind !== "word" || ["if", "for", "while", "switch", "catch", "using", "lock"].includes(name.value)) continue;
+        let end = nameIndex;
+        if (["python", "gdscript"].includes(language)) {
+            const indent = /^\s*/u.exec(lines[token.line - 1] ?? "")?.[0].length ?? 0;
+            let lastLine = token.line;
+            for (let line = token.line; line < lines.length; line++) {
+                const source = lines[line] ?? "";
+                if (!source.trim() || source.trim().startsWith("#")) continue;
+                if ((/^\s*/u.exec(source)?.[0].length ?? 0) <= indent) break;
+                lastLine = line + 1;
+            }
+            while ((tokens[end + 1]?.line ?? Infinity) <= lastLine) end++;
+        } else {
+            let cursor = nameIndex + 1;
+            if (kind === "function") {
+                while (cursor < tokens.length && !["(", ";", "{"].includes(tokens[cursor]?.value ?? "")) cursor++;
+                if (tokens[cursor]?.value !== "(") continue;
+                cursor = close(tokens, cursor, "(", ")") + 1;
+            }
+            while (cursor < tokens.length && !["{", ";", "="].includes(tokens[cursor]?.value ?? "") && (tokens[cursor]?.line ?? 0) <= token.line + 8) {
+                if ((tokens[cursor]?.line ?? 0) > token.line && [...typeWords, "fn", "fun", "func", "def", "function"].includes(tokens[cursor]?.value ?? "")) break;
+                cursor++;
+            }
+            if (tokens[cursor]?.value === "{") end = close(tokens, cursor, "{", "}");
+            else if ([";", "="].includes(tokens[cursor]?.value ?? "")) end = cursor;
+            else end = nameIndex;
+            if (kind === "function" && tokens[cursor]?.value === ";" && !["csharp", "java", "typescript", "rust"].includes(language)) continue;
+        }
+        declarations.push({ name: name.value, kind, line: token.line, endLine: tokens[end]?.line ?? token.line });
+        if (kind === "function") functionEnd = end;
+        index = nameIndex;
+    }
+    return declarations;
+}

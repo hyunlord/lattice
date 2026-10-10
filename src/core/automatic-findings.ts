@@ -23,19 +23,35 @@ function uniqueSources(sources: readonly Source[]): Source[] {
         .sort(([left], [right]) => compare(left, right)).map(([, source]) => source);
 }
 
-function ownersOf(source: Source, nodes: readonly NodeDraft[]): NodeDraft[] {
-    const candidates = nodes.flatMap(node => node.sources.filter(item => item.path === source.path).map(item => ({ node, source: item })));
-    const pointers = candidates.filter(item => item.source.pointer !== "" && (source.pointer === item.source.pointer || source.pointer.startsWith(`${item.source.pointer}/`)));
-    if (pointers.length) {
-        const length = Math.max(...pointers.map(item => item.source.pointer.length));
-        return pointers.filter(item => item.source.pointer.length === length).map(item => item.node);
+type SourceOwners = { pointers: Map<string, NodeDraft[]>; spans: { node: NodeDraft; source: Source; }[]; structural: NodeDraft[]; };
+function indexOwners(nodes: readonly NodeDraft[]): Map<string, SourceOwners> {
+    const paths = new Map<string, SourceOwners>();
+    for (const node of nodes) for (const source of node.sources) {
+        let owners = paths.get(source.path);
+        if (!owners) { owners = { pointers: new Map(), spans: [], structural: [] }; paths.set(source.path, owners); }
+        const pointer = source.pointer;
+        if (pointer !== "") {
+            const group = owners.pointers.get(pointer) ?? [];
+            group.push(node);
+            owners.pointers.set(pointer, group);
+        } else if (structuralKinds.has(node.kind)) owners.structural.push(node);
+        else owners.spans.push({ node, source });
     }
-    const spans = candidates.filter(item => !structuralKinds.has(item.node.kind) && item.source.pointer === "" && item.source.line <= source.line && (item.source.endLine ?? item.source.line) >= (source.endLine ?? source.line));
+    return paths;
+}
+function ownersOf(source: Source, paths: ReadonlyMap<string, SourceOwners>): readonly NodeDraft[] {
+    const owners = paths.get(source.path);
+    if (!owners) return [];
+    for (let pointer = source.pointer; pointer !== ""; pointer = pointer.slice(0, Math.max(0, pointer.lastIndexOf("/")))) {
+        const matches = owners.pointers.get(pointer);
+        if (matches) return matches;
+    }
+    const spans = owners.spans.filter(item => item.source.line <= source.line && (item.source.endLine ?? item.source.line) >= (source.endLine ?? source.line));
     if (spans.length) {
         const length = Math.min(...spans.map(item => (item.source.endLine ?? item.source.line) - item.source.line));
         return spans.filter(item => (item.source.endLine ?? item.source.line) - item.source.line === length).map(item => item.node);
     }
-    return candidates.filter(item => structuralKinds.has(item.node.kind) && item.source.pointer === "").map(item => item.node);
+    return owners.structural;
 }
 
 function finding(rule: string, layer: Layer, targets: readonly string[], metrics: JsonObject, message: string, sources: readonly Source[], digest: Digest): Finding {
@@ -71,9 +87,10 @@ export function automaticFindings(nodes: readonly NodeDraft[], edges: readonly E
         incident.get(to.id)?.add(edge.id);
     }
     const owned: OwnedDiagnostic[] = [];
+    const sourceOwners = indexOwners(nodes);
     const uniqueDiagnostics = new Map(diagnostics.filter(item => brokenCodes.has(item.code)).map(item => [canonicalJson(item), item]));
     for (const [, diagnostic] of [...uniqueDiagnostics].sort(([left], [right]) => compare(left, right))) {
-        if (diagnostic.source) owned.push({ diagnostic, owners: ownersOf(diagnostic.source, nodes) });
+        if (diagnostic.source) owned.push({ diagnostic, owners: ownersOf(diagnostic.source, sourceOwners) });
     }
     const results: Finding[] = [];
     for (const [layer, group] of [...layers].sort(([left], [right]) => compare(canonicalJson(left), canonicalJson(right)))) {

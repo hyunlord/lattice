@@ -33,7 +33,7 @@ export function queryGraph(name: ToolName, args: Record<string, unknown>, graph:
             const findings = scope.findings.filter(finding => (!args['severity'] || finding.severity === args['severity']) && (!args['rule'] || finding.ruleId === args['rule']) && (!args['node'] || finding.targetIds.includes(String(args['node']))) && (!args['gate'] || (finding.gate?.status ?? 'none') === args['gate']));
             return { ...summary, ...page(findings.map(finding => ({ ...finding, metrics: pageJson(finding.metrics, args), targetIds: page(finding.targetIds, args), sources: page(finding.sources, args) })), args), link: link('/home', { layer: scope.layer }) };
         }
-        case 'lattice_diff': case 'lattice_freshness': throw new McpArgumentError('name', `${name} requires repository I/O`);
+        case 'lattice_interpretation_context': case 'lattice_write_interpretation': case 'lattice_draft_lens': case 'lattice_diff': case 'lattice_freshness': throw new McpArgumentError('name', `${name} requires repository I/O`);
         default: { const exhaustive: never = name; throw new McpArgumentError('name', String(exhaustive)); }
     }
 }

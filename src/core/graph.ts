@@ -82,7 +82,7 @@ function cloneValidated<T>(value: T, copies = new WeakMap<object, T>()): T {
         const descriptor = Object.getOwnPropertyDescriptor(value, key);
         if (descriptor && "value" in descriptor) {
             const child: unknown = descriptor.value;
-            Object.defineProperty(result, key, { value: cloneValidated(child, copies), enumerable: true, configurable: true, writable: true });
+            Reflect.set(result, key, cloneValidated(child, copies));
         }
     }
     return result;

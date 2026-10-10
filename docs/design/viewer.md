@@ -106,3 +106,7 @@ Measure text/non-text contrast and run color-deficiency simulations for category
 ## Curated human presentation
 
 A lens may select viewIds, findings, inventory and distributions for the detailed home disclosure; the picture map is the initial surface. Empty-layer views are hidden; direct links offer the layers containing their inputs. Detail summaryFields use attribute paths (or `facet` followed by a facet key), and relationship groups provide human labels and directions. Raw attributes can be collapsed. Row membership follows the selected layer; referenced identities and relationships resolve against the complete graph. Program presence and static support remain distinct from observed execution.
+
+## Approved L7 three-view home
+
+The user-approved [loop reference](l7-prototype.html) and [generic contract](loop-views.md) supersede the initial island home. Loop, focused relationships, and catalog are the first surface; existing engineering views remain under disclosures. The preserved reference is not an embedded production screenshot or dataset.

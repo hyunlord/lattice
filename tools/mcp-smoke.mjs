@@ -27,7 +27,7 @@ export async function verifyMcp(cli, root) {
     const initialized=await send('initialize',{protocolVersion:'2025-11-25',capabilities:{},clientInfo:{name:'installed-package-smoke',version:'1'}});
     assert.equal(initialized.protocolVersion,'2025-11-25');
     child.stdin.write(JSON.stringify({jsonrpc:'2.0',method:'notifications/initialized'})+'\n');
-    const catalog=await send('tools/list',{}); assert.equal(catalog.tools.length,8);
+    const catalog=await send('tools/list',{}); assert.equal(catalog.tools.length,11);
     const argumentsByName={lattice_overview:{},lattice_find:{kind:'data-record'},lattice_node:{id:'a'},lattice_trace:{from:'a',to:'b'},lattice_matrix:{},lattice_findings:{},lattice_diff:{ref:'HEAD'},lattice_freshness:{}};
     const hashes=new Set();
     for (const [name,args] of Object.entries(argumentsByName)) {

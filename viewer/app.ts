@@ -1,5 +1,5 @@
-import { renderPictureMap } from './picture-map.js';
-import { buildPictureMap } from './picture-map-model.js';
+import { renderLoopMap } from './loop-map.js';
+import { buildLoopMap } from './loop-map-model.js';
 import type { Node as GraphNode, Facet, Finding, Source, Snapshot } from '../dist/core/model.js';
 import { renderExplore } from './explore.js';
 import { humanValue } from './views-records.js';
@@ -149,18 +149,12 @@ function overview(version: number) {
     });
 }
 function home() {
-    const header = el('header', undefined, 'picture-home-header');
-    const title = el('h1', graph.repository.name + ' 지도'); title.tabIndex = -1;
-    const actions = el('div', undefined, 'actions');
     const evidence = el('section', undefined, 'picture-evidence'); evidence.hidden = true;
     const details = el('nav', undefined, 'picture-deeper'); details.hidden = true; details.setAttribute('aria-label', '자세히');
-    const toggle = (label: string, area: HTMLElement) => { const control = button(label, () => { area.hidden = !area.hidden; control.setAttribute('aria-expanded', String(!area.hidden)); }); control.setAttribute('aria-expanded', 'false'); return control; };
-    actions.append(toggle('자세히', details), toggle('근거 보기', evidence));
     for (const [label, path] of [['발견과 요약', '/overview'], ['목록', '/list'], ['행렬과 상태판', '/views'], ['관계 탐색', '/explore'], ['변화', '/changes']]) if (label && path) details.append(link(label, routeHref(path)));
     pageHeading('근거', undefined, evidence);
-    header.append(title, actions); main.append(header, details, evidence);
-    const map = el('div', undefined, 'picture-home-map'); main.append(map);
-    disposeScreen = renderPictureMap(map, buildPictureMap(visibleNodes, graph.edges, graph.facets, presentation.pictureMap, Object.fromEntries((presentation.detail?.relationships ?? []).flatMap(relation => relation.edgeKinds.map(kind => [kind, relation.label])))), { kindLabel, nodeHref });
+    const map = el('div', undefined, 'picture-home-map'); main.append(map, details, evidence);
+    disposeScreen = renderLoopMap(map, buildLoopMap(visibleNodes, graph.edges, graph.facets, presentation, graph.repository.name), { kindLabel, nodeHref, onEvidence: () => { evidence.hidden = !evidence.hidden; if (!evidence.hidden) evidence.scrollIntoView({ block: 'nearest' }); }, onDetails: () => { details.hidden = !details.hidden; if (!details.hidden) details.scrollIntoView({ block: 'nearest' }); } });
 }
 function selectControl(label: string, name: string, values: readonly (readonly string[])[], selected: string) {
     const wrapper = el('label', label); const select = el('select'); select.name = name;

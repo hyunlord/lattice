@@ -38,3 +38,10 @@ view as consumer content catalogs. Cards show source language, import counts,
 and declared dependency links. Human-first detail labels the incoming/outgoing
 imports and keeps raw attributes in a disclosure. No game-specific renderer or
 source modification is involved.
+
+The approved loop presentation also uses this lens as a generic example.
+`presentation.loop.stages: []` selects automatic folder stages; an empty flow
+list never fabricates a gameplay cycle between source modules and asset claims.
+The same stage, focus and catalog screens use static import relationships,
+unknown runtime status, and an accepted-reference strip. The original repository
+remains read-only and source provenance remains in the detailed workbench.

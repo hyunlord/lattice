@@ -16,6 +16,7 @@ export async function serve(options: Options) {
     if (options.output !== undefined || options.force) throw new Error('serve accepts --root, --lens, --cache-dir, --port and --json');
     const cache = cacheDirectory(options.root, options.cacheDir);
     const generations = new Map<string, Map<string, string>>();
+    const mediaFiles = new Map<string, { bytes: Buffer; mimeType: string; }>();
     const clients = new Set<ServerResponse>();
     const assets = new Map(readdirSync(join(packageRoot, 'viewer')).filter(file => file.endsWith('.js') || file.endsWith('.css')).map(file => [`/${file}`, readFileSync(join(packageRoot, 'viewer', file))]));
     assets.set('/__lattice/live-client.js', readFileSync(join(packageRoot, 'bin/live-client.js')));
@@ -45,6 +46,7 @@ export async function serve(options: Options) {
                 generation++; builds++;
                 generations.set(String(generation), next.files);
                 graphHash = next.graph.hash;
+                for (const file of next.result.media.files) mediaFiles.set('/' + file.path, file);
                 while (generations.size > 4) { const oldest = generations.keys().next().value; if (oldest === undefined) break; generations.delete(oldest); }
                 fingerprint = observed.fingerprint;
                 const recovered = error !== null;
@@ -76,6 +78,8 @@ export async function serve(options: Options) {
             const config = `<meta name="lattice-generation" content="${generation}"><script type="module" src="/__lattice/live-client.js"></script>`;
             send(200, 'text/html; charset=utf-8', template.replace('</head>', `${config}</head>`)); return;
         }
+        const mediaFile = mediaFiles.get(url.pathname);
+        if (mediaFile) { send(200, mediaFile.mimeType, mediaFile.bytes); return; }
         const asset = assets.get(url.pathname);
         if (asset) { send(200, url.pathname.endsWith('.css') ? 'text/css' : 'text/javascript', asset); return; }
         if (error && !url.searchParams.has('generation') && ['/graph.json', '/presentation.json', '/snapshots.json'].includes(url.pathname)) { send(503, 'application/json', JSON.stringify({ error })); return; }

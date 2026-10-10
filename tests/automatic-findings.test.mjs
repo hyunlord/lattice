@@ -68,3 +68,12 @@ test('automatic findings remain deterministic under input order and rank only te
     assert.equal(hubs.id, find(changed, 'highest-degree-hubs', null).id);
     assert.ok(hubs.id.startsWith('automatic:'));
 });
+
+test('diagnostic ownership indexes source paths and exact pointer ancestors instead of rescanning every record', () => {
+    let pointerReads = 0;
+    const nodes = Array.from({ length: 300 }, (_, index) => node(`row-${index}`, null, [new Proxy(source(`/rows/${index}`), { get(target, key, receiver) { if (key === "pointer") pointerReads++; return Reflect.get(target, key, receiver); } })]));
+    const diagnostics = nodes.map((_, index) => ({ code: 'unresolved-reference', value: `missing-${index}`, source: source(`/rows/${index}/targetId`) }));
+    const findings = lattice.automaticFindings(nodes, [], diagnostics, digest);
+    assert.equal(find(findings, 'broken-references', null).targetIds.length, 300);
+    assert.ok(pointerReads < 5000, `ownership read ${pointerReads} record pointers for 300 diagnostics`);
+});

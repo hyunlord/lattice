@@ -2,7 +2,7 @@
 
 A repository-neutral system map for people and agents. Deterministic extraction creates one graph for a static browser viewer and MCP tools; declarative lenses add repository-specific meaning.
 
-**Status: L1 core/CLI and L2 generic viewer are verified; L3 MCP and agent setup are available.** All six web screens share graph evidence with eight stdio tools. L4 reusable CI automation and L5 final acceptance remain pending. See the [acceptance ledger](docs/review/acceptance.md).
+**Status: L1 core/CLI and L2 generic viewer are verified; L3 MCP and agent setup are available.** All six web screens share graph evidence with eleven stdio tools. L4 reusable CI automation and L5 final acceptance remain pending. See the [acceptance ledger](docs/review/acceptance.md).
 
 - [Original v0.1 brief](docs/design/brief-v0.1.md)
 - [Architecture and lens contract](docs/design/lattice-v0.md)
@@ -48,7 +48,7 @@ See [module extraction evidence and limits](docs/review/l1-modules.md).
 
 ## Query from agents
 
-Run `lattice mcp --root /path/to/repository` for stdio MCP, or use `init` to configure installed clients. The eight tools inspect overview, filtered nodes, detail, paths, matrices, findings, Git differences and freshness. Each query checks actual file contents before serving graph evidence. [Protocol, pagination, viewer links and setup](docs/design/mcp.md) describe the contract.
+Run `lattice mcp --root /path/to/repository` for stdio MCP, or use `init` to configure installed clients. Eight query tools inspect overview, filtered nodes, detail, paths, matrices, findings, Git differences and freshness. Three additional interpretation tools read source-bound module/folder context, write AI notes, and save an inactive lens draft. Each query checks actual file contents before serving graph evidence. See [agent notes and optional external CI summarization](docs/review/l7-interpretation.md). [Protocol, pagination, viewer links and setup](docs/design/mcp.md) describe the contract.
 
 ## Automate maps in GitHub Actions
 

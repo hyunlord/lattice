@@ -69,6 +69,43 @@ findings:
     template: '{count} source modules declare at least 10 imports.'
     implementation: Static import declarations include external modules. This review threshold is descriptive, not a quality gate or runtime-use claim.
 presentation:
+  loop:
+    title: Source structure and dependencies
+    lead: Read the selected source modules and authored asset references. Static dependencies do not
+      establish runtime behavior.
+    center:
+      title: Repository
+      description: Read-only source
+    catalogKinds:
+      - module
+      - accepted-asset
+    stages: []
+    flows: []
+    strips:
+      - title: Accepted asset references
+        description: Authored paths and sizes; independent visual acceptance is not implied.
+        kinds:
+          - accepted-asset
+    places:
+      title: Source files
+      kinds: []
+    relationGroups:
+      - label: Imported by
+        side: left
+        kinds:
+          - module
+        steps:
+          - edgeKinds:
+              - imports
+            direction: in
+      - label: Declared dependencies
+        side: right
+        kinds:
+          - module
+        steps:
+          - edgeKinds:
+              - imports
+            direction: out
   name: Charter & Kin
   description: Read-only TypeScript module map. Static imports show source dependencies, not gameplay or runtime acceptance. Tracked src TypeScript modules and manifest accepted-reference metadata are selected. Asset approval is the manifest claim; images are not visually validated by this map.
   home:
