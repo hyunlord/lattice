@@ -1,4 +1,5 @@
-import { interpretationContext, writeInterpretation, writeInterpretations, writeDraftLens } from './interpretation.mjs';
+import { object } from './types.mjs';
+import { interpretationContext, compactInterpretation, writeInterpretation, writeInterpretations, writeDraftLens } from './interpretation.mjs';
 import { performance } from 'node:perf_hooks';
 import type { Options } from './types.mjs';
 import { FreshRepository } from './freshness.mjs';
@@ -24,10 +25,10 @@ export function createMcpHandler(options: Options) {
         const started = performance.now();
         const fresh = await service.ensureFreshAsync();
         let result: object;
-        if (name === 'lattice_interpretation_context') result = interpretationContext(options.root, fresh.graph, typeof args['offset'] === 'number' ? args['offset'] : 0, typeof args['limit'] === 'number' ? args['limit'] : 50);
+        if (name === 'lattice_interpretation_context') result = interpretationContext(options.root, fresh.graph, typeof args['offset'] === 'number' ? args['offset'] : 0, typeof args['limit'] === 'number' ? args['limit'] : 50, { ...(args['scope'] === 'all' || args['scope'] === 'folders' || args['scope'] === 'overview' ? { scope: args['scope'] } : {}), ...(args['overviewScope'] === 'all' || args['overviewScope'] === 'production' ? { overviewScope: args['overviewScope'] } : {}), ...(typeof args['compact'] === 'boolean' ? { compact: args['compact'] } : {}) });
         else if (name === 'lattice_write_interpretation') {
-            if (Array.isArray(args['records'])) { const records = writeInterpretations(options.root, fresh.graph, args['records']); result = { updated: records.length, records }; }
-            else result = writeInterpretation(options.root, fresh.graph, args['record']);
+            if (Array.isArray(args['records'])) { const inputs = args['records'], records = writeInterpretations(options.root, fresh.graph, inputs); result = { updated: records.length, records: records.map((note, index) => object(inputs[index]) && Object.hasOwn(inputs[index], 'sourceSetToken') ? compactInterpretation(note) : note) }; }
+            else { const note = writeInterpretation(options.root, fresh.graph, args['record']); result = object(args['record']) && Object.hasOwn(args['record'], 'sourceSetToken') ? compactInterpretation(note) : note; }
         }
         else if (name === 'lattice_draft_lens') result = writeDraftLens(options.root, fresh.graph, stringArg(args, 'yaml') ?? '', stringArg(args, 'expectedHash'));
         else if (name === 'lattice_freshness') result = { graphHash: fresh.graph.hash, repository: fresh.graph.repository, link: link('/home') };

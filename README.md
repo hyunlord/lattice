@@ -2,7 +2,7 @@
 
 A repository-neutral system map for people and agents. Deterministic extraction creates one graph for a static browser viewer and MCP tools; declarative lenses add repository-specific meaning.
 
-**Status: L1–L7 technical delivery is available; L8 readability work is in progress.** The browser opens a map with focused-item and catalog views, backed by eleven MCP tools. Reusable CI publishes consumer maps and PR differences; L5 uses the approved warm-response and full-build budgets. L7 was reviewed as partial, so L8 restores prototype details and improves unfamiliar-repository maps before maintenance. See the [acceptance ledger](docs/review/acceptance.md) and [L7 evidence](docs/review/l7-loop-experience.md).
+**Status: L1–L7 technical delivery and the bs-mobile prototype corrections are available; L8 unfamiliar-repository readability remains under review.** The browser opens a map with focused-item and catalog views, backed by eleven MCP tools. Reusable CI publishes consumer maps and PR differences; L5 uses the approved warm-response and full-build budgets. L8 now requires physical folder grouping, truthful role descriptions, connected dependency lines and separate zero-config / external-agent comprehension checks before maintenance. See the [acceptance ledger](docs/review/acceptance.md) and [L8 evidence](docs/review/l8-readable-repositories.md).
 
 - [Original v0.1 brief](docs/design/brief-v0.1.md)
 - [Architecture and lens contract](docs/design/lattice-v0.md)

@@ -26,6 +26,11 @@ test('init wires agents alongside Graft and remains byte stable without home wri
     assert.equal(config.mcpServers.lattice.command, process.execPath);
     assert.deepEqual(config.mcpServers.lattice.args.slice(-3), ['mcp', '--root', f.root]);
     assert.match(first[0], /lattice_overview/); assert.match(first[3], /lattice_diff/);
+    for (const instructions of [first[0], first[3]]) {
+        assert.match(instructions, /scope="overview", compact=true, limit=9/);
+        assert.match(instructions, /sourceSetToken/);
+        assert.match(instructions, /overviewScope="all"/);
+    }
     assert.equal(f.run('--no-global').status, 0);
     assert.deepEqual(paths.map(path => readFileSync(join(f.root, path), 'utf8')), first);
     assert.equal(existsSync(join(f.home, '.codex')), false);

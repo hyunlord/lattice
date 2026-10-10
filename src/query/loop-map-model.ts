@@ -1,8 +1,9 @@
+import { plain } from '../adapters/markdown-inline.js';
 import type { Node, Edge, Facet } from '../core/model.js';
 import type { LoopMap, LoopNode, LoopStage, LoopInterpretation, LoopRelationGroup, LoopItem } from './loop-map-types.js';
 import type { LoopConfig } from './loop-config.js';
 import type { MediaManifest } from './media-model.js';
-import { buildStructuralOverview, productionSource, structuralSummary, structuralCategoryLabel } from './structural-map-model.js';
+import { buildStructuralOverview, structuralSummary, structuralCategoryLabel } from './structural-map-model.js';
 export type LoopPresentation = {
     name?: string; loop?: LoopConfig;
     kinds: readonly { id: string; label?: string; }[];
@@ -19,7 +20,7 @@ export function buildLoopMap(nodes: readonly Node[], edges: readonly Edge[], fac
     const kindName = (kind: string) => presentation.kinds.find(k => k.id === kind)?.label ?? ({ module: '모듈', file: '파일', package: '패키지', type: '타입', function: '함수', class: '클래스', method: '메서드', interface: '인터페이스', enum: '열거형', struct: '구조체', trait: '트레이트' }[kind] ?? kind);
     const display = (key: string, value: unknown): string => typeof value === 'string' ? presentation.facets?.[key]?.values?.[value] ?? value : Array.isArray(value) ? value.map(v => display(key, v)).join(' · ') : typeof value === 'number' || typeof value === 'boolean' ? String(value) : '';
     const summary = (n: Node) => (config?.summaryFields ?? ['cardText', 'description', 'concept']).map(k => n.attributes[k]).find((v): v is string => typeof v === 'string') ?? '';
-    const interpretation = (id: string): LoopInterpretation | undefined => { const note = presentation.interpretations?.find(n => n.targetId === id); return note ? { summary: note.summary, stale: note.status === 'stale', evidence: note.sources } : undefined; };
+    const interpretation = (id: string): LoopInterpretation | undefined => { const note = presentation.interpretations?.find(n => n.targetId === id); return note ? { summary: plain(note.summary), stale: note.status === 'stale', evidence: note.sources } : undefined; };
     const automatic = !config?.stages.length || !config.stages.some(stage => nodes.some(n => stage.kinds.includes(n.kind)));
     const structuralNodes = nodes.some(node => node.kind === 'module') ? nodes.filter(node => node.kind !== 'file') : nodes;
     const folderMap = automatic ? buildStructuralOverview(structuralNodes, edges) : undefined;
@@ -57,22 +58,27 @@ export function buildLoopMap(nodes: readonly Node[], edges: readonly Edge[], fac
         const style = { ...baseStyle, ...variant };
         return { id: n.id, name: ['module', 'file'].includes(n.kind) ? (n.sources[0]?.path.split('/').at(-1) ?? n.name) : n.name, kind: n.kind, kindLabel: variant?.label ?? (n.kind === 'package' && n.attributes['category'] ? structuralCategoryLabel(n) : kindName(n.kind)), summary: summary(n) || (automatic ? structuralSummary([n], [], n.sources[0]?.path.split('/').slice(0, -1).join('/') || '.') : ''), status: status === 'present' || status === 'absent' ? status : 'unknown', fields, relationGroups: groups, catalogSummary: groups.slice(0, 2).map(g => `${g.label} ${g.items.length}`).join(' · '), ordinal: typeof n.attributes['order'] === 'number' ? n.attributes['order'] - 1 : ordinal, ...(style?.shape ? { kindShape: style.shape } : {}), ...(style?.color ? { kindColor: style.color } : {}), ...(note ? { interpretation: note } : {}), ...(media?.status === 'available' ? { media } : {}) };
     });
-    const structuralFocus = automatic ? loopNodes.filter(n => n.kind === 'module').map(n => ({ id: n.id, production: productionSource(byId.get(n.id)?.sources[0]?.path ?? n.name), degree: new Set([...(outgoing.get(n.id) ?? []).filter(e => e.kind === 'imports').map(e => e.target), ...(incoming.get(n.id) ?? []).filter(e => e.kind === 'imports').map(e => e.source)]).size })).sort((a, b) => Number(b.production) - Number(a.production) || b.degree - a.degree || a.id.localeCompare(b.id))[0]?.id : undefined;
+
     const groupNodes = (members: readonly Node[], field?: string) => { const groups = new Map<string, { id: string; }[]>(); for (const n of members) { const title = field ? display(field, n.attributes[field]) || kindName(n.kind) : kindName(n.kind); groups.set(title, [...groups.get(title) ?? [], { id: n.id }]); } return [...groups].map(([title, items]) => ({ title, items })); };
     const relatedSystemIds = new Set((config?.stages ?? []).flatMap(stage => stage.systemIds));
     const systemKinds = new Set(nodes.filter(n => relatedSystemIds.has(n.id) || relatedSystemIds.has(String(n.attributes['originalId'] ?? ''))).map(n => n.kind));
     const systemNodes = new Set(nodes.filter(n => systemKinds.has(n.kind)).map(n => n.id));
     const stages: LoopStage[] = folderMap ? folderMap.stages.map(stage => {
-        const candidate = stage.scopePaths ? undefined : interpretation(stage.id.startsWith('all:') ? stage.id.slice(4) : stage.id);
-        const paths = new Set(stage.nodeIds.flatMap(id => byId.get(id)?.sources.map(source => source.path) ?? []));
-        const note = candidate?.evidence.length && candidate.evidence.every(source => paths.has(source.path)) ? candidate : undefined;
+        const all = stage.id.startsWith('all:') || folderMap.structuralScope.default === 'all';
+        const id = stage.id.startsWith('all:') ? stage.id.slice(4) : stage.id;
+        const scoped = interpretation(`overview:${all ? 'all' : 'production'}:${stage.id}`);
+        const candidate = scoped ?? interpretation(id.startsWith('directory:') ? `folder:${id.slice('directory:'.length)}` : id);
+        const paths = new Set((stage.descendantNodeIds ?? stage.nodeIds).flatMap(id => byId.get(id)?.sources.map(source => source.path) ?? []));
+        const covered = new Set(candidate?.evidence.map(source => source.path));
+        const exact = !scoped && !all && !id.startsWith('directory:') || covered.size === paths.size;
+        const note = candidate?.evidence.length && exact && candidate.evidence.every(source => paths.has(source.path)) ? candidate : undefined;
         const { summaryDetail: _detail, summaryDetails: _details, ...withoutDetail } = stage;
-        return { ...(note ? withoutDetail : stage), ...(note ? { summary: note.summary, interpretation: note } : {}) };
+        return { ...(note && !note.stale ? withoutDetail : stage), ...(note ? { ...(note.stale ? {} : { summary: note.summary }), interpretation: note } : {}) };
     }) : (config?.stages ?? []).map(stage => {
         const members = nodes.filter(n => stage.kinds.includes(n.kind));
         const systems = new Set(nodes.filter(n => stage.systemIds.includes(n.id) || stage.systemIds.includes(String(n.attributes['originalId'] ?? ''))).map(n => n.id));
         const influences = (direction: 'in' | 'out') => edges.filter(e => systemNodes.has(e.source) && systemNodes.has(e.target) && systems.has(direction === 'in' ? e.target : e.source) && !systems.has(direction === 'in' ? e.source : e.target) && typeof e.attributes?.['label'] === 'string').flatMap(e => { const other = byId.get(direction === 'in' ? e.source : e.target); return other ? [{ name: other.name, description: String(e.attributes?.['label']) }] : []; });
         return { id: stage.id, title: stage.title, summary: stage.summary, unit: stage.unit, nodeIds: members.map(n => n.id), groups: groupNodes(members, stage.groupBy), incoming: influences('in'), outgoing: influences('out') };
     });
-    return { ...(structuralFocus ? { defaultFocus: structuralFocus } : {}), ...(folderMap ? { structural: true, structuralScope: folderMap.structuralScope, verifiedCycleStageGroups: folderMap.verifiedCycleStageGroups, rootStageIds: folderMap.rootStageIds, defaultStage: folderMap.defaultStage } : {}), showStatus: loopNodes.some(n => n.status !== 'unknown'), ...(config?.subtitle ? { subtitle: config.subtitle } : {}), ...(config?.defaultStage ? { defaultStage: config.defaultStage } : {}), title: config?.title ?? `${repositoryName} 지도`, lead: (config?.lead ?? (automatic ? structuralSummary([], nodes, '.') : '')) || '덩어리를 눌러 역할과 연결을 살펴보세요. 화살표 숫자는 가져다 쓰는 파일 수입니다.', ...(config?.center ? { center: config.center } : { center: { title: repositoryName, description: '구조와 의존 관계' } }), stages, flows: folderMap ? folderMap.flows : config?.flows ?? [], nodes: loopNodes, statusLabels: { present: '지금 빌드에 있음', absent: '설계에 있음', unknown: '실행 상태 미판정', ...config?.statusLabels }, kindOrder: config?.catalogKinds ?? [...new Set(loopNodes.map(n => n.kind))], strips: (config?.strips ?? []).map(s => ({ title: s.title, description: s.description, groups: s.kinds.map(kind => ({ title: kindName(kind), nodeIds: nodes.filter(n => n.kind === kind).map(n => n.id) })) })), ...(config?.places ? { places: { title: config.places.title, description: config.places.description, nodeIds: nodes.filter(n => config.places?.kinds.includes(n.kind)).map(n => n.id) } } : {}) };
+    return { ...(folderMap ? { structural: true, structuralSourceRoot: folderMap.structuralSourceRoot, structuralEntryStageIds: folderMap.structuralEntryStageIds, structuralScope: folderMap.structuralScope, verifiedCycleStageGroups: folderMap.verifiedCycleStageGroups, rootStageIds: folderMap.rootStageIds, defaultStage: folderMap.defaultStage } : {}), showStatus: loopNodes.some(n => n.status !== 'unknown'), ...(config?.subtitle ? { subtitle: config.subtitle } : {}), ...(config?.defaultStage ? { defaultStage: config.defaultStage } : {}), title: config?.title ?? `${repositoryName} 지도`, lead: (config?.lead ?? (automatic ? structuralSummary([], nodes, '.') : '')) || '덩어리를 눌러 역할과 연결을 살펴보세요. 화살표 숫자는 가져다 쓰는 파일 수입니다.', ...(config?.center ? { center: config.center } : { center: { title: repositoryName, description: '구조와 의존 관계' } }), stages, flows: folderMap ? folderMap.flows : config?.flows ?? [], nodes: loopNodes, statusLabels: { present: '지금 빌드에 있음', absent: '설계에 있음', unknown: '실행 상태 미판정', ...config?.statusLabels }, kindOrder: config?.catalogKinds ?? [...new Set(loopNodes.map(n => n.kind))], strips: (config?.strips ?? []).map(s => ({ title: s.title, description: s.description, groups: s.kinds.map(kind => ({ title: kindName(kind), nodeIds: nodes.filter(n => n.kind === kind).map(n => n.id) })) })), ...(config?.places ? { places: { title: config.places.title, description: config.places.description, nodeIds: nodes.filter(n => config.places?.kinds.includes(n.kind)).map(n => n.id) } } : {}) };
 }

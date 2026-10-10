@@ -1,5 +1,6 @@
 import { entryPoints, javascriptEvidence } from "./code-evidence.js";
 import { descriptiveProse } from "./description-prose.js";
+import { plain } from "./markdown-inline.js";
 import type { JsonObject } from "../core/canonical.js";
 import type { CodeToken } from "./code-tokens.js";
 
@@ -26,7 +27,37 @@ export function publicDeclaration(tokens: readonly CodeToken[], index: number, l
 }
 
 function sentence(value: string): string {
-    const clean = value.replace(/\{@(?:code|literal)\s+([^}]+)\}/gu, "$1").replace(/<see\s+cref=["']([^"']+)["']\s*\/>/gu, "$1").replace(/\{@(?:link|linkplain)\s+([^}]+)\}/gu, (_match, target: string) => target.trim().replace(/^\S+\s+(.+)$/u, "$1")).replace(/<[^>]*>/gu, " ").replace(/\s+/gu, " ").trim();
+    const summary = /<summary\b[^>]*>([\s\S]*?)<\/summary>/iu.exec(value)?.[1] ?? value;
+    const withoutExamples = summary.replace(/<(example|code|pre|script|style)\b[^>]*>[\s\S]*?<\/\1\s*>/giu, " ");
+    const prose: string[] = [];
+    let fence: { readonly marker: string; readonly width: number; } | undefined;
+    for (const line of withoutExamples.split(/\r\n|\r|\n/u)) {
+        const marker = /^\s*(`{3,}|~{3,})/u.exec(line)?.[1];
+        if (marker) {
+            if (!fence) fence = { marker: marker[0] ?? "", width: marker.length };
+            else if (marker[0] === fence.marker && marker.length >= fence.width) fence = undefined;
+            continue;
+        }
+        if (fence) continue;
+        if (/^\s*@(?:module|packageDocumentation)\b/u.test(line)) continue;
+        const content = line.replace(/^\s*@(?:fileoverview|file|description|summary)\s*/u, "");
+        if (/^\s*@\w+/u.test(content)) break;
+        prose.push(content.replace(/^\s*#{1,6}\s+/u, ""));
+    }
+    const inline = prose.join(" ").replace(/\{@(?:code|literal)\s+([^}]+)\}/gu, "$1")
+        .replace(/<see\s+cref=["']([^"']+)["']\s*\/>/gu, "$1")
+        .replace(/\{@(?:link|linkplain)\s+([^}]+)\}/gu, (_match, target: string) => target.trim().replace(/^\S+\s+(.+)$/u, "$1"))
+        .replace(/<[^>]*>/gu, " ");
+    const clean = plain(inline).replace(/&(?:amp|lt|gt|quot|apos|nbsp);/gu, entity => {
+        switch (entity) {
+            case "&amp;": return "&";
+            case "&lt;": return "<";
+            case "&gt;": return ">";
+            case "&quot;": return '"';
+            case "&apos;": return "'";
+            default: return " ";
+        }
+    }).replace(/\s+/gu, " ").trim();
     return (/^.*?[.!?](?:\s|$)/u.exec(clean)?.[0] ?? clean).trim().slice(0, 320);
 }
 
@@ -45,7 +76,7 @@ function scriptDescription(text: string): JsonObject | undefined {
             index++;
             parts.push((lines[index] ?? "").trim().replace(/^#+\s?/u, ""));
         }
-        const body = parts.join(" ");
+        const body = parts.join("\n");
         if (!descriptiveProse(body)) continue;
         const summary = sentence(body);
         if (summary.split(/\s+/u).length >= 3) return { text: summary, kind: "module-doc", line: start + 1, endLine: index + 1 };
@@ -94,7 +125,7 @@ export function sourceDescription(text: string, language: string): JsonObject | 
         const next = lines.slice(cursor).find(value => value.trim() && !(language === "java" && /^\s*@\w+(?:\.\w+)*(?:\([^)]*\))?\s*$/u.test(value)))?.trim() ?? "";
         const directive = (part: string): boolean => /^(?:eslint-(?:disable|enable)|@ts-(?:check|nocheck|ignore|expect-error)|prettier-ignore|biome-ignore|ruff:|pylint:|nolint\b|go:|ReSharper\s+(?:disable|restore)|noinspection\b)/iu.test(part.trim()) || (/^(?:import |from |using )/u.test(next) && /^(?:types?\s+only|type-only(?:\s+imports?)?|imports?\s+only)[!.\s]*$/iu.test(part.trim()));
         const prose = parts.map((part, index) => ({ part, index })).filter(({ part, index }) => !directive(part) && !/^\s*[-=]{3,}\s*$/u.test(part) && !/^\s*[-=]{3,}\s*$/u.test(parts[index + 1] ?? ""));
-        const content = prose.map(value => value.part).join(" ");
+        const content = prose.map(value => value.part).join("\n");
         if (!descriptiveProse(content)) continue;
         const summary = sentence(content);
         const filteredDirective = parts.some(directive);
@@ -162,8 +193,7 @@ export function publicTypeDocumentation(lines: readonly string[], language: stri
             if (!parts.length || (cursor === lower && marker.test(lines[cursor - 1] ?? ""))) return definition;
         }
         const docLines = parts.map(part => part.trim().replace(/^\/\*+|\*\/$/gu, "").replace(/^(?:\/{2,3}|\*)\s?/u, ""));
-        const metadataStart = docLines.findIndex(part => /^\s*@(?:author|since|param|return|returns|throws|exception|see|version|deprecated|serial|serialField|serialData|apiNote|implSpec|implNote)\b/u.test(part));
-        const body = (metadataStart < 0 ? docLines : docLines.slice(0, metadataStart)).join(" ");
+        const body = docLines.join("\n");
         if (!descriptiveProse(body)) return definition;
         const text = sentence(body);
         if (!text || /^@|^<inheritdoc\b/iu.test(text)) return definition;

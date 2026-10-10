@@ -29,3 +29,12 @@ test('hub configuration falls back for a layer without those hubs and raw relati
     assert.equal(map.hubs.length, 2);
     assert.equal(map.hubs.flatMap(hub => hub.nodes)[0].relations[0].label, '연결 물품');
 });
+
+test('collapsed physical folder owns every file once and preserves inter-folder dependencies', () => {
+    const modules = Array.from({ length: 14 }, (_, i) => ({ id: `m${i}`, kind: 'module', name: `m${i}`, attributes: {}, sources: [{ path: `src/part${i}/index.ts`, line: 1, pointer: '', contentHash: 'h' }], contentHash: 'h' }));
+    modules.push({ ...modules[0], id: 'outside', sources: [{ ...modules[0].sources[0], path: 'other/main.ts' }] });
+    const map = buildPictureMap(modules, [], []);
+    assert.equal(map.hubs.length, 2);
+    assert.equal(map.hubs.find(hub => hub.id === 'directory:src').nodes.length, 14);
+    assert.equal(new Set(map.hubs.flatMap(hub => hub.nodes.map(node => node.id))).size, 15);
+});

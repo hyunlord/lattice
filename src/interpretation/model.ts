@@ -1,4 +1,5 @@
 import type { Graph, Source } from '../core/model.js';
+import { buildStructuralOverview } from '../query/structural-map-model.js';
 
 export type Interpretation = {
     readonly schemaVersion: 1;
@@ -30,7 +31,7 @@ export function parseInterpretation(value: unknown): Interpretation {
     if (new Set(sources.map(source => source.path)).size !== sources.length) throw new InterpretationError('Duplicate interpretation source');
     return { schemaVersion: 1, targetId: string(value['targetId'], 'targetId', 4096), summary: string(value['summary'], 'summary (one or two sentences)', 1000), author: string(value['author'], 'AI author', 200), sources };
 }
-export function interpretationTargets(graph: Graph): readonly InterpretationTarget[] {
+export function interpretationTargets(graph: Graph, includeOverview = false): readonly InterpretationTarget[] {
     const modules = graph.nodes.filter(node => node.kind === 'module');
     const targets: InterpretationTarget[] = modules.map(node => ({ id: node.id, name: node.name, kind: 'module', sources: node.sources }));
     const folders = new Map<string, Map<string, Source>>();
@@ -40,11 +41,32 @@ export function interpretationTargets(graph: Graph): readonly InterpretationTarg
         sources.set(source.path, source); folders.set(folder, sources);
     }
     for (const [folder, sources] of folders) targets.push({ id: `folder:${folder}`, name: folder, kind: 'cluster', sources: [...sources.values()].sort((a, b) => a.path.localeCompare(b.path)) });
+    if (includeOverview) targets.push(...overviewInterpretationTargets(graph));
     return targets.sort((a, b) => a.id.localeCompare(b.id));
 }
-export function interpretationStatus(note: Interpretation, graph: Graph, targets: readonly InterpretationTarget[] = interpretationTargets(graph)): 'fresh' | 'stale' {
+/** Separate identities keep whole-tree notes distinct from production-only first-screen notes. */
+export function overviewInterpretationTargets(graph: Graph, requestedScope?: 'production' | 'all'): readonly InterpretationTarget[] {
+    const map = buildStructuralOverview(graph.nodes, graph.edges);
+    const nodes = new Map(graph.nodes.map(node => [node.id, node]));
+    const stages = new Map(map.stages.map(stage => [stage.id, stage]));
+    return (requestedScope ? [requestedScope] : ['production', 'all'] as const).flatMap(scope => {
+        const roots = scope === 'all' ? map.structuralScope.allRootStageIds : map.rootStageIds;
+        return roots.flatMap(id => {
+            const stage = stages.get(id);
+            if (!stage) return [];
+            const sources = new Map<string, Source>();
+            for (const nodeId of stage.descendantNodeIds ?? stage.nodeIds) {
+                const node = nodes.get(nodeId);
+                if (node?.kind !== 'module' && node?.kind !== 'file') continue;
+                for (const source of node.sources) sources.set(source.path, source);
+            }
+            return sources.size ? [{ id: `overview:${scope}:${id}`, name: stage.title, kind: 'cluster' as const, sources: [...sources.values()].sort((a, b) => a.path.localeCompare(b.path)) }] : [];
+        });
+    });
+}
+export function interpretationStatus(note: Interpretation, graph: Graph, targets: readonly InterpretationTarget[] = interpretationTargets(graph, note.targetId.startsWith('overview:'))): 'fresh' | 'stale' {
     const target = targets.find(entry => entry.id === note.targetId);
     const current = new Map(graph.inputs.map(input => [input.path, input.contentHash]));
     if (!target || target.sources.length !== note.sources.length) return 'stale';
-    return note.sources.every(source => current.get(source.path) === source.contentHash && target.sources.some(candidate => candidate.path === source.path)) ? 'fresh' : 'stale';
+    return note.sources.every(source => current.get(source.path) === source.contentHash && target.sources.some(candidate => candidate.path === source.path && candidate.line === source.line)) ? 'fresh' : 'stale';
 }

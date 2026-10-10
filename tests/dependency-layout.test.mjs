@@ -31,13 +31,41 @@ test('an off-page dependency stays in the selected chunk explanation', () => {
     assert.equal(view.flows.length, 0);
     assert.deepEqual(view.stages[0].outgoing, [{ name: 'folder:src/feature9', description: '1개 파일이 사용: index.ts' }]);
 });
-test('dense maps disclose a selected neighborhood and can restore every dependency', async () => {
+test('overview limits dependency pairs by weight without selecting a foundation', async () => {
     const { displayedDependencyFlows } = await import('../viewer/dependency-layout.js');
-    const flows = Array.from({ length: 18 }, (_, index) => ({ source: `source${index}`, target: 'foundation', sourceFiles: [`source${index}.ts`] }));
-    const view = { stages: [], flows };
-    assert.equal(displayedDependencyFlows(view, 'source4', false).length, 1);
-    assert.equal(displayedDependencyFlows(view, 'source4', true).length, 18);
-    assert.equal(displayedDependencyFlows({ stages: [], flows: flows.slice(0, 7) }, 'source4', false).length, 7);
+    const flows = Array.from({ length: 8 }, (_, index) => ({ source: `source${index}`, target: 'foundation', count: index + 1, sourceFiles: Array.from({ length: index + 1 }, (_, n) => `${index}/${n}.ts`) }));
+    const view = { stages: ['foundation', ...flows.map(flow => flow.source)].map(id => stage(id)), flows };
+    assert.deepEqual(displayedDependencyFlows(view, undefined, false).map(flow => flow.count), [8, 7, 6, 5, 4]);
+    assert.equal(displayedDependencyFlows(view, 'source0', false).length, 1);
+    assert.equal(displayedDependencyFlows(view, undefined, true).length, 8);
+});
+test('mutually dependent folder containers omit their internal arrows', async () => {
+    const { displayedDependencyFlows } = await import('../viewer/dependency-layout.js');
+    const view = {
+        stages: ['app', 'api', 'core', 'util'].map(id => stage(id)), flows: [
+            { source: 'app', target: 'api', count: 4 }, { source: 'api', target: 'core', count: 8 },
+            { source: 'core', target: 'api', count: 2 }, { source: 'core', target: 'util', count: 3 }
+        ]
+    };
+    assert.deepEqual(displayedDependencyFlows(view, undefined, false).map(flow => [flow.source, flow.target]), [['app', 'api'], ['api', 'util']]);
+});
+test('one mutual-reference container shares one external importer count', async () => {
+    const { displayedDependencyFlows } = await import('../viewer/dependency-layout.js');
+    const view = {
+        stages: ['a', 'b', 'base'].map(id => stage(id)), flows: [
+            { source: 'a', target: 'b', count: 1 }, { source: 'b', target: 'a', count: 1 },
+            { source: 'a', target: 'base', sourceFiles: ['a/one.ts'], count: 1 },
+            { source: 'b', target: 'base', sourceFiles: ['b/two.ts'], count: 1 }
+        ]
+    };
+    const result = displayedDependencyFlows(view, undefined, false);
+    assert.equal(result.length, 1); assert.equal(result[0].count, 2);
+    assert.deepEqual(result[0].sourceFiles, ['a/one.ts', 'b/two.ts']);
+});
+test('opposite directions preserve separate importer counts on one pair', async () => {
+    const { dependencyPairs } = await import('../viewer/dependency-layout.js');
+    const pairs = dependencyPairs([{ source: 'a', target: 'b', count: 3, sourceFiles: ['a/1', 'a/2', 'a/3'], label: '3개 파일' }, { source: 'b', target: 'a', count: 2, sourceFiles: ['b/1', 'b/2'], label: '2개 파일' }]);
+    assert.equal(pairs.length, 1); assert.equal(pairs[0].count, 3); assert.equal(pairs[0].reverseCount, 2); assert.equal(pairs[0].weight, 5);
 });
 test('label bands leave a free routing cell between a rounded label and the next card', async () => {
     const { dependencyBandHeight } = await import('../viewer/dependency-layout.js');
@@ -213,11 +241,11 @@ test('member counts never distinguish two otherwise identical dependency labels'
     assert.ok([...names.values()].every(name => !name.includes('(+')));
 });
 
-test('compact headings retain both named group members and immediate folder context', async () => {
+test('folder headings use the model source-root path without unrelated representatives', async () => {
     const { dependencyHeadingParts } = await import('../viewer/dependency-layout.js');
-    const group = { ...stage('group'), headingParts: ['internal/complete', 'cmd/task'] };
+    const group = { ...stage('group'), title: 'internal', headingParts: ['internal/complete', 'cmd/task'] };
     const ast = { ...stage('ast'), title: 'taskfile/ast' };
-    assert.deepEqual(dependencyHeadingParts(group, [group, ast]), ['internal/complete', 'cmd/task']);
+    assert.deepEqual(dependencyHeadingParts(group, [group, ast]), ['internal']);
     assert.deepEqual(dependencyHeadingParts(ast, [group, ast]), ['taskfile/ast']);
 });
 

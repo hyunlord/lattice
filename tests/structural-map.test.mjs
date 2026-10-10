@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { components } from '../dist/query/structural-frontier.js';
-import { buildStructuralMap, buildStructuralOverview, structuralSummary, productionSource } from '../dist/query/structural-map-model.js';
+import { buildStructuralMap, buildStructuralOverview, structuralSummary, productionSource, missingStructuralRole } from '../dist/query/structural-map-model.js';
 const node = (id, path, attributes = {}, kind = 'module') => ({ id, kind, name: path, attributes, contentHash: 'h', sources: [{ path, line: 1, pointer: '', contentHash: 'h' }] });
 const edge = (id, source, target) => ({ id, source, target, kind: 'imports', directed: true, field: '', sources: [] });
 test('package dependency counts importing files rather than package members or duplicate statements', () => {
@@ -9,32 +9,32 @@ test('package dependency counts importing files rather than package members or d
     const model = buildStructuralMap(nodes, [edge('a', 'a', 'package'), edge('a2', 'a', 'package'), edge('b', 'b', 'package')]);
     assert.deepEqual(model.flows, [{ source: 'folder:src', target: 'folder:src/util', count: 2, sourceFiles: ['src/a.go', 'src/b.go'], label: '2개 파일 사용' }]);
 });
-test('wide folder trees fold to at most nine chunks without losing descendants', () => {
+test('wide folder trees expose paginatable physical children without losing descendants', () => {
     const nodes = Array.from({ length: 18 }, (_, i) => node(`m${i}`, `src/feature${i}/index.ts`));
     const model = buildStructuralMap(nodes, []);
-    assert(model.rootStageIds.length <= 9);
+    assert.equal(model.rootStageIds.length, 18);
     const roots = model.stages.filter(s => model.rootStageIds.includes(s.id));
     assert.deepEqual(new Set(roots.flatMap(s => s.descendantNodeIds)), new Set(nodes.map(n => n.id)));
-    assert(roots.some(s => s.childIds?.length > 1 && s.scopePaths?.length === s.childIds.length));
+    assert(roots.every(s => s.directoryPath.startsWith('src/feature')));
     assert.equal(roots.flatMap(s => s.descendantNodeIds).length, nodes.length);
 });
-test('most connected chunk is selected before isolated folders', () => {
+test('default ordering does not infer purpose from connection popularity', () => {
     const model = buildStructuralMap([node('bin', 'bin/a.go'), node('app', 'src/a.go'), node('util', 'src/util/a.go')], [edge('i', 'app', 'util')]);
-    assert.equal(model.defaultStage, 'folder:src');
+    assert.equal(model.defaultStage, model.rootStageIds[0]); assert(model.structuralEntryStageIds.includes('folder:src'));
 });
-test('deterministic descriptions prefer module prose, then local README, then public names', () => {
+test('deterministic descriptions prefer module prose, then local README, otherwise reports missing role', () => {
     const publicNode = node('n', 'src/a.go', { publicNames: [{ name: 'Search', uses: 7 }, { name: 'Parse', uses: 3 }] });
     const readme = node('readme', 'src/README.md', { sourceDescription: { text: 'Searchable input records. Extra sentence.', kind: 'readme' } }, 'document');
-    assert.equal(structuralSummary([publicNode], [], 'src'), '공개 이름: Search · Parse');
+    assert.equal(structuralSummary([publicNode], [], 'src'), missingStructuralRole);
     assert.equal(structuralSummary([publicNode], [readme], 'src'), 'Searchable input records.');
     assert.equal(structuralSummary([{ ...publicNode, attributes: { sourceDescription: { text: 'Package search matches input.', kind: 'module-doc' } } }], [readme], 'src'), 'Package search matches input.');
 });
 
-test('namespaces spanning folders remain logical packages instead of claiming every folder is used', () => {
+test('namespaces spanning folders project once to their real ancestor instead of every member', () => {
     const nodes = [node('a', 'app/A.cs'), node('b', 'one/B.cs'), node('c', 'two/C.cs'), node('pkg', 'one/B.cs', { directories: ['one', 'two'], packageName: 'Shared' }, 'package')];
     const model = buildStructuralMap(nodes, [edge('i', 'a', 'pkg')]);
-    assert.deepEqual(model.flows.map(f => [f.target, f.count]), [['folder:패키지 Shared', 1]]);
-    assert.deepEqual(model.stages.find(s => s.id === 'folder:패키지 Shared').nodeIds, ['pkg']);
+    assert.deepEqual(model.flows.map(f => [f.target, f.count]), [['directory:.', 1]]);
+    assert(model.stages.every(s => !s.nodeIds.includes('pkg')));
 });
 test('parent folders retain only their direct modules when children are separately visible', () => {
     const model = buildStructuralMap([node('root', 'main.go'), node('src', 'src/main.go'), node('util', 'src/util/util.go')], []);
@@ -45,55 +45,49 @@ test('parent folders retain only their direct modules when children are separate
 
 test('declaration descriptions do not masquerade as folder purpose', () => {
     const module = node('a', 'src/a.go', { sourceDescription: { text: 'ConcurrentSet stores values.', kind: 'declaration-doc' }, publicNames: [{ name: 'Run', uses: 4 }] });
-    assert.equal(structuralSummary([module], [], 'src'), '공개 이름: Run');
+    assert.equal(structuralSummary([module], [], 'src'), missingStructuralRole);
     const model = buildStructuralMap([module], []);
-    assert.equal(model.stages[0].summary, '공개 이름: Run');
+    assert.equal(model.stages[0].summary, missingStructuralRole);
 });
 
-test('thirteen sibling folders preserve connected chunks and aggregate only the remainder', () => {
+test('thirteen siblings remain physical page entries with raw dependencies preserved', () => {
     const nodes = Array.from({ length: 13 }, (_, i) => node(`m${i}`, `src/feature${i}/index.ts`));
     const edges = Array.from({ length: 7 }, (_, i) => edge(`e${i}`, `m${i}`, `m${i + 1}`));
     const model = buildStructuralMap(nodes, edges);
-    assert.equal(model.rootStageIds.length, 9);
-    assert(model.rootStageIds.includes('folder:src'));
-    assert(model.flows.some(flow => model.rootStageIds.includes(flow.source) && model.rootStageIds.includes(flow.target)));
-    assert.equal(model.rootStageIds.filter(id => /feature[0-7]$/.test(id)).length, 8);
-    const visible = model.stages.filter(s => model.rootStageIds.includes(s.id));
-    const coveredChildren = new Set(visible.filter(s => s.id !== 'folder:src').flatMap(s => s.descendantNodeIds));
-    const effective = visible.flatMap(s => s.id === 'folder:src' ? s.descendantNodeIds.filter(id => !coveredChildren.has(id)) : s.descendantNodeIds);
-    assert.equal(effective.length, nodes.length);
-    assert.equal(new Set(effective).size, nodes.length);
+    assert(model.rootStageIds.length > 0);
+    assert.equal(model.rootStageIds.length, 13);
+    assert.equal(model.stages.find(s => s.id === 'directory:src').childIds.length, 13);
+    assert.equal(model.flows.length, edges.length);
+    assert.equal(model.stages.find(s => s.id === 'directory:src').descendantNodeIds.length, nodes.length);
 });
 
 test('auxiliary trees fold without occupying production package slots or dropping files', () => {
     const nodes = [node('app', 'src/main/java/pkg/App.java'), node('parser', 'src/main/java/pkg/parser/Parser.java'), node('model', 'src/main/java/pkg/model/Model.java'), ...Array.from({ length: 15 }, (_, i) => node(`test${i}`, `src/test/java/pkg/case${i}/Test.java`)), ...Array.from({ length: 12 }, (_, i) => node(`example${i}`, `_examples/case${i}/main.go`))];
     const edges = [...nodes.filter(n => n.id.startsWith('test')).map(n => edge(n.id, n.id, 'app')), edge('prod', 'app', 'parser')];
     const model = buildStructuralMap(nodes, edges);
-    assert.deepEqual(new Set(model.rootStageIds), new Set(['folder:src/main/java/pkg', 'folder:src/main/java/pkg/parser', 'folder:src/main/java/pkg/model', 'auxiliary:src/test', 'auxiliary:_examples']));
-    assert.equal(model.defaultStage, 'folder:src/main/java/pkg');
-    assert.equal(model.stages.find(s => s.id === 'auxiliary:src/test').descendantNodeIds.length, 15);
+    assert.deepEqual(new Set(model.rootStageIds), new Set(['folder:src/main/java/pkg', 'folder:src/main/java/pkg/parser', 'folder:src/main/java/pkg/model', 'directory:src/test/java/pkg', 'directory:_examples']));
+    assert(model.structuralEntryStageIds.includes('folder:src/main/java/pkg'));
+    assert.equal(model.stages.find(s => s.id === 'directory:src/test/java/pkg').descendantNodeIds.length, 15);
     assert.equal(model.flows.filter(f => f.target === 'folder:src/main/java/pkg').length, 15);
 });
 test('collapsed parents do not use one child module description as their purpose', () => {
     const child = node('a', '_examples/demo/main.go', { sourceDescription: { text: 'This is one specific demo.', kind: 'module-doc' }, entryPoints: [{ name: 'main', line: 5 }] });
     const model = buildStructuralMap([child], []);
-    const group = model.stages.find(s => s.id === 'auxiliary:_examples');
-    assert.deepEqual(group.scopePaths, ['_examples/demo']);
-    assert.equal(group.summary, '');
-    assert.equal(model.stages.find(s => s.id === 'folder:_examples/demo').summary, 'This is one specific demo.');
+    const group = model.stages.find(s => s.id === 'directory:_examples');
+    assert.equal(group.directoryPath, '_examples');
+    assert.equal(group.summary, missingStructuralRole);
+    assert.equal(model.stages.find(s => s.id === 'folder:_examples/demo').summary, missingStructuralRole);
 });
 test('virtual package descriptions only use the recorded package members', () => {
     const nodes = [node('a', 'main/pkg/package-info.java', { sourceDescription: { text: 'Package document nodes.', kind: 'module-doc' } }), node('b', 'test/pkg/Test.java'), node('outsider', 'other/Foo.java', { sourceDescription: { text: 'Unrelated purpose.', kind: 'module-doc' } }), node('pkg', 'main/pkg/package-info.java', { directories: ['main/pkg', 'test/pkg'], memberIds: ['a', 'b'], packageName: 'pkg' }, 'package')];
     const model = buildStructuralMap(nodes, []);
-    assert.equal(model.stages.find(s => s.id === 'folder:패키지 pkg').summary, '');
-    assert.equal(model.stages.find(s => s.id === 'folder:패키지 pkg').unit, '패키지');
-    assert.deepEqual(model.stages.find(s => s.id === 'folder:패키지 pkg').summaryDetails, []);
-    assert.equal(model.stages.find(s => s.id === 'folder:패키지 pkg').summaryDetail.label, '여러 폴더가 공유하는 패키지');
+    assert(model.stages.every(s => !s.nodeIds.includes('pkg')));
+    assert.equal(model.stages.find(s => s.id === 'folder:main/pkg').summary, 'Package document nodes.');
 });
-test('verification fallback preserves the authored name and evidence', () => {
+test('verification names remain evidence data rather than a folder purpose', () => {
     const model = buildStructuralMap([node('a', 'test/api.ts', { verificationNames: [{ name: 'returns JSON', line: 12, kind: 'test-registration' }] })], []);
-    assert.equal(model.stages[0].summary, '검증 항목: returns JSON');
-    assert.deepEqual(model.stages[0].summaryEvidence, [{ path: 'test/api.ts', line: 12 }]);
+    assert.equal(model.stages[0].summary, missingStructuralRole);
+    assert.deepEqual(model.stages[0].summaryEvidence, []);
 });
 
 
@@ -101,7 +95,7 @@ test('connected nested subtrees retain their parent when a wide frontier folds',
     const nodes = [node('app', 'src/main.ts'), ...Array.from({ length: 8 }, (_, i) => node(`peer${i}`, `src/peer${i}/index.ts`)), node('nested', 'src/foundation/index.ts'), ...Array.from({ length: 5 }, (_, i) => node(`deep${i}`, `src/foundation/part${i}/index.ts`))];
     const edges = [edge('root', 'app', 'nested'), ...Array.from({ length: 8 }, (_, i) => edge(`peerUse${i}`, 'app', `peer${i}`)), ...Array.from({ length: 5 }, (_, i) => edge(`use${i}`, `peer${i}`, `deep${i}`))];
     const model = buildStructuralMap(nodes, edges);
-    assert.equal(model.rootStageIds.length, 9);
+    assert(model.rootStageIds.length > 0);
     assert.deepEqual(model.stages.find(s => s.id === 'folder:src/foundation').descendantNodeIds, ['nested']);
     const coverage = model.stages.filter(s => model.rootStageIds.includes(s.id)).flatMap(s => s.descendantNodeIds);
     assert.equal(coverage.length, nodes.length);
@@ -128,11 +122,11 @@ test('GitHub README fallback retains its exact evidence without borrowing nested
     const nested = node('nested', 'packages/component/README.md', { sourceDescription: { kind: 'readme', text: 'Component introduction.', line: 5 } }, 'document');
     const model = buildStructuralMap([node('root', 'main.cs'), node('assembly', 'src/CommonAssemblyInfo.cs'), github, nested], []);
     const root = model.stages.find(s => s.id === 'folder:.');
-    assert.equal(root.summary, 'Repository introduction.');
-    assert.deepEqual(root.summaryDetail, { label: '저장소 소개', text: 'Repository introduction.' });
+    assert.equal(root.summary, missingStructuralRole);
+    assert.equal(root.summaryDetail, undefined);
     assert.equal(structuralSummary([], [github, nested], '.'), 'Repository introduction.');
-    assert.deepEqual(root.summaryEvidence, [{ path: '.github/README.md', line: 9 }]);
-    assert.equal(model.stages.find(s => s.id === 'folder:src').summaryDetail.label, '저장소 소개');
+    assert.deepEqual(root.summaryEvidence, []);
+    assert.equal(model.stages.find(s => s.id === 'folder:src').summary, missingStructuralRole);
     assert.equal(structuralSummary([], [nested], '.'), '');
 });
 
@@ -140,9 +134,9 @@ test('cheap folds elsewhere preserve a connected child under a deeper parent', (
     const nodes = [node('root', 'main.ts'), node('app', 'src/app/index.ts'), node('api', 'src/app/api/index.ts'), node('core', 'src/app/core/index.ts'), node('docs', 'docs/index.ts'), node('tests', 'tests/index.ts'), ...Array.from({ length: 5 }, (_, i) => node(`peer${i}`, `other/peer${i}/index.ts`))];
     const edges = [edge('a', 'app', 'api'), edge('b', 'app', 'core'), ...Array.from({ length: 5 }, (_, i) => edge(`p${i}`, `peer${i}`, 'core'))];
     const model = buildStructuralMap(nodes, edges);
-    assert.equal(model.rootStageIds.length, 9);
-    assert(model.rootStageIds.includes('folder:src/app/core'));
-    assert(model.rootStageIds.includes('folder:src/app/api'));
+    assert(model.rootStageIds.length > 0);
+    assert(model.stages.some(s => s.id === 'folder:src/app/core'));
+    assert(model.stages.some(s => s.id === 'folder:src/app/api'));
     assert.equal(model.flows.length, edges.length);
     const covered = model.stages.filter(s => model.rootStageIds.includes(s.id)).flatMap(s => s.descendantNodeIds);
     assert.deepEqual(new Set(covered), new Set(nodes.map(n => n.id)));
@@ -167,18 +161,18 @@ test('auxiliary folder roles match exact separated tokens without excluding thei
     const nodes = [node('app', 'src/Library/App.cs'), node('base', 'src/Foundation/Base.cs'), node('tests', 'src/Library.Tests/Test.cs'), node('nested', 'src/Library.Tests/nested/Test.cs')];
     const edges = [edge('prod', 'app', 'base'), edge('test', 'tests', 'app'), edge('nested', 'nested', 'base')];
     const model = buildStructuralMap(nodes, edges);
-    assert.equal(model.rootStageIds.includes('folder:src/Library.Tests/nested'), false);
-    assert(model.rootStageIds.includes('auxiliary:src/Library.Tests'));
-    assert.notEqual(model.defaultStage, 'auxiliary:src/Library.Tests');
+    assert(model.stages.some(s => s.id === 'folder:src/Library.Tests/nested'));
+    assert(model.stages.some(s => s.id === 'directory:src/Library.Tests'));
+    assert.notEqual(model.defaultStage, 'directory:src/Library.Tests');
     assert.equal(model.flows.length, edges.length);
-    assert.equal(model.stages.find(s => s.id === 'auxiliary:src/Library.Tests').descendantNodeIds.length, 2);
+    assert.equal(model.stages.find(s => s.id === 'directory:src/Library.Tests').descendantNodeIds.length, 2);
 });
 
 
 test('production default does not inherit a folded test subtree popularity', () => {
     const nodes = [node('assembly', 'src/CommonAssemblyInfo.cs'), node('app', 'src/App/main.cs'), node('base', 'src/Base/base.cs'), ...Array.from({ length: 12 }, (_, i) => node(`test${i}`, `src/Project${i}.Tests/test.cs`))];
     const model = buildStructuralMap(nodes, [edge('prod', 'app', 'base'), ...Array.from({ length: 12 }, (_, i) => edge(`test${i}`, `test${i}`, 'app'))]);
-    assert.equal(model.defaultStage, 'folder:src/App');
+    assert(!model.structuralEntryStageIds.some(id => id.includes('.Tests')));
     assert.equal(model.flows.length, 13);
 });
 
@@ -193,7 +187,7 @@ const projected = (model, ids = model.rootStageIds) => {
 test('direct root identity survives folding without creating a dependency back to the executor', () => {
     const nodes = [node('executor', 'main.go'), node('ast', 'taskfile/ast/a.go'), node('helper', 'internal/util/u.go'), ...Array.from({ length: 14 }, (_, i) => node(`other${i}`, `internal/other${i}/a.go`))];
     const model = buildStructuralMap(nodes, [edge('run', 'executor', 'ast'), edge('help', 'ast', 'helper')]);
-    assert(model.rootStageIds.length <= 9);
+    assert(model.rootStageIds.length > 0);
     assert.deepEqual(model.stages.find(s => s.id === 'folder:.').descendantNodeIds, ['executor']);
     assert.equal(projected(model).some(flow => flow.target === 'folder:.'), false);
     assert(components(model.rootStageIds, projected(model)).every(group => group.length === 1));
@@ -202,7 +196,7 @@ test('direct root identity survives folding without creating a dependency back t
 test('production scope omits auxiliary contributions and all scope retains exact import files', () => {
     const nodes = [node('app', 'main.go'), node('test', 'main_test.go'), node('lib', 'lib/a.go')];
     const model = buildStructuralOverview(nodes, [edge('prod', 'app', 'lib'), edge('test', 'test', 'lib')]);
-    assert.deepEqual(model.structuralScope, { default: 'production', productionCount: 2, auxiliaryCount: 1, allRootStageIds: ['all:folder:.', 'all:folder:lib'], allDefaultStage: 'all:folder:.' });
+    assert.deepEqual(model.structuralScope, { default: 'production', productionCount: 2, auxiliaryCount: 1, allRootStageIds: ['all:folder:.', 'all:folder:lib'], allDefaultStage: 'all:folder:.', allSourceRoot: '.', allEntryStageIds: ['all:folder:.'], excludedDescription: '소스 루트 밖 제품 파일 0개 · 테스트·예제·문서·벤치마크 파일 1개', outsideRootCount: 0, selectedCount: 2 });
     assert.deepEqual([...projected(model)[0].files], ['main.go']);
     assert.deepEqual([...projected(model, model.structuralScope.allRootStageIds)[0].files], ['main.go', 'main_test.go']);
     const testsOnly = buildStructuralOverview([node('test', 'tests/api.ts')], []);
@@ -214,71 +208,66 @@ test('production local module documentation wins over ancestor sections and auxi
     const test = node('test', 'src/lib/ApiTest.java', { sourceDescription: { kind: 'module-doc', text: 'Test helpers.' }, publicNames: [{ name: 'Sandwich', uses: 100 }] });
     const readme = node('readme', 'src/README.md', { sourceDescription: { kind: 'readme', text: 'The Maven module.' } }, 'heading'); readme.name = 'lib';
     assert.equal(structuralSummary([module, test], [readme], 'src/lib'), 'The public API.');
-    assert.equal(structuralSummary([{ ...module, attributes: { publicNames: [{ name: 'Api', uses: 1 }] } }, test], [], 'src/lib'), '공개 이름: Api');
+    assert.equal(structuralSummary([{ ...module, attributes: { publicNames: [{ name: 'Api', uses: 1 }] } }, test], [], 'src/lib'), missingStructuralRole);
 });
 
-test('fallback keeps named production anchors and does not turn scope metadata into purpose', async () => {
+test('wide top-level pages retain every physical child regardless of dependency pattern', async () => {
     const { structuralFrontier } = await import('../dist/query/structural-frontier.js');
     const stages = Array.from({ length: 18 }, (_, i) => ({ id: `folder:${i ? `module${i}` : '.'}`, title: i ? `module${i}` : 'root', summary: '', unit: '모듈', nodeIds: [`n${i}`], groups: [], incoming: [], outgoing: [] }));
     const flows = stages.slice(1).map((stage, i) => ({ source: stages[i].id, target: stage.id, sourceFiles: Array.from({ length: i === 5 || i === 10 ? 20 : 1 }, (_, n) => `module${i}/file${n}.ts`), label: 'uses' }));
     const model = structuralFrontier(stages, flows, () => true);
     const roots = model.stages.filter(s => model.rootStageIds.includes(s.id));
-    assert(roots.length <= 9);
-    assert(roots.filter(s => s.nodeIds.length && s.id !== 'folder:.').length >= 3);
-    assert(roots.some(s => s.id === 'folder:.'));
+    assert.equal(roots.length, 18); assert(roots.some(stage => stage.directoryPath === '.'));
     assert(roots.every(s => !s.title.startsWith('의존 단계') && s.summary === ''));
     assert(components(model.rootStageIds, projected({ ...model, flows })).every(group => group.length === 1));
     assert.equal(roots.flatMap(s => s.descendantNodeIds).length, stages.length);
     const cycle = structuralFrontier(stages, [...flows, { source: stages.at(-1).id, target: stages[0].id, sourceFiles: ['module17/file.ts'], label: 'uses' }], () => true);
     const cyclicRoots = cycle.stages.filter(s => cycle.rootStageIds.includes(s.id));
-    assert.equal(cyclicRoots.length, 9);
-    assert.equal(cyclicRoots.filter(s => s.nodeIds.length).length, 8);
+    assert.equal(cyclicRoots.length, 18); assert(cyclicRoots.some(stage => stage.directoryPath === '.'));
     assert.equal(cyclicRoots.flatMap(s => s.descendantNodeIds).length, stages.length);
 });
-test('scope public names aggregate full definitions once per source instead of truncated overload lists', () => {
+test('scope public names and overloads remain raw facts instead of folder descriptions', () => {
     const n = node('n', 'src/a.go', { definitions: [{ name: 'Executor', public: true, uses: 9, line: 4 }, { name: 'Executor', public: true, uses: 9, line: 7 }, { name: 'Reader', public: true, uses: 15, line: 10 }, { name: 'Secret', public: false, uses: 100, line: 12 }], publicNames: [{ name: 'Executor', uses: 9 }, { name: 'ExportedValue', uses: 2, line: 14 }] });
-    assert.equal(structuralSummary([n], [], 'src'), '공개 이름: Reader · Executor · ExportedValue');
+    assert.equal(structuralSummary([n], [], 'src'), missingStructuralRole);
     const model = buildStructuralMap([n], []);
-    assert.deepEqual(model.stages[0].summaryEvidence.map(e => e.line), [4, 10, 14]);
+    assert.deepEqual(model.stages[0].summaryEvidence, []);
 });
 
-test('scoped cards label representative type prose and preserve its comment evidence', () => {
+test('folder roles reject representative type prose while retaining actual folder documentation', () => {
     const doc = { text: 'Processes manifests and runs their actions. More detail.', kind: 'type-doc', line: 4, endLine: 5 };
     const member = node('runner', 'runner.go', { definitions: [{ name: 'Runner', kind: 'type', public: true, uses: 20, line: 6, declarationDescription: doc }] });
     const readme = node('readme', 'README.md', { sourceDescription: { kind: 'readme', text: 'Repository purpose.', line: 1 } }, 'document');
     assert.equal(structuralSummary([], [readme], '.'), 'Repository purpose.');
     const model = buildStructuralMap([member, readme], []);
-    assert.equal(model.stages[0].summary, '주요 타입 Runner — Processes manifests and runs their actions.');
-    assert.deepEqual(model.stages[0].summaryDetail, { label: '주요 타입 Runner', text: 'Processes manifests and runs their actions.' });
-    assert.deepEqual(model.stages[0].summaryEvidence, [{ path: 'runner.go', line: 4 }]);
+    assert.equal(model.stages[0].summary, missingStructuralRole);
+    assert.equal(model.stages[0].summaryDetail, undefined);
+    assert.deepEqual(model.stages[0].summaryEvidence, []);
     const copy = node('copy', 'src/README.md', readme.attributes, 'document');
-    assert.equal(structuralSummary([{ ...member, sources: [{ ...member.sources[0], path: 'src/runner.go' }] }], [readme, copy], 'src'), '주요 타입 Runner — Processes manifests and runs their actions.');
+    assert.equal(structuralSummary([{ ...member, sources: [{ ...member.sources[0], path: 'src/runner.go' }] }], [readme, copy], 'src'), missingStructuralRole);
     const module = { ...member, attributes: { ...member.attributes, sourceDescription: { kind: 'module-doc', text: 'Package runner evaluates input.' } } };
     assert.equal(structuralSummary([module], [readme], '.'), 'Package runner evaluates input.');
 });
-test('residual cards keep actual folder names and label member type prose without broadening its claim', () => {
+test('parent folders never borrow representative child type descriptions', () => {
     const nodes = [node('a', 'examples/alpha/a.ts', { definitions: [{ name: 'Alpha', kind: 'type', public: true, uses: 3, line: 10, declarationDescription: { kind: 'type-doc', text: 'Renders an example.', line: 8, endLine: 9 } }] }), node('b', 'examples/beta/b.ts'), node('hidden', 'examples/zzz/z.ts', { definitions: [{ name: 'Hidden', kind: 'type', public: true, uses: 500, mentionFiles: 500, declarationDescription: { kind: 'type-doc', text: 'Describes the hidden helper.', line: 2 } }] })];
-    const model = buildStructuralMap(nodes, []), group = model.stages.find(s => s.scopePaths);
-    assert.equal(group.title, 'examples/alpha · beta 외 1개 폴더');
-    assert.deepEqual(group.headingParts, ['examples/alpha', 'examples/beta']);
-    assert.equal(group.headingRemainder, 1);
-    assert.equal(group.summary, '주요 타입 Alpha — Renders an example.');
-    assert.deepEqual(group.summaryDetails, [{ label: '주요 타입 Alpha', text: 'Renders an example.' }]);
-    assert.deepEqual(group.summaryEvidence, [{ path: 'examples/alpha/a.ts', line: 8 }]);
+    const model = buildStructuralMap(nodes, []), group = model.stages.find(s => s.id === 'directory:examples');
+    assert.equal(group.directoryPath, 'examples');
+    assert.equal(group.summary, missingStructuralRole);
+    assert.equal(group.headingParts, undefined);
+    assert.deepEqual(group.summaryEvidence, []);
 });
 
-test('cross-file lexical mentions outrank local repetitions without implying compiler binding', () => {
+test('lexical popularity never upgrades a type description into a folder role', () => {
     const type = (name, uses, mentionFiles) => ({ kind: 'type', public: true, name, uses, ...(mentionFiles === undefined ? {} : { mentionFiles, usageBasis: 'distinct-other-files-lexical' }), declarationDescription: { kind: 'type-doc', text: `${name} handles its documented task.`, line: 3 } });
     const n = node('types', 'src/types.cs', { definitions: [type('LocalHelper', 100), type('MainApi', 2, 12), type('LocalException', 200, 1)] });
-    assert.equal(structuralSummary([n], [], 'src'), '주요 타입 MainApi — MainApi handles its documented task.');
+    assert.equal(structuralSummary([n], [], 'src'), missingStructuralRole);
     const undocumented = { ...n, attributes: { definitions: n.attributes.definitions.map(({ declarationDescription, ...value }) => value) } };
-    assert.equal(structuralSummary([undocumented], [], 'src'), '공개 이름: MainApi · LocalException · LocalHelper');
+    assert.equal(structuralSummary([undocumented], [], 'src'), missingStructuralRole);
 });
-test('explicit package warning does not override an authored representative type purpose', () => {
-    const n = node('a', 'src/a.java', { sourceDescription: { kind: 'module-doc', text: 'Do NOT use this package directly.' }, definitions: [{ kind: 'type', public: true, name: 'Factory', uses: 1, declarationDescription: { kind: 'type-doc', text: 'Creates requested values.', line: 8 } }] });
-    assert.equal(structuralSummary([n], [], 'src'), '주요 타입 Factory — Creates requested values.');
+test('explicit package warning remains authoritative instead of an unrelated type purpose', () => {
+    const n = node('a', 'src/package-info.java', { sourceDescription: { kind: 'module-doc', text: 'Do NOT use this package directly.' }, definitions: [{ kind: 'type', public: true, name: 'Factory', uses: 1, declarationDescription: { kind: 'type-doc', text: 'Creates requested values.', line: 8 } }] });
+    assert.equal(structuralSummary([n], [], 'src'), 'Do NOT use this package directly.');
     const warningOnly = buildStructuralMap([{ ...n, attributes: { sourceDescription: n.attributes.sourceDescription } }], []);
-    assert.equal(warningOnly.stages[0].summaryDetail.label, '사용 주의');
+    assert.equal(warningOnly.stages[0].summary, 'Do NOT use this package directly.');
 });
 test('package endpoints deduplicate only when all member files already have one physical owner', async () => {
     const { packageStages } = await import('../dist/query/structural-package-stages.js');
@@ -316,13 +305,13 @@ test('package alias cleanup removes empty folded ancestors and refreshes mixed s
     }
 });
 
-test('type role details retain three distinct ranked facts and only their exact source evidence', () => {
+test('ranked type facts never become a folder role or folder evidence', () => {
     const member = (name, rank, path, line) => node(name + path, path, { definitions: [{ name, kind: 'type', public: true, mentionFiles: rank, uses: 1, declarationDescription: { kind: 'type-doc', text: `${name} performs its documented operation.`, line } }] });
     const nodes = [member('First', 12, 'src/a.ts', 2), member('Second', 10, 'src/b.ts', 4), member('Third', 8, 'src/c.ts', 6), member('Fourth', 6, 'src/d.ts', 8), member('First', 5, 'src/e.ts', 10)];
     const stage = buildStructuralMap(nodes, []).stages[0];
-    assert.deepEqual(stage.summaryDetails.map(d => d.label), ['주요 타입 First', '주요 타입 Second', '주요 타입 Third']);
-    assert.deepEqual(stage.summaryDetail, stage.summaryDetails[0]);
-    assert.deepEqual(stage.summaryEvidence, [{ path: 'src/a.ts', line: 2 }, { path: 'src/b.ts', line: 4 }, { path: 'src/c.ts', line: 6 }]);
+    assert.equal(stage.summary, missingStructuralRole);
+    assert.equal(stage.summaryDetails, undefined);
+    assert.deepEqual(stage.summaryEvidence, []);
     const documented = nodes.map((n, i) => i ? n : { ...n, attributes: { ...n.attributes, sourceDescription: { kind: 'module-doc', text: 'This package executes operations.', line: 1 } } });
     assert.equal(buildStructuralMap(documented, []).stages[0].summaryDetails, undefined);
 });

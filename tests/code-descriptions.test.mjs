@@ -237,3 +237,24 @@ test('type prose excludes line-leading documentation block tags without removing
     const prose = attributes('Parser.java', '/**\n * Sends status to support@example.org using {@code @author}.\n */\npublic class Parser {}');
     assert.equal(prose.definitions[0].declarationDescription.text, 'Sends status to support@example.org using @author.');
 });
+
+test('module docs render prose without Markdown wrappers or JSDoc examples', () => {
+    const text = '/**\n * @module request\n * **Builds** a `Request` from [input](https://example.org). More details.\n * @example\n * const example = new Request();\n */\nexport const request = 1;';
+    assert.deepEqual(attributes('index.ts', text).sourceDescription, { text: 'Builds a Request from input.', kind: 'module-doc', line: 1, endLine: 6 });
+});
+
+test('fenced examples never become module descriptions and prose after them survives', () => {
+    const text = '/**\n * ```ts\n * const misleading = "Example code.";\n * ```\n * Provides **routing** helpers.\n */\nimport x from "./x";';
+    assert.equal(attributes('index.ts', text).sourceDescription.text, 'Provides routing helpers.');
+    assert.equal(attributes('index.ts', '/**\n * @example\n * const misleading = "Example code.";\n */\nimport x from "./x";').sourceDescription, undefined);
+});
+
+test('XML documentation selects summary prose and excludes example code', () => {
+    const text = 'using System;\n/// <example><code>var value = "Wrong purpose.";</code></example>\n/// <summary>Reads <see cref="IParser"/> &amp; **writes** <c>CSV</c> records.</summary>\npublic class Reader {}';
+    assert.equal(attributes('Reader.cs', text).definitions[0].declarationDescription.text, 'Reads IParser & writes CSV records.');
+});
+
+test('documentation block metadata without sentence punctuation cannot leak into prose', () => {
+    const text = '/**\n * Parses structured values\n * @example\n * new Parser().parse("value")\n * @returns parsed data\n */\npublic class Parser {}';
+    assert.equal(attributes('Parser.java', text).definitions[0].declarationDescription.text, 'Parses structured values');
+});
