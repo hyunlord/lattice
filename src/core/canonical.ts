@@ -4,13 +4,20 @@ export type JsonValue = null | boolean | number | string | readonly JsonValue[] 
 export type JsonObject = { readonly [key: string]: JsonValue; };
 
 export function canonicalJson(value: unknown): string {
-    return encode(value, { path: "$", ancestors: new Set(), depth: 0 });
+    return canonicalEncoder()(value);
+}
+
+/** Reuse only within an operation whose input objects remain unchanged. */
+export function canonicalEncoder(): (value: unknown) => string {
+    const encoded = new WeakMap<object, Map<number, string>>();
+    return value => encode(value, { path: "$", ancestors: new Set(), depth: 0, encoded });
 }
 
 type Position = {
     readonly path: string;
     readonly ancestors: ReadonlySet<object>;
     readonly depth: number;
+    readonly encoded: WeakMap<object, Map<number, string>>;
 };
 
 function encode(value: unknown, position: Position): string {
@@ -34,6 +41,8 @@ function encode(value: unknown, position: Position): string {
 
 function encodeObject(value: object, position: Position): string {
     if (position.ancestors.has(value)) throw new GraphInputError(position.path, "cyclic value");
+    const cached = position.encoded.get(value)?.get(position.depth);
+    if (cached !== undefined) return cached;
     const ancestors = new Set(position.ancestors).add(value);
     const array = Array.isArray(value);
     const prototype: unknown = Object.getPrototypeOf(value);
@@ -53,8 +62,12 @@ function encodeObject(value: object, position: Position): string {
             throw new GraphInputError(path, "expected an enumerable data property");
         }
         const child: unknown = descriptor.value;
-        const encoded = encode(child, { path, ancestors, depth: position.depth + 1 });
+        const encoded = encode(child, { path, ancestors, depth: position.depth + 1, encoded: position.encoded });
         return array ? encoded : `${JSON.stringify(key)}:${encoded}`;
     });
-    return array ? `[${parts.join(",")}]` : `{${parts.join(",")}}`;
+    const encoded = array ? `[${parts.join(",")}]` : `{${parts.join(",")}}`;
+    const depths = position.encoded.get(value) ?? new Map<number, string>();
+    depths.set(position.depth, encoded);
+    position.encoded.set(value, depths);
+    return encoded;
 }

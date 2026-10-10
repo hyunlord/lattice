@@ -3,8 +3,16 @@ import type { Source } from "../core/model.js";
 import type { ExtractedRecord } from "../adapters/types.js";
 import type { Environment, RuntimeValue } from "./runtime.js";
 function isRuntimeArray(value: RuntimeValue): value is readonly RuntimeValue[] { return Array.isArray(value); }
+const sourceKeys = new WeakMap<Source, { readonly path: string; readonly pointer: string; readonly key: string; }>();
+function sourceKey(source: Source): string {
+    const cached = sourceKeys.get(source);
+    if (cached && cached.path === source.path && cached.pointer === source.pointer) return cached.key;
+    const key = `${source.path}#${source.pointer}`;
+    sourceKeys.set(source, { path: source.path, pointer: source.pointer, key });
+    return key;
+}
 export function addSources(env: Environment, sources: readonly Source[]): void {
-    for (const source of sources) env.sources.set(`${source.path}#${source.pointer}`, source);
+    for (const source of sources) env.sources.set(sourceKey(source), source);
 }
 export type Provenance = { readonly roots: WeakMap<object, readonly Source[]>; readonly locations: WeakMap<object, ReadonlyMap<string, readonly Source[]>>; readonly dependencies: WeakMap<object, ReadonlyMap<string, readonly Source[]>>; };
 export function createProvenance(): Provenance { return { roots: new WeakMap(), locations: new WeakMap(), dependencies: new WeakMap() }; }
@@ -32,30 +40,32 @@ export function locatedRecord(record: ExtractedRecord, provenance: Provenance): 
     return view;
 }
 export function locatedPath(value: RuntimeValue, path: readonly JsonValue[], env: Environment): RuntimeValue {
-    if (!path.length) {
-        if (value !== null && typeof value === "object") addSources(env, env.provenance?.roots.get(value) ?? []);
-        return value;
+    let current = value;
+    for (let depth = 0; depth < path.length; depth++) {
+        const head = path[depth];
+        if (head === "*" && isRuntimeArray(current)) {
+            const input = current;
+            const tail = path.slice(depth + 1);
+            const dependencies = new Map<string, readonly Source[]>();
+            const result = input.map((_, index) => {
+                const sources = new Map<string, Source>();
+                const child = locatedPath(input, [index, ...tail], { ...env, sources });
+                addSources(env, [...sources.values()]);
+                dependencies.set(String(index), [...sources.values()]);
+                return child;
+            });
+            env.provenance?.dependencies.set(result, dependencies);
+            return result;
+        }
+        if (current === null || typeof current !== "object") return undefined;
+        const key = pathSegment(head);
+        if (!Object.hasOwn(current, key)) return undefined;
+        addSources(env, env.provenance?.dependencies.get(current)?.get(key) ?? []);
+        if (depth === path.length - 1) addSources(env, env.provenance?.locations.get(current)?.get(key) ?? []);
+        current = isRuntimeArray(current) ? current[Number(key)] : current[key];
     }
-    const [head, ...tail] = path;
-    if (head === "*" && isRuntimeArray(value)) {
-        const dependencies = new Map<string, readonly Source[]>();
-        const result = value.map((_, index) => {
-            const sources = new Map<string, Source>();
-            const child = locatedPath(value, [index, ...tail], { ...env, sources });
-            addSources(env, [...sources.values()]);
-            dependencies.set(String(index), [...sources.values()]);
-            return child;
-        });
-        env.provenance?.dependencies.set(result, dependencies);
-        return result;
-    }
-    if (value === null || typeof value !== "object") return undefined;
-    const key = pathSegment(head);
-    if (!Object.hasOwn(value, key)) return undefined;
-    addSources(env, env.provenance?.dependencies.get(value)?.get(key) ?? []);
-    if (!tail.length) addSources(env, env.provenance?.locations.get(value)?.get(key) ?? []);
-    const child = isRuntimeArray(value) ? value[Number(key)] : value[key];
-    return locatedPath(child, tail, env);
+    if (current !== null && typeof current === "object") addSources(env, env.provenance?.roots.get(current) ?? []);
+    return current;
 }
 export function itemEnvironment(env: Environment, input: readonly RuntimeValue[], index: number): Environment {
     const sources = collectionSources(env, input, index);

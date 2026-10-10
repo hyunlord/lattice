@@ -1,0 +1,42 @@
+import test from 'node:test';
+import { execFileSync } from 'node:child_process';
+import assert from 'node:assert/strict';
+import { realpathSync, mkdtempSync, rmSync, writeFileSync, readFileSync, statSync, utimesSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
+import { buildRepository } from '../bin/build.mjs';
+import { readGraph, atomic } from '../bin/storage.mjs';
+test('validated immutable graph is reused only while complete file bytes match', t => {
+    const root = realpathSync(mkdtempSync(join(tmpdir(), 'lattice-storage-reuse-')));
+    t.after(() => rmSync(root, { recursive: true, force: true }));
+    execFileSync('git', ['init', '-q', root]);
+    writeFileSync(join(root, 'data.json'), '[{"id":"one","name":"Alpha"}]');
+    const graph = buildRepository({ root }).graph, path = join(root, 'graph.json');
+    atomic(path, graph);
+    const first = readGraph(path);
+    assert.equal(readGraph(path), first);
+    const stat = statSync(path);
+    writeFileSync(path, readFileSync(path, 'utf8').replace('Alpha', 'Omega'));
+    utimesSync(path, stat.atime, stat.mtime);
+    assert.throws(() => readGraph(path), /hash mismatch/u);
+});
+
+test('historical builds reuse immutable inputs but refresh current-lens projections', async t => {
+    const { compareRepository } = await import('../bin/history.mjs');
+    const root = realpathSync(mkdtempSync(join(tmpdir(), 'lattice-history-reuse-')));
+    t.after(() => rmSync(root, { recursive: true, force: true }));
+    execFileSync('git', ['init', '-q', root]);
+    writeFileSync(join(root, '.gitignore'), '.lattice/\n');
+    writeFileSync(join(root, 'data.json'), '[{"id":"one","name":"Alpha"}]');
+    execFileSync('git', ['-C', root, 'add', '.']);
+    execFileSync('git', ['-C', root, '-c', 'user.name=Test', '-c', 'user.email=test@example.invalid', 'commit', '-qm', 'fixture']);
+    const options = { root };
+    const first = compareRepository(options, 'HEAD');
+    assert.equal(compareRepository(options, 'HEAD').before, first.before);
+    const lens = join(root, '.lattice', 'lens.json');
+    writeFileSync(lens, JSON.stringify({ schemaVersion: 1, name: 'Lens', kinds: [{ id: 'thing', label: 'Things', files: ['data.json'] }] }));
+    const projected = compareRepository(options, 'HEAD');
+    assert.notEqual(projected.before.hash, first.before.hash);
+    assert.equal(projected.difference.before.coverage, 'current-lens-projection');
+    assert.equal(projected.before.nodes.find(node => node.id === 'one').kind, 'thing');
+});

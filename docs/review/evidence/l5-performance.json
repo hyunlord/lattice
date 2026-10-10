@@ -1,0 +1,284 @@
+{
+  "status": "partial",
+  "date": "2026-10-10",
+  "hardware": "Apple M4 Max 14 cores; 38654705664 bytes; Darwin 27 arm64",
+  "method": "3 empty-cache builds; first empty-cache MCP request; 20 unchanged freshness calls; 3 calls per 8 tools; default Git environment",
+  "cases": [
+    {
+      "name": "final-json",
+      "sourceCommit": "7aebd2e9046c4926d14fcb2d6f597dd02c5744f8",
+      "sourceClean": true,
+      "optionalGraft": false,
+      "toolBaseCommit": "7d45e88ce9a2546c915f1261cf473ce86998736e",
+      "trackedDiffSha256": "36a6e0211a08ea77fd9e09620e666b909f49d2fae8bda45b476c14dd2c11e05b",
+      "compiledAggregateSha256": "5344403601805becd96b54aaef02e96795bcc52ef9c13d64a7cf3e04044d89e5",
+      "node": "v24.21.0",
+      "graphHash": "76253be0d1545f2c7467849e25792212f0bd2d33e1b1381d3600fe89365d1c48",
+      "lensSha256": "db8fb8c1d892535918202f8889c750aee83b02ae30d26d8d83e5646db41071bc",
+      "builds": {
+        "n": 3,
+        "minMs": 2048.247417,
+        "p50Ms": 2057.4375,
+        "p95Ms": 2075.3387090000006,
+        "maxMs": 2075.3387090000006
+      },
+      "coldMcpMs": 1981.6215000000002,
+      "unchangedFreshness": {
+        "n": 20,
+        "minMs": 42.84016700000029,
+        "p50Ms": 45.134374999999636,
+        "p95Ms": 47.518207999999504,
+        "maxMs": 49.17891700000109
+      },
+      "tools": {
+        "lattice_overview": {
+          "n": 3,
+          "minMs": 53.03691600000093,
+          "p50Ms": 54.37220800000068,
+          "p95Ms": 54.629541999998764,
+          "maxMs": 54.629541999998764
+        },
+        "lattice_find": {
+          "n": 3,
+          "minMs": 49.73166599999968,
+          "p50Ms": 52.56266700000015,
+          "p95Ms": 52.61091699999997,
+          "maxMs": 52.61091699999997
+        },
+        "lattice_node": {
+          "n": 3,
+          "minMs": 45.41487500000039,
+          "p50Ms": 45.91675000000032,
+          "p95Ms": 46.06233400000019,
+          "maxMs": 46.06233400000019
+        },
+        "lattice_trace": {
+          "n": 3,
+          "minMs": 43.197791999999026,
+          "p50Ms": 44.05341599999883,
+          "p95Ms": 46.265625,
+          "maxMs": 46.265625
+        },
+        "lattice_matrix": {
+          "n": 3,
+          "minMs": 57.95170800000051,
+          "p50Ms": 58.077000000001135,
+          "p95Ms": 67.36275000000023,
+          "maxMs": 67.36275000000023
+        },
+        "lattice_findings": {
+          "n": 3,
+          "minMs": 43.64270899999974,
+          "p50Ms": 45.32520900000054,
+          "p95Ms": 46.08487499999865,
+          "maxMs": 46.08487499999865
+        },
+        "lattice_diff": {
+          "n": 3,
+          "minMs": 670.0518749999992,
+          "p50Ms": 680.7672500000008,
+          "p95Ms": 691.6959999999999,
+          "maxMs": 691.6959999999999
+        },
+        "lattice_freshness": {
+          "n": 3,
+          "minMs": 42.992833000000246,
+          "p50Ms": 43.792208999999275,
+          "p95Ms": 46.39191600000049,
+          "maxMs": 46.39191600000049
+        }
+      },
+      "gates": {
+        "buildUnder10s": true,
+        "deterministicFirstTwo": true,
+        "unchangedFreshnessUnder50ms": true,
+        "mcpUnder1s": false,
+        "allToolCallsSuccessful": true
+      }
+    },
+    {
+      "name": "final-yaml",
+      "sourceCommit": "6a0fb5b7ad5af6cd4244b34cc6053fcdb0dd5287",
+      "sourceClean": true,
+      "optionalGraft": true,
+      "toolBaseCommit": "7d45e88ce9a2546c915f1261cf473ce86998736e",
+      "trackedDiffSha256": "36a6e0211a08ea77fd9e09620e666b909f49d2fae8bda45b476c14dd2c11e05b",
+      "compiledAggregateSha256": "5344403601805becd96b54aaef02e96795bcc52ef9c13d64a7cf3e04044d89e5",
+      "node": "v24.21.0",
+      "graphHash": "b201932e49b448978fad34a7204f6fdd45be59faf2af741e8e43af33e414b8fa",
+      "lensSha256": "00f17f0dc4286dbc246037107857eb7f1ef1303f309f2bdf5fba3c44a788bbff",
+      "builds": {
+        "n": 3,
+        "minMs": 2853.3113329999996,
+        "p50Ms": 2875.270709,
+        "p95Ms": 2895.3332499999997,
+        "maxMs": 2895.3332499999997
+      },
+      "coldMcpMs": 2842.104792,
+      "unchangedFreshness": {
+        "n": 20,
+        "minMs": 49.82820899999933,
+        "p50Ms": 51.23591699999997,
+        "p95Ms": 56.9926660000001,
+        "maxMs": 63.693750000000364
+      },
+      "tools": {
+        "lattice_overview": {
+          "n": 3,
+          "minMs": 85.57608299999993,
+          "p50Ms": 85.808500000001,
+          "p95Ms": 87.28766700000051,
+          "maxMs": 87.28766700000051
+        },
+        "lattice_find": {
+          "n": 3,
+          "minMs": 54.43291700000009,
+          "p50Ms": 55.66070899999977,
+          "p95Ms": 55.686249999998836,
+          "maxMs": 55.686249999998836
+        },
+        "lattice_node": {
+          "n": 3,
+          "minMs": 50.234958999999435,
+          "p50Ms": 51.916041999998924,
+          "p95Ms": 52.07941699999901,
+          "maxMs": 52.07941699999901
+        },
+        "lattice_trace": {
+          "n": 3,
+          "minMs": 49.875,
+          "p50Ms": 50.17279199999939,
+          "p95Ms": 50.894249999999374,
+          "maxMs": 50.894249999999374
+        },
+        "lattice_matrix": {
+          "n": 3,
+          "minMs": 63.63824999999997,
+          "p50Ms": 64.77666700000009,
+          "p95Ms": 68.90516599999864,
+          "maxMs": 68.90516599999864
+        },
+        "lattice_findings": {
+          "n": 3,
+          "minMs": 49.892791999998735,
+          "p50Ms": 50.05012499999975,
+          "p95Ms": 52.20587499999965,
+          "maxMs": 52.20587499999965
+        },
+        "lattice_diff": {
+          "n": 3,
+          "minMs": 1518.3211249999986,
+          "p50Ms": 3365.424709000001,
+          "p95Ms": 4145.4416249999995,
+          "maxMs": 4145.4416249999995
+        },
+        "lattice_freshness": {
+          "n": 3,
+          "minMs": 51.38624999999956,
+          "p50Ms": 55.236541000002035,
+          "p95Ms": 57.04712500000096,
+          "maxMs": 57.04712500000096
+        }
+      },
+      "gates": {
+        "buildUnder10s": true,
+        "deterministicFirstTwo": true,
+        "unchangedFreshnessUnder50ms": false,
+        "mcpUnder1s": false,
+        "allToolCallsSuccessful": true
+      }
+    },
+    {
+      "name": "final-yaml-ci",
+      "sourceCommit": "6a0fb5b7ad5af6cd4244b34cc6053fcdb0dd5287",
+      "sourceClean": true,
+      "optionalGraft": false,
+      "toolBaseCommit": "7d45e88ce9a2546c915f1261cf473ce86998736e",
+      "trackedDiffSha256": "36a6e0211a08ea77fd9e09620e666b909f49d2fae8bda45b476c14dd2c11e05b",
+      "compiledAggregateSha256": "5344403601805becd96b54aaef02e96795bcc52ef9c13d64a7cf3e04044d89e5",
+      "node": "v24.21.0",
+      "graphHash": "7358f9dda9f51af1431d4c070a7906338cbe364e0046a4f627b615a3fadde807",
+      "lensSha256": "00f17f0dc4286dbc246037107857eb7f1ef1303f309f2bdf5fba3c44a788bbff",
+      "builds": {
+        "n": 3,
+        "minMs": 2763.195833,
+        "p50Ms": 2786.5713339999998,
+        "p95Ms": 2839.4847910000008,
+        "maxMs": 2839.4847910000008
+      },
+      "coldMcpMs": 2738.6286249999994,
+      "unchangedFreshness": {
+        "n": 20,
+        "minMs": 44.62712499999907,
+        "p50Ms": 49.15712499999972,
+        "p95Ms": 51.528167000000394,
+        "maxMs": 55.50908399999935
+      },
+      "tools": {
+        "lattice_overview": {
+          "n": 3,
+          "minMs": 80.43008399999962,
+          "p50Ms": 83.52758300000096,
+          "p95Ms": 84.1049579999999,
+          "maxMs": 84.1049579999999
+        },
+        "lattice_find": {
+          "n": 3,
+          "minMs": 53.10725000000093,
+          "p50Ms": 53.1228340000016,
+          "p95Ms": 54.004249999999956,
+          "maxMs": 54.004249999999956
+        },
+        "lattice_node": {
+          "n": 3,
+          "minMs": 50.20833300000049,
+          "p50Ms": 51.07750000000124,
+          "p95Ms": 51.14574999999968,
+          "maxMs": 51.14574999999968
+        },
+        "lattice_trace": {
+          "n": 3,
+          "minMs": 48.47587500000009,
+          "p50Ms": 48.78491699999904,
+          "p95Ms": 54.270542000000205,
+          "maxMs": 54.270542000000205
+        },
+        "lattice_matrix": {
+          "n": 3,
+          "minMs": 64.31183299999975,
+          "p50Ms": 69.0903330000001,
+          "p95Ms": 69.46837500000038,
+          "maxMs": 69.46837500000038
+        },
+        "lattice_findings": {
+          "n": 3,
+          "minMs": 50.26654199999939,
+          "p50Ms": 50.577415999998266,
+          "p95Ms": 51.29108300000007,
+          "maxMs": 51.29108300000007
+        },
+        "lattice_diff": {
+          "n": 3,
+          "minMs": 1051.306583999998,
+          "p50Ms": 1063.1793749999997,
+          "p95Ms": 1084.0142919999998,
+          "maxMs": 1084.0142919999998
+        },
+        "lattice_freshness": {
+          "n": 3,
+          "minMs": 45.36545800000022,
+          "p50Ms": 50.16029199999684,
+          "p95Ms": 51.1704159999972,
+          "maxMs": 51.1704159999972
+        }
+      },
+      "gates": {
+        "buildUnder10s": true,
+        "deterministicFirstTwo": true,
+        "unchangedFreshnessUnder50ms": false,
+        "mcpUnder1s": false,
+        "allToolCallsSuccessful": true
+      }
+    }
+  ]
+}

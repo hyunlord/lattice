@@ -33,6 +33,9 @@ test('diff reports semantic edits and provenance while ignoring observation-only
     const after = lattice.createGraph(later, digest);
     // When: comparing their semantic records.
     assert.equal(typeof lattice.diffGraphs, 'function');
+    assert.ok(Object.values(lattice.diffGraphs(before, before)).every(change => change.added.length === 0 && change.removed.length === 0 && change.changed.length === 0));
+    const colliding = () => '0'.repeat(64);
+    assert.equal(lattice.diffGraphs(lattice.createGraph(earlier, colliding), lattice.createGraph(later, colliding)).nodes.changed.length, 1);
     const result = lattice.diffGraphs(before, after);
     // Then: sorted additions/removals and exact before/after edits omit the stable node.
     assert.deepEqual(result.nodes.added.map(value => value.id), ['a-added', 'z-added']);

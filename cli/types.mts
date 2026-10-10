@@ -16,6 +16,7 @@ export interface RepositoryReader {
     readonly commit?: string;
     readonly dirty: boolean;
     readonly paths: readonly string[];
+    prepare?(paths: readonly string[]): void;
     readText(path: string): string | undefined;
 }
 export interface Selection {
