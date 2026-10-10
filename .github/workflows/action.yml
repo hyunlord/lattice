@@ -1,0 +1,25 @@
+name: Action artifact acceptance
+on:
+  push:
+    branches: [main]
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  artifact:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: ./
+        id: map
+      - name: Verify artifact-only output without Pages permission
+        env:
+          SITE_PATH: ${{ steps.map.outputs.site-path }}
+          REPORT_PATH: ${{ steps.map.outputs.report-path }}
+        run: |
+          test -s "$SITE_PATH/index.html"
+          node --input-type=module -e 'import fs from "node:fs"; const graph=JSON.parse(fs.readFileSync(process.env.SITE_PATH+"/graph.json")); const report=JSON.parse(fs.readFileSync(process.env.REPORT_PATH)); if(graph.hash!==report.graphHash || !graph.nodes.length)process.exit(1); console.log(JSON.stringify({hash:graph.hash,nodes:graph.nodes.length}));'

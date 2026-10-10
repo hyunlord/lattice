@@ -1,0 +1,99 @@
+name: lattice-action
+description: Build, check and export a fresh repository system map with downloadable evidence
+inputs:
+  root:
+    description: Repository checkout to inspect
+    default: '.'
+  lens:
+    description: Optional lens path (relative to root or absolute)
+    default: ''
+  base-ref:
+    description: Comparison revision; defaults to pull request base SHA
+    default: ''
+  history-ref:
+    description: Optional additional historical snapshot revision
+    default: ''
+  history-current-lens:
+    description: Project the current lens on the additional historical snapshot
+    default: 'false'
+  node-version:
+    description: Node version used for the Lattice CLI
+    default: '22'
+  artifact-name:
+    description: Static site artifact name (unique per invocation)
+    default: lattice-map
+  report-artifact-name:
+    description: Validated system difference report artifact name
+    default: lattice-report
+outputs:
+  site-path:
+    description: Generated static site directory
+    value: ${{ steps.build.outputs.site-path }}
+  report-path:
+    description: Generated report JSON
+    value: ${{ steps.build.outputs.report-path }}
+  cache-path:
+    description: Generated graph and historical snapshots
+    value: ${{ steps.build.outputs.cache-path }}
+  graph-hash:
+    description: Exported graph identity
+    value: ${{ steps.build.outputs.graph-hash }}
+  check-status:
+    description: pass or fail (failed and unknown gates fail the action after upload)
+    value: ${{ steps.build.outputs.check-status }}
+runs:
+  using: composite
+  steps:
+    - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1
+      with:
+        node-version: ${{ inputs.node-version }}
+        package-manager-cache: false
+    - name: Prepare trusted Lattice tool
+      shell: bash
+      env:
+        LATTICE_ACTION_PATH: ${{ github.action_path }}
+      run: |
+        cd "$LATTICE_ACTION_PATH"
+        npm ci --ignore-scripts --no-audit --no-fund
+        npm run build
+    - name: Isolate generated files
+      id: paths
+      shell: bash
+      run: |
+        WORK_DIR=$(mktemp -d "$RUNNER_TEMP/lattice-ci.XXXXXX")
+        printf 'work-dir=%s\n' "$WORK_DIR" >> "$GITHUB_OUTPUT"
+    - name: Build, check, compare and export
+      id: build
+      shell: bash
+      env:
+        LATTICE_ACTION_PATH: ${{ github.action_path }}
+        LATTICE_ROOT: ${{ inputs.root }}
+        LATTICE_LENS: ${{ inputs.lens }}
+        LATTICE_BASE_REF: ${{ inputs.base-ref }}
+        LATTICE_HISTORY_REF: ${{ inputs.history-ref }}
+        LATTICE_HISTORY_CURRENT_LENS: ${{ inputs.history-current-lens }}
+        LATTICE_CACHE_DIR: ${{ steps.paths.outputs.work-dir }}/cache
+        LATTICE_OUTPUT_DIR: ${{ steps.paths.outputs.work-dir }}/site
+        LATTICE_REPORT_PATH: ${{ steps.paths.outputs.work-dir }}/report/report.json
+      run: node "$LATTICE_ACTION_PATH/bin/ci-build.mjs"
+    - name: Preserve static map even when a gate fails
+      if: ${{ !cancelled() && steps.build.outcome == 'success' }}
+      uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
+      with:
+        name: ${{ inputs.artifact-name }}
+        path: ${{ steps.build.outputs.site-path }}
+        include-hidden-files: true
+        if-no-files-found: error
+    - name: Preserve system difference report
+      if: ${{ !cancelled() && steps.build.outcome == 'success' }}
+      uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
+      with:
+        name: ${{ inputs.report-artifact-name }}
+        path: ${{ steps.build.outputs.report-path }}
+        if-no-files-found: error
+    - name: Enforce lens gates
+      if: ${{ !cancelled() && steps.build.outcome == 'success' }}
+      shell: bash
+      env:
+        CHECK_STATUS: ${{ steps.build.outputs.check-status }}
+      run: test "$CHECK_STATUS" = pass

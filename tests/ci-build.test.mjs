@@ -1,0 +1,63 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { mkdtempSync, mkdirSync, writeFileSync, readFileSync, rmSync, realpathSync, existsSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
+import { execFileSync } from 'node:child_process';
+import { runCiBuild } from '../bin/ci-build.mjs';
+import { parseCiReport, CiReportError } from '../bin/ci-report.mjs';
+function fixture(t) {
+    const directory = realpathSync(mkdtempSync(join(tmpdir(), 'lattice-ci-')));
+    t.after(() => rmSync(directory, { recursive: true, force: true }));
+    const root = join(directory, 'source'), runnerTemp = join(directory, 'temp');
+    mkdirSync(root); mkdirSync(runnerTemp); execFileSync('git', ['init', '-q', root]);
+    const git = (...args) => execFileSync('git', ['-C', root, ...args], { encoding: 'utf8' }).trim();
+    const commit = () => { git('add', '.'); git('-c', 'user.name=Test', '-c', 'user.email=test@example.invalid', 'commit', '-qm', 'fixture'); return git('rev-parse', 'HEAD'); };
+    const data = value => writeFileSync(join(root, 'records.json'), JSON.stringify(value));
+    const config = { root, runnerTemp, cacheDir: join(runnerTemp, 'cache'), outputDir: join(runnerTemp, 'site'), reportPath: join(runnerTemp, 'report.json'), repository: 'example/project', runId: '123', eventName: 'push' };
+    return { root, git, commit, data, config };
+}
+test('CI build exports real source graph and strict report without invoking consumer package scripts', t => {
+    const f = fixture(t);
+    f.data([{ id: 'record', name: 'Record' }]);
+    writeFileSync(join(f.root, 'package.json'), JSON.stringify({ scripts: { build: 'node -e "throw new Error(\'must not execute\')"' } }));
+    const commit = f.commit();
+    const result = runCiBuild({ ...f.config, sourceCommit: commit });
+    assert.equal(result.checkStatus, 'pass');
+    const graph = JSON.parse(readFileSync(join(result.outputPath, 'graph.json'), 'utf8'));
+    assert.equal(graph.repository.commit, commit);
+    assert.equal(result.report.graphHash, graph.hash);
+    assert.equal(result.report.counts.nodes, graph.nodes.length);
+    assert.ok(existsSync(join(result.outputPath, 'index.html')));
+    assert.deepEqual(parseCiReport(JSON.parse(readFileSync(result.reportPath, 'utf8'))), result.report);
+    assert.throws(() => parseCiReport({ ...result.report, surprise: true }), CiReportError);
+});
+test('failed configured gate still produces browsable site and report', t => {
+    const f = fixture(t);
+    f.data([{ id: 'one' }]); mkdirSync(join(f.root, '.lattice'));
+    writeFileSync(join(f.root, '.lattice/lens.json'), JSON.stringify({ schemaVersion: 1, name: 'Fixture', kinds: [], findings: [{ id: 'approval', query: {}, severity: 'warning', metrics: { count: 1 }, template: '{count}', gate: { metric: 'count', comparator: 'eq', threshold: 0 } }] }));
+    f.commit();
+    const result = runCiBuild(f.config);
+    assert.equal(result.checkStatus, 'fail');
+    assert.equal(result.report.gates.failed, 1);
+    assert.ok(existsSync(join(result.outputPath, 'graph.json')));
+    assert.equal(parseCiReport(JSON.parse(readFileSync(result.reportPath, 'utf8'))).gates.failed, 1);
+});
+test('PR base delta remains authoritative after optional current-lens history comparison', t => {
+    const f = fixture(t);
+    f.data([{ id: 'one' }]);
+    mkdirSync(join(f.root, '.lattice'));
+    writeFileSync(join(f.root, '.lattice/lens.json'), JSON.stringify({ schemaVersion: 1, name: 'Fixture', kinds: [{ id: 'record', label: 'Record', files: ['records.json'] }] }));
+    const baseline = f.commit();
+    f.data([{ id: 'one' }, { id: 'two' }]); const base = f.commit();
+    f.data([{ id: 'one' }, { id: 'two' }, { id: 'three' }]); const head = f.commit();
+    const result = runCiBuild({ ...f.config, eventName: 'pull_request', pullRequest: { number: 7, headSha: head, baseSha: base }, baseRef: base, historyRef: baseline, historyCurrentLens: true });
+    assert.equal(result.report.difference.baseCommit, base);
+    assert.equal(result.report.difference.headCommit, head);
+    assert.equal(result.report.difference.counts.nodes.added, 1);
+    const savedDiff = JSON.parse(readFileSync(join(result.cacheDir, 'diff.json'), 'utf8'));
+    assert.equal(savedDiff.before.commit, base);
+    const snapshots = JSON.parse(readFileSync(join(result.outputPath, 'snapshots.json'), 'utf8'));
+    assert.ok(snapshots.some(snapshot => snapshot.commit === baseline && snapshot.coverage === 'current-lens-projection'));
+    assert.equal(JSON.parse(readFileSync(join(result.outputPath, 'graph.json'), 'utf8')).repository.commit, head);
+});
