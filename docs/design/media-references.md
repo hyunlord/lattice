@@ -18,3 +18,7 @@ presentation:
 The asset resolver accepts PNG, JPEG, WebP, GIF, SVG and AVIF. Only existing regular files physically inside the repository are published. Absolute paths, remote URLs, path traversal and symlinks escaping the repository are not published. Missing or unreadable files become `status: missing` entries with the source path and reason, so an unavailable thumbnail does not invalidate the graph.
 
 The `media.json` manifest maps node IDs to available URLs, original repository paths and SHA-256 hashes, with optional frame and alt text. Available assets use content-addressed `media/<sha256>.<extension>` URLs. Identical bytes share one exported file. The same manifest and URLs are used by the local server and static export; image bytes remain separate from graph JSON. The hash describes the image bytes, not an AI interpretation or runtime implementation claim.
+
+## Git LFS in CI
+
+When referenced images use Git LFS, pass `lfs: true` to the reusable Lattice workflow. The default remains false for repositories that do not need LFS. A checkout that still contains an LFS pointer reports the media as unavailable with a fetch hint and does not export the pointer as a broken image. Hydration changes the checkout bytes, not the source commit or consumer lens.

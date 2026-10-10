@@ -47,3 +47,14 @@ test('image content hashes change with bytes and malformed atlas dimensions are 
         assert.equal(parseMediaReference({ path: 'icon.png', frame: { x: 0, y: 0, width: -1, height: 1 } }), undefined);
     } finally { rmSync(root, { recursive: true, force: true }); }
 });
+
+test('unfetched Git LFS image pointers are unavailable instead of exported as broken images', () => {
+    const root = mkdtempSync(join(tmpdir(), 'lattice-media-lfs-'));
+    try {
+        writeFileSync(join(root, 'atlas.png'), `version https://git-lfs.github.com/spec/v1\noid sha256:${'a'.repeat(64)}\nsize 735523\n`);
+        const result = resolveMediaAssets(root, [node('atlas')], { nodes: { atlas: 'atlas.png' } });
+        assert.equal(result.files.length, 0);
+        assert.equal(result.manifest.atlas.status, 'missing');
+        assert.match(result.manifest.atlas.reason, /Git LFS.*checkout/u);
+    } finally { rmSync(root, { recursive: true, force: true }); }
+});

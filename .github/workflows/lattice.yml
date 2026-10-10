@@ -9,6 +9,10 @@ on:
       lens:
         default: ''
         type: string
+      lfs:
+        description: Download Git LFS assets in the source checkout
+        default: false
+        type: boolean
       history-ref:
         default: ''
         type: string
@@ -40,6 +44,7 @@ jobs:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
           path: source
           fetch-depth: 0
+          lfs: ${{ inputs.lfs }}
           persist-credentials: false
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
