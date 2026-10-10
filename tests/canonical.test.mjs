@@ -12,6 +12,9 @@ test('canonical JSON sorts object keys without sorting meaningful arrays', () =>
 
 test('canonical JSON rejects values that would silently lose information', () => {
     const cyclic = {}; cyclic.self = cyclic;
+    for (const validate of [lattice.canonicalJson, canonical.validateCanonical]) {
+        assert.throws(() => validate({ 'a~/': [{ 'b/~': undefined }] }), { name: 'GraphInputError', path: '$/a~0~1/0/b~1~0', reason: 'value is not JSON' });
+    }
     const getter = Object.defineProperty({}, 'value', { enumerable: true, get() { throw new Error('must not run'); } });
     for (const input of [undefined, NaN, Infinity, 1n, () => 1, new Date(), [undefined], Array(2), cyclic, getter, JSON.parse('{"__proto__":{}}')]) {
         let expected;
