@@ -170,7 +170,13 @@ export function applyLens(base: readonly ExtractedRecord[], lens: Lens, input: S
     }
     const findings: Finding[] = array(lens.config["findings"] ?? []).map((value, index) => {
         const rule = object(value); const query = object(rule["query"] ?? {});
-        const targets = records.filter(record => matchesQuery(query, environments.get(record.node.id) ?? { vars: graphVars, records, sources: graphSources, graph }));
+        const selected = records.map(record => {
+            const base = environments.get(record.node.id) ?? { vars: graphVars, records, sources: graphSources, graph };
+            const env = { ...base, sources: new Map<string, Source>() };
+            addSources(env, record.node.sources);
+            return { record, env };
+        }).filter(({ env }) => matchesQuery(query, env));
+        const targets = selected.map(({ record }) => record);
         const sources = new Map<string, Source>();
         const targetNodes = retainSources(targets.map(record => locatedRecord(record, provenance)), targets.flatMap(record => record.node.sources), provenance);
         const targetValues = targets.map(record => {
@@ -182,7 +188,7 @@ export function applyLens(base: readonly ExtractedRecord[], lens: Lens, input: S
         retainSources(targetValues, targetValues.flatMap(value => provenance.roots.get(value) ?? []), provenance);
         const env: Environment = { ...supportContext, ...(definition.fields[`/findings/${index}`] ? { expressionSource: definition.fields[`/findings/${index}`] } : {}), vars: { ...graphVars, targets: targetNodes, targetValues }, records, sources, graph };
         provenance.dependencies.set(env.vars, graphDependencies);
-        for (const target of targets) addSources(env, [...(environments.get(target.node.id)?.sources.values() ?? target.node.sources)]);
+        for (const target of selected) addSources(env, [...target.env.sources.values()]);
         const lensSource = definition?.fields[`/findings/${index}`];
         if (lensSource) addSources(env, [lensSource]);
         const metrics: Record<string, JsonValue> = {};

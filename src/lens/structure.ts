@@ -24,7 +24,9 @@ export function matchesQuery(query: JsonObject, env: Environment): boolean {
 function environment(context: LensContext, record: ExtractedRecord): Environment {
     const env = context.environments.get(record.node.id);
     if (!env) throw new GraphInputError(record.node.id, "Missing lens environment");
-    return { ...env, sources: new Map(env.sources) };
+    const local = { ...env, sources: new Map<string, Source>() };
+    addSources(local, record.node.sources);
+    return local;
 }
 function targetRecord(context: LensContext, rule: JsonObject, alias: JsonValue, pointer: string): ExtractedRecord {
     const field = array(rule["targetField"] ?? ["id"]);

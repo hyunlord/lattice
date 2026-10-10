@@ -34,7 +34,10 @@ test('source retains exact fields across derived scopes, lexical bindings, neste
             constant: source(literal({ id: 'b', cost: 20 })),
             conditional: { op: 'case', cases: [{ when: { op: 'gt', left: get('node', 'unrelated'), right: 0 }, value: get('node', 'budget') }], default: 0 },
         }).map(([id, value]) => ({ id, key: id, value })),
-        findings: [{ id: 'evidence', severity: 'warning', query: {}, metrics: { chosen: map(get('vars', 'targetValues'), source(get('item', 'derived', 'chosen'))), targets: source({ op: 'count', value: get('vars', 'targets') }), targetValues: source({ op: 'count', value: get('vars', 'targetValues') }) }, template: 'Evidence' }],
+        edges: [{ id: 'selected-link', source: { where: { op: 'eq', left: get('node', 'id'), right: 'a' } }, target: get('node', 'steps', 0, 'id'), targetField: ['id'] }],
+        findings: [{ id: 'evidence', severity: 'warning', query: {}, metrics: { chosen: map(get('vars', 'targetValues'), source(get('item', 'derived', 'chosen'))), targets: source({ op: 'count', value: get('vars', 'targets') }), targetValues: source({ op: 'count', value: get('vars', 'targetValues') }) }, template: 'Evidence' },
+        { id: 'selected-budget', query: { where: { op: 'gt', left: get('vars', 'transitive'), right: 0 } }, metrics: { count: { op: 'count', value: get('vars', 'targets') } }, template: 'Budget' },
+        { id: 'selected-identity', query: { where: { op: 'eq', left: get('node', 'id'), right: 'a' } }, metrics: { count: { op: 'count', value: get('vars', 'targets') } }, template: 'Identity' }],
     });
     const result = applyLens(extractJson(data), parseLens(lensInput), lensInput);
     const facets = Object.fromEntries(result.facets.filter(facet => facet.nodeId === 'a').map(facet => [facet.key, facet.value]));
@@ -51,6 +54,10 @@ test('source retains exact fields across derived scopes, lexical bindings, neste
     assert.deepEqual(result.findings[0].metrics.chosen.map(pointers), [['/0/budget'], ['/1/budget']]);
     assert.equal(facets.direct[0].contentHash, data.contentHash);
     assert.equal(facets.direct[0].path, 'records.json');
+    const dataPointers = record => pointers(record.sources.filter(entry => entry.path === data.path)).sort();
+    assert.deepEqual(dataPointers(result.edges.find(edge => edge.kind === 'selected-link')), ['/0', '/0/id', '/0/steps/0/id', '/1', '/1/id']);
+    assert.deepEqual(dataPointers(result.findings.find(finding => finding.id === 'selected-budget')), ['/0', '/0/budget', '/1', '/1/budget']);
+    assert.deepEqual(dataPointers(result.findings.find(finding => finding.id === 'selected-identity')), ['/0', '/0/id']);
     const evidence = key => result.facets.find(facet => facet.nodeId === 'a' && facet.key === key).sources;
     for (const key of ['direct', 'derived', 'repeated']) {
         assert.deepEqual(pointers(evidence(key).filter(entry => entry.path === data.path)).sort(), ['/0', '/0/budget']);
