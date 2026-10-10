@@ -79,14 +79,16 @@ export function renderDependencyOverview(host: HTMLElement, ui: LoopUI): () => v
         for (const level of [...new Set(levels.map(group => group.level))]) {
             const row = element('div', '', 'lm-dependency-level'); row.dataset['level'] = String(level); const groups = levels.filter(group => group.level === level);
             for (const group of groups) {
-                const region = element('div', '', `lm-dependency-group${group.cyclic ? ' lm-dependency-cycle' : group.foldedCycle ? ' lm-dependency-aggregate' : ''}`); if (inlineRoles) { region.style.setProperty('--lm-member-basis', group.stages.length > 3 ? '200px' : '150px'); region.style.flexGrow = String(group.stages.length); region.style.minWidth = group.stages.length > 1 ? `${(group.stages.length > 3 ? 3 : 2) * 150 + 40}px` : '150px'; } if (group.cyclic || group.foldedCycle) region.append(element('span', '상호 참조 · 이 카드 → 사용하는 폴더 (파일 수)', 'lm-cycle-caption'));
+                const region = element('div', '', `lm-dependency-group${group.cyclic ? ' lm-dependency-cycle' : group.foldedCycle ? ' lm-dependency-aggregate' : ''}`); if (inlineRoles) { region.style.setProperty('--lm-member-basis', group.stages.length > 3 ? '200px' : '150px'); region.style.flexGrow = String(group.stages.length); region.style.minWidth = group.stages.length > 1 ? `${(group.stages.length > 3 ? 3 : 2) * 150 + 40}px` : '150px'; } if (group.cyclic || group.foldedCycle) region.append(element('div', '상호 참조 · 이 카드 → 사용하는 폴더 (파일 수)', 'lm-cycle-caption'));
                 const internal = internalDependencyFacts(view, group.stages.map(stage => stage.id));
                 const groupIds = group.stages.map(stage => stage.id).sort();
                 const groupNote = model.structuralDependencyGroups?.find(item => item.stageIds.length === groupIds.length && [...item.stageIds].sort().every((id, index) => id === groupIds[index]))?.interpretation;
                 if (groupNote) {
                     const summary = element('div', '', 'lm-dependency-group-summary');
-                    summary.append(element('span', `묶음 AI 요약${groupNote.stale ? ' · 원본 변경됨' : ''}`, 'lm-role-source'), element('p', groupNote.summary));
-                    const evidence = interpretation(groupNote); if (evidence) summary.append(evidence); region.append(summary);
+                    summary.append(element('p', groupNote.summary));
+                    const evidence = interpretation(groupNote);
+                    if (evidence) { evidence.className = 'lm-group-evidence'; const label = evidence.querySelector('summary'); if (label) label.textContent = `AI 요약 근거${groupNote.stale ? ' · 원본 변경됨' : ''}`; evidence.querySelector('p')?.remove(); (region.querySelector('.lm-cycle-caption') ?? summary).append(evidence); }
+                    region.append(summary);
                 }
                 for (const stage of group.stages) {
                     const box = stage.filePreviews?.length ? element('article', '', 'lm-station lm-folder-files') : element('button', '', 'lm-station'); if (box instanceof HTMLButtonElement) box.type = 'button'; box.dataset['stage'] = stage.id; if (box instanceof HTMLButtonElement) box.setAttribute('aria-pressed', String(stage.id === selected));

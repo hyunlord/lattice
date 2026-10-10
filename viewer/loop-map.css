@@ -100,4 +100,6 @@
 
 .lm-flat-files .lm-dependency-group{max-width:none}
 
-.lm-dependency-group-summary{flex-basis:100%;width:100%;font:13px/18px var(--lm-body);margin:0}.lm-dependency-group-summary>p{margin:0}.lm-dependency-group-summary .lm-interpretation{margin-top:4px;padding-top:4px}
+.lm-dependency-group-summary{flex-basis:100%;width:100%;font:13px/18px var(--lm-body);margin:0}.lm-dependency-group-summary>p{margin:0}
+
+.lm-dependency-group:has(>.lm-dependency-group-summary){padding-top:4px;row-gap:4px}.lm-dependency-group:has(>.lm-dependency-group-summary)>.lm-cycle-caption{position:static;display:flex;flex-wrap:wrap;align-items:start;gap:0 12px;flex-basis:100%;line-height:18px}.lm-group-evidence{min-width:0}.lm-group-evidence>summary{font:inherit;cursor:pointer}.lm-group-evidence[open]{flex-basis:100%;overflow-wrap:anywhere}.lm-group-evidence ul{margin:4px 0;padding-left:18px}@media(min-width:701px){.lm-group-evidence>summary{min-height:18px}}
