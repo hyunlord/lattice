@@ -1,3 +1,4 @@
+import { interpretationContext, writeInterpretation, writeInterpretations, writeDraftLens } from './interpretation.mjs';
 import { performance } from 'node:perf_hooks';
 import type { Options } from './types.mjs';
 import { FreshRepository } from './freshness.mjs';
@@ -23,7 +24,13 @@ export function createMcpHandler(options: Options) {
         const started = performance.now();
         const fresh = await service.ensureFreshAsync();
         let result: object;
-        if (name === 'lattice_freshness') result = { graphHash: fresh.graph.hash, repository: fresh.graph.repository, link: link('/home') };
+        if (name === 'lattice_interpretation_context') result = interpretationContext(options.root, fresh.graph, typeof args['offset'] === 'number' ? args['offset'] : 0, typeof args['limit'] === 'number' ? args['limit'] : 50);
+        else if (name === 'lattice_write_interpretation') {
+            if (Array.isArray(args['records'])) { const records = writeInterpretations(options.root, fresh.graph, args['records']); result = { updated: records.length, records }; }
+            else result = writeInterpretation(options.root, fresh.graph, args['record']);
+        }
+        else if (name === 'lattice_draft_lens') result = writeDraftLens(options.root, fresh.graph, stringArg(args, 'yaml') ?? '', stringArg(args, 'expectedHash'));
+        else if (name === 'lattice_freshness') result = { graphHash: fresh.graph.hash, repository: fresh.graph.repository, link: link('/home') };
         else if (name === 'lattice_diff') {
             const comparison = compareRepository(options, stringArg(args, 'ref'), fresh.build);
             const semantic = webDiff(comparison.before, comparison.after, comparison.presentation, args);

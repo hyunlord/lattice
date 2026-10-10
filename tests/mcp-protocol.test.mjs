@@ -21,11 +21,11 @@ async function exchange(messages) {
     return stdout.trim().split('\n').map(line => JSON.parse(line));
 }
 
-test('stdio frames fragmented requests, serves eight tools, serializes calls and exits at EOF', async () => {
+test('stdio frames fragmented requests, serves eleven tools, serializes calls and exits at EOF', async () => {
     const results = await exchange([initialize(), ready, { jsonrpc: '2.0', id: 2, method: 'tools/list' }, call(3, 'lattice_find', { q: '한글' }), { jsonrpc: '2.0', id: 4, method: 'ping' }]);
     assert.deepEqual(results.map(result => result.id), [1, 2, 3, 4]);
     assert.equal(results[0].result.protocolVersion, '2025-11-25');
-    assert.equal(results[1].result.tools.length, 8);
+    assert.equal(results[1].result.tools.length, 11);
     assert.equal(results[1].result.tools[0].annotations.readOnlyHint, true);
     assert.equal(results[2].result.structuredContent.args.q, '한글');
     assert.deepEqual(JSON.parse(results[2].result.content[0].text), results[2].result.structuredContent);

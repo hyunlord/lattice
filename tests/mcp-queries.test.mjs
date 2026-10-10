@@ -50,7 +50,7 @@ test('MCP matrix cells reproduce shared web projection and carry source evidence
     assert.deepEqual(result.cells.items[0].sources.items, [source]);
 });
 test('MCP schemas reject unknown fields and wrong types while allowing later pages', () => {
-    assert.equal(toolDefinitions.length, 8);
+    assert.equal(toolDefinitions.length, 11);
     assert.throws(() => parseArguments('lattice_trace', { from: 'a', hops: 11 }), McpArgumentError);
     assert.throws(() => parseArguments('lattice_find', { limit: 201 }), McpArgumentError);
     assert.throws(() => parseArguments('lattice_find', { unknown: 1 }), McpArgumentError);

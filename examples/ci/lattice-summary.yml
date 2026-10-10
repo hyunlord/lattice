@@ -1,0 +1,51 @@
+name: Optional AI map summaries
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+permissions:
+  contents: read
+concurrency:
+  group: lattice-summary-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  summarize:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: repository
+      - uses: actions/checkout@v4
+        with:
+          repository: hyunlord/lattice
+          ref: ${{ vars.LATTICE_REF }}
+          path: lattice
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm ci && npm run build
+        working-directory: lattice
+      - uses: actions/cache/restore@v4
+        with:
+          path: repository/.lattice/notes
+          key: lattice-notes-v1-${{ github.ref_name }}-${{ vars.LATTICE_SUMMARY_MODEL }}-${{ github.run_id }}-${{ github.run_attempt }}
+          restore-keys: |
+            lattice-notes-v1-${{ github.ref_name }}-${{ vars.LATTICE_SUMMARY_MODEL }}-
+      - name: Summarize missing or changed evidence (skip without key)
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          LATTICE_SUMMARY_MODEL: ${{ vars.LATTICE_SUMMARY_MODEL }}
+          LATTICE_SUMMARY_KEY_ENV: OPENAI_API_KEY
+        run: node lattice/bin/lattice.mjs summarize --root repository --json -- node "$GITHUB_WORKSPACE/lattice/examples/ci/openai-summary.mjs"
+      - uses: actions/cache/save@v4
+        with:
+          path: repository/.lattice/notes
+          key: lattice-notes-v1-${{ github.ref_name }}-${{ vars.LATTICE_SUMMARY_MODEL }}-${{ github.run_id }}-${{ github.run_attempt }}
+      - name: Export map with AI labels and evidence
+        run: |
+          node lattice/bin/lattice.mjs build --root repository
+          node lattice/bin/lattice.mjs export "$RUNNER_TEMP/lattice-site" --root repository
+      - uses: actions/upload-artifact@v4
+        with:
+          name: lattice-site-with-summaries
+          path: ${{ runner.temp }}/lattice-site

@@ -1,0 +1,11 @@
+# Optional CI summaries
+
+Copy `lattice-summary.yml` into the consuming repository's `.github/workflows/`. Set repository variables `LATTICE_REF` to a reviewed Lattice commit and `LATTICE_SUMMARY_MODEL` to an accessible model supporting structured outputs; add the optional `OPENAI_API_KEY` Actions secret. No key means the core command skips summaries and still exports the map. The example is opt-in and runs on main pushes or manual dispatch, never on untrusted PR events.
+
+Lattice does not contain or select an LLM. Its `summarize` command sends only missing/stale targets to the explicitly supplied external process. This example process calls OpenAI's Responses API using Node's built-in fetch, a 100-second timeout, no retries, `store: false` and a strict JSON schema. It has no SDK dependencies. Provider credentials never enter notes or standard output. Running it with a key sends the changed targets' source text to that provider and can incur API charges.
+
+Notes restored from the branch/model-specific Actions cache retain the previous source hashes. Only changed targets are sent on subsequent runs. Each successful run saves a new immutable cache key; cache eviction produces a full re-summary, not falsely fresh notes. The workflow exports a site artifact with the new notes; insert your existing Pages publication step after export if desired. It never commits generated notes. A failed provider request fails the job and does not replace the previous cache.
+
+`LATTICE_SUMMARY_ENDPOINT` optionally supplies a compatible Responses endpoint; use HTTPS. HTTP loopback is allowed for local contract tests. The runner preserves IDs and source hashes from Lattice's request rather than asking the model to invent provenance. It rejects incomplete, duplicate, refused or malformed output. It limits changed evidence to 2 MiB; larger repositories should provide a batching runner with a matching execution budget. No source truncation is silently performed.
+
+The request shape follows the [official OpenAI structured output documentation](https://developers.openai.com/api/docs/guides/structured-outputs?api-mode=responses), checked 2026-10-10. Verification uses an actual local HTTP server and runner subprocess; it does not establish access to a paid model or live-provider quality.

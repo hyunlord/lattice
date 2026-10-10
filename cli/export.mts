@@ -1,3 +1,5 @@
+import { resolveMediaAssets } from './assets.mjs';
+import { parseMediaConfig } from '../dist/query/media-model.js';
 import { object } from './types.mjs';
 import type { Options } from './types.mjs';
 import { copyFileSync, existsSync, lstatSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, realpathSync, renameSync, rmSync, writeFileSync } from 'node:fs';
@@ -44,6 +46,8 @@ export function exportSite(options: Options) {
     if (!existsSync(graphPath)) throw new Error('Run lattice build before export');
     const graph = readGraph(graphPath);
     const snapshots = readSnapshots(cache);
+    const presentation: unknown = JSON.parse(readFileSync(join(cache, 'presentation.json'), 'utf8'));
+    const media = resolveMediaAssets(options.root, graph.nodes, parseMediaConfig(object(presentation) ? presentation['media'] : undefined));
     const output = destination(options);
     mkdirSync(dirname(output), { recursive: true });
     const staging = mkdtempSync(join(dirname(output), `.${basename(output)}-lattice-`));
@@ -52,6 +56,9 @@ export function exportSite(options: Options) {
     try {
         for (const file of ['index.html', 'styles.css', ...readdirSync(join(packageRoot, 'viewer')).filter(file => (file.endsWith('.js') || file.endsWith('.css')))]) copyFileSync(join(packageRoot, 'viewer', file), join(staging, file));
         for (const file of ['graph.json', 'presentation.json']) copyFileSync(join(cache, file), join(staging, file));
+        writeFileSync(join(staging, 'media.json'), JSON.stringify(media.manifest, null, 2) + '\n');
+        if (object(presentation)) writeFileSync(join(staging, 'presentation.json'), JSON.stringify({ ...presentation, mediaManifest: media.manifest }, null, 2) + '\n');
+        for (const file of media.files) { mkdirSync(dirname(join(staging, file.path)), { recursive: true }); writeFileSync(join(staging, file.path), file.bytes); }
         writeFileSync(join(staging, 'snapshots.json'), JSON.stringify(snapshots, null, 2) + '\n');
         for (const snapshot of snapshots) {
             mkdirSync(join(staging, 'snapshots'), { recursive: true });

@@ -1,5 +1,6 @@
 import { canonicalJson } from "../core/canonical.js";
 import type { Edge, Source } from "../core/model.js";
+import { languageMatches } from "./language-links.js";
 import { nativeResolver } from "./native-links.js";
 import { codeLanguage } from "./code.js";
 import type { CodeModule, ModuleImport } from "./code.js";
@@ -44,7 +45,7 @@ export function resolveModuleLinks(modules: readonly CodeModule[]): { readonly e
     const diagnostics: ModuleDiagnostic[] = [];
     for (const module of modules) {
         for (const reference of module.imports) {
-            const native = nativeMatches(module, reference);
+            const native = nativeMatches(module, reference) ?? languageMatches(module, modules, reference);
             const possible = native ? [native.paths] : candidates(module, reference);
             const matches = possible.map(group => [...new Set(group.filter(path => paths.has(path)))]).find(group => group.length > 0) ?? [];
             if (matches.length === 1 || (matches.length > 1 && native?.multiple)) {
@@ -53,7 +54,7 @@ export function resolveModuleLinks(modules: readonly CodeModule[]): { readonly e
                     if (target === undefined) continue;
                     edges.push({ id: `import:${canonicalJson([module.node.id, target, reference.source.pointer])}`, kind: "imports", source: module.node.id, target, directed: true, field: reference.source.pointer, sources: [reference.source], attributes: { specifier: reference.specifier, ...(reference.member ? { member: reference.member } : {}) } });
                 }
-            } else diagnostics.push({ code: matches.length > 1 ? "ambiguous-module" : (reference.specifier.startsWith(".") || reference.form?.startsWith("mod") || /^(?:crate|self|super)::/u.test(reference.specifier)) ? "unresolved-local-module" : "external-or-unresolved-module", specifier: reference.specifier, source: reference.source });
+            } else diagnostics.push({ code: matches.length > 1 ? "ambiguous-module" : (reference.specifier.startsWith(".") || reference.form?.startsWith("mod") || reference.form === "script-path" || /^(?:crate|self|super)::/u.test(reference.specifier)) ? "unresolved-local-module" : "external-or-unresolved-module", specifier: reference.specifier, source: reference.source });
         }
     }
     return { edges, diagnostics };

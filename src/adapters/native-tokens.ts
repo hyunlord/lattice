@@ -1,7 +1,7 @@
 import type { CodeToken } from "./code-tokens.js";
 
 /** Lexical evidence only: literal bodies and comments never become declarations. */
-export function nativeTokens(text: string, rust: boolean): readonly CodeToken[] {
+export function nativeTokens(text: string, rust: boolean, options: { readonly language?: string; readonly literals?: boolean; } = {}): readonly CodeToken[] {
     const tokens: CodeToken[] = [];
     let index = 0, line = 1;
     const skip = (end: number): void => { line += text.slice(index, end).split("\n").length - 1; index = end; };
@@ -12,11 +12,24 @@ export function nativeTokens(text: string, rust: boolean): readonly CodeToken[] 
         if (rest.startsWith("/*")) {
             let depth = 1, cursor = index + 2;
             while (cursor < text.length && depth) {
-                if (rust && text.startsWith("/*", cursor)) { depth++; cursor += 2; }
+                if ((rust || ["swift", "kotlin"].includes(options.language ?? "")) && text.startsWith("/*", cursor)) { depth++; cursor += 2; }
                 else if (text.startsWith("*/", cursor)) { depth--; cursor += 2; }
                 else cursor++;
             }
             skip(cursor); continue;
+        }
+        if (options.language === "go" && character === "`") {
+            const end = text.indexOf("`", index + 1);
+            if (options.literals) tokens.push({ kind: "string", value: text.slice(index + 1, end < 0 ? text.length : end), line });
+            skip(end < 0 ? text.length : end + 1); continue;
+        }
+        const swiftRaw = options.language === "swift" ? /^(#+)("{3}|"{1})/u.exec(rest) : null;
+        if (swiftRaw) {
+            const marker = `${swiftRaw[2] ?? '"'}${swiftRaw[1] ?? ""}`;
+            const opening = swiftRaw[0];
+            const end = text.indexOf(marker, index + opening.length);
+            if (options.literals) tokens.push({ kind: "string", value: text.slice(index + opening.length, end < 0 ? text.length : end), line });
+            skip(end < 0 ? text.length : end + marker.length); continue;
         }
         const rawRust = rust ? /^(?:br|cr|r)(#*)"/u.exec(rest) : null;
         const rawCsharp = !rust ? /^\$*("{3,})/u.exec(rest) : null;
@@ -24,6 +37,7 @@ export function nativeTokens(text: string, rust: boolean): readonly CodeToken[] 
             const opening = (rawRust ?? rawCsharp)?.[0] ?? "";
             const marker = rawRust ? `"${rawRust[1] ?? ""}` : rawCsharp?.[1] ?? '"""';
             const end = text.indexOf(marker, index + opening.length);
+            if (options.literals) tokens.push({ kind: "string", value: text.slice(index + opening.length, end < 0 ? text.length : end), line });
             skip(end < 0 ? text.length : end + marker.length); continue;
         }
         const verbatim = !rust ? /^(?:\$?@|@\$)"/u.exec(rest)?.[0] : undefined;
@@ -38,6 +52,7 @@ export function nativeTokens(text: string, rust: boolean): readonly CodeToken[] 
                 } else if (!verbatim && text[cursor] === "\\") cursor += 2;
                 else cursor++;
             }
+            if (options.literals) tokens.push({ kind: "string", value: text.slice(index + (verbatim?.length ?? 1), Math.max(index + 1, cursor - 1)), line });
             skip(Math.min(cursor, text.length)); continue;
         }
         const word = /^(?:r#|@)?[\p{L}_][\p{L}\p{N}_]*/u.exec(rest)?.[0];

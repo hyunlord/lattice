@@ -1,6 +1,6 @@
 # MCP and agent configuration
 
-`lattice mcp --root /absolute/repository` serves eight read-only graph tools over newline-delimited UTF-8 JSON-RPC on stdin/stdout. No HTTP MCP endpoint, source edits, network tools or subscription capability is advertised. Generated graph/cache files are written as needed. Git remains required.
+`lattice mcp --root /absolute/repository` serves eight read-only graph tools and three interpretation tools over newline-delimited UTF-8 JSON-RPC on stdin/stdout. No HTTP MCP endpoint, source-code edits, network tools or subscription capability is advertised. Interpretation writes are confined to notes and an inactive draft lens; their MCP readOnlyHint is false. Generated graph/cache files are written as needed. Git remains required.
 
 ```sh
 lattice mcp --root /path/to/repository --cache-dir /path/to/external-cache
@@ -44,3 +44,13 @@ Init validates the lens and every destination before writing. It installs manage
 The generated process uses an absolute Node executable, absolute installed Lattice CLI, and explicit repository root without a shell. Keep that installation at its configured path. A per-root `lattice_<hash>` Codex name is shared by project/global entries. Default init registers that repository globally; multiple repositories therefore remain available to global clients. Use `--no-global` for project-only registration with no home writes. Codex can require project trust before loading project configuration. Restart clients after setup. See official [Codex MCP settings](https://developers.openai.com/codex/mcp/) and [Claude project scope](https://code.claude.com/docs/en/mcp#project-scope).
 
 No TOML dependency is added. The conservative editor supports normal table headers, quoted/bare dotted keys, strings, booleans, numbers, arrays and inline tables. Multiline strings, datetimes and arrays of tables are refused before any writes. Unsupported valid syntax is reported as unsupported rather than rewritten speculatively.
+
+## L7 interpretation tools
+
+| Tool | Behavior |
+| --- | --- |
+| `lattice_interpretation_context` | Paginated modules/folders with exact source hashes, excerpts, notes and stale status |
+| `lattice_write_interpretation` | Validate current source hashes and persist attributed AI notes; never changes source code |
+| `lattice_draft_lens` | Validate an inactive YAML lens draft; existing draft replacement requires expectedHash |
+
+[Storage, agent-init workflow, read-only source override and optional external CI runner](../review/l7-interpretation.md) define the interpretation contract.

@@ -27,3 +27,4 @@ export { importGraft, graftAdapterVersion } from "./adapters/graft.js";
 export type { GraftImport, GraftDiagnostic } from "./adapters/graft.js";
 export { automaticFindings } from "./core/automatic-findings.js";
 export type { AutomaticDiagnostic } from "./core/automatic-findings.js";
+export { codeStructure } from "./adapters/code-structure.js";

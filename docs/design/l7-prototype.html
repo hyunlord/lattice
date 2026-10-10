@@ -1,0 +1,632 @@
+<title>Sow &amp; Siege 순환 지도</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Hahmlet:wght@500;700;800&family=IBM+Plex+Sans+KR:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* Layout: a field ledger — the six-step loop is the hero ring, one shared detail panel under it, then strips for after-the-run and the ten places. Every chip jumps to "하나씩 보기". */
+:root{
+  --paper:#ECEFE8; --grid:#E2E6DC; --panel:#F8F9F5; --ink:#1E2226; --muted:#5B6158; --line:#CDD2C6; --line-strong:#8F978A;
+  --accent:#2B4AA0; --accent-soft:#DDE4F4; --live:#2E7A4B; --live-soft:#D8ECDD; --enemy:#9A2E2B; --enemy-soft:#F1DCD9;
+  --k-weapon:#2B4AA0; --k-land:#56794A; --k-building:#9A6A2B; --k-people:#3C6C98; --k-item:#59626E; --k-charter:#76507F;
+  --k-evolution:#A97A1F; --k-enemy:#9A2E2B; --k-chapter:#6A5B47; --k-vassal:#2F7A72; --k-material:#9E7426; --k-manor:#4B5F52;
+  --font-display:"Hahmlet","Noto Serif KR","AppleMyungjo",serif;
+  --font-body:"IBM Plex Sans KR","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;
+  --font-mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#14171B; --grid:#191D22; --panel:#1C2026; --ink:#E7E9E2; --muted:#A3A99D; --line:#30363D; --line-strong:#5D666F;
+    --accent:#93A9F0; --accent-soft:#232D48; --live:#7ACB97; --live-soft:#1D3527; --enemy:#E5807A; --enemy-soft:#3A2220;
+    --k-weapon:#93A9F0; --k-land:#93C17E; --k-building:#D9A35F; --k-people:#86B2DD; --k-item:#AAB3BE; --k-charter:#C7A1D3;
+    --k-evolution:#E1B65A; --k-enemy:#E5807A; --k-chapter:#C4B49C; --k-vassal:#7CC7BC; --k-material:#DAAE5C; --k-manor:#A3BAA9;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#14171B; --grid:#191D22; --panel:#1C2026; --ink:#E7E9E2; --muted:#A3A99D; --line:#30363D; --line-strong:#5D666F;
+  --accent:#93A9F0; --accent-soft:#232D48; --live:#7ACB97; --live-soft:#1D3527; --enemy:#E5807A; --enemy-soft:#3A2220;
+  --k-weapon:#93A9F0; --k-land:#93C17E; --k-building:#D9A35F; --k-people:#86B2DD; --k-item:#AAB3BE; --k-charter:#C7A1D3;
+  --k-evolution:#E1B65A; --k-enemy:#E5807A; --k-chapter:#C4B49C; --k-vassal:#7CC7BC; --k-material:#DAAE5C; --k-manor:#A3BAA9;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{background-color:var(--paper);background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:36px 36px;color:var(--ink);font-family:var(--font-body);font-size:15px;line-height:1.55}
+button{font:inherit;color:inherit}
+.wrap{max-width:1140px;margin:0 auto;padding-inline:20px;padding-block:28px 56px}
+h1,h2,h3{font-family:var(--font-display);text-wrap:balance;margin:0;line-height:1.2}
+.mono{font-family:var(--font-mono);font-variant-numeric:tabular-nums}
+.muted{color:var(--muted)}
+.top{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px 24px;margin-bottom:18px}
+.top h1{font-size:2.3rem;font-weight:800;letter-spacing:-0.01em}
+.top .sub{margin:4px 0 0;color:var(--muted);font-size:.95rem}
+.stamp{margin:0;font-size:.8rem;color:var(--muted)}
+.legend{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:.8rem;color:var(--muted);margin:0 0 18px;padding:0;list-style:none}
+.legend li{display:inline-flex;align-items:center;gap:5px}
+.tabs{display:flex;gap:4px;border-bottom:1px solid var(--line);margin-bottom:22px;overflow-x:auto}
+.tabs button{background:none;border:0;border-bottom:3px solid transparent;padding:10px 14px 9px;font-weight:600;font-size:1rem;color:var(--muted);cursor:pointer;white-space:nowrap}
+.tabs button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--accent)}
+.tabs button:focus-visible,.chip:focus-visible,.station:focus-visible,.card:focus-visible,.fl-item:focus-visible,.seg button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.lead{max-width:62ch;margin:0 0 18px;color:var(--muted)}
+/* ring */
+.ring{position:relative;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));column-gap:70px;row-gap:62px;padding:8px 0 4px}
+.ring svg.arrows{position:absolute;inset:0;pointer-events:none;overflow:visible;z-index:0}
+.station{position:relative;z-index:1;text-align:left;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 14px 12px;cursor:pointer;display:flex;flex-direction:column;gap:4px;min-width:0}
+.station:hover{border-color:var(--line-strong)}
+.station[aria-pressed="true"]{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent)}
+.station .no{font-family:var(--font-mono);font-size:.72rem;color:var(--muted);letter-spacing:.06em}
+.station h3{font-size:1.32rem;font-weight:700}
+.station .line{font-size:.82rem;color:var(--muted);line-height:1.45}
+.station .meta{display:flex;align-items:center;gap:8px;margin-top:4px;font-size:.8rem}
+.bar{flex:1;height:5px;border-radius:3px;background:var(--line);overflow:hidden;min-width:30px}
+.bar i{display:block;height:100%;background:var(--live)}
+#st-attack{grid-column:2;grid-row:1}#st-kill{grid-column:3;grid-row:1}#st-tool{grid-column:4;grid-row:2}
+#st-grow{grid-column:3;grid-row:3}#st-harvest{grid-column:2;grid-row:3}#st-choice{grid-column:1;grid-row:2}
+.lord{grid-column:2 / span 2;grid-row:2;z-index:1;align-self:center;justify-self:center;width:78%;text-align:center;padding:14px 16px;border:1px dashed var(--line-strong);border-radius:999px;background:var(--paper)}
+.lord h3{font-size:1.1rem}
+.lord p{margin:4px 0 0;font-size:.8rem;color:var(--muted)}
+.flow{fill:none;stroke:var(--line-strong);stroke-width:1.6}
+.threat{fill:none;stroke:var(--enemy);stroke-width:1.6;stroke-dasharray:5 5}
+.flow-l{font-family:var(--font-body);font-size:12px;font-weight:600;fill:var(--muted);paint-order:stroke;stroke:var(--paper);stroke-width:5px;stroke-linejoin:round}
+.threat-l{fill:var(--enemy)}
+/* detail */
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px 20px;margin-top:26px}
+.panel-head{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 12px;margin-bottom:10px}
+.panel-head h2{font-size:1.5rem}
+.panel-head .no{font-family:var(--font-mono);font-size:.8rem;color:var(--muted)}
+.cols{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:22px}
+.grp{margin:12px 0 0}
+.grp h4{margin:0 0 8px;font-size:.78rem;letter-spacing:.06em;color:var(--muted);font-weight:600}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--paper);border-radius:999px;padding:4px 10px 4px 8px;font-size:.86rem;cursor:pointer;max-width:100%}
+.chip:hover{border-color:var(--line-strong)}
+.chip span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--live);display:inline-block;flex:none}
+.g{flex:none;display:block}
+.rows{display:grid;gap:6px}
+.row{display:grid;grid-template-columns:minmax(0,170px) minmax(0,1fr);gap:10px;align-items:start;font-size:.86rem}
+.row .chip{justify-self:start}
+.row p{margin:3px 0 0;color:var(--muted)}
+.inf{list-style:none;margin:0;padding:0;display:grid;gap:8px;font-size:.86rem}
+.inf b{font-weight:600}
+.inf .to{color:var(--muted)}
+/* strips */
+.strip{margin-top:30px}
+.strip h2{font-size:1.25rem;margin-bottom:4px}
+.strip > p{margin:0 0 12px;color:var(--muted);font-size:.88rem}
+.after{display:grid;grid-template-columns:minmax(0,1fr) 34px minmax(0,1.4fr) 34px minmax(0,1.2fr);align-items:stretch;gap:0}
+.after .box{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 14px;min-width:0}
+.after .box h3{font-size:1rem;margin-bottom:8px}
+.after .arr{display:flex;align-items:center;justify-content:center;color:var(--line-strong);font-size:1.3rem}
+.places{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}
+.place{text-align:left;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px 12px;cursor:pointer;display:flex;flex-direction:column;gap:3px;min-width:0}
+.place:hover{border-color:var(--line-strong)}
+.place .ord{font-family:var(--font-mono);font-size:.72rem;color:var(--muted)}
+.place b{font-family:var(--font-display);font-size:1rem}
+.place .c{font-size:.78rem;color:var(--muted);line-height:1.4}
+.place .boss{font-size:.78rem;color:var(--enemy);margin-top:auto;padding-top:4px}
+/* focus */
+.focus{display:grid;grid-template-columns:270px minmax(0,1fr);gap:22px;align-items:start}
+.finder{position:sticky;top:env(safe-area-inset-top,0px);background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:8px;min-width:0}
+.finder input,.finder select,.cat-tools input{width:100%;font:inherit;font-size:.9rem;padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--paper);color:var(--ink)}
+.fl{list-style:none;margin:0;padding:0;max-height:62vh;overflow:auto;display:flex;flex-direction:column;gap:1px}
+.fl-item{width:100%;display:flex;align-items:center;gap:8px;background:none;border:0;border-radius:7px;padding:6px 8px;text-align:left;cursor:pointer;font-size:.88rem}
+.fl-item:hover{background:var(--paper)}
+.fl-item[aria-current="true"]{background:var(--accent-soft)}
+.fl-item .k{margin-left:auto;font-size:.72rem;color:var(--muted)}
+.fl-sep{font-size:.72rem;letter-spacing:.06em;color:var(--muted);padding:8px 8px 2px}
+.fhead{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px}
+.fhead h2{font-size:2rem;font-weight:800}
+.kind{display:inline-flex;align-items:center;gap:6px;font-size:.82rem;color:var(--muted)}
+.pill{font-size:.75rem;font-weight:600;border-radius:999px;padding:3px 9px;border:1px solid var(--line-strong);color:var(--muted)}
+.pill.live{background:var(--live-soft);color:var(--live);border-color:transparent}
+.cardtext{font-family:var(--font-display);font-size:1.25rem;font-weight:500;margin:10px 0 14px;max-width:46ch}
+.ego{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:8px;overflow-x:auto}
+.ego svg{display:block}
+.enode{cursor:pointer}
+.enode rect{fill:var(--paper);stroke:var(--line-strong);stroke-width:1}
+.enode:hover rect,.enode:focus rect{stroke:var(--accent);stroke-width:2}
+.enode:focus{outline:none}
+.enode text{font-family:var(--font-body);fill:var(--ink)}
+.enode .ek{fill:var(--muted)}
+.ecenter rect{fill:var(--accent-soft);stroke:var(--accent);stroke-width:1.5}
+.ecenter text{font-family:var(--font-display);fill:var(--ink)}
+.eedge{fill:none;stroke:var(--line-strong);stroke-width:1.4}
+.elab{font-family:var(--font-body);font-size:11.5px;font-weight:600;fill:var(--muted);paint-order:stroke;stroke:var(--panel);stroke-width:5px;stroke-linejoin:round}
+.empty{padding:22px;color:var(--muted);text-align:center;font-size:.9rem}
+.dl{display:grid;grid-template-columns:minmax(0,150px) minmax(0,1fr);gap:8px 16px;margin:18px 0 0}
+.dl dt{font-size:.8rem;color:var(--muted);font-weight:600;padding-top:2px}
+.dl dd{margin:0;font-size:.92rem;max-width:68ch}
+.phases{margin:0;padding-left:1.1em;display:grid;gap:6px}
+.rel{margin-top:18px;display:grid;gap:12px}
+/* catalog */
+.cat-tools{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:14px}
+.cat-tools input{max-width:260px}
+.seg{display:flex;flex-wrap:wrap;gap:6px}
+.seg button{border:1px solid var(--line);background:var(--panel);border-radius:999px;padding:5px 11px;font-size:.84rem;cursor:pointer;display:inline-flex;align-items:center;gap:6px}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.toggle{display:inline-flex;align-items:center;gap:6px;font-size:.86rem;color:var(--muted);cursor:pointer;white-space:nowrap}
+@media (min-width:860px){.rel.full{display:none}}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(232px,1fr));gap:10px}
+.card{text-align:left;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 14px;cursor:pointer;display:flex;flex-direction:column;gap:5px;min-width:0}
+.card:hover{border-color:var(--line-strong)}
+.card .top2{display:flex;align-items:center;gap:6px;font-size:.75rem;color:var(--muted)}
+.card .top2 .dot{margin-left:auto}
+.card b{font-family:var(--font-display);font-size:1.08rem}
+.card .c{font-size:.84rem;line-height:1.45}
+.card .r{font-size:.78rem;color:var(--muted);margin-top:auto;padding-top:4px}
+.count{font-size:.85rem;color:var(--muted);margin:0 0 10px}
+footer{margin-top:40px;font-size:.8rem;color:var(--muted);max-width:80ch}
+@media (max-width:980px){.places{grid-template-columns:repeat(2,minmax(0,1fr))}.cols{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:859px){
+  .ring{grid-template-columns:minmax(0,1fr);row-gap:46px;padding-right:34px}
+  #st-attack,#st-kill,#st-tool,#st-grow,#st-harvest,#st-choice,.lord{grid-column:1;grid-row:auto}
+  .lord{order:-1;width:100%;border-radius:12px}
+  #st-attack{order:1}#st-kill{order:2}#st-tool{order:3}#st-grow{order:4}#st-harvest{order:5}#st-choice{order:6}
+  .after{grid-template-columns:minmax(0,1fr)}
+  .after .arr{transform:rotate(90deg);height:30px}
+  .focus{grid-template-columns:minmax(0,1fr)}
+  .finder{position:static}
+  .fl{max-height:34vh}
+  .ego{display:none}
+  .row{grid-template-columns:minmax(0,1fr)}
+  .dl{grid-template-columns:minmax(0,1fr)}
+  .dl dt{padding-top:6px}
+  .top h1{font-size:1.9rem}
+  .fhead h2{font-size:1.6rem}
+}
+@media (prefers-reduced-motion:no-preference){.station,.chip,.card,.place{transition:border-color .15s ease,box-shadow .15s ease}}
+</style>
+<div class="wrap">
+  <header class="top">
+    <div>
+      <h1>Sow &amp; Siege</h1>
+      <p class="sub">게임 구조 지도 · Lattice 사람용 화면 시안</p>
+    </div>
+    <p class="stamp" id="stamp"></p>
+  </header>
+  <ul class="legend" id="legend" aria-label="기호 설명"></ul>
+  <nav class="tabs" role="tablist" aria-label="보기">
+    <button role="tab" id="tab-loop" data-view="loop" aria-selected="true" aria-controls="view-loop">한눈에 보는 순환</button>
+    <button role="tab" id="tab-focus" data-view="focus" aria-selected="false" aria-controls="view-focus">하나씩 보기</button>
+    <button role="tab" id="tab-catalog" data-view="catalog" aria-selected="false" aria-controls="view-catalog">도감</button>
+  </nav>
+
+  <section id="view-loop" role="tabpanel" aria-labelledby="tab-loop">
+    <p class="lead">한 판은 이 여섯 단계를 계속 돕니다. 영주는 직접 짓거나 배치하지 않고, 움직이는 길과 고르는 카드로만 판을 바꿉니다. 단계를 누르면 그 안에 무엇이 있는지, 무엇에 영향을 주는지 아래에 나옵니다.</p>
+    <div class="ring" id="ring">
+      <svg class="arrows" id="ring-svg" aria-hidden="true"></svg>
+      <div class="lord" aria-hidden="false">
+        <h3>영주</h3>
+        <p>움직이는 곳이 곧 공격·작업 위치<br>레벨업마다 카드 한 장을 고른다</p>
+      </div>
+    </div>
+    <div class="panel" id="station-panel" aria-live="polite"></div>
+
+    <div class="strip">
+      <h2>판이 끝나면</h2>
+      <p>판에서 지켜 낸 재료가 장원을 키우고, 장원이 다음 판의 가신 편성과 선택지를 엽니다.</p>
+      <div class="after">
+        <div class="box"><h3>재료</h3><div class="chips" id="after-mat"></div></div>
+        <div class="arr" aria-hidden="true">→</div>
+        <div class="box"><h3>장원</h3><div class="chips" id="after-manor"></div></div>
+        <div class="arr" aria-hidden="true">→</div>
+        <div class="box"><h3>가신 · 다음 판에 데려갈 동료</h3><div class="chips" id="after-vassal"></div></div>
+      </div>
+    </div>
+
+    <div class="strip">
+      <h2>싸우는 장소 10곳</h2>
+      <p>챕터마다 땅의 규칙 하나가 바뀌고, 보스는 두 챕터씩 같은 상대를 다른 조건에서 만납니다.</p>
+      <div class="places" id="places"></div>
+    </div>
+  </section>
+
+  <section id="view-focus" role="tabpanel" aria-labelledby="tab-focus" hidden>
+    <div class="focus">
+      <aside class="finder" aria-label="항목 찾기">
+        <label for="f-q" class="muted" style="font-size:.8rem">이름으로 찾기</label>
+        <input id="f-q" type="search" placeholder="예: 씨앗 자루, 보스" autocomplete="off">
+        <label for="f-k" class="muted" style="font-size:.8rem">종류</label>
+        <select id="f-k"></select>
+        <ul class="fl" id="f-list"></ul>
+      </aside>
+      <article id="f-main" aria-live="polite"></article>
+    </div>
+  </section>
+
+  <section id="view-catalog" role="tabpanel" aria-labelledby="tab-catalog" hidden>
+    <div class="cat-tools">
+      <input id="c-q" type="search" placeholder="이름·문구로 찾기" autocomplete="off" aria-label="도감에서 찾기">
+      <label class="toggle" for="c-live"><input id="c-live" type="checkbox"> 지금 빌드에 있는 것만</label>
+    </div>
+    <div class="seg" id="c-kinds" role="group" aria-label="종류 고르기" style="margin-bottom:14px"></div>
+    <p class="count" id="c-count"></p>
+    <div class="cards" id="c-cards"></div>
+  </section>
+
+  <footer id="foot"></footer>
+</div>
+<script type="application/json" id="data">{"commit":"05e1270","revision":"designed-v1.1","systems":[{"id":"core:system_movement","n":"이동·바라보기","p":"한 손 이동으로 공격·작업·회수의 위치를 선택한다"},{"id":"core:system_weapon","n":"무기 공격","p":"서로 다른 공격 기하로 위협에 대응한다"},{"id":"core:system_tool","n":"도구 발동","p":"공격과 지속 성장의 씨앗을 한 행동으로 만든다"},{"id":"core:system_land","n":"땅 성장","p":"위치별 성장물이 다음 이동과 전투를 바꾼다"},{"id":"core:system_building","n":"건물 성장","p":"고정 거점에 전투·복구·물류 기능을 남긴다"},{"id":"core:system_people","n":"사람 역할","p":"노동·징집·귀환을 보이는 배우의 행동으로 연결한다"},{"id":"core:system_fertility","n":"비옥도 순환","p":"처치 잔재를 땅의 성장 기회로 돌린다"},{"id":"core:system_threat","n":"번영과 위협","p":"번영한 위치가 적의 행동 목표가 되게 한다"},{"id":"core:system_enemy","n":"적·보스","p":"빌드가 만든 통로와 자산에 대응 과제를 만든다"},{"id":"core:system_choice","n":"성장 선택·진화","p":"한 판의 행동 규칙을 조합한다"},{"id":"core:system_return","n":"수확·귀환·결산","p":"판 안 행동의 출처를 판 밖 결과로 전달한다"},{"id":"core:system_manor","n":"장원·가신 해금","p":"판 결과에 따라 다음 판의 행동 선택지를 연다"},{"id":"core:system_chapter","n":"챕터·계절 장치","p":"익숙한 순환의 조건을 공간·시간 규칙으로 바꾼다"}],"inf":[{"f":"core:system_movement","t":"core:system_weapon","s":"바라보기와 발 위치가 공격 궤적을 정함"},{"f":"core:system_movement","t":"core:system_tool","s":"자동 발동이 남길 작업 장소를 정함"},{"f":"core:system_movement","t":"core:system_return","s":"완성물 회수와 귀환 동선을 선택"},{"f":"core:system_weapon","t":"core:system_land","s":"일부 무기의 수확·흔적 상호작용"},{"f":"core:system_weapon","t":"core:system_fertility","s":"처치·재 사용이 잔재 가용량을 바꿈"},{"f":"core:system_weapon","t":"core:system_enemy","s":"타격·제어·약점 대응"},{"f":"core:system_tool","t":"core:system_land","s":"땅 잔류물 생성과 성장 조건 공급"},{"f":"core:system_tool","t":"core:system_building","s":"기초 생성·작업·복구 시작"},{"f":"core:system_tool","t":"core:system_people","s":"작업자·부대의 소집과 역할 흔적"},{"f":"core:system_tool","t":"core:system_enemy","s":"발동 면의 타격·제어"},{"f":"core:system_land","t":"core:system_weapon","s":"작물·수로 상태가 고유 공격 조건"},{"f":"core:system_land","t":"core:system_people","s":"수확·급수 작업의 위치와 상태"},{"f":"core:system_land","t":"core:system_fertility","s":"성장에 쓰인 잔재는 중복 사용 불가"},{"f":"core:system_land","t":"core:system_threat","s":"익은 자산이 약탈 관심 대상"},{"f":"core:system_land","t":"core:system_return","s":"실제로 회수한 수확 출처"},{"f":"core:system_building","t":"core:system_weapon","s":"통과·거점·방호와 공격의 결합"},{"f":"core:system_building","t":"core:system_people","s":"작업·휴식·집결 거점"},{"f":"core:system_building","t":"core:system_threat","s":"완성 시설과 보관물이 공성 목표"},{"f":"core:system_building","t":"core:system_return","s":"유한 잔해의 가공·운반 경로"},{"f":"core:system_people","t":"core:system_land","s":"작업·회수·보호와 징집 중단"},{"f":"core:system_people","t":"core:system_building","s":"복구·가공·운반 작업"},{"f":"core:system_people","t":"core:system_enemy","s":"호위·진형·표적 유도"},{"f":"core:system_people","t":"core:system_return","s":"살아 돌아온 운반·징집 기록"},{"f":"core:system_fertility","t":"core:system_land","s":"회수 잔재가 성장 조건을 채움"},{"f":"core:system_threat","t":"core:system_enemy","s":"자산별 목표 선택과 접근 경로"},{"f":"core:system_enemy","t":"core:system_land","s":"도난·성장 방해·짓밟기"},{"f":"core:system_enemy","t":"core:system_building","s":"파손·부품 도난·폐허"},{"f":"core:system_enemy","t":"core:system_people","s":"작업 중단·귀환 위험"},{"f":"core:system_enemy","t":"core:system_fertility","s":"처치가 회수 가능한 잔재를 남김"},{"f":"core:system_enemy","t":"core:system_return","s":"놓친 운반물·파괴로 결산 손실"},{"f":"core:system_choice","t":"core:system_weapon","s":"형태 성장·고유 행동·진화"},{"f":"core:system_choice","t":"core:system_tool","s":"잔류물 성장 경로와 역할 선택"},{"f":"core:system_choice","t":"core:system_people","s":"도구·물품·특허장이 작업/전투 전환을 변경"},{"f":"core:system_return","t":"core:system_choice","s":"판 안 회수 경험치가 카드 선택으로"},{"f":"core:system_return","t":"core:system_manor","s":"출처별 유한 재료를 한 번만 정산"},{"f":"core:system_manor","t":"core:system_people","s":"출전 가신이 역할·능력·대가를 제공"},{"f":"core:system_manor","t":"core:system_choice","s":"해금된 행동을 다음 판 후보로"},{"f":"core:system_chapter","t":"core:system_land","s":"계절·범람·그늘 등 성장 조건"},{"f":"core:system_chapter","t":"core:system_building","s":"거점 접근과 복구 조건"},{"f":"core:system_chapter","t":"core:system_enemy","s":"고유 장치와 보스 패턴 조합"},{"f":"core:system_chapter","t":"core:system_return","s":"회수 창과 통로 조건"}],"recs":[{"id":"core:iron_blade","k":"weapon","n":"철날 검","c":"앞에 적이 오면→짧은 호로 벤다","w":"wave-1a","live":true,"form":"부채꼴 베기","role":"군중 정리","axes":["범위","빈도"],"does":"자동 주기마다 마지막 이동 방향의 짧은 호를 벤다.","uniq":"호 안의 적을 함께 베어 퇴로를 연다.","estate":"완성 건물 옆에서도 같은 정면 베기로 접근 적을 막는다.","gap":"뒤쪽은 베기 범위 밖이다."},{"id":"core:harvest_scythe","k":"weapon","n":"이삭 낫","c":"익은 밭을 베면→이삭 파편이 퍼진다","w":"wave-1a","live":true,"form":"부채꼴 베기","role":"영지 연동","axes":["범위","개수"],"does":"자동으로 이동 방향의 넓은 호를 벤다.","uniq":"낫이 익은 이삭에 닿으면 정상 수확과 함께 바깥으로 파편을 날린다.","estate":"core:seed_bag의 익은 밭에서만 파편이 생긴다. 어린 작물은 그대로 자라며 수확 보상은 보존한다.","gap":"호의 뒤쪽에는 타격이 없다."},{"id":"core:ditch_pike","k":"weapon","n":"고랑 장창","c":"고랑을 따라 찌르면→적이 끝으로 밀린다","w":"wave-2","live":false,"form":"직선 찌르기","role":"제어","axes":["범위","관통"],"does":"자동으로 마지막 이동 방향의 좁은 선을 찌른다.","uniq":"고랑 위 적을 그 고랑 끝으로 민다.","estate":"core:plough의 보이는 고랑을 밀침 경로로 쓴다.","gap":"좁은 선의 측면은 비어 있다."},{"id":"core:seed_bolt","k":"weapon","n":"씨받이 쇠살","c":"익은 밭을 지나면→쇠살에 씨앗이 맺힌다","w":"wave-1b","live":false,"form":"관통 직선","role":"단일 대상","axes":["관통","빈도"],"does":"가까운 적에게 자동으로 직선 관통 쇠살을 쏜다.","uniq":"밭을 지난 쇠살에 빛나는 송이가 붙고 다음 적중에서 터진다.","estate":"익은 밭은 송이의 조건이며 작물·수확·종자 재고를 소비하지 않는다.","gap":"좁은 관통선 밖의 적은 맞지 않는다."},{"id":"core:cinder_flail","k":"weapon","n":"숯불 도리깨","c":"숯추가 적을 쓰러뜨리면→재불이 남는다","w":"wave-2","live":false,"form":"궤도","role":"군중 정리","axes":["개수","범위"],"does":"숯추가 영주 주위를 공전하며 닿은 적을 친다.","uniq":"그 자리에 잠시 재불이 남아 뒤따르는 적을 태운다.","estate":"재불은 작물과 건물을 손상시키지 않으며 별도 비옥층을 만들지 않는다.","gap":"숯추 궤도 안쪽은 공격이 닿지 않는다."},{"id":"core:ward_orbit","k":"weapon","n":"수호 고리","c":"방패 조각에 닿으면→적이 밖으로 밀린다","w":"wave-1a","live":true,"form":"궤도","role":"생존","axes":["개수","범위"],"does":"방패 조각이 영주 둘레의 고정 궤도를 자동으로 돈다.","uniq":"실제 조각에 닿은 적을 바깥으로 밀어낸다.","estate":"성장물 둘레를 걸으며 고리 바깥 접근 적을 민다.","gap":"고리 안쪽과 조각 사이가 비어 있다."},{"id":"core:spore_fan","k":"weapon","n":"포자 부채","c":"뒤쪽 포자에 닿으면→적에게 포자가 터진다","w":"wave-1b","live":false,"form":"장판","role":"군중 정리","axes":["범위","빈도"],"does":"자동으로 영주 뒤쪽 땅에 포자 구역을 남긴다.","uniq":"포자 구역에 들어온 적에게 포자가 터진다.","estate":"성장물 곁에 포자를 두어 추격자를 막는다. 중첩 구역은 같은 적중을 중복 계산하지 않는다.","gap":"고정 구역을 벗어나면 지원을 받지 못한다."},{"id":"core:storm_fork","k":"weapon","n":"빗물 쇠스랑","c":"젖은 적이 보이면→번개가 먼저 잇는다","w":"wave-1a","live":true,"form":"연쇄","role":"제어","axes":["개수","범위"],"does":"가까운 적을 자동으로 찍고 이웃 적으로 번개를 넘긴다.","uniq":"다음 연결점으로 가까운 젖은 적을 우선 고른다.","estate":"core:rain_ladle 물길의 젖음 표식을 이용하며 같은 연쇄에서 같은 적을 재방문하지 않는다.","gap":"적 사이가 벌어지면 연쇄가 끊긴다."},{"id":"core:stone_maul","k":"weapon","n":"경계돌 망치","c":"지면 예고가 닫히면→돌망치가 내려친다","w":"wave-1b","live":false,"form":"내려찍기","role":"단일 대상","axes":["범위","빈도"],"does":"가까운 가장 큰 적의 발밑을 예고한 뒤 그 지면을 자동으로 내려친다.","uniq":"착지 범위의 적을 치고 밀어낸다.","estate":"건물 앞에 머문 공성 적을 겨누며 건물 뒤로 충격을 전송하지 않는다.","gap":"예고 뒤 착지점을 바꾸지 않아 움직이는 적에게 빗나간다."},{"id":"core:ember_wand","k":"weapon","n":"잔불 지팡이","c":"적을 향해 불씨가 뜨면→굽어 따라간다","w":"wave-1a","live":true,"form":"유도탄","role":"단일 대상","axes":["개수","빈도"],"does":"가까운 적에게 자동으로 추적 불씨를 보낸다.","uniq":"불씨가 지정한 적을 향해 굽어 날아가 적중한다.","estate":"불씨는 성장물에 막히지 않으며 건물 우회 경로를 따로 만들지 않는다. 표적 소멸 시 꺼진다.","gap":"불씨가 날아가는 동안 적중이 지연된다."},{"id":"core:mill_disc","k":"weapon","n":"맷돌 원반","c":"돌아오는 원반에 수확이 닿으면→함께 회수한다","w":"wave-2","live":false,"form":"부메랑","role":"군중 정리","axes":["개수","범위"],"does":"가까운 적에게 원반을 자동 발사하고 영주 현재 위치로 돌아오게 한다.","uniq":"귀환 원반이 꾸러미를 실어 영주에게 가져온다.","estate":"이미 생긴 수확 보상을 옮길 뿐 새 보상을 만들지 않는다.","gap":"원반이 멀리 나가 있는 동안 영주 곁이 빈다."},{"id":"core:watchtower_crossbow","k":"weapon","n":"망루 쇠뇌","c":"쇠뇌 조준선이 닫히면→큰 적을 쏜다","w":"wave-2","live":false,"form":"설치 포탑","role":"단일 대상","axes":["개수","범위"],"does":"자동 주기마다 영주 발밑 거치대에 쇠뇌를 세우며 이전 거치대는 접는다.","uniq":"고정 쇠뇌가 사거리 안 가장 큰 적을 조준선으로 예고한 뒤 쏜다.","estate":"건물 곁에도 같은 지면 거치대를 세운다. 건물 결속과 붕괴 연동은 없다.","gap":"조준 중 가까이 들어온 적에게 방향을 바꾸지 못한다."},{"id":"core:granary_sling","k":"weapon","n":"곡창 투석끈","c":"자루 그림자가 닫히면→착지해 적을 모은다","w":"wave-2","live":false,"form":"낙하 폭격","role":"제어","axes":["개수","범위"],"does":"추격 무리 너머에 자동으로 향 자루를 높이 던진다.","uniq":"착지 충격으로 적을 치고 향으로 일반 적을 착지점에 유인한다.","estate":"향 자루는 무기 효과이며 비축 식량을 쓰지 않는다. 보스의 예고 공격은 유인으로 취소하지 않는다.","gap":"그림자 예고 뒤 착지까지 지연되어 빠른 적이 벗어날 수 있다."},{"id":"core:grave_lantern","k":"weapon","n":"흙빛 혼등","c":"등불 안에 빈 흙이 있으면→비옥한 빛이 남는다","w":"wave-2","live":false,"form":"오라","role":"영지 연동","axes":["범위","빈도"],"does":"영주 주위의 등불 영역이 적을 자동으로 태운다.","uniq":"빛이 그 흙에 남아 다음 파종의 성장을 돕는다.","estate":"잔재·작물·재고를 소비하지 않는다. 같은 흙의 빛은 중첩되지 않고 파종 때 끝난다.","gap":"작은 등불 영역 밖의 적에게 닿지 않는다."},{"id":"core:ox_guard","k":"weapon","n":"황소 방패","c":"이동 뒤 방패벽이 서면→추격자를 민다","w":"wave-2","live":false,"form":"후방 벽","role":"생존","axes":["범위","빈도"],"does":"자동 주기마다 마지막 이동 방향 뒤에 방패벽을 세운다.","uniq":"벽에 닿는 추격자를 밀어낸다.","estate":"수레 운반선 뒤쪽을 지나며 같은 방패벽으로 추격자를 막는다.","gap":"고정 벽은 전방의 적을 막지 못한다."},{"id":"core:canal_bow","k":"weapon","n":"수로 활","c":"물길 모서리에 닿으면→화살이 꺾인다","w":"wave-2","live":false,"form":"반사","role":"영지 연동","axes":["개수","범위"],"does":"가까운 적에게 자동으로 물화살을 쏜다.","uniq":"화살이 모서리에서 흐름 방향으로 꺾인다.","estate":"core:rain_ladle의 보이는 물길을 쓰며 같은 모서리를 재방문하지 않는다. 마른 고랑에는 반사하지 않는다.","gap":"물길 없는 곳에서는 좁은 직선 밖을 맞히지 못한다."},{"id":"core:root_harpoon","k":"weapon","n":"뿌리 작살","c":"뿌리덫을 적이 밟으면→가시가 붙든다","w":"wave-2","live":false,"form":"덫","role":"제어","axes":["개수","범위"],"does":"영주 뒤의 지면에 자동으로 뿌리 작살을 박는다.","uniq":"처음 밟은 일반 적을 뿌리로 붙들고 가시로 친다. 보스에는 가시만 적중한다.","estate":"덫은 경작과 겹쳐도 파종·성장을 막지 않는다. 최초 접촉 뒤 닫혀 사라진다.","gap":"설치 지점을 벗어난 적에게 닿지 않는다."},{"id":"core:levy_banner","k":"weapon","n":"징집 파동기","c":"파면이 적에게 닿으면→바깥으로 밀린다","w":"wave-2","live":false,"form":"퍼지는 파동","role":"생존","axes":["범위","빈도"],"does":"자동으로 영주 중심에서 바깥으로 퍼지는 파동을 낸다.","uniq":"지나가는 파면에 닿은 적을 밀어낸다.","estate":"밀어낸 공간을 기존 부대가 이용할 수 있으나 강제 재집결·작업 중단·신규 소환은 없다.","gap":"지나간 파면 뒤로 들어온 적은 다음 파동까지 맞지 않는다."},{"id":"core:seed_bag","k":"tool","n":"씨앗 자루","c":"익은 이삭에 닿으면→수확 경험치를 얻는다","w":"wave-1a","live":true,"tgt":"land","act":"자동 주기마다 이동 방향으로 씨앗 부채를 뿌려 적을 밀치고 빈 흙에 심는다.","rem":"씨앗·어린 싹·익은 이삭이 같은 위치에 남는 밭","grow":"파종 후 경과에 따라 싹에서 이삭으로 자라며 익은 뒤에는 수확하기 전까지 그 상태로 기다린다.","resp":["시간"],"ret":[{"ch":"경험치","m":"실제 파종 후 성숙한 밭을 수확할 때 경험치 보상을 생성한다. 완료 원장은 도구 원본 인스턴스와 해당 growth-cycle 식별자로 한 번만 지급한다. 중단·재시도·수리·파괴 후 복구·저장 불러오기는 같은 식별자를 유지한다. 보상 이동이나 재수거는 새 보상을 생성하지 않는다."}],"harv":"익은 이삭이 수확되어 경험치 꾸러미가 드러난다.","rec":"밟혀 없어진 밭은 다음 씨앗 공격으로 다시 심되 사라진 성숙도를 복원하지 않는다.","cost":"미숙 밭을 보호하려 넓게 이동하면 건물 옆 방어 시간이 줄어든다."},{"id":"core:plough","k":"tool","n":"쟁기","c":"고랑 작업이 끝나면→경작 경험치를 얻는다","w":"wave-1b","live":false,"tgt":"land","act":"자동으로 전방 쟁기날을 밀어 직선 흙덩이 공격과 고랑을 남긴다.","rem":"진행 방향을 가진 패인 흙길","grow":"새 미경작 구간에 쟁기 공격이 지나면 고랑 정비가 진행되고 끝까지 갈아야 작업이 완료된다. 이미 정비한 구간의 수리나 재연결에는 새 성장 주기를 만들지 않는다. 다른 고랑이나 밭 가장자리에 닿은 구간끼리만 물을 전달한다.","resp":["이웃"],"ret":[{"ch":"전투","m":"core:ditch_pike의 밀침을 연결된 고랑 끝으로 보낸다."},{"ch":"보조","m":"연결된 고랑에 물이 들어오면 양옆 밭으로 물을 전달한다."},{"ch":"경험치","m":"새 미경작 구간을 처음 끝까지 갈아 정비를 마쳤을 때 경험치 보상을 생성한다. 완료 원장은 도구 원본 인스턴스와 해당 growth-cycle 식별자로 한 번만 지급한다. 중단·재시도·수리·파괴 후 복구·저장 불러오기는 같은 식별자를 유지한다. 보상 이동이나 재수거는 새 보상을 생성하지 않는다."}],"harv":"새 고랑 끝의 흙무더기가 고르게 펴지고 경험치가 드러난다.","rec":"끊어진 구간을 쟁기 공격이 다시 지나면 연결이 복구되며 남은 양쪽 고랑은 유지된다.","cost":"이미 정비한 구간을 다시 지나도 새 작업 보상은 없으며 떨어진 고랑은 연결 효과를 받지 못한다."},{"id":"core:rain_ladle","k":"tool","n":"빗물 바가지","c":"물을 채워 급수를 마치면→경험치를 얻는다","w":"wave-1a","live":true,"tgt":"land","act":"자동으로 전방에 물을 끼얹어 적을 밀고 착지 지면에 물받이를 남긴다.","rem":"깊이가 보이는 물받이와 넘쳐 흐르는 물길","grow":"비 오는 계절에는 물받이가 차고 가뭄에는 저장분을 마른 인접 땅에 내주며, 다 쓰면 물길이 마른다. 한 급수 성장 주기는 실제 물의 입고부터 필요한 마른 땅의 급수 완료까지이며 빈 물받이·물의 단순 이동·공격 소비에는 완료 보상이 없다.","resp":["계절"],"ret":[{"ch":"보조","m":"물길에 닿은 작물의 마름을 해소한다."},{"ch":"전투","m":"물길을 건넌 적이 젖어 core:storm_fork의 연쇄 연결점이 된다."},{"ch":"경험치","m":"비나 유한한 급수원으로 채운 저장수를 실제 마른 땅에 전달해 급수를 마쳤을 때 경험치 보상을 생성한다. 완료 원장은 도구 원본 인스턴스와 해당 growth-cycle 식별자로 한 번만 지급한다. 중단·재시도·수리·파괴 후 복구·저장 불러오기는 같은 식별자를 유지한다. 보상 이동이나 재수거는 새 보상을 생성하지 않는다."}],"harv":"가득 찬 물받이에서 마른 땅으로 급수가 끝나 물방울 경험치가 뜬다.","rec":"물받이가 깨지면 다음 바가지 타격으로 물받이 지형을 다시 파낼 수 있지만 유실된 물은 비가 오거나 실제 급수될 때까지 돌아오지 않는다.","cost":"공격과 급수가 같은 저장수를 소비하며 바닥나면 약한 마른 바가지 타격만 남는다."},{"id":"core:compost_sack","k":"tool","n":"퇴비 포대","c":"잔재 퇴비가 숙성되면→경험치를 얻는다","w":"wave-2","live":false,"tgt":"land","act":"자동으로 퇴비 덩어리를 산탄처럼 던져 적을 치고 착지점에 퇴비층을 깐다.","rem":"잔재 조각이 흙으로 변하는 퇴비 더미","grow":"실제 처치 잔재를 소비한 퇴비가 시간을 거쳐 숙성 흙으로 바뀐다. 숙성 완료가 성장 보상이며 다음 파종이 흙을 사용하면 빈 층으로 돌아간다. 빈 층은 새 잔재 없이는 다시 숙성하지 않는다.","resp":["처치"],"ret":[{"ch":"경험치","m":"실제 잔재를 소비한 퇴비가 숙성을 마쳤을 때 경험치 보상을 생성한다. 완료 원장은 도구 원본 인스턴스와 해당 growth-cycle 식별자로 한 번만 지급한다. 중단·재시도·수리·파괴 후 복구·저장 불러오기는 같은 식별자를 유지한다. 보상 이동이나 재수거는 새 보상을 생성하지 않는다."}],"harv":"거친 잔재가 고운 숙성 흙으로 바뀌며 경험치가 드러난다.","rec":"퇴비층을 잃으면 다시 던져 깔되 이미 소모한 잔재는 환급하지 않고 새로운 처치를 기다린다.","cost":"흡수한 잔재는 수거꾼이 다시 사용할 수 없다."},{"id":"core:mandrake_bulb","k":"tool","n":"만드라고라 구근","c":"깨어난 구근을 뽑으면→비명과 경험치가 난다","w":"wave-2","live":false,"tgt":"land","act":"자동으로 구근을 던져 적 사이에서 튕기게 한 뒤 빈 땅에 박는다.","rem":"잎 아래 얼굴 모양 뿌리가 보이는 구근밭","grow":"자체 경과로 잎이 나지만 인접 밭이 성숙해야 뿌리가 깨어난다. 깨어난 구근은 수확을 기다리며 이웃 조건만으로 재생하지 않는다.","resp":["이웃","시간"],"ret":[{"ch":"전투","m":"성숙 구근을 지나 수확할 때 비명 파면이 적을 밀어 퇴로를 연다."},{"ch":"경험치","m":"심고 성장해 이웃 결실로 깨어난 구근을 실제 뽑았을 때 경험치 보상을 생성한다. 완료 원장은 도구 원본 인스턴스와 해당 growth-cycle 식별자로 한 번만 지급한다. 중단·재시도·수리·파괴 후 복구·저장 불러오기는 같은 식별자를 유지한다. 보상 이동이나 재수거는 새 보상을 생성하지 않는다."}],"harv":"깨어난 얼굴 뿌리를 뽑으면 비명 고리와 경험치가 나온다.","rec":"다시 구근을 심고 잎의 성장과 이웃 밭의 결실을 새로 기다린다.","cost":"이웃 밭이 없거나 미숙하면 비명 수확을 쓸 수 없고 뽑은 구근은 다시 준비해야 한다."},{"id":"core:carpenter_hammer","k":"tool","n":"목수 망치","c":"목재 가공품이 출고되면→경험치를 얻는다","w":"wave-1a","live":true,"tgt":"building","act":"자동 망치 내려찍기가 앞의 적을 치고 가까운 빈 터에 작업소 골조를 세운다.","rem":"골조에서 지붕과 버팀대가 붙는 목공 작업소","grow":"영주가 표시된 작업 반경 안에 있으면 이동 중에도 공정이 진행되고 반경 밖에서는 멈춘다. 정지나 체류 자세를 요구하지 않는다. 완성 작업소는 인접한 기존 목조 폐허의 유한한 목재를 직접 받아 가공 출고한다. 수레의 원거리 운반도 같은 원재료 재고를 사용한다. 수리나 자기 건물의 반복 파괴는 새 목재나 새 출고를 만들지 않는다.","resp":["시간"],"ret":[{"ch":"전투","m":"완성 작업소의 버팀대가 접근 적을 옆으로 후려친다."},{"ch":"금화","m":"기존 목조 폐허에서 가공해 회수한 목재는 결산의 자재 회수 후보로 남는다. 판 안에서 팔아 금화로 바꾸면 그 목재는 장원 자재로 중복 반출하지 않는다."},{"ch":"경험치","m":"기존 폐허의 유한한 목재를 실제 소비해 가공 출고를 마쳤을 때 경험치 보상을 생성한다. 완료 원장은 도구 원본 인스턴스와 해당 shipment 식별자로 한 번만 지급한다. 중단·재시도·수리·파괴 후 복구·저장 불러오기는 같은 식별자를 유지한다. 보상 이동이나 재수거는 새 보상을 생성하지 않는다."}],"harv":"작업소 출고대에 가공 목재 꾸러미와 경험치가 놓인다.","rec":"폐허에 망치 공격이 닿으면 남은 골조부터 수리를 시작하며 완성 기능은 공정이 끝나야 돌아온다.","cost":"작업 반경 밖에서는 공정이 멈추며 가공은 기존 폐허의 유한한 목재를 소비한다."},{"id":"core:kiln_bellows","k":"tool","n":"가마 풀무","c":"가마가 식어 출고되면→경험치를 얻는다","w":"wave-2","live":false,"tgt":"building","act":"자동 풀무 화염이 전방 적을 태우고 빈 터의 가마 화구를 연다.","rem":"열고 닫히는 화구와 냉각 선반을 가진 가마","grow":"인접한 기존 점토 더미의 유한한 점토나 폐허의 유한한 고철을 한 화물로 받아 화염 처치의 불씨로 소성을 시작한다. 소성이 끝나면 문을 닫고 냉각하며 추가 불씨는 이 화물의 냉각을 되돌리지 않는다. 냉각 뒤 벽돌 또는 철을 출고한다. 원료 없는 불씨는 출고나 철을 만들지 않는다. 수레가 가져온 고철도 같은 원료 원장을 사용한다.","resp":["처치","시간"],"ret":[{"ch":"보조","m":"출고 벽돌이 가까운 손상 건물의 복구 공정에 전달된다."},{"ch":"금화","m":"제련한 철은 결산의 자재 회수 후보로 남긴다. 판 안 판매를 선택해 금화로 바꾸면 장원에 같은 철을 다시 반출하지 않는다."},{"ch":"경험치","m":"실제 원료를 소비한 화물이 소성과 냉각을 마쳐 출고되었을 때 경험치 보상을 생성한다. 완료 원장은 도구 원본 인스턴스와 해당 shipment 식별자로 한 번만 지급한다. 중단·재시도·수리·파괴 후 복구·저장 불러오기는 같은 식별자를 유지한다. 보상 이동이나 재수거는 새 보상을 생성하지 않는다."}],"harv":"식은 가마 문이 열려 완성품과 경험치가 출고대에 놓인다.","rec":"무너진 가마를 풀무로 다시 점화할 수 있으나 소성 중이던 화물은 잃고 새 불씨부터 모은다.","cost":"출고에는 유한한 점토나 고철이 필요하며 냉각이 끝날 때까지 기다려야 한다."},{"id":"core:cart_yoke","k":"tool","n":"수레 멍에","c":"화물이 집하소에 도착하면→경험치를 얻는다","w":"wave-2","live":false,"tgt":"building","act":"자동으로 멍에 수레를 직선 돌진시켜 적을 치고 귀환 지점에 집하소를 세운다.","rem":"수레 바퀴 자국과 짐칸이 쌓이는 집하소","grow":"연결 가능한 인접 수확지가 생기면 그 지점을 운반 경로에 편입하고 사라진 수확지는 경로에서 빼므로 경로망 모양이 성장이다. 인접한 기존 목재·금속 폐허도 유한한 회수 경로로 편입한다. 목재는 작업소로, 금속은 가마로 운반하며 원래 폐허 재고에서 꺼낸 양을 중복 수거하지 않는다. 운송 임무는 원본 화물 식별자와 최초 목적지로 고정한다. 하역 완료된 같은 화물을 재적재하거나 집하소 사이로 돌려도 새 출고 경험치는 없다. 수확 원래 보상의 이동과 운송 완료 보상은 서로 다른 원장 항목이다.","resp":["이웃"],"ret":[{"ch":"금화","m":"운반한 판매용 잉여를 집하소에서 금화로 교환해 지도에 남긴다."},{"ch":"경험치","m":"새 화물을 원래 목적지까지 실제 운송해 하역을 마쳤을 때 경험치 보상을 생성한다. 완료 원장은 도구 원본 인스턴스와 해당 shipment 식별자로 한 번만 지급한다. 중단·재시도·수리·파괴 후 복구·저장 불러오기는 같은 식별자를 유지한다. 보상 이동이나 재수거는 새 보상을 생성하지 않는다."}],"harv":"적재 수레가 집하소에서 짐을 내리고 운송 경험치가 뜬다.","rec":"남은 집하소는 다음 멍에 발동에 빈 수레를 보내며 떨어진 화물은 다른 회수 수단으로 건질 수 있다. 집하소도 잃으면 새 귀환점부터 경로를 다시 잇는다.","cost":"운반 중 화물이 노출되며 수레가 파괴되면 집하소에 도착하지 않은 화물은 바닥에 떨어진다."},{"id":"core:seed_vault_key","k":"tool","n":"종자 금고 열쇠","c":"저장 종자를 출고하면→경험치를 얻는다","w":"wave-2","live":false,"tgt":"building","act":"큰 열쇠가 자동으로 관통 왕복하며 빈 터에 종자 금고 문을 연다.","rem":"종자 칸과 계절 봉인이 보이는 작은 금고","grow":"인접 밭의 수확에서 종자를 받아 칸을 채우고 계절 전환 때 봉인을 풀어 빈 밭에 자동 재파종한다. 저장량은 방출 전까지 생산 보상이 아니다. 경험치는 실제 종자가 빈 밭에 출고되어 심어진 뒤에만 생긴다. 보관·계절 변경만으로는 지급하지 않는다.","resp":["계절","이웃"],"ret":[{"ch":"보조","m":"계절 전환 후 파괴된 밭자리에 어린 싹이 돌아와 재건 동선을 줄인다."},{"ch":"경험치","m":"실제 저장한 종자를 소비해 빈 밭 재파종 출고를 완료했을 때 경험치 보상을 생성한다. 완료 원장은 도구 원본 인스턴스와 해당 shipment 식별자로 한 번만 지급한다. 중단·재시도·수리·파괴 후 복구·저장 불러오기는 같은 식별자를 유지한다. 보상 이동이나 재수거는 새 보상을 생성하지 않는다."}],"harv":"금고 문에서 종자 꾸러미가 나와 빈 밭에 심어지고 경험치가 뜬다.","rec":"금고가 깨지면 남은 종자가 바닥에 떨어진다. 새 금고를 열고 근처에 남은 종자를 다시 회수해야 하며 사라진 종자는 복제하지 않는다.","cost":"보관한 수확은 지금 경험치나 식량으로 회수하지 못한다."},{"id":"core:shadow_stake","k":"tool","n":"그림자 말뚝","c":"새 울타리 연결을 마치면→경험치를 얻는다","w":"wave-2","live":false,"tgt":"building","act":"자동으로 지면 그림자를 찔러 적을 치고 이동 뒤 빈 터에 말뚝을 박는다.","rem":"검은 말뚝 사이 바닥에 낮게 이어진 울타리","grow":"인접 말뚝의 그림자가 계절의 광향에 따라 맞닿을 때만 연결되어 울타리가 된다. 계절이 바뀌면 연결 방향이 달라져 열린 통로가 이동한다. 새로운 울타리 구간의 첫 공사 완료만 보상한다. 계절별 재연결·수리·같은 자리에 재설치는 기존 구간 식별자를 이어받는다.","resp":["계절","이웃"],"ret":[{"ch":"전투","m":"접촉 적을 가시로 치고 연결된 선을 돌아가게 해 추격 방향을 바꾼다."},{"ch":"경험치","m":"새 미완성 구간의 말뚝을 연결해 울타리 공사를 처음 완료했을 때 경험치 보상을 생성한다. 완료 원장은 도구 원본 인스턴스와 해당 growth-cycle 식별자로 한 번만 지급한다. 중단·재시도·수리·파괴 후 복구·저장 불러오기는 같은 식별자를 유지한다. 보상 이동이나 재수거는 새 보상을 생성하지 않는다."}],"harv":"새 말뚝 구간의 그림자가 처음 맞물려 경험치가 드러난다.","rec":"깨진 말뚝 자리에 다시 박으면 현재 계절의 그림자 방향으로 연결을 재계산하며 옛 방어선이 그대로 돌아온다고 보장하지 않는다.","cost":"울타리 밖 성장물을 보호하지 못하고 공성 적은 말뚝을 부수며 통과한다."},{"id":"core:muster_horn","k":"tool","n":"뿔나팔","c":"교전 임무를 마치고 돌아오면→경험치를 얻는다","w":"wave-1a","live":true,"tgt":"people","act":"자동 나팔 음파가 적을 밀고 가까운 비징집 작업 부대를 불러 창병으로 전환한다.","rem":"모자와 짧은 창을 맞춘 이동 징집대","grow":"징집대가 참여한 처치 경험이 쌓이면 흩어진 찌르기에서 서로 빈틈을 맡는 교대 전열로 전환한다. 참여하지 않은 먼 처치는 훈련이 아니다. 부대 하나를 Core 엔티티 하나로 다루며 대표 스프라이트로 표현한다. 공유 활성 부대 상한에 도달하면 기존 가용 부대만 재사용하고 새 부대를 만들지 않는다. 가용 부대가 없으면 공격만 발동한다. 임무는 가까운 실제 적 무리와의 교전으로 시작하고 그 무리와 교전이 끝나면 영주 곁으로 자동 귀환한다. 교전하지 않은 왕복은 완료가 아니다. 완료된 임무는 적 교전·원본 화물·치료 사건의 식별자를 재사용해 새 임무로 포장할 수 없다.","resp":["처치"],"ret":[{"ch":"전투","m":"성장한 징집병이 교대로 창을 내밀어 귀환 중인 동료의 빈틈을 메운다."},{"ch":"경험치","m":"실제 적 교전을 마친 징집대가 지정 귀환점에 복귀했을 때 경험치 보상을 생성한다. 완료 원장은 도구 원본 인스턴스와 해당 mission 식별자로 한 번만 지급한다. 중단·재시도·수리·파괴 후 복구·저장 불러오기는 같은 식별자를 유지한다. 보상 이동이나 재수거는 새 보상을 생성하지 않는다."}],"harv":"교전에 참여한 징집대가 영주 곁으로 돌아와 깃발을 내리고 경험치를 준다.","rec":"패주한 생존자는 처마나 영주 곁으로 돌아와 재징집할 수 있지만 잃은 사람은 가용 백성에서 새로 모집하고 훈련을 다시 시작한다.","cost":"징집한 작업 부대는 원래 일을 멈춘다. 가용 부대에서만 전환하며 새 인력을 무료로 만들지 않는다."},{"id":"core:lantern_staff","k":"tool","n":"등불 지팡이","c":"잔재 운반 후 돌아오면→경험치를 얻는다","w":"wave-1b","live":false,"tgt":"people","act":"자동 등불 탄이 적을 관통하고 가까운 가용 작업 부대에게 수거 등불을 건넨다.","rem":"등불과 잔재 꾸러미를 든 수거 부대의 대표 모습","grow":"새 처치 지점이 생기면 가까운 잔재를 목적지로 삼고, 인접한 경작지까지 운반을 완수하면 그 왕복로를 익혀 다음부터 같은 경로의 잔재를 묶어 나른다. 부대 하나를 Core 엔티티 하나로 다루며 대표 스프라이트로 표현한다. 공유 활성 부대 상한에 도달하면 기존 가용 부대만 재사용하고 새 부대를 만들지 않는다. 가용 부대가 없으면 공격만 발동한다. 잔재 원본 식별자에 운반 임무를 묶으며 배달된 잔재를 다시 옮겨 새 임무를 만들지 않는다. 완료된 임무는 적 교전·원본 화물·치료 사건의 식별자를 재사용해 새 임무로 포장할 수 없다.","resp":["처치","이웃"],"ret":[{"ch":"보조","m":"운반한 잔재를 작물 뿌리에 내려놓아 다음 결실의 거름으로 쓴다."},{"ch":"경험치","m":"새 잔재를 목적 경작지에 전달한 수거대가 귀환했을 때 경험치 보상을 생성한다. 완료 원장은 도구 원본 인스턴스와 해당 mission 식별자로 한 번만 지급한다. 중단·재시도·수리·파괴 후 복구·저장 불러오기는 같은 식별자를 유지한다. 보상 이동이나 재수거는 새 보상을 생성하지 않는다."}],"harv":"잔재를 내려놓은 수거대가 빈 꾸러미로 돌아와 경험치를 준다.","rec":"수거꾼이 패주하면 짐을 떨어뜨리고 돌아온다. 새 수거꾼은 떨어진 짐을 다시 줍지만 이전 사람의 익힌 경로는 승계하지 않는다.","cost":"운반 부대는 방어선 밖에 노출되고 같은 잔재를 퇴비가 먼저 소비할 수 있다."},{"id":"core:herb_basket","k":"tool","n":"약초 바구니","c":"치료를 마치고 돌아오면→경험치를 얻는다","w":"wave-2","live":false,"tgt":"people","act":"자동으로 가시 씨앗을 흩뿌려 적을 찌르고 가까운 가용 작업 부대에게 약초 바구니를 맡긴다.","rem":"약초 천을 들고 옮기는 치료 부대의 대표 모습","grow":"익은 밭 옆에서 약초를 말리는 시간을 채워 치료 꾸러미를 만든다. 환자를 돌보면 꾸러미를 소비하고 다시 약초를 준비한다. 부대 하나를 Core 엔티티 하나로 다루며 대표 스프라이트로 표현한다. 공유 활성 부대 상한에 도달하면 기존 가용 부대만 재사용하고 새 부대를 만들지 않는다. 가용 부대가 없으면 공격만 발동한다. 치료대는 실제 부상 부대에게 꾸러미를 소비해 치료를 완료한 뒤 준비 지점으로 귀환한다. 건강한 부대와 치료하지 않은 왕복은 임무가 아니다. 완료된 임무는 적 교전·원본 화물·치료 사건의 식별자를 재사용해 새 임무로 포장할 수 없다.","resp":["시간","이웃"],"ret":[{"ch":"보조","m":"다친 생존 작업자가 꾸러미 치료를 마치면 퇴각 상태에서 작업 가능 상태로 돌아간다."},{"ch":"경험치","m":"실제 부상 부대를 약초 꾸러미로 치료한 치료대가 귀환했을 때 경험치 보상을 생성한다. 완료 원장은 도구 원본 인스턴스와 해당 mission 식별자로 한 번만 지급한다. 중단·재시도·수리·파괴 후 복구·저장 불러오기는 같은 식별자를 유지한다. 보상 이동이나 재수거는 새 보상을 생성하지 않는다."}],"harv":"치료받은 부대가 작업으로 돌아가고 치료대가 빈 바구니로 귀환하며 경험치를 준다.","rec":"치료사가 퇴각하면 남은 꾸러미는 그 자리에 남고 다시 돌아와 주울 수 있다. 사망자는 치료로 복제하지 않고 새 인력을 배치한다.","cost":"약초로 쓴 수확은 일반 수확 보상이 되지 않으며 치료 중인 사람도 생산을 멈춘다."},{"id":"core:rain_chime","k":"tool","n":"빗물 풍경","c":"물을 나르고 돌아오면→경험치를 얻는다","w":"wave-2","live":false,"tgt":"people","act":"자동 풍경 물방울이 적 사이로 연쇄 튀고 가까운 가용 작업 부대를 물지기대로 전환한다.","rem":"물통과 어깨 풍경을 단 급수 부대의 대표 모습","grow":"비 오는 계절에는 넘친 물을 저수 지점에 모으는 역할을 익히고, 가뭄에는 저장수를 마른 밭에 나르는 역할로 전환한다. 계절 전환 때 현재 짐을 먼저 마저 운반한다. 부대 하나를 Core 엔티티 하나로 다루며 대표 스프라이트로 표현한다. 공유 활성 부대 상한에 도달하면 기존 가용 부대만 재사용하고 새 부대를 만들지 않는다. 가용 부대가 없으면 공격만 발동한다. 넘친 물의 회수나 마른 밭 급수 후 출발지로 돌아와야 임무가 끝난다. 같은 물을 저수지 사이로 돌리는 왕복은 새 임무가 아니다. 완료된 임무는 적 교전·원본 화물·치료 사건의 식별자를 재사용해 새 임무로 포장할 수 없다.","resp":["계절"],"ret":[{"ch":"보조","m":"물통이 도착한 밭의 마름을 해소해 성장이 재개된다."},{"ch":"경험치","m":"실제 물을 필요한 밭이나 저수지에 전달한 물지기대가 귀환했을 때 경험치 보상을 생성한다. 완료 원장은 도구 원본 인스턴스와 해당 mission 식별자로 한 번만 지급한다. 중단·재시도·수리·파괴 후 복구·저장 불러오기는 같은 식별자를 유지한다. 보상 이동이나 재수거는 새 보상을 생성하지 않는다."}],"harv":"물지기대가 급수 후 빈 물통으로 저수지에 돌아와 경험치를 준다.","rec":"패주하며 잃은 물은 다시 저수 지점에서 채워야 한다. 생존 물지기는 복귀하고 잃은 인원은 새 가용 작업자로 충원한다.","cost":"급수는 저장수를 소비하고 물지기대는 원래 작업에서 빠진다."},{"id":"core:formation_drum","k":"tool","n":"깃발 북","c":"입구 방어 후 돌아오면→경험치를 얻는다","w":"wave-2","live":false,"tgt":"people","act":"자동 북 충격이 전방으로 퍼져 적을 밀고 가까운 가용 작업 부대를 방패대열로 묶는다.","rem":"방패 모서리를 맞대고 서는 수비 대열","grow":"같은 입구에서 흩어지지 않고 버티면 방패를 맞물려 통과 적을 밀치는 전열로 완성된다. 이동 명령은 별도 UI 없이 영주가 다른 완성 건물을 지나갈 때 자동으로 바뀌고 정렬을 다시 시작한다. 부대 하나를 Core 엔티티 하나로 다루며 대표 스프라이트로 표현한다. 공유 활성 부대 상한에 도달하면 기존 가용 부대만 재사용하고 새 부대를 만들지 않는다. 가용 부대가 없으면 공격만 발동한다. 실제 적이 접근하면 방어 임무를 시작하고 그 접근 무리를 막아낸 뒤 영주 곁으로 자동 귀환한다. 적 없는 경비와 위치 변경만으로 임무 완료를 만들지 않는다. 완료된 임무는 적 교전·원본 화물·치료 사건의 식별자를 재사용해 새 임무로 포장할 수 없다.","resp":["시간"],"ret":[{"ch":"전투","m":"완성 전열은 적 접촉을 방패 밀침으로 되받아 입구를 비운다."},{"ch":"경험치","m":"실제 적의 접근을 막은 방패대가 해당 방어 임무를 마치고 귀환했을 때 경험치 보상을 생성한다. 완료 원장은 도구 원본 인스턴스와 해당 mission 식별자로 한 번만 지급한다. 중단·재시도·수리·파괴 후 복구·저장 불러오기는 같은 식별자를 유지한다. 보상 이동이나 재수거는 새 보상을 생성하지 않는다."}],"harv":"공격을 막은 방패대가 임무기를 접고 영주 곁에 돌아와 경험치를 준다.","rec":"흩어진 생존 병사는 지킬 건물 앞에 다시 모여 정렬을 시작하며 잃은 대원은 가용 백성에서만 보충한다.","cost":"진형 유지 동안 농사에 복귀하지 못하고 거점을 옮기면 형성한 방어가 풀린다."},{"id":"core:ash_gathering_charm","k":"item","n":"재 모음패","c":"비옥한 빛 이탈 → 빛을 옮겨 다음 밭에 놓음","w":"wave-2","live":false,"lt":[],"lw":["core:grave_lantern"],"trig":"영주가 비옥한 빛이 남은 경작지를 떠날 때","ben":"모음패가 남은 빛을 담아 다음 빈 경작지에 내려놓는다.","cost":"옮긴 빛은 원래 경작지에 남지 않는다.","num":false},{"id":"core:bitter_seed_dust","k":"item","n":"쓴 씨앗 가루","c":"씨앗 약탈 → 쓴 가루로 후속 약탈자 우회","w":"wave-1a","live":true,"lt":["core:seed_bag"],"lw":[],"trig":"적이 씨앗을 먹을 때","ben":"먹힌 자리의 쓴 가루가 뒤따르는 약탈자를 옆길로 돌린다.","cost":"","num":false},{"id":"core:cart_axle_ring","k":"item","n":"수레 축테","c":"잔해 충돌 → 수레 화물 낙하 방지","w":"wave-2","live":false,"lt":["core:cart_yoke"],"lw":[],"trig":"수레가 잔해와 충돌할 때","ben":"고정한 화물이 수레에서 떨어지지 않는다.","cost":"","num":false},{"id":"core:clay_water_bead","k":"item","n":"질그릇 물구슬","c":"물길 통과 → 물을 빼서 어린 밭으로 운반","w":"wave-1a","live":true,"lt":["core:rain_ladle"],"lw":[],"trig":"물길에서 어린 밭으로 이동할 때","ben":"기존 물을 구슬에 담아 처음 만난 어린 밭으로 옮긴다.","cost":"옮긴 물은 원래 물길에 남지 않는다.","num":false},{"id":"core:compost_screen","k":"item","n":"거름 체망","c":"퇴비층 위 포자 폭발 → 가장자리로 포자 분사","w":"wave-2","live":false,"lt":["core:compost_sack"],"lw":["core:spore_fan"],"trig":"포자가 퇴비층 위에서 터질 때","ben":"체망이 터진 포자를 걸러 퇴비층 바깥 가장자리로 흩뿌려 접근 적을 친다.","cost":"","num":false},{"id":"core:crop_guard_signet","k":"item","n":"곡식 수호인","c":"밭 수확 → 영주 곁 창병을 수확지로 파견","w":"wave-1a","live":true,"lt":["core:seed_bag","core:muster_horn"],"lw":["core:harvest_scythe"],"trig":"씨앗 밭의 수확 대열이나 낫이 익은 밭을 수확할 때","ben":"수호인이 그 자리에 깃발을 남겨 이미 소집된 창병 대열을 불러 약탈자를 막는다.","cost":"파견한 창병 대열은 그동안 영주 곁을 지키지 않는다.","num":false},{"id":"core:drum_tension_rope","k":"item","n":"북 가죽 조임줄","c":"징집 파동 발동 → 전면 파동이 쐐기로 돌출","w":"wave-2","live":false,"lt":[],"lw":["core:levy_banner"],"trig":"징집 파동이 퍼질 때","ben":"조임줄이 파면의 앞부분을 당겨 쐐기 모양으로 내보내 앞의 적을 가른다.","cost":"","num":false},{"id":"core:fallow_marker","k":"item","n":"휴경 표지목","c":"수확지 이탈 → 밭을 쉬게 해 이웃에 거름","w":"wave-1b","live":false,"lt":["core:plough"],"lw":[],"trig":"수확한 밭을 떠날 때","ben":"그 밭을 쉬게 하여 회복한 흙을 이웃 파종지에 보낸다.","cost":"휴경 밭에서는 작물과 수확 경험치를 얻지 못한다.","num":false},{"id":"core:front_rank_peg","k":"item","n":"전열 고정못","c":"후방 벽 전개 → 고정못으로 밀림 방지","w":"wave-2","live":false,"lt":[],"lw":["core:ox_guard"],"trig":"후방 방패벽이 세워질 때","ben":"벽에 고정못이 내려와 적의 밀침에도 후방을 지킨다.","cost":"","num":false},{"id":"core:furrow_measuring_rope","k":"item","n":"고랑 재는 줄","c":"고랑 옆 선 생성 → 작업자 통행선 표시","w":"wave-2","live":false,"lt":["core:plough"],"lw":["core:ditch_pike"],"trig":"기존 고랑 옆에 고랑이나 찌르기 선이 생길 때","ben":"고랑 가장자리에 통행선을 남겨 작업자가 밭을 우회한다.","cost":"","num":false},{"id":"core:harvest_basket_lid","k":"item","n":"수확 바구니 뚜껑","c":"향 자루 착지 → 영주 반대쪽으로 향 분출","w":"wave-2","live":false,"lt":[],"lw":["core:granary_sling"],"trig":"향 자루가 땅에 닿을 때","ben":"자루의 뚜껑이 열려 영주 반대쪽으로만 향을 보내 적을 유인한다.","cost":"","num":false},{"id":"core:herb_drying_frame","k":"item","n":"약초 말림틀","c":"남는 약초 도착 → 보관 후 부상자에게 전달","w":"wave-2","live":false,"lt":["core:herb_basket"],"lw":[],"trig":"부상자가 없는 곳에 약초가 도착할 때","ben":"약초를 걸어 두었다가 다가온 부상자에게 건넨다.","cost":"","num":false},{"id":"core:joiner_square","k":"item","n":"이음 직각자","c":"전방 적 접근 → 뒤를 비우고 고리를 앞에 꺾음","w":"wave-1a","live":true,"lt":[],"lw":["core:ward_orbit"],"trig":"영주 앞에 적이 들어올 때","ben":"직각자가 공전 조각의 궤도를 앞쪽 모서리로 꺾어 접근 적을 밀어낸다.","cost":"꺾인 조각은 그동안 뒤쪽 궤도를 지키지 않는다.","num":false},{"id":"core:kiln_heat_tile","k":"item","n":"가마 축열판","c":"공격 뒤 잔열 → 축열판에 담아 건물 수리","w":"wave-2","live":false,"lt":["core:kiln_bellows"],"lw":["core:cinder_flail"],"trig":"공격이 끝난 뒤 잔열이 남을 때","ben":"잔열을 축열판에 담아 가까운 건물 수리에 쓴다.","cost":"","num":false},{"id":"core:lantern_shutter","k":"item","n":"등불 가림판","c":"귀환 안내 → 통로만 비추고 바깥빛 차단","w":"wave-1b","live":false,"lt":["core:lantern_staff"],"lw":[],"trig":"귀환 길을 비출 때","ben":"빛을 귀환 통로에 모아 바깥의 적에게 숨긴다.","cost":"통로 밖 인원은 안내 빛을 받지 못한다.","num":false},{"id":"core:levy_bread_wrap","k":"item","n":"징집 빵보","c":"부대 출발 → 식량을 묶어 원정 중 배식","w":"wave-1a","live":true,"lt":["core:muster_horn"],"lw":[],"trig":"부대가 출발할 때","ben":"저장 식량을 싸서 귀환 전 현장에서 배식한다.","cost":"싸 둔 식량은 귀환 전 다른 용도로 쓰지 못한다.","num":false},{"id":"core:long_shot_counter","k":"item","n":"먼 사격 눈금","c":"표적 이탈 → 눈금 재진입자를 우선 조준","w":"wave-2","live":false,"lt":[],"lw":["core:watchtower_crossbow"],"trig":"표적이 사거리 밖으로 나갈 때","ben":"남긴 눈금에 다시 들어온 적을 다음 사격의 우선 표적으로 삼는다.","cost":"","num":false},{"id":"core:lure_pebble_box","k":"item","n":"유인 자갈함","c":"도주자 명중 → 앞쪽 자갈 소리로 경로 전환","w":"wave-1b","live":false,"lt":[],"lw":["core:ember_wand"],"trig":"불씨가 도주 중인 약탈자에게 닿을 때","ben":"약탈자 앞에 자갈 소리를 내어 도주 방향을 꺾는다.","cost":"","num":false},{"id":"core:mandrake_ear_plug","k":"item","n":"구근 귀마개","c":"구근 비명 → 작업자가 놀라지 않고 수확","w":"wave-2","live":false,"lt":["core:mandrake_bulb"],"lw":[],"trig":"수확 구근이 비명을 낼 때","ben":"작업자의 귀마개가 닫혀 작업을 계속한다.","cost":"","num":false},{"id":"core:meadow_buckle","k":"item","n":"들판 허리쇠","c":"범위 안 약탈자 → 다음 검 베기를 그쪽으로","w":"wave-1a","live":true,"lt":[],"lw":["core:iron_blade"],"trig":"검의 공격 범위에 약탈자가 있을 때","ben":"다음 베기의 방향을 그 약탈자 쪽으로 돌린다.","cost":"","num":false},{"id":"core:muster_roll","k":"item","n":"징집 명부","c":"부대 소집 → 귀환 완료 대열부터 선택","w":"wave-1b","live":false,"lt":["core:muster_horn"],"lw":[],"trig":"부대를 소집할 때","ben":"귀환을 마친 가용 대열부터 소집 대상으로 고른다.","cost":"","num":false},{"id":"core:projectile_return_hook","k":"item","n":"투사체 회수고리","c":"귀환 원반 접촉 → 남은 경로를 접고 회수","w":"wave-2","live":false,"lt":[],"lw":["core:mill_disc"],"trig":"영주가 돌아오는 원반에 닿을 때","ben":"원반을 즉시 회수하고 다음 발사 준비를 시작한다.","cost":"생략한 귀환 경로에서는 타격하지 않는다.","num":false},{"id":"core:rain_watch_cup","k":"item","n":"빗소리 감시잔","c":"작업길 연쇄 명중 → 감시잔이 귀환 신호","w":"wave-2","live":false,"lt":["core:rain_chime"],"lw":["core:storm_fork"],"trig":"물방울 연쇄나 번개 연쇄가 작업길의 적에 닿을 때","ben":"감시잔이 맞은 적 쪽으로 울려 해당 길의 작업자에게 귀환 신호를 보낸다.","cost":"","num":false},{"id":"core:repair_apron","k":"item","n":"수선 앞치마","c":"수리 중 파편 → 앞치마로 받아 작업 지속","w":"wave-1b","live":false,"lt":["core:carpenter_hammer"],"lw":[],"trig":"수리 중 파편이 튈 때","ben":"앞치마가 파편을 받아 수리 동작이 끊기지 않는다.","cost":"","num":false},{"id":"core:return_path_knot","k":"item","n":"귀환 매듭끈","c":"인원 귀환 → 익은 밭을 피해 경계로 우회","w":"wave-1b","live":false,"lt":["core:lantern_staff"],"lw":[],"trig":"인원이 귀환할 때","ben":"익은 밭을 밟지 않는 경계 길로 돌아온다.","cost":"밭을 가로지르는 지름길은 쓰지 않는다.","num":false},{"id":"core:ripe_bell_clapper","k":"item","n":"익음 알림 추","c":"급수 배정 → 가장 오래 마른 밭부터 방문","w":"wave-2","live":false,"lt":["core:rain_chime"],"lw":[],"trig":"물지기가 급수할 밭을 고를 때","ben":"알림 추가 가장 오래 마른 밭을 울려 물지기가 그 밭부터 급수하게 한다.","cost":"","num":false},{"id":"core:root_binding_cord","k":"item","n":"뿌리 묶음끈","c":"뿌리덫 포획 → 뿌리끈으로 밀려남 방지","w":"wave-2","live":false,"lt":[],"lw":["core:root_harpoon"],"trig":"뿌리덫이 적을 붙잡을 때","ben":"덫에 걸린 적이 다른 적에게 밀려도 뿌리끈이 붙든다.","cost":"","num":false},{"id":"core:ruin_keystone","k":"item","n":"폐허 쐐기돌","c":"건물 붕괴 → 기초를 남겨 같은 터 재건","w":"wave-1b","live":false,"lt":["core:carpenter_hammer"],"lw":[],"trig":"건물이 무너질 때","ben":"남은 기초를 표시해 같은 터 재건 시 기존 기초를 재사용한다.","cost":"","num":false},{"id":"core:scaffold_step","k":"item","n":"비계 발판","c":"작업자 피습 → 방패 발판으로 뒤쪽 피신","w":"wave-2","live":false,"lt":["core:formation_drum"],"lw":[],"trig":"작업자 뒤에 적이 접근할 때","ben":"방패 대열이 발판을 펴 작업자를 대열 뒤로 넘긴다.","cost":"","num":false},{"id":"core:seed_pouch_lining","k":"item","n":"씨주머니 안감","c":"씨앗 송이 폭발 → 파편을 전방에 모아 발사","w":"wave-1b","live":false,"lt":[],"lw":["core:seed_bolt"],"trig":"쇠살의 씨앗 송이가 적중해 터질 때","ben":"안감이 씨앗 파편을 원래 쇠살 방향으로 모아 전방에 흩뿌린다.","cost":"","num":false},{"id":"core:shadow_stake_lens","k":"item","n":"그늘말뚝 렌즈","c":"그림자 접촉 → 밭을 약탈자의 시야에서 숨김","w":"wave-2","live":false,"lt":["core:shadow_stake"],"lw":[],"trig":"그림자가 밭에 닿을 때","ben":"밭 쪽으로 그림자를 모아 시야로 찾는 약탈자의 목표에서 가린다.","cost":"","num":false},{"id":"core:shock_absorber_pad","k":"item","n":"충격 흡수천","c":"망치 착지 → 천이 펴지며 후속 충격파","w":"wave-1b","live":false,"lt":[],"lw":["core:stone_maul"],"trig":"망치가 땅에 닿을 때","ben":"착지점의 흡수천이 충격을 모았다가 바깥으로 펴져 적에게 후속 파동을 보낸다.","cost":"","num":false},{"id":"core:spare_seed_locket","k":"item","n":"여분 종자함","c":"빈 밭 통과 → 보관 씨앗을 꺼내 재파종","w":"wave-2","live":false,"lt":["core:seed_vault_key"],"lw":[],"trig":"보관 씨앗을 가지고 빈 밭을 지날 때","ben":"종자함에서 씨앗을 꺼내 빈 밭에 심는다.","cost":"꺼낸 씨앗은 보관 재고에서 빠진다.","num":false},{"id":"core:tower_plumb_line","k":"item","n":"망루 다림줄","c":"첫 조준 완료 → 통로 고정, 바깥 적 제외","w":"wave-2","live":false,"lt":[],"lw":["core:watchtower_crossbow"],"trig":"쇠뇌가 첫 조준을 마칠 때","ben":"그 방향을 사격 통로로 고정한다.","cost":"재거치 전까지 통로 밖 적을 조준하지 않는다.","num":false},{"id":"core:wind_seed_flag","k":"item","n":"바람 씨깃","c":"물 공격 중 회전 → 투사체가 안쪽으로 휨","w":"wave-2","live":false,"lt":["core:rain_ladle"],"lw":["core:canal_bow"],"trig":"물을 던지거나 물화살을 쏘며 방향을 바꿀 때","ben":"깃발이 물 투사체를 회전 안쪽으로 휘게 한다. 물화살은 공격으로 끝나고 바가지 물만 물받이를 남긴다.","cost":"","num":false},{"id":"core:shadow_retreat_clasp","k":"item","n":"그늘 퇴로걸쇠","c":"작업자 후퇴 → 밭 그늘을 접어 퇴로 보호","w":"wave-2","live":false,"lt":["core:shadow_stake"],"lw":[],"trig":"작업자가 그늘 밖으로 물러날 때","ben":"그늘막을 퇴로 쪽으로 접어 작업자를 가린다.","cost":"옮긴 그늘막은 원래 밭을 가리지 않는다.","num":false},{"id":"core:ditch_watch","k":"charter","n":"배수로 감시 의무","c":"고랑 연결 → 거름을 연결 밭에만 운반","w":"wave-2","live":false,"lt":["core:plough","core:compost_sack"],"trig":"연결된 고랑 안에서 적이 처치될 때","rule":"비옥도 회수를 주변 확산 대신 고랑에 연결된 밭으로만 운반하는 의무로 바꾼다.","forf":"고랑 밖에서 생긴 처치 비옥도는 이 특허장의 회수 대상에서 제외되어 연결 밭에 전해지지 않는다."},{"id":"core:fallow_rotation","k":"charter","n":"휴경 순번장","c":"수확 완료 → 밭을 쉬게 해 이웃에 비옥도","w":"wave-2","live":false,"lt":["core:seed_bag","core:plough"],"trig":"연결된 밭의 수확이 끝날 때","rule":"최근 수확한 밭은 다음 파종을 건너뛰고 이웃 밭으로 휴경 비옥도를 넘기는 순환을 자동 적용한다.","forf":"쉬는 밭은 휴경을 마치기 전 식량과 수확 경험치를 만들지 못한다."},{"id":"core:fertile_duel","k":"charter","n":"밭머리 결투권","c":"밭머리 처치 → 거름을 그 밭에만 묻음","w":"wave-2","live":false,"lt":["core:compost_sack"],"trig":"영주가 밭머리에서 적을 처치할 때","rule":"그 처치의 거름을 바로 해당 밭에 묻고 일반 회수 경로를 거치지 않게 한다.","forf":"대상 처치의 비옥도는 다른 밭이나 저장소로 옮길 수 없어 그 밭이 파괴되면 함께 잃는다."},{"id":"core:gleaning_right","k":"charter","n":"이삭 줍기 권리","c":"수확 완료 → 경험치 몫을 이삭 배식으로","w":"wave-2","live":false,"lt":["core:seed_bag","core:muster_horn"],"trig":"수확이 끝나 잔여 이삭이 남을 때","rule":"수확 보상을 즉시 모두 회수하는 대신 잔여 이삭을 백성이 주워 다음 배식에 쓰게 한다.","forf":"이삭으로 남긴 몫은 수확 경험치가 되지 않으며 줍는 인원은 징집할 수 없다."},{"id":"core:granary_lock","k":"charter","n":"곡창 봉인장","c":"식량 입고 → 겨울까지 사용 못할 몫 봉인","w":"wave-2","live":false,"lt":["core:seed_vault_key"],"trig":"식량이 저장되고 다음 계절이 겨울로 바뀔 때","rule":"입고 식량의 봉인 몫은 약탈자가 빼앗거나 긴급 건설이 소비하지 못하게 별도 보관하며, 겨울 시작 사건에서만 봉인을 자동 해제해 배식에 돌린다. 저장 건물 자체가 파괴되면 봉인은 보호하지 못하고 해당 재고도 유실된다.","forf":"봉인된 몫은 겨울 전 굶주림·징집·긴급 수리에 쓰지 못한다."},{"id":"core:guarded_harvest","k":"charter","n":"무장 수확권","c":"수확 반경 유지 → 다음 공격을 수확 베기로","w":"wave-2","live":false,"lt":["core:seed_bag"],"trig":"영주가 수확 작업 반경 안에 있는 동안","rule":"다음 근접 공격을 수확 종료 원호 베기로 예약하여 수확 완료와 적 밀어내기를 함께 수행한다.","forf":"예약 중 원래 공격은 보류하며 반경 밖으로 나가면 예약이 취소된다. 반경 안에서는 계속 이동할 수 있다."},{"id":"core:levy_relief","k":"charter","n":"교대 징집 규약","c":"교대 인원 도착 → 공격을 멈추고 노동 복귀","w":"wave-2","live":false,"lt":["core:muster_horn","core:formation_drum"],"trig":"전열 인원이 귀농할 때","rule":"준비된 대기 인원이 도착하고 나서 기존 인원을 노동으로 돌려보내는 교대 규칙을 적용한다.","forf":"교대 대열을 맞추는 동안 기존 부대의 자동 공격을 중단하며 예비 인력도 노동을 떠나야 한다."},{"id":"core:meal_oath","k":"charter","n":"공동 식탁 서약","c":"식량 도착 → 저장할 몫을 먼저 현장 배식","w":"wave-2","live":false,"lt":["core:cart_yoke","core:muster_horn"],"trig":"작업자가 수확물을 창고로 운반할 때","rule":"다음 노동 주기의 식사를 현장에서 먼저 나누고 남은 몫만 저장한다.","forf":"선배식으로 묶인 식량은 그 주기 징집 비용이나 건물 수리로 전환하지 못한다."},{"id":"core:measured_volley","k":"charter","n":"절제 사격령","c":"농지 적 진입 → 비축탄 일제 사격 후 재장전","w":"wave-2","live":false,"lt":[],"trig":"농지에 적이 없었다가 다시 사거리 안에 들어올 때","rule":"빈 사격을 하지 않고 걸어 둔 탄을 농지를 가르는 관통 일제 사격으로 풀어 준다.","forf":"일제 사격 후 탄을 다시 거는 동안 후속 사격을 할 수 없으며 농지 밖 적에게 비축 사격을 쓰지 않는다."},{"id":"core:rally_boundary","k":"charter","n":"집결 경계선","c":"경계 통과 → 노동을 멈추고 대열 재정렬","w":"wave-2","live":false,"lt":["core:formation_drum","core:lantern_staff"],"trig":"귀환 부대가 영주가 지난 경계 지점에 도착할 때","rule":"가장 최근 경계 통과점을 자동 집결지로 사용해 농지로 흩어지기 전 대열을 재정렬한다.","forf":"재정렬이 끝나기 전에는 해당 인원을 경작이나 재징집에 사용할 수 없다."},{"id":"core:repair_tithe","k":"charter","n":"수선 십일조","c":"식량 입고 → 배식 몫을 떼어 건물 수리","w":"wave-2","live":false,"lt":["core:carpenter_hammer","core:cart_yoke"],"trig":"수확 식량이 도착하고 손상 건물이 있을 때","rule":"입고분에서 목수의 식량을 먼저 떼어 가까운 손상 건물의 수리 작업을 개시한다.","forf":"떼어 낸 식량은 인구 유지와 징집에 쓸 수 없고 수리 중단 때도 이미 먹은 몫은 되돌아오지 않는다."},{"id":"core:ruin_salvage","k":"charter","n":"폐허 회수권","c":"폐허 발생 → 건물 복구 대신 해체 부재 회수","w":"wave-2","live":false,"lt":["core:carpenter_hammer"],"trig":"폐허가 생기고 목수의 다음 작업을 정할 때","rule":"활성 건물 작업 대신 폐허 해체를 먼저 수행해 회수 부재를 다음 재건 터로 옮긴다.","forf":"해체와 운반이 끝날 때까지 해당 건물의 공격과 경작 보조를 복구할 수 없다."},{"id":"core:sowing_sworddance","k":"evolution","n":"파종 검무","c":"검 베기 → 베기 선에만 씨앗 파종","w":"wave-1a","live":true,"inp":["core:iron_blade","core:seed_bag"],"trig":"두 입력을 보유하고 직접 파종한 밭에서 검으로 적을 처치한 뒤 진화 카드를 선택할 때","before":"검의 베기와 씨앗 투척이 따로 발동한다.","after":"검이 베고 지나간 선을 따라 씨앗을 이어 심어 베기 궤적을 경작 통로로 남긴다.","vis":"짧게 사라지던 검 자국 뒤로 씨앗 점선과 싹줄이 남는다.","cost":"파종지가 베기 선에 몰려 측면 약탈에 노출되며 베지 못한 빈 땅은 이 공격으로 심지 못한다."},{"id":"core:harpoon_plough","k":"evolution","n":"견인 쟁기창","c":"뿌리덫 포획 → 파종 못할 고랑으로 견인","w":"wave-2","live":false,"inp":["core:root_harpoon","core:plough"],"trig":"두 입력을 보유하고 뿌리덫에 붙잡힌 적을 고랑 곁에서 처치한 뒤 진화 카드를 선택할 때","before":"작살은 뒤쪽 빈 땅에 고정 덫으로 박혀 밟은 적을 붙들고, 쟁기는 별도로 고랑을 낸다.","after":"고랑 곁에 박힌 뿌리덫이 적을 붙잡으면 쟁기날이 고랑을 따라 움직여 덫과 붙잡힌 적을 끌고 처치 터를 연결한다. 보스는 끌리지 않고 지나가는 가시에만 맞는다.","vis":"땅에 고정되어 닫히던 뿌리 손 아래 쟁기날이 생겨 고랑 위로 미끄러지고 뒤에 경작선을 남긴다.","cost":"견인 중인 덫은 새 적을 붙잡을 수 없고 견인 구간에는 파종하지 못한다. 고랑이 끊기면 그 끝에 멈추어 다시 고정 덫이 된다."},{"id":"core:marching_banner","k":"evolution","n":"교대 진군기","c":"교대 박자 → 노동 대신 예비 대열 전진","w":"wave-2","live":false,"inp":["core:levy_banner","core:formation_drum"],"trig":"두 입력을 보유하고 부대가 귀환을 마친 뒤 진화 카드를 선택할 때","before":"군기의 전투 신호와 북의 집결 신호가 따로 나온다.","after":"군기 아래 전진·귀환 통로를 나누고 북의 박자마다 귀환 대열 뒤로 예비 대열이 들어와 공격선을 잇는다.","vis":"단일 군기 주위 점들이 서로 반대로 흐르는 두 대열로 바뀐다.","cost":"예비 인원이 대기열에 묶여 경작을 하지 못하고 교대 박자 전에는 즉시 증원할 수 없다."},{"id":"core:rain_channel_shot","k":"evolution","n":"물길 관통시위","c":"물화살 진입 → 관개를 멈춘 관통 물길","w":"wave-2","live":false,"inp":["core:canal_bow","core:rain_ladle"],"trig":"두 입력을 보유하고 젖은 밭에서 활로 적을 처치한 뒤 진화 카드를 선택할 때","before":"물화살은 물길 모서리마다 흐름 방향으로 반사되는 개별 탄이며, 빗물 국자는 별도로 연결 물길을 남긴다.","after":"물화살이 물길에 닿으면 반사 탄 대신 흐름을 타고 전진하는 연속 관통 물줄기로 풀린다. 물줄기가 지나간 연결 구간은 잠시 사격선으로 남아 뒤따라 진입한 적도 맞히고 관개 작업은 끝날 때까지 멈춘다.","vis":"모서리마다 꺾이며 지나가던 작은 화살이 물길을 채우는 굵은 연속 선으로 바뀌고, 지나간 선에는 관통 물결이 남는다.","cost":"공격선으로 점유한 물길은 관개에 쓰지 못하며 마른 틈에서 공격선이 끊긴다. 밭 성장 재개는 물줄기가 빠진 뒤에 가능하다."},{"id":"core:warded_masonry","k":"evolution","n":"호위 성가퀴","c":"건물 수리 → 영주 곁 고리가 건물로 이동","w":"wave-1a","live":true,"inp":["core:ward_orbit","core:carpenter_hammer"],"trig":"두 입력을 보유하고 건물 수리를 끝낸 뒤 진화 카드를 선택할 때","before":"수호물은 영주를 돌고 망치는 별도로 수리한다.","after":"수호물이 수리 중인 건물 외곽으로 옮겨 공전하며 목수가 일할 공간으로 들어오는 적을 친다.","vis":"영주 중심 원이 건물 모서리를 두르는 궤도로 바뀐다.","cost":"수호물이 건물에 붙어 있는 동안 영주는 그 수호물의 근접 방어를 받지 못한다."},{"id":"core:compost_rain","k":"evolution","n":"거름비 순환","c":"거름 회수 → 직접 배분 대신 거름비 운반","w":"wave-2","live":false,"inp":["core:compost_sack","core:rain_ladle"],"trig":"두 도구를 보유하고 회수한 거름으로 밭을 성장시킨 뒤 진화 카드를 선택할 때","before":"거름 회수와 물 뿌리기가 개별 지점에서 이뤄진다.","after":"처치 흔적의 거름을 물에 타 어린 밭들을 덮는 거름비 구름으로 띄우고 구름 경로에서 성장 작업을 수행한다.","vis":"지면 더미와 물방울이 연결되어 이동하는 갈색 빗줄기 띠로 바뀐다.","cost":"구름으로 보낸 거름은 특정 밭에 직접 줄 수 없고 구름이 지나가는 순서를 기다려야 한다."},{"id":"core:sheltered_sowing","k":"evolution","n":"지붕 아래 파종","c":"작업 반경 유지 → 처마 완성 뒤 씨앗 성장","w":"wave-1a","live":true,"inp":["core:seed_bag","core:carpenter_hammer"],"trig":"두 도구를 보유하고 건물 곁 밭을 수확한 뒤 진화 카드를 선택할 때","before":"씨앗 파종과 건물 수리가 떨어져 진행된다.","after":"수리한 건물 처마에서 씨앗을 떨어뜨려 인접 밭 위로 약탈을 막는 짧은 지붕을 확장한다.","vis":"분리된 건물과 씨앗 점이 처마 밑 경작 띠로 연결된다.","cost":"골조가 미완성 또는 파괴된 동안 씨앗 성장이 멈춘다. 작업 반경 안에서는 이동하며 완성·수리할 수 있고 반경 밖에서는 작업이 중단된다."},{"id":"core:winter_seed_stove","k":"evolution","n":"겨울 씨앗 아궁이","c":"가마 가열 → 공격용 열로 보관 종자 보호","w":"wave-2","live":false,"inp":["core:kiln_bellows","core:seed_vault_key"],"trig":"두 도구를 보유하고 저장 씨앗이 계절을 넘긴 뒤 진화 카드를 선택할 때","before":"가마 가열과 종자 보관이 따로 이뤄진다.","after":"종자 보관함을 아궁이 둘레에 붙이고 가열 때 온풍으로 씨앗을 감싸 다음 파종 몫을 보호한다.","vis":"불꽃 앞면 뒤로 둥근 종자 칸과 온풍 고리가 생긴다.","cost":"종자가 아궁이에 모여 그 터를 잃으면 보관분을 함께 잃고 보호용 열은 공격으로 쓰지 못한다."},{"id":"core:reaping_seed_bridge","k":"evolution","n":"수확 종자다리","c":"낫 수확 → 미숙작물·보관씨앗 소모해 파종호","w":"wave-2","live":false,"inp":["core:harvest_scythe","core:seed_vault_key"],"trig":"두 입력을 보유하고 저장 씨앗을 사용해 재파종한 뒤 진화 카드를 선택할 때","before":"낫의 수확과 종자 보관은 서로 독립된다.","after":"낫이 익은 밭을 베면 보관 씨앗이 낫 끝을 따라 날아가 건너편 빈 터로 이어지는 파종 호를 만든다.","vis":"수확 호의 끝에서 씨앗 다리가 뻗고 끝점에 새 싹이 남는다.","cost":"낫 궤도의 미숙 작물도 잘려 해당 수확을 잃는다. 보관 씨앗을 소비해 파종호를 만들며 씨앗이 없으면 파종호는 나오지 않는다."},{"id":"core:burial_spore_courier","k":"evolution","n":"포자 거름운반대","c":"거름 포자 출발 → 적 접촉 시 배송 대신 폭발","w":"wave-2","live":false,"inp":["core:spore_fan","core:compost_sack"],"trig":"두 입력을 보유하고 처치 거름을 밭에 돌려준 뒤 진화 카드를 선택할 때","before":"부채는 영주 뒤에 고정 포자 구역을 남기고 퇴비 자루는 별도로 처치 흔적을 회수한다.","after":"포자 구역이 회수 거름을 품은 이동 덩이로 변해 어린 밭으로 향한다. 적과 먼저 접촉한 덩이는 폭발 공격 후 거름을 그 자리에 떨어뜨려 배송을 실패한다. 적을 만나지 않고 밭에 도착한 덩이만 폭발 없이 거름을 내려놓아 파종을 돕는다. 같은 덩이가 두 결과를 함께 주지 않는다.","vis":"움직이지 않던 점묘 포자 얼룩이 거름을 품은 덩이들로 떠올라 어린 밭을 향해 행렬로 이동한다.","cost":"적에게 터진 포자는 거름을 그 자리에 떨어뜨려 예정된 밭까지 전달하지 못한다."},{"id":"core:storm_chime_relay","k":"evolution","n":"빗종 번개계주","c":"빗종 응답 → 작업 멈춘 대열로 번개 중계","w":"wave-2","live":false,"inp":["core:storm_fork","core:rain_chime"],"trig":"두 입력을 보유하고 물지기가 저수 지점과 마른 밭 사이의 급수 왕복을 마친 뒤 진화 카드를 선택할 때","before":"전투 번개와 관개 교대 신호가 따로 나온다.","after":"비 차임에 응답해 이동하는 인원의 머리 위로 번개가 중계되어 경로 옆 적을 옆가지로 타격한다.","vis":"적 사이 번개선에 이동하는 종 표식이 중계점으로 드러난다.","cost":"중계 인원은 번개가 지나갈 때 멈춰 작업과 귀환이 끊기며 인원이 없는 곳으로는 중계하지 못한다."},{"id":"core:kiln_chain_perimeter","k":"evolution","n":"가마 사슬화환","c":"가마 점화 → 어린 싹도 태우는 사슬 궤도","w":"wave-2","live":false,"inp":["core:cinder_flail","core:kiln_bellows"],"trig":"두 입력을 보유하고 가마 가까이에서 적을 처치한 뒤 진화 카드를 선택할 때","before":"도리깨 휘두르기와 가마 화염이 분리된다.","after":"불붙은 도리깨 사슬을 가마 외곽에 걸어 회전시키고 접근 적을 가열면 쪽으로 밀어 넣는다.","vis":"영주 곁 사슬이 가마를 둘러싼 불타는 다각형 궤도로 옮겨 간다.","cost":"가마 사슬의 재가 어린 싹도 태워 해당 수확을 잃는다. 가마 궤도에 있는 사슬은 영주 곁을 지키지 못한다."},{"id":"core:grain_sling_convoy","k":"evolution","n":"곡물 호위투석대","c":"수레 운송 → 화물 식량 소모해 유인 공격","w":"wave-2","live":false,"inp":["core:granary_sling","core:cart_yoke"],"trig":"두 입력을 보유하고 적의 추격을 받은 화물이 도착한 뒤 진화 카드를 선택할 때","before":"투석과 수레 운송이 따로 움직인다.","after":"수레 위에 투석 주머니가 걸려 운송 중 화물에서 미끼 곡물을 던지고 따라온 적을 빈 주머니로 후려친다.","vis":"영주 주변 투석 궤적이 수레 앞 미끼 호와 수레 뒤 타격 호로 갈라진다.","cost":"미끼로 던진 곡물은 목적지에 도착할 식량에서 빠지며 수레가 멈추면 호위 공격도 운송 재개를 기다린다."},{"id":"core:ox_herbal_rescue","k":"evolution","n":"약초 황소구조대","c":"아군 부상 → 후방 벽 대신 왕복 구조 들것","w":"wave-2","live":false,"inp":["core:ox_guard","core:herb_basket"],"trig":"두 입력을 보유하고 전투 중 부상 인원을 치료한 뒤 진화 카드를 선택할 때","before":"황소 방패는 이동 뒤에 고정된 후방 벽을 만들고 약초 바구니는 별도로 부상 인원을 치료한다.","after":"후방 방패벽이 약초 들것의 옆판으로 접혀 자동 이동 구조대가 된다. 가장 가까운 부상 아군으로 이동하며 앞의 적을 밀어 연 뒤 아군을 태워 약초 치료 지점으로 되돌아온다.","vis":"뒤에 고정되던 황소머리 방패 벽이 들것 양옆으로 접히고 왕복 이동하는 구조체로 변한다.","cost":"구조 왕복 중 새 후방 방패벽을 세우지 못하고 실은 약초는 다른 부상자에게 배분할 수 없다."},{"id":"core:grave_shadow_corridor","k":"evolution","n":"묘등 그늘회랑","c":"그늘 연결 → 영주 곁 대신 회랑에서 빛날","w":"wave-2","live":false,"inp":["core:grave_lantern","core:shadow_stake"],"trig":"두 입력을 보유하고 그늘 구역에서 적을 처치한 뒤 진화 카드를 선택할 때","before":"묘등의 빛과 말뚝의 그늘이 개별 영역을 만든다.","after":"묘등이 말뚝 사이를 떠다니며 그늘 경계에서만 바깥으로 빛날을 펼쳐 통로 안 성장물을 가리고 접근 적을 친다.","vis":"등불 주변 둥근 빛이 말뚝을 잇는 어두운 통로와 바깥쪽 빛날로 바뀐다.","cost":"등불이 회랑을 순찰하는 동안 영주 곁에서 공격하지 않고 말뚝을 잃으면 해당 구간은 끊긴다."},{"id":"core:mandrake_muster_ring","k":"evolution","n":"구근 소집환","c":"구근 수확 → 노동 대열을 방어 고리로 소집","w":"wave-2","live":false,"inp":["core:mandrake_bulb","core:muster_horn"],"trig":"두 도구를 보유하고 구근을 수확한 뒤 진화 카드를 선택할 때","before":"구근 수확 비명과 부대 소집이 따로 발생한다.","after":"구근이 터진 수확 자리를 소집 고리로 바꿔 근처 준비 인원이 바깥을 향해 서고 진입 적을 고리 밖으로 밀어낸다.","vis":"단발 비명 원이 병력이 둘러선 방어 고리와 빈 수확 중심으로 변한다.","cost":"소집된 인원은 고리를 해제할 때까지 노동에 복귀하지 못하며 새 구근 없이 다른 터에 고리를 옮길 수 없다."},{"id":"core:lantern_rank_gates","k":"evolution","n":"등불 대열문","c":"귀환자 접근 → 추격 대신 통로 호위문 개방","w":"wave-2","live":false,"inp":["core:lantern_staff","core:formation_drum"],"trig":"두 도구를 보유하고 귀환 인원이 집결을 마친 뒤 진화 카드를 선택할 때","before":"귀환 안내 빛과 부대 집결 박자가 분리된다.","after":"등불 길의 양옆에 북 대열이 서고 귀환 인원이 지날 때만 서로 벌어졌다 닫히는 호위문을 만든다.","vis":"흩어진 안내 빛과 병사가 통로 양옆의 열리는 문 모양으로 합쳐진다.","cost":"문을 맡은 병력은 멀리 추격할 수 없고 귀환자가 통과하는 순간 적도 열린 틈으로 들어올 수 있다."},{"id":"core:furrow_convoy_rail","k":"evolution","n":"고랑 수레궤도","c":"수레 돌진 → 파종 못할 고랑 궤도로 운송","w":"wave-2","live":false,"inp":["core:plough","core:cart_yoke"],"trig":"두 도구를 보유하고 고랑 옆 밭의 수확물이 도착한 뒤 진화 카드를 선택할 때","before":"고랑을 내는 동선과 운송 동선이 분리된다.","after":"수레가 빈 고랑을 궤도로 삼아 달리며 앞바퀴로 적을 밀고 정차한 밭에서만 화물을 싣는 경작 운송선을 만든다.","vis":"고랑 위에 바퀴 자국이 이어지고 수레의 자유 곡선 경로가 정차점 있는 선으로 바뀐다.","cost":"궤도로 쓰는 고랑에는 씨앗을 심지 못하고 궤도가 막히면 화물도 도착하지 못한다."},{"id":"core:raider","k":"enemy","n":"약탈병","c":"영주를 발견하면 → 뒤쫓아 작업 복귀선을 막는다","w":"wave-1a","live":true,"tier":"일반","beh":"영주를 추격하며 뒤따르는 무리로 작업 복귀선을 막는다.","tell":"들어 올린 칼날과 영주를 향한 발자국","ctr":"농지 밖으로 원을 그려 유인한 뒤 빈 복귀선으로 돌아온다.","thr":"영주를 농지에서 밀어내 자동 도구의 작업 기회를 끊는다.","ph":[]},{"id":"core:seed_mite","k":"enemy","n":"씨앗 진드기","c":"새 씨앗이 생기면 → 달라붙어 씨앗을 갉는다","w":"wave-1a","live":true,"tier":"일반","beh":"씨앗에 달라붙어 껍질을 갉고, 씨앗이 사라지면 다음 어린 밭으로 기어간다.","tell":"씨앗 가장자리의 움직이는 검은 턱","ctr":"씨앗 구역 곁으로 이동하여 자동 공격 범위에 붙은 진드기를 넣는다.","thr":"파종 흔적을 지워 해당 밭의 성장 출발점을 잃게 한다.","ph":[]},{"id":"core:crop_grazer","k":"enemy","n":"작물 포식자","c":"익은 밭에 닿으면 → 멈춰 서서 수확물을 삼킨다","w":"wave-1a","live":true,"tier":"일반","beh":"영주를 지나쳐 익은 작물 앞에 멈추고 고개를 숙여 삼킨다.","tell":"익은 이삭을 향한 열린 입과 씹기 준비 자세","ctr":"먹기 전에 밭으로 돌아와 자동 수확하거나 밭 앞에서 자동 공격으로 끊는다.","thr":"회수하지 않은 수확물이 사라져 영지 환류가 끊긴다.","ph":[]},{"id":"core:ram_runner","k":"enemy","n":"돌진 주자","c":"돌진선이 굳으면 → 직진한 뒤 숨을 고른다","w":"wave-1a","live":true,"tier":"일반","beh":"발을 구른 위치에서 돌진선을 확정하고 직진한 뒤 숨을 고른다.","tell":"지면의 직선 먼지와 발굽 소리","ctr":"선에 수직으로 이동하고 돌진 종료 지점에 자동 공격을 겹친다.","thr":"밭 사이 복귀 통로를 가로질러 수확 접근을 막는다.","ph":[]},{"id":"core:shield_raider","k":"enemy","n":"방패 약탈병","c":"정면 공격이 오면 → 방패로 막고 옆구리를 드러낸다","w":"wave-1a","live":true,"tier":"일반","beh":"방패를 고정해 앞쪽 투사체를 막으며 걷고, 영주가 옆으로 돌면 멈춰 방패 방향을 다시 잡는다.","tell":"불투명한 방패 앞면과 노출된 옆구리","ctr":"옆으로 돌아 회전 중인 몸체를 자동 공격하거나 후방을 지나는 공격을 선택한다.","thr":"방패 뒤의 성장물 공격자를 보호한다.","ph":[]},{"id":"core:wine_wasp","k":"enemy","n":"발효 말벌","c":"영주가 밭에 오면 → 독침을 쏘고 뒤로 물러난다","w":"wave-1a","live":true,"tier":"일반","beh":"독침을 쏜 뒤 영주 반대쪽으로 물러나며 수확물과 영주 사이 거리를 벌린다.","tell":"배 끝의 독방울과 조준선","ctr":"사격을 옆으로 흘리고 재장전 중 밭으로 들어가거나 퇴로 쪽으로 접근한다.","thr":"수확 통로에 사격을 반복해 회수를 늦춘다.","ph":[]},{"id":"core:burrow_larva","k":"enemy","n":"굴파는 유충","c":"어린 밭이 생기면 → 땅속으로 와서 솟구친다","w":"wave-1b","live":false,"tier":"일반","beh":"지하로 이동해 어린 씨앗 아래에서 솟구친 뒤 지상에 몸을 드러낸다.","tell":"이동하는 흙두둑과 도착지의 갈라지는 흙","ctr":"흙두둑 앞을 비우고 솟구친 몸체를 자동 공격 범위에 넣는다.","thr":"외곽 방어를 지나 씨앗 구역 안쪽을 공격한다.","ph":[]},{"id":"core:basket_mimic","k":"enemy","n":"바구니 위장꾼","c":"영주가 바구니에 다가오면 → 뚜껑을 벌려 덮친다","w":"wave-1b","live":false,"tier":"일반","beh":"바구니 모양으로 웅크렸다가 영주가 접근하면 뚜껑을 벌려 덮친다. 위장 중에도 적 판정과 자동 표적 선택은 유지한다.","tell":"바구니 아래의 발과 간헐적으로 벌어지는 이빨 테두리","ctr":"바구니 곁을 바로 통과하지 않고 자동 공격 사거리 끝에서 위장을 벗긴다.","thr":"익은 작물로 돌아오는 경로에 매복한다.","ph":[]},{"id":"core:salt_crow","k":"enemy","n":"소금 까마귀","c":"어린 밭에 착지하면 → 소금을 뿌려 성장을 멈춘다","w":"wave-1b","live":false,"tier":"일반","beh":"밭 위를 선회하다 착지해 소금을 흩뿌리고 다시 날아오른다. 날아 있는 동안도 공격 대상이다.","tell":"밭 위 소금 가루 그림자와 접는 날개","ctr":"착지 예고에 맞춰 접근해 자동 공격으로 투하를 끊거나 오염 구역을 피해 작업 경로를 바꾼다.","thr":"오염된 밭의 비옥도 소비 성장을 멈춰 후속 수확을 늦춘다.","ph":[]},{"id":"core:grain_sack_bandit","k":"enemy","n":"곡물 자루꾼","c":"익은 작물을 주우면 → 자루에 담아 가장자리로 달아난다","w":"wave-1b","live":false,"tier":"일반","beh":"곡물을 자루에 담은 뒤 지도 가장자리로 도주하며 처치되면 훔친 곡물을 내려놓는다.","tell":"불룩해지는 자루와 가장자리로 향한 발자국","ctr":"짐을 든 퇴로를 가로질러 자동 공격을 집중하고 떨어진 곡물로 돌아온다.","thr":"놓친 운반자는 해당 수확물을 전장에서 가져간다.","ph":[]},{"id":"core:rope_catcher","k":"enemy","n":"올가미 사냥꾼","c":"올가미 예고가 뜨면 → 이동 경로에 끊을 수 있는 줄을 친다","w":"wave-1b","live":false,"tier":"일반","beh":"이동 예상 위치에 올가미를 던지고 남은 줄로 통로를 막는다. 줄은 자동 공격으로 끊어진다.","tell":"던지는 팔과 지면의 열린 고리","ctr":"예고 때 방향을 바꾸거나 공격이 줄을 끊는 동안 우회한다.","thr":"작업 거점 사이 반복 경로를 봉쇄한다.","ph":[]},{"id":"core:locust_cloud","k":"enemy","n":"메뚜기 무리","c":"뭉친 무리가 맞으면 → 갈라져 서로 다른 밭을 갉는다","w":"wave-1b","live":false,"tier":"일반","beh":"뭉친 무리가 공격받을 때 작은 개체로 갈라져 서로 다른 익은 밭으로 흩어진다. 분열은 새 보상이나 재분열을 만들지 않는다.","tell":"검은 구름 속 벌어지는 날개 틈","ctr":"갈라지기 전부터 넓은 자동 공격을 겹치거나 회수할 밭 쪽으로 이동해 흩어진 개체를 막는다.","thr":"분산된 수확물들을 동시에 갉아먹는다.","ph":[]},{"id":"core:blight_beetle","k":"enemy","n":"역병 딱정벌레","c":"어린 밭에 붙으면 → 이웃 밭으로 역병을 옮긴다","w":"wave-1b","live":false,"tier":"일반","beh":"밭에 역병 흔적을 남기고 연결된 이웃 밭으로 기어간다. 처치하면 이후 전파가 멎고 남은 흔적은 도구 작업을 다시 받으면 벗겨진다.","tell":"등판의 병든 잎과 다음 밭으로 이어지는 얼룩","ctr":"연결선 끝의 개체를 자동 공격으로 끊고 오염 밭을 지나는 작업 동선으로 복구한다.","thr":"인접 성장 고리를 따라 작업 정지를 번지게 한다.","ph":[]},{"id":"core:stone_breaker","k":"enemy","n":"돌벽 파괴자","c":"건물 앞에서 망치를 들면 → 내려쳐 폐허로 만든다","w":"wave-2","live":false,"tier":"정예","beh":"영주를 무시하고 건물 앞에 뿌리내려 망치를 든다. 휘두른 뒤 박힌 망치를 빼는 동안 움직이지 못한다.","tell":"건물 벽에 퍼지는 금과 머리 위 망치","ctr":"준비 중 집중 자동 공격으로 끊거나 회수 동작 동안 공격하고 이후 도구 작업으로 수리한다.","thr":"거점 건물을 폐허로 바꿔 그 건물이 주던 전투 환류를 끊는다.","ph":[]},{"id":"core:ember_sapper","k":"enemy","n":"불씨 공병","c":"건물에 항아리가 닿으면 → 점화 뒤 건물 기능을 멈춘다","w":"wave-2","live":false,"tier":"정예","beh":"건물에 불씨 항아리를 던지고 물러난다. 항아리는 적 대상이며 점화 전에 자동 공격으로 깨면 불길이 나지 않는다.","tell":"날아오는 항아리의 심지와 착지 뒤 번지는 연기","ctr":"항아리를 자동 공격 범위에 넣어 점화를 막거나 공병의 퇴로를 차단한다.","thr":"점화된 건물은 기능을 멈추고 다시 도구 작업을 받아야 복구된다.","ph":[]},{"id":"core:whistle_hunter","k":"enemy","n":"호각 추격자","c":"호각 준비를 마치면 → 기존 적을 거점 양옆으로 모은다","w":"wave-2","live":false,"tier":"정예","beh":"호각 준비 뒤 주변 약탈병을 거점 양쪽으로 모은다. 소환으로 새 개체를 만드는 대신 기존 적의 접근 방향을 바꾼다.","tell":"부푸는 볼과 모일 방향을 가리키는 깃발","ctr":"준비 중 호각수를 자동 공격으로 끊거나 적이 모이기 전 열린 방향으로 빠져나간다.","thr":"농지에 머물러 성장시키는 동작을 포위 위험으로 바꾼다.","ph":[]},{"id":"core:rubble_golem","k":"enemy","n":"잔해 골렘","c":"폐허에 다가오면 → 잔해를 붙여 갑옷으로 삼는다","w":"wave-2","live":false,"tier":"정예","beh":"잔해를 몸에 붙여 바깥 갑옷을 만든다. 공격으로 갑옷을 깨면 흡수한 잔해가 그 자리에 돌아오고 골렘 몸체가 드러난다.","tell":"폐허에서 몸으로 끌려가는 돌조각","ctr":"폐허에서 떨어지도록 유인한 뒤 갑옷을 깨거나 먼저 복구 경로를 지나 잔해 공급을 끊는다.","thr":"복구를 미룬 거점의 잔해가 적의 공격 차단물로 쓰인다.","ph":[]},{"id":"core:flood_tusk","k":"enemy","n":"둑깨는 상아왕","c":"둑에 균열이 보이면 → 물길을 터뜨리고 상아로 돌진한다","w":"wave-1a","live":true,"tier":"보스","beh":"상아로 물길 둑을 깨 물줄기를 내고, 고정한 돌진 경로로 물줄기를 가른다.","tell":"굽힌 상아와 둑의 물샘","ctr":"둑 균열 예고를 따라 마른 통로로 이동하고 돌진 뒤 노출된 옆구리를 자동 공격한다.","thr":"범람선의 어린 밭을 휴면시켜 성장 동선을 옮기게 한다.","ph":[{"cue":"둑에 푸른 균열이 순서대로 나타남","act":"균열에서 물줄기가 뻗어 통로를 갈라 놓는다. 물줄기는 끝이 있으며 모든 출구를 닫지 않는다.","res":"균열이 없는 둑 쪽으로 이동해 작업 거점과 탈출선을 함께 남긴다."},{"cue":"상아를 낮추며 끊어지지 않는 돌진선 표시","act":"돌진선 확정 뒤 직진하고 끝에서 상아가 땅에 박힌다.","res":"선 옆으로 피한 뒤 박힌 상아 옆으로 접근해 자동 공격한다."}]},{"id":"core:root_choir","k":"enemy","n":"뿌리 합창목","c":"뿌리 닻이 열리면 → 졸개를 부르고 본체 외피가 열린다","w":"wave-3","live":false,"tier":"보스","beh":"뿌리 닻으로 거점 사이를 연결하고 닻에서 졸개를 내보내는 동안 본체 외피를 연다. 닻을 부수면 해당 소환 통로와 뿌리선이 끊어져 안전한 접근로가 남는다.","tell":"땅 위로 솟은 매듭과 본체로 이어지는 맥동","ctr":"소환 통로의 닻을 자동 공격으로 끊은 뒤 열린 본체 쪽으로 이동한다.","thr":"뿌리선이 성장물 사이 이동을 가로막고 소환체가 어린 밭으로 몰린다.","ph":[{"cue":"닻이 벌어지며 본체에서 닻으로 빛 이동","act":"닻이 살아 있는 통로에서 졸개를 내보내는 동안 본체 외피가 열린다.","res":"졸개 경로를 닫을 닻을 공격할지 열린 본체로 갈지 이동으로 결정한다."},{"cue":"뿌리선이 지면에서 솟기 전 잎이 연달아 뒤집힘","act":"연결선이 순서대로 솟아올라 통로를 쓸고 끊어진 닻 자리는 안전 통로로 남는다.","res":"미리 끊은 닻 자리로 돌아가 선 사이를 통과한다."}]},{"id":"core:cinder_crane","k":"enemy","n":"잿불 관학","c":"바람 표식이 돌면 → 불길이 뻗고 반대편에 착지한다","w":"wave-3","live":false,"tier":"보스","beh":"날갯짓으로 불씨를 실어 나르고 바람 방향이 바뀔 때 재 속에 숨은 몸을 드러낸다.","tell":"솟은 볏과 날갯짓 전 기우는 재","ctr":"바람 화살표의 옆으로 이동하고 불씨 둥지를 자동 공격으로 부숴 발화 통로를 줄인다.","thr":"불씨가 연속 성장 구역을 따라 번져 도구 작업이 필요한 소실 흔적을 남긴다.","ph":[{"cue":"지면의 재가 부채꼴로 들림","act":"전방으로 불씨를 뿌려 점화될 둥지를 만든다. 둥지는 점화 전에 공격으로 제거할 수 있다.","res":"부채 바깥으로 피하고 지킬 성장물 옆 둥지를 자동 공격한다."},{"cue":"볏이 닫히고 바람 표식이 회전","act":"이미 생긴 불길만 새 바람 방향으로 길게 뻗고 보스는 회전 반대편에 착지한다.","res":"불길 진행선에서 비켜나 착지 방향으로 이동해 자동 공격한다."}]},{"id":"core:toll_regent","k":"enemy","n":"공납의 철섭정","c":"징수 깃발이 보상에 닿으면 → 봉인해 본체로 끌고 간다","w":"wave-3","live":false,"tier":"보스","beh":"이동하는 징수 깃발을 보내 아직 회수하지 않은 성장 보상을 감싼다. 깃발을 부수면 보상이 풀리며 본체는 징수 연결이 끊긴 방향을 향해 방패를 돌린다.","tell":"보상에 닿는 붉은 끈과 본체의 큰 방패","ctr":"보상 깃발을 자동 공격으로 끊을지 방패 뒤 본체로 갈지 동선으로 고른다.","thr":"회수 동선을 가로채 보상을 일시 봉인하지만 이미 얻은 지갑 자원은 빼앗지 않는다.","ph":[{"cue":"깃발이 보상 위에 펼쳐지고 끈이 팽팽해짐","act":"깃발이 봉인한 보상을 본체 방향으로 끌고 가며 도착하면 보스 외피가 된다.","res":"이동 중 깃발을 자동 공격하여 보상을 회수하거나 본체 외피로 바뀐 뒤 파괴해 되찾는다."},{"cue":"방패 테두리에서 갈라진 고리가 나타남","act":"빈 틈을 남긴 검문 고리가 바깥으로 움직이고 본체 방패가 끊어진 징수선 쪽으로 고정된다.","res":"고리의 틈으로 통과해 방패가 향하지 않은 쪽에서 자동 공격한다."}]},{"id":"core:winter_hart","k":"enemy","n":"겨울 뿔사슴","c":"서리선이 굳으면 → 돌진해 익은 밭을 얼린다","w":"wave-3","live":false,"tier":"보스","beh":"긴 몸체로 수확 접근을 막고 뿔을 낮춰 밭을 가로지르며, 몸을 돌려 주변 수확물을 훑는다.","tell":"뿔에 맺힌 서리와 회전 방향으로 휘는 풀","ctr":"밭 밖으로 돌진을 유도하고 회전 바깥을 돌아 수확 통로로 복귀한다.","thr":"익은 밭에 남은 서리가 수확 환류를 봉인해 마지막 성장 회수를 시험한다.","ph":[{"cue":"뿔 끝부터 지면에 서리 직선이 맺힘","act":"서리선 확정 뒤 길게 돌진하며 선 위의 익은 밭을 얼린다.","res":"익은 밭 밖에서 돌진선을 유도한 뒤 옆으로 피한다."},{"cue":"몸이 한쪽으로 기울고 꼬리 쪽 지면에 호가 보임","act":"몸을 돌려 호를 훑은 뒤 뿔이 땅에 걸린다. 얼어 있는 밭은 이때 도구 작업을 다시 받으면 풀린다.","res":"호 바깥으로 이동해 뿔이 걸린 동안 자동 공격 또는 밭 복구 동선을 선택한다."}]},{"id":"meta:chapter_1","k":"chapter","n":"새싹 들판","c":"작업 경로에 새싹이 이어지면 → 적의 발자국도 모인다","w":"wave-1a","live":true,"ord":1,"rule":"농지 경계의 새싹 자국은 영주가 지나간 작업 경로를 따라 이어지며 연결된 구역에 적의 발자국도 모인다.","dec":"한 구역의 연결 성장을 마칠지 바깥 새 구역으로 옮겨 추격선을 분산할지 고른다.","boss":"core:flood_tusk","enc":"씨앗 진드기와 약탈병이 성장점 보호와 바깥 유인을 각각 요구한다."},{"id":"meta:chapter_2","k":"chapter","n":"물굽이 나루","c":"수위 말뚝이 젖으면 → 낮은 길이 잠기고 높은 길이 남는다","w":"wave-1b","live":false,"ord":2,"rule":"나루의 수위 말뚝이 차례로 젖으면 표시된 낮은 통로만 범람하고 높은 우회로는 남는다. 범람은 어린 밭을 휴면시키며 물이 빠지면 다시 작업할 수 있다.","dec":"범람 전 회수하고 떠날지 높은 둑에 남아 물이 빠진 뒤 복구할지 고른다.","boss":"core:flood_tusk","enc":"굴파는 유충의 출현점을 읽으며 상아왕의 물줄기와 나루 우회로를 겹쳐 판단한다."},{"id":"meta:chapter_3","k":"chapter","n":"그늘 숲길","c":"달꽃에 그늘이 닿으면 → 익음이 진행된다","w":"wave-3","live":false,"ord":3,"rule":"그늘 숲의 달꽃은 그늘일 때만 익고 밝은 구간에서는 익음이 멈춘다. 그늘 경계는 지면의 잎 무늬로 이동 방향을 예고한다.","dec":"움직이는 그늘을 따라 작업할지 이미 익은 구역으로 돌아가 회수할지 고른다.","boss":"core:root_choir","enc":"바구니 위장꾼이 그늘 수확 경로를 매복하고 합창목 닻이 복귀 통로를 막는다."},{"id":"meta:chapter_4","k":"chapter","n":"돌등성이","c":"울림돌에 공격이 닿으면 → 균열 쪽으로 낙석을 예고한다","w":"wave-3","live":false,"ord":4,"rule":"돌등성이의 울림돌은 근처 공격이 적중하면 균열 방향을 드러내고 다음 울림 때 그 방향으로 낙석을 보낸다. 안전한 반대 사면은 늘 남는다.","dec":"적을 돌 옆에 유인해 낙석에 맞힐지 성장물에서 떨어진 사면을 유지할지 고른다.","boss":"core:root_choir","enc":"방패 약탈병을 돌아가는 길과 합창목 닻에 접근하는 길에 울림돌이 끼어든다."},{"id":"meta:chapter_5","k":"chapter","n":"갈대 여울","c":"갈대가 바람에 누우면 → 열린 통로가 바뀐다","w":"wave-3","live":false,"ord":5,"rule":"갈대 여울의 갈대문은 바람에 눕고 일어나며 열린 통로를 바꾼다. 문 너머 적의 머리와 공격 예고는 가리지 않는다.","dec":"곧 열릴 문 앞에서 수확을 마칠지 이미 열린 먼 통로로 우회할지 고른다.","boss":"core:cinder_crane","enc":"올가미 사냥꾼과 관학의 불씨가 문이 열리는 순간의 진입 결정을 시험한다."},{"id":"meta:chapter_6","k":"chapter","n":"잿빛 수림","c":"잿더미에 도구가 닿으면 → 비옥한 새싹자리로 바뀐다","w":"wave-3","live":false,"ord":6,"rule":"잿빛 수림의 잿더미는 도구 작업을 받으면 비옥한 새싹자리로 바뀌지만 다시 불길이 지나면 복구 전 상태로 돌아간다.","dec":"관학의 불길이 지나간 뒤 작업할지 안전한 외곽에서 먼저 수확을 확보할지 고른다.","boss":"core:cinder_crane","enc":"불씨 공병과 관학이 복구 순서를 흔들고 역병 딱정벌레가 새로 연결한 밭을 따라간다."},{"id":"meta:chapter_7","k":"chapter","n":"바람 고개","c":"깃발 방향으로 돌풍이 불면 → 바닥 보상이 바람막이로 간다","w":"wave-3","live":false,"ord":7,"rule":"바람 고개의 깃발은 다음 돌풍 방향을 먼저 가리키며 돌풍은 땅에 놓인 회수 보상만 바람막이 쪽으로 이동시킨다. 적 공격 예고는 이동하지 않는다.","dec":"보상이 모이는 바람막이로 돌아갈지 흩어지기 전에 가까운 보상을 회수할지 고른다.","boss":"core:toll_regent","enc":"곡물 자루꾼과 철섭정의 징수 깃발이 바람막이 회수 경로를 두고 경쟁한다."},{"id":"meta:chapter_8","k":"chapter","n":"두 강의 변경","c":"수문 색이 바뀌면 → 양쪽 여울이 번갈아 열린다","w":"wave-3","live":false,"ord":8,"rule":"두 강의 변경은 수문 색과 물소리로 양쪽 여울의 개폐를 번갈아 예고한다. 중앙 능선은 항상 통과 가능하다.","dec":"한쪽 성장물을 끝까지 지킬지 여울이 열릴 때 반대쪽 보상으로 넘어갈지 고른다.","boss":"core:toll_regent","enc":"호각 추격자는 한쪽 수비 병력을 모으고 철섭정의 검문 고리는 중앙 복귀 시점을 시험한다."},{"id":"meta:chapter_9","k":"chapter","n":"겨울 능선","c":"눈보라가 오면 → 바람막이 밖 성장물만 언다","w":"wave-3","live":false,"ord":9,"rule":"겨울 능선은 눈보라 전 흰 결이 밀려오며 바람막이 안 성장물은 얼지 않는다. 바깥의 얼음은 도구 작업을 다시 받으면 녹는다.","dec":"보호 구역에 작업을 모을지 눈보라 사이에 바깥 밭을 복구하고 회수할지 고른다.","boss":"core:winter_hart","enc":"돌진 주자의 직선과 겨울 뿔사슴의 서리선을 바람막이 입구에서 떨어뜨려야 한다."},{"id":"meta:chapter_10","k":"chapter","n":"장원의 마지막 해","c":"계절이 바뀌면 → 지난 거점은 다시 작업해야 환류한다","w":"wave-3","live":false,"ord":10,"rule":"장원의 마지막 해에는 성장물이 봄·여름·가을·겨울 문양을 차례로 남기고 계절이 바뀔 때 앞선 문양의 구역은 다음 계절 작업을 받기 전까지 환류를 보류한다. 문양 순서는 화면에서 미리 보인다.","dec":"새 계절 성장으로 확장할지 지난 계절 거점을 다시 지나 누적 환류를 회수할지 고른다.","boss":"core:winter_hart","enc":"잔해 골렘과 메뚜기 무리가 복구와 수확을 나누고 겨울 뿔사슴이 마지막 회수 경로를 훑는다."},{"id":"core:furrow_guard","k":"vassal","n":"고랑 방패수","c":"고랑에서 포위되면 → 흙빛 방패가 적을 옆으로 쓸어낸다","w":"wave-4","live":false,"role":"고랑을 기준으로 적을 밀어 수확 동선을 여는 방패 호위","trig":"영주가 고랑에서 수확 중 적에게 둘러싸이면","act":"고랑을 따라 거대한 흙빛 방패를 펼쳐 앞의 적을 옆으로 쓸어낸다.","cost":"방패를 세운 앞쪽만 지키며 방향을 돌리는 동안 뒤쪽 밭이 노출된다.","scene":"방패 앞의 적이 옆으로 밀려 수확지에서 나가는 길이 열린다.","lt":["core:plough","core:formation_drum"]},{"id":"core:gate_pikeman","k":"vassal","n":"문지기 장창수","c":"적이 건물 틈으로 오면 → 빛의 창빗장이 선두를 붙든다","w":"wave-4","live":false,"role":"성장 건물 사이로 들어오는 선두 적을 고정하는 통로 수비수","trig":"적이 완성 건물 사이의 통로로 들어오면","act":"장창 끝을 빛나는 빗장으로 뻗어 선두 적을 꿰고 통로에 붙잡는다.","cost":"빗장을 유지하는 동안 다른 통로를 지키거나 밖의 적을 추격하지 못한다.","scene":"선두 적이 빛나는 창에 걸려 멈추고 뒤따르는 적은 통로 밖에 쌓인다.","lt":["core:carpenter_hammer","core:shadow_stake"]},{"id":"core:gleaner","k":"vassal","n":"이삭지기","c":"수확 뒤 이삭이 남으면 → 볏단으로 띄워 귀환대에 배식한다","w":"wave-4","live":false,"role":"전장 수확의 잔여물을 귀환 부대 식량으로 바꾸는 회수 노동자","trig":"수확 완료 자리에서 아직 회수하지 않은 잔여 이삭을 발견하면","act":"갈퀴를 휘둘러 남은 이삭을 떠오르는 볏단으로 묶고 귀환 아군에게 운반해 식량으로 배식한다. 이미 회수된 수확은 다시 쓰지 않는다.","cost":"볏단을 나르는 동안 다음 밭의 잔여물을 줍지 못하며 적이 점령한 밭에는 들어가지 않는다.","scene":"이삭이 볏단으로 떠올라 따라오고 귀환 아군 앞에서 풀려 식량으로 소비된다.","lt":["core:seed_bag","core:compost_sack"]},{"id":"core:water_carrier","k":"vassal","n":"물지게꾼","c":"저장수와 마른 밭이 있으면 → 물고기 물줄기로 급수한다","w":"wave-4","live":false,"role":"서로 떨어진 밭을 왕복하며 물을 나누는 이동 노동자","trig":"빗물 바가지 물받이나 빗물 풍경 집수 지점에 저장수가 남고 마른 밭이 있으면","act":"공급원의 물을 물통에 담아 운반한 뒤 물고기 모양 물줄기로 쏟아 마른 밭의 성장을 재개한다.","cost":"운반한 물은 공격용 저수에서 빠지며 운반 중 다른 밭의 급수와 수확을 맡지 못한다.","scene":"도착한 물고기 물줄기가 마른 흙에 스며들고 시든 잎이 일어서며 성장 상태가 재개된다.","lt":["core:rain_ladle","core:rain_chime"]},{"id":"core:ruin_mason","k":"vassal","n":"폐허 석공","c":"폐허에 쓸 잔해가 남으면 → 잔해를 띄워 기초를 맞춘다","w":"wave-4","live":false,"role":"파괴된 성장 건물의 기초를 살려 재건 경로를 잇는 현장 석공","trig":"영주가 적을 몰아낸 폐허에 남은 기초와 사용 가능한 잔해가 있으면","act":"망치로 지면을 울려 기존 잔해를 공중으로 들어 기초에 맞물린다. 소비한 잔해로 재건 첫 공정을 마치고 이후 완성은 건물 도구에 맡긴다.","cost":"기초 보수 중 다른 폐허를 맡지 못하며 사용한 잔해는 목재 반출이나 다른 수리에 쓸 수 없다.","scene":"떠오른 돌과 목재가 기초에 맞물려 재건 가능한 골조가 선다. 완성 건물은 아직 생기지 않는다.","lt":["core:carpenter_hammer","core:cart_yoke"]},{"id":"core:seed_keeper","k":"vassal","n":"씨앗 관리인","c":"복구할 종자가 남으면 → 씨앗새를 날려 파괴 밭에 심는다","w":"wave-4","live":false,"role":"파괴된 밭의 잔여 씨앗을 모아 재파종하는 복구 노동자","trig":"파괴 밭에 옮길 미회수 잔여 씨앗이나 보관 종자가 있으면","act":"남은 종자를 씨앗새로 날려 파괴 밭에 내려앉힌다. 새가 흙 속에 들어가 어린 싹으로 바뀌며 소비한 종자는 사라진다.","cost":"종자를 복구에 쓰는 동안 다른 밭의 파종을 지원하지 못하며 보관한 동일 종자를 수확 보상으로 되돌리지 못한다.","scene":"씨앗새가 빈 밭으로 날아가 어린 싹으로 바뀐다. 성숙 수확이나 새 종자는 즉시 생기지 않는다.","lt":["core:seed_bag","core:seed_vault_key"]},{"id":"core:banner_caller","k":"vassal","n":"밭머리 기수","c":"밭에 적이 오고 아군이 있으면 → 빛의 깃발선으로 엄호를 옮긴다","w":"wave-4","live":false,"role":"영주 이동을 따라 분대 엄호의 중심을 옮기는 현장 지휘관","trig":"영주 가까운 밭으로 적이 접근하고 지휘 가능한 아군 분대가 있으면","act":"깃발을 땅에 내리꽂아 빛나는 엄호선을 펼치고 기존 분대를 밭 바깥으로 이동시켜 적을 막는다. 새 병력은 만들지 않는다.","cost":"옮겨 온 분대의 이전 자리는 엄호가 비며 귀환 임무 중인 분대는 데려오지 않는다.","scene":"빛의 선을 따라 기존 분대 대표가 밭 바깥으로 옮겨 서고 작물 사이가 비워진다.","lt":["core:muster_horn","core:formation_drum"]},{"id":"core:return_captain","k":"vassal","n":"귀환 대장","c":"아군이 귀환하면 → 빛의 돛으로 낙오자를 모아 호송한다","w":"wave-4","live":false,"role":"전투 뒤 낙오자를 모아 노동 현장으로 돌려보내는 호송 지휘관","trig":"전투나 봉사 임무를 마친 아군 그룹이 귀환 경로에 들어오면","act":"대장의 망토를 빛나는 귀환 돛으로 펼쳐 생존한 낙오 인원을 같은 귀환 그룹으로 합류시키고 경작지까지 호송한다. 죽은 인원은 되살리지 않는다.","cost":"호송 동안 영주 곁의 방어 지원을 비우며 귀환 도착 전에는 인원이 생산을 재개하지 못한다.","scene":"빛의 돛 아래 낙오 흔적이 귀환 그룹에 합쳐지고 도착한 작업자가 노동 상태로 돌아간다.","lt":["core:muster_horn","core:lantern_staff"]},{"id":"meta:forge","k":"manor","n":"대장간","c":"철재와 앞선 훈련을 갖추면 → 다음 가신 훈련이 열린다","w":"wave-4","live":false,"inp":["meta:iron"],"fn":"가신 훈련의 다음 단계와 장비를 사용하는 현장 행동 훈련을 연다. 영구 공격력 덧셈으로 배우지 않은 행동을 대신하지 않는다.","unlock":"철재를 확보하고 앞선 훈련을 마치면 자동 성장하여 다음 가신 훈련 단계에 접근하게 한다.","run":"성장한 가마로 금속 잔해를 옮겨 정련 산물을 회수한 출정은 가신의 다음 현장 훈련 경로를 먼저 연다."},{"id":"meta:scriptorium","k":"manor","n":"기록소","c":"인장과 출정 기록을 갖추면 → 새 연구 도전이 열린다","w":"wave-4","live":false,"inp":["meta:charter"],"fn":"사람 성장과 귀환 기록을 연구 조건으로 삼아 도구·물품 발견 도전을 연다.","unlock":"인장과 해당 출정 기록이 갖추어지면 자동 성장하고 새 연구 도전을 결산에 표시한다.","run":"징집만 반복하는 판보다 부대 귀환과 유해 운반자의 봉사 임무 귀환을 완결한 판에서 연구 경로가 열린다."},{"id":"meta:granary","k":"manor","n":"곡물창고","c":"회수 곡물이 모이면 → 다음 보관 단계가 열린다","w":"wave-4","live":false,"inp":["meta:grain"],"fn":"자동 생산을 보관하는 기간의 다음 단계를 연다. 보관 상한 자체를 없애지 않는다.","unlock":"수확에서 환산된 곡물이 모이면 자동 성장하여 다음 보관 단계에 접근하게 한다.","run":"수확을 회수해 지킨 판은 자동 생산 보관 경로를 열지만 병영 편성 권한을 직접 열지는 않는다."},{"id":"meta:barracks","k":"manor","n":"병영","c":"곡물과 귀환 인장을 갖추면 → 가신 편성 자리가 열린다","w":"wave-4","live":false,"inp":["meta:grain","meta:charter"],"fn":"함께 출전할 가신 편성 자리를 열어 현장 노동자와 수비수의 조합을 바꾼다.","unlock":"배식용 곡물과 귀환을 증명한 인장이 갖추어지면 자동 성장해 추가 편성 자리를 연다.","run":"밭 수확과 부대 귀환을 함께 완결한 판이 복합 편성에 연결된다."},{"id":"meta:carpentry_yard","k":"manor","n":"목공 마당","c":"목재와 복구 이력을 갖추면 → 재건 도전이 열린다","w":"wave-4","live":false,"inp":["meta:timber"],"fn":"폐허 기초를 회수하는 재건 도전을 열어 석공과 건물 도구의 복구 행동을 배우게 한다.","unlock":"회수 목재가 모이고 건물 복구 이력이 남으면 자동 성장하여 재건 도전을 표시한다.","run":"완성 건물을 방치하지 않고 복구한 판은 새 건물 배치 메뉴 대신 복구 선택지를 남긴다."},{"id":"meta:salvage_depot","k":"manor","n":"회수 작업장","c":"목재와 철재를 갖추면 → 회수 임무 선택이 열린다","w":"wave-4","live":false,"inp":["meta:timber","meta:iron"],"fn":"건물 잔해의 회수와 정련을 잇는 출전 준비 선택지를 연다. 다음 출전에서 회수 임무를 선택할 수 있다.","unlock":"회수 목재와 정련 철재가 함께 모이면 자동 성장하여 회수 임무를 출전 선택에 추가한다.","run":"건물 잔해를 운반하고 가마에서 지켜 낸 판이 다음 판의 회수 목적을 만든다."},{"id":"meta:seed_archive","k":"manor","n":"종자 보관원","c":"곡물과 목재를 갖추면 → 재파종 도전이 열린다","w":"wave-4","live":false,"inp":["meta:grain","meta:timber"],"fn":"수확 종자를 보관해 파괴 밭 재파종을 목표로 하는 복구 도전과 씨앗 관리인 훈련 경로를 연다.","unlock":"수확 곡물과 보관틀 목재가 갖추어지면 자동 성장하고 재파종 도전을 연다.","run":"수확과 건물 복구를 함께 돌본 판은 전투 훈련 대신 씨앗 복구 경로를 남긴다."},{"id":"meta:signal_court","k":"manor","n":"신호 훈련장","c":"철재와 인장을 갖추면 → 엄호·호송 교대 훈련이 열린다","w":"wave-4","live":false,"inp":["meta:iron","meta:charter"],"fn":"현장 기수와 귀환 대장의 교대 임무를 훈련하는 도전을 열어 엄호에서 호송으로 역할이 바뀌는 선택지를 만든다.","unlock":"신호 장비용 철재와 귀환 인장이 갖추어지면 자동 성장하여 교대 임무 도전을 연다.","run":"정련 거점을 지키면서 사람을 귀환시킨 판은 분대의 교대 행동 훈련으로 이어진다."},{"id":"meta:grain","k":"material","n":"곡물","c":"목표로 고르면 → 첫 씨앗 제안 보장; 완주 기본분은 늘 지급","w":"wave-4","live":false,"src":[{"id":"core:seed_bag","a":"파종한 밭을 성숙시켜 수확물을 회수한다."},{"id":"core:rain_ladle","a":"물을 댄 성장 구역의 수확을 끝내 회수한다."}],"snk":[{"id":"meta:granary","a":"보관 단계의 자동 성장에 곡물을 비축한다."},{"id":"meta:barracks","a":"출전 편성 자리의 배식 기반을 마련한다."},{"id":"meta:seed_archive","a":"재파종 훈련에 쓸 종자를 비축한다."}],"early":"core:seed_bag"},{"id":"meta:timber","k":"material","n":"목재","c":"목표로 고르면 → 첫 망치 제안 보장; 완주 기본분은 늘 지급","w":"wave-4","live":false,"src":[{"id":"core:carpenter_hammer","a":"성장한 목공 거점에서 파괴 건물에 이미 남아 있던 목조 잔해를 작업재로 가공해 회수한다. 잔해는 소비되며 수리 횟수로 새 목재를 만들지 않는다."},{"id":"core:cart_yoke","a":"파괴 건물의 유한한 목조 잔해를 수거해 운반하고 성장한 회수 거점에 적재한다. 동일 잔해의 재수거는 불가능하다."}],"snk":[{"id":"meta:carpentry_yard","a":"폐허 재건 도전을 위한 목공 설비를 자동 성장시킨다."},{"id":"meta:salvage_depot","a":"잔해를 분류하는 회수 설비를 마련한다."},{"id":"meta:seed_archive","a":"종자를 보관하는 틀을 마련한다."}],"early":"core:carpenter_hammer"},{"id":"meta:iron","k":"material","n":"철재","c":"목표로 고르면 → 첫 풀무 제안 보장; 완주 기본분은 늘 지급","w":"wave-4","live":false,"src":[{"id":"core:kiln_bellows","a":"성장한 가마에서 회수한 기존 금속 잔해를 소비해 정련하고 완성 산물을 회수한다. 잔해가 없으면 정련 성과도 없다."},{"id":"core:cart_yoke","a":"파괴 건물의 유한한 금속 잔해를 회수해 성장한 가마로 운반하고 정련 완료까지 호위한다. 운반만 한 원재료와 정련된 철재를 중복 환산하지 않는다."}],"snk":[{"id":"meta:forge","a":"가신의 다음 현장 훈련에 필요한 장비를 제작한다."},{"id":"meta:salvage_depot","a":"정련과 회수 설비의 금속 부품을 제작한다."},{"id":"meta:signal_court","a":"교대 훈련용 신호 장비를 제작한다."}],"early":"core:kiln_bellows"},{"id":"meta:charter","k":"material","n":"인장","c":"목표로 고르면 → 첫 나팔 제안 보장; 완주 기본분은 늘 지급","w":"wave-4","live":false,"src":[{"id":"core:muster_horn","a":"징집된 부대가 전투를 마치고 귀환해 사람 성장 고리를 완결한다."},{"id":"core:lantern_staff","a":"유해 운반자의 회수·운반 임무를 호위하여 귀환을 완료한다. 귀환 때 발급된 봉사 완료 기록만 결산에서 인장 성과로 인정한다. 유해 자체를 인장으로 바꾸지 않으며 같은 임무 기록을 중복 인정하지 않는다."}],"snk":[{"id":"meta:scriptorium","a":"사람 성장 기록을 연구 도전의 해금 근거로 등록한다."},{"id":"meta:barracks","a":"함께 출전할 가신 편성의 권한을 연다."},{"id":"meta:signal_court","a":"기수와 호송 지휘관의 교대 훈련을 인가한다."}],"early":"core:muster_horn"},{"id":"core:gathering_loop","k":"item","n":"수거 고리","c":"보상 낙하 → 더 먼 보상까지 자동 수거","w":"wave-1a","live":true,"lt":[],"lw":[],"trig":"보상이 떨어질 때","ben":"더 먼 보상까지 자동으로 끌어온다.","cost":"","num":true},{"id":"core:wayfarer_boots","k":"item","n":"길잡이 장화","c":"영주 이동 → 이동 속도 증가","w":"wave-1a","live":true,"lt":[],"lw":[],"trig":"영주가 이동할 때","ben":"영주의 이동 속도를 높인다.","cost":"","num":true},{"id":"core:quickturn_clasp","k":"item","n":"재빠른 걸쇠","c":"재사용 준비 → 발동 대기시간 감소","w":"wave-2","live":false,"lt":[],"lw":[],"trig":"공격이나 도구가 다시 준비될 때","ben":"자동 발동의 재사용 대기시간을 줄인다.","cost":"","num":true},{"id":"core:wide_reach_band","k":"item","n":"넓은 손길 띠","c":"범위 공격 발동 → 공격 범위 확대","w":"wave-2","live":false,"lt":[],"lw":[],"trig":"범위 공격이 발동할 때","ben":"공격 판정의 범위를 넓힌다.","cost":"","num":true},{"id":"core:stout_heart_charm","k":"item","n":"튼튼한 심장패","c":"장착 중 → 최대 체력 증가","w":"wave-2","live":false,"lt":[],"lw":[],"trig":"영주가 장착할 때","ben":"영주의 최대 체력을 높인다.","cost":"","num":true},{"id":"core:driving_weight","k":"item","n":"밀어내는 추","c":"밀치기 명중 → 적이 밀려나는 거리 증가","w":"wave-2","live":false,"lt":[],"lw":[],"trig":"공격으로 적을 밀칠 때","ben":"기존 밀치기의 거리를 늘린다.","cost":"","num":true},{"id":"core:ditch_root_bastion","k":"evolution","n":"고랑 뿌리창책","c":"구근 각성 → 따라오지 않는 방사 창책","w":"wave-2","live":false,"inp":["core:ditch_pike","core:mandrake_bulb"],"trig":"구근이 깨어난 고랑에서 진화 카드를 선택할 때","before":"무기 공격과 도구 작업이 각각 발동한다.","after":"깨어난 구근 둘레에 장창이 뻗어 진입 적을 바깥으로 찌른다.","vis":"직선 찌르기가 구근 둘레의 방사형 창책으로 바뀐다.","cost":"장창이 구근 둘레에 고정되어 영주를 따라오지 않는다."},{"id":"core:seed_bolt_granary_burst","k":"evolution","n":"종자 봉인산탄","c":"익은 밭 관통 → 수확분을 써서 씨앗산탄","w":"wave-2","live":false,"inp":["core:seed_bolt","core:seed_vault_key"],"trig":"익은 밭을 관통한 뒤 진화 카드를 선택할 때","before":"무기 공격과 도구 작업이 각각 발동한다.","after":"쇠살이 익은 작물의 종자를 실어 다음 적에게 부채꼴 씨앗탄을 뿌린다.","vis":"직선 쇠살 뒤로 작물에서 가져온 씨앗탄이 부채꼴로 펼쳐진다.","cost":"종자를 떼어 낸 작물은 수확분을 잃어 보관할 종자가 줄어든다."},{"id":"core:stone_masonry_rampart","k":"evolution","n":"경계돌 솟음성벽","c":"건물 앞 내려찍기 → 이동 못할 돌벽 생성","w":"wave-2","live":false,"inp":["core:stone_maul","core:carpenter_hammer"],"trig":"건물을 완성한 뒤 진화 카드를 선택할 때","before":"무기 공격과 도구 작업이 각각 발동한다.","after":"내려찍은 경계돌이 완성 건물 앞에 솟아 접근 적을 밀어내는 짧은 벽이 된다.","vis":"착지 원이 건물 앞에 솟는 벽으로 변한다.","cost":"돌이 건물 앞에 남아 영주가 이동한 곳은 막지 못한다."},{"id":"core:ember_herbal_wisp","k":"evolution","n":"약초 길잡이불","c":"아군 부상 → 약초를 싣고 휘어가는 불씨","w":"wave-2","live":false,"inp":["core:ember_wand","core:herb_basket"],"trig":"약초 치료가 끝난 뒤 진화 카드를 선택할 때","before":"무기 공격과 도구 작업이 각각 발동한다.","after":"약초를 실은 불씨가 부상 아군까지 휘어 날며 경로에 닿는 적을 태운 뒤 약초를 건넨다.","vis":"적 추적 불씨가 약초를 싣고 아군에게 향하는 초록 불씨로 바뀐다.","cost":"불씨에 실린 약초는 도착 전 다른 부상자에게 쓸 수 없다."},{"id":"core:mill_shadow_reel","k":"evolution","n":"그늘 원반도르래","c":"그늘 연결 → 영주 대신 말뚝 사이 원반 왕복","w":"wave-2","live":false,"inp":["core:mill_disc","core:shadow_stake"],"trig":"그늘 구간을 통과한 뒤 진화 카드를 선택할 때","before":"무기 공격과 도구 작업이 각각 발동한다.","after":"원반이 말뚝 사이를 왕복해 그늘 경계에 들어온 적을 벤다.","vis":"영주를 오가던 원반이 말뚝 사이의 직선 왕복궤도로 옮겨 간다.","cost":"말뚝 사이에 묶인 원반은 영주에게 돌아와 근처를 지키지 못한다."},{"id":"core:watchtower_signal_bolt","k":"evolution","n":"망루 귀환신호살","c":"귀환 길 적 진입 → 길 밖 포기한 관통 신호살","w":"wave-2","live":false,"inp":["core:watchtower_crossbow","core:lantern_staff"],"trig":"귀환 대열이 도착한 뒤 진화 카드를 선택할 때","before":"무기 공격과 도구 작업이 각각 발동한다.","after":"쇠뇌가 귀환 길 앞 적을 관통하며 빛나는 길을 남겨 돌아오는 대열을 안내한다.","vis":"큰 적 조준선이 귀환 길 위 빛나는 관통선으로 바뀐다.","cost":"사격 표적을 귀환 길 안에서만 고르므로 길 밖 큰 적은 겨누지 않는다."}]}</script>
+<script>
+(function(){
+'use strict';
+var DATA = JSON.parse(document.getElementById('data').textContent);
+var R = DATA.recs;
+var BY = Object.create(null); R.forEach(function(r){ BY[r.id] = r; });
+var KIND = {weapon:'무기', tool:'도구', item:'물품', charter:'특허장', evolution:'진화', enemy:'적', chapter:'챕터', vassal:'가신', material:'재료', manor:'장원'};
+var ORDER = ['weapon','tool','item','evolution','charter','enemy','chapter','vassal','material','manor'];
+var TGT = {land:'땅', building:'건물', people:'사람'};
+var WAVE = {'wave-1a':'1a','wave-1b':'1b','wave-2':'2','wave-3':'3','wave-4':'4'};
+var FRIENDLY = {'core:system_movement':'영주 이동','core:system_weapon':'공격','core:system_tool':'도구 작업','core:system_land':'성장 · 땅','core:system_building':'성장 · 건물','core:system_people':'성장 · 사람','core:system_fertility':'성장 · 비옥도','core:system_threat':'적의 표적','core:system_enemy':'처치 · 적','core:system_choice':'성장 카드','core:system_return':'수확','core:system_manor':'판 밖 · 장원','core:system_chapter':'장소 · 계절'};
+
+function esc(s){ return String(s == null ? '' : s).replace(/[&<>"']/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
+function push(m,k,v){ (m[k] = m[k] || []).push(v); }
+function uniq(a){ return a.filter(function(x,i){ return a.indexOf(x) === i; }); }
+function pad(n){ return (n < 10 ? '0' : '') + n; }
+function names(ids){ return ids.filter(function(i){ return BY[i]; }).map(function(i){ return BY[i].n; }); }
+function firstSentence(s){ if (!s) return ''; var m = String(s).match(/^.*?다\.(?=\s|$)/); return m ? m[0] : String(s); }
+function remShort(s){ var w = String(s || '').trim().split(/\s+/); return w[w.length - 1] || ''; }
+function load(k, d){ try { var v = localStorage.getItem('ssmap.' + k); return v == null ? d : v; } catch(e){ return d; } }
+function save(k, v){ try { localStorage.setItem('ssmap.' + k, v); } catch(e){} }
+
+// relation indexes
+var evoBy = {}, itemsBy = {}, chartersBy = {}, vassalsBy = {}, matsBy = {}, chapByBoss = {}, chapByEnemy = {}, enemiesByChap = {};
+R.forEach(function(r){
+  if (r.k === 'evolution') r.inp.forEach(function(i){ push(evoBy, i, r.id); });
+  if (r.k === 'item') { (r.lt || []).forEach(function(i){ push(itemsBy, i, r.id); }); (r.lw || []).forEach(function(i){ push(itemsBy, i, r.id); }); }
+  if (r.k === 'charter') (r.lt || []).forEach(function(i){ push(chartersBy, i, r.id); });
+  if (r.k === 'vassal') (r.lt || []).forEach(function(i){ push(vassalsBy, i, r.id); });
+  if (r.k === 'material') r.src.forEach(function(s){ push(matsBy, s.id, r.id); });
+  if (r.k === 'chapter' && r.boss) push(chapByBoss, r.boss, r.id);
+});
+var ENEMIES = R.filter(function(r){ return r.k === 'enemy'; });
+R.filter(function(r){ return r.k === 'chapter'; }).forEach(function(ch){
+  ENEMIES.forEach(function(e){ if (e.tier !== '보스' && ch.enc && ch.enc.indexOf(e.n) >= 0) { push(chapByEnemy, e.id, ch.id); push(enemiesByChap, ch.id, e.id); } });
+});
+function byKind(k){ return R.filter(function(r){ return r.k === k; }); }
+function groupBy(list, f){ var g = {}, order = []; list.forEach(function(r){ var k = f(r); if (!g[k]) { g[k] = []; order.push(k); } g[k].push(r); }); return order.map(function(k){ return [k, g[k]]; }); }
+
+// glyphs
+function shape(r){
+  var col = r.k === 'tool' ? 'var(--k-' + r.tgt + ')' : 'var(--k-' + r.k + ')';
+  var f = 'style="fill:' + col + '"', st = 'style="fill:none;stroke:' + col + '"';
+  switch (r.k) {
+    case 'weapon': return '<rect x="3.2" y="3.2" width="9.6" height="9.6" transform="rotate(45 8 8)" ' + f + '/>';
+    case 'tool': return '<rect x="2.5" y="2.5" width="11" height="11" rx="2.6" ' + f + '/>';
+    case 'item': return '<circle cx="8" cy="8" r="5.4" ' + f + '/>';
+    case 'charter': return '<rect x="1.8" y="4.6" width="12.4" height="6.8" rx="3.4" ' + f + '/>';
+    case 'evolution': return '<path d="M8 1.2 9.9 6.1 14.8 8 9.9 9.9 8 14.8 6.1 9.9 1.2 8 6.1 6.1Z" ' + f + '/>';
+    case 'enemy': return '<path d="M8 1.8 14.4 13.8H1.6Z" ' + f + '/>';
+    case 'chapter': return '<path d="M3.2 1.8V14.6M3.2 2.4H13L10.6 5.9 13 9.4H3.2" ' + st + ' stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>';
+    case 'vassal': return '<circle cx="8" cy="8" r="5" ' + st + ' stroke-width="2.2"/><circle cx="8" cy="8" r="1.9" ' + f + '/>';
+    case 'material': return '<path d="M8 1.6 13.5 4.8V11.2L8 14.4 2.5 11.2V4.8Z" ' + f + '/>';
+    case 'manor': return '<path d="M1.8 8.2 8 2.4 14.2 8.2V14H1.8Z" ' + f + '/>';
+  }
+  return '';
+}
+function glyph(r, s){ s = s || 14; return '<svg class="g" width="' + s + '" height="' + s + '" viewBox="0 0 16 16" aria-hidden="true">' + shape(r) + '</svg>'; }
+function kindLabel(r){ return r.k === 'tool' ? TGT[r.tgt] + ' 도구' : KIND[r.k]; }
+function chip(id, note){
+  var r = BY[id]; if (!r) return '';
+  return '<button type="button" class="chip" data-go="' + esc(id) + '" title="' + esc(r.c) + '">' + glyph(r) + '<span>' + esc(r.n) + (note ? ' <small class="muted">' + esc(note) + '</small>' : '') + '</span>' + (r.live ? '<i class="dot" title="지금 빌드에 있음"></i>' : '') + '</button>';
+}
+function grp(title, inner){ return '<div class="grp"><h4>' + esc(title) + '</h4>' + inner + '</div>'; }
+function chips(list, noteFn){ return '<div class="chips">' + list.map(function(r){ return chip(r.id, noteFn ? noteFn(r) : ''); }).join('') + '</div>'; }
+function rows(list){ return '<div class="rows">' + list.map(function(x){ return '<div class="row">' + chip(x[0]) + '<p>' + esc(x[1]) + '</p></div>'; }).join('') + '</div>'; }
+
+// header
+var LIVE = R.filter(function(r){ return r.live; }).length;
+document.getElementById('stamp').innerHTML = '설계 v1.1 · 콘텐츠 ' + R.length + ' · 지금 빌드에 있음 ' + LIVE + ' · <span class="mono">' + esc(DATA.commit) + '</span>';
+(function legend(){
+  var ex = [{k:'weapon'},{k:'tool',tgt:'land'},{k:'tool',tgt:'building'},{k:'tool',tgt:'people'},{k:'item'},{k:'evolution'},{k:'charter'},{k:'enemy'},{k:'chapter'},{k:'vassal'},{k:'material'},{k:'manor'}];
+  var lab = ['무기','땅 도구','건물 도구','사람 도구','물품','진화','특허장','적','챕터','가신','재료','장원'];
+  document.getElementById('legend').innerHTML = ex.map(function(r, i){ return '<li>' + glyph(r, 13) + lab[i] + '</li>'; }).join('') + '<li><i class="dot"></i>지금 빌드에 있음</li>';
+})();
+document.getElementById('foot').innerHTML = '데이터: bs-mobile 설계 카탈로그 designed-v1.1(커밋 <span class="mono">' + esc(DATA.commit) + '</span>)과 wave-1a 실행 데이터. 이 페이지는 Lattice가 저장소 데이터로 자동 생성할 사람용 화면의 시안입니다. 공개 지도와 같은 원본을 씁니다.';
+
+// ---------- loop view ----------
+var STATIONS = [
+  {key:'attack', t:'공격', unit:'무기', line:'영주가 움직이는 방향으로 무기가 자동 공격한다', kinds:['weapon'], sys:['core:system_weapon','core:system_movement']},
+  {key:'kill', t:'처치', unit:'적', line:'쓰러진 자리에 잔재가 남고, 적은 번영한 곳을 노린다', kinds:['enemy'], sys:['core:system_enemy','core:system_threat']},
+  {key:'tool', t:'도구 작업', unit:'도구', line:'도구도 공격하면서 지나간 자리에 작업물을 남긴다', kinds:['tool'], sys:['core:system_tool']},
+  {key:'grow', t:'성장', unit:'작업물', line:'밭·작업장·부대가 시간·처치·이웃·계절에 따라 자란다', kinds:['tool'], sys:['core:system_land','core:system_building','core:system_people','core:system_fertility']},
+  {key:'harvest', t:'수확', unit:'재료', line:'다 자란 것에 닿으면 경험치와 재료가 된다', kinds:['material'], sys:['core:system_return']},
+  {key:'choice', t:'성장 카드', unit:'카드', line:'레벨업마다 무기·도구·물품·진화·특허장 중 하나를 고른다', kinds:['item','evolution','charter'], sys:['core:system_choice']}
+];
+var FLOW = {attack:'쓰러뜨림', kill:'잔재·빈 터', tool:'작업물', grow:'다 자람', harvest:'경험치', choice:'더 강하게'};
+function members(s){ return R.filter(function(r){ return s.kinds.indexOf(r.k) >= 0; }); }
+
+var ring = document.getElementById('ring');
+var lordEl = ring.querySelector('.lord');
+STATIONS.forEach(function(s, i){
+  var mem = members(s), live = mem.filter(function(r){ return r.live; }).length;
+  var b = document.createElement('button');
+  b.type = 'button'; b.className = 'station'; b.id = 'st-' + s.key; b.setAttribute('data-station', s.key); b.setAttribute('aria-pressed', 'false');
+  b.innerHTML = '<span class="no">' + pad(i + 1) + '</span><h3>' + esc(s.t) + '</h3><span class="line">' + esc(s.line) + '</span>' +
+    '<span class="meta"><span class="mono">' + esc(s.unit) + ' ' + mem.length + '</span><span class="bar" title="지금 빌드에 있는 비율"><i style="width:' + Math.round(live / Math.max(1, mem.length) * 100) + '%"></i></span><span class="mono muted">빌드 ' + live + '</span></span>';
+  ring.insertBefore(b, lordEl);
+});
+
+function renderStation(key){
+  var s = STATIONS.filter(function(x){ return x.key === key; })[0] || STATIONS[2];
+  var idx = STATIONS.indexOf(s);
+  Array.prototype.forEach.call(document.querySelectorAll('.station'), function(b){ b.setAttribute('aria-pressed', String(b.getAttribute('data-station') === s.key)); });
+  var left = '';
+  if (s.key === 'attack') {
+    left = groupBy(byKind('weapon'), function(r){ return r.role; }).map(function(g){ return grp(g[0] + ' ' + g[1].length, chips(g[1], function(r){ return r.form; })); }).join('');
+  } else if (s.key === 'kill') {
+    left = groupBy(byKind('enemy'), function(r){ return r.tier; }).map(function(g){ return grp(g[0] + ' ' + g[1].length, chips(g[1])); }).join('');
+  } else if (s.key === 'tool') {
+    left = groupBy(byKind('tool'), function(r){ return r.tgt; }).map(function(g){ return grp(TGT[g[0]] + ' 도구 ' + g[1].length, rows(g[1].map(function(r){ return [r.id, firstSentence(r.act)]; }))); }).join('');
+  } else if (s.key === 'grow') {
+    left = groupBy(byKind('tool'), function(r){ return r.tgt; }).map(function(g){ return grp(TGT[g[0]] + '에 남는 것', rows(g[1].map(function(r){ return [r.id, '남기는 것: ' + r.rem + ' · 자라는 조건: ' + (r.resp || []).join('·')]; }))); }).join('');
+  } else if (s.key === 'harvest') {
+    left = grp('경험치가 나오는 순간 · 도구 15', rows(byKind('tool').map(function(r){ return [r.id, r.harv]; }))) +
+      grp('재료 4 · 판이 끝나면 장원으로', rows(byKind('material').map(function(r){ return [r.id, '얻는 곳: ' + names(r.src.map(function(x){ return x.id; })).join(', ') + ' · 쓰는 곳: ' + names(r.snk.map(function(x){ return x.id; })).join(', ')]; })));
+  } else if (s.key === 'choice') {
+    left = grp('진화 ' + byKind('evolution').length + ' · 두 장비를 함께 키우면 모양이 바뀐다', chips(byKind('evolution'), function(r){ return names(r.inp).join(' + '); })) +
+      grp('물품 ' + byKind('item').length, chips(byKind('item'))) +
+      grp('특허장 ' + byKind('charter').length + ' · 규칙을 바꾸고 무언가를 포기한다', chips(byKind('charter'))) +
+      '<p class="muted" style="font-size:.84rem;margin:10px 0 0">무기와 도구도 같은 카드 묶음에서 나옵니다.</p>';
+  }
+  var out = DATA.inf.filter(function(i){ return s.sys.indexOf(i.f) >= 0 && s.sys.indexOf(i.t) < 0; });
+  var inn = DATA.inf.filter(function(i){ return s.sys.indexOf(i.t) >= 0 && s.sys.indexOf(i.f) < 0; });
+  function infList(list, dir){ return list.length ? '<ul class="inf">' + list.map(function(i){ return '<li><b>' + esc(FRIENDLY[dir === 'out' ? i.t : i.f]) + '</b><br><span class="to">' + esc(i.s) + '</span></li>'; }).join('') + '</ul>' : '<p class="muted" style="font-size:.86rem;margin:0">없음</p>'; }
+  document.getElementById('station-panel').innerHTML =
+    '<div class="panel-head"><span class="no">' + pad(idx + 1) + ' / 06</span><h2>' + esc(s.t) + '</h2><span class="muted">' + esc(s.line) + '</span></div>' +
+    '<div class="cols"><div>' + left + '</div><div>' + grp('이 단계가 영향을 주는 곳', infList(out, 'out')) + grp('이 단계가 영향을 받는 곳', infList(inn, 'in')) + '</div></div>';
+  save('station', s.key);
+}
+
+var DEFS = '<defs><marker id="ah" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" style="fill:var(--line-strong)"/></marker>' +
+  '<marker id="ahr" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" style="fill:var(--enemy)"/></marker></defs>';
+function edgePt(a, b, padPx){
+  var dx = b.cx - a.cx, dy = b.cy - a.cy, L = Math.hypot(dx, dy) || 1;
+  var sx = dx ? (a.w / 2) / Math.abs(dx) : Infinity, sy = dy ? (a.h / 2) / Math.abs(dy) : Infinity, s = Math.min(sx, sy);
+  return {x: a.cx + dx * s + dx / L * padPx, y: a.cy + dy * s + dy / L * padPx};
+}
+function txt(x, y, t, anchor, cls, extra){ return '<text class="' + (cls || 'flow-l') + '" x="' + x.toFixed(1) + '" y="' + y.toFixed(1) + '" text-anchor="' + (anchor || 'middle') + '" dominant-baseline="middle"' + (extra || '') + '>' + esc(t) + '</text>'; }
+function drawRing(){
+  var svg = document.getElementById('ring-svg');
+  var rb = ring.getBoundingClientRect(); if (!rb.width) return;
+  svg.setAttribute('width', rb.width); svg.setAttribute('height', rb.height); svg.setAttribute('viewBox', '0 0 ' + rb.width + ' ' + rb.height);
+  function box(k){ var b = document.getElementById('st-' + k).getBoundingClientRect(); var x = b.left - rb.left, y = b.top - rb.top; return {x:x, y:y, w:b.width, h:b.height, cx:x + b.width / 2, cy:y + b.height / 2}; }
+  var seq = STATIONS.map(function(s){ return s.key; }), out = '';
+  var mobile = window.matchMedia('(max-width: 859px)').matches;
+  if (!mobile) {
+    var C = {x: rb.width / 2, y: rb.height / 2};
+    seq.forEach(function(k, i){
+      var a = box(k), b = box(seq[(i + 1) % seq.length]);
+      var p = edgePt(a, b, 5), q = edgePt(b, a, 9);
+      var m = {x:(p.x + q.x) / 2, y:(p.y + q.y) / 2}, nx = m.x - C.x, ny = m.y - C.y, L = Math.hypot(nx, ny) || 1; nx /= L; ny /= L;
+      var c = {x: m.x + nx * 24, y: m.y + ny * 24};
+      var lm = {x:(p.x + 2 * c.x + q.x) / 4 + nx * 13, y:(p.y + 2 * c.y + q.y) / 4 + ny * 13};
+      out += '<path class="flow" d="M' + p.x.toFixed(1) + ' ' + p.y.toFixed(1) + ' Q' + c.x.toFixed(1) + ' ' + c.y.toFixed(1) + ' ' + q.x.toFixed(1) + ' ' + q.y.toFixed(1) + '" marker-end="url(#ah)"/>' + txt(lm.x, lm.y, FLOW[k]);
+    });
+    var g = box('grow'), kl = box('kill');
+    var tx = g.x + g.w * 0.86, p1 = {x:tx, y:g.y - 6}, p2 = {x:kl.x + kl.w * 0.86, y:kl.y + kl.h + 9};
+    out += '<path class="threat" d="M' + p1.x.toFixed(1) + ' ' + p1.y.toFixed(1) + ' C' + (p1.x + 34).toFixed(1) + ' ' + (p1.y - 60).toFixed(1) + ' ' + (p2.x + 34).toFixed(1) + ' ' + (p2.y + 60).toFixed(1) + ' ' + p2.x.toFixed(1) + ' ' + p2.y.toFixed(1) + '" marker-end="url(#ahr)"/>' +
+      txt(p2.x - 8, p2.y + 16, '번영한 곳을 노림', 'end', 'flow-l threat-l');
+  } else {
+    seq.forEach(function(k, i){
+      if (i === seq.length - 1) return;
+      var a = box(k), b = box(seq[i + 1]);
+      var x = a.x + a.w * 0.5;
+      out += '<path class="flow" d="M' + x.toFixed(1) + ' ' + (a.y + a.h + 4).toFixed(1) + ' V' + (b.y - 7).toFixed(1) + '" marker-end="url(#ah)"/>' + txt(x + 10, (a.y + a.h + b.y) / 2, FLOW[k], 'start');
+    });
+    var a2 = box('choice'), b2 = box('attack'), xr = rb.width - 12;
+    out += '<path class="flow" d="M' + (a2.x + a2.w + 2).toFixed(1) + ' ' + a2.cy.toFixed(1) + ' H' + xr.toFixed(1) + ' V' + b2.cy.toFixed(1) + ' H' + (b2.x + b2.w + 7).toFixed(1) + '" marker-end="url(#ah)"/>' +
+      txt(xr + 4, (a2.cy + b2.cy) / 2, '다시 공격으로 · ' + FLOW.choice, 'middle', 'flow-l', ' transform="rotate(-90 ' + (xr + 4).toFixed(1) + ' ' + ((a2.cy + b2.cy) / 2).toFixed(1) + ')"');
+  }
+  svg.innerHTML = DEFS + out;
+}
+
+// after-run strip and places
+document.getElementById('after-mat').innerHTML = byKind('material').map(function(r){ return chip(r.id); }).join('');
+document.getElementById('after-manor').innerHTML = byKind('manor').map(function(r){ return chip(r.id, names(r.inp).join('·')); }).join('');
+document.getElementById('after-vassal').innerHTML = byKind('vassal').map(function(r){ return chip(r.id); }).join('');
+document.getElementById('places').innerHTML = byKind('chapter').sort(function(a, b){ return a.ord - b.ord; }).map(function(r){
+  return '<button type="button" class="place" data-go="' + esc(r.id) + '"><span class="ord">' + pad(r.ord) + (r.live ? ' · 지금 빌드에 있음' : '') + '</span><b>' + esc(r.n) + '</b><span class="c">' + esc(r.c) + '</span><span class="boss">보스 · ' + esc(BY[r.boss] ? BY[r.boss].n : '') + '</span></button>';
+}).join('');
+
+// ---------- focus view ----------
+function relations(r){
+  var G = [];
+  function add(side, lab, items){ items = items.filter(function(x){ return BY[x.id]; }); if (items.length) G.push({side:side, lab:lab, items:items}); }
+  function ids(list){ return (list || []).map(function(id){ return {id:id}; }); }
+  if (r.k === 'weapon' || r.k === 'tool') {
+    var ev = evoBy[r.id] || [];
+    var partners = [], results = [];
+    ev.forEach(function(eid){ var e = BY[eid], p = e.inp.filter(function(i){ return i !== r.id; })[0]; partners.push({id:p, note:'→ ' + e.n}); results.push({id:eid, note:'+ ' + (BY[p] ? BY[p].n : '')}); });
+    add('L', '함께 고르면 진화', partners);
+    if (r.k === 'weapon') add('L', '강화하는 물품', ids(itemsBy[r.id]));
+    if (r.k === 'tool') { add('L', '붙는 물품', ids(itemsBy[r.id])); add('L', '규칙을 바꾸는 특허장', ids(chartersBy[r.id])); add('L', '함께 일하는 가신', ids(vassalsBy[r.id])); }
+    add('R', '진화하면', results);
+    if (r.k === 'tool') add('R', '얻는 재료', ids(matsBy[r.id]));
+  } else if (r.k === 'item') {
+    add('R', '강화 대상', ids((r.lt || []).concat(r.lw || [])));
+  } else if (r.k === 'charter') {
+    add('R', '적용 도구', ids(r.lt));
+  } else if (r.k === 'evolution') {
+    add('L', '재료가 되는 두 장비', ids(r.inp));
+  } else if (r.k === 'enemy') {
+    add('R', '보스로 나오는 장소', ids(chapByBoss[r.id]));
+    add('R', '나오는 장소', ids(chapByEnemy[r.id]));
+  } else if (r.k === 'chapter') {
+    add('L', '이 장소의 적', ids(enemiesByChap[r.id]));
+    add('R', '보스', ids(r.boss ? [r.boss] : []));
+  } else if (r.k === 'vassal') {
+    add('L', '함께 쓰는 도구', ids(r.lt));
+  } else if (r.k === 'material') {
+    add('L', '얻는 곳', ids(r.src.map(function(x){ return x.id; })));
+    add('R', '쓰는 곳', ids(r.snk.map(function(x){ return x.id; })));
+  } else if (r.k === 'manor') {
+    add('L', '필요한 재료', ids(r.inp));
+  }
+  return G;
+}
+function details(r){
+  var rows2 = [];
+  function add(k, v){ if (v && (Array.isArray(v) ? v.length : String(v).trim())) rows2.push([k, v]); }
+  switch (r.k) {
+    case 'weapon': add('하는 일', r.does); add('고유 동작', r.uniq); add('영지와 엮이는 방식', r.estate); add('빈틈', r.gap); add('형태 · 역할', r.form + ' · ' + r.role); add('레벨업하면', (r.axes || []).join('·') + '이 늘어난다'); break;
+    case 'tool': add('발동', r.act); add('지도에 남기는 것', r.rem); add('자라는 조건', (r.resp || []).join('·') + ' · ' + firstSentence(r.grow)); add('돌려주는 것', (r.ret || []).map(function(x){ return x.ch + ' · ' + firstSentence(x.m); })); add('수확 순간', r.harv); add('잃었을 때', r.rec); add('대가', r.cost); break;
+    case 'item': add('언제', r.trig); add('효과', r.ben); add('대가', r.cost || '없음'); add('종류', r.num ? '수치 강화 · 어떤 빌드에도 쓰임' : '행동을 바꾸는 물품'); break;
+    case 'charter': add('언제', r.trig); add('바뀌는 규칙', r.rule); add('포기하는 것', r.forf); break;
+    case 'evolution': add('열리는 조건', r.trig); add('바뀌기 전', r.before); add('바뀐 뒤', r.after); add('화면에서', r.vis); add('대가', r.cost); break;
+    case 'enemy': add('등급', r.tier); add('행동', r.beh); add('예고', r.tell); add('대응', r.ctr); add('영지에 주는 피해', r.thr); add('보스 국면', (r.ph || []).map(function(p){ return '예고: ' + p.cue + ' → ' + p.act + ' 대응: ' + p.res; })); break;
+    case 'chapter': add('순서', r.ord + '번째 장소'); add('땅의 규칙', r.rule); add('플레이어의 고민', r.dec); add('싸움의 변화', r.enc); break;
+    case 'vassal': add('역할', r.role); add('조건', r.trig); add('능력', r.act); add('대표 장면', r.scene); add('대가', r.cost); break;
+    case 'material': add('얻는 곳', r.src.map(function(x){ return (BY[x.id] ? BY[x.id].n : x.id) + ' · ' + firstSentence(x.a); })); add('쓰는 곳', r.snk.map(function(x){ return (BY[x.id] ? BY[x.id].n : x.id) + ' · ' + firstSentence(x.a); })); break;
+    case 'manor': add('기능', r.fn); add('열리는 조건', r.unlock); add('판과의 연결', r.run); break;
+  }
+  return '<dl class="dl">' + rows2.map(function(p){ return '<dt>' + esc(p[0]) + '</dt><dd>' + (Array.isArray(p[1]) ? '<ul class="phases">' + p[1].map(function(x){ return '<li>' + esc(x) + '</li>'; }).join('') + '</ul>' : esc(p[1])) + '</dd>'; }).join('') + '</dl>';
+}
+function trunc(s, n){ s = String(s || ''); return s.length > n ? s.slice(0, n - 1) + '…' : s; }
+function drawEgo(r){
+  var host = document.getElementById('ego'); if (!host) return;
+  var G = relations(r);
+  if (!G.length) { host.innerHTML = '<p class="empty">다른 콘텐츠와 직접 이어진 연결이 없습니다. 아래 설명을 보세요.</p>'; return; }
+  var W = Math.max(660, host.clientWidth - 16), colW = Math.min(214, Math.round(W * 0.29)), nodeH = 40, gap = 7, headH = 22, groupGap = 12, cap = 6;
+  function layout(side){
+    var y = 0, items = [];
+    G.filter(function(g){ return g.side === side; }).forEach(function(g){
+      items.push({type:'head', y:y, lab:g.lab}); y += headH;
+      g.items.slice(0, cap).forEach(function(it){ items.push({type:'node', y:y, it:it}); y += nodeH + gap; });
+      if (g.items.length > cap) { items.push({type:'more', y:y, n:g.items.length - cap}); y += 20; }
+      y += groupGap;
+    });
+    return {items:items, h:Math.max(0, y - groupGap)};
+  }
+  var Lh = layout('L'), Rh = layout('R');
+  var ch = 92, H = Math.max(Lh.h, Rh.h, ch + 24) + 24;
+  var cw = Math.min(250, W - 2 * colW - 120), cx = W / 2, cy = H / 2;
+  var xL = 6, xR = W - 6 - colW;
+  var offL = (H - Lh.h) / 2, offR = (H - Rh.h) / 2;
+  var s = '';
+  function nodeSvg(x, y, it){
+    var n = BY[it.id], note = it.note || kindLabel(n);
+    return '<g class="enode" data-go="' + esc(n.id) + '" tabindex="0" role="button" aria-label="' + esc(n.n) + '">' +
+      '<rect x="' + x + '" y="' + y + '" width="' + colW + '" height="' + nodeH + '" rx="8"/>' +
+      '<g transform="translate(' + (x + 9) + ',' + (y + 12) + ')">' + shape(n) + '</g>' +
+      '<text x="' + (x + 32) + '" y="' + (y + 17) + '" font-size="13.5" font-weight="500">' + esc(trunc(n.n, 13)) + '</text>' +
+      '<text class="ek" x="' + (x + 32) + '" y="' + (y + 32) + '" font-size="11">' + esc(trunc(note, 20)) + '</text>' +
+      (n.live ? '<circle cx="' + (x + colW - 11) + '" cy="' + (y + 11) + '" r="3.6" style="fill:var(--live)"/>' : '') + '</g>';
+  }
+  function side(lay, x, off, isLeft){
+    lay.items.forEach(function(e){
+      var y = off + e.y;
+      if (e.type === 'head') s += '<text class="elab" x="' + (isLeft ? x : x + colW) + '" y="' + (y + 13) + '" text-anchor="' + (isLeft ? 'start' : 'end') + '">' + esc(e.lab) + '</text>';
+      else if (e.type === 'more') s += '<text class="elab" x="' + (isLeft ? x : x + colW) + '" y="' + (y + 12) + '" text-anchor="' + (isLeft ? 'start' : 'end') + '">+' + e.n + '개 더 · 아래 목록</text>';
+      else {
+        var ny = y + nodeH / 2, x1 = isLeft ? x + colW : x, x2 = isLeft ? cx - cw / 2 : cx + cw / 2, mx = (x1 + x2) / 2;
+        s += '<path class="eedge" d="M' + x1 + ' ' + ny + ' C' + mx + ' ' + ny + ' ' + mx + ' ' + cy + ' ' + x2 + ' ' + cy + '"/>';
+        s += nodeSvg(x, y, e.it);
+      }
+    });
+  }
+  side(Lh, xL, offL, true); side(Rh, xR, offR, false);
+  s += '<g class="ecenter"><rect x="' + (cx - cw / 2) + '" y="' + (cy - ch / 2) + '" width="' + cw + '" height="' + ch + '" rx="12"/>' +
+    '<g transform="translate(' + (cx - 9) + ',' + (cy - 36) + ') scale(1.15)">' + shape(r) + '</g>' +
+    '<text x="' + cx + '" y="' + (cy + 4) + '" text-anchor="middle" font-size="19" font-weight="700">' + esc(trunc(r.n, 12)) + '</text>' +
+    '<text x="' + cx + '" y="' + (cy + 26) + '" text-anchor="middle" font-size="11.5" style="font-family:var(--font-body);fill:var(--muted)">' + esc(kindLabel(r)) + '</text></g>';
+  host.innerHTML = '<svg width="' + W + '" height="' + H + '" viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="' + esc(r.n) + '과 이어진 콘텐츠">' + s + '</svg>';
+}
+var focusId = load('focus', 'core:seed_bag'); if (!BY[focusId]) focusId = 'core:seed_bag';
+function renderFocus(id){
+  var r = BY[id]; if (!r) return; focusId = id; save('focus', id);
+  var G = relations(r);
+  var full = G.every(function(g){ return g.items.length <= 6; });
+  var relHtml = G.length ? '<div class="rel' + (full ? ' full' : '') + '">' + G.map(function(g){ return grp(g.lab + ' ' + g.items.length, '<div class="chips">' + g.items.map(function(it){ return chip(it.id, it.note || ''); }).join('') + '</div>'); }).join('') + '</div>' : '';
+  document.getElementById('f-main').innerHTML =
+    '<div class="fhead"><span class="kind">' + glyph(r, 15) + esc(kindLabel(r)) + (r.k === 'weapon' ? ' · ' + esc(r.form) : '') + '</span></div>' +
+    '<div class="fhead" style="margin-top:4px"><h2>' + esc(r.n) + '</h2>' + (r.live ? '<span class="pill live">지금 빌드에 있음</span>' : '<span class="pill">설계만 · 구현 순서 ' + esc(WAVE[r.w] || '-') + '</span>') + '</div>' +
+    '<p class="cardtext">' + esc(r.c) + '</p>' +
+    '<div class="ego" id="ego"></div>' + relHtml + details(r);
+  drawEgo(r);
+  Array.prototype.forEach.call(document.querySelectorAll('.fl-item'), function(b){ b.setAttribute('aria-current', String(b.getAttribute('data-go') === id)); });
+}
+var fq = document.getElementById('f-q'), fk = document.getElementById('f-k');
+fk.innerHTML = '<option value="all">전체 ' + R.length + '</option>' + ORDER.map(function(k){ return '<option value="' + k + '">' + KIND[k] + ' ' + byKind(k).length + '</option>'; }).join('');
+function renderFinder(){
+  var q = fq.value.trim(), k = fk.value, html = '';
+  ORDER.forEach(function(kind){
+    if (k !== 'all' && k !== kind) return;
+    var list = byKind(kind).filter(function(r){ return !q || r.n.indexOf(q) >= 0 || (r.c || '').indexOf(q) >= 0; });
+    if (!list.length) return;
+    html += '<li class="fl-sep">' + KIND[kind] + ' ' + list.length + '</li>' + list.map(function(r){
+      return '<li><button type="button" class="fl-item" data-go="' + esc(r.id) + '" aria-current="' + String(r.id === focusId) + '">' + glyph(r) + '<span>' + esc(r.n) + '</span>' + (r.live ? '<i class="dot" title="지금 빌드에 있음"></i>' : '') + '<span class="k">' + esc(r.k === 'tool' ? TGT[r.tgt] : '') + '</span></button></li>';
+    }).join('');
+  });
+  document.getElementById('f-list').innerHTML = html || '<li class="fl-sep">찾는 항목이 없습니다</li>';
+}
+fq.addEventListener('input', renderFinder); fk.addEventListener('change', renderFinder);
+
+// ---------- catalog ----------
+var cstate = {kind:'all', live:false, q:''};
+function relSummary(r){
+  switch (r.k) {
+    case 'weapon': case 'tool':
+      var ev = (evoBy[r.id] || []).map(function(eid){ var e = BY[eid], p = e.inp.filter(function(i){ return i !== r.id; })[0]; return e.n + '(+' + (BY[p] ? BY[p].n : '') + ')'; });
+      return (r.k === 'tool' ? TGT[r.tgt] + ' · 남기는 것: ' + remShort(r.rem) + ' · ' : r.form + ' · ') + '진화: ' + (ev.join(', ') || '없음');
+    case 'item': var g = names((r.lt || []).concat(r.lw || [])); return g.length ? '→ ' + g.join(', ') : '범용 물품';
+    case 'charter': return '→ ' + names(r.lt || []).join(', ');
+    case 'evolution': return names(r.inp).join(' + ');
+    case 'enemy': var ch = names((chapByBoss[r.id] || []).concat(chapByEnemy[r.id] || [])); return r.tier + (ch.length ? ' · ' + ch.join(', ') : '');
+    case 'chapter': return r.ord + '번째 장소 · 보스 ' + (BY[r.boss] ? BY[r.boss].n : '');
+    case 'vassal': return '→ ' + names(r.lt || []).join(', ');
+    case 'material': return '얻는 곳 ' + r.src.length + ' · 쓰는 곳 ' + r.snk.length;
+    case 'manor': return '필요: ' + names(r.inp).join(', ');
+  }
+  return '';
+}
+function renderCatalog(){
+  var seg = '<button type="button" data-kind="all" aria-pressed="' + String(cstate.kind === 'all') + '">전체 ' + R.length + '</button>' +
+    ORDER.map(function(k){ var ex = k === 'tool' ? {k:'tool', tgt:'land'} : {k:k}; return '<button type="button" data-kind="' + k + '" aria-pressed="' + String(cstate.kind === k) + '">' + glyph(ex, 12) + KIND[k] + ' ' + byKind(k).length + '</button>'; }).join('');
+  document.getElementById('c-kinds').innerHTML = seg;
+  var q = cstate.q;
+  var list = R.filter(function(r){ return (cstate.kind === 'all' || r.k === cstate.kind) && (!cstate.live || r.live) && (!q || r.n.indexOf(q) >= 0 || (r.c || '').indexOf(q) >= 0); });
+  list.sort(function(a, b){ return ORDER.indexOf(a.k) - ORDER.indexOf(b.k) || (b.live - a.live); });
+  document.getElementById('c-count').textContent = list.length + '개' + (cstate.live ? ' · 지금 빌드에 있는 것만' : '');
+  document.getElementById('c-cards').innerHTML = list.map(function(r){
+    return '<button type="button" class="card" data-go="' + esc(r.id) + '"><span class="top2">' + glyph(r, 13) + esc(kindLabel(r)) + (r.live ? '<i class="dot" title="지금 빌드에 있음"></i>' : '') + '</span><b>' + esc(r.n) + '</b><span class="c">' + esc(r.c) + '</span><span class="r">' + esc(relSummary(r)) + '</span></button>';
+  }).join('') || '<p class="muted">조건에 맞는 항목이 없습니다.</p>';
+}
+document.getElementById('c-kinds').addEventListener('click', function(e){ var b = e.target.closest('[data-kind]'); if (!b) return; cstate.kind = b.getAttribute('data-kind'); renderCatalog(); });
+document.getElementById('c-q').addEventListener('input', function(e){ cstate.q = e.target.value.trim(); renderCatalog(); });
+document.getElementById('c-live').addEventListener('change', function(e){ cstate.live = e.target.checked; renderCatalog(); });
+
+// ---------- navigation ----------
+var VIEWS = ['loop', 'focus', 'catalog'];
+function showView(v){
+  if (VIEWS.indexOf(v) < 0) v = 'loop';
+  VIEWS.forEach(function(x){ document.getElementById('view-' + x).hidden = x !== v; document.getElementById('tab-' + x).setAttribute('aria-selected', String(x === v)); });
+  save('view', v);
+  try { history.replaceState(null, '', '#' + v); } catch(e){}
+  if (v === 'loop') requestAnimationFrame(drawRing);
+  if (v === 'focus') { renderFinder(); renderFocus(focusId); }
+  if (v === 'catalog') renderCatalog();
+}
+function openFocus(id){
+  if (!BY[id]) return; focusId = id; showView('focus');
+  var top = document.querySelector('.tabs'); if (top && top.scrollIntoView) top.scrollIntoView({block:'start'});
+}
+document.addEventListener('click', function(e){
+  var go = e.target.closest('[data-go]'); if (go) { e.preventDefault(); openFocus(go.getAttribute('data-go')); return; }
+  var st = e.target.closest('[data-station]'); if (st) { renderStation(st.getAttribute('data-station')); return; }
+  var tab = e.target.closest('[data-view]'); if (tab) showView(tab.getAttribute('data-view'));
+});
+document.addEventListener('keydown', function(e){
+  if ((e.key === 'Enter' || e.key === ' ') && e.target.classList && e.target.classList.contains('enode')) { e.preventDefault(); openFocus(e.target.getAttribute('data-go')); }
+});
+if (window.ResizeObserver) { new ResizeObserver(function(){ drawRing(); }).observe(ring); }
+var egoTimer = 0;
+window.addEventListener('resize', function(){ clearTimeout(egoTimer); egoTimer = setTimeout(function(){ if (!document.getElementById('view-focus').hidden && BY[focusId]) drawEgo(BY[focusId]); }, 120); });
+if (document.fonts && document.fonts.ready) document.fonts.ready.then(function(){ drawRing(); });
+
+renderStation(load('station', 'tool'));
+var start = (location.hash || '').replace('#', '');
+showView(VIEWS.indexOf(start) >= 0 ? start : load('view', 'loop'));
+requestAnimationFrame(drawRing);
+})();
+</script>

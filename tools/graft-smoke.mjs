@@ -20,8 +20,10 @@ export function verifyGraft(cli, repository) {
   git(['add', '.']); git(['commit', '--quiet', '-m', 'Record module sources']);
   const baseline = git(['rev-parse', 'HEAD']);
   run(['build']);
-  assert.equal(graph().nodes.length, 2);
-  assert.equal(graph().edges.length, 1);
+  assert.equal(graph().nodes.length, 4);
+  assert.equal(graph().nodes.filter(node => node.kind === 'function').length, 2);
+  assert.equal(graph().edges.length, 3);
+  assert.equal(graph().edges.filter(edge => edge.kind === 'contains').length, 2);
   mkdirSync(join(repository, 'graft/.graph'), { recursive: true });
   const node = (id, path, name, kind, span) => ({ id, path, name, kind, span, signature: null, exported: true, origin: 'ast', body_hash: hash(files[path]), summary_state: 'pending', summary: null, crux: null });
   const wiring = {
@@ -61,8 +63,10 @@ export function verifyGraft(cli, repository) {
   assert.notEqual(graph().hash, refreshed, 'An ignored graph-only edit is observed');
   for (const invalid of ['{', JSON.stringify({ ...wiring, meta: { ...wiring.meta, version: 2 } })]) {
     save('graft/.graph/wiring.json', invalid); run(['build']);
-    assert.equal(graph().nodes.length, 2);
-    assert.equal(graph().edges.length, 1);
+    assert.equal(graph().nodes.length, 4);
+  assert.equal(graph().nodes.filter(node => node.kind === 'function').length, 2);
+    assert.equal(graph().edges.length, 3);
+  assert.equal(graph().edges.filter(edge => edge.kind === 'contains').length, 2);
     assert.ok(read('.lattice/cache/diagnostics.json').some(value => value.code === 'graft-invalid'));
   }
   rmSync(join(repository, 'graft'), { recursive: true }); run(['build']);

@@ -10,6 +10,7 @@ import { initialize } from './init.mjs';
 import { serve } from './serve.mjs';
 import { buildRepository } from './build.mjs';
 import { compareRepository } from './history.mjs';
+import { runInterpretationCommand } from './interpretation-runner.mjs';
 import { mcp } from './mcp.mjs';
 import { cacheDirectory, persistBuild, withCacheLock } from './storage.mjs';
 
@@ -34,11 +35,13 @@ function options(args: readonly string[]) {
             else if (arg === '--viewer-url') options.viewerUrl = value;
             else options.port = value;
         } else if (arg === '--json') options.json = true;
+        else if (arg === '--no-lens') options.noLens = true;
         else if (arg === '--no-global') options.noGlobal = true;
         else if (arg === '--force') options.force = true;
         else if (!arg.startsWith('-') && options.output === undefined) options.output = arg;
         else throw new Error(`Unknown argument: ${arg}`);
     }
+    if (options.noLens && options.lens) throw new Error('Choose --lens or --no-lens');
     options.root = realpathSync(resolve(options.root));
     if (options.cacheDir !== undefined) {
         options.cacheDir = canonicalDirectory(resolve(options.cacheDir));
@@ -67,7 +70,7 @@ function build(options: Options, command = 'build') {
             console.log(`Built ${graph.nodes.length} nodes, ${graph.edges.length} edges, ${graph.facets.length} facets, ${graph.findings.length} findings.`);
             console.log(`Extraction: ${result.extraction.stats.parsed} parsed, ${result.extraction.stats.reused} reused, ${result.extraction.stats.discarded} discarded; ${result.extraction.stats.files} files content-verified.`);
             console.log(`Input/reference diagnostics: ${result.diagnostics.length} (selected input scope).`);
-            if (graph.lensDigest === null) console.log('Coverage: JSON, YAML, CSV, Markdown and code files; JS/TS/Python static imports. Unity tagged YAML is not included.');
+            if (graph.lensDigest === null) console.log('Coverage: JSON, YAML, CSV, Markdown and code files; JS/TS/Python/C#/Rust/Go/Java/Kotlin/Swift/GDScript static imports and named definitions. Unity tagged YAML is not included.');
             console.log(`Graph ${graph.hash}\n${join(cacheDirectory(options.root, options.cacheDir), 'graph.json')}`);
         }
         return graph;
@@ -114,10 +117,21 @@ try {
     if (command !== 'serve' && args.includes('--port')) throw new Error('--port is supported by serve');
     if (command !== 'export' && args.includes('--force')) throw new Error('--force is supported by export');
     if (!command || command === '--help' || command === 'help') {
-        const help = 'Lattice\n  lattice init --root <repository> [--no-global] [--json]\n  lattice build --root <repository> [--lens <lens.yaml|lens.json>] [--cache-dir <directory>] [--json]\n  lattice check --root <repository> [--lens <lens.yaml|lens.json>] [--cache-dir <directory>] [--json]\n  lattice diff <ref> --root <repository> [--lens <lens.yaml|lens.json>] [--cache-dir <directory>] [--json]\n  lattice export <directory> --root <repository> [--force] [--cache-dir <directory>] [--json]\n  lattice serve --root <repository> [--lens <lens.yaml|lens.json>] [--port <number>] [--cache-dir <directory>] [--json]\n  lattice mcp --root <repository> [--lens <lens>] [--cache-dir <directory>] [--viewer-url <URL>]\n\nJSON/YAML/CSV/Markdown/code build; optional declarative YAML/JSON lens; static home/list/detail.';
+        const help = 'Lattice\n  lattice init --root <repository> [--no-global] [--json]\n  lattice build --root <repository> [--lens <lens.yaml|lens.json> | --no-lens] [--cache-dir <directory>] [--json]\n  lattice check --root <repository> [--lens <lens.yaml|lens.json> | --no-lens] [--cache-dir <directory>] [--json]\n  lattice diff <ref> --root <repository> [--lens <lens.yaml|lens.json> | --no-lens] [--cache-dir <directory>] [--json]\n  lattice export <directory> --root <repository> [--force] [--cache-dir <directory>] [--json]\n  lattice serve --root <repository> [--lens <lens.yaml|lens.json> | --no-lens] [--port <number>] [--cache-dir <directory>] [--json]\n  lattice summarize --root <repository> [--json] -- <external-command> [args...]\n  lattice mcp --root <repository> [--lens <lens>] [--cache-dir <directory>] [--viewer-url <URL>]\n\nJSON/YAML/CSV/Markdown/code build; optional declarative YAML/JSON lens; static home/list/detail.';
         if (jsonRequested) output('help', { text: help });
         else console.log(help);
     } else if (command === 'init') { const opts = options(args); const result = initialize(opts); if (opts.json) output(command, result); }
+    else if (command === 'summarize') {
+        const divider = args.indexOf('--');
+        if (divider < 0) throw new Error('summarize requires -- <external-command> [args...] and LATTICE_SUMMARY_KEY_ENV');
+        const opts = options(args.slice(0, divider));
+        if (opts.output !== undefined) throw new Error('summarize takes no positional argument before --');
+        const keyEnv = process.env['LATTICE_SUMMARY_KEY_ENV'];
+        if (!keyEnv) throw new Error('Set LATTICE_SUMMARY_KEY_ENV to the API-key environment variable name');
+        const graph = withCacheLock(opts.root, () => { const result = buildRepository(opts); return persistBuild(opts.root, result, opts.cacheDir); }, opts.cacheDir);
+        const result = await runInterpretationCommand(opts.root, graph, args.slice(divider + 1), keyEnv);
+        if (opts.json) output(command, result); else console.log(JSON.stringify(result));
+    }
     else if (command === 'build') build(options(args));
     else if (command === 'check') check(options(args));
     else if (command === 'diff') diff(options(args));
