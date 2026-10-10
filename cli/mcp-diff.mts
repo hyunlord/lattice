@@ -23,6 +23,9 @@ function changes<T extends DiffRecord>(before: readonly Comparison<T>[], after: 
 /** The web-selected layer is authoritative for both revisions, including incident correspondence edges. */
 export function webDiff(beforeGraph: Graph, afterGraph: Graph, presentation: unknown, args: Record<string, unknown>) {
     const afterScope = scopeGraph(afterGraph, presentation, args);
+    if (beforeGraph.nodes === afterGraph.nodes && beforeGraph.edges === afterGraph.edges && beforeGraph.facets === afterGraph.facets && beforeGraph.findings === afterGraph.findings) {
+        return { layer: afterScope.layer, nodes: changes([], [], args), edges: changes([], [], args), facets: changes([], [], args), findings: changes([], [], args) };
+    }
     const beforeScope = scopeGraph(beforeGraph, presentation, { ...args, layer: afterScope.layer });
     const before = snapshotComparisons(beforeGraph, beforeScope.nodes, afterScope.layer);
     const after = snapshotComparisons(afterGraph, afterScope.nodes, afterScope.layer);

@@ -106,3 +106,5 @@ L2 completion: [three-repository and public Pages acceptance](l2-acceptance.md) 
 L3 completion: [shared graph MCP and agent setup evidence](l3-mcp.md) verifies all five L3 rows. Actual Claude/Codex calls retain the published graph identity and lens-authored 24/30 result. L4 reusable automation and L5 combined acceptance remain pending.
 
 L4 completion: [actual reusable delivery acceptance](l4-action.md) verifies all four L4 rows through Lattice PR43 and bs-mobile PR161, including same-comment rerun, default-branch Pages and downloaded artifact browser checks. L5 remains pending.
+
+L5 progress: [actual-source performance investigation](l5-performance.md) records faster builds and comparisons with identical graph semantics. Cold MCP and expanded YAML timings still exceed requested limits; no L5 row is promoted by this partial result.

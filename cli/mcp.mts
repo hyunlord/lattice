@@ -19,9 +19,9 @@ export function createMcpHandler(options: Options) {
         return target.href;
     };
     const service = new FreshRepository(options);
-    return (name: ToolName, args: Record<string, unknown>): object => {
+    return async (name: ToolName, args: Record<string, unknown>): Promise<object> => {
         const started = performance.now();
-        const fresh = service.ensureFresh();
+        const fresh = await service.ensureFreshAsync();
         let result: object;
         if (name === 'lattice_freshness') result = { graphHash: fresh.graph.hash, repository: fresh.graph.repository, link: link('/home') };
         else if (name === 'lattice_diff') {
