@@ -4,7 +4,11 @@ import type { NativeMatches } from "./native-links.js";
 function pathOf(module: CodeModule): string { return module.node.sources[0]?.path ?? ""; }
 function names(module: CodeModule): readonly string[] {
     const definitions = module.node.attributes["definitions"];
-    return Array.isArray(definitions) ? definitions.flatMap(value => value && typeof value === "object" && !Array.isArray(value) && typeof value["name"] === "string" ? [value["name"]] : []) : [];
+    return Array.isArray(definitions) ? definitions.flatMap(value => {
+        if (!value || typeof value !== "object" || Array.isArray(value) || typeof value["name"] !== "string") return [];
+        if (module.language === "java") return value["kind"] === "type" ? [typeof value["qualifiedName"] === "string" ? value["qualifiedName"] : value["name"]] : [];
+        return [value["name"]];
+    }) : [];
 }
 function normalized(path: string): string | undefined {
     const parts: string[] = [];
@@ -17,13 +21,14 @@ function normalized(path: string): string | undefined {
 }
 export function languageMatches(module: CodeModule, modules: readonly CodeModule[], reference: ModuleImport): NativeMatches | undefined {
     let matches: readonly CodeModule[] = [], multiple = false;
+    let packageName: string | undefined;
     const specifier = reference.specifier;
     if (["java", "kotlin"].includes(module.language)) {
         const candidates = modules.filter(candidate => ["java", "kotlin"].includes(candidate.language));
         if (specifier.endsWith(".*")) {
             const target = specifier.slice(0, -2);
-            matches = candidates.filter(candidate => candidate.node.attributes["package"] === target); multiple = true;
-            if (!matches.length) { matches = candidates.filter(candidate => names(candidate).some(name => `${String(candidate.node.attributes["package"] ?? "")}.${name}` === target)); multiple = false; }
+            matches = candidates.filter(candidate => candidate.node.attributes["package"] === target); multiple = true; packageName = target;
+            if (!matches.length) { matches = candidates.filter(candidate => names(candidate).some(name => `${String(candidate.node.attributes["package"] ?? "")}.${name}` === target)); multiple = false; packageName = undefined; }
         } else matches = candidates.filter(candidate => names(candidate).some(name => {
             const full = [candidate.node.attributes["package"], name].filter(Boolean).join(".");
             return full === specifier || specifier.startsWith(`${full}.`);
@@ -33,7 +38,7 @@ export function languageMatches(module: CodeModule, modules: readonly CodeModule
         const parts = pathOf(module).split("/"), sourceIndex = parts.lastIndexOf("Sources");
         const root = sourceIndex < 0 ? undefined : parts.slice(0, sourceIndex).join("/");
         if (root !== undefined) matches = modules.filter(candidate => candidate.language === "swift" && pathOf(candidate).startsWith(`${root ? root + "/" : ""}Sources/${target}/`));
-        multiple = true;
+        multiple = true; packageName = `${root ? root + "/" : ""}Sources/${target}`;
     } else if (module.language === "go") {
         let directory: string | undefined;
         const manifests = modules.filter(candidate => candidate.language === "gomod" && typeof candidate.node.attributes["goModule"] === "string");
@@ -42,7 +47,7 @@ export function languageMatches(module: CodeModule, modules: readonly CodeModule
         if (owning && typeof prefix === "string" && (specifier === prefix || specifier.startsWith(prefix + "/"))) directory = normalized(`${pathOf(owning).slice(0, -6)}${specifier.slice(prefix.length).replace(/^\//u, "")}`);
         else if (specifier.startsWith(".")) directory = normalized(`${pathOf(module).split("/").slice(0, -1).join("/")}/${specifier}`);
         if (directory !== undefined) matches = modules.filter(candidate => candidate.language === "go" && !pathOf(candidate).endsWith("_test.go") && pathOf(candidate).split("/").slice(0, -1).join("/") === directory);
-        multiple = true;
+        multiple = true; packageName = directory;
     } else if (module.language === "gdscript") {
         if (reference.form === "script-class") matches = modules.filter(candidate => candidate.language === "gdscript" && candidate.node.attributes["globalClass"] === specifier);
         else {
@@ -50,5 +55,5 @@ export function languageMatches(module: CodeModule, modules: readonly CodeModule
             matches = modules.filter(candidate => pathOf(candidate) === path);
         }
     } else return undefined;
-    return { paths: matches.map(pathOf), multiple };
+    return { paths: matches.map(pathOf), multiple, ...(packageName === undefined ? {} : { packageName }) };
 }

@@ -1,3 +1,4 @@
+import { descriptionAttributes } from "./code-descriptions.js";
 import type { NodeDraft, Source } from "../core/model.js";
 import type { JsonObject } from "../core/canonical.js";
 import { makeSource, validateSourceInput } from "./types.js";
@@ -10,7 +11,7 @@ import { languageImports } from "./language-imports.js";
 import { csharpImports } from "./csharp-imports.js";
 import { rustImports } from "./rust-imports.js";
 
-export type ModuleImport = { readonly specifier: string; readonly member?: string; readonly scope?: string; readonly form?: string; readonly source: Source; };
+export type ModuleImport = { readonly specifier: string; readonly member?: string; readonly scope?: string; readonly importScope?: "project" | "file"; readonly form?: string; readonly source: Source; };
 export type CodeModule = { readonly node: NodeDraft; readonly language: string; readonly imports: readonly ModuleImport[]; };
 const languages: Readonly<Record<string, string>> = {
     ts: "typescript", tsx: "typescript", mts: "typescript", cts: "typescript",
@@ -29,7 +30,19 @@ function javascriptImports(tokens: readonly CodeToken[], add: (specifier: string
             if (token.value === "{") depth++;
             else if (token.value === "}") depth--;
         }
-        if (depth !== 0 || token.kind !== "word" || (token.value !== "import" && token.value !== "export")) continue;
+        if (token.kind !== "word" || (token.value !== "import" && token.value !== "export")) continue;
+        let cursor = index + 1, before = index - 1;
+        while (tokens[cursor]?.kind === "newline") cursor++;
+        while (tokens[before]?.kind === "newline") before--;
+        if (token.value === "import" && tokens[cursor]?.value === "(" && tokens[before]?.value !== ".") {
+            cursor++;
+            while (tokens[cursor]?.kind === "newline") cursor++;
+            const literal = tokens[cursor++];
+            while (tokens[cursor]?.kind === "newline") cursor++;
+            if (literal?.kind === "string" && [")", ","].includes(tokens[cursor]?.value ?? "")) add(literal.value, token.line);
+            continue;
+        }
+        if (depth !== 0) continue;
         const previous = tokens[index - 1];
         if (previous && previous.kind !== "newline" && ![";", "}"].includes(previous.value)) continue;
         const next = tokens.slice(index + 1).find(item => item.kind !== "newline");
@@ -105,7 +118,8 @@ export function extractCode(input: SourceInput): CodeModule {
     else if (["go", "java", "kotlin", "swift", "gdscript", "gomod"].includes(language)) {
         const native = languageImports(input, language); imports = [...native.imports]; attributes = native.attributes;
     }
-    attributes = { ...attributes, definitions: codeDeclarations(input, language) };
+    const definitions = codeDeclarations(input, language);
+    attributes = { ...attributes, definitions, ...descriptionAttributes(input.text, language, definitions) };
     return {
         language, imports,
         node: { id: `module:${input.path}`, kind: "module", name: input.path, attributes: { ...attributes, language, extraction: ["typescript", "javascript", "python", "csharp", "rust", "go", "java", "kotlin", "swift", "gdscript"].includes(language) ? "static-imports" : "file-only", imports: imports.map(item => item.specifier) }, sources: [makeSource(input, "", 1, input.text.split(/\r\n|\r|\n/u).length)] },

@@ -32,7 +32,7 @@ export function interpretationContext(root: string, graph: Graph, offset = 0, li
     const notes = new Map(readInterpretations(root, graph).map(note => [note.targetId, note]));
     const reader = workingRepository(root);
     const targets = interpretationTargets(graph);
-    return { draft: readDraftStatus(root, graph) ?? null, total: targets.length, offset, items: targets.slice(offset, offset + limit).map(target => ({ ...target, interpretation: notes.get(target.id) ?? null, sources: target.sources.map(source => ({ ...source, excerpt: reader.readText(source.path)?.split('\n').slice(Math.max(0, source.line - 1), source.line + 39).join('\n') ?? '' })) })) };
+    return { summaryLanguage: 'ko', draft: readDraftStatus(root, graph) ?? null, total: targets.length, offset, items: targets.slice(offset, offset + limit).map(target => ({ ...target, interpretation: notes.get(target.id) ?? null, sources: target.sources.map(source => ({ ...source, excerpt: reader.readText(source.path)?.split('\n').slice(Math.max(0, source.line - 1), source.line + 39).join('\n') ?? '' })) })) };
 }
 export function writeInterpretations(root: string, graph: Graph, inputs: readonly unknown[]): readonly VisibleInterpretation[] {
     if (!inputs.length || inputs.length > 500) throw new InterpretationError('Expected 1 to 500 interpretation records');

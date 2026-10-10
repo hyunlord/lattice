@@ -1,3 +1,4 @@
+import { publicTypeUsage } from './public-type-usage.mjs';
 import { resolveMediaAssets } from './assets.mjs';
 import { parseMediaConfig } from '../dist/query/media-model.js';
 import type { Options, RepositoryReader, SourceLink } from './types.mjs';
@@ -16,24 +17,31 @@ export function buildRepository(options: Options, historical?: RepositoryReader,
     if (options.output !== undefined) throw new Error('build takes --root and --lens, not an output directory');
     const { root } = options;
     const { repository, lens, lensInput, coverage, selected, codeInputs, fingerprint, graft: graftObservation } = observed ?? observeRepository(options, historical);
-    const sourceLink: SourceLink = source => !repository.dirty && repository.remoteUrl && repository.commit ? { ...source, revision: repository.commit, url: `${repository.remoteUrl}/blob/${repository.commit}/${source.path.split('/').map(encodeURIComponent).join('/')}#L${source.line}` } : source;
+    const sourceUrls = new Map<string, string>();
+    const sourceLink: SourceLink = source => {
+        if (repository.dirty || !repository.remoteUrl || !repository.commit) return source;
+        let url = sourceUrls.get(source.path);
+        if (url === undefined) { url = `${repository.remoteUrl}/blob/${repository.commit}/${source.path.split('/').map(encodeURIComponent).join('/')}`; sourceUrls.set(source.path, url); }
+        return { ...source, revision: repository.commit, url: `${url}#L${source.line}` };
+    };
     const cache = extractionCache(root, options.cacheDir);
-    const { records, documents, modules, files, inputs: recordInputs, diagnostics } = collectInputs({ selected, lens, sourceLink, cache });
+    const { records, documents, modules: extractedModules, files, inputs: recordInputs, diagnostics } = collectInputs({ selected, lens, sourceLink, cache });
+    const modules = publicTypeUsage(extractedModules, selected.filter(input => input.format === 'code').map(input => input.input));
     const graft = buildGraft(graftObservation, selected, sourceLink);
     const inputs = [...new Map([...recordInputs, ...codeInputs.map(({ path, contentHash }) => ({ path, contentHash })), ...(graftObservation?.input ? [{ path: graftObservation.input.path, contentHash: graftObservation.input.contentHash }] : [])].map(input => [input.path, input])).values()].sort((a, b) => a.path < b.path ? -1 : a.path > b.path ? 1 : 0);
     const codeHashes = new Map(codeInputs.map(input => [input.path, input.contentHash]));
     const codeSourceLink: SourceLink = source => codeHashes.get(source.path) === source.contentHash ? sourceLink(source) : source;
     const coveredPaths = new Set(graft.coveredPaths);
     const structure = codeStructure(modules.filter(module => !module.node.sources.some(source => coveredPaths.has(source.path))));
-    const knownNodes = [...documents.flatMap(document => document.nodes), ...modules.map(module => module.node), ...structure.nodes, ...files, ...graft.nodes];
-    const moduleLinks = resolveModuleLinks(modules);
+    const moduleLinks = resolveModuleLinks(modules, records);
+    const knownNodes = [...documents.flatMap(document => document.nodes), ...modules.map(module => module.node), ...structure.nodes, ...files, ...graft.nodes, ...moduleLinks.nodes];
     const importedLinks = new Set(graft.edges.map(edge => canonicalJson([edge.source, edge.target, edge.kind])));
     const ownEdges = moduleLinks.edges.filter(edge => !importedLinks.has(canonicalJson([edge.source, edge.target, edge.kind])));
     let documentDiagnostics: readonly DocumentDiagnostic[] = [];
     const structuralEdges = (nodes: readonly NodeDraft[]) => {
         const linked = resolveDocumentLinks(documents.map(document => ({ ...document, nodes: [] })), nodes);
         documentDiagnostics = linked.diagnostics;
-        return [...linked.edges, ...ownEdges, ...structure.edges, ...graft.edges];
+        return [...linked.edges, ...ownEdges, ...moduleLinks.membershipEdges, ...structure.edges, ...graft.edges];
     };
     let interpreted;
     // Adapter records and parsed lenses are data-only; library callers retain one-pass queries by default.

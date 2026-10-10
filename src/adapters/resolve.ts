@@ -45,11 +45,10 @@ export function resolveRecords(records: readonly ExtractedRecord[], knownNodes: 
         if (known.has(node.id)) throw new DataInputError(node.sources[0]?.path ?? "<nodes>", node.sources[0]?.line ?? 1, `Duplicate known node ID: ${node.id}`);
         known.set(node.id, node);
     }
-    const ordered = [...records].sort((a, b) => compare(identity(a), identity(b)));
+    const ordered = records.map(record => ({ record, key: identity(record) })).sort((a, b) => compare(a.key, b.key));
     const aliases = new Map<string, ExtractedRecord[]>();
     const locations = new Set<string>();
-    for (const record of ordered) {
-        const key = identity(record);
+    for (const { record, key } of ordered) {
         if (locations.has(key)) {
             const source = location(record);
             throw new DataInputError(source.path, source.line, "Duplicate record source");
@@ -62,7 +61,7 @@ export function resolveRecords(records: readonly ExtractedRecord[], knownNodes: 
     const used = new Set([...known.keys(), ...[...aliases].filter(([, entries]) => entries.length === 1).map(([id]) => id)]);
     const ids = new Map<ExtractedRecord, string>();
     const diagnostics: ReferenceDiagnostic[] = [];
-    for (const record of ordered) {
+    for (const { record } of ordered) {
         let id = record.node.id;
         if ((aliases.get(id)?.length ?? 0) > 1 || known.has(id)) {
             const source = location(record);
@@ -77,7 +76,7 @@ export function resolveRecords(records: readonly ExtractedRecord[], knownNodes: 
     }
     const nodes: NodeDraft[] = [...knownNodes];
     const edges: Edge[] = [];
-    for (const record of ordered) {
+    for (const { record } of ordered) {
         const id = ids.get(record);
         if (id === undefined) throw new Error("Missing assigned record ID");
         nodes.push({ ...record.node, id });
@@ -100,6 +99,6 @@ export function resolveRecords(records: readonly ExtractedRecord[], knownNodes: 
     return {
         nodes: nodes.sort((a, b) => compare(a.id, b.id)),
         edges: edges.sort((a, b) => compare(a.id, b.id)),
-        diagnostics: diagnostics.sort((a, b) => compare(canonicalJson(a), canonicalJson(b))),
+        diagnostics: diagnostics.map(value => ({ value, key: canonicalJson(value) })).sort((a, b) => compare(a.key, b.key)).map(entry => entry.value),
     };
 }

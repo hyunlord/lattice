@@ -29,3 +29,5 @@ export function media(node: LoopNode): HTMLElement | undefined {
     box.append(image); return box;
 }
 export function orderedKinds(ui: LoopUI): string[] { const kinds = [...new Set(ui.model.nodes.map(node => node.kind))]; const order = ui.model.kindOrder ?? []; return kinds.sort((a, b) => { const ai = order.indexOf(a), bi = order.indexOf(b); return (ai < 0 ? order.length : ai) - (bi < 0 ? order.length : bi) || a.localeCompare(b); }); }
+
+export function kindLabel(kind: string, ui: LoopUI): string { const configured = ui.context.kindLabel?.(kind); return configured && configured !== kind ? configured : ui.model.nodes.find(node => node.kind === kind)?.kindLabel ?? kind; }

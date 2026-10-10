@@ -1,8 +1,10 @@
 import type { LoopStage, LoopUI } from './loop-map-types.js';
 import { chip, element, interpretation, svg } from './loop-map-shared.js';
+import { renderDependencyOverview } from './dependency-overview.js';
 import { readLoopRoute, writeLoopRoute } from './loop-map-route.js';
 
 export function renderLoopOverview(host: HTMLElement, ui: LoopUI): () => void {
+    if (ui.model.structural) return renderDependencyOverview(host, ui);
     const model = ui.model; if (model.lead) host.append(element('p', model.lead, 'lm-lead'));
     const ring = element('div', '', `lm-ring${model.stages.length === 6 ? ' lm-ring-six' : ''}`); const arrows = svg('svg'); arrows.classList.add('lm-arrows'); arrows.setAttribute('aria-hidden', 'true'); ring.append(arrows);
     const buttons = new Map<string, HTMLButtonElement>(); const positions = [[2, 1], [3, 1], [4, 2], [3, 3], [2, 3], [1, 2]] as const;
@@ -11,7 +13,7 @@ export function renderLoopOverview(host: HTMLElement, ui: LoopUI): () => void {
         if (model.stages.length === 6) { button.style.setProperty('--station-column', String(positions[index]?.[0] ?? 1)); button.style.setProperty('--station-row', String(positions[index]?.[1] ?? 1)); }
         const members = stage.nodeIds.flatMap(id => { const node = ui.byId.get(id); return node ? [node] : []; }); const present = members.filter(node => node.status === 'present').length; const known = members.some(node => node.status !== 'unknown');
         const meta = element('span', '', 'lm-station-meta'); meta.append(element('span', `${stage.unit} ${members.length}`, 'lm-mono'));
-        if (known) { const bar = element('span', '', 'lm-bar'); bar.title = model.statusLabels.present; const fill = element('i'); fill.style.width = `${present / Math.max(1, members.length) * 100}%`; bar.append(fill); const count = element('span', `● ${present}`, 'lm-mono lm-live-count'); count.title = model.statusLabels.present; count.setAttribute('aria-label', `${model.statusLabels.present} ${present}`); meta.append(bar, count); } else meta.append(element('span', model.statusLabels.unknown, 'lm-muted'));
+        if (known) { const bar = element('span', '', 'lm-bar'); bar.title = model.statusLabels.present; const fill = element('i'); fill.style.width = `${present / Math.max(1, members.length) * 100}%`; bar.append(fill); const count = element('span', `● ${present}`, 'lm-mono lm-live-count'); count.title = model.statusLabels.present; count.setAttribute('aria-label', `${model.statusLabels.present} ${present}`); meta.append(bar, count); } else if (model.showStatus) meta.append(element('span', model.statusLabels.unknown, 'lm-muted'));
         button.append(element('span', String(index + 1).padStart(2, '0'), 'lm-number'), element('h3', stage.title), element('span', stage.summary, 'lm-station-line'), meta); ring.append(button); buttons.set(stage.id, button);
     }
     if (model.center) { const center = element('div', '', 'lm-center'); center.append(element('h3', model.center.title), element('p', model.center.description)); ring.append(center); }

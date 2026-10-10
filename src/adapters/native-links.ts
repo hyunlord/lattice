@@ -1,6 +1,6 @@
 import type { CodeModule, ModuleImport } from "./code.js";
 
-export type NativeMatches = { readonly paths: readonly string[]; readonly multiple: boolean; };
+export type NativeMatches = { readonly paths: readonly string[]; readonly multiple: boolean; readonly packageName?: string; };
 function strings(value: unknown): readonly string[] { return Array.isArray(value) ? value.filter((item): item is string => typeof item === "string") : []; }
 export function csharpMatches(modules: readonly CodeModule[], reference: ModuleImport): NativeMatches {
     const target = reference.specifier.replace(/^global::/u, "");
@@ -15,6 +15,7 @@ export function csharpMatches(modules: readonly CodeModule[], reference: ModuleI
         if (matches.length) return {
             paths: matches.flatMap(module => module.node.sources[0] ? [module.node.sources[0].path] : []),
             multiple: matches.every(module => strings(module.node.attributes["namespaces"]).includes(name)),
+            ...(matches.every(module => strings(module.node.attributes["namespaces"]).includes(name)) ? { packageName: name } : {}),
         };
     }
     return { paths: [], multiple: false };

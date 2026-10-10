@@ -1,0 +1,11 @@
+# TypeScript configuration import evidence
+
+Lattice resolves explicit `compilerOptions.paths` aliases from selected TypeScript configurations without loading TypeScript or another compiler at runtime. Configuration files and targets must already be inside the selected input scope. An alias never causes additional files to be read.
+
+`tsconfig.json`, named `tsconfig.*.json` files, and their selected relative `extends` bases accept JSON comments and trailing commas. Parsing preserves the original source line positions and content hashes. Other JSON data remains strict JSON. Configuration records participate in ordinary extraction caching and the graph input fingerprint.
+
+The nearest directory containing a selected configuration owns a module. Its `tsconfig.json` takes precedence over named configurations; otherwise a uniquely applicable named configuration is required. Explicit `files`, `include`, and `exclude` control applicability. Relative inherited settings keep the directory of the configuration that declared them. Selected local `extends` chains are supported; missing, cyclic, package-based, or multi-base chains remain unresolved for affected aliases.
+
+Alias patterns may be exact or contain one `*`. Exact patterns win, then the longest matching prefix and suffix. Targets resolve relative to an explicit `baseUrl`, or the configuration that declared `paths`. Only selected code modules are candidates. Existing JavaScript-to-TypeScript extension aliases are supported. Multiple viable targets produce an ambiguity diagnostic instead of choosing a branch. Missing targets remain explicit local-resolution diagnostics. Configuration evidence includes the import declaration and the relevant `paths`, `baseUrl`, scope, and `extends` fields.
+
+This is static declaration evidence, not a complete compiler project model. It does not execute bundler aliases, load package-based configuration extensions, evaluate TypeScript project references, infer generated outputs, or fetch packages. C# project references and implicit parent-namespace type bindings are also outside this import model; C# `global using` declarations retain their project-wide scope and are never expanded into guessed file usage.

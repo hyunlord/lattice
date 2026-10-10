@@ -14,7 +14,7 @@ export async function runInterpretationCommand(root: string, graph: Graph, comma
     const pending = interpretationTargets(graph).filter(target => current.get(target.id)?.status !== 'fresh');
     if (!pending.length) return { skipped: 'All summaries current', updated: 0 };
     const reader = workingRepository(root);
-    const request = { schemaVersion: 1, targets: pending.map(target => ({ ...target, sources: target.sources.map(source => ({ ...source, text: reader.readText(source.path) ?? '' })) })) };
+    const request = { schemaVersion: 1, summaryLanguage: 'ko', targets: pending.map(target => ({ ...target, sources: target.sources.map(source => ({ ...source, text: reader.readText(source.path) ?? '' })) })) };
     const output = await new Promise<string>((resolve, reject) => {
         const child = spawn(executable, args, { cwd: root, stdio: ['pipe', 'pipe', 'pipe'], shell: false });
         let stdout = '', size = 0, failed = false;

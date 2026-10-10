@@ -1,3 +1,4 @@
+import { markdownDescription } from "./markdown-description.js";
 import { label, plain, maskCode, bracketMatches, destination, inlineEnd } from "./markdown-inline.js";
 import type { Edge, NodeDraft, Source } from "../core/model.js";
 import { DataInputError, makeSource, validateSourceInput } from "./types.js";
@@ -17,6 +18,7 @@ export function extractMarkdown(input: SourceInput): MarkdownDocument {
     let fenceCharacter = "";
     let fenceLength = 0;
     let commentOpen = false;
+    let paragraphOpen = false;
     for (const rawLine of lines) {
         let line = rawLine;
         if (fenceLength === 0) {
@@ -53,7 +55,10 @@ export function extractMarkdown(input: SourceInput): MarkdownDocument {
             fenceLength = marker.length;
             visible.push("");
         } else {
-            visible.push(/^(?: {4}|\t)/u.test(line) ? "" : line);
+            const indented = /^(?: {4}|\t)/u.test(line);
+            const visibleParagraph = paragraphOpen || (!indented && /<p(?:\s[^>]*)?>/iu.test(line));
+            visible.push(indented && !paragraphOpen ? "" : line);
+            if (visibleParagraph) paragraphOpen = !/<\/p\s*>/iu.test(line);
         }
     }
     const definitions = new Map<string, string>();
@@ -97,7 +102,8 @@ export function extractMarkdown(input: SourceInput): MarkdownDocument {
         const body = visible.slice(heading.endLine, next === undefined ? visible.length : next.line - 1).filter((_, offset) => !definitionLines.has(heading.endLine + offset)).join("\n").trim();
         if (body !== "") metadata[key] = body;
     }
-    const nodes: NodeDraft[] = [{ id: documentId, kind: "document", name: title, attributes: metadata, sources: [makeSource(input, "", 1, lines.length)] }];
+    const documentDescription = markdownDescription(visible, 0, headings.find(heading => heading.level > 1)?.line ?? visible.length, /(?:^|\/)readme(?:\.[^/]*)?$/iu.test(input.path) ? input.path.split("/").at(-2) : undefined);
+    const nodes: NodeDraft[] = [{ id: documentId, kind: "document", name: title, attributes: { ...metadata, ...(documentDescription ? { sourceDescription: documentDescription } : {}) }, sources: [makeSource(input, "", 1, lines.length)] }];
     const edges: Edge[] = [];
     const usedAnchors = new Set<string>();
     const suffixes = new Map<string, number>();
@@ -116,7 +122,8 @@ export function extractMarkdown(input: SourceInput): MarkdownDocument {
         const source = makeSource(input, pointer, heading.line, heading.endLine);
         while (stack.length > 0 && (stack[stack.length - 1]?.level ?? 0) >= heading.level) stack.pop();
         const parentId = stack[stack.length - 1]?.id ?? documentId;
-        nodes.push({ id, kind: "heading", name: heading.text, attributes: { level: heading.level, anchor, text: heading.text }, sources: [source] });
+        const description = markdownDescription(visible, heading.endLine, (headings[index + 1]?.line ?? (visible.length + 1)) - 1);
+        nodes.push({ id, kind: "heading", name: heading.text, attributes: { level: heading.level, anchor, text: heading.text, ...(description ? { sourceDescription: description } : {}) }, sources: [source] });
         edges.push({ id: `contains:${JSON.stringify([parentId, id])}`, kind: "contains", source: parentId, target: id, directed: true, field: pointer, sources: [source] });
         stack.push({ level: heading.level, id });
     }

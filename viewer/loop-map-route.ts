@@ -1,10 +1,10 @@
-export type LoopRoute = { readonly view: 'loop' | 'focus' | 'catalog'; readonly item?: string; readonly stage?: string; };
+export type LoopRoute = { readonly view: 'loop' | 'focus' | 'catalog'; readonly item?: string; readonly stage?: string; readonly scope?: 'production' | 'all'; };
 
 export function readLoopRoute(): LoopRoute {
     const params = new URLSearchParams(location.hash.split('?')[1]);
     const view = params.get('view');
-    const item = params.get('item'); const stage = params.get('stage');
-    return { view: view === 'focus' || view === 'catalog' ? view : 'loop', ...(item ? { item } : {}), ...(stage ? { stage } : {}) };
+    const scope = params.get('scope'); const item = params.get('item'); const stage = params.get('stage');
+    return { view: view === 'focus' || view === 'catalog' ? view : 'loop', ...(item ? { item } : {}), ...(stage ? { stage } : {}), ...(scope === 'production' || scope === 'all' ? { scope } : {}) };
 }
 
 export function writeLoopRoute(values: Partial<LoopRoute>): void {
