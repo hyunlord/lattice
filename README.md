@@ -2,7 +2,7 @@
 
 A repository-neutral system map for people and agents. Deterministic extraction creates one graph for a static browser viewer and MCP tools; declarative lenses add repository-specific meaning.
 
-**Status: L1–L7 technical delivery and the bs-mobile prototype corrections are available; L8 unfamiliar-repository readability remains under review.** The browser opens a map with focused-item and catalog views, backed by eleven MCP tools. Reusable CI publishes consumer maps and PR differences; L5 uses the approved warm-response and full-build budgets. L8 now requires physical folder grouping, truthful role descriptions, connected dependency lines and separate zero-config / external-agent comprehension checks before maintenance. See the [acceptance ledger](docs/review/acceptance.md) and [L8 evidence](docs/review/l8-readable-repositories.md).
+**Status: L8 readability accepted by the user; final reported compatibility fixes and consumer publication are in progress.** No-config comprehension is3/3/3 and the actual external-agent summary flow is4/4/4. The browser provides overview, focused-item and catalog views; reusable CI publishes consumer maps and PR differences. After the bounded CommonJS, metadata, Python-description and wording corrections are delivered, development returns to maintenance: automatic maps and PR comments, with further fixes only for user-reported problems. See the [acceptance ledger](docs/review/acceptance.md) and [L8 evidence](docs/review/l8-readable-repositories.md).
 
 - [Original v0.1 brief](docs/design/brief-v0.1.md)
 - [Architecture and lens contract](docs/design/lattice-v0.md)
@@ -56,7 +56,7 @@ Run `lattice mcp --root /path/to/repository` for stdio MCP, or use `init` to con
 
 Use the reusable workflow at `hyunlord/lattice/.github/workflows/lattice.yml@<LATTICE_COMMIT_SHA>` and set its `tool-ref` input to the same complete commit SHA. It builds the actual PR head with read-only permissions, uploads map/report artifacts, and updates a bot-owned system-diff comment for same-repository PRs. Fork PRs retain artifacts without privileged comments. A separate job publishes successful default-branch builds only when Pages is already configured; `pages: false` keeps artifact-only delivery.
 
-The root composite action `hyunlord/lattice@<LATTICE_COMMIT_SHA>` is also available for custom build jobs. Optional `verification-script` runs consumer-specific checks only in the read-only source-build job. See [workflow examples, permissions, inputs and report schema](docs/design/action.md). L4 deployment acceptance remains pending until recorded in the ledger.
+The root composite action `hyunlord/lattice@<LATTICE_COMMIT_SHA>` is also available for custom build jobs. Optional `verification-script` runs consumer-specific checks only in the read-only source-build job. See [workflow examples, permissions, inputs and report schema](docs/design/action.md). L4 deployment acceptance is recorded in the ledger.
 
 ## Explore relationships
 

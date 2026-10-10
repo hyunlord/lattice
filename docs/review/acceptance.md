@@ -117,3 +117,9 @@ Final L5 refresh: [PR174 publication and installed-package evidence](l5-performa
 
 
 L5 closure (2026-10-10): all L5 rows and REPORT are complete under the [explicit user correction and anomaly disposition](l5-performance.md#user-acceptance-correction--2026-10-10). This is acceptance adjudication, not a claim that the final anomalous p95 measured below50ms. Future performance work follows the user's warm-response/full-build triggers; L6 is separate.
+
+## L8 user acceptance and final bounded corrections
+
+On2026-10-11 the user directly adjudicated `d14c5f8` AutoMapper AI comprehension as4/5 after an independent first-screen review. This closes the comprehension gate at baseline3/3/3 and actual external-agent flow4/4/4; the previous3/5 result remains historical evidence, not rewritten. No unsupported internal hierarchy is added.
+
+The user authorized only the reported CommonJS, package-introduction, Python-definition-description and reader-wording corrections, with regression tests and same-width fastify8636808/httpxb5addb6 comparisons. No new sample grading is required. PR76, consumer Pages delivery and maintenance transition remain pending until their actual evidence is recorded. Subsequent work is limited to automatic map/PR-comment upkeep and user-reported issues.

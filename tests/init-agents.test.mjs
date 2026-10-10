@@ -30,6 +30,7 @@ test('init wires agents alongside Graft and remains byte stable without home wri
         assert.match(instructions, /scope="overview", compact=true, limit=9/);
         assert.match(instructions, /sourceSetToken/);
         assert.match(instructions, /visibleFiles/);
+        assert.match(instructions, /Name the actual member folders/);
         assert.match(instructions, /supported inside that file by imports, calls or types/);
         assert.match(instructions, /overviewScope="all"/);
     }

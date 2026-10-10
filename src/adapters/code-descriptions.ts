@@ -157,7 +157,9 @@ export function descriptionAttributes(text: string, language: string, definition
         if (!seen.has(name)) { seen.add(name); names.push({ name, uses: Number(value["uses"] ?? 0), line: value["line"] ?? 1 }); }
     }
     names.sort((a, b) => Number(b.uses) - Number(a.uses) || String(a.name).localeCompare(String(b.name)));
-    return { ...(description ? { sourceDescription: description } : {}), publicNames: names.slice(0, 3), entryPoints: entryPoints(text, language, definitions), verificationNames: evidence.verificationNames };
+    const exportList = language === "python" ? /^__all__\s*=\s*\[([\s\S]*?)\]/mu.exec(text)?.[1] : undefined;
+    const declaredExports = exportList && /^(?:\s|,|'[^']*'|"[^"]*")*$/u.test(exportList) ? [...exportList.matchAll(/['"]([A-Za-z_]\w*)['"]/gu)].map(match => match[1] ?? "") : undefined;
+    return { ...(description ? { sourceDescription: description } : {}), ...(declaredExports ? { declaredExports } : {}), publicNames: names.slice(0, 3), entryPoints: entryPoints(text, language, definitions), verificationNames: evidence.verificationNames };
 }
 
 
@@ -169,6 +171,28 @@ export function publicDeclarationDocumentation(lines: readonly string[], languag
         const modifiers = "(?:(?:public|export|default|internal|protected|private|abstract|final|sealed|static|partial|open|data|value|inline|pub)\\s+)*";
         const typePrefix = language === "go" ? "(?:type\\s+)?" : `${modifiers}(?:class|struct|interface|enum|trait|protocol|record|union|typealias|type|object)(?:\\s+(?:class|struct))?\\s+`;
         const declarationLine = lines[Number(definition["line"] ?? 1) - 1] ?? "";
+        if (language === "python") {
+            if (!/^(?:class |(?:async )?def )/u.test(declarationLine)) return definition;
+            let cursor = Number(definition["line"] ?? 1) - 1;
+            while (cursor < lines.length && cursor < Number(definition["line"] ?? 1) + 128 && !/:\s*(?:#.*)?$/u.test(lines[cursor] ?? "")) {
+                if (/\)\s*(?:->[^:]+)?\s*:\s*\S/u.test(lines[cursor] ?? "") || (cursor >= Number(definition["line"] ?? 1) && /^\S/u.test(lines[cursor] ?? ""))) return definition;
+                cursor++;
+            }
+            cursor++;
+            while (cursor < lines.length && /^\s*(?:#.*)?$/u.test(lines[cursor] ?? "")) cursor++;
+            const opening = /^\s+(?:[ru])?("""|''')(.*)$/iu.exec(lines[cursor] ?? "");
+            if (!opening) return definition;
+            const start = cursor, marker = opening[1] ?? "", parts: string[] = [];
+            let part = opening[2] ?? "", closed = false;
+            while (cursor < lines.length && cursor - start < 256) {
+                const end = part.indexOf(marker);
+                parts.push(end < 0 ? part : part.slice(0, end));
+                if (end >= 0) { closed = true; break; }
+                part = lines[++cursor] ?? "";
+            }
+            const body = parts.join("\n"), summary = sentence(body);
+            return closed && descriptiveProse(body) && summary ? { ...definition, declarationDescription: { text: summary, kind: definition["kind"] === "type" ? "type-doc" : "function-doc", line: start + 1, endLine: cursor + 1 } } : definition;
+        }
         if (definition["kind"] === "function" && !new RegExp(`^[^{};=]*\\b${escapedName}(?:\\s*<[^>]*>)?\\s*\\(`, "u").test(declarationLine)) return definition;
         if (definition["kind"] === "type" && !new RegExp(`^\\s*${typePrefix}${escapedName}\\b`, "u").test(declarationLine)) return definition;
 

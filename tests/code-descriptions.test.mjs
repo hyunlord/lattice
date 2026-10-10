@@ -314,3 +314,30 @@ test('public function docs retain the bounded adjacent-comment scan', () => {
     const text = 'package demo\n' + Array.from({ length: 300 }, () => '// Older discussion.').join('\n') + '\nfunc Run() {}';
     assert.equal(attributes('api.go', text).definitions.find(d => d.name === 'Run').declarationDescription, undefined);
 });
+
+test('Python public declaration docstrings retain their own scope and first sentence', () => {
+    const value = attributes('pkg/_client.py', 'import typing\n__all__ = ["Client"]\nclass BaseClient:\n    """Shared implementation details."""\nclass _Private:\n    """Private implementation."""\nclass Client(BaseClient):\n    """An HTTP client with connection pooling. More detail."""\n    def send(self):\n        """Send one request."""\ndef helper():\n    """Transform input values. More detail."""\n');
+    assert.equal(value.sourceDescription, undefined);
+    const client = value.definitions.find(item => item.name === 'Client');
+    assert.deepEqual(client.declarationDescription, { text: 'An HTTP client with connection pooling.', kind: 'type-doc', line: 8, endLine: 8 });
+    assert.equal(value.definitions.find(item => item.name === 'send').declarationDescription, undefined);
+    assert.equal(value.definitions.find(item => item.name === 'helper').declarationDescription.text, 'Transform input values.');
+    assert.deepEqual(value.declaredExports, ['Client']);
+});
+
+test('Python file fallback labels a representative public class without promoting it to a folder role', async () => {
+    const { structuralFilePreviews } = await import('../dist/query/structural-file-previews.js');
+    const { structuralSummary, missingStructuralRole } = await import('../dist/query/structural-map-model.js');
+    const text = 'import typing\nclass BaseClient:\n    """Shared request implementation."""\nclass Client(BaseClient):\n    """An HTTP client with pooling. More detail."""\n';
+    const node = extractCode({ path: 'pkg/_client.py', text, contentHash: createHash('sha256').update(text).digest('hex') }).node;
+    const [preview] = structuralFilePreviews([node]);
+    assert.equal(preview.summary, '대표 타입 Client — An HTTP client with pooling.');
+    assert.deepEqual(preview.summaryEvidence, [{ path: 'pkg/_client.py', line: 5 }]);
+    assert.equal(structuralSummary([node], [], 'pkg'), missingStructuralRole);
+});
+
+test('Python inline suites never borrow the next top-level declaration docstring', () => {
+    const value = attributes('api.py', 'def helper(): pass\ndef public():\n    """The public operation."""\n    pass\n');
+    assert.equal(value.definitions.find(item => item.name === 'helper').declarationDescription, undefined);
+    assert.equal(value.definitions.find(item => item.name === 'public').declarationDescription.text, 'The public operation.');
+});

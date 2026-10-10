@@ -1,3 +1,4 @@
+import { commonjsImports } from "./commonjs-imports.js";
 import { goTypeEvidence } from "./go-type-references.js";
 import { descriptionAttributes } from "./code-descriptions.js";
 import type { NodeDraft, Source } from "../core/model.js";
@@ -111,7 +112,11 @@ export function extractCode(input: SourceInput): CodeModule {
         imports.push({ specifier, ...(member === undefined ? {} : { member }), source: makeSource(input, `/imports/${imports.length}`, line) });
     };
     if (language === "python") pythonImports(codeTokens(input.text.replace(/\r\n|\r/gu, "\n"), true), add);
-    else if (language === "typescript" || language === "javascript") javascriptImports(codeTokens(input.text.replace(/\r\n|\r/gu, "\n"), false), add);
+    else if (language === "typescript" || language === "javascript") {
+        const tokens = codeTokens(input.text.replace(/\r\n|\r/gu, "\n"), false);
+        javascriptImports(tokens, add);
+        commonjsImports(tokens, (specifier, line, form) => imports.push({ specifier, form, source: makeSource(input, `/imports/${imports.length}`, line) }));
+    }
     else if (language === "csharp" || language === "rust") {
         const native = language === "csharp" ? csharpImports(input) : rustImports(input);
         imports = [...native.imports]; attributes = native.attributes;

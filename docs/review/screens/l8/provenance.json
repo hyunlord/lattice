@@ -49,7 +49,7 @@
       "sha256": "42bb7a5edb2b41aaeffa41833b6735b49e5053e3290dde45445ab16986b6d8c3"
     }
   ],
-  "gateStatus": "Partial: baseline 3/3/3; actual external-agent summaries 4/4/3. AutoMapper below required 4. Final user judgment pending.",
+  "gateStatus": "User accepted L8 on2026-10-11: baseline3/3/3 and external-agent flow4/4/4. Earlier raw reviewer scores preserved below. Final four reported fixes and consumer publication pending.",
   "scores": {
     "baseline": {
       "cobra": 3,
@@ -61,5 +61,20 @@
       "zod": 4,
       "automapper": 3
     }
+  },
+  "userAcceptance": {
+    "date": "2026-10-11",
+    "toolCommit": "d14c5f8",
+    "baseline": [
+      3,
+      3,
+      3
+    ],
+    "withAI": [
+      4,
+      4,
+      4
+    ],
+    "reason": "User reports independent first-screen AutoMapper purpose, parts and flow recovered without tracing every internal relation; adjudicated4/5."
   }
 }

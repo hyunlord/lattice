@@ -185,9 +185,9 @@ export function dependencyLabelRowHeight(flows: readonly LoopFlow[], lines: Read
     return flows.some(flow => (lines.get(JSON.stringify([flow.source, flow.target]))?.length ?? 0) > 2) ? 64 : 48;
 }
 
-export function dependencyPairSources(view: DependencyView, pair: Pick<LoopFlow, 'source' | 'target'>): readonly string[] {
+export function dependencyPairSources(view: DependencyView, pair: Pick<LoopFlow, 'source' | 'target'>, endpoint: 'source' | 'target' = 'source'): readonly string[] {
     const groups = dependencyLevels(view); const owner = new Map(groups.flatMap(group => group.stages.map(stage => [stage.id, group.stages[0]?.id ?? stage.id] as const)));
-    return [...new Set(view.flows.filter(flow => owner.get(flow.source) === owner.get(pair.source) && owner.get(flow.target) === owner.get(pair.target)).map(flow => view.stages.find(stage => stage.id === flow.source)?.title ?? flow.source))].sort();
+    return [...new Set(view.flows.filter(flow => owner.get(flow.source) === owner.get(pair.source) && owner.get(flow.target) === owner.get(pair.target)).map(flow => view.stages.find(stage => stage.id === flow[endpoint])?.title ?? flow[endpoint]))].sort();
 }
 
 export function dependencyCardRole(stage: LoopStage): { readonly text: string; readonly label: string; } {

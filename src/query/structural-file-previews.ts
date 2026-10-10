@@ -32,9 +32,14 @@ export function structuralFilePreviews(nodes: readonly Node[], edges: readonly E
         const named = records(node.attributes['publicNames']);
         const definitions = records(node.attributes['definitions']).filter(definition => definition['public'] === true && record(definition['declarationDescription']));
         const rank = (definition: Record<string, unknown>): number => { const index = named.findIndex(name => name['name'] === definition['name']); return index < 0 ? named.length : index; };
-        definitions.sort((a, b) => rank(a) - rank(b));
+        const python = node.attributes['language'] === 'python';
+        const exports = Array.isArray(node.attributes['declaredExports']) ? node.attributes['declaredExports'] : [];
+        const stem = (source?.path.split('/').at(-1) ?? '').replace(/\.pyi?$/u, '').replace(/^_+|_/gu, '').toLowerCase();
+        const alignment = (definition: Record<string, unknown>): number => python ? Number(exports.includes(definition['name'])) * 4 + Number(String(definition['name']).toLowerCase() === stem) * 2 + Number(definition['kind'] === 'type') : 0;
+        definitions.sort((a, b) => alignment(b) - alignment(a) || rank(a) - rank(b));
         const selected = definitions[0], doc = record(selected?.['declarationDescription']), definitionText = text(doc?.['text']);
         const definition = selected && typeof selected['name'] === 'string' && definitionText ? { name: selected['name'], summary: definitionText, line: typeof doc?.['line'] === 'number' ? doc['line'] : typeof selected['line'] === 'number' ? selected['line'] : 1 } : undefined;
-        return { references: references(node.id), id: node.id, name: (source?.path ?? node.name).split('/').at(-1) ?? node.name, summary: summary || '파일 설명 없음 — 요약 실행 필요', summaryEvidence: summary && source ? [{ path: source.path, line: typeof description?.['line'] === 'number' ? description['line'] : source.line }] : [], ...(definition ? { definition } : {}) };
+        const representative = python && !summary && definition ? `대표 ${selected?.['kind'] === 'type' ? '타입' : '함수'} ${definition.name} — ${definition.summary}` : '';
+        return { references: references(node.id), id: node.id, name: (source?.path ?? node.name).split('/').at(-1) ?? node.name, summary: summary || representative || '파일 설명 없음 — 요약 실행 필요', summaryEvidence: (summary || representative) && source ? [{ path: source.path, line: representative ? definition?.line ?? source.line : typeof description?.['line'] === 'number' ? description['line'] : source.line }] : [], ...(definition ? { definition } : {}) };
     });
 }

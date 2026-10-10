@@ -293,6 +293,9 @@ test('collapsed-arrow attribution names actual members rather than the represent
     const { dependencyPairSources } = await import('../viewer/dependency-layout.js');
     const view = { stages: ['root', 'configuration', 'license'].map(id => stage(id)), flows: [{ source: 'root', target: 'configuration' }, { source: 'configuration', target: 'root' }, { source: 'configuration', target: 'license' }] };
     assert.deepEqual(dependencyPairSources(view, { source: 'root', target: 'license' }), ['configuration']);
+    assert.deepEqual(dependencyPairSources(view, { source: 'root', target: 'license' }, 'target'), ['license']);
+    const reverse = { ...view, flows: [...view.flows.filter(flow => flow.target !== 'license'), { source: 'license', target: 'root' }] };
+    assert.deepEqual(dependencyPairSources(reverse, { source: 'license', target: 'configuration' }, 'target'), ['root']);
 });
 
 test('coverage separates rendered external pairs from internal directed connections', async () => {

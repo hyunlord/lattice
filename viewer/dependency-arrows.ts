@@ -73,7 +73,7 @@ export function drawDependencyArrows(scene: ArrowScene): readonly DependencyPair
         const text = svg('text'); text.classList.add('lm-flow-label', 'lm-dependency-label'); text.dataset['route'] = routeId; text.dataset['source'] = flow.source; text.dataset['target'] = flow.target; text.dataset['count'] = String(flow.count ?? 0);
         text.setAttribute('x', String(segment.center.x)); text.setAttribute('y', String(segment.center.y)); text.setAttribute('text-anchor', 'middle'); text.setAttribute('dominant-baseline', 'central'); const actualSources = dependencyPairSources(view, flow);
         const attribution = actualSources.join('·');
-        text.textContent = flow.reverseCount ? `${attribution} → ${flow.count ?? 0} · ← ${flow.reverseCount}` : `${attribution} · ${flow.count ?? 0}`;
+        text.textContent = flow.reverseCount ? `${attribution} → ${flow.count ?? 0}개 파일 · ← ${flow.reverseCount}개 파일` : `${attribution}의 파일 ${flow.count ?? 0}개`;
         graph.append(text); text.dataset['sourceMembers'] = JSON.stringify(actualSources);
         const candidates = points.slice(1).flatMap((point, index) => {
             const before = points[index]; if (!before) return [];
@@ -94,10 +94,14 @@ export function drawDependencyArrows(scene: ArrowScene): readonly DependencyPair
             return undefined;
         };
         let halo = position();
-        if (!halo) { text.textContent = flow.reverseCount ? `→ ${flow.count ?? 0} · ← ${flow.reverseCount}` : String(flow.count ?? 0); halo = position(); }
+        if (!halo) { text.textContent = flow.reverseCount ? `→ ${flow.count ?? 0}개 파일 · ← ${flow.reverseCount}개 파일` : `${flow.count ?? 0}개 파일`; halo = position(); }
         if (!halo) { graph.dataset['unplacedLabels'] = String(Number(graph.dataset['unplacedLabels'] ?? 0) + 1); text.remove(); path.remove(); continue; }
         labelHalos.push(halo); labeledFlows.push(flow);
-        const titleText = `${actualSources.join(' · ') || flow.source} → ${[...(boxes.get(flow.target)?.querySelectorAll('h3') ?? [])].map(heading => heading.textContent).join(' · ') || flow.target}: ${flow.count ?? 0}개 파일${flow.reverseCount ? `; 반대 방향 ${flow.reverseCount}개 파일` : ''}`;
+        const actualTargets = dependencyPairSources(view, flow, 'target');
+        const targetNames = actualTargets.length ? actualTargets : view.stages.filter(stage => stage.id === flow.target).map(stage => stage.title);
+        const from = actualSources.join(' · ') || flow.source; const to = targetNames.join(' · ') || flow.target;
+        const reverse = { source: flow.target, target: flow.source }; const reverseFrom = dependencyPairSources(view, reverse).join(' · ') || to; const reverseTo = dependencyPairSources(view, reverse, 'target').join(' · ') || from;
+        const titleText = `${from} → ${to} (${from}의 파일 ${flow.count ?? 0}개가 ${to}를 씀)${flow.reverseCount ? `; ${reverseFrom} → ${reverseTo} (${reverseFrom}의 파일 ${flow.reverseCount}개가 ${reverseTo}를 씀)` : ''}`;
         const title = svg('title'); title.textContent = titleText; path.append(title); const labelTitle = svg('title'); labelTitle.textContent = titleText; text.append(labelTitle); graph.append(text);
     }
     return labeledFlows;

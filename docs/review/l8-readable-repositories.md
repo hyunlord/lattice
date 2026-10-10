@@ -2,9 +2,9 @@
 
 ![Original three repositories before and after, each panel 1280 by 800](screens/l8/three-repositories-before-after.png)
 
-Status: **partial** at `d14c5f8`. No-config comprehension is **3/3/3** and the actual external-agent summary flow is **4/4/3** for Cobra/Zod/AutoMapper. The required AI score of 4 for every repository remains unmet; PR 76 stays draft and the consumer pin is unchanged. Maintenance remains deferred.
+Status: **L8 comprehension accepted by the user on2026-10-11** at `d14c5f8`: no-config **3/3/3**, actual external-agent summaries **4/4/4**. A separate first-screen reviewer correctly recovered AutoMapper's purpose, parts and flow without tracing all16 relationships; the user adjudicated AutoMapper4/5. Earlier3/5 answers below remain unchanged. Only the four newly reported compatibility/wording corrections and consumer publication remain before maintenance. No new sample grading will be run.
 
-The current collective region exposes every member role and observed direction without inventing an internal execution hierarchy. The AutoMapper reader recovered the roles and all16 directions, but judged the text tracing too slow for30 seconds. Independent code and contract reviews found no factual hierarchy to add from these import relationships. Failed answers remain intact; final user judgment is pending.
+The current collective region exposes every member role and observed direction without inventing an internal execution hierarchy. The AutoMapper reader recovered the roles and all16 directions, but judged the text tracing too slow for30 seconds. Independent code and contract reviews found no factual hierarchy to add from these import relationships. Earlier failed answers remain intact; the superseding user judgment is recorded above.
 
 All390 tests, Node20/22/24 and the other two CI jobs pass. Independent checks cover18 structural screens, all visible and expanded text/relations, and16 accepted bs-mobile/C&K screens plus disclosure interactions. The same23 externally authored notes retain310 source anchors. Build code is identical to measured `cc493ae`: fzf0.595s and bs-mobile9.500/9.552/8.729s; no new timing claim is made.
 
@@ -12,7 +12,7 @@ All390 tests, Node20/22/24 and the other two CI jobs pass. Independent checks co
 | --- | --- | --- |
 | Cobra | [3/5](screens/l8/cobra-baseline.png) | [4/5](screens/l8/cobra-with-ai.png) |
 | Zod | [3/5](screens/l8/zod-baseline.png) | [4/5](screens/l8/zod-with-ai.png) |
-| AutoMapper | [3/5](screens/l8/automapper-baseline.png) | [3/5](screens/l8/automapper-with-ai.png) |
+| AutoMapper | [3/5](screens/l8/automapper-baseline.png) | [4/5 user acceptance; earlier reviewer3/5 retained](screens/l8/automapper-with-ai.png) |
 
 [Exact source revisions and screenshot hashes](screens/l8/provenance.json). Frozen original [baseline answers](screens/l8/baseline-frozen-verdict.md) and [AI answers](screens/l8/ai-frozen-verdict.md) map image1 to Zod and image2 to AutoMapper; unchanged Cobra images retain their prior answers. Published answer copies add only a terminal newline required by the documentation checker. The same fixed samples are corrective reviews, not newly unseen acceptance. [Separate source comparison and factual corrections](screens/l8/source-corrections.md) distinguish reader omissions, namespace projection and remaining semantic-analysis limits. The chronological record below preserves earlier failures and decisions.
 

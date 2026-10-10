@@ -37,6 +37,11 @@ function folderDocument(members: readonly Node[], documents: readonly Node[], pa
 
 export function structuralSummary(members: readonly Node[], documents: readonly Node[], path: string): string {
     if (path === '.' && !members.length) {
+        const metadata = documents.filter(node => node.kind === 'document' && descriptionKind(node) === 'package-metadata' && descriptionText(node)).sort((a, b) => {
+            const left = a.sources[0]?.path ?? '', right = b.sources[0]?.path ?? '';
+            return left.split('/').length - right.split('/').length || left.localeCompare(right);
+        })[0];
+        if (metadata) return sentence(descriptionText(metadata));
         const intro = [/^readme(?:\.[^/]*)?$/iu, /^\.github\/readme(?:\.[^/]*)?$/iu].map(pattern => documents.find(node => node.kind === 'document' && pattern.test(node.sources[0]?.path ?? '') && descriptionKind(node) === 'readme' && sentence(descriptionText(node)))).find(node => node !== undefined);
         return intro ? sentence(descriptionText(intro)) : '';
     }
