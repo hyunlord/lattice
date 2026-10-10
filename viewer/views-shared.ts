@@ -1,6 +1,7 @@
 import type { Node, Edge, Source, View } from '../dist/core/model.js';
 import { element, anchor, pager, pageNumber } from './explore-controls.js';
 export type ViewsContext = {
+    readonly allNodes?: readonly Node[]; readonly allEdges?: readonly Edge[]; readonly layerLabel?: (layer: string) => string;
     readonly views: readonly View[]; readonly nodes: readonly Node[]; readonly edges: readonly Edge[];
     readonly id: string; readonly params: URLSearchParams; readonly heading: (title: string, description: string) => void;
     readonly href: (id: string, params: Record<string, string>) => string;
@@ -11,7 +12,7 @@ export function viewRoute(context: ViewsContext, changes: Record<string, string>
 export function panel(title: string): HTMLElement { const result = element('section', '', 'panel section'); result.append(element('h2', title)); return result; }
 export function region(table: HTMLTableElement, label: string): HTMLElement { const wrap = element('div', '', 'table-region'); wrap.tabIndex = 0; wrap.setAttribute('role', 'region'); wrap.setAttribute('aria-label', label); wrap.append(table); const container = element('div'); container.append(element('p', '열이 화면을 벗어나면 표를 가로로 스크롤하세요. 표에 초점을 두고 ← → 키로도 이동할 수 있습니다.', 'meta view-scroll-hint'), wrap); return container; }
 export function selection(container: HTMLElement, context: ViewsContext, ids: { readonly nodeIds: readonly string[]; readonly edgeIds: readonly string[]; }): void {
-    const nodes = new Map(context.nodes.map(node => [node.id, node])); const edges = new Map(context.edges.map(edge => [edge.id, edge]));
+    const nodes = new Map((context.allNodes ?? context.nodes).map(node => [node.id, node])); const edges = new Map((context.allEdges ?? context.edges).map(edge => [edge.id, edge]));
     if (ids.nodeIds.length) {
         const list = element('ul', '', 'neighbors'); const page = pageNumber(context.params.get('detailPage'), ids.nodeIds.length, 30);
         for (const id of ids.nodeIds.slice(page * 30, (page + 1) * 30)) { const item = element('li'); item.append(anchor(nodes.get(id)?.name ?? id, context.nodeHref(id))); list.append(item); }

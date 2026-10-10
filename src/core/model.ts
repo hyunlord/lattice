@@ -55,7 +55,7 @@ export type Finding = {
 };
 export type View = {
     readonly id: string;
-    readonly type: "matrix" | "cycle" | "distribution" | "table";
+    readonly type: "matrix" | "cycle" | "distribution" | "table" | "gallery" | "status" | "graph";
     readonly label: string;
     readonly description?: string;
     readonly query: JsonObject;

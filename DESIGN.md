@@ -38,6 +38,8 @@ IDs/counts use tabular figures and mono. Labels wrap; IDs can wrap anywhere or b
 
 ## 4. Spacing & Layout
 
+Human view sizing tokens: gallery minimum 20rem, text matrix cell minimum 12rem/maximum 20rem, matrix region maximum 70vh. These sizes constrain data regions, not the page.
+
 Base spacing tokens `--space-1` through `--space-6`: 4, 8, 12, 16, 20, 24px; `--space-8`: 32px. Rail 200px, inspector 320px, minimum main column 320px. App fills viewport width; content panels have 16px padding and 24px section gaps. Table row minimum 36px desktop; touch controls 44px. Border radius 4px, border 1px, focus offset 2px.
 
 Breakpoints: under 640px navigation becomes a disclosure with full labels and inspector moves below content; 640–1023px collapsed rail and one content column; 1024px+ full rail and optional inspector. Data tables use `--table-min-width: 960px` when multiple descriptive columns are present. No page-level horizontal overflow; wide data tables have a labeled, keyboard-scrollable region. Test 375, 768, 1280px.
@@ -63,3 +65,7 @@ No entrance or ambient motion. Optional 120ms opacity transition for inspector/t
 ## 7. Depth & Surface
 
 Borders-only depth. One-pixel separators, flat surfaces, no shadows. Selected rows use `--surface-active`; highlighted graph neighbors use outline/dash/label in addition to color. UI colors, typography and spacing must trace to these tokens. More detail: [screen wireframes](docs/design/viewer.md).
+
+## Human reading views
+
+Gallery cards use the existing flat panel, 16px padding, 16px gaps and a minimum 256px (`--card-min-width`) column. Their title is the primary node link; labeled summary, badge and status fields are lens data, never inferred from domain IDs. Status remains text, including absent evidence. Matrix explanations wrap in 256px (`--matrix-text-width`) cells; the first column and header stay sticky within the scroll region. A target selector reduces dense matrices to one destination. Individual graph views default to a selected node and its neighborhood, with full names in a parallel accessible list. Curated home links precede findings. Detail summaries and named relationships precede raw attribute disclosure; provenance remains accessible.

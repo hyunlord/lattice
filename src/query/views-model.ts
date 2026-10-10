@@ -4,10 +4,13 @@ export type Coverage = { readonly selected: number; readonly total: number; read
 export type Axis = { readonly key: string; readonly label: string; readonly nodeIds: readonly string[]; };
 export type Bucket = Axis & { readonly count: number; readonly edgeIds: readonly string[]; readonly sources: readonly Source[]; };
 export type Cell = { readonly row: string; readonly column: string; readonly count: number; readonly label: string; readonly nodeIds: readonly string[]; readonly edgeIds: readonly string[]; readonly sources: readonly Source[]; };
+export type ViewColumn = { readonly id: string; readonly label: string; readonly role?: 'summary' | 'badge' | 'status'; };
+type RowProjection<T extends 'table' | 'gallery' | 'status'> = { readonly type: T; readonly columns: readonly ViewColumn[]; readonly rows: readonly { readonly nodeId: string; readonly values: JsonObject; }[]; readonly edgeKinds?: readonly string[]; readonly coverage: Coverage; };
 export type ViewProjection =
-    | { readonly type: 'matrix'; readonly mode: 'edges' | 'nodes'; readonly rows: readonly Axis[]; readonly columns: readonly Axis[]; readonly cells: readonly Cell[]; readonly coverage: Coverage; }
+    | { readonly type: 'matrix'; readonly cellDisplay?: 'count' | 'label'; readonly mode: 'edges' | 'nodes'; readonly rows: readonly Axis[]; readonly columns: readonly Axis[]; readonly cells: readonly Cell[]; readonly coverage: Coverage; }
     | { readonly type: 'distribution'; readonly buckets: readonly Bucket[]; readonly coverage: Coverage; }
-    | { readonly type: 'table'; readonly columns: readonly { readonly id: string; readonly label: string; }[]; readonly rows: readonly { readonly nodeId: string; readonly values: JsonObject; }[]; readonly coverage: Coverage; }
+    | RowProjection<'table'> | RowProjection<'gallery'> | RowProjection<'status'>
+    | { readonly type: 'graph'; readonly nodes: readonly Node[]; readonly edges: readonly Edge[]; readonly coverage: Coverage; }
     | { readonly type: 'cycle'; readonly nodes: readonly Node[]; readonly edges: readonly Edge[]; readonly coverage: Coverage; }
     | { readonly type: 'unsupported'; readonly reason: string; readonly coverage: Coverage; };
 function object(value: JsonValue | undefined): value is JsonObject { return value !== null && typeof value === 'object' && !Array.isArray(value); }
@@ -55,17 +58,18 @@ export function normalizeView(view: View, nodes: readonly Node[], edges: readonl
     const members = (value: readonly string[]) => unique(value).filter(id => selectedIds.has(id));
     const evidence = (nodeIds: readonly string[], edgeIds: readonly string[]) => provenance([...selected.filter(node => nodeIds.includes(node.id)), ...links.filter(edge => edgeIds.includes(edge.id))]);
     switch (view.type) {
-        case 'table': {
+        case 'gallery': case 'status': case 'table': {
             const columns = query['columns'], rows = query['rows'];
             if (!objects(columns) || !objects(rows)) return unsupported('표 열 또는 행이 없습니다.');
-            const normalizedColumns: { id: string; label: string; }[] = [], normalizedRows: { nodeId: string; values: JsonObject; }[] = [];
-            for (const column of columns) { const id = column['id'], name = column['label']; if (typeof id !== 'string' || typeof name !== 'string') return unsupported('표 열의 이름이 올바르지 않습니다.'); normalizedColumns.push({ id, label: name }); }
+            const normalizedColumns: ViewColumn[] = [], normalizedRows: { nodeId: string; values: JsonObject; }[] = [];
+            for (const column of columns) { const id = column['id'], name = column['label']; if (typeof id !== 'string' || typeof name !== 'string') return unsupported('표 열의 이름이 올바르지 않습니다.'); const role = column['role']; if (role !== undefined && role !== 'summary' && role !== 'badge' && role !== 'status') return unsupported('Invalid column role'); normalizedColumns.push({ id, label: name, ...(role === undefined ? {} : { role }) }); }
             for (const row of rows) { const nodeId = row['nodeId'], values = row['values']; if (typeof nodeId !== 'string' || !object(values) || normalizedColumns.some(column => values[column.id] === undefined)) return unsupported('표 행의 값이 불완전합니다.'); if (selectedIds.has(nodeId)) normalizedRows.push({ nodeId, values }); }
-            return { type: 'table', columns: normalizedColumns, rows: normalizedRows, coverage };
+            const edgeKinds = query['edgeKinds']; if (edgeKinds !== undefined && !strings(edgeKinds)) return unsupported('Invalid relationship kinds');
+            return { type: view.type, columns: normalizedColumns, rows: normalizedRows, ...(edgeKinds === undefined ? {} : { edgeKinds }), coverage };
         }
-        case 'cycle': {
+        case 'graph': case 'cycle': {
             const edgeIds = query['edgeIds']; if (!strings(edgeIds)) return unsupported('순환 보기의 edgeIds가 없습니다.');
-            const wanted = new Set(edgeIds); return { type: 'cycle', nodes: selected, edges: links.filter(edge => wanted.has(edge.id)), coverage };
+            const wanted = new Set(edgeIds); return { type: view.type, nodes: selected, edges: links.filter(edge => wanted.has(edge.id)), coverage };
         }
         case 'distribution': {
             const data = query['buckets']; if (!objects(data)) return unsupported('분포 구간이 없습니다.');
@@ -111,7 +115,8 @@ export function normalizeView(view: View, nodes: readonly Node[], edges: readonl
                 cells.push({ row, column, count: directed || automatic ? edgeIds.length : nodeIds.length, label: typeof cell['label'] === 'string' ? cell['label'] : '', nodeIds, edgeIds, sources: evidence(nodeIds, edgeIds) });
             }
             const compare = (a: Axis, b: Axis) => a.key.localeCompare(b.key);
-            return { type: 'matrix', mode: directed || automatic ? 'edges' : 'nodes', rows: directed ? rows : rows.sort(compare), columns: directed ? columns : columns.sort(compare), cells: cells.sort((a, b) => a.row.localeCompare(b.row) || a.column.localeCompare(b.column)), coverage };
+            const cellDisplay = query['cellDisplay']; if (cellDisplay !== undefined && cellDisplay !== 'count' && cellDisplay !== 'label') return unsupported('Invalid matrix cell display');
+            return { type: 'matrix', ...(cellDisplay === undefined ? {} : { cellDisplay }), mode: directed || automatic ? 'edges' : 'nodes', rows: directed ? rows : rows.sort(compare), columns: directed ? columns : columns.sort(compare), cells: cells.sort((a, b) => a.row.localeCompare(b.row) || a.column.localeCompare(b.column)), coverage };
         }
     }
 }

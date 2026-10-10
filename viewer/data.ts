@@ -1,9 +1,10 @@
+import { homePresentation, detailPresentation, type HomePresentation, type DetailPresentation } from './presentation.js';
 import type { Node, Edge, Facet, Finding, Source, Snapshot, View, Repository } from '../dist/core/model.js';
 import type { JsonObject, JsonValue } from '../dist/core/canonical.js';
 export type BrowserGraph = { schemaVersion: 1; hash: string; nodes: Node[]; edges: Edge[]; facets: Facet[]; findings: Finding[]; views: View[]; repository: Repository; };
 type Kind = { id: string; label?: string; hidden?: boolean; columns?: string[]; };
 type Layer = { id: string; label?: string; };
-export type Presentation = { name?: string; description?: string; defaultLayer?: string; kinds: Kind[]; layers?: Layer[] | Record<string, { label?: string; }>; facets?: Record<string, { label?: string; values?: Record<string, string>; }>; };
+export type Presentation = { home?: HomePresentation; detail?: DetailPresentation; name?: string; description?: string; defaultLayer?: string; kinds: Kind[]; layers?: Layer[] | Record<string, { label?: string; }>; facets?: Record<string, { label?: string; values?: Record<string, string>; }>; };
 export function object(value: unknown): value is Record<string, unknown> { return value !== null && typeof value === 'object' && !Array.isArray(value); }
 function arrayOf<T>(value: unknown, check: (item: unknown) => item is T): value is T[] { return Array.isArray(value) && value.every(check); }
 function string(value: unknown): value is string { return typeof value === 'string'; }
@@ -16,7 +17,7 @@ function edge(value: unknown): value is Edge { return object(value) && string(va
 function facet(value: unknown): value is Facet { return object(value) && string(value['id']) && string(value['nodeId']) && string(value['key']) && json(value['value']) && string(value['ruleId']) && arrayOf(value['sources'], source); }
 function gate(value: unknown): value is Finding['gate'] { return value === undefined || object(value) && string(value['metric']) && ['eq', 'ne', 'gt', 'gte', 'lt', 'lte'].some(item => item === value['comparator']) && typeof value['threshold'] === 'number' && ['pass', 'fail', 'unknown'].some(item => item === value['status']); }
 function finding(value: unknown): value is Finding { return object(value) && string(value['id']) && string(value['ruleId']) && ['info', 'warning', 'error'].some(item => item === value['severity']) && arrayOf(value['targetIds'], string) && jsonObject(value['metrics']) && string(value['message']) && ['computed', 'authored-interpretation', 'source-support'].some(item => item === value['basis']) && arrayOf(value['sources'], source) && optionalString(value['intent']) && optionalString(value['implementation']) && gate(value['gate']); }
-function view(value: unknown): value is View { return object(value) && string(value['id']) && ['matrix', 'cycle', 'distribution', 'table'].some(item => item === value['type']) && string(value['label']) && optionalString(value['description']) && jsonObject(value['query']) && arrayOf(value['sources'], source); }
+function view(value: unknown): value is View { return object(value) && string(value['id']) && ['matrix', 'cycle', 'distribution', 'table', 'gallery', 'status', 'graph'].some(item => item === value['type']) && string(value['label']) && optionalString(value['description']) && jsonObject(value['query']) && arrayOf(value['sources'], source); }
 function repository(value: unknown): value is Repository { return object(value) && string(value['name']) && optionalString(value['commit']) && optionalString(value['remoteUrl']) && typeof value['dirty'] === 'boolean' && string(value['sourceFingerprint']); }
 export function parseGraph(value: unknown): BrowserGraph {
     if (!object(value) || value['schemaVersion'] !== 1 || !string(value['hash']) || !arrayOf(value['nodes'], node) || !arrayOf(value['edges'], edge) || !arrayOf(value['facets'], facet) || !arrayOf(value['findings'], finding) || !arrayOf(value['views'], view) || !repository(value['repository'])) throw new Error('지원하지 않거나 불완전한 그래프 형식입니다.');
@@ -34,6 +35,9 @@ export function parsePresentation(value: unknown): Presentation {
     if (string(value['defaultLayer'])) result.defaultLayer = value['defaultLayer'];
     if (arrayOf(value['layers'], layer) || labels(value['layers'])) result.layers = value['layers'];
     if (facetLabels(value['facets'])) result.facets = value['facets'];
+    const home = homePresentation(value['home']), detail = detailPresentation(value['detail']);
+    if (home) result.home = home;
+    if (detail) result.detail = detail;
     return result;
 }
 function snapshot(value: unknown): value is Snapshot { return object(value) && string(value['id']) && /^[a-f0-9]{64}$/.test(value['id']) && value['artifactPath'] === `snapshots/${value['id']}.json` && string(value['graphHash']) && optionalString(value['commit']) && (value['lensHash'] === null || string(value['lensHash'])) && string(value['inputFingerprint']) && string(value['coverage']); }

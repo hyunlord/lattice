@@ -62,7 +62,7 @@ Cycle: query groups + directed links; counts/evidence → nodes
 Table: specified generic columns and query output
 ```
 
-Always provide `auto-kind-matrix` and `auto-field-distribution`; distributions use actual source attributes/kinds when no lens exists. Matrix axes and cells are drill-down links. Cycle layouts follow graph query relationships and optional ordering, never a hardcoded product loop. Lens views use these four templates, not domain-specific components. A view with insufficient inputs reports what is missing and links to its query/coverage.
+Always provide `auto-kind-matrix` and `auto-field-distribution`; distributions use actual source attributes/kinds when no lens exists. Matrix axes and cells are drill-down links. Cycle layouts follow graph query relationships and optional ordering, never a hardcoded product loop. Lens views use generic matrix, distribution, cycle, table, gallery, graph and status templates. Gallery/status reuse computed table columns and rows; optional column roles name summaries, badges and status. Individual graph views preserve node identities and support a focused neighborhood. Matrix cellDisplay=label exposes authored relationship text and a target filter with sticky headings. No template contains domain-specific branches. A view with insufficient inputs reports what is missing and links to its query/coverage.
 
 ## Changes: `#/changes/<base>/<head>`
 
@@ -98,3 +98,7 @@ Export includes all JS/CSS/fonts (system stack), graph JSON and snapshots; no ru
 Capture home/explore/list/views/changes/node detail for each of three actual repositories: bs-mobile lens, Charter & Kin example lens with external output, and lensless public non-game repository. Attach an index of 18 desktop screenshots to the PR, each recording source commit, graph hash, lens hash, route and viewport. Add mobile (375px), tablet (768px), light/dark, focus and error-state evidence. Screenshots alone do not prove interactions: drive navigation, keyboard selection, kind/facet filtering, neighbors, paths, aggregation expansion, sort/search, matrix drill-down, theme persistence, history pair selection and copied deep-link reload in a browser.
 
 Measure text/non-text contrast and run color-deficiency simulations for category/selection/status distinguishability. Inspect images manually at native size. Browser assertions must check meaningful real rows/relations/metrics, not only element existence. Retain browser console errors/network failures and fix them. Record failures and final evidence in `.omo/evidence/` and PR artifacts; no evidence ZIP delivery. This document is not evidence that these gates have passed.
+
+## Curated human presentation
+
+A lens may select home viewIds, findings, inventory and distributions. Empty-layer views are hidden; direct links offer the layers containing their inputs. Detail summaryFields use attribute paths (or `facet` followed by a facet key), and relationship groups provide human labels and directions. Raw attributes can be collapsed. Row membership follows the selected layer; referenced identities and relationships resolve against the complete graph. Program presence and static support remain distinct from observed execution.

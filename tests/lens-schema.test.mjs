@@ -57,3 +57,17 @@ test('operation glob matchers preserve repeated wildcard and literal matching', 
         }
     }
 });
+
+test('human view declarations materialize generic roles and presentation controls', () => {
+    const columns = [{ id: 'summary', label: 'Summary', role: 'summary', value: { op: 'literal', value: 'Text' } }];
+    const views = [{ id: 'cards', type: 'gallery', label: 'Cards', columns, edgeKinds: ['uses'] }, { id: 'states', type: 'status', label: 'States', columns }, { id: 'links', type: 'graph', label: 'Links', edgeKinds: ['uses'] }, { id: 'matrix', type: 'matrix', label: 'Matrix', edgeKinds: ['uses'], cellDisplay: 'label' }];
+    const presentation = { home: { viewIds: ['cards'], distributions: false }, detail: { summaryFields: [{ label: 'Summary', path: ['description'] }], relationships: [{ label: 'Uses', edgeKinds: ['uses'], direction: 'outgoing' }], rawAttributes: 'collapsed' } };
+    const input = source({ views, presentation });
+    const result = applyLens([], parseLens(input), input);
+    assert.deepEqual(result.views.map(view => view.type), ['gallery', 'status', 'graph', 'matrix']);
+    assert.equal(result.views[0].query.columns[0].role, 'summary');
+    assert.deepEqual(result.views[0].query.edgeKinds, ['uses']);
+    assert.equal(result.views[3].query.cellDisplay, 'label');
+    assert.deepEqual(result.presentation, presentation);
+    assert.throws(() => parseLens(source({ views: [{ ...views[0], columns: [{ ...columns[0], role: 'unknown' }] }] })), { name: 'DataInputError' });
+});
