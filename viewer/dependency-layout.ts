@@ -188,6 +188,22 @@ export function dependencyLabelRowHeight(flows: readonly LoopFlow[], lines: Read
     return flows.some(flow => (lines.get(JSON.stringify([flow.source, flow.target]))?.length ?? 0) > 2) ? 64 : 48;
 }
 
+export function dependencyPairSources(view: DependencyView, pair: Pick<LoopFlow, 'source' | 'target'>): readonly string[] {
+    const groups = dependencyLevels(view); const owner = new Map(groups.flatMap(group => group.stages.map(stage => [stage.id, group.stages[0]?.id ?? stage.id] as const)));
+    return [...new Set(view.flows.filter(flow => owner.get(flow.source) === owner.get(pair.source) && owner.get(flow.target) === owner.get(pair.target)).map(flow => view.stages.find(stage => stage.id === flow.source)?.title ?? flow.source))].sort();
+}
+
+export function dependencyCardRole(stage: LoopStage): { readonly text: string; readonly label: string; } {
+    const fresh = stage.interpretation && !stage.interpretation.stale;
+    const summary = fresh ? stage.interpretation?.summary : stage.summaryEvidence?.length ? stage.summary : undefined;
+    return { text: summary?.split(/(?<=[.!?。])\s/u)[0] || '역할 설명 없음 — 요약 실행 필요', label: fresh ? 'AI 요약' : summary ? '문서 설명' : '' };
+}
+
+export function featuredDependencyRoles(view: DependencyView, entryStageIds: readonly string[]): readonly LoopStage[] {
+    const entries = new Set(entryStageIds);
+    return [...view.stages].sort((a, b) => Number(entries.has(b.id)) - Number(entries.has(a.id)) || (b.descendantNodeIds ?? b.nodeIds).length - (a.descendantNodeIds ?? a.nodeIds).length || a.id.localeCompare(b.id)).slice(0, 3);
+}
+
 export function internalDependencyFacts(view: DependencyView, memberIds: readonly string[]): readonly LoopFlow[] {
     const members = new Set(memberIds);
     return view.flows.filter(flow => flow.source !== flow.target && members.has(flow.source) && members.has(flow.target)).map(flow => {

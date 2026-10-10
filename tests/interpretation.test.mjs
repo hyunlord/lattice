@@ -251,3 +251,24 @@ test('stale note hashes cannot inherit a current source permalink by path alone'
     assert.equal(stale.status, 'stale');
     assert.equal(stale.sources[0].url, undefined);
 });
+test('overview context includes exact visible flat-folder files with independently bound module notes', async t => {
+    const { root } = fixture(t);
+    for (const name of ['c', 'd']) writeFileSync(join(root, `src/${name}.ts`), `export function ${name}() { return 1; }\n`);
+    const graph = buildRepository({ root }).graph;
+    const { buildStructuralOverview } = await import('../dist/query/structural-map-model.js');
+    const map = buildStructuralOverview(graph.nodes, graph.edges);
+    const visible = map.stages.find(stage => stage.id === map.rootStageIds[0]).filePreviews.map(file => file.id);
+    const context = interpretationContext(root, graph, 0, 1, { scope: 'overview', compact: true });
+    assert.equal(context.items.length, 1);
+    const files = context.items[0].visibleFiles;
+    assert.deepEqual(files.map(file => file.id), visible);
+    assert.equal(files.length, 3);
+    assert.ok(files.every(file => file.kind === 'module' && file.sourceCount === 1 && file.evidence.length === 1 && file.evidence[0].excerpt.length <= 600));
+    const target = files[0];
+    writeInterpretation(root, graph, { schemaVersion: 1, targetId: target.id, sourceSetToken: target.sourceSetToken, summary: '호출된 작업을 실행하고 결과를 반환합니다.', author: 'test-agent' });
+    const updated = interpretationContext(root, graph, 0, 1, { scope: 'overview', compact: true });
+    assert.equal(updated.items[0].visibleFiles[0].interpretation.status, 'fresh');
+    assert.equal(updated.total, context.total, 'File previews do not alter folder pagination');
+    writeFileSync(join(root, target.samplePaths[0]), 'export const changed = 2;\n');
+    assert.equal(readInterpretations(root, buildRepository({ root }).graph)[0].status, 'stale');
+});

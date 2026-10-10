@@ -1,13 +1,13 @@
-import type { DependencyPair, Obstacle, Point } from './dependency-layout.js';
-import { dependencyPort, clearDependencyPort } from './dependency-layout.js';
+import type { DependencyPair, DependencyView, Obstacle, Point } from './dependency-layout.js';
+import { dependencyPort, clearDependencyPort, dependencyPairSources } from './dependency-layout.js';
 import { svg } from './loop-map-shared.js';
 
-type ArrowScene = { readonly host: HTMLElement; readonly graph: SVGSVGElement; readonly flows: readonly DependencyPair[]; readonly boxes: ReadonlyMap<string, HTMLElement>; };
+type ArrowScene = { readonly view: DependencyView; readonly host: HTMLElement; readonly graph: SVGSVGElement; readonly flows: readonly DependencyPair[]; readonly boxes: ReadonlyMap<string, HTMLElement>; };
 function labelSegment(points: readonly Point[]): { readonly center: Point; readonly vertical: boolean; readonly length: number; } | undefined {
     return points.slice(1).flatMap((point, index) => { const before = points[index]; return before ? [{ center: { x: (point.x + before.x) / 2, y: (point.y + before.y) / 2 }, vertical: point.x === before.x, length: Math.hypot(point.x - before.x, point.y - before.y) }] : []; }).sort((a, b) => b.length - a.length)[0];
 }
 export function drawDependencyArrows(scene: ArrowScene): void {
-    const { host, graph, flows, boxes } = scene; const bounds = host.getBoundingClientRect(); if (!bounds.width) return;
+    const { host, graph, flows, boxes, view } = scene; const bounds = host.getBoundingClientRect(); if (!bounds.width) return;
     graph.replaceChildren(); graph.dataset['unrouted'] = '0'; graph.dataset['sharedFallbacks'] = '0'; graph.dataset['unroutedPairs'] = ''; graph.setAttribute('viewBox', `0 0 ${bounds.width} ${bounds.height}`); graph.setAttribute('width', String(bounds.width)); graph.setAttribute('height', String(bounds.height));
     const markerId = `dependency-arrow-${crypto.randomUUID()}`; const defs = svg('defs'), marker = svg('marker'); marker.id = markerId;
     for (const [key, value] of Object.entries({ viewBox: '0 0 10 10', refX: '9', refY: '5', markerWidth: '5', markerHeight: '5', orient: 'auto-start-reverse' })) marker.setAttribute(key, value);
@@ -53,9 +53,14 @@ export function drawDependencyArrows(scene: ArrowScene): void {
         path.setAttribute('stroke-width', String(Math.min(6, 1.5 + Math.log2(flow.weight + 1) * .55))); graph.append(path);
         const segment = labelSegment(route); if (!segment) continue;
         const text = svg('text'); text.classList.add('lm-flow-label', 'lm-dependency-label'); text.dataset['route'] = routeId; text.dataset['source'] = flow.source; text.dataset['target'] = flow.target; text.dataset['count'] = String(flow.count ?? 0);
-        text.setAttribute('x', String(segment.center.x)); text.setAttribute('y', String(segment.center.y)); text.setAttribute('text-anchor', 'middle'); text.setAttribute('dominant-baseline', 'central'); text.textContent = flow.reverseCount ? `→ ${flow.count ?? 0} · ← ${flow.reverseCount}` : String(flow.count ?? 0);
+        text.setAttribute('x', String(segment.center.x)); text.setAttribute('y', String(segment.center.y)); text.setAttribute('text-anchor', 'middle'); text.setAttribute('dominant-baseline', 'central'); const actualSources = dependencyPairSources(view, flow);
+        const attribution = actualSources.join('·');
+        text.textContent = flow.reverseCount ? `${attribution} → ${flow.count ?? 0} · ← ${flow.reverseCount}` : `${attribution} · ${flow.count ?? 0}`;
         if (segment.vertical) text.setAttribute('transform', `rotate(-90 ${segment.center.x} ${segment.center.y})`);
-        const titleText = `${[...(boxes.get(flow.source)?.querySelectorAll('h3') ?? [])].map(heading => heading.textContent).join(' · ') || flow.source} → ${[...(boxes.get(flow.target)?.querySelectorAll('h3') ?? [])].map(heading => heading.textContent).join(' · ') || flow.target}: ${flow.count ?? 0}개 파일${flow.reverseCount ? `; 반대 방향 ${flow.reverseCount}개 파일` : ''}`;
+        graph.append(text); text.dataset['sourceMembers'] = JSON.stringify(actualSources);
+        const available = segment.length || Math.max(0, Math.hypot(end.x - start.x, end.y - start.y) - 8);
+        if (text.getComputedTextLength() + 8 > available) text.textContent = flow.reverseCount ? `→ ${flow.count ?? 0} · ← ${flow.reverseCount}` : String(flow.count ?? 0);
+        const titleText = `${actualSources.join(' · ') || flow.source} → ${[...(boxes.get(flow.target)?.querySelectorAll('h3') ?? [])].map(heading => heading.textContent).join(' · ') || flow.target}: ${flow.count ?? 0}개 파일${flow.reverseCount ? `; 반대 방향 ${flow.reverseCount}개 파일` : ''}`;
         const title = svg('title'); title.textContent = titleText; path.append(title); const labelTitle = svg('title'); labelTitle.textContent = titleText; text.append(labelTitle); graph.append(text);
     }
 }

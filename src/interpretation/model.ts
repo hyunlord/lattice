@@ -9,7 +9,7 @@ export type Interpretation = {
     readonly sources: readonly { readonly path: string; readonly contentHash: string; readonly line: number; }[];
 };
 export type VisibleInterpretation = Omit<Interpretation, 'sources'> & { readonly sources: readonly (Interpretation['sources'][number] & { readonly url?: string; })[]; } & { readonly label: 'AI 요약'; readonly status: 'fresh' | 'stale'; readonly notePath: string; };
-export type InterpretationTarget = { readonly id: string; readonly name: string; readonly kind: 'module' | 'cluster'; readonly sources: readonly Source[]; };
+export type InterpretationTarget = { readonly id: string; readonly name: string; readonly kind: 'module' | 'cluster'; readonly sources: readonly Source[]; readonly visibleFileIds?: readonly string[]; };
 export class InterpretationError extends Error {
     constructor(message: string) { super(message); this.name = 'InterpretationError'; }
 }
@@ -60,7 +60,7 @@ export function overviewInterpretationTargets(graph: Graph, requestedScope?: 'pr
                 if (node?.kind !== 'module' && node?.kind !== 'file') continue;
                 for (const source of node.sources) sources.set(source.path, source);
             }
-            return sources.size ? [{ id: `overview:${scope}:${id}`, name: stage.title, kind: 'cluster' as const, sources: [...sources.values()].sort((a, b) => a.path.localeCompare(b.path)) }] : [];
+            return sources.size ? [{ id: `overview:${scope}:${id}`, name: stage.title, kind: 'cluster' as const, ...(stage.filePreviews?.length ? { visibleFileIds: stage.filePreviews.map(file => file.id) } : {}), sources: [...sources.values()].sort((a, b) => a.path.localeCompare(b.path)) }] : [];
         });
     });
 }

@@ -72,8 +72,14 @@ export function buildLoopMap(nodes: readonly Node[], edges: readonly Edge[], fac
         const covered = new Set(candidate?.evidence.map(source => source.path));
         const exact = !scoped && !all && !id.startsWith('directory:') || covered.size === paths.size;
         const note = candidate?.evidence.length && exact && candidate.evidence.every(source => paths.has(source.path)) ? candidate : undefined;
+        const filePreviews = stage.filePreviews?.map(file => {
+            const fileNote = interpretation(file.id), sources = new Set(byId.get(file.id)?.sources.map(source => source.path));
+            const evidence = new Set(fileNote?.evidence.map(source => source.path));
+            if (!fileNote?.evidence.length || evidence.size !== sources.size || fileNote.evidence.some(source => !sources.has(source.path))) return file;
+            return { ...file, ...(fileNote.stale ? {} : { summary: fileNote.summary }), interpretation: fileNote };
+        });
         const { summaryDetail: _detail, summaryDetails: _details, ...withoutDetail } = stage;
-        return { ...(note && !note.stale ? withoutDetail : stage), ...(note ? { ...(note.stale ? {} : { summary: note.summary }), interpretation: note } : {}) };
+        return { ...(note && !note.stale ? withoutDetail : stage), ...(filePreviews ? { filePreviews } : {}), ...(note ? { ...(note.stale ? {} : { summary: note.summary }), interpretation: note } : {}) };
     }) : (config?.stages ?? []).map(stage => {
         const members = nodes.filter(n => stage.kinds.includes(n.kind));
         const systems = new Set(nodes.filter(n => stage.systemIds.includes(n.id) || stage.systemIds.includes(String(n.attributes['originalId'] ?? ''))).map(n => n.id));

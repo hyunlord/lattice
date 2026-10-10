@@ -12,7 +12,7 @@ export type LoopNode = {
     readonly relationGroups: readonly LoopRelationGroup[]; readonly catalogSummary?: string; readonly ordinal?: number;
     readonly interpretation?: LoopInterpretation; readonly media?: LoopMedia;
 };
-export type LoopFilePreview = { readonly id: string; readonly name: string; readonly summary: string; readonly summaryEvidence: readonly { readonly path: string; readonly line: number; }[]; readonly definition?: { readonly name: string; readonly summary: string; readonly line: number; }; };
+export type LoopFilePreview = { readonly interpretation?: LoopInterpretation; readonly id: string; readonly name: string; readonly summary: string; readonly summaryEvidence: readonly { readonly path: string; readonly line: number; }[]; readonly definition?: { readonly name: string; readonly summary: string; readonly line: number; }; };
 export type LoopStage = {
     readonly id: string; readonly title: string; readonly summary: string; readonly unit: string; readonly nodeIds: readonly string[];
     readonly groups: readonly { readonly title: string; readonly items: readonly LoopItem[]; }[];

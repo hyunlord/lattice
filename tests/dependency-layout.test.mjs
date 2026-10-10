@@ -275,3 +275,22 @@ test('mutual-folder facts retain strongest actual directions and deduplicate imp
     assert.deepEqual(internalDependencyFacts(view, ['a', 'b', 'c']).map(f => [f.source, f.target, f.count]), [['a', 'b', 2], ['a', 'c', 1], ['b', 'a', 1]]);
     assert.deepEqual(internalDependencyFacts(view, ['a']), []);
 });
+test('featured roles prioritize entry folders then largest subtrees without selecting them', async () => {
+    const { featuredDependencyRoles } = await import('../viewer/dependency-layout.js');
+    const stages = [{ ...stage('compat'), descendantNodeIds: ['a'] }, { ...stage('root'), descendantNodeIds: ['a', 'b'] }, { ...stage('config'), descendantNodeIds: ['a', 'b', 'c'] }, { ...stage('mappers'), descendantNodeIds: ['a', 'b', 'c', 'd'] }];
+    assert.deepEqual(featuredDependencyRoles({ stages, flows: [] }, ['root']).map(s => s.id), ['root', 'mappers', 'config']);
+    assert.deepEqual(featuredDependencyRoles({ stages: [stages[0]], flows: [] }, []).map(s => s.id), ['compat']);
+});
+test('inline card roles keep first sourced sentence and never expose stale AI as current', async () => {
+    const { dependencyCardRole } = await import('../viewer/dependency-layout.js');
+    const authored = { ...stage('a'), summary: 'Parses requests. Preserves routes.', summaryEvidence: [{ path: 'a/README.md', line: 1 }] };
+    assert.deepEqual(dependencyCardRole(authored), { text: 'Parses requests.', label: '문서 설명' });
+    assert.deepEqual(dependencyCardRole({ ...authored, interpretation: { summary: 'Builds clients. Calls the parser.', stale: false, evidence: [] } }), { text: 'Builds clients.', label: 'AI 요약' });
+    assert.deepEqual(dependencyCardRole({ ...authored, interpretation: { summary: 'Old inferred role.', stale: true, evidence: [] } }), { text: 'Parses requests.', label: '문서 설명' });
+    assert.equal(dependencyCardRole(stage('b')).text, '역할 설명 없음 — 요약 실행 필요');
+});
+test('collapsed-arrow attribution names actual members rather than the representative folder', async () => {
+    const { dependencyPairSources } = await import('../viewer/dependency-layout.js');
+    const view = { stages: ['root', 'configuration', 'license'].map(id => stage(id)), flows: [{ source: 'root', target: 'configuration' }, { source: 'configuration', target: 'root' }, { source: 'configuration', target: 'license' }] };
+    assert.deepEqual(dependencyPairSources(view, { source: 'root', target: 'license' }), ['configuration']);
+});

@@ -123,3 +123,30 @@ test('AI summary presentation removes inline Markdown while preserving original 
     assert.deepEqual(interpretations, original);
     assert.deepEqual(model.nodes[0].interpretation.evidence, original[1].sources);
 });
+
+test('flat file previews use fresh exact-module AI notes and keep stale prose labelled', () => {
+    const nodes = [node('module:args.go', 'module', {}, 'args.go'), node('module:command.go', 'module', {}, 'command.go')];
+    const notes = [
+        { targetId: 'module:args.go', summary: '`인자`를 검사한다.', status: 'fresh', sources: [{ path: 'args.go', line: 10, url: 'https://example.test/args.go#L10' }] },
+        { targetId: 'module:command.go', summary: '이전 명령 설명', status: 'stale', sources: [{ path: 'command.go', line: 20 }] },
+    ];
+    const model = buildLoopMap(nodes, [], [], { kinds: [], interpretations: notes }, 'example');
+    const previews = model.stages.find(s => s.id === 'folder:.').filePreviews;
+    const fresh = previews.find(file => file.id === 'module:args.go');
+    assert.equal(fresh.summary, '인자를 검사한다.');
+    assert.equal(fresh.interpretation.stale, false);
+    assert.deepEqual(fresh.interpretation.evidence, notes[0].sources);
+    const stale = previews.find(file => file.id === 'module:command.go');
+    assert.equal(stale.summary, '파일 설명 없음 — 요약 실행 필요');
+    assert.equal(stale.interpretation.stale, true);
+    assert.equal(stale.interpretation.summary, '이전 명령 설명');
+    assert.deepEqual(model.flows, []);
+    assert.equal(notes[0].summary, '`인자`를 검사한다.');
+});
+test('flat file summaries cannot borrow a different module note or evidence', () => {
+    const nodes = [node('module:args.go', 'module', {}, 'args.go')];
+    const model = buildLoopMap(nodes, [], [], { kinds: [], interpretations: [{ targetId: 'module:args.go', summary: 'Unrelated claim', status: 'fresh', sources: [{ path: 'other.go', line: 1 }] }] }, 'example');
+    const file = model.stages.find(s => s.id === 'folder:.').filePreviews[0];
+    assert.equal(file.summary, '파일 설명 없음 — 요약 실행 필요');
+    assert.equal(file.interpretation, undefined);
+});

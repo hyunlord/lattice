@@ -55,12 +55,17 @@ export function interpretationContext(root: string, graph: Graph, offset = 0, li
     const notes = new Map(readInterpretations(root, graph).map(note => [note.targetId, note]));
     const reader = workingRepository(root);
     const targets = options.scope === 'overview' ? overviewInterpretationTargets(graph, options.overviewScope ?? 'production') : interpretationTargets(graph).filter(target => options.scope !== 'folders' || target.kind === 'cluster');
-    const items = targets.slice(offset, offset + limit).map(target => {
+    const present = (target: InterpretationTarget) => {
         const note = notes.get(target.id);
         if (!options.compact) return { ...target, interpretation: note ?? null, sources: target.sources.map(source => ({ ...source, excerpt: reader.readText(source.path)?.split('\n').slice(Math.max(0, source.line - 1), source.line + 39).join('\n') ?? '' })) };
         const evidence = target.sources.slice(0, 3).map(source => ({ path: source.path, line: source.line, excerpt: (reader.readText(source.path)?.split('\n').slice(Math.max(0, source.line - 1), source.line + 39).join('\n') ?? '').slice(0, 600) }));
         return { id: target.id, name: target.name, kind: target.kind, sourceCount: target.sources.length, sourceSetToken: sourceSetToken(target), samplePaths: target.sources.slice(0, 20).map(source => source.path), omittedPathCount: Math.max(0, target.sources.length - 20), evidence, interpretation: note ? compactInterpretation(note) : null };
-    });
+    };
+    const modules = new Map(interpretationTargets(graph).filter(target => target.kind === 'module').map(target => [target.id, target]));
+    const items = targets.slice(offset, offset + limit).map(target => ({
+        ...present(target),
+        ...(options.scope === 'overview' && target.visibleFileIds?.length ? { visibleFiles: target.visibleFileIds.flatMap(id => { const module = modules.get(id); return module ? [present(module)] : []; }) } : {}),
+    }));
     const draft = readDraftStatus(root, graph);
     return { summaryLanguage: 'ko', draft: draft ? options.compact ? { path: draft.path, label: draft.label, status: draft.status } : draft : null, total: targets.length, offset, items };
 }
