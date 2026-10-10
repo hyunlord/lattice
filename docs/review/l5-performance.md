@@ -35,3 +35,19 @@ All 45 tool calls succeed in each case and all three builds in each case have th
 ## Remaining acceptance
 
 Final timing evidence and the installed package run accompany this change. A passing cold build does not waive the first MCP response requirement. Final consumer publication, the same installed artifact on three repositories, and actual Claude Code/Codex discovery and query records are separate L5 checks. Earlier milestone reports remain historical evidence.
+
+## Facet-provenance candidate follow-up
+
+[PR48](https://github.com/hyunlord/lattice/pull/48), merged as `0a20ebe`, corrects generic facet provenance. Package SHA-256 `40b1c2ea543c13a9af6ae95ab70a9c7003b0f01c95e6ae236cb5862d72477ba2` was independently installed and measured on clean consumer `1ea90743f2d2cfa47135b426d1278dd8a791adf6`, with no optional Graft directory or input. This is a verified intermediate candidate; subsequent rule-provenance work is not covered by these measurements.
+
+Three empty-cache builds took at most **2.392s**, with identical hashes. The first empty-cache MCP request took **2.280s**, exceeding one second. Twenty unchanged freshness calls reached **51.69ms p95 / 52.34ms maximum**, exceeding50ms. Three calls to each warm tool all passed, including HEAD diff at **0.574s maximum**; all45 tool calls succeeded. The aggregate MCP gate still fails because the cold request is included. Graph hash is `9aa9921ceefcbf593a97fef836bdf442f0b807a88ba4038e80a666d0fd2f5ce1`.
+
+The new `facet-provenance-candidate-ci` case is appended to the machine-readable record. Earlier failures and the distinct optional-Graft condition remain intact. These observations establish improvement and remaining failures, not L5 completion.
+
+## Rule-provenance candidate follow-up
+
+[PR49](https://github.com/hyunlord/lattice/pull/49), merged as `d8a689`, further corrects generic rule provenance. Its installed package SHA-256 is `89a188a741c8d83960eba19e202c11376312879ef5be4f342e638bac92b0a765`. The same measurement protocol ran against clean source `3363bb1aaf4ae11c25a6889d457bdf1477914b6e`, with no optional Graft input, Node24.21.0 and the recorded Apple M4 Max environment.
+
+Three independent builds reached **2.148s maximum** and retained equal hashes. The first cold MCP call took **2.047s**, still failing one second. Twenty unchanged freshness calls reached **47.93ms p95 / 50.423ms maximum**; the maximum still fails50ms, despite the passing p95. All eight warm tools passed, with HEAD diff **0.524s maximum**. All45 calls succeeded. Graph hash is `1ed8ce8c513d61e05689aa83d2ff7ca40d21d7a855de7d7efce64d44887d5413`.
+
+The appended `rule-provenance-candidate-ci` case preserves all earlier observations. Performance and L5 remain incomplete; public consumer/browser and real-client records for this candidate are separate evidence, not inferred from successful timings or older artifacts.

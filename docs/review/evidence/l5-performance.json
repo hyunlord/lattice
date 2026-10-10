@@ -279,6 +279,192 @@
         "mcpUnder1s": false,
         "allToolCallsSuccessful": true
       }
+    },
+    {
+      "name": "facet-provenance-candidate-ci",
+      "toolCommit": "0a20ebe",
+      "packageSha256": "40b1c2ea543c13a9af6ae95ab70a9c7003b0f01c95e6ae236cb5862d72477ba2",
+      "sourceCommit": "1ea90743f2d2cfa47135b426d1278dd8a791adf6",
+      "sourceClean": true,
+      "optionalGraft": false,
+      "compiledAggregateSha256": "302a77e9287194b9d5c04a1a04f4a16982268923c7f86cfba1c5ad4c390df1d8",
+      "node": "v24.21.0",
+      "graphHash": "9aa9921ceefcbf593a97fef836bdf442f0b807a88ba4038e80a666d0fd2f5ce1",
+      "lensSha256": "8afd760eb6e364ed023a1da08cc4bc6beb60afa9a1f05dee811be8fd98c8380c",
+      "builds": {
+        "n": 3,
+        "minMs": 2351.288917,
+        "p50Ms": 2363.77575,
+        "p95Ms": 2391.828583,
+        "maxMs": 2391.828583
+      },
+      "coldMcpMs": 2280.4431250000007,
+      "unchangedFreshness": {
+        "n": 20,
+        "minMs": 44.189000000000306,
+        "p50Ms": 46.220790999999736,
+        "p95Ms": 51.68870900000002,
+        "maxMs": 52.340000000000146
+      },
+      "tools": {
+        "lattice_overview": {
+          "n": 3,
+          "minMs": 80.43625000000065,
+          "p50Ms": 82.75529199999983,
+          "p95Ms": 82.84599999999955,
+          "maxMs": 82.84599999999955
+        },
+        "lattice_find": {
+          "n": 3,
+          "minMs": 51.00087499999972,
+          "p50Ms": 51.14520900000025,
+          "p95Ms": 53.8885420000006,
+          "maxMs": 53.8885420000006
+        },
+        "lattice_node": {
+          "n": 3,
+          "minMs": 46.119667000000845,
+          "p50Ms": 48.25429199999962,
+          "p95Ms": 49.45995800000128,
+          "maxMs": 49.45995800000128
+        },
+        "lattice_trace": {
+          "n": 3,
+          "minMs": 45.972209000001385,
+          "p50Ms": 46.633458999998766,
+          "p95Ms": 46.894625000000815,
+          "maxMs": 46.894625000000815
+        },
+        "lattice_matrix": {
+          "n": 3,
+          "minMs": 59.77879100000064,
+          "p50Ms": 62.31366700000035,
+          "p95Ms": 71.71195899999839,
+          "maxMs": 71.71195899999839
+        },
+        "lattice_findings": {
+          "n": 3,
+          "minMs": 48.777125000000524,
+          "p50Ms": 48.89083399999981,
+          "p95Ms": 50.69391700000051,
+          "maxMs": 50.69391700000051
+        },
+        "lattice_diff": {
+          "n": 3,
+          "minMs": 546.0387919999994,
+          "p50Ms": 549.5635000000002,
+          "p95Ms": 574.4273750000011,
+          "maxMs": 574.4273750000011
+        },
+        "lattice_freshness": {
+          "n": 3,
+          "minMs": 44.50525000000016,
+          "p50Ms": 44.698333000000275,
+          "p95Ms": 49.26599999999962,
+          "maxMs": 49.26599999999962
+        }
+      },
+      "gates": {
+        "buildUnder10s": true,
+        "deterministicFirstTwo": true,
+        "unchangedFreshnessUnder50ms": false,
+        "mcpUnder1s": false,
+        "allToolCallsSuccessful": true
+      },
+      "limitation": "Candidate0a20ebe before subsequent generic rule-provenance changes; earlier optional-Graft measurements remain distinct cases."
+    },
+    {
+      "name": "rule-provenance-candidate-ci",
+      "toolCommit": "d8a689",
+      "packageSha256": "89a188a741c8d83960eba19e202c11376312879ef5be4f342e638bac92b0a765",
+      "sourceCommit": "3363bb1aaf4ae11c25a6889d457bdf1477914b6e",
+      "sourceClean": true,
+      "optionalGraft": false,
+      "compiledAggregateSha256": "46261c9eb6899332412ad5c90e6607a3cd137c9de660721b7a99ec4a07168cb1",
+      "node": "v24.21.0",
+      "graphHash": "1ed8ce8c513d61e05689aa83d2ff7ca40d21d7a855de7d7efce64d44887d5413",
+      "lensSha256": "8afd760eb6e364ed023a1da08cc4bc6beb60afa9a1f05dee811be8fd98c8380c",
+      "builds": {
+        "n": 3,
+        "minMs": 2107.586042,
+        "p50Ms": 2111.327665999999,
+        "p95Ms": 2148.481084,
+        "maxMs": 2148.481084
+      },
+      "coldMcpMs": 2046.7053749999995,
+      "unchangedFreshness": {
+        "n": 20,
+        "minMs": 42.798124999999345,
+        "p50Ms": 45.597749999998996,
+        "p95Ms": 47.932708000000275,
+        "maxMs": 50.423375000000306
+      },
+      "tools": {
+        "lattice_overview": {
+          "n": 3,
+          "minMs": 76.47070899999926,
+          "p50Ms": 77.6705409999995,
+          "p95Ms": 78.97720900000058,
+          "maxMs": 78.97720900000058
+        },
+        "lattice_find": {
+          "n": 3,
+          "minMs": 49.503874999998516,
+          "p50Ms": 50.927834000000075,
+          "p95Ms": 51.461959000000206,
+          "maxMs": 51.461959000000206
+        },
+        "lattice_node": {
+          "n": 3,
+          "minMs": 46.78325000000041,
+          "p50Ms": 47.911416999999346,
+          "p95Ms": 50.14091700000063,
+          "maxMs": 50.14091700000063
+        },
+        "lattice_trace": {
+          "n": 3,
+          "minMs": 43.85679199999868,
+          "p50Ms": 46.92820800000118,
+          "p95Ms": 47.2403749999994,
+          "maxMs": 47.2403749999994
+        },
+        "lattice_matrix": {
+          "n": 3,
+          "minMs": 51.34541700000045,
+          "p50Ms": 51.496250000000146,
+          "p95Ms": 66.47991700000057,
+          "maxMs": 66.47991700000057
+        },
+        "lattice_findings": {
+          "n": 3,
+          "minMs": 46.2386660000011,
+          "p50Ms": 46.455292000000554,
+          "p95Ms": 47.95229199999994,
+          "maxMs": 47.95229199999994
+        },
+        "lattice_diff": {
+          "n": 3,
+          "minMs": 514.2615000000005,
+          "p50Ms": 521.2925410000007,
+          "p95Ms": 524.4084579999999,
+          "maxMs": 524.4084579999999
+        },
+        "lattice_freshness": {
+          "n": 3,
+          "minMs": 47.080832999999984,
+          "p50Ms": 47.61204199999884,
+          "p95Ms": 49.33745900000031,
+          "maxMs": 49.33745900000031
+        }
+      },
+      "gates": {
+        "buildUnder10s": true,
+        "deterministicFirstTwo": true,
+        "unchangedFreshnessUnder50ms": false,
+        "mcpUnder1s": false,
+        "allToolCallsSuccessful": true
+      },
+      "limitation": "PR49 installed candidate; public consumer and actual-client acceptance remain separate. Earlier optional-Graft and failed measurements are preserved."
     }
   ]
 }
