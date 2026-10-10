@@ -76,3 +76,11 @@ test('human views retain column roles and cross-layer row references while filte
     const matrix = normalizeView(view('matrix', { nodeIds: [], cellDisplay: 'label', cells: [] }), [], []);
     assert.equal(matrix.cellDisplay, 'label');
 });
+
+test('grouped label matrices name only current members and preserve authored labels', () => {
+    const query = { cellDisplay: 'label', nodeIds: ['a', 'b'], cells: [{ row: 'r', column: 'c', nodeIds: ['a', 'b'], count: 99 }] };
+    const result = normalizeView(view('matrix', query), [nodes[0]], []);
+    assert.equal(result.cells[0].label, 'a'); assert.equal(result.cells[0].count, 1);
+    const authored = normalizeView(view('matrix', { ...query, cells: [{ ...query.cells[0], label: 'Authored' }] }), nodes, []);
+    assert.equal(authored.cells[0].label, 'Authored');
+});

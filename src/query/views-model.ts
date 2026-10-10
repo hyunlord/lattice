@@ -112,7 +112,7 @@ export function normalizeView(view: View, nodes: readonly Node[], edges: readonl
                         if (previous) axes.splice(axes.indexOf(previous), 1); axes.push({ key: id, label: label(value), nodeIds: combined });
                     }
                 }
-                cells.push({ row, column, count: directed || automatic ? edgeIds.length : nodeIds.length, label: typeof cell['label'] === 'string' ? cell['label'] : '', nodeIds, edgeIds, sources: evidence(nodeIds, edgeIds) });
+                cells.push({ row, column, count: directed || automatic ? edgeIds.length : nodeIds.length, label: typeof cell['label'] === 'string' ? cell['label'] : !directed && !automatic && query['cellDisplay'] === 'label' ? nodeIds.map(id => all.get(id)?.name ?? id).join(' · ') : '', nodeIds, edgeIds, sources: evidence(nodeIds, edgeIds) });
             }
             const compare = (a: Axis, b: Axis) => a.key.localeCompare(b.key);
             const cellDisplay = query['cellDisplay']; if (cellDisplay !== undefined && cellDisplay !== 'count' && cellDisplay !== 'label') return unsupported('Invalid matrix cell display');
