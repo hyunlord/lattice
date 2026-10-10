@@ -83,7 +83,7 @@
 @media(min-width:701px){.lm-file-evidence>summary{min-height:24px}}
 .lm-dependency-roles .lm-featured-role .lm-role-description{display:block;overflow:visible;-webkit-line-clamp:unset}.lm-more-roles{font:12px/18px var(--lm-body);margin-top:8px}.lm-more-roles>summary{cursor:pointer;min-height:28px}.lm-more-roles .lm-dependency-role{margin-top:4px}@media(max-width:700px){.lm-more-roles>summary{min-height:44px}}
 .lm-dependency-overview.lm-inline-roles{grid-template-columns:minmax(0,1fr)}.lm-inline-roles .lm-dependency-level{align-items:flex-start}.lm-inline-roles .lm-dependency-group{max-width:none}.lm-inline-role{font:13px/18px var(--lm-body);margin:0;color:var(--lm-ink);text-align:left}.lm-inline-ai-label{font:11px/15px var(--lm-body);color:var(--lm-muted)}.lm-all-role-details{font:13px/18px var(--lm-body)}.lm-all-role-details>summary{cursor:pointer;min-height:32px}.lm-all-role-details .lm-dependency-roles{border:0;padding:8px 0;overflow:visible}.lm-file-ai{font:12px/18px var(--lm-body);margin:0}.lm-file-ai>summary{min-height:24px}@media(max-width:700px){.lm-all-role-details>summary,.lm-file-ai>summary{min-height:44px}}
-@media(min-width:701px){.lm-inline-roles .lm-dependency-group>.lm-station{flex:1 1 150px;align-self:flex-start}.lm-inline-roles .lm-dependency-group{flex-basis:0}}
+@media(min-width:701px){.lm-inline-roles .lm-dependency-group>.lm-station{flex:1 1 var(--lm-member-basis,150px);align-self:flex-start}.lm-inline-roles .lm-dependency-group{flex-basis:0}}
 .lm-inline-roles .lm-dependency-level{align-items:stretch}@media(min-width:701px){.lm-inline-roles .lm-dependency-group>.lm-station{align-self:stretch}}@media(max-width:700px){.lm-inline-roles .lm-dependency-group{min-width:0!important}}
 
 @media(min-width:701px){.lm-flat-files .lm-file-previews{grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}.lm-flat-files .lm-file-previews>li{min-width:0}}
@@ -99,3 +99,5 @@
 .lm-file-references{margin-top:8px;border-top:1px solid var(--lm-line);padding-top:4px}.lm-file-reference{font:12px/18px var(--lm-body);margin:0}.lm-file-reference-target{font:600 12px/18px var(--lm-mono)!important;border:0;background:none;color:inherit;text-decoration:underline;padding:0;min-height:24px}.lm-file-evidence>a{display:block}@media(max-width:700px){.lm-file-reference-target{min-height:44px}}
 
 .lm-flat-files .lm-dependency-group{max-width:none}
+
+.lm-dependency-group-summary{flex-basis:100%;width:100%;font:13px/18px var(--lm-body);margin:0}.lm-dependency-group-summary>p{margin:0}.lm-dependency-group-summary .lm-interpretation{margin-top:4px;padding-top:4px}

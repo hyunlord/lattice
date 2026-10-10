@@ -56,6 +56,13 @@ try {
   const help = execFileSync(process.execPath, [join(temporary, 'node_modules/@hyunlord/lattice/bin/lattice.mjs'), '--help'], { cwd: temporary, encoding: 'utf8' });
   assert.match(help, /lattice build/);
   assert.ok(entry.files.some(file => file.path === 'viewer/app.js'));
+  assert.ok(entry.files.some(file => file.path === 'viewer/structural-dependency-groups.js'));
+  execFileSync(process.execPath, ['--input-type=module', '-e', `
+    import assert from 'node:assert/strict';
+    import {pathToFileURL} from 'node:url';
+    const {dependencyComponents} = await import(pathToFileURL(process.argv[1]).href);
+    assert.equal(dependencyComponents({stages:[{id:'a'},{id:'b'}],flows:[{source:'a',target:'b'},{source:'b',target:'a'}]}).length, 1);
+  `, join(temporary, 'node_modules/@hyunlord/lattice/viewer/structural-dependency-groups.js')], { encoding: 'utf8' });
   assert.equal(manifest.license, 'MIT');
   console.log('Installed CLI launch and static viewer packaging passed.');
   const repository = join(temporary, 'repository');

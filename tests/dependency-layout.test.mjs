@@ -302,3 +302,34 @@ test('coverage separates rendered external pairs from internal directed connecti
     assert.deepEqual(dependencyCoverage(view, shown), { externalArrows: 1, internalDirections: 2, hiddenExternalArrows: 1 });
     assert.deepEqual(dependencyCoverage(view, displayedDependencyFlows(view, undefined, true)), { externalArrows: 2, internalDirections: 2, hiddenExternalArrows: 0 });
 });
+
+test('four separate sources use distinct clear vertical ports on a wide target', async () => {
+    const { straightDependencyRoute, dependencyRouteIntersects } = await import('../viewer/dependency-layout.js');
+    const target = { x: 40, y: 200, width: 800, height: 80 };
+    const sources = [40, 240, 440, 640].map(x => ({ x, y: 40, width: 180, height: 80 }));
+    const routes = sources.map(source => straightDependencyRoute(source, target, []));
+    assert.equal(new Set(routes.map(route => route[0].x)).size, 4);
+    for (const [index, route] of routes.entries()) {
+        assert.equal(route.length, 2); assert.equal(route[0].x, route[1].x);
+        const halo = { x: route[0].x - 8, y: 140, width: 16, height: 28 };
+        for (const [other, foreign] of routes.entries()) if (other !== index) assert.equal(dependencyRouteIntersects(foreign, halo), false);
+    }
+    assert.equal(straightDependencyRoute(sources[0], target, [{ x: 100, y: 130, width: 80, height: 20 }]), undefined);
+});
+
+test('strongest routes survive crossings while independent routes remain visible', async () => {
+    const { selectDependencyRoutes } = await import('../viewer/dependency-layout.js');
+    const routes = [
+        { flow: { source: 'weak', target: 'base', weight: 1 }, points: [{ x: 0, y: 50 }, { x: 100, y: 50 }] },
+        { flow: { source: 'strong', target: 'base', weight: 10 }, points: [{ x: 50, y: 0 }, { x: 50, y: 100 }] },
+        { flow: { source: 'other', target: 'base', weight: 2 }, points: [{ x: 150, y: 0 }, { x: 150, y: 100 }] },
+    ];
+    assert.deepEqual(selectDependencyRoutes(routes).map(item => item.flow.source), ['strong', 'other']);
+});
+
+test('scope switching keeps only interpretations for that exact structural scope', async () => {
+    const { structuralScopeModel } = await import('../viewer/dependency-layout.js');
+    const model = { stages: [], flows: [], rootStageIds: [], structuralScope: { productionCount: 2, default: 'production', allRootStageIds: [] }, structuralDependencyGroups: [{ id: 'production', scope: 'production' }, { id: 'all', scope: 'all' }] };
+    assert.deepEqual(structuralScopeModel(model).structuralDependencyGroups.map(group => group.id), ['production']);
+    assert.deepEqual(structuralScopeModel(model, 'all').structuralDependencyGroups.map(group => group.id), ['all']);
+});

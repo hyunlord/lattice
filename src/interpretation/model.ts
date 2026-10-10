@@ -1,4 +1,5 @@
 import type { Graph, Source } from '../core/model.js';
+import { overviewDependencyGroups } from '../query/structural-dependency-groups.js';
 import { buildStructuralOverview } from '../query/structural-map-model.js';
 
 export type Interpretation = {
@@ -9,7 +10,7 @@ export type Interpretation = {
     readonly sources: readonly { readonly path: string; readonly contentHash: string; readonly line: number; }[];
 };
 export type VisibleInterpretation = Omit<Interpretation, 'sources'> & { readonly sources: readonly (Interpretation['sources'][number] & { readonly url?: string; })[]; } & { readonly label: 'AI 요약'; readonly status: 'fresh' | 'stale'; readonly notePath: string; };
-export type InterpretationTarget = { readonly id: string; readonly name: string; readonly kind: 'module' | 'cluster'; readonly sources: readonly Source[]; readonly visibleFileIds?: readonly string[]; };
+export type InterpretationTarget = { readonly id: string; readonly name: string; readonly kind: 'module' | 'cluster'; readonly sources: readonly Source[]; readonly visibleFileIds?: readonly string[]; readonly group?: { readonly relation: 'folder-imports' | 'projected-folder-imports'; readonly stageIds: readonly string[]; readonly memberTargetIds: readonly string[]; readonly memberNames: readonly string[]; }; };
 export class InterpretationError extends Error {
     constructor(message: string) { super(message); this.name = 'InterpretationError'; }
 }
@@ -51,7 +52,7 @@ export function overviewInterpretationTargets(graph: Graph, requestedScope?: 'pr
     const stages = new Map(map.stages.map(stage => [stage.id, stage]));
     return (requestedScope ? [requestedScope] : ['production', 'all'] as const).flatMap(scope => {
         const roots = scope === 'all' ? map.structuralScope.allRootStageIds : map.rootStageIds;
-        return roots.flatMap(id => {
+        const folders = roots.flatMap(id => {
             const stage = stages.get(id);
             if (!stage) return [];
             const sources = new Map<string, Source>();
@@ -62,6 +63,16 @@ export function overviewInterpretationTargets(graph: Graph, requestedScope?: 'pr
             }
             return sources.size ? [{ id: `overview:${scope}:${id}`, name: stage.title, kind: 'cluster' as const, ...(stage.filePreviews?.length ? { visibleFileIds: stage.filePreviews.map(file => file.id) } : {}), sources: [...sources.values()].sort((a, b) => a.path.localeCompare(b.path)) }] : [];
         });
+        const groups = overviewDependencyGroups(map, scope).flatMap(group => {
+            const sources = new Map<string, Source>();
+            for (const id of group.nodeIds) for (const source of nodes.get(id)?.sources ?? []) sources.set(source.path, source);
+            return sources.size ? [{ id: group.id, name: '함께 연결된 폴더 묶음', kind: 'cluster' as const, sources: [...sources.values()].sort((a, b) => a.path.localeCompare(b.path)), group: { relation: group.folded ? 'projected-folder-imports' as const : 'folder-imports' as const, stageIds: group.stageIds, memberTargetIds: group.stageIds.map(id => `overview:${scope}:${id}`), memberNames: group.stageIds.map(id => stages.get(id)?.title ?? id) } }] : [];
+        });
+        // Group explanations and their member roles precede later pages without replacing either.
+        return Array.from({ length: Math.ceil(roots.length / 9) }, (_, page) => {
+            const pageIds = new Set(roots.slice(page * 9, page * 9 + 9));
+            return [...groups.filter(group => group.group.stageIds.every(id => pageIds.has(id))), ...folders.filter(folder => pageIds.has(folder.id.slice(`overview:${scope}:`.length)))];
+        }).flat();
     });
 }
 export function interpretationStatus(note: Interpretation, graph: Graph, targets: readonly InterpretationTarget[] = interpretationTargets(graph, note.targetId.startsWith('overview:'))): 'fresh' | 'stale' {

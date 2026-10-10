@@ -29,7 +29,9 @@ export type LoopStage = {
     readonly summaryEvidence?: readonly { readonly path: string; readonly line: number; }[];
 };
 export type LoopFlow = { readonly source: string; readonly target: string; readonly label: string; readonly tone?: 'normal' | 'warning'; readonly auxiliary?: boolean; readonly count?: number; readonly sourceFiles?: readonly string[]; readonly projectSourceFiles?: readonly string[]; };
+export type LoopDependencyGroup = { readonly id: string; readonly scope: 'production' | 'all'; readonly stageIds: readonly string[]; readonly nodeIds: readonly string[]; readonly folded: boolean; readonly interpretation?: LoopInterpretation; };
 export type LoopMap = {
+    readonly structuralDependencyGroups?: readonly LoopDependencyGroup[];
     readonly title?: string; readonly subtitle?: string; readonly lead: string;
     readonly verifiedCycleStageGroups?: readonly (readonly string[])[];
     readonly structuralSourceRoot?: string; readonly structuralEntryStageIds?: readonly string[];

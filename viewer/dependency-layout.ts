@@ -1,4 +1,5 @@
 import type { LoopFlow, LoopMap, LoopStage } from './loop-map-types.js';
+import { dependencyComponents, projectedDependencyRelations } from './structural-dependency-groups.js';
 
 
 export function structuralScopeModel(model: LoopMap, requested?: 'production' | 'all'): LoopMap {
@@ -8,39 +9,53 @@ export function structuralScopeModel(model: LoopMap, requested?: 'production' | 
     const stageById = new Map(model.stages.map(stage => [stage.id, stage])); const included = new Set<string>();
     const visit = (id: string): void => { if (included.has(id)) return; included.add(id); for (const child of stageById.get(id)?.childIds ?? []) visit(child); };
     for (const id of roots) visit(id);
-    return { ...model, rootStageIds: roots, ...(all ? { defaultStage: scope.allDefaultStage, ...(scope.allSourceRoot ? { structuralSourceRoot: scope.allSourceRoot } : {}), ...(scope.allEntryStageIds ? { structuralEntryStageIds: scope.allEntryStageIds } : {}) } : {}), stages: model.stages.filter(stage => included.has(stage.id)), flows: model.flows.filter(flow => included.has(flow.source) && included.has(flow.target)), ...(model.verifiedCycleStageGroups ? { verifiedCycleStageGroups: model.verifiedCycleStageGroups.filter(group => group.every(id => included.has(id))) } : {}) };
+    return { ...model, ...(model.structuralDependencyGroups ? { structuralDependencyGroups: model.structuralDependencyGroups.filter(group => group.scope === (all ? 'all' : 'production')) } : {}), rootStageIds: roots, ...(all ? { defaultStage: scope.allDefaultStage, ...(scope.allSourceRoot ? { structuralSourceRoot: scope.allSourceRoot } : {}), ...(scope.allEntryStageIds ? { structuralEntryStageIds: scope.allEntryStageIds } : {}) } : {}), stages: model.stages.filter(stage => included.has(stage.id)), flows: model.flows.filter(flow => included.has(flow.source) && included.has(flow.target)), ...(model.verifiedCycleStageGroups ? { verifiedCycleStageGroups: model.verifiedCycleStageGroups.filter(group => group.every(id => included.has(id))) } : {}) };
 }
 
 export type DependencyView = { readonly stages: readonly LoopStage[]; readonly flows: readonly LoopFlow[]; readonly actualCycles?: readonly (readonly string[])[]; };
 export function dependencyView(model: LoopMap, ids: readonly string[]): DependencyView {
     const stages = ids.flatMap(id => { const stage = model.stages.find(item => item.id === id); return stage ? [stage] : []; });
     const stageById = new Map(model.stages.map(stage => [stage.id, stage]));
-    const ancestor = (id: string): string | undefined => {
-        let current: string | undefined = id;
-        while (current) { if (ids.includes(current)) return current; current = stageById.get(current)?.parentId; }
-        return undefined;
-    };
-    const groups = new Map<string, { source: string; target: string; files: Set<string>; projectFiles: Set<string>; }>();
-    for (const flow of model.flows) {
-        const source = ancestor(flow.source) ?? flow.source, target = ancestor(flow.target) ?? flow.target;
-        if (!source || !target || source === target) continue;
-        const key = JSON.stringify([source, target]); const group = groups.get(key) ?? { source, target, files: new Set<string>(), projectFiles: new Set<string>() };
-        for (const file of flow.sourceFiles ?? []) group.files.add(file); for (const file of flow.projectSourceFiles ?? []) group.projectFiles.add(file); groups.set(key, group);
-    }
-    const flows = [...groups.values()].map(group => ({ source: group.source, target: group.target, count: group.files.size, sourceFiles: [...group.files].sort(), projectSourceFiles: [...group.projectFiles].sort(), label: group.projectFiles.size ? `${group.files.size - group.projectFiles.size}개 파일 · 프로젝트 선언 ${group.projectFiles.size}개` : `${group.files.size}개 파일` }));
+    const { flows, relatedFlows, actualCycles } = projectedDependencyRelations(model.stages, model.flows, ids, model.verifiedCycleStageGroups);
     const effective = stages.map(stage => {
         const nested = stages.filter(other => { let parent = other.parentId; while (parent) { if (parent === stage.id) return true; parent = stageById.get(parent)?.parentId; } return false; });
         const covered = new Set(nested.flatMap(other => other.descendantNodeIds ?? other.nodeIds));
         const nodeIds = (stage.descendantNodeIds ?? stage.nodeIds).filter(id => !covered.has(id));
-        const related = (direction: 'incoming' | 'outgoing') => flows.filter(flow => (direction === 'incoming' ? flow.target : flow.source) === stage.id).map(flow => ({ name: stageById.get(direction === 'incoming' ? flow.source : flow.target)?.title ?? '', description: dependencyFlowDescription(flow) }));
+        const related = (direction: 'incoming' | 'outgoing') => relatedFlows.filter(flow => (direction === 'incoming' ? flow.target : flow.source) === stage.id).map(flow => ({ name: stageById.get(direction === 'incoming' ? flow.source : flow.target)?.title ?? '', description: dependencyFlowDescription(flow) }));
         return { ...stage, nodeIds, groups: [{ title: '모듈', items: nodeIds.map(id => ({ id })) }], incoming: related('incoming'), outgoing: related('outgoing') };
     });
-    const actualCycles = (model.verifiedCycleStageGroups ?? []).map(cycle => [...new Set(cycle.flatMap(id => ancestor(id) ?? []))]).filter(cycle => cycle.length > 1);
-    return { stages: effective, flows: flows.filter(flow => ids.includes(flow.source) && ids.includes(flow.target)), actualCycles };
+    return { stages: effective, flows, actualCycles };
 }
 
 export type Point = { readonly x: number; readonly y: number; };
 export type Obstacle = { readonly x: number; readonly y: number; readonly width: number; readonly height: number; };
+export function dependencyRouteIntersects(points: readonly Point[], box: Obstacle): boolean {
+    return points.slice(1).some((b, index) => {
+        const a = points[index]; if (!a) return false;
+        return a.x === b.x ? a.x >= box.x && a.x <= box.x + box.width && Math.max(a.y, b.y) >= box.y && Math.min(a.y, b.y) <= box.y + box.height
+            : a.y >= box.y && a.y <= box.y + box.height && Math.max(a.x, b.x) >= box.x && Math.min(a.x, b.x) <= box.x + box.width;
+    });
+}
+export function selectDependencyRoutes<T extends { readonly flow: DependencyPair; readonly points: readonly Point[]; }>(routes: readonly T[]): readonly T[] {
+    const selected: T[] = [];
+    for (const route of [...routes].sort((a, b) => b.flow.weight - a.flow.weight || a.flow.source.localeCompare(b.flow.source) || a.flow.target.localeCompare(b.flow.target))) {
+        const collision = selected.some(other => other.points.slice(1).some((end, index) => {
+            const start = other.points[index]; if (!start) return false;
+            const padding = Math.max(3, Math.min(6, 1.5 + Math.log2(other.flow.weight + 1) * .55));
+            return dependencyRouteIntersects(route.points, { x: Math.min(start.x, end.x) - padding, y: Math.min(start.y, end.y) - padding, width: Math.abs(start.x - end.x) + padding * 2, height: Math.abs(start.y - end.y) + padding * 2 });
+        }));
+        if (!collision) selected.push(route);
+    }
+    return selected;
+}
+export function straightDependencyRoute(source: Obstacle, target: Obstacle, obstacles: readonly Obstacle[]): readonly Point[] | undefined {
+    const x = source.x + source.width / 2;
+    if (x <= target.x + 12 || x >= target.x + target.width - 12) return undefined;
+    const downward = target.y >= source.y + source.height;
+    if (!downward && source.y < target.y + target.height) return undefined;
+    const route = [{ x, y: downward ? source.y + source.height + 2 : source.y - 2 }, { x, y: downward ? target.y - 3 : target.y + target.height + 3 }];
+    return obstacles.some(box => dependencyRouteIntersects(route, box)) ? undefined : route;
+}
 export type RouteSpace = { readonly width: number; readonly height: number; readonly obstacles: readonly Obstacle[]; readonly occupied?: ReadonlySet<string>; };
 export function orthogonalRoute(start: Point, end: Point, space: RouteSpace): readonly Point[] {
     const step = 8; const columns = Math.ceil(space.width / step) + 1, rows = Math.ceil(space.height / step) + 1;
@@ -64,25 +79,7 @@ export function orthogonalRoute(start: Point, end: Point, space: RouteSpace): re
     return route.filter((p, index) => { const before = route[index - 1], after = route[index + 1]; return !before || !after || (before.x !== p.x || p.x !== after.x) && (before.y !== p.y || p.y !== after.y); });
 }
 
-export function dependencyLevels(view: DependencyView): readonly { readonly stages: readonly LoopStage[]; readonly cyclic: boolean; readonly foldedCycle: boolean; readonly level: number; }[] {
-    const reaches = (start: string, target: string): boolean => {
-        const pending = [start], seen = new Set<string>();
-        while (pending.length) { const id = pending.pop(); if (!id || seen.has(id)) continue; seen.add(id); for (const flow of view.flows.filter(flow => flow.source === id)) { if (flow.target === target) return true; pending.push(flow.target); } }
-        return false;
-    };
-    const assigned = new Set<string>(); const groups = view.stages.flatMap(stage => {
-        if (assigned.has(stage.id)) return [];
-        const stages = view.stages.filter(other => other.id === stage.id || reaches(stage.id, other.id) && reaches(other.id, stage.id)); stages.forEach(other => assigned.add(other.id));
-        const cyclic = stages.length > 1 && (view.actualCycles?.some(cycle => stages.every(stage => cycle.includes(stage.id))) ?? false);
-        return [{ stages, cyclic, foldedCycle: stages.length > 1 && !cyclic, level: 0 }];
-    });
-    const owner = (id: string) => groups.findIndex(group => group.stages.some(stage => stage.id === id));
-    for (let iteration = 0; iteration < groups.length; iteration++) for (const flow of view.flows) {
-        const a = owner(flow.source), b = owner(flow.target), source = groups[a], target = groups[b];
-        if (source && target && a !== b) target.level = Math.max(target.level, source.level + 1);
-    }
-    return groups.sort((a, b) => a.level - b.level);
-}
+export const dependencyLevels = dependencyComponents;
 
 export type DependencyPair = LoopFlow & { readonly reverseCount?: number; readonly reverseSourceFiles?: readonly string[]; readonly weight: number; };
 export function dependencyPairs(flows: readonly LoopFlow[]): readonly DependencyPair[] {
