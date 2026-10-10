@@ -50,7 +50,7 @@ export function string(value: RuntimeValue): string {
     if (typeof value !== "string") throw new Error("Lens expected a string");
     return value;
 }
-export type Environment = { readonly provenance?: Provenance; readonly itemSources?: readonly Source[]; readonly codeSupport?: ReadonlyMap<string, CodeSupportEvaluation>; readonly expressionSource?: Source; readonly sourceLink?: (source: Source) => Source; readonly node?: JsonObject; readonly item?: RuntimeValue; readonly vars: RuntimeObject; readonly records: readonly ExtractedRecord[]; readonly sources: Map<string, Source>; readonly graph?: JsonObject; };
+export type Environment = { readonly collectSources?: boolean; readonly provenance?: Provenance; readonly itemSources?: readonly Source[]; readonly codeSupport?: ReadonlyMap<string, CodeSupportEvaluation>; readonly expressionSource?: Source; readonly sourceLink?: (source: Source) => Source; readonly node?: JsonObject; readonly item?: RuntimeValue; readonly vars: RuntimeObject; readonly records: readonly ExtractedRecord[]; readonly sources: Map<string, Source>; readonly graph?: JsonObject; };
 export function recordView(node: NodeDraft): JsonObject { return { ...node.attributes, id: node.id, kind: node.kind, name: node.name }; }
 export function evaluateLocated(expression: JsonValue | undefined, env: Environment): { readonly value: RuntimeValue; readonly sources: readonly Source[]; } {
     const sources = new Map<string, Source>();

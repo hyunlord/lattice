@@ -37,9 +37,13 @@ test('source retains exact fields across derived scopes, lexical bindings, neste
         edges: [{ id: 'selected-link', source: { where: { op: 'eq', left: get('node', 'id'), right: 'a' } }, target: get('node', 'steps', 0, 'id'), targetField: ['id'] }],
         findings: [{ id: 'evidence', severity: 'warning', query: {}, metrics: { chosen: map(get('vars', 'targetValues'), source(get('item', 'derived', 'chosen'))), targets: source({ op: 'count', value: get('vars', 'targets') }), targetValues: source({ op: 'count', value: get('vars', 'targetValues') }) }, template: 'Evidence' },
         { id: 'selected-budget', query: { where: { op: 'gt', left: get('vars', 'transitive'), right: 0 } }, metrics: { count: { op: 'count', value: get('vars', 'targets') } }, template: 'Budget' },
-        { id: 'selected-identity', query: { where: { op: 'eq', left: get('node', 'id'), right: 'a' } }, metrics: { count: { op: 'count', value: get('vars', 'targets') } }, template: 'Identity' }],
+        { id: 'selected-identity', query: { where: { op: 'eq', left: get('node', 'id'), right: 'a' } }, metrics: { count: { op: 'count', value: get('vars', 'targets') } }, template: 'Identity' },
+        { id: 'selected-source', query: { where: { op: 'gt', left: { op: 'count', value: source(get('vars', 'transitive')) }, right: 0 } }, metrics: {}, template: 'Source predicate' },
+        { id: 'selected-lookup', query: { where: { op: 'eq', left: { op: 'at', object: { op: 'lookup', kind: 'record', field: ['id'], equals: 'a' }, key: 'budget' }, right: get('node', 'budget') } }, metrics: {}, template: 'Lookup predicate' }],
     });
-    const result = applyLens(extractJson(data), parseLens(lensInput), lensInput);
+    const baseline = applyLens(extractJson(data), parseLens(lensInput), lensInput);
+    const result = applyLens(extractJson(data), parseLens(lensInput), lensInput, { queryProbe: true });
+    assert.deepEqual(result, baseline);
     const facets = Object.fromEntries(result.facets.filter(facet => facet.nodeId === 'a').map(facet => [facet.key, facet.value]));
     for (const key of ['direct', 'derived', 'repeated', 'lexical']) assert.deepEqual(pointers(facets[key]), ['/0/budget']);
     assert.deepEqual(pointers(facets.graph), ['/0/budget', '/1/budget']);
@@ -58,6 +62,9 @@ test('source retains exact fields across derived scopes, lexical bindings, neste
     assert.deepEqual(dataPointers(result.edges.find(edge => edge.kind === 'selected-link')), ['/0', '/0/id', '/0/steps/0/id', '/1', '/1/id']);
     assert.deepEqual(dataPointers(result.findings.find(finding => finding.id === 'selected-budget')), ['/0', '/0/budget', '/1', '/1/budget']);
     assert.deepEqual(dataPointers(result.findings.find(finding => finding.id === 'selected-identity')), ['/0', '/0/id']);
+    assert.deepEqual(result.findings.find(finding => finding.id === 'selected-source').targetIds, ['a', 'b']);
+    assert.deepEqual(dataPointers(result.findings.find(finding => finding.id === 'selected-source')), ['/0', '/0/budget', '/1', '/1/budget']);
+    assert.deepEqual(result.findings.find(finding => finding.id === 'selected-lookup').targetIds, ['a']);
     const evidence = key => result.facets.find(facet => facet.nodeId === 'a' && facet.key === key).sources;
     for (const key of ['direct', 'derived', 'repeated']) {
         assert.deepEqual(pointers(evidence(key).filter(entry => entry.path === data.path)).sort(), ['/0', '/0/budget']);
