@@ -46,16 +46,18 @@ Statuses: **designed** means a reviewed contract exists, not implementation; **p
 | L5-05 | bs-mobile PR lens + Action + Pages (D1 replacement) | merged PR, CI and live URL | verified: [merged consumer, ADR check, public Pages and read-only portability](l5-acceptance.md) |
 | L5-06 | Charter & Kin minimal example, strictly read-only | real source graph + external cache/output + unchanged git status | verified: [source, portability and actual client evidence](l5-acceptance.md) |
 | L5-07 | Lensless public non-game repo, core unchanged | actual repository source SHA + useful screens/graph, same tool binary | verified: [source, portability and actual client evidence](l5-acceptance.md) |
-| L5-08 | bs full build ≤10s / unchanged freshness ≤50ms / MCP ≤1s | repeated timed runs with mode/hardware/Node/source/file count | pending: [recorded timing failures](l5-performance.md) |
+| L5-08 | full build/first empty-cache request ≤10s; warm MCP ≤1s; freshness p95 ≤50ms with explicit anomaly disposition | recorded measurements plus user correction; no replacement p95 invented | accepted by user adjudication: [criteria, raw values and disposition](l5-performance.md#user-acceptance-correction--2026-10-10) |
 | L5-09 | Same commit two independent builds same hash | cold-cache commands and actual identical semantic graph hashes | verified: [independent cold-build hashes](l5-performance.md) |
 | L5-10 | Claude Code tool list and stat-only-items/intent query | real client transcript with exact tool names, answers and hashes | verified: [source, portability and actual client evidence](l5-acceptance.md) |
 | L5-11 | Codex tool list and same query | real client transcript; protocol harness alone insufficient | verified: [source, portability and actual client evidence](l5-acceptance.md) |
 | INV-01 | No Graft code copy / no domain-aware core / no LLM stage | diff/source review and package dependency inspection | verified: [bounded shipped-scope review](l5-acceptance.md) |
 | INV-02 | No data editor, hosted auth, multiuser scope | scope review and shipped surface | verified: [bounded shipped-scope review](l5-acceptance.md) |
 | INV-03 | bs-mobile PR-only / Charter & Kin no commits | remote PR/history + before/after read-only checkout checks | verified: [merged consumer, ADR check, public Pages and read-only portability](l5-acceptance.md) |
-| REPORT | L0–L5 ≤10-line summaries + commit/PR/CI | linked milestone reports | pending |
+| REPORT | L0–L5 ≤10-line summaries + commit/PR/CI | linked milestone reports | verified: [L5 closure](l5-acceptance.md#final-l5-closure) and historical milestone evidence below |
 
-## Milestone evidence
+## Historical milestone evidence
+
+The entries below preserve decisions made at each checkpoint. The final [2026-10-10 user acceptance](l5-acceptance.md#final-l5-closure) supersedes earlier L5 pending statuses; all measurements remain unchanged.
 
 L0: repository created and cloned; design/reference artifacts prepared. Independent design review passed; local documentation and negative checks passed. [Remote L0 CI passed](https://github.com/hyunlord/lattice/actions/runs/37972697599) and [PR #4 merged](https://github.com/hyunlord/lattice/pull/4). See [L0 evidence](l0.md). Product CLI, viewer, Pages, MCP, Action, performance and agent acceptance have **not** run.
 
@@ -112,3 +114,6 @@ L5 progress: [actual-source performance investigation](l5-performance.md) record
 L5 partial acceptance: [source/oracle, portability and actual client evidence](l5-acceptance.md) verifies the recorded semantic and agent requirements. [Performance thresholds remain failed](l5-performance.md), while expanded consumer publication and actual client parity are verified. This is not L5 completion.
 
 Final L5 refresh: [PR174 publication and installed-package evidence](l5-performance.md#final-pr174-publication-and-retained-failures) records public source `8bf6629`, the same package on three repositories, and actual Claude/Codex queries matching public graph `0b7c27c5`. The pristine measurement still fails cold MCP (1.831s) and maximum unchanged freshness (348.760ms); the separate optional-Graft failure remains preserved. L5-08 and REPORT remain pending; successful publication, portability and functional client checks do not waive these limits.
+
+
+L5 closure (2026-10-10): all L5 rows and REPORT are complete under the [explicit user correction and anomaly disposition](l5-performance.md#user-acceptance-correction--2026-10-10). This is acceptance adjudication, not a claim that the final anomalous p95 measured below50ms. Future performance work follows the user's warm-response/full-build triggers; L6 is separate.

@@ -1,5 +1,5 @@
 {
-  "status": "partial",
+  "status": "accepted-by-user-adjudication",
   "date": "2026-10-10",
   "hardware": "Apple M4 Max 14 cores; 38654705664 bytes; Darwin 27 arm64",
   "method": "3 empty-cache builds; first empty-cache MCP request; 20 unchanged freshness calls; 3 calls per 8 tools; default Git environment",
@@ -2019,5 +2019,35 @@
       }
     ],
     "status": "partial; L5-08 and REPORT pending; cold MCP and maximum freshness failed"
+  },
+  "acceptanceAdjudication": {
+    "date": "2026-10-10",
+    "authority": "Explicit user performance criteria correction and instruction to close L5",
+    "criteria": {
+      "warmMcpMaxMs": 1000,
+      "firstEmptyCacheIncludingBuildMaxMs": 10000,
+      "fullBuildMaxMs": 10000,
+      "unchangedFreshnessP95MaxMs": 50
+    },
+    "finalCase": "published-pr174-pristine",
+    "measuredFinal": {
+      "fullBuildMaxMs": 1905.8769590000002,
+      "firstEmptyCacheMs": 1831.0636250000007,
+      "warmMcpMaxMs": 575.5437090000014,
+      "freshnessP95Ms": 329.4267910000017,
+      "freshnessMaxMs": 348.75966700000026
+    },
+    "historicalPassingP95": {
+      "case": "linked-items-published-pr165",
+      "p95Ms": 48.004,
+      "rounded": true
+    },
+    "laterDiagnostic": {
+      "warmMs": 44.6,
+      "p95Established": false
+    },
+    "freshnessDisposition": "Accepted by user adjudication excluding the unreproduced episode; final measured p95 is not asserted to pass 50ms. Raw case and original gate decisions preserved.",
+    "recurrencePolicy": "Record recurrence in an issue. Future performance PR only if warm MCP >1000ms or full build >10000ms.",
+    "newAcceptanceMeasurement": false
   }
 }

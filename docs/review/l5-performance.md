@@ -1,8 +1,16 @@
 # L5 performance investigation
 
-Status: partial. This report records an improvement, not completion of L5. [Issue 46](https://github.com/hyunlord/lattice/issues/46) remains open while any requested timing or final acceptance evidence is missing.
+Status: accepted by user adjudication on 2026-10-10 under the corrected criteria below. Historical strict-gate failures remain unchanged in the measurement record. [Issue46](https://github.com/hyunlord/lattice/issues/46) tracks this closure.
 
-## Method
+## User acceptance correction — 2026-10-10
+
+L5 is accepted under the user's explicit correction of the ambiguous brief and instruction to close the milestone. Warm MCP tool responses must be at most1s. The first empty-cache request includes the whole build and is judged against10s. Unchanged freshness is judged by p95≤50ms; an unreproduced anomalous episode is recorded rather than blocking closure, and recurrence must become an issue. Future performance PRs are authorized only when warm tool responses exceed1s or a full build exceeds10s.
+
+The final pristine case measures a1.906s maximum full build, a1.831s first empty-cache response including its build, and a0.576s maximum warm response: these satisfy the corrected build/MCP budgets. Freshness needs a separate evidence distinction: **48.004ms p95 belongs to historical published PR165**, while the final pristine run actually records **329.427ms p95 and348.760ms maximum**. The later44.6ms diagnostic is one warm observation, not a newly measured p95. No current48ms p95 is claimed. Closure is the user's acceptance adjudication of the unreproduced episode, not a claim that its raw p95 passed50ms. The full episode, earlier failures, identities and original gate booleans remain preserved; no new measurement or performance code was added to obtain acceptance.
+
+The user's instruction to close L5 resolves L5-08 using those corrected budgets and that explicit episode disposition. If the anomaly recurs, record it in an issue; do not silently replace old results or open another performance implementation PR outside the stated triggers. The existing long object-valued facet readability limitation belongs to the separate human-facing screen work, not an unreported L5 performance blocker.
+
+## Historical method and prior gate decisions
 
 Measurements use Node 24.21.0 on macOS Darwin 27 arm64, Apple M4 Max (14 cores, 38,654,705,664 bytes memory). Each build starts with a distinct empty external cache. The MCP process starts with another empty cache, receives its first query, twenty unchanged freshness queries and three calls to each of the eight tools. Every timing includes the actual response; the first query's rebuild is not excluded. Coordinated builds and tests are paused during measurement. Unrelated desktop processes can still run; later cases preserve host samples outside timed spans and do not claim an idle machine. Timings are machine observations, not a platform-wide guarantee.
 

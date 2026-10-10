@@ -1,6 +1,6 @@
 # L5 source, portability and agent acceptance
 
-Status: partial. Source/oracle, portability and actual-client evidence below does not waive the failed [performance requirements](l5-performance.md). The expanded consumer lens merged through [bs-mobile PR163](https://github.com/hyunlord/bs-mobile/pull/163); the retained PR163 Pages and actual-client records verify the same historical source and graph. The PR165 publication follow-up below has separate browser and performance evidence. L5 and the overall goal remain incomplete.
+Status: accepted on 2026-10-10 by the user under the [corrected performance criteria and explicit anomaly disposition](l5-performance.md#user-acceptance-correction--2026-10-10). The following prior records retain their original identities and historical pending/failure decisions; the final closure section supersedes those status decisions without rewriting observations.
 
 [Lattice PR47](https://github.com/hyunlord/lattice/pull/47) merged as `b9da44c0f22e0133fff675a9dd4c916b6b716fa9`; [Node20/22/24 CI](https://github.com/hyunlord/lattice/actions/runs/38014061877) passed. The earlier separately installed candidate `61d419b` matches PR47, package SHA-256 `3abdb704a6ffbc1502d24d761ac1363b54fd6cdbefd442c0ab1d70ebf2a6bedb`. [PR48](https://github.com/hyunlord/lattice/pull/48), merged as `0a20ebe`, subsequently corrected generic facet provenance. That candidate `09e7764` has package SHA-256 `40b1c2ea543c13a9af6ae95ab70a9c7003b0f01c95e6ae236cb5862d72477ba2`. Node24.21.0 runs the CLI and clients. [PR49](https://github.com/hyunlord/lattice/pull/49), merged as `d8a689`, subsequently corrected generic rule provenance. The latest three-repository prototype/source/browser checks use package SHA-256 `89a188a741c8d83960eba19e202c11376312879ef5be4f342e638bac92b0a765`. Earlier records remain retained with their identities; the retained bs-client calls match the historical PR163 Pages graph. Failed performance requirements remain.
 
@@ -69,3 +69,18 @@ The public [map](https://hyunlord.github.io/bs-mobile/#/home?layer=designed-v1) 
 The tool remains pinned to `d8a689` / package89a188a7; later Lattice main `8709844` is not covered by this consumer measurement. [Published-source performance](l5-performance.md#published-linked-item-lens-follow-up) records three builds at1.970s maximum, cold MCP1.828s and unchanged freshness48.004ms p95 /53.439ms maximum. All45 tool calls succeed, but cold MCP and maximum freshness still fail. The earlier controlled projection's passing freshness maximum cannot replace this result. [Compact publication/performance evidence](evidence/l5-performance.json) preserves exact identities and the premerge check.
 
 Prior prototype, source, portability and actual-client records above retain their original source/lens identities. The actual clients were not rerun for PR165, so their historical graph agreement is not asserted for the latest public graph. No failing gate changes: L5-08 and REPORT remain pending, and the overall goal is incomplete.
+
+
+## Final L5 closure
+
+관문: 통과 — 사용자 정정 기준과 비재현 이상 관측의 명시적 판정으로 L5를 종료한다.
+
+1. 공개 [bs-mobile 지도](https://hyunlord.github.io/bs-mobile/)는 source `8bf662918b57d4bff95707c2fd55fc2933ace195`, graph `0b7c27c5a87966160dd636ea1bf512c49bbaae36eef96066ef57483a00e2a9f2`로 검증했다.
+2. [PR174](https://github.com/hyunlord/bs-mobile/pull/174)와 [Pages CI](https://github.com/hyunlord/bs-mobile/actions/runs/38024501827/attempts/2)가 공개 산출물을 고정한다.
+3. 같은 `e165b5` 패키지로 bs-mobile·Charter & Kin·Click을 검증했고, 공개22 화면/폭 사례·31 그래프 응답·24 자산 해시가 일치한다.
+4. 실제 Claude/Codex는8 도구를 발견하고3/6 호출에서 같은 공개 그래프와24/30 및 저자 해석을 받았다.
+5. 최종 전체 빌드 최대1.906초, 빌드 포함 첫 요청1.831초, 웜 응답 최대0.576초는 정정 예산을 충족한다.
+6. 역사적 freshness p95는48.004ms이며 최종 비재현 사례는329.427ms p95/348.760ms 최대다. 이를48ms로 바꾸지 않고 사용자 판정으로 종료한다.
+7. 원시 실패·선택적 Graft 사례·배포403 및 이후 성공은 보존하며, 이상 재현 시 이슈로 기록한다.
+8. [Lattice PR58](https://github.com/hyunlord/lattice/pull/58), commit `24a7a1f58f53e22d2e5596a69efc672153ea3b74`, [Node20/22/24 CI](https://github.com/hyunlord/lattice/actions/runs/38025076832)가 최종 기능/측정 증거를 보존한다.
+9. [구조화된 최종 증거](evidence/l5-performance.json)와 [사용자 판정](l5-performance.md#user-acceptance-correction--2026-10-10)을 기준으로 L5-08과 REPORT를 닫는다. L6 화면 작업은 별도 범위다.
