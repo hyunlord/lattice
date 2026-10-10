@@ -114,3 +114,5 @@
 .focused-matrix td, .focused-matrix th { min-width:0; max-width:none; overflow-wrap:anywhere; }
 .text-matrix .matrix-cell { font-family:inherit; padding:var(--space-2); justify-content:flex-start; }
 .focused-matrix caption { white-space:normal; }
+
+.table-region:has(.focused-matrix) { max-height:none; }
