@@ -206,10 +206,12 @@ export function featuredDependencyRoles(view: DependencyView, entryStageIds: rea
 
 export function internalDependencyFacts(view: DependencyView, memberIds: readonly string[]): readonly LoopFlow[] {
     const members = new Set(memberIds);
-    return view.flows.filter(flow => flow.source !== flow.target && members.has(flow.source) && members.has(flow.target)).map(flow => {
+    const ranked = view.flows.filter(flow => flow.source !== flow.target && members.has(flow.source) && members.has(flow.target)).map(flow => {
         const sourceFiles = [...new Set(flow.sourceFiles ?? [])].sort();
         return { ...flow, sourceFiles, count: sourceFiles.length };
-    }).sort((a, b) => b.count - a.count || a.source.localeCompare(b.source) || a.target.localeCompare(b.target)).slice(0, 3);
+    }).sort((a, b) => b.count - a.count || a.source.localeCompare(b.source) || a.target.localeCompare(b.target));
+    const seen = new Set<string>();
+    return ranked.filter(flow => { if (seen.has(flow.source)) return false; seen.add(flow.source); return true; });
 }
 
 export function dependencyFlowDescription(flow: LoopFlow): string {

@@ -269,10 +269,10 @@ test('dependency labels explicitly distinguish a folder bundle from its represen
     const labels = [...dependencyLabelLines({ stages: [source, bundle], flows: [{ source: source.id, target: bundle.id, label: '11개 파일', count: 11 }] }).values()];
     assert.deepEqual(labels, [['root → logger 묶음', '11개 파일']]);
 });
-test('mutual-folder facts retain strongest actual directions and deduplicate importers', async () => {
+test('mutual-folder facts preserve every source strongest direction and deduplicate importers', async () => {
     const { internalDependencyFacts } = await import('../viewer/dependency-layout.js');
     const view = { stages: [], flows: [{ source: 'a', target: 'b', sourceFiles: ['1', '1', '2'], count: 99 }, { source: 'b', target: 'a', sourceFiles: ['3'] }, { source: 'c', target: 'a', sourceFiles: ['4'] }, { source: 'a', target: 'c', sourceFiles: ['5'] }, { source: 'outside', target: 'a', sourceFiles: ['1', '2', '3'] }] };
-    assert.deepEqual(internalDependencyFacts(view, ['a', 'b', 'c']).map(f => [f.source, f.target, f.count]), [['a', 'b', 2], ['a', 'c', 1], ['b', 'a', 1]]);
+    assert.deepEqual(internalDependencyFacts(view, ['a', 'b', 'c']).map(f => [f.source, f.target, f.count]), [['a', 'b', 2], ['b', 'a', 1], ['c', 'a', 1]]);
     assert.deepEqual(internalDependencyFacts(view, ['a']), []);
 });
 test('featured roles prioritize entry folders then largest subtrees without selecting them', async () => {
