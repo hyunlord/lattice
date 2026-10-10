@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import { createServer } from 'node:http';
+import { githubClient } from '../bin/ci-github.mjs';
 import { renderCiComment, publishCiComment, commentMarker } from '../bin/ci-comment.mjs';
 const head = 'a'.repeat(40), base = 'b'.repeat(40);
 const counts = { nodes: 2, edges: 1, facets: 0, findings: 1, views: 0 };
@@ -53,4 +54,23 @@ test('publisher skips stale and fork pull requests and rejects unrelated run rep
     assert.equal((await publishCiComment(report, fork)).reason, 'fork pull request');
     await assert.rejects(() => publishCiComment({ ...report, runId: '124' }, f.context), /trusted run/);
     assert.equal(f.writes.length, 0);
+});
+
+test('GitHub failures retain bounded denial evidence without exposing credentials', async t => {
+    const server = createServer((_req, res) => {
+        res.writeHead(403, { 'content-type': 'application/json', 'x-github-request-id': 'request-123', 'x-accepted-github-permissions': 'pull_requests=write', 'retry-after': '60' });
+        res.end(JSON.stringify({ message: 'Denied secret-token\n' + 'x'.repeat(1000) }));
+    });
+    await new Promise(resolve => server.listen(0, '127.0.0.1', resolve));
+    t.after(() => new Promise(resolve => server.close(resolve)));
+    const client = githubClient({ token: 'secret-token', apiUrl: `http://127.0.0.1:${server.address().port}` });
+    await assert.rejects(client.request('PATCH', '/comment', { body: 'private body' }), error => {
+        assert.match(error.message, /HTTP 403.*Denied \[redacted\]/);
+        assert.match(error.message, /x-github-request-id=request-123/);
+        assert.match(error.message, /retry-after=60/);
+        assert.match(error.message, /x-accepted-github-permissions=pull_requests=write/);
+        assert(!error.message.includes('secret-token') && !error.message.includes('private body'));
+        assert(!error.message.includes('\n') && error.message.length < 1000);
+        return true;
+    });
 });

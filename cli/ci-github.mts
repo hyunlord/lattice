@@ -12,7 +12,15 @@ export function githubClient(connection: GithubConnection): GithubClient {
                 ...(body === undefined ? {} : { body: JSON.stringify(body) }),
                 signal: AbortSignal.timeout(30_000), redirect: 'error',
             });
-            if (!response.ok) throw new Error(`GitHub API ${method} failed with HTTP ${response.status}`);
+            if (!response.ok) {
+                const safe = (value: string) => value.split(connection.token).join('[redacted]').replace(/[\u0000-\u001f\u007f]/gu, ' ').slice(0, 240);
+                const details: unknown = await response.json().catch(() => undefined);
+                const message = object(details) && typeof details['message'] === 'string' ? `: ${safe(details['message'])}` : '';
+                const headers = ['x-github-request-id', 'x-accepted-github-permissions', 'retry-after', 'x-ratelimit-remaining', 'x-ratelimit-reset'].flatMap(name => {
+                    const value = response.headers.get(name); return value === null ? [] : [`${name}=${safe(value)}`];
+                });
+                throw new Error(`GitHub API ${method} failed with HTTP ${response.status}${message}${headers.length ? ` (${headers.join('; ')})` : ''}`);
+            }
             try { return await response.json(); }
             catch (error) {
                 if (error instanceof SyntaxError) throw new Error('GitHub API returned invalid JSON');

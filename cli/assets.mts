@@ -27,7 +27,9 @@ export function resolveMediaAssets(root: string, nodes: readonly Pick<Node, 'id'
             const physical = realpathSync(requested);
             if (!contained(repository, physical)) { missing('Image symlink points outside the repository'); continue; }
             if (!statSync(physical).isFile()) { missing('Image path is not a file'); continue; }
-            const bytes = readFileSync(physical), sourceHash = createHash('sha256').update(bytes).digest('hex');
+            const bytes = readFileSync(physical);
+            if (bytes.subarray(0, 64).toString('utf8').startsWith('version https://git-lfs.github.com/spec/v1')) { missing('Git LFS image is not downloaded; enable LFS checkout or run git lfs pull'); continue; }
+            const sourceHash = createHash('sha256').update(bytes).digest('hex');
             const path = `media/${sourceHash}${extension}`;
             files.set(path, { path, bytes, mimeType });
             manifest[node.id] = { status: 'available', url: path, sourcePath: reference.path, sourceHash, ...(reference.frame ? { frame: reference.frame } : {}), ...(reference.alt ? { alt: reference.alt } : {}) };
