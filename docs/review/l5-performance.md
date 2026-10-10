@@ -51,3 +51,25 @@ The new `facet-provenance-candidate-ci` case is appended to the machine-readable
 Three independent builds reached **2.148s maximum** and retained equal hashes. The first cold MCP call took **2.047s**, still failing one second. Twenty unchanged freshness calls reached **47.93ms p95 / 50.423ms maximum**; the maximum still fails50ms, despite the passing p95. All eight warm tools passed, with HEAD diff **0.524s maximum**. All45 calls succeeded. Graph hash is `1ed8ce8c513d61e05689aa83d2ff7ca40d21d7a855de7d7efce64d44887d5413`.
 
 The appended `rule-provenance-candidate-ci` case preserves all earlier observations. Performance and L5 remain incomplete; public consumer/browser and real-client records for this candidate are separate evidence, not inferred from successful timings or older artifacts.
+
+## Linked-item lens controlled projection
+
+[bs-mobile issue164](https://github.com/hyunlord/bs-mobile/issues/164) and [PR165](https://github.com/hyunlord/bs-mobile/pull/165) replace the linked-item facet's whole-edge scan with the original designed item link lists. The layer, kind, target identity, universal-item exclusion and unique source-item semantics remain the same. The domain rule stays in the consumer lens; generic provenance is not discarded. Both expressions agree on all449 current and436 historical nodes, and the current full graph agrees on all non-source values after excluding graph identity/lens/snapshot metadata. Every applicable predicate and link-list read retains its field or original-record span.
+
+The controlled pair uses the same installed `d8a689` package, clean consumer `c162509897333940d7a8124d58b1be75963c35d4`, Node24.21.0 and the hardware/protocol above, with no optional Graft input. Both lenses are external projections. The source checkout remains clean before and after each run, preserving immutable source links equally. This avoids mistaking dirty-source URL removal for a lens improvement. Lens hashes, graph identities, full warm-tool summaries and all failed gates are appended to [the evidence record](evidence/l5-performance.json).
+
+| Clean-source external projection | Graph bytes | Cold build maximum | First cold MCP | Unchanged freshness p95 / maximum | Warm HEAD diff maximum |
+| --- | --- | --- | --- | --- | --- |
+| Original linked-item expression | 55,786,248 | 2.136 s | 2.044 s | 49.085 / 51.126 ms | 0.506 s |
+| Direct item-link expression | 47,205,555 | 1.938 s | 1.834 s | 48.038 / 48.569 ms | 0.462 s |
+
+Both runs retain deterministic builds and all45 successful tool calls. The candidate passes the recorded freshness maximum and reduces graph bytes by15.38%; **cold MCP still fails one second**. These are controlled projections, not final published-consumer acceptance. The subsequent published-source run below records PR165 CI, publication, browser and performance separately. L5-08 and the overall milestone report remain incomplete; all earlier failures are retained.
+
+
+## Published linked-item lens follow-up
+
+[PR165](https://github.com/hyunlord/bs-mobile/pull/165) merged as `03c5f22f528ad005f6367b66ba0878c95ae142fb` after [full CI38018070629](https://github.com/hyunlord/bs-mobile/actions/runs/38018070629) and [map CI38018070918](https://github.com/hyunlord/bs-mobile/actions/runs/38018070918) passed. [Pages deployment38018970891](https://github.com/hyunlord/bs-mobile/actions/runs/38018970891) succeeded. This run uses the actual default repository lens on that clean merged source, with no optional Graft input, and the same installed `d8a689` package89a188a7. Later Lattice main `8709844` is not the tool measured or published here.
+
+Three empty-cache builds reached **1.970s maximum**. The first cold MCP request took **1.828s**, still failing one second. Twenty unchanged freshness calls reached **48.004ms p95 / 53.439ms maximum**; the maximum fails50ms. The controlled external projection's passing maximum does not supersede this failure. All45 tool calls succeeded; all eight warm tools passed, including HEAD diff at **0.489s maximum**. Build determinism passed.
+
+The public browser and local performance graph match exactly at `3c5e5e544e9d1b3e8e3e66660e549cb4f764143b8c35261ecbb44646aecf23b1`. Browser verification passed22 route/width cases and8 interaction groups with zero errors or overflow, including historical comparison and reload. [Compact evidence](evidence/l5-performance.json) appends this actual default-lens case, publication links and the premerge ADR scan. Earlier external projections, actual-client observations and all timing failures remain historical evidence. L5-08 and REPORT remain pending; cold MCP and maximum freshness are not waived.
