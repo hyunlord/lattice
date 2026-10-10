@@ -1,6 +1,6 @@
 # L6 human-facing views
 
-Local acceptance: five real bs-mobile tasks pass within two clicks from home at 375, 768 and 1280 pixels (15 task/viewport observations). Public deployment remains pending until the consumer pin and CI publish this viewer.
+Local acceptance: five real bs-mobile tasks pass within two clicks from home at 375, 768 and 1280 pixels (15 task/viewport observations). The initial public deployment was verified at consumer commit `86b8c56`; the navigation follow-up below closes an additional visual finding.
 
 ## Generic contract
 
@@ -21,3 +21,7 @@ No dependencies were added. Existing DOM/canvas/table primitives and token style
 | Land influences | Home → text matrix → land target | Six incoming explanations shown directly |
 
 Visual inspection found and corrected a mobile matrix width issue: a selected target now fits a two-column table. Further checks cover individual graph focus, raw-detail disclosure and wrong-layer recovery. Child review sessions hit their account usage limit; implementation integration and browser review continued in the parent session. No independent final dual-review result is claimed.
+
+## Public navigation follow-up (#62)
+
+The public build passed all 15 answer/path checks and matched all 26 validated package assets. Screenshot inspection then exposed retained gallery scroll: after opening iron blade, Chrome reported `scrollY=1277` and heading top `-1147`, before and after full-page capture. A failing-first browser assertion required the new detail to start at its summary. Resetting document scroll after route rendering changes the same reproduction to `scrollY=0`, heading top `130`. This is generic navigation behavior; no lens or dependency is added. The five-task harness now also requires newly opened detail/status headings in the first viewport. `npm run check` still passes all 155 tests.
