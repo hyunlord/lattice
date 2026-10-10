@@ -3,7 +3,7 @@ import type { Lens, SourceInput } from '../dist/index.js';
 import { existsSync, readFileSync } from 'node:fs';
 import { basename, relative, resolve, sep } from 'node:path';
 import { canonicalJson } from '../dist/index.js';
-import { matchesGlob, parseLens } from '../dist/lens/index.js';
+import { createGlobMatcher, parseLens } from '../dist/lens/index.js';
 import { inside, inInputScope, selectedInputs } from './inputs.mjs';
 import { workingRepository, workingRepositoryAsync } from './repository.mjs';
 import { digest } from './storage.mjs';
@@ -34,9 +34,10 @@ function observeInputs(options: Options, repository: RepositoryReader, historica
     const previous = plans.get(options);
     const sameLens = previous?.lensInput?.path === lensInput?.path && previous?.lensInput?.text === lensInput?.text;
     const lens = sameLens ? previous?.lens : lensInput ? parseLens(lensInput) : undefined;
+    const match = createGlobMatcher();
     const plan = previous && sameLens && samePaths(previous.paths, repository.paths) ? previous : {
         lensInput, lens, paths: repository.paths, selected: selectedInputs(repository.paths, lens),
-        codePaths: repository.paths.filter(path => inInputScope(path, lens) && lens?.codeLinks.some(rule => rule.files.some(pattern => matchesGlob(path, pattern)))),
+        codePaths: repository.paths.filter(path => inInputScope(path, lens, match) && lens?.codeLinks.some(rule => rule.files.some(pattern => match(path, pattern)))),
     };
     plans.set(options, plan);
     const coverage = !lens ? 'no-lens' : historical ? historicalText === undefined ? 'current-lens-projection' : 'repository-lens' : inside(root, lensPath) ? 'repository-lens' : 'current-lens-projection';

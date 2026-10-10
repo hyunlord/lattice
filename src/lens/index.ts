@@ -77,7 +77,7 @@ export function parseLens(input: SourceInput): Lens {
     const codeLinks = parseCodeLinks(definition);
     return { ...(include === undefined ? {} : { include }), ...(exclude === undefined ? {} : { exclude }), name: string(config["name"]), kinds, config, codeLinks, derived: compileDerived(definition, codeLinks) };
 }
-export function matchesGlob(path: string, pattern: string): boolean {
+function compileGlob(pattern: string): RegExp {
     let expression = "^";
     for (let i = 0; i < pattern.length; i++) {
         const char = pattern[i] ?? "";
@@ -88,7 +88,23 @@ export function matchesGlob(path: string, pattern: string): boolean {
         else if (char === "?") expression += "[^/]";
         else expression += char.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
     }
-    return new RegExp(`${expression}$`, "u").test(path);
+    return new RegExp(`${expression}$`, "u");
+}
+
+export function matchesGlob(path: string, pattern: string): boolean {
+    return compileGlob(pattern).test(path);
+}
+
+export function createGlobMatcher(): typeof matchesGlob {
+    const patterns = new Map<string, RegExp>();
+    return (path, pattern) => {
+        let expression = patterns.get(pattern);
+        if (!expression) {
+            expression = compileGlob(pattern);
+            patterns.set(pattern, expression);
+        }
+        return expression.test(path);
+    };
 }
 function probeSafe(value: JsonValue): boolean {
     if (value === null || typeof value !== "object") return true;
@@ -115,7 +131,7 @@ export function applyLens(base: readonly ExtractedRecord[], lens: Lens, input: S
     const graph: Record<string, JsonValue> = { nodes: retainSources(records.map(record => locatedRecord(record, provenance)), nodeSources, provenance), edges: edgeArray(initialEdges) };
     retainSources(graph, [...nodeSources, ...initialEdges.flatMap(edge => edge.sources)], provenance);
     const derived = lens.derived;
-    const codeLinks = prepareCodeLinks(lens.codeLinks, options.codeInputs ?? [], matchesGlob);
+    const codeLinks = prepareCodeLinks(lens.codeLinks, options.codeInputs ?? [], createGlobMatcher());
     const expressionSource = definition.node.sources[0];
     const supportContext = { provenance, ...(expressionSource ? { expressionSource } : {}), ...(options.sourceLink ? { sourceLink: options.sourceLink } : {}) };
     const graphVars: Record<string, RuntimeValue> = {};

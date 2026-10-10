@@ -44,3 +44,16 @@ test('JSON lens is one root mapping rather than a projected record collection', 
     const text = `[${input.text}]`;
     assert.throws(() => parseLens({ ...input, text, contentHash: createHash('sha256').update(text).digest('hex') }), /Expected lens object/u);
 });
+
+test('operation glob matchers preserve repeated wildcard and literal matching', async () => {
+    const { createGlobMatcher, matchesGlob } = await import('../dist/lens/index.js');
+    const match = createGlobMatcher();
+    for (const pattern of ['**/*.json', 'data/*?.json', '한글/😀.[x]', '', '**']) {
+        for (const path of ['a.json', 'data/a.json', 'data/sub/a.json', '한글/😀.[x]', '']) {
+            const expected = matchesGlob(path, pattern);
+            assert.equal(match(path, pattern), expected);
+            assert.equal(match(path, pattern), expected);
+            assert.equal(createGlobMatcher()(path, pattern), expected);
+        }
+    }
+});
