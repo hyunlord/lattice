@@ -50,6 +50,12 @@ See [module extraction evidence and limits](docs/review/l1-modules.md).
 
 Run `lattice mcp --root /path/to/repository` for stdio MCP, or use `init` to configure installed clients. The eight tools inspect overview, filtered nodes, detail, paths, matrices, findings, Git differences and freshness. Each query checks actual file contents before serving graph evidence. [Protocol, pagination, viewer links and setup](docs/design/mcp.md) describe the contract.
 
+## Automate maps in GitHub Actions
+
+Use the reusable workflow at `hyunlord/lattice/.github/workflows/lattice.yml@<LATTICE_COMMIT_SHA>` and set its `tool-ref` input to the same complete commit SHA. It builds the actual PR head with read-only permissions, uploads map/report artifacts, and updates a bot-owned system-diff comment for same-repository PRs. Fork PRs retain artifacts without privileged comments. A separate job publishes successful default-branch builds only when Pages is already configured; `pages: false` keeps artifact-only delivery.
+
+The root composite action `hyunlord/lattice@<LATTICE_COMMIT_SHA>` is also available for custom build jobs. Optional `verification-script` runs consumer-specific checks only in the read-only source-build job. See [workflow examples, permissions, inputs and report schema](docs/design/action.md). L4 deployment acceptance remains pending until recorded in the ledger.
+
 ## Explore relationships
 
 The Explore screen filters node/edge kinds, text and facets; follows directed shortest paths or incoming/outgoing N-hop neighborhoods; and ranks connected hubs. Layers stay separate. Kind/folder groups expand into paginated members, with exact totals and complete accessible node/relationship lists. Large maps aggregate above 50 nodes; readable diagram labels, keyboard pan/zoom and explicit paging keep all 5,000-node test members reachable. A lens can derive the generic boolean node attribute `pinned` to select initial hubs; URL pins override it. See [Explore behavior and browser evidence](docs/review/l2-explore.md).

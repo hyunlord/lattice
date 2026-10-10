@@ -1,0 +1,136 @@
+name: Reusable Lattice map
+on:
+  workflow_call:
+    inputs:
+      tool-ref:
+        description: Immutable Lattice commit SHA (pin to the same revision as this workflow)
+        required: true
+        type: string
+      lens:
+        default: ''
+        type: string
+      history-ref:
+        default: ''
+        type: string
+      history-current-lens:
+        default: false
+        type: boolean
+      verification-script:
+        description: Optional repository-relative Node script; runs only in the read-only build job with cache and site paths
+        default: ''
+        type: string
+      pages:
+        description: Publish on the default branch when Pages is configured; artifacts are always retained
+        default: true
+        type: boolean
+permissions:
+  contents: read
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    outputs:
+      report-ready: ${{ steps.map.outputs.report-path != '' }}
+    steps:
+      - name: Require an immutable tool version
+        env:
+          TOOL_REF: ${{ inputs.tool-ref }}
+        run: '[[ "$TOOL_REF" =~ ^[a-f0-9]{40}$ ]]'
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          path: source
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          repository: hyunlord/lattice
+          ref: ${{ inputs.tool-ref }}
+          path: lattice-tool
+          persist-credentials: false
+      - uses: ./lattice-tool
+        id: map
+        with:
+          root: source
+          lens: ${{ inputs.lens }}
+          history-ref: ${{ inputs.history-ref }}
+          history-current-lens: ${{ inputs.history-current-lens }}
+      - name: Run repository verification
+        if: inputs.verification-script != ''
+        working-directory: source
+        env:
+          VERIFY_SCRIPT: ${{ inputs.verification-script }}
+          CACHE_PATH: ${{ steps.map.outputs.cache-path }}
+          SITE_PATH: ${{ steps.map.outputs.site-path }}
+        run: |
+          SCRIPT_PATH=$(realpath -- "$VERIFY_SCRIPT")
+          case "$VERIFY_SCRIPT" in /*) echo 'Verification script must be repository-relative'; exit 1;; esac
+          case "$SCRIPT_PATH" in "$PWD"/*) ;; *) echo 'Verification script must remain inside the repository'; exit 1;; esac
+          test -f "$SCRIPT_PATH"
+          node "$SCRIPT_PATH" "$CACHE_PATH" "$SITE_PATH"
+  publish:
+    needs: build
+    if: ${{ inputs.pages && github.event_name != 'pull_request' && github.ref == format('refs/heads/{0}', github.event.repository.default_branch) }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          repository: hyunlord/lattice
+          ref: ${{ inputs.tool-ref }}
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1
+        with:
+          node-version: '22'
+          package-manager-cache: false
+      - run: npm ci --ignore-scripts --no-audit --no-fund && npm run build
+      - name: Check existing Pages availability
+        id: pages
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: node bin/ci-pages.mjs
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333
+        if: steps.pages.outputs.available == 'true'
+        with:
+          name: lattice-map
+          path: ${{ runner.temp }}/lattice-site
+      - uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9
+        if: steps.pages.outputs.available == 'true'
+        with:
+          path: ${{ runner.temp }}/lattice-site
+      - uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346
+        if: steps.pages.outputs.available == 'true'
+        id: deploy
+  comment:
+    needs: build
+    if: ${{ !cancelled() && needs.build.outputs.report-ready == 'true' && github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      actions: read
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          repository: hyunlord/lattice
+          ref: ${{ inputs.tool-ref }}
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1
+        with:
+          node-version: '22'
+          package-manager-cache: false
+      - run: npm ci --ignore-scripts --no-audit --no-fund && npm run build
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333
+        with:
+          name: lattice-report
+          path: ${{ runner.temp }}/lattice-report
+      - name: Update the bot-owned system difference comment
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          REPORT_PATH: ${{ runner.temp }}/lattice-report/report.json
+        run: node bin/ci-comment.mjs "$REPORT_PATH"
