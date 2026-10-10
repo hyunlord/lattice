@@ -29,19 +29,19 @@ export function dependencyView(model: LoopMap, ids: readonly string[]): Dependen
 
 export type Point = { readonly x: number; readonly y: number; };
 export type Obstacle = { readonly x: number; readonly y: number; readonly width: number; readonly height: number; };
-export type RouteSpace = { readonly width: number; readonly height: number; readonly obstacles: readonly Obstacle[]; };
+export type RouteSpace = { readonly width: number; readonly height: number; readonly obstacles: readonly Obstacle[]; readonly occupied?: ReadonlySet<string>; };
 export function orthogonalRoute(start: Point, end: Point, space: RouteSpace): readonly Point[] {
     const step = 8; const columns = Math.ceil(space.width / step) + 1, rows = Math.ceil(space.height / step) + 1;
     const cell = (p: Point) => Math.round(p.y / step) * columns + Math.round(p.x / step);
     const point = (index: number): Point => ({ x: index % columns * step, y: Math.floor(index / columns) * step });
     const from = cell(start), to = cell(end); const blocked = new Uint8Array(columns * rows);
-    for (const box of space.obstacles) for (let y = Math.max(0, Math.floor(box.y / step)); y <= Math.min(rows - 1, Math.ceil((box.y + box.height) / step)); y++) for (let x = Math.max(0, Math.floor(box.x / step)); x <= Math.min(columns - 1, Math.ceil((box.x + box.width) / step)); x++) blocked[y * columns + x] = 1;
+    for (const box of space.obstacles) for (let y = Math.max(0, Math.ceil(box.y / step)); y <= Math.min(rows - 1, Math.floor((box.y + box.height) / step)); y++) for (let x = Math.max(0, Math.ceil(box.x / step)); x <= Math.min(columns - 1, Math.floor((box.x + box.width) / step)); x++) blocked[y * columns + x] = 1;
     blocked[from] = 0; blocked[to] = 0;
     const queue = [from], previous = new Map<number, number>(); previous.set(from, from);
     for (let index = 0; index < queue.length && !previous.has(to); index++) {
         const current = queue[index]; if (current === undefined) continue;
         const x = current % columns, y = Math.floor(current / columns);
-        const neighbors = [x > 0 ? current - 1 : -1, x < columns - 1 ? current + 1 : -1, y > 0 ? current - columns : -1, y < rows - 1 ? current + columns : -1].filter(n => n >= 0 && !blocked[n] && !previous.has(n));
+        const neighbors = [x > 0 ? current - 1 : -1, x < columns - 1 ? current + 1 : -1, y > 0 ? current - columns : -1, y < rows - 1 ? current + columns : -1].filter(n => n >= 0 && !blocked[n] && !previous.has(n) && !space.occupied?.has([current, n].sort((a, b) => a - b).join(':')));
         neighbors.sort((a, b) => { const p = point(a), q = point(b); return Math.abs(p.x - end.x) + Math.abs(p.y - end.y) - Math.abs(q.x - end.x) - Math.abs(q.y - end.y); });
         for (const next of neighbors) { previous.set(next, current); queue.push(next); }
     }
@@ -75,7 +75,34 @@ export function displayedDependencyFlows(view: DependencyView, selected: string 
     return view.flows.length <= 12 || showAll ? view.flows : view.flows.filter(flow => flow.source === selected || flow.target === selected);
 }
 
-export function dependencyBandHeight(flowCount: number, width: number): number {
-    const columns = Math.max(1, Math.floor((width - 48) / 144));
-    return flowCount ? 48 + Math.ceil(flowCount / columns) * 40 : 16;
+export function dependencyBandHeight(flowCount: number, width: number, rowHeight = 48): number {
+    const columns = Math.max(1, Math.floor((width - 48) / 240));
+    return flowCount ? 40 + Math.ceil(flowCount / columns) * rowHeight : 16;
+}
+
+export function uniqueDependencyNames(stages: readonly LoopStage[]): ReadonlyMap<string, string> {
+    return new Map(stages.map(stage => {
+        const parts = (stage.title === '.' ? '루트' : stage.title).split('/');
+        for (let length = 1; length <= parts.length; length++) {
+            const name = parts.slice(-length).join('/');
+            if (stages.every(other => other.id === stage.id || other.title.split('/').slice(-length).join('/') !== name)) return [stage.id, name];
+        }
+        return [stage.id, stage.title];
+    }));
+}
+export function dependencyPort(box: Obstacle, index: number, count: number): number {
+    return Math.round((box.x + box.width / 2 + (index - (count - 1) / 2) * Math.min(8, (box.width - 24) / Math.max(1, count))) / 8) * 8;
+}
+export function reserveDependencyRoute(points: readonly Point[], width: number, occupied: Set<string>): void {
+    const columns = Math.ceil(width / 8) + 1;
+    for (let i = 1; i < points.length; i++) {
+        const a = points[i - 1], b = points[i]; if (!a || !b) continue;
+        let x = Math.round(a.x / 8), y = Math.round(a.y / 8); const tx = Math.round(b.x / 8), ty = Math.round(b.y / 8);
+        while (x !== tx || y !== ty) { const before = y * columns + x; if (x !== tx) x += Math.sign(tx - x); else y += Math.sign(ty - y); occupied.add([before, y * columns + x].sort((a, b) => a - b).join(':')); }
+    }
+}
+
+export function dependencyLabelLines(view: DependencyView): ReadonlyMap<string, readonly string[]> {
+    const names = uniqueDependencyNames(view.stages);
+    return new Map(view.flows.map(flow => { const from = names.get(flow.source) ?? flow.source, to = names.get(flow.target) ?? flow.target; const pair = `${from} → ${to}`; return [JSON.stringify([flow.source, flow.target]), pair.length <= 30 ? [pair, flow.label] : [from, `→ ${to}`, flow.label]]; }));
 }

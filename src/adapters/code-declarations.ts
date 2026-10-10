@@ -25,8 +25,10 @@ export function codeDeclarations(input: SourceInput, language: string): readonly
     for (const token of tokens) if (token.kind === "word") occurrences.set(token.value, (occurrences.get(token.value) ?? 0) + 1);
     const typeWords = ["class", "class_name", "struct", "interface", "enum", "trait", "protocol", "record", "union", "typealias"];
     let functionEnd = -1;
+    const typeOwners: { readonly name: string; readonly end: number; }[] = [];
     for (let index = 0; index < tokens.length; index++) {
         if (index <= functionEnd) continue;
+        while (typeOwners.length && index > (typeOwners.at(-1)?.end ?? -1)) typeOwners.pop();
         const token = tokens[index];
         if (!token || token.kind !== "word") continue;
         let nameIndex = index + 1, kind = "";
@@ -75,7 +77,8 @@ export function codeDeclarations(input: SourceInput, language: string): readonly
             else end = nameIndex;
             if (kind === "function" && tokens[cursor]?.value === ";" && !["csharp", "java", "typescript", "rust"].includes(language)) continue;
         }
-        declarations.push({ name: name.value, kind, line: token.line, endLine: tokens[end]?.line ?? token.line, public: publicDeclaration(tokens, nameIndex, language), uses: Math.max(0, (occurrences.get(name.value) ?? 1) - 1) });
+        declarations.push({ name: name.value, kind, ...(language === "java" && kind === "type" ? { qualifiedName: [...typeOwners.map(owner => owner.name), name.value].join(".") } : {}), line: token.line, endLine: tokens[end]?.line ?? token.line, public: publicDeclaration(tokens, nameIndex, language), uses: Math.max(0, (occurrences.get(name.value) ?? 1) - 1) });
+        if (language === "java" && kind === "type") typeOwners.push({ name: name.value, end });
         if (kind === "function") functionEnd = end;
         index = nameIndex;
     }

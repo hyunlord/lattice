@@ -41,9 +41,38 @@ test('dense maps disclose a selected neighborhood and can restore every dependen
 });
 test('label bands leave a free routing cell between a rounded label and the next card', async () => {
     const { dependencyBandHeight } = await import('../viewer/dependency-layout.js');
-    assert.equal(dependencyBandHeight(5, 1100), 88);
+    assert.equal(dependencyBandHeight(5, 1100), 136);
     const label = { x: 310, y: 158, width: 92, height: 20 };
     const card = { x: 170, y: 206, width: 368, height: 102 };
     const points = orthogonalRoute({ x: 416, y: 168 }, { x: 352, y: 192 }, { width: 1100, height: 500, obstacles: [label, card] });
     assert.ok(points.length > 1);
+});
+
+test('dependency labels distinguish identical leaf names and ports stay separate', async () => {
+    const { uniqueDependencyNames, dependencyPort, reserveDependencyRoute } = await import('../viewer/dependency-layout.js');
+    const names = uniqueDependencyNames([{ id: 'a', title: 'src/main/nodes' }, { id: 'b', title: 'src/test/nodes' }, { id: 'c', title: 'src/parser' }]);
+    assert.deepEqual([...names.values()], ['main/nodes', 'test/nodes', 'parser']);
+    const box = { x: 24, y: 24, width: 160, height: 80 }; assert.equal(new Set(Array.from({ length: 8 }, (_, i) => dependencyPort(box, i, 8))).size, 8);
+    const occupied = new Set(); reserveDependencyRoute([{ x: 16, y: 48 }, { x: 112, y: 48 }], 128, occupied);
+    const route = orthogonalRoute({ x: 16, y: 48 }, { x: 112, y: 48 }, { width: 128, height: 128, obstacles: [], occupied });
+    assert.ok(route.some(point => point.y !== 48));
+});
+
+test('every dependency label names its endpoints and count without tracing a shared path', async () => {
+    const { dependencyLabelLines } = await import('../viewer/dependency-layout.js');
+    const stages = [{ id: 'a', title: 'source' }, { id: 'b', title: 'test/helpers' }, { id: 'c', title: 'long-package-name-with-many-characters' }];
+    const labels = dependencyLabelLines({ stages, flows: [{ source: 'a', target: 'b', label: '28개 파일' }, { source: 'a', target: 'c', label: '1개 파일' }] });
+    assert.deepEqual(labels.get('["a","b"]'), ['source → helpers', '28개 파일']);
+    assert.deepEqual(labels.get('["a","c"]'), ['source', '→ long-package-name-with-many-characters', '1개 파일']);
+});
+
+test('fractional card bounds preserve the free grid corridor beside a label', () => {
+    for (const fixture of [
+        { start: { x: 232, y: 224 }, end: { x: 160, y: 240 }, label: { x: 22, y: 206, width: 196, height: 32 }, card: { x: 12, y: 255.25, width: 310, height: 172.34375 } },
+        { start: { x: 232, y: 1664 }, end: { x: 168, y: 1968 }, label: { x: 22, y: 1934, width: 196, height: 32 }, card: { x: 12, y: 1981.34375, width: 310, height: 115.25 } }
+    ]) {
+        const route = orthogonalRoute(fixture.start, fixture.end, { width: 334, height: 2200, obstacles: [fixture.label, fixture.card] });
+        assert.ok(route.length > 1);
+        for (let i = 1; i < route.length; i++) { const a = route[i - 1], b = route[i]; for (let t = 0; t <= 1; t += .01)for (const obstacle of [fixture.label, fixture.card]) { const x = a.x + (b.x - a.x) * t, y = a.y + (b.y - a.y) * t; assert.ok(!(x > obstacle.x && x < obstacle.x + obstacle.width && y > obstacle.y && y < obstacle.y + obstacle.height)); } }
+    }
 });

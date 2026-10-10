@@ -31,7 +31,7 @@ export function buildRepository(options: Options, historical?: RepositoryReader,
     const codeSourceLink: SourceLink = source => codeHashes.get(source.path) === source.contentHash ? sourceLink(source) : source;
     const coveredPaths = new Set(graft.coveredPaths);
     const structure = codeStructure(modules.filter(module => !module.node.sources.some(source => coveredPaths.has(source.path))));
-    const moduleLinks = resolveModuleLinks(modules);
+    const moduleLinks = resolveModuleLinks(modules, records);
     const knownNodes = [...documents.flatMap(document => document.nodes), ...modules.map(module => module.node), ...structure.nodes, ...files, ...graft.nodes, ...moduleLinks.nodes];
     const importedLinks = new Set(graft.edges.map(edge => canonicalJson([edge.source, edge.target, edge.kind])));
     const ownEdges = moduleLinks.edges.filter(edge => !importedLinks.has(canonicalJson([edge.source, edge.target, edge.kind])));

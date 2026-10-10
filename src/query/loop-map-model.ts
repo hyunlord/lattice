@@ -2,7 +2,7 @@ import type { Node, Edge, Facet } from '../core/model.js';
 import type { LoopMap, LoopNode, LoopStage, LoopInterpretation, LoopRelationGroup, LoopItem } from './loop-map-types.js';
 import type { LoopConfig } from './loop-config.js';
 import type { MediaManifest } from './media-model.js';
-import { buildStructuralMap, structuralSummary } from './structural-map-model.js';
+import { buildStructuralMap, productionSource, structuralSummary } from './structural-map-model.js';
 export type LoopPresentation = {
     name?: string; loop?: LoopConfig;
     kinds: readonly { id: string; label?: string; }[];
@@ -57,7 +57,7 @@ export function buildLoopMap(nodes: readonly Node[], edges: readonly Edge[], fac
         const style = { ...baseStyle, ...variant };
         return { id: n.id, name: ['module', 'file'].includes(n.kind) ? (n.sources[0]?.path.split('/').at(-1) ?? n.name) : n.name, kind: n.kind, kindLabel: variant?.label ?? kindName(n.kind), summary: summary(n) || (automatic ? structuralSummary([n], [], n.sources[0]?.path.split('/').slice(0, -1).join('/') || '.') : ''), status: status === 'present' || status === 'absent' ? status : 'unknown', fields, relationGroups: groups, catalogSummary: groups.slice(0, 2).map(g => `${g.label} ${g.items.length}`).join(' · '), ordinal: typeof n.attributes['order'] === 'number' ? n.attributes['order'] - 1 : ordinal, ...(style?.shape ? { kindShape: style.shape } : {}), ...(style?.color ? { kindColor: style.color } : {}), ...(note ? { interpretation: note } : {}), ...(media?.status === 'available' ? { media } : {}) };
     });
-    const structuralFocus = automatic ? loopNodes.filter(n => n.kind === 'module').map(n => ({ id: n.id, degree: new Set([...(outgoing.get(n.id) ?? []).filter(e => e.kind === 'imports').map(e => e.target), ...(incoming.get(n.id) ?? []).filter(e => e.kind === 'imports').map(e => e.source)]).size })).sort((a, b) => b.degree - a.degree || a.id.localeCompare(b.id))[0]?.id : undefined;
+    const structuralFocus = automatic ? loopNodes.filter(n => n.kind === 'module').map(n => ({ id: n.id, production: productionSource(byId.get(n.id)?.sources[0]?.path ?? n.name), degree: new Set([...(outgoing.get(n.id) ?? []).filter(e => e.kind === 'imports').map(e => e.target), ...(incoming.get(n.id) ?? []).filter(e => e.kind === 'imports').map(e => e.source)]).size })).sort((a, b) => Number(b.production) - Number(a.production) || b.degree - a.degree || a.id.localeCompare(b.id))[0]?.id : undefined;
     const groupNodes = (members: readonly Node[], field?: string) => { const groups = new Map<string, { id: string; }[]>(); for (const n of members) { const title = field ? display(field, n.attributes[field]) || kindName(n.kind) : kindName(n.kind); groups.set(title, [...groups.get(title) ?? [], { id: n.id }]); } return [...groups].map(([title, items]) => ({ title, items })); };
     const relatedSystemIds = new Set((config?.stages ?? []).flatMap(stage => stage.systemIds));
     const systemKinds = new Set(nodes.filter(n => relatedSystemIds.has(n.id) || relatedSystemIds.has(String(n.attributes['originalId'] ?? ''))).map(n => n.kind));

@@ -56,3 +56,9 @@ test('structural focus starts on the most connected module and leaves configured
     const configured = buildLoopMap(nodes, edges, [], { kinds: [], loop: loopConfig({ stages: [{ id: 's', title: 'Modules', kinds: ['module'] }] }) }, 'example');
     assert.equal(configured.defaultFocus, undefined);
 });
+
+test('structural focus prefers production code over a busier test module', () => {
+    const nodes = [node('test', 'module', {}, 'test/test.ts'), node('prod', 'module', {}, 'src/main.ts'), node('helper', 'module', {}, 'src/helper.ts')];
+    const model = buildLoopMap(nodes, [edge('a', 'imports', 'test', 'prod'), edge('b', 'imports', 'test', 'helper')], [], { kinds: [] }, 'example');
+    assert.equal(model.defaultFocus, 'helper');
+});

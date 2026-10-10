@@ -4,7 +4,11 @@ import type { NativeMatches } from "./native-links.js";
 function pathOf(module: CodeModule): string { return module.node.sources[0]?.path ?? ""; }
 function names(module: CodeModule): readonly string[] {
     const definitions = module.node.attributes["definitions"];
-    return Array.isArray(definitions) ? definitions.flatMap(value => value && typeof value === "object" && !Array.isArray(value) && typeof value["name"] === "string" ? [value["name"]] : []) : [];
+    return Array.isArray(definitions) ? definitions.flatMap(value => {
+        if (!value || typeof value !== "object" || Array.isArray(value) || typeof value["name"] !== "string") return [];
+        if (module.language === "java") return value["kind"] === "type" ? [typeof value["qualifiedName"] === "string" ? value["qualifiedName"] : value["name"]] : [];
+        return [value["name"]];
+    }) : [];
 }
 function normalized(path: string): string | undefined {
     const parts: string[] = [];

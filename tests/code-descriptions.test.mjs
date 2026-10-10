@@ -67,3 +67,56 @@ test('shell and Ruby use only meaningful leading script documentation without ad
     assert.equal(attributes('test.rb', '# frozen_string_literal: true\nrequire "test"\n# Run isolated integration scenarios.').sourceDescription, undefined);
     assert.equal(attributes('update.sh', '#!/bin/sh\n# Copyright 2026\n#\n# Updates generated completion files.\nset -e').sourceDescription.text, 'Updates generated completion files.');
 });
+
+test('license provenance and URL-only headers are never source descriptions', () => {
+    for (const header of ['/*! MIT License © Example */', '// https://example.org/original', '// Ported from Original, source: https://example.org']) assert.equal(attributes('index.ts', `${header}\nimport x from './x.js';\nexport default x;`).sourceDescription, undefined);
+});
+test('package documentation skips Java annotations while type documentation remains distinct', () => {
+    assert.equal(attributes('package-info.java', '/** Utilities for parsing structured input. */\n@NullMarked\npackage demo;').sourceDescription.kind, 'module-doc');
+    assert.equal(attributes('a.py', '# Formats a value.\ndef format_value(): pass').sourceDescription.kind, 'declaration-doc');
+    assert.equal(attributes('a.ts', '/** Builds one request. */\nexport function request() {}').sourceDescription.kind, 'declaration-doc');
+});
+test('public export values entrypoints and real imported test registrations carry source evidence', () => {
+    const value = attributes('index.ts', 'const hidden = 1;\nexport const create = () => 1;\nconst client = {};\nexport default client;\nexport {hidden as visible};');
+    assert.deepEqual(value.publicNames.map(item => item.name).sort(), ['client', 'create', 'visible']);
+    assert.deepEqual(attributes('main.go', 'package main\nfunc main() {}').entryPoints, [{ name: 'main', line: 2 }]);
+    assert.deepEqual(attributes('helpers.go', 'package helpers\nfunc main() {}').entryPoints, []);
+    const tests = attributes('x.test.ts', "import verify from 'ava';\nverify('retries failed requests', () => {});\nconst fake = \"verify('invented',()=>{})\";");
+    assert.deepEqual(tests.verificationNames, [{ name: 'retries failed requests', line: 2, kind: 'test-registration' }]);
+    assert.deepEqual(attributes('x.ts', "function verify() {}\nverify('not proven test',()=>{});").verificationNames, []);
+    assert.deepEqual(attributes('x.test-d.ts', "import {expectType} from 'tsd';\nexpectType<string>(value);").verificationNames, [{ name: 'expectType', line: 2, kind: 'type-assertion' }]);
+});
+test('README introductions preserve blockquotes and plain HTML paragraphs but skip notices', async () => {
+    const { extractMarkdown } = await import('../dist/index.js');
+    for (const text of ['# Client\n\n> [!NOTE]\n> Release preview.\n\n> A small HTTP client for browser requests.\n\nTargets modern browsers.', '<div align="center">\n<p>A small HTTP client for browser requests.</p>\n<img src="badge.svg">\n</div>\n\nTargets modern browsers.', '<div>\n<p>\nA small HTTP client for browser requests.\n</p>\n</div>']) {
+        const graph = extractMarkdown({ path: 'README.md', text, contentHash: createHash('sha256').update(text).digest('hex') });
+        assert.equal(graph.nodes[0].attributes.sourceDescription.text, 'A small HTTP client for browser requests.');
+    }
+});
+
+test('default exports describe declared bindings, never literal values or call expressions', () => {
+    for (const text of ['export default true;', 'function createClient() {}\nexport default createClient();', 'export default missing;']) assert.deepEqual(attributes('index.ts', text).publicNames, []);
+    assert.deepEqual(attributes('index.ts', 'const client = {};\nexport default client;').publicNames.map(value => value.name), ['client']);
+});
+test('README sponsor containers cannot override the real introduction', async () => {
+    const { extractMarkdown } = await import('../dist/index.js');
+    for (const banner of ['<div class="sponsors"><p>Sponsored by Acme.</p></div>', '<div class="sponsors">\n<p>Acme makes excellent tools.</p>\n</div>']) {
+        const text = `${banner}\n\n<p>A portable search engine for local files.</p>`;
+        const graph = extractMarkdown({ path: 'README.md', text, contentHash: createHash('sha256').update(text).digest('hex') });
+        assert.equal(graph.nodes[0].attributes.sourceDescription.text, 'A portable search engine for local files.');
+    }
+});
+
+test('provenance sentences and setext titles do not count as purpose', async () => {
+    assert.equal(attributes('middleware.go', '// The original work was derived from Example middleware, source: https://example.org\npackage middleware').sourceDescription, undefined);
+    const { extractMarkdown } = await import('../dist/index.js');
+    for (const underline of ['============', '------------']) {
+        const text = `Example programs\n${underline}\n\n* [Demo](demo.go)\n`;
+        const graph = extractMarkdown({ path: 'README.md', text, contentHash: createHash('sha256').update(text).digest('hex') });
+        assert.equal(graph.nodes[0].attributes.sourceDescription, undefined);
+    }
+    const text = 'Search\n======\n\nFind local files quickly.';
+    const graph = extractMarkdown({ path: 'README.md', text, contentHash: createHash('sha256').update(text).digest('hex') });
+    assert.equal(graph.nodes[0].attributes.sourceDescription.text, 'Find local files quickly.');
+    assert.equal(graph.nodes[0].attributes.sourceDescription.line, 4);
+});

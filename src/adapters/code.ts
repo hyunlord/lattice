@@ -30,7 +30,19 @@ function javascriptImports(tokens: readonly CodeToken[], add: (specifier: string
             if (token.value === "{") depth++;
             else if (token.value === "}") depth--;
         }
-        if (depth !== 0 || token.kind !== "word" || (token.value !== "import" && token.value !== "export")) continue;
+        if (token.kind !== "word" || (token.value !== "import" && token.value !== "export")) continue;
+        let cursor = index + 1, before = index - 1;
+        while (tokens[cursor]?.kind === "newline") cursor++;
+        while (tokens[before]?.kind === "newline") before--;
+        if (token.value === "import" && tokens[cursor]?.value === "(" && tokens[before]?.value !== ".") {
+            cursor++;
+            while (tokens[cursor]?.kind === "newline") cursor++;
+            const literal = tokens[cursor++];
+            while (tokens[cursor]?.kind === "newline") cursor++;
+            if (literal?.kind === "string" && [")", ","].includes(tokens[cursor]?.value ?? "")) add(literal.value, token.line);
+            continue;
+        }
+        if (depth !== 0) continue;
         const previous = tokens[index - 1];
         if (previous && previous.kind !== "newline" && ![";", "}"].includes(previous.value)) continue;
         const next = tokens.slice(index + 1).find(item => item.kind !== "newline");

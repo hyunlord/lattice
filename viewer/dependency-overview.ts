@@ -1,7 +1,7 @@
 import type { LoopStage, LoopUI } from './loop-map-types.js';
 import { chip, element, interpretation, svg } from './loop-map-shared.js';
 import { readLoopRoute, writeLoopRoute } from './loop-map-route.js';
-import { dependencyBandHeight, dependencyLevels, dependencyView, displayedDependencyFlows } from './dependency-layout.js';
+import { dependencyBandHeight, dependencyLabelLines, dependencyLevels, dependencyView, displayedDependencyFlows } from './dependency-layout.js';
 import { drawDependencyArrows } from './dependency-arrows.js';
 
 function pathTitle(value: string): HTMLElement {
@@ -64,10 +64,10 @@ export function renderDependencyOverview(host: HTMLElement, ui: LoopUI): () => v
         }
         const initial = view.stages.find(stage => stage.id === selected) ?? view.stages[0]; if (initial) renderPanel(initial);
         redraw = () => {
-            const flows = displayedDependencyFlows(view, selected, showAll);
+            const flows = displayedDependencyFlows(view, selected, showAll); const labelRows = dependencyLabelLines({ ...view, flows }); const rowHeight = [...labelRows.values()].some(lines => lines.length > 2) ? 64 : 48;
             mode.replaceChildren(); mode.hidden = view.flows.length <= 12;
             if (!mode.hidden) { const title = byId.get(selected ?? '')?.title ?? '선택한 덩어리'; mode.append(element('span', showAll ? `전체 ${view.flows.length}개 연결 표시` : `${title}의 연결 ${flows.length}개 표시 · 전체 ${view.flows.length}개`)); const toggle = element('button', showAll ? '선택한 덩어리만' : '전체 화살표'); toggle.type = 'button'; toggle.setAttribute('aria-pressed', String(showAll)); toggle.onclick = () => { showAll = !showAll; redraw(); }; mode.append(toggle); }
-            for (const gap of diagram.querySelectorAll<HTMLElement>('.lm-dependency-gap')) { const count = flows.filter(flow => boxes.get(flow.source)?.closest('.lm-dependency-level') === gap.previousElementSibling).length; gap.style.height = `${dependencyBandHeight(count, diagram.clientWidth)}px`; }
+            for (const gap of diagram.querySelectorAll<HTMLElement>('.lm-dependency-gap')) { const count = flows.filter(flow => boxes.get(flow.source)?.closest('.lm-dependency-level') === gap.previousElementSibling).length; gap.style.height = `${dependencyBandHeight(count, diagram.clientWidth, rowHeight)}px`; }
             drawDependencyArrows({ host: diagram, graph, view: { ...view, flows }, boxes });
             if (Number(graph.dataset['unrouted']) > 0) { connections.open = true; const summary = connections.querySelector('summary'); if (summary) summary.textContent = `전체 덩어리 연결 ${view.flows.length}개 · 밀집한 연결은 아래 목록에서 확인`; }
         }; requestAnimationFrame(redraw);

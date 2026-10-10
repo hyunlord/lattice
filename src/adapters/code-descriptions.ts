@@ -1,3 +1,5 @@
+import { entryPoints, javascriptEvidence } from "./code-evidence.js";
+import { descriptiveProse } from "./description-prose.js";
 import type { JsonObject } from "../core/canonical.js";
 import type { CodeToken } from "./code-tokens.js";
 
@@ -44,7 +46,7 @@ function scriptDescription(text: string): JsonObject | undefined {
             parts.push((lines[index] ?? "").trim().replace(/^#+\s?/u, ""));
         }
         const body = parts.join(" ");
-        if (/copyright|spdx-license|licensed under|all rights reserved|permission is hereby granted/iu.test(body)) continue;
+        if (!descriptiveProse(body)) continue;
         const summary = sentence(body);
         if (summary.split(/\s+/u).length >= 3) return { text: summary, kind: "module-doc", line: start + 1, endLine: index + 1 };
     }
@@ -91,10 +93,10 @@ export function sourceDescription(text: string, language: string): JsonObject | 
         cursor++;
         const prose = parts.filter((part, index) => !/^\s*[-=]{3,}\s*$/u.test(part) && !/^\s*[-=]{3,}\s*$/u.test(parts[index + 1] ?? ""));
         const content = prose.join(" ");
-        if (/copyright|spdx-license|licensed under|all rights reserved|permission is hereby granted|automatically generated|code generated|^go:build/iu.test(content)) continue;
+        if (!descriptiveProse(content) || /automatically generated|code generated|^go:build/iu.test(content)) continue;
         const summary = sentence(content);
-        const next = lines.slice(cursor).find(value => value.trim())?.trim() ?? "";
-        const moduleDoc = language === "python" || line.startsWith("//!") || line.startsWith("/*!") || /@(?:module|fileoverview|file)\b/u.test(content) || /^(?:package |namespace |import |from |using |use |extern )/u.test(next);
+        const next = lines.slice(cursor).find(value => value.trim() && !(language === "java" && /^\s*@\w+(?:\([^)]*\))?\s*$/u.test(value)))?.trim() ?? "";
+        const moduleDoc = (language === "python" && /^(?:[ru])?(?:"""|''')/iu.test(line)) || line.startsWith("//!") || line.startsWith("/*!") || /@(?:module|fileoverview|file)\b/u.test(content) || /^(?:package |namespace |import |from |using |use |extern )/u.test(next);
         if (summary && /[\p{L}]/u.test(summary)) return { text: summary, kind: moduleDoc ? "module-doc" : "declaration-doc", line: start + 1, endLine: cursor };
     }
     return undefined;
@@ -113,6 +115,11 @@ export function descriptionAttributes(text: string, language: string, definition
         if (value["public"] !== true || seen.has(name)) return false;
         seen.add(name); return true;
     }).map(value => ({ name: String(value["name"] ?? ""), uses: Math.max(0, Number(value["uses"] ?? 0) - (counts.get(String(value["name"] ?? "")) ?? 1) + 1), line: value["line"] ?? 1 }));
+    const evidence = ["javascript", "typescript"].includes(language) ? javascriptEvidence(text) : { exports: [], verificationNames: [] };
+    for (const value of evidence.exports) {
+        const name = String(value["name"] ?? "");
+        if (!seen.has(name)) { seen.add(name); names.push({ name, uses: Number(value["uses"] ?? 0), line: value["line"] ?? 1 }); }
+    }
     names.sort((a, b) => Number(b.uses) - Number(a.uses) || String(a.name).localeCompare(String(b.name)));
-    return { ...(description ? { sourceDescription: description } : {}), publicNames: names.slice(0, 3) };
+    return { ...(description ? { sourceDescription: description } : {}), publicNames: names.slice(0, 3), entryPoints: entryPoints(text, language, definitions), verificationNames: evidence.verificationNames };
 }

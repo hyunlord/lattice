@@ -62,3 +62,28 @@ test('thirteen sibling folders preserve connected chunks and aggregate only the 
     assert.equal(effective.length, nodes.length);
     assert.equal(new Set(effective).size, nodes.length);
 });
+
+test('auxiliary trees fold without occupying production package slots or dropping files', () => {
+    const nodes = [node('app', 'src/main/java/pkg/App.java'), node('parser', 'src/main/java/pkg/parser/Parser.java'), node('model', 'src/main/java/pkg/model/Model.java'), ...Array.from({ length: 15 }, (_, i) => node(`test${i}`, `src/test/java/pkg/case${i}/Test.java`)), ...Array.from({ length: 12 }, (_, i) => node(`example${i}`, `_examples/case${i}/main.go`))];
+    const edges = [...nodes.filter(n => n.id.startsWith('test')).map(n => edge(n.id, n.id, 'app')), edge('prod', 'app', 'parser')];
+    const model = buildStructuralMap(nodes, edges);
+    assert.deepEqual(new Set(model.rootStageIds), new Set(['folder:src/main/java/pkg', 'folder:src/main/java/pkg/parser', 'folder:src/main/java/pkg/model', 'folder:src/test', 'folder:_examples']));
+    assert.equal(model.defaultStage, 'folder:src/main/java/pkg');
+    assert.equal(model.stages.find(s => s.id === 'folder:src/test').descendantNodeIds.length, 15);
+    assert.equal(model.flows.filter(f => f.target === 'folder:src/main/java/pkg').length, 15);
+});
+test('collapsed parents do not use one child module description as their purpose', () => {
+    const child = node('a', '_examples/demo/main.go', { sourceDescription: { text: 'This is one specific demo.', kind: 'module-doc' }, entryPoints: [{ name: 'main', line: 5 }] });
+    const model = buildStructuralMap([child], []);
+    assert.equal(model.stages.find(s => s.id === 'folder:_examples').summary, '실행 진입점: main');
+});
+test('virtual package descriptions only use the recorded package members', () => {
+    const nodes = [node('a', 'main/pkg/package-info.java', { sourceDescription: { text: 'Package document nodes.', kind: 'module-doc' } }), node('b', 'test/pkg/Test.java'), node('outsider', 'other/Foo.java', { sourceDescription: { text: 'Unrelated purpose.', kind: 'module-doc' } }), node('pkg', 'main/pkg/package-info.java', { directories: ['main/pkg', 'test/pkg'], memberIds: ['a', 'b'], packageName: 'pkg' }, 'package')];
+    const model = buildStructuralMap(nodes, []);
+    assert.equal(model.stages.find(s => s.id === 'folder:패키지 pkg').summary, 'Package document nodes.');
+});
+test('verification fallback preserves the authored name and evidence', () => {
+    const model = buildStructuralMap([node('a', 'test/api.ts', { verificationNames: [{ name: 'returns JSON', line: 12, kind: 'test-registration' }] })], []);
+    assert.equal(model.stages[0].summary, '검증 항목: returns JSON');
+    assert.deepEqual(model.stages[0].summaryEvidence, [{ path: 'test/api.ts', line: 12 }]);
+});

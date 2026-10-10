@@ -88,3 +88,54 @@ test('Kotlin extension functions use the callable name rather than the receiver 
     const nodes = codeStructure([module('Extensions.kt', 'fun String.greet(): String { return this }\nfun List<String>.names() {}')]).nodes;
     assert.deepEqual(nodes.map(node => node.name), ['greet', 'names']);
 });
+
+test('literal dynamic imports are resolved inside functions without inventing expression or property-call targets', () => {
+    // Given nested literal imports plus syntactically similar non-import expressions.
+    const input = module('app.ts', `async function load() {
+        await import('./model.js');
+        await import(
+          './other.js', { with: { type: 'json' } }
+        );
+        await import('./unknown' + suffix);
+        await import(dynamicPath);
+        obj.import('./fake.js');
+        obj?.import('./fake.js');
+        // import('./fake.js')
+        const text = "import('./fake.js')";
+        const template = \`import('./fake.js')\`;
+    }`);
+    // When references are extracted and resolved against real selected modules.
+    const result = resolveModuleLinks([input, module('model.ts'), module('other.ts'), module('fake.ts')]);
+    // Then only literal language imports are present with original statement provenance.
+    assert.deepEqual(input.imports.map(item => [item.specifier, item.source.line]), [['./model.js', 2], ['./other.js', 3]]);
+    assert.deepEqual(result.edges.map(edge => edge.target), ['module:model.ts', 'module:other.ts']);
+});
+
+test('Java method names cannot masquerade as type or package prefixes', () => {
+    // Given a method named like the target package and its real public type.
+    const modules = [module('Use.java', 'package client; import demo.parser.Parser; class Use {}'), module('Connection.java', 'package demo; interface Connection { Object parser(); }'), module('Parser.java', 'package demo.parser; public class Parser {}')];
+    // When the explicit type import is resolved.
+    const result = resolveModuleLinks(modules);
+    // Then the method owner is not a competing import destination.
+    assert.deepEqual(result.diagnostics, []);
+    assert.deepEqual(result.edges.map(edge => edge.target), ['module:Parser.java']);
+});
+
+test('Java nested static wildcard imports require their actual qualified nested type', () => {
+    // Given two distinct enclosing types, only one declaring Inner.
+    const modules = [module('Use.java', 'import static demo.Outer.Inner.*; import static demo.Other.Inner.*;'), module('Outer.java', 'package demo; class Outer { static class Inner { static int VALUE; } }'), module('Other.java', 'package demo; class Other {}')];
+    // When wildcard imports resolve.
+    const result = resolveModuleLinks(modules);
+    // Then the declared nesting resolves and the absent nested owner remains unresolved.
+    assert.deepEqual(result.edges.map(edge => edge.target), ['module:Outer.java']);
+    assert.deepEqual(result.diagnostics.map(item => item.specifier), ['demo.Other.Inner.*']);
+});
+
+test('Java nested type qualification stops at the enclosing declaration boundary', () => {
+    // Given sibling top-level types and nested owner declarations on one line.
+    const value = module('Types.java', 'package demo; class Outer { class Inner {} } class Peer { class Nested {} }');
+    // When declaration metadata is extracted.
+    const types = value.node.attributes.definitions.filter(definition => definition.kind === 'type');
+    // Then nested owners remain exact and never leak into the next top-level declaration.
+    assert.deepEqual(types.map(definition => definition.qualifiedName), ['Outer', 'Outer.Inner', 'Peer', 'Peer.Nested']);
+});
