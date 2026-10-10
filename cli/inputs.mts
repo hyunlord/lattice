@@ -4,7 +4,7 @@ import type { extractionCache } from './extraction-cache.mjs';
 import { parseRecords, parseDocument, parseModule } from './decode.mjs';
 import { isAbsolute, relative, sep } from 'node:path';
 import { extractJson, extractYaml, extractCsv, extractMarkdown, extractCode, codeLanguage, DataInputError } from '../dist/index.js';
-import { matchesGlob } from '../dist/lens/index.js';
+import { createGlobMatcher, matchesGlob } from '../dist/lens/index.js';
 
 function isRecordValue(value: JsonValue): value is JsonObject {
     return value !== null && typeof value === 'object' && !Array.isArray(value);
@@ -15,17 +15,18 @@ export function inside(root: string, path: string) {
     return offset !== '..' && !offset.startsWith(`..${sep}`) && !isAbsolute(offset);
 }
 
-export function inInputScope(path: string, lens?: Lens) {
+export function inInputScope(path: string, lens?: Lens, match = matchesGlob) {
     return !/^(?:\.lattice|\.omo|\.omx|\.codex|\.agents|\.git|graft)\//u.test(path)
-        && (lens?.include === undefined || lens.include.some(pattern => matchesGlob(path, pattern)))
-        && !lens?.exclude?.some(pattern => matchesGlob(path, pattern));
+        && (lens?.include === undefined || lens.include.some(pattern => match(path, pattern)))
+        && !lens?.exclude?.some(pattern => match(path, pattern));
 }
 
 export function selectedInputs(paths: readonly string[], lens?: Lens) {
     const selected: Selection[] = [];
+    const match = createGlobMatcher();
     for (const path of paths) {
-        if (!inInputScope(path, lens)) continue;
-        const kinds = lens?.kinds.flatMap(kind => [kind, ...(kind.selections ?? []).map(selection => ({ ...kind, ...selection }))].filter(selection => selection.files.some(pattern => matchesGlob(path, pattern)))) ?? [];
+        if (!inInputScope(path, lens, match)) continue;
+        const kinds = lens?.kinds.flatMap(kind => [kind, ...(kind.selections ?? []).map(selection => ({ ...kind, ...selection }))].filter(selection => selection.files.some(pattern => match(path, pattern)))) ?? [];
         if (lens && kinds.length === 0) continue;
         if (new Set(kinds.map(kind => kind.records ?? '')).size !== kinds.length) throw new Error(`Ambiguous kind patterns: ${path}`);
         const language = codeLanguage(path);
