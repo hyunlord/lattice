@@ -6,7 +6,7 @@ export type LoopConfig = {
     flows: LoopFlow[]; strips: { title: string; description: string; kinds: string[]; }[];
     places?: { title: string; description: string; kinds: string[]; };
     relationGroups: { label: string; displayStep?: number; viaPrefix?: string; side: 'left' | 'right'; kinds?: string[]; steps: { edgeKinds: string[]; direction: 'in' | 'out'; }[]; }[];
-    kindStyles?: Record<string, { shape?: LoopShape; color?: LoopTone; variants?: readonly { readonly field: string; readonly value: string | number | boolean; readonly shape?: LoopShape; readonly color?: LoopTone; }[]; }>;
+    kindStyles?: Record<string, { label?: string; shape?: LoopShape; color?: LoopTone; variants?: readonly { readonly field: string; readonly value: string | number | boolean; readonly shape?: LoopShape; readonly color?: LoopTone; readonly label?: string; }[]; }>;
 };
 const object = (v: unknown): v is Record<string, unknown> => !!v && typeof v === 'object' && !Array.isArray(v);
 const text = (v: unknown, fallback = '') => typeof v === 'string' ? v : fallback;
@@ -22,8 +22,8 @@ export function loopConfig(value: unknown): LoopConfig | undefined {
         const shape = style['shape'], color = style['color'];
         const shapes: LoopShape[] = ['diamond', 'square', 'circle', 'pill', 'star', 'triangle', 'flag', 'target', 'hexagon', 'house'];
         const colors: LoopTone[] = ['blue', 'green', 'amber', 'red', 'purple', 'gray', 'teal'];
-        const variants = objects(style['variants']).flatMap(v => { const field = v['field'], value = v['value']; return typeof field === 'string' && (typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean') ? [{ field, value, ...shapes.flatMap(shape => shape === v['shape'] ? [{ shape }] : [])[0], ...colors.flatMap(color => color === v['color'] ? [{ color }] : [])[0] }] : []; });
-        styles[kind] = { ...(variants.length ? { variants } : {}), ...shapes.flatMap(s => s === shape ? [{ shape: s }] : [])[0], ...colors.flatMap(c => c === color ? [{ color: c }] : [])[0] };
+        const variants = objects(style['variants']).flatMap(v => { const field = v['field'], value = v['value']; return typeof field === 'string' && (typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean') ? [{ field, value, ...(typeof v['label'] === 'string' ? { label: v['label'] } : {}), ...shapes.flatMap(shape => shape === v['shape'] ? [{ shape }] : [])[0], ...colors.flatMap(color => color === v['color'] ? [{ color }] : [])[0] }] : []; });
+        styles[kind] = { ...(typeof style['label'] === 'string' ? { label: style['label'] } : {}), ...(variants.length ? { variants } : {}), ...shapes.flatMap(s => s === shape ? [{ shape: s }] : [])[0], ...colors.flatMap(c => c === color ? [{ color: c }] : [])[0] };
     }
     return {
         ...(typeof value['subtitle'] === 'string' ? { subtitle: value['subtitle'] } : {}),

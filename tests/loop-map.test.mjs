@@ -35,9 +35,10 @@ test('kind-specific fields override defaults and read translated facet values', 
     assert.deepEqual(result.nodes[1].fields, [{ label: 'Default', value: 'fallback' }]);
 });
 test('attribute style overrides inherit base shape and do not affect other kinds', () => {
-    const loop = loopConfig({ kindStyles: { part: { shape: 'square', color: 'blue', variants: [{ field: 'category', value: 'growing', color: 'green' }] } } });
+    const loop = loopConfig({ kindStyles: { part: { shape: 'square', color: 'blue', variants: [{ field: 'category', value: 'growing', color: 'green', label: 'Growing part' }] } } });
     const result = buildLoopMap([node('a', 'part', { category: 'growing' }), node('b', 'part', { category: 'other' }), node('c', 'other', { category: 'growing' })], [], [], { kinds: [], loop }, 'example');
-    assert.equal(result.nodes[0].kindColor, 'green'); assert.equal(result.nodes[0].kindShape, 'square');
+    assert.equal(result.nodes[0].kindColor, 'green');
+    assert.equal(result.nodes[0].kindLabel, 'Growing part'); assert.equal(result.nodes[0].kindShape, 'square');
     assert.equal(result.nodes[1].kindColor, 'blue'); assert.equal(result.nodes[2].kindColor, undefined);
 });
 test('an intermediate display step keeps the final partner as context', () => {

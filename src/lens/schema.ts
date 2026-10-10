@@ -51,7 +51,7 @@ export function validateLens(definition: ExtractedRecord): void {
         }
     };
     const loopGroup = s.shape({ title: s.text, description: s.text, kinds: texts }, ["title", "kinds"]);
-    const loopStyle = { shape: s.choice(["diamond", "square", "circle", "pill", "star", "triangle", "flag", "target", "hexagon", "house"]), color: s.choice(["blue", "green", "amber", "red", "purple", "gray", "teal"]) };
+    const loopStyle = { label: s.text, shape: s.choice(["diamond", "square", "circle", "pill", "star", "triangle", "flag", "target", "hexagon", "house"]), color: s.choice(["blue", "green", "amber", "red", "purple", "gray", "teal"]) };
     const scalar: Check = (value, pointer) => { if (typeof value !== "string" && typeof value !== "number" && typeof value !== "boolean") s.fail(pointer, "Expected a string, number, or boolean"); };
     const summaryFields = s.list(s.shape({ label: s.text, path: texts }, ["label", "path"]));
     const loop = s.shape({
