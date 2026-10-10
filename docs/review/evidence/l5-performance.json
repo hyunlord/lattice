@@ -465,6 +465,337 @@
         "allToolCallsSuccessful": true
       },
       "limitation": "PR49 installed candidate; public consumer and actual-client acceptance remain separate. Earlier optional-Graft and failed measurements are preserved."
+    },
+    {
+      "name": "linked-items-baseline-external-projection",
+      "toolCommit": "d8a6890084a338e3504900b87a1b60c5090a9652",
+      "packageSha256": "89a188a741c8d83960eba19e202c11376312879ef5be4f342e638bac92b0a765",
+      "sourceCommit": "c162509897333940d7a8124d58b1be75963c35d4",
+      "sourceCleanBefore": true,
+      "sourceCleanAfter": true,
+      "optionalGraft": false,
+      "compiledAggregateSha256": "46261c9eb6899332412ad5c90e6607a3cd137c9de660721b7a99ec4a07168cb1",
+      "node": "v24.21.0",
+      "coverage": "external-lens current-lens-projection, not published",
+      "graphHash": "51a87de0b5199ec4cdbec8927fbfbe12196c22584697e6f7c13b1090c7eeb042",
+      "graphBytes": 55786248,
+      "lensSha256": "8afd760eb6e364ed023a1da08cc4bc6beb60afa9a1f05dee811be8fd98c8380c",
+      "builds": {
+        "n": 3,
+        "minMs": 2117.657416,
+        "p50Ms": 2120.5117920000002,
+        "p95Ms": 2136.152667,
+        "maxMs": 2136.152667
+      },
+      "coldMcpMs": 2044.1263750000007,
+      "unchangedFreshness": {
+        "n": 20,
+        "minMs": 43.065042000000176,
+        "p50Ms": 44.713040999999066,
+        "p95Ms": 49.084749999999985,
+        "maxMs": 51.12604199999987
+      },
+      "tools": {
+        "lattice_overview": {
+          "n": 3,
+          "minMs": 75.7437919999993,
+          "p50Ms": 77.50187499999993,
+          "p95Ms": 78.54279200000019,
+          "maxMs": 78.54279200000019
+        },
+        "lattice_find": {
+          "n": 3,
+          "minMs": 48.447540999999546,
+          "p50Ms": 50.497041999999055,
+          "p95Ms": 52.40037499999926,
+          "maxMs": 52.40037499999926
+        },
+        "lattice_node": {
+          "n": 3,
+          "minMs": 45.149083000000246,
+          "p50Ms": 45.53087500000038,
+          "p95Ms": 45.73616700000093,
+          "maxMs": 45.73616700000093
+        },
+        "lattice_trace": {
+          "n": 3,
+          "minMs": 43.8581669999985,
+          "p50Ms": 45.274749999998676,
+          "p95Ms": 45.711874999999054,
+          "maxMs": 45.711874999999054
+        },
+        "lattice_matrix": {
+          "n": 3,
+          "minMs": 52.08137499999975,
+          "p50Ms": 52.70433299999968,
+          "p95Ms": 62.73408399999971,
+          "maxMs": 62.73408399999971
+        },
+        "lattice_findings": {
+          "n": 3,
+          "minMs": 46.011708,
+          "p50Ms": 47.71858299999985,
+          "p95Ms": 49.45808299999953,
+          "maxMs": 49.45808299999953
+        },
+        "lattice_diff": {
+          "n": 3,
+          "minMs": 494.61133399999926,
+          "p50Ms": 498.8355410000004,
+          "p95Ms": 506.0622089999997,
+          "maxMs": 506.0622089999997
+        },
+        "lattice_freshness": {
+          "n": 3,
+          "minMs": 42.95900000000074,
+          "p50Ms": 45.16491700000006,
+          "p95Ms": 47.0054999999993,
+          "maxMs": 47.0054999999993
+        }
+      },
+      "gates": {
+        "buildUnder10s": true,
+        "deterministicFirstTwo": true,
+        "unchangedFreshnessUnder50ms": false,
+        "mcpUnder1s": false,
+        "allToolCallsSuccessful": true
+      },
+      "limitation": "Controlled clean-source external lens projection. Not a published consumer measurement; cold MCP still fails. Prior measurements and optional-Graft cases remain preserved."
+    },
+    {
+      "name": "linked-items-candidate-external-projection",
+      "toolCommit": "d8a6890084a338e3504900b87a1b60c5090a9652",
+      "packageSha256": "89a188a741c8d83960eba19e202c11376312879ef5be4f342e638bac92b0a765",
+      "sourceCommit": "c162509897333940d7a8124d58b1be75963c35d4",
+      "sourceCleanBefore": true,
+      "sourceCleanAfter": true,
+      "optionalGraft": false,
+      "compiledAggregateSha256": "46261c9eb6899332412ad5c90e6607a3cd137c9de660721b7a99ec4a07168cb1",
+      "node": "v24.21.0",
+      "coverage": "external-lens current-lens-projection, not published",
+      "graphHash": "6e2a20fcbc28ce4590f9bbb2e2359379ea5c065dbc9a4041e562fce7ed430e0c",
+      "graphBytes": 47205555,
+      "lensSha256": "17ca9377c761d2a326d45b51555ff5d9e3a91cf9c20302145bc707a13879b6d5",
+      "builds": {
+        "n": 3,
+        "minMs": 1924.1466249999999,
+        "p50Ms": 1925.809791,
+        "p95Ms": 1937.8275,
+        "maxMs": 1937.8275
+      },
+      "coldMcpMs": 1834.2267089999996,
+      "unchangedFreshness": {
+        "n": 20,
+        "minMs": 42.77649999999994,
+        "p50Ms": 45.33991600000081,
+        "p95Ms": 48.0384580000009,
+        "maxMs": 48.5692910000007
+      },
+      "tools": {
+        "lattice_overview": {
+          "n": 3,
+          "minMs": 75.51104199999827,
+          "p50Ms": 77.64204100000097,
+          "p95Ms": 78.36912499999926,
+          "maxMs": 78.36912499999926
+        },
+        "lattice_find": {
+          "n": 3,
+          "minMs": 49.46550000000025,
+          "p50Ms": 49.494290999999066,
+          "p95Ms": 50.016625000000204,
+          "maxMs": 50.016625000000204
+        },
+        "lattice_node": {
+          "n": 3,
+          "minMs": 45.182207999998354,
+          "p50Ms": 46.04887500000041,
+          "p95Ms": 46.34570800000074,
+          "maxMs": 46.34570800000074
+        },
+        "lattice_trace": {
+          "n": 3,
+          "minMs": 43.425499999999374,
+          "p50Ms": 45.28254199999901,
+          "p95Ms": 47.96416700000009,
+          "maxMs": 47.96416700000009
+        },
+        "lattice_matrix": {
+          "n": 3,
+          "minMs": 50.27595800000017,
+          "p50Ms": 51.13216700000157,
+          "p95Ms": 57.16316699999879,
+          "maxMs": 57.16316699999879
+        },
+        "lattice_findings": {
+          "n": 3,
+          "minMs": 45.95525000000089,
+          "p50Ms": 46.12658300000112,
+          "p95Ms": 49.42066599999998,
+          "maxMs": 49.42066599999998
+        },
+        "lattice_diff": {
+          "n": 3,
+          "minMs": 456.93054200000006,
+          "p50Ms": 459.634,
+          "p95Ms": 462.1895830000012,
+          "maxMs": 462.1895830000012
+        },
+        "lattice_freshness": {
+          "n": 3,
+          "minMs": 43.929667000000336,
+          "p50Ms": 45.07079200000044,
+          "p95Ms": 45.941499999998996,
+          "maxMs": 45.941499999998996
+        }
+      },
+      "gates": {
+        "buildUnder10s": true,
+        "deterministicFirstTwo": true,
+        "unchangedFreshnessUnder50ms": true,
+        "mcpUnder1s": false,
+        "allToolCallsSuccessful": true
+      },
+      "limitation": "Controlled clean-source external lens projection. Not a published consumer measurement; cold MCP still fails. Prior measurements and optional-Graft cases remain preserved."
+    },
+    {
+      "name": "linked-items-published-pr165",
+      "toolCommit": "d8a6890084a338e3504900b87a1b60c5090a9652",
+      "packageSha256": "89a188a741c8d83960eba19e202c11376312879ef5be4f342e638bac92b0a765",
+      "sourceCommit": "03c5f22f528ad005f6367b66ba0878c95ae142fb",
+      "sourceCleanBefore": true,
+      "sourceCleanAfter": true,
+      "optionalGraft": false,
+      "compiledAggregateSha256": "46261c9eb6899332412ad5c90e6607a3cd137c9de660721b7a99ec4a07168cb1",
+      "node": "v24.21.0",
+      "coverage": "default repository lens on merged source",
+      "graphHash": "3c5e5e544e9d1b3e8e3e66660e549cb4f764143b8c35261ecbb44646aecf23b1",
+      "lensSha256": "17ca9377c761d2a326d45b51555ff5d9e3a91cf9c20302145bc707a13879b6d5",
+      "builds": {
+        "n": 3,
+        "minMs": 1929.104791,
+        "p50Ms": 1939.556,
+        "p95Ms": 1969.542959,
+        "maxMs": 1969.542959
+      },
+      "coldMcpMs": 1827.9485830000003,
+      "unchangedFreshness": {
+        "n": 20,
+        "minMs": 44.00104099999953,
+        "p50Ms": 45.5190419999999,
+        "p95Ms": 48.00383299999885,
+        "maxMs": 53.43883300000016
+      },
+      "tools": {
+        "lattice_overview": {
+          "n": 3,
+          "minMs": 76.4213749999999,
+          "p50Ms": 77.46941700000025,
+          "p95Ms": 80.04091700000026,
+          "maxMs": 80.04091700000026
+        },
+        "lattice_find": {
+          "n": 3,
+          "minMs": 51.142125000000306,
+          "p50Ms": 51.49462500000118,
+          "p95Ms": 53.28129099999933,
+          "maxMs": 53.28129099999933
+        },
+        "lattice_node": {
+          "n": 3,
+          "minMs": 45.95287500000086,
+          "p50Ms": 46.40837499999907,
+          "p95Ms": 46.53583299999991,
+          "maxMs": 46.53583299999991
+        },
+        "lattice_trace": {
+          "n": 3,
+          "minMs": 44.661707999999635,
+          "p50Ms": 45.64941700000054,
+          "p95Ms": 46.107874999999694,
+          "maxMs": 46.107874999999694
+        },
+        "lattice_matrix": {
+          "n": 3,
+          "minMs": 52.96533399999862,
+          "p50Ms": 53.02533299999959,
+          "p95Ms": 60.031166999999186,
+          "maxMs": 60.031166999999186
+        },
+        "lattice_findings": {
+          "n": 3,
+          "minMs": 46.80845799999952,
+          "p50Ms": 47.63025000000016,
+          "p95Ms": 48.75724999999875,
+          "maxMs": 48.75724999999875
+        },
+        "lattice_diff": {
+          "n": 3,
+          "minMs": 482.19183300000077,
+          "p50Ms": 486.080750000001,
+          "p95Ms": 488.5348749999994,
+          "maxMs": 488.5348749999994
+        },
+        "lattice_freshness": {
+          "n": 3,
+          "minMs": 44.27258299999994,
+          "p50Ms": 44.95933299999888,
+          "p95Ms": 49.35450000000128,
+          "maxMs": 49.35450000000128
+        }
+      },
+      "gates": {
+        "buildUnder10s": true,
+        "deterministicFirstTwo": true,
+        "unchangedFreshnessUnder50ms": false,
+        "mcpUnder1s": false,
+        "allToolCallsSuccessful": true
+      },
+      "consumerPublication": {
+        "pr": "https://github.com/hyunlord/bs-mobile/pull/165",
+        "ci": "https://github.com/hyunlord/bs-mobile/actions/runs/38018070629",
+        "mapCi": "https://github.com/hyunlord/bs-mobile/actions/runs/38018070918",
+        "deployment": "https://github.com/hyunlord/bs-mobile/actions/runs/38018970891",
+        "premerge": {
+          "checkedAt": "2026-10-10T02:59:36.952779+00:00",
+          "main": "c162509897333940d7a8124d58b1be75963c35d4",
+          "head": "6ff76524960b3c0a69b1d4ce3085bc573b88860e",
+          "openPullRequests": [
+            {
+              "number": 165,
+              "head": "6ff76524960b3c0a69b1d4ce3085bc573b88860e",
+              "adrFiles": []
+            }
+          ],
+          "collision": false
+        },
+        "browser": {
+          "graphHash": "3c5e5e544e9d1b3e8e3e66660e549cb4f764143b8c35261ecbb44646aecf23b1",
+          "sourceCommit": "03c5f22f528ad005f6367b66ba0878c95ae142fb",
+          "routeWidthCases": 22,
+          "interactionGroups": 8,
+          "errors": 0,
+          "overflowCases": 0,
+          "localPerformanceGraphMatch": true,
+          "baselineOracle": {
+            "noEvolutionWeapons": 6,
+            "noItemWeapons": 15,
+            "seedBagLinkedItems": 11,
+            "carpenterHammerLinkedItems": 7,
+            "noXpReturnTools": 12,
+            "waveOneEvolutions": 0
+          },
+          "currentOracle": {
+            "noEvolutionWeapons": 0,
+            "noItemWeapons": 0,
+            "seedBagLinkedItems": 2,
+            "carpenterHammerLinkedItems": 2,
+            "noXpReturnTools": 0,
+            "waveOneEvolutions": 3
+          }
+        }
+      },
+      "limitation": "Actual merged default-lens source and public browser agree. Cold MCP and maximum unchanged freshness still fail; p95 does not replace maximum. Earlier actual-client records remain historical and were not rerun for this graph. Tool remains pinned to d8a689, not subsequent Lattice main changes."
     }
   ]
 }
