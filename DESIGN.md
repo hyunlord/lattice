@@ -2,7 +2,7 @@
 
 ## 1. Atmosphere & Identity
 
-A compact repository workbench: precise, quiet and readable. Its signature is persistent provenance beside every inspection, with a stable navigation rail and dense aligned rows. No game identity, marketing hero, decorative art, gradients or ornamental animation. The user's information-density contract overrides spacious promotional-layout examples in generic design references.
+A picture map first, with a compact repository workbench available on demand. The first screen explains regions, their contents and directed connections. Provenance remains available through an evidence disclosure; detailed inspection retains the navigation rail and dense aligned rows. No game identity, marketing hero, decorative art, gradients or ornamental animation. The user's information-density contract overrides spacious promotional-layout examples in generic design references.
 
 ## 2. Color
 
@@ -40,7 +40,7 @@ IDs/counts use tabular figures and mono. Labels wrap; IDs can wrap anywhere or b
 
 Human view sizing tokens: gallery minimum 20rem, text matrix cell minimum 12rem/maximum 20rem, matrix region maximum 70vh. These sizes constrain data regions, not the page.
 
-Base spacing tokens `--space-1` through `--space-6`: 4, 8, 12, 16, 20, 24px; `--space-8`: 32px. Rail 200px, inspector 320px, minimum main column 320px. App fills viewport width; content panels have 16px padding and 24px section gaps. Table row minimum 36px desktop; touch controls 44px. Border radius 4px, border 1px, focus offset 2px.
+Base spacing tokens `--space-1` through `--space-6`: 4, 8, 12, 16, 20, 24px; `--space-8`: 32px. Rail 200px, inspector 320px, minimum main column 320px. App fills viewport width; content panels have 16px padding and 24px section gaps. Table row minimum 36px desktop; touch controls 44px. Workbench border radius 4px, border 1px, focus offset 2px. The picture map uses island radius 20px on desktop and 16px on mobile, a 24px point target containing a 16px kind shape, and desktop gaps of 32px horizontally and 40px vertically. Mobile island titles remain 16px; never shrink them to fit the desktop composition.
 
 Breakpoints: under 640px navigation becomes a disclosure with full labels and inspector moves below content; 640–1023px collapsed rail and one content column; 1024px+ full rail and optional inspector. Data tables use `--table-min-width: 960px` when multiple descriptive columns are present. No page-level horizontal overflow; wide data tables have a labeled, keyboard-scrollable region. Test 375, 768, 1280px.
 
@@ -68,6 +68,17 @@ Borders-only depth. One-pixel separators, flat surfaces, no shadows. Selected ro
 
 ## Human reading views
 
-Gallery cards use the existing flat panel, 16px padding, 16px gaps and a minimum 256px (`--card-min-width`) column. Their title is the primary node link; labeled summary, badge and status fields are lens data, never inferred from domain IDs. Status remains text, including absent evidence. Matrix explanations wrap in 256px (`--matrix-text-width`) cells; the first column and header stay sticky within the scroll region. A target selector reduces dense matrices to one destination. Individual graph views default to a selected node and its neighborhood, with full names in a parallel accessible list. Curated home links precede findings. Detail summaries and named relationships precede raw attribute disclosure; provenance remains accessible.
+Gallery cards use the existing flat panel, 16px padding, 16px gaps and a minimum 256px (`--card-min-width`) column. Their title is the primary node link; labeled summary, badge and status fields are lens data, never inferred from domain IDs. Status remains text, including absent evidence. Matrix explanations wrap in 256px (`--matrix-text-width`) cells; the first column and header stay sticky within the scroll region. A target selector reduces dense matrices to one destination. Individual graph views default to a selected node and its neighborhood, with full names in a parallel accessible list. The picture-map home precedes curated links and findings, which remain under 자세히. Detail summaries and named relationships precede raw attribute disclosure; provenance remains accessible.
 
 Final human-view polish uses the same tokens and DOM components: galleries show eight records per page, default to collapsed relationship evidence, and sort by name or lens badge/status fields. Individual graphs require a selected center. Grouped sentence matrices show member names without changing graph topology.
+
+
+## Picture-map home (L7)
+
+The approved first screen is one full-width map with large named islands, kind-shaped content points, directed influence arrows and a single-line legend. Lens configuration selects hub kinds, membership edge kinds, influence edge kinds, a primary-membership facet and a status facet. A point appears only in its primary island; its small card lists other memberships. Empty hubs remain visible so their incoming and outgoing arrows explain their role. Arrow width expresses connection count; hover or keyboard focus exposes the relationship text. Kind and status also have non-color cues.
+
+At 1280×800, every hub name must fit without document scrolling. Mobile uses a vertical island layout with readable titles at native scale, not a miniature desktop canvas. Clicking a point opens an anchored card containing its name, short summary and a bounded list of three to five connections, and a 자세히 link. Existing galleries, matrices, status boards and full evidence remain available below that disclosure.
+
+Without configured picture-map hubs, folder areas contain file/module points and static imports become arrows. This fallback also applies when a lens exists but has no picture-map configuration, including the Charter & Kin example. Unknown execution status stays unknown rather than becoming completion evidence.
+
+The initial map hides the layer selector, source snapshot, graph hash, input coverage and provenance wording under 근거 보기. The expanded evidence retains these values and their meaning. Approved shape and spacing do not imply a passed visual gate: collect desktop/mobile browser screenshots and assert metadata hiding, hub-label visibility and interactions against the built export. Human 30-second comprehension remains the user's public-Pages check.

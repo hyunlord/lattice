@@ -1,3 +1,5 @@
+import { renderPictureMap } from './picture-map.js';
+import { buildPictureMap } from './picture-map-model.js';
 import type { Node as GraphNode, Facet, Finding, Source, Snapshot } from '../dist/core/model.js';
 import { renderExplore } from './explore.js';
 import { humanValue } from './views-records.js';
@@ -67,7 +69,7 @@ const snapshotGraphs = new Map<string, BrowserGraph>();
 const layerOf = (node: GraphNode) => String(node.attributes['layer'] ?? '');
 const layerLabel = (layer: string) => (Array.isArray(presentation.layers) ? presentation.layers.find(item => item.id === layer)?.label : presentation.layers?.[layer]?.label) || layer || '층 미지정';
 function routeHref(path: string, params: Record<string, string> = {}) { const query = new URLSearchParams({ ...(activeLayer ? { layer: activeLayer } : {}), ...params }); return '#' + path + (query.size ? '?' + query : ''); }
-function layerControl() {
+function layerControl(target: HTMLElement = main) {
     const layers = [...new Set(allVisibleNodes.map(layerOf))];
     if (layers.length < 2 && !layers[0]) return;
     const bar = el('div', undefined, 'filters layer-filter');
@@ -78,7 +80,7 @@ function layerControl() {
         params.set('layer', event.target.value); params.delete('page');
         location.hash = '#' + (path.startsWith('/node/') ? '/home' : path) + '?' + params;
     });
-    bar.append(control, el('span', '각 층의 노드와 발견을 따로 셉니다. 대응 링크는 동일 구현을 뜻하지 않습니다.', 'meta')); main.append(bar);
+    bar.append(control, el('span', '각 층의 노드와 발견을 따로 셉니다. 대응 링크는 동일 구현을 뜻하지 않습니다.', 'meta')); target.append(bar);
 }
 function layerFindings(data = graph, layer = activeLayer) {
     const ids = new Set(data.nodes.filter(node => layerOf(node) === layer).map(node => node.id));
@@ -88,7 +90,7 @@ const kindLabel = (kind: string) => kinds.find(item => item.id === kind)?.label 
 const facetLabel = (key: string) => presentation.facets?.[key]?.label || key;
 const valueLabel = (key: string, value: unknown) => presentation.facets?.[key]?.values?.[display(value)] || display(value);
 
-function pageHeading(title: string, description?: string) {
+function pageHeading(title: string, description?: string, target: HTMLElement = main) {
     const head = el('header', undefined, 'page-head');
     const h1 = el('h1', title); h1.tabIndex = -1; head.append(h1);
     if (description) head.append(el('p', description, 'muted'));
@@ -98,7 +100,7 @@ function pageHeading(title: string, description?: string) {
     provenance.append(el('span', graph.repository.dirty ? '작업 트리 변경 포함' : '기록된 소스 스냅샷'));
     const hash = el('span', '그래프 ' + graph.hash.slice(0, 12)); hash.title = graph.hash; provenance.append(hash);
     provenance.append(el('span', document.querySelector('meta[name="lattice-generation"]') ? '로컬 지도 · 파일 변경 시 자동 갱신' : '정적 내보내기 · 이후 변경은 재빌드 필요'));
-    head.append(provenance); main.append(head); layerControl();
+    head.append(provenance); target.append(head); layerControl(target);
 }
 function automaticFindingText(finding: Finding): { label: string; message: string; } | undefined {
     const count = finding.metrics['count'];
@@ -138,13 +140,27 @@ function findingView(finding: Finding, compact = false) {
     }
     return article;
 }
-function home(version: number) {
+function overview(version: number) {
     void renderHome(main, {
         graph, nodes: visibleNodes, findings: layerFindings(), kinds, presentation, layer: activeLayer,
         snapshots, readSnapshot, isCurrent: () => version === renderVersion,
         heading: pageHeading, kindLabel, facetLabel, valueLabel, sources, findingView: finding => findingView(finding, true), nodeHref, listHref,
         changesHref: (base, head) => routeHref('/changes', { base, head }),
     });
+}
+function home() {
+    const header = el('header', undefined, 'picture-home-header');
+    const title = el('h1', graph.repository.name + ' 지도'); title.tabIndex = -1;
+    const actions = el('div', undefined, 'actions');
+    const evidence = el('section', undefined, 'picture-evidence'); evidence.hidden = true;
+    const details = el('nav', undefined, 'picture-deeper'); details.hidden = true; details.setAttribute('aria-label', '자세히');
+    const toggle = (label: string, area: HTMLElement) => { const control = button(label, () => { area.hidden = !area.hidden; control.setAttribute('aria-expanded', String(!area.hidden)); }); control.setAttribute('aria-expanded', 'false'); return control; };
+    actions.append(toggle('자세히', details), toggle('근거 보기', evidence));
+    for (const [label, path] of [['발견과 요약', '/overview'], ['목록', '/list'], ['행렬과 상태판', '/views'], ['관계 탐색', '/explore'], ['변화', '/changes']]) if (label && path) details.append(link(label, routeHref(path)));
+    pageHeading('근거', undefined, evidence);
+    header.append(title, actions); main.append(header, details, evidence);
+    const map = el('div', undefined, 'picture-home-map'); main.append(map);
+    disposeScreen = renderPictureMap(map, buildPictureMap(visibleNodes, graph.edges, graph.facets, presentation.pictureMap, Object.fromEntries((presentation.detail?.relationships ?? []).flatMap(relation => relation.edgeKinds.map(kind => [kind, relation.label])))), { kindLabel, nodeHref });
 }
 function selectControl(label: string, name: string, values: readonly (readonly string[])[], selected: string) {
     const wrapper = el('label', label); const select = el('select'); select.name = name;
@@ -244,7 +260,8 @@ function render() {
     visibleNodes = allVisibleNodes.filter(node => layerOf(node) === activeLayer);
     const route = path === '/explore' ? 'explore' : path.startsWith('/views') ? 'views' : path.startsWith('/changes') ? 'changes' : path === '/home' ? 'home' : 'list';
     document.querySelectorAll<HTMLAnchorElement>('[data-route]').forEach(item => { item.href = routeHref('/' + item.dataset['route']); if (item.dataset['route'] === route) item.setAttribute('aria-current', 'page'); else item.removeAttribute('aria-current'); });
-    if (path === '/home') home(version); else if (path === '/explore') { pageHeading('관계 탐색', '종류와 분류로 좁히고, 방향 경로와 이웃을 따라 출처까지 탐색합니다.'); const visibleIds = new Set(visibleNodes.map(node => node.id)); disposeScreen = renderExplore(main, { nodes: visibleNodes, edges: graph.edges.filter(edge => visibleIds.has(edge.source) && visibleIds.has(edge.target)), facets: graph.facets.filter(facet => visibleIds.has(facet.nodeId)), params, kindLabel, facetLabel, valueLabel, nodeHref, href: values => routeHref('/explore', values) }); } else if (path === '/list') listing(params); else if (path.startsWith('/views')) views(path.slice(7), params); else if (path.startsWith('/changes')) changes(params, version); else if (path.startsWith('/node/')) { try { detail(decodeURIComponent(path.slice(6)), version); } catch { pageHeading('잘못된 노드 주소'); main.append(link('목록으로 돌아가기', listHref())); } } else { pageHeading('화면을 찾을 수 없습니다'); main.append(link('홈으로 돌아가기', routeHref('/home'))); }
+    document.body.classList.toggle('picture-home', path === '/home');
+    if (path === '/home') home(); else if (path === '/overview') overview(version); else if (path === '/explore') { pageHeading('관계 탐색', '종류와 분류로 좁히고, 방향 경로와 이웃을 따라 출처까지 탐색합니다.'); const visibleIds = new Set(visibleNodes.map(node => node.id)); disposeScreen = renderExplore(main, { nodes: visibleNodes, edges: graph.edges.filter(edge => visibleIds.has(edge.source) && visibleIds.has(edge.target)), facets: graph.facets.filter(facet => visibleIds.has(facet.nodeId)), params, kindLabel, facetLabel, valueLabel, nodeHref, href: values => routeHref('/explore', values) }); } else if (path === '/list') listing(params); else if (path.startsWith('/views')) views(path.slice(7), params); else if (path.startsWith('/changes')) changes(params, version); else if (path.startsWith('/node/')) { try { detail(decodeURIComponent(path.slice(6)), version); } catch { pageHeading('잘못된 노드 주소'); main.append(link('목록으로 돌아가기', listHref())); } } else { pageHeading('화면을 찾을 수 없습니다'); main.append(link('홈으로 돌아가기', routeHref('/home'))); }
     document.title = `${main.querySelector('h1')?.textContent || '지도'} · Lattice`;
     main.querySelector('h1')?.focus({ preventScroll: true });
     window.scrollTo(0, 0);
