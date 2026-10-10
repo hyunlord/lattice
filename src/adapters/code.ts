@@ -11,7 +11,7 @@ import { languageImports } from "./language-imports.js";
 import { csharpImports } from "./csharp-imports.js";
 import { rustImports } from "./rust-imports.js";
 
-export type ModuleImport = { readonly specifier: string; readonly member?: string; readonly scope?: string; readonly form?: string; readonly source: Source; };
+export type ModuleImport = { readonly specifier: string; readonly member?: string; readonly scope?: string; readonly importScope?: "project" | "file"; readonly form?: string; readonly source: Source; };
 export type CodeModule = { readonly node: NodeDraft; readonly language: string; readonly imports: readonly ModuleImport[]; };
 const languages: Readonly<Record<string, string>> = {
     ts: "typescript", tsx: "typescript", mts: "typescript", cts: "typescript",

@@ -60,7 +60,7 @@ export function resolveModuleLinks(modules: readonly CodeModule[], metadata: rea
                 if (group) packages.set(group.id, group);
                 for (const target of group ? [group.id] : matches.map(path => paths.get(path))) {
                     if (target === undefined) continue;
-                    edges.push({ id: `import:${canonicalJson([module.node.id, target, reference.source.pointer])}`, kind: "imports", source: module.node.id, target, directed: true, field: reference.source.pointer, sources: [reference.source, ...(self?.sources ?? [])], attributes: { specifier: reference.specifier, ...(reference.member ? { member: reference.member } : {}) } });
+                    edges.push({ id: `import:${canonicalJson([module.node.id, target, reference.source.pointer])}`, kind: "imports", source: module.node.id, target, directed: true, field: reference.source.pointer, sources: [reference.source, ...(self?.sources ?? [])], attributes: { specifier: reference.specifier, ...(reference.importScope ? { importScope: reference.importScope } : {}), ...(reference.form ? { importForm: reference.form } : {}), ...(reference.member ? { member: reference.member } : {}) } });
                 }
             } else diagnostics.push({ code: matches.length > 1 ? "ambiguous-module" : (self !== undefined || reference.specifier.startsWith(".") || reference.form?.startsWith("mod") || reference.form === "script-path" || /^(?:crate|self|super)::/u.test(reference.specifier)) ? "unresolved-local-module" : "external-or-unresolved-module", specifier: reference.specifier, source: reference.source, ...(self ? { reason: self.reason, evidence: self.sources } : {}) });
         }

@@ -7,7 +7,7 @@ export function packageNode(language: string, name: string, members: readonly Co
     return {
         id: `package:${language}:${name}`, kind: "package", name,
         attributes: {
-            language, packageName: name,
+            language, packageName: name, category: language === "csharp" ? "namespace" : "package", scope: "repository",
             directories: [...new Set(sources.map(source => source.path.split("/").slice(0, -1).join("/") || "."))].sort(),
             memberIds: members.map(member => member.node.id).sort(),
         },

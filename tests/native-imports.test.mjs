@@ -11,6 +11,9 @@ test('C# namespace imports target packages with alias/static and scoped namespac
         module('Tools.cs', 'namespace Game { namespace Model { public static class Tools {} } }'),
     ]);
     assert.deepEqual(result.diagnostics, []);
+    assert.deepEqual(result.edges.map(edge => [edge.attributes.importScope, edge.attributes.importForm]), [['project', 'namespace'], ['file', 'alias'], ['file', 'type'], ['file', 'namespace']]);
+    assert.equal(result.nodes[0].attributes.category, 'namespace');
+    assert.equal(result.nodes[0].attributes.scope, 'repository');
     assert.deepEqual(result.edges.map(edge => [edge.target, edge.sources[0].line]), [
         ['package:csharp:Game.Model', 1], ['module:Hero.cs', 2], ['module:Tools.cs', 3], ['package:csharp:Game.Model', 4],
     ]);
@@ -69,7 +72,7 @@ test('Rust does not invent edges for undeclared files, custom paths or macro tok
 test('native metadata survives cache decoding and keeps source joins identical', async () => {
     const { parseModule } = await import('../bin/decode.mjs');
     const modules = [
-        module('A.cs', 'using Game;'), module('B.cs', 'namespace Game; class Hero {}'),
+        module('A.cs', 'global using Game;\nusing Alias = Game.Hero;'), module('B.cs', 'namespace Game; class Hero {}'),
         module('src/lib.rs', 'mod models; use crate::models::Hero;'), module('src/models.rs', 'pub struct Hero;'),
     ];
     const decoded = modules.map(value => parseModule(JSON.parse(JSON.stringify(value))));
@@ -84,4 +87,14 @@ test('Rust root-level items resolve through super without treating unknown root 
     ]);
     assert.deepEqual(result.edges.map(edge => edge.target), ['module:src/child.rs', 'module:src/lib.rs']);
     assert.deepEqual(result.diagnostics.map(item => item.specifier), ['crate::Missing']);
+});
+
+test('global using is declaration evidence, not propagated usage by every module', () => {
+    const modules = [module('GlobalUsings.cs', 'global /* comment */ using\n Domain;'), module('one.cs', 'class One {}'), module('two.cs', 'class Two {}'), module('Domain.cs', 'namespace Domain; class Item {}')];
+    const result = resolveModuleLinks(modules);
+    assert.equal(result.edges.length, 1);
+    assert.equal(result.edges[0].source, 'module:GlobalUsings.cs');
+    assert.equal(result.edges[0].attributes.importScope, 'project');
+    assert.equal(result.edges[0].sources[0].line, 1);
+    assert.equal(result.nodes[0].attributes.language, 'csharp');
 });

@@ -1,9 +1,14 @@
 import { descriptiveProse } from "./description-prose.js";
 import type { JsonObject } from "../core/canonical.js";
+import { maskMarkdownImages } from "./markdown-images.js";
 import { plain } from "./markdown-inline.js";
 
 /** visible lines already exclude fenced code and HTML comments. */
-export function markdownDescription(lines: readonly string[], start: number, end: number): JsonObject | undefined {
+export function markdownDescription(sourceLines: readonly string[], start: number, end: number): JsonObject | undefined {
+    const lineOffset = start;
+    const lines = maskMarkdownImages(sourceLines.slice(start, end + 1).join("\n")).split("\n");
+    end -= start;
+    start = 0;
     let htmlDepth = 0;
     let marketingDepth = 0;
     let notice = false;
@@ -50,7 +55,7 @@ export function markdownDescription(lines: readonly string[], start: number, end
         const content = plain(parts.join(" ")).replace(/<[^>]*>/gu, " ").replace(/\s+/gu, " ").trim();
         if (!descriptiveProse(content)) continue;
         const text = (/^.*?[.!?](?:\s|$)/u.exec(content)?.[0] ?? content).trim().slice(0, 320);
-        return { text, kind: "readme", line: first + 1, endLine: last + 1 };
+        return { text, kind: "readme", line: lineOffset + first + 1, endLine: lineOffset + last + 1 };
     }
     return undefined;
 }

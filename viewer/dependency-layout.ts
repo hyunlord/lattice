@@ -1,6 +1,6 @@
 import type { LoopFlow, LoopMap, LoopStage } from './loop-map-types.js';
 
-export type DependencyView = { readonly stages: readonly LoopStage[]; readonly flows: readonly LoopFlow[]; };
+export type DependencyView = { readonly stages: readonly LoopStage[]; readonly flows: readonly LoopFlow[]; readonly actualCycles?: readonly (readonly string[])[]; };
 export function dependencyView(model: LoopMap, ids: readonly string[]): DependencyView {
     const stages = ids.flatMap(id => { const stage = model.stages.find(item => item.id === id); return stage ? [stage] : []; });
     const stageById = new Map(model.stages.map(stage => [stage.id, stage]));
@@ -9,22 +9,23 @@ export function dependencyView(model: LoopMap, ids: readonly string[]): Dependen
         while (current) { if (ids.includes(current)) return current; current = stageById.get(current)?.parentId; }
         return undefined;
     };
-    const groups = new Map<string, { source: string; target: string; files: Set<string>; }>();
+    const groups = new Map<string, { source: string; target: string; files: Set<string>; projectFiles: Set<string>; }>();
     for (const flow of model.flows) {
         const source = ancestor(flow.source) ?? flow.source, target = ancestor(flow.target) ?? flow.target;
         if (!source || !target || source === target) continue;
-        const key = JSON.stringify([source, target]); const group = groups.get(key) ?? { source, target, files: new Set<string>() };
-        for (const file of flow.sourceFiles ?? []) group.files.add(file); groups.set(key, group);
+        const key = JSON.stringify([source, target]); const group = groups.get(key) ?? { source, target, files: new Set<string>(), projectFiles: new Set<string>() };
+        for (const file of flow.sourceFiles ?? []) group.files.add(file); for (const file of flow.projectSourceFiles ?? []) group.projectFiles.add(file); groups.set(key, group);
     }
-    const flows = [...groups.values()].map(group => ({ source: group.source, target: group.target, count: group.files.size, sourceFiles: [...group.files].sort(), label: `${group.files.size}개 파일` }));
+    const flows = [...groups.values()].map(group => ({ source: group.source, target: group.target, count: group.files.size, sourceFiles: [...group.files].sort(), projectSourceFiles: [...group.projectFiles].sort(), label: group.projectFiles.size ? `${group.files.size - group.projectFiles.size}개 파일 · 프로젝트 선언 ${group.projectFiles.size}개` : `${group.files.size}개 파일` }));
     const effective = stages.map(stage => {
         const nested = stages.filter(other => { let parent = other.parentId; while (parent) { if (parent === stage.id) return true; parent = stageById.get(parent)?.parentId; } return false; });
         const covered = new Set(nested.flatMap(other => other.descendantNodeIds ?? other.nodeIds));
         const nodeIds = (stage.descendantNodeIds ?? stage.nodeIds).filter(id => !covered.has(id));
-        const related = (direction: 'incoming' | 'outgoing') => flows.filter(flow => (direction === 'incoming' ? flow.target : flow.source) === stage.id).map(flow => ({ name: stageById.get(direction === 'incoming' ? flow.source : flow.target)?.title ?? '', description: `${flow.count}개 파일이 사용: ${flow.sourceFiles.map(file => file.split('/').at(-1)).join(', ')}` }));
+        const related = (direction: 'incoming' | 'outgoing') => flows.filter(flow => (direction === 'incoming' ? flow.target : flow.source) === stage.id).map(flow => ({ name: stageById.get(direction === 'incoming' ? flow.source : flow.target)?.title ?? '', description: dependencyFlowDescription(flow) }));
         return { ...stage, nodeIds, groups: [{ title: '모듈', items: nodeIds.map(id => ({ id })) }], incoming: related('incoming'), outgoing: related('outgoing') };
     });
-    return { stages: effective, flows: flows.filter(flow => ids.includes(flow.source) && ids.includes(flow.target)) };
+    const actualCycles = originalDependencyCycles(model.flows).map(cycle => [...new Set(cycle.flatMap(id => ancestor(id) ?? []))]).filter(cycle => cycle.length > 1);
+    return { stages: effective, flows: flows.filter(flow => ids.includes(flow.source) && ids.includes(flow.target)), actualCycles };
 }
 
 export type Point = { readonly x: number; readonly y: number; };
@@ -52,7 +53,7 @@ export function orthogonalRoute(start: Point, end: Point, space: RouteSpace): re
     return route.filter((p, index) => { const before = route[index - 1], after = route[index + 1]; return !before || !after || (before.x !== p.x || p.x !== after.x) && (before.y !== p.y || p.y !== after.y); });
 }
 
-export function dependencyLevels(view: DependencyView): readonly { readonly stages: readonly LoopStage[]; readonly cyclic: boolean; readonly level: number; }[] {
+export function dependencyLevels(view: DependencyView): readonly { readonly stages: readonly LoopStage[]; readonly cyclic: boolean; readonly foldedCycle: boolean; readonly level: number; }[] {
     const reaches = (start: string, target: string): boolean => {
         const pending = [start], seen = new Set<string>();
         while (pending.length) { const id = pending.pop(); if (!id || seen.has(id)) continue; seen.add(id); for (const flow of view.flows.filter(flow => flow.source === id)) { if (flow.target === target) return true; pending.push(flow.target); } }
@@ -61,7 +62,8 @@ export function dependencyLevels(view: DependencyView): readonly { readonly stag
     const assigned = new Set<string>(); const groups = view.stages.flatMap(stage => {
         if (assigned.has(stage.id)) return [];
         const stages = view.stages.filter(other => other.id === stage.id || reaches(stage.id, other.id) && reaches(other.id, stage.id)); stages.forEach(other => assigned.add(other.id));
-        return [{ stages, cyclic: stages.length > 1, level: 0 }];
+        const cyclic = stages.length > 1 && (view.actualCycles === undefined || view.actualCycles.some(cycle => stages.every(stage => cycle.includes(stage.id))));
+        return [{ stages, cyclic, foldedCycle: stages.length > 1 && !cyclic, level: 0 }];
     });
     const owner = (id: string) => groups.findIndex(group => group.stages.some(stage => stage.id === id));
     for (let iteration = 0; iteration < groups.length; iteration++) for (const flow of view.flows) {
@@ -77,7 +79,14 @@ export function displayedDependencyFlows(view: DependencyView, selected: string 
 
 export function dependencyBandHeight(flowCount: number, width: number, rowHeight = 48): number {
     const columns = Math.max(1, Math.floor((width - 48) / 240));
-    return flowCount ? 40 + Math.ceil(flowCount / columns) * rowHeight : 16;
+    return flowCount ? 40 + Math.ceil(flowCount / columns) * rowHeight : 32;
+}
+
+export function sharedFolderPrefix(paths: readonly string[]): string {
+    if (paths.length < 2) return '';
+    const parts = paths.map(path => path.split('/')); const first = parts[0] ?? []; let length = 0;
+    while (length < first.length - 1 && parts.every(path => path.length > length + 1 && path[length] === first[length])) length++;
+    return first.slice(0, length).join('/');
 }
 
 export function uniqueDependencyNames(stages: readonly LoopStage[]): ReadonlyMap<string, string> {
@@ -105,4 +114,29 @@ export function reserveDependencyRoute(points: readonly Point[], width: number, 
 export function dependencyLabelLines(view: DependencyView): ReadonlyMap<string, readonly string[]> {
     const names = uniqueDependencyNames(view.stages);
     return new Map(view.flows.map(flow => { const from = names.get(flow.source) ?? flow.source, to = names.get(flow.target) ?? flow.target; const pair = `${from} → ${to}`; return [JSON.stringify([flow.source, flow.target]), pair.length <= 30 ? [pair, flow.label] : [from, `→ ${to}`, flow.label]]; }));
+}
+
+export function dependencyLabelRowHeight(flows: readonly LoopFlow[], lines: ReadonlyMap<string, readonly string[]>): number {
+    return flows.some(flow => (lines.get(JSON.stringify([flow.source, flow.target]))?.length ?? 0) > 2) ? 64 : 48;
+}
+
+export function dependencyFlowDescription(flow: LoopFlow): string {
+    const project = new Set(flow.projectSourceFiles ?? []), files = flow.sourceFiles ?? [];
+    const names = (values: readonly string[]) => values.map(file => file.split('/').at(-1)).join(', ');
+    return project.size ? `${files.length - project.size}개 파일이 사용: ${names(files.filter(file => !project.has(file)))} · 프로젝트 공통 선언 ${project.size}개: ${names([...project])} (프로젝트 전체 범위)` : `${flow.count ?? files.length}개 파일이 사용: ${names(files)}`;
+}
+function originalDependencyCycles(flows: readonly LoopFlow[]): readonly (readonly string[])[] {
+    const neighbors = new Map<string, string[]>();
+    for (const flow of flows) { const targets = neighbors.get(flow.source) ?? []; targets.push(flow.target); neighbors.set(flow.source, targets); if (!neighbors.has(flow.target)) neighbors.set(flow.target, []); }
+    const indices = new Map<string, number>(), low = new Map<string, number>(), stack: string[] = [], active = new Set<string>(), cycles: string[][] = []; let next = 0;
+    const visit = (id: string): void => {
+        indices.set(id, next); low.set(id, next++); stack.push(id); active.add(id);
+        for (const target of neighbors.get(id) ?? []) { if (!indices.has(target)) { visit(target); low.set(id, Math.min(low.get(id) ?? 0, low.get(target) ?? 0)); } else if (active.has(target)) low.set(id, Math.min(low.get(id) ?? 0, indices.get(target) ?? 0)); }
+        if (low.get(id) !== indices.get(id)) return;
+        const cycle: string[] = []; let member: string | undefined;
+        do { member = stack.pop(); if (member !== undefined) { active.delete(member); cycle.push(member); } } while (member !== id && member !== undefined);
+        if (cycle.length > 1) cycles.push(cycle);
+    };
+    for (const id of neighbors.keys()) if (!indices.has(id)) visit(id);
+    return cycles;
 }

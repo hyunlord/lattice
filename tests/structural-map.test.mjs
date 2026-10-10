@@ -87,3 +87,21 @@ test('verification fallback preserves the authored name and evidence', () => {
     assert.equal(model.stages[0].summary, '검증 항목: returns JSON');
     assert.deepEqual(model.stages[0].summaryEvidence, [{ path: 'test/api.ts', line: 12 }]);
 });
+
+
+test('connected nested subtrees retain their parent when a wide frontier folds', () => {
+    const nodes = [node('app', 'src/main.ts'), ...Array.from({ length: 8 }, (_, i) => node(`peer${i}`, `src/peer${i}/index.ts`)), node('nested', 'src/foundation/index.ts'), ...Array.from({ length: 5 }, (_, i) => node(`deep${i}`, `src/foundation/part${i}/index.ts`))];
+    const edges = [edge('root', 'app', 'nested'), ...Array.from({ length: 8 }, (_, i) => edge(`peerUse${i}`, 'app', `peer${i}`)), ...Array.from({ length: 5 }, (_, i) => edge(`use${i}`, `peer${i}`, `deep${i}`))];
+    const model = buildStructuralMap(nodes, edges);
+    assert.equal(model.rootStageIds.length, 9);
+    assert(model.rootStageIds.includes('folder:src/foundation'));
+    assert.equal(model.stages.find(s => s.id === 'folder:src/foundation').descendantNodeIds.length, 6);
+    assert.equal(model.flows.length, edges.length);
+});
+test('project-wide import declarations remain separate from local import evidence', () => {
+    const nodes = [node('global', 'src/GlobalUsings.cs'), node('local', 'src/Local.cs'), node('target', 'lib/Target.cs')];
+    const model = buildStructuralMap(nodes, [{ ...edge('global', 'global', 'target'), attributes: { importScope: 'project' } }, edge('local', 'local', 'target')]);
+    assert.equal(model.flows[0].count, 2);
+    assert.deepEqual(model.flows[0].projectSourceFiles, ['src/GlobalUsings.cs']);
+    assert.equal(model.flows[0].label, '1개 파일 사용 · 프로젝트 선언 1개');
+});

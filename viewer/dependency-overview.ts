@@ -1,7 +1,7 @@
 import type { LoopStage, LoopUI } from './loop-map-types.js';
-import { chip, element, interpretation, svg } from './loop-map-shared.js';
+import { chip, element, interpretation, label, svg } from './loop-map-shared.js';
 import { readLoopRoute, writeLoopRoute } from './loop-map-route.js';
-import { dependencyBandHeight, dependencyLabelLines, dependencyLevels, dependencyView, displayedDependencyFlows } from './dependency-layout.js';
+import { dependencyBandHeight, dependencyFlowDescription, dependencyLabelLines, dependencyLabelRowHeight, dependencyLevels, dependencyView, displayedDependencyFlows, sharedFolderPrefix } from './dependency-layout.js';
 import { drawDependencyArrows } from './dependency-arrows.js';
 
 function pathTitle(value: string): HTMLElement {
@@ -24,7 +24,7 @@ export function renderDependencyOverview(host: HTMLElement, ui: LoopUI): () => v
     let redraw = (): void => { };
     const renderPanel = (stage: LoopStage): void => {
         selected = stage.id; for (const button of diagram.querySelectorAll<HTMLButtonElement>('[data-stage]')) button.setAttribute('aria-pressed', String(button.dataset['stage'] === selected));
-        panel.replaceChildren(); const header = element('div', '', 'lm-panel-head'); header.append(element('h2', stage.title), element('span', stage.summary, 'lm-muted')); panel.append(header);
+        panel.replaceChildren(); const header = element('div', '', 'lm-panel-head'); header.append(element('h2', stage.title), element('p', stage.summary, 'lm-muted')); panel.append(header);
         if (stage.childIds?.length) { const expand = element('button', `하위 덩어리 ${stage.childIds.length}개 펼치기`, 'lm-dependency-expand'); expand.type = 'button'; expand.onclick = () => { parentId = stage.id; page = 0; selected = stage.childIds?.[0]; render(); if (selected) writeLoopRoute({ view: 'loop', stage: selected }); }; panel.append(expand); }
         const columns = element('div', '', 'lm-cols'); const content = element('div');
         for (const group of stage.groups) { const block = element('details', '', 'lm-group'); block.open = false; block.append(element('summary', `${group.title} ${group.items.length}`)); const items = element('div', '', 'lm-chips'); for (const item of group.items) { const button = chip(item.id, ui); if (button) items.append(button); } block.append(items); content.append(block); }
@@ -46,15 +46,24 @@ export function renderDependencyOverview(host: HTMLElement, ui: LoopUI): () => v
         nav.hidden = !parentId && ids.length <= 9;
         if (ids.length > 9) for (const [text, delta] of [['이전', -1], ['다음', 1]] as const) { const button = element('button', text); button.type = 'button'; button.disabled = page + delta < 0 || (page + delta) * 9 >= ids.length; button.onclick = () => { page += delta; selected = ids[page * 9]; render(); if (selected) writeLoopRoute({ view: 'loop', stage: selected }); }; nav.append(button); }
         connections.replaceChildren(element('summary', `전체 덩어리 연결 ${view.flows.length}개`));
-        const connectionList = element('ul', '', 'lm-influence'); for (const flow of view.flows) connectionList.append(element('li', `${byId.get(flow.source)?.title ?? flow.source} → ${byId.get(flow.target)?.title ?? flow.target} — ${flow.label}: ${(flow.sourceFiles ?? []).map(file => file.split('/').at(-1)).join(', ')}`)); connections.append(connectionList);
+        const connectionList = element('ul', '', 'lm-influence'); for (const flow of view.flows) connectionList.append(element('li', `${byId.get(flow.source)?.title ?? flow.source} → ${byId.get(flow.target)?.title ?? flow.target} — ${dependencyFlowDescription(flow)}`)); connections.append(connectionList);
+        const drawingView = { ...view, stages: view.stages.map(stage => { const node = stage.nodeIds.length === 1 ? ui.byId.get(stage.nodeIds[0] ?? '') : undefined; return node?.kind === 'package' ? { ...stage, title: node.name } : stage; }) };
         const levels = dependencyLevels(view); const boxes = new Map<string, HTMLElement>();
         for (const level of [...new Set(levels.map(group => group.level))]) {
             const row = element('div', '', 'lm-dependency-level'); row.dataset['level'] = String(level); const groups = levels.filter(group => group.level === level);
+            const folders = groups.flatMap(group => group.stages).filter(stage => !stage.nodeIds.some(id => ui.byId.get(id)?.kind === 'package')); const prefix = sharedFolderPrefix(folders.map(stage => stage.title));
+            if (prefix) { row.append(element('span', `${prefix}/`, 'lm-folder-prefix')); }
             for (const group of groups) {
-                const region = element('div', '', `lm-dependency-group${group.cyclic ? ' lm-dependency-cycle' : ''}`); if (group.cyclic) region.append(element('span', '서로 의존하는 순환', 'lm-cycle-caption'));
+                const region = element('div', '', `lm-dependency-group${group.cyclic || group.foldedCycle ? ' lm-dependency-cycle' : ''}`); if (group.cyclic || group.foldedCycle) region.append(element('span', group.cyclic ? '서로 의존하는 순환' : '접힌 폴더 사이의 양방향 연결', 'lm-cycle-caption'));
                 for (const stage of group.stages) {
                     const box = element('button', '', 'lm-station'); box.type = 'button'; box.dataset['stage'] = stage.id; box.setAttribute('aria-pressed', String(stage.id === selected));
-                    box.append(pathTitle(stage.title), element('span', stage.summary, 'lm-station-line'), element('span', `${stage.nodeIds.length}개 모듈${stage.childIds?.length ? ` · 하위 ${stage.childIds.length}덩어리` : ''}`, 'lm-station-meta'));
+                    const identity = stage.nodeIds.length === 1 ? ui.byId.get(stage.nodeIds[0] ?? '') : undefined;
+                    const namespace = identity?.kind === 'package' ? identity : undefined;
+                    if (namespace) box.append(element('span', label(namespace, ui), 'lm-stage-category'));
+                    const displayName = namespace?.name ?? (prefix ? stage.title.slice(prefix.length + 1) : stage.title);
+                    const minimum = `min(100%, calc(${Math.max(...displayName.split('/').map(part => part.length))} * .6rem + 26px))`; box.style.minWidth = minimum; if (!group.cyclic && !group.foldedCycle) region.style.minWidth = minimum;
+                    box.title = stage.title;
+                    box.append(pathTitle(displayName), element('span', stage.summary, 'lm-station-line'), element('span', `${stage.nodeIds.length}개 모듈${stage.childIds?.length ? ` · 하위 ${stage.childIds.length}덩어리` : ''}`, 'lm-station-meta'));
                     box.onclick = () => { renderPanel(stage); writeLoopRoute({ view: 'loop', stage: stage.id }); }; region.append(box); boxes.set(stage.id, box);
                 } row.append(region);
             }
@@ -64,11 +73,11 @@ export function renderDependencyOverview(host: HTMLElement, ui: LoopUI): () => v
         }
         const initial = view.stages.find(stage => stage.id === selected) ?? view.stages[0]; if (initial) renderPanel(initial);
         redraw = () => {
-            const flows = displayedDependencyFlows(view, selected, showAll); const labelRows = dependencyLabelLines({ ...view, flows }); const rowHeight = [...labelRows.values()].some(lines => lines.length > 2) ? 64 : 48;
+            const flows = displayedDependencyFlows(view, selected, showAll); const labelRows = dependencyLabelLines({ ...drawingView, flows });
             mode.replaceChildren(); mode.hidden = view.flows.length <= 12;
             if (!mode.hidden) { const title = byId.get(selected ?? '')?.title ?? '선택한 덩어리'; mode.append(element('span', showAll ? `전체 ${view.flows.length}개 연결 표시` : `${title}의 연결 ${flows.length}개 표시 · 전체 ${view.flows.length}개`)); const toggle = element('button', showAll ? '선택한 덩어리만' : '전체 화살표'); toggle.type = 'button'; toggle.setAttribute('aria-pressed', String(showAll)); toggle.onclick = () => { showAll = !showAll; redraw(); }; mode.append(toggle); }
-            for (const gap of diagram.querySelectorAll<HTMLElement>('.lm-dependency-gap')) { const count = flows.filter(flow => boxes.get(flow.source)?.closest('.lm-dependency-level') === gap.previousElementSibling).length; gap.style.height = `${dependencyBandHeight(count, diagram.clientWidth, rowHeight)}px`; }
-            drawDependencyArrows({ host: diagram, graph, view: { ...view, flows }, boxes });
+            for (const gap of diagram.querySelectorAll<HTMLElement>('.lm-dependency-gap')) { const peers = flows.filter(flow => boxes.get(flow.source)?.closest('.lm-dependency-level') === gap.previousElementSibling); gap.style.height = `${dependencyBandHeight(peers.length, diagram.clientWidth, dependencyLabelRowHeight(peers, labelRows))}px`; }
+            drawDependencyArrows({ host: diagram, graph, view: { ...drawingView, flows }, boxes });
             if (Number(graph.dataset['unrouted']) > 0) { connections.open = true; const summary = connections.querySelector('summary'); if (summary) summary.textContent = `전체 덩어리 연결 ${view.flows.length}개 · 밀집한 연결은 아래 목록에서 확인`; }
         }; requestAnimationFrame(redraw);
     };

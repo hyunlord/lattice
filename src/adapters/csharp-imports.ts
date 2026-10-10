@@ -32,7 +32,7 @@ export function csharpImports(input: SourceInput): { readonly imports: readonly 
             let target = "";
             while (tokens[cursor]?.kind === "word" || [".", ":"].includes(tokens[cursor]?.value ?? "")) target += tokens[cursor++]?.value ?? "";
             if (tokens[cursor]?.value !== ";" || !/^(?:global::)?[\p{L}_][\p{L}\p{N}_]*(?:\.[\p{L}_][\p{L}\p{N}_]*)*$/u.test(target)) continue;
-            imports.push({ specifier: target, form, scope: scope.name, source: makeSource(input, `/imports/${imports.length}`, token.line) });
+            imports.push({ specifier: target, form, scope: scope.name, importScope: tokens[index - 1]?.value === "global" ? "project" : "file", source: makeSource(input, `/imports/${imports.length}`, token.line) });
             index = cursor;
         } else if (["class", "struct", "interface", "enum", "record"].includes(token.value)) {
             const name = token.value === "record" && ["class", "struct"].includes(tokens[index + 1]?.value ?? "") ? tokens[index + 2] : tokens[index + 1];

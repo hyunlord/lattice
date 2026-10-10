@@ -1,5 +1,5 @@
 import type { DependencyView, Obstacle, Point } from './dependency-layout.js';
-import { dependencyLabelLines, dependencyPort, orthogonalRoute, reserveDependencyRoute } from './dependency-layout.js';
+import { dependencyLabelLines, dependencyLabelRowHeight, dependencyPort, orthogonalRoute, reserveDependencyRoute } from './dependency-layout.js';
 import { svg } from './loop-map-shared.js';
 
 type ArrowScene = { readonly host: HTMLElement; readonly graph: SVGSVGElement; readonly view: DependencyView; readonly boxes: ReadonlyMap<string, HTMLElement>; };
@@ -11,16 +11,18 @@ export function drawDependencyArrows(scene: ArrowScene): void {
     const head = svg('path'); head.setAttribute('d', 'M0 0L10 5L0 10Z'); head.classList.add('lm-arrow-normal'); marker.append(head); defs.append(marker); graph.append(defs);
     const rectangles = new Map<string, Obstacle>();
     for (const [id, box] of boxes) { const rect = box.getBoundingClientRect(); rectangles.set(id, { x: rect.left - bounds.left, y: rect.top - bounds.top, width: rect.width, height: rect.height }); }
-    const labelLines = dependencyLabelLines(view); const rowHeight = [...labelLines.values()].some(lines => lines.length > 2) ? 64 : 48; const occupied = new Set<string>();
+    const labelLines = dependencyLabelLines(view); const occupied = new Set<string>();
     const labels = view.flows.flatMap((flow, index) => {
         const source = rectangles.get(flow.source), target = rectangles.get(flow.target); if (!source || !target) return [];
         const row = boxes.get(flow.source)?.closest('.lm-dependency-level'); if (!row) return [];
         const rowBounds = row.getBoundingClientRect(); const peers = view.flows.filter(other => boxes.get(other.source)?.closest('.lm-dependency-level') === row);
+        const rowHeight = dependencyLabelRowHeight(peers, labelLines);
         const slot = peers.indexOf(flow), columns = Math.max(1, Math.floor((bounds.width - 48) / 240));
         const label: Obstacle = { x: 24 + (slot % columns) * 240, y: Math.ceil((rowBounds.bottom - bounds.top + 32) / 8) * 8 + Math.floor(slot / columns) * rowHeight, width: 192, height: rowHeight - 20 };
         return [{ flow, source, target, label, index }];
     });
     const obstacles = [...rectangles.values()].map(box => ({ x: box.x - 4, y: box.y - 4, width: box.width + 8, height: box.height + 8 }));
+    for (const caption of host.querySelectorAll('.lm-folder-prefix')) { const rect = caption.getBoundingClientRect(); obstacles.push({ x: rect.left - bounds.left - 2, y: rect.top - bounds.top - 2, width: rect.width + 4, height: rect.height + 4 }); }
     for (const entry of labels) {
         const { source, target, flow, label } = entry;
         const ports = (id: string) => view.flows.filter(item => item.source === id || item.target === id);

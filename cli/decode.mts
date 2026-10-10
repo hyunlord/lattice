@@ -33,7 +33,9 @@ export function parseModule(value: unknown): CodeModule {
             const imported = record(entry);
             const member = optional(imported['member'], text);
             const scope = optional(imported['scope'], text), form = optional(imported['form'], text);
-            return { specifier: text(imported['specifier']), source: source(imported['source']), ...(member === undefined ? {} : { member }), ...(scope === undefined ? {} : { scope }), ...(form === undefined ? {} : { form }) };
+            const importScope = optional(imported['importScope'], text);
+            if (importScope !== undefined && importScope !== 'project' && importScope !== 'file') throw new GraphInputError('$cache/importScope', 'expected project or file');
+            return { specifier: text(imported['specifier']), source: source(imported['source']), ...(member === undefined ? {} : { member }), ...(scope === undefined ? {} : { scope }), ...(form === undefined ? {} : { form }), ...(importScope === undefined ? {} : { importScope }) };
         })
     };
 }

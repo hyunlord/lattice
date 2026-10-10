@@ -91,13 +91,18 @@ export function sourceDescription(text: string, language: string): JsonObject | 
         } else if (/^(?:package |namespace )[^;{}]+;?$/u.test(line)) { cursor++; continue; }
         else return undefined;
         cursor++;
-        const prose = parts.filter((part, index) => !/^\s*[-=]{3,}\s*$/u.test(part) && !/^\s*[-=]{3,}\s*$/u.test(parts[index + 1] ?? ""));
-        const content = prose.join(" ");
+        const next = lines.slice(cursor).find(value => value.trim() && !(language === "java" && /^\s*@\w+(?:\([^)]*\))?\s*$/u.test(value)))?.trim() ?? "";
+        const directive = (part: string): boolean => /^(?:eslint-(?:disable|enable)|@ts-(?:check|nocheck|ignore|expect-error)|prettier-ignore|biome-ignore|ruff:|pylint:|nolint\b|go:|ReSharper\s+(?:disable|restore)|noinspection\b)/iu.test(part.trim()) || (/^(?:import |from |using )/u.test(next) && /^(?:types?\s+only|type-only(?:\s+imports?)?|imports?\s+only)[!.\s]*$/iu.test(part.trim()));
+        const prose = parts.map((part, index) => ({ part, index })).filter(({ part, index }) => !directive(part) && !/^\s*[-=]{3,}\s*$/u.test(part) && !/^\s*[-=]{3,}\s*$/u.test(parts[index + 1] ?? ""));
+        const content = prose.map(value => value.part).join(" ");
         if (!descriptiveProse(content) || /automatically generated|code generated|^go:build/iu.test(content)) continue;
         const summary = sentence(content);
-        const next = lines.slice(cursor).find(value => value.trim() && !(language === "java" && /^\s*@\w+(?:\([^)]*\))?\s*$/u.test(value)))?.trim() ?? "";
+        const filteredDirective = parts.some(directive);
+        const substantive = prose.filter(value => value.part.trim());
+        const firstLine = filteredDirective ? start + (substantive[0]?.index ?? 0) + 1 : start + 1;
+        const lastLine = filteredDirective ? start + (substantive[substantive.length - 1]?.index ?? 0) + 1 : cursor;
         const moduleDoc = (language === "python" && /^(?:[ru])?(?:"""|''')/iu.test(line)) || line.startsWith("//!") || line.startsWith("/*!") || /@(?:module|fileoverview|file)\b/u.test(content) || /^(?:package |namespace |import |from |using |use |extern )/u.test(next);
-        if (summary && /[\p{L}]/u.test(summary)) return { text: summary, kind: moduleDoc ? "module-doc" : "declaration-doc", line: start + 1, endLine: cursor };
+        if (summary && /[\p{L}]/u.test(summary)) return { text: summary, kind: moduleDoc ? "module-doc" : "declaration-doc", line: firstLine, endLine: lastLine };
     }
     return undefined;
 }

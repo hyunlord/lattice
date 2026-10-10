@@ -120,3 +120,27 @@ test('provenance sentences and setext titles do not count as purpose', async () 
     assert.equal(graph.nodes[0].attributes.sourceDescription.text, 'Find local files quickly.');
     assert.equal(graph.nodes[0].attributes.sourceDescription.line, 4);
 });
+
+test('multiline linked badges are removed without losing real prose or source lines', async () => {
+    const { extractMarkdown } = await import('../dist/index.js');
+    for (const badge of ['[![Build\nCI](https://example.org/a(b).svg)](https://example.org/build)', '![Build\nCI][badge]', '[![Build\nCI][badge]][build]']) {
+        const text = `${badge}\n\nA database migration tool. More details.\n\n[badge]: badge.svg\n[build]: /build`;
+        const graph = extractMarkdown({ path: 'README.md', text, contentHash: createHash('sha256').update(text).digest('hex') });
+        assert.equal(graph.nodes[0].attributes.sourceDescription.text, 'A database migration tool.');
+        assert.equal(graph.nodes[0].attributes.sourceDescription.line, 4);
+    }
+    const text = '[![CI](badge.svg)](/build) A database migration tool.';
+    assert.equal(extractMarkdown({ path: 'README.md', text, contentHash: createHash('sha256').update(text).digest('hex') }).nodes[0].attributes.sourceDescription.text, 'A database migration tool.');
+});
+test('tool pragmas and import annotations are not module purpose', () => {
+    for (const header of ['/* eslint-disable no-inner-declarations */', '// @ts-nocheck', '// prettier-ignore', '// types only!', '// type-only imports']) assert.equal(attributes('module.ts', `${header}\nimport {value} from './value';\nexport function run() {}`).sourceDescription, undefined);
+    assert.equal(attributes('Module.cs', '// ReSharper disable MergeCastWithTypeCheck\nusing System;\npublic class Module {}').sourceDescription, undefined);
+    assert.equal(attributes('module.ts', '// Requests remote data with retries.\nimport {value} from "./value";').sourceDescription.text, 'Requests remote data with retries.');
+});
+
+test('tool directives are removed per line while adjacent purpose keeps exact evidence', () => {
+    const value = attributes('module.ts', '// @ts-check\n// Provides HTTP request retries.\nimport x from "./x.js";');
+    assert.deepEqual(value.sourceDescription, { text: 'Provides HTTP request retries.', kind: 'module-doc', line: 2, endLine: 2 });
+    const block = attributes('module.ts', '/* eslint-disable no-console\n * Provides HTTP request retries.\n */\nimport x from "./x.js";');
+    assert.deepEqual(block.sourceDescription, { text: 'Provides HTTP request retries.', kind: 'module-doc', line: 2, endLine: 2 });
+});

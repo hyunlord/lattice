@@ -76,3 +76,40 @@ test('fractional card bounds preserve the free grid corridor beside a label', ()
         for (let i = 1; i < route.length; i++) { const a = route[i - 1], b = route[i]; for (let t = 0; t <= 1; t += .01)for (const obstacle of [fixture.label, fixture.card]) { const x = a.x + (b.x - a.x) * t, y = a.y + (b.y - a.y) * t; assert.ok(!(x > obstacle.x && x < obstacle.x + obstacle.width && y > obstacle.y && y < obstacle.y + obstacle.height)); } }
     }
 });
+
+test('a long label affects only the dependency gap that contains it', async () => {
+    const { dependencyLabelLines, dependencyLabelRowHeight } = await import('../viewer/dependency-layout.js');
+    const short = { source: 'a', target: 'b', label: '7개 파일' }, long = { source: 'b', target: 'c', label: '1개 파일' };
+    const lines = dependencyLabelLines({ stages: [{ id: 'a', title: 'test' }, { id: 'b', title: 'src' }, { id: 'c', title: 'long-namespace-with-many-characters' }], flows: [short, long] });
+    assert.equal(dependencyLabelRowHeight([short], lines), 48);
+    assert.equal(dependencyLabelRowHeight([long], lines), 64);
+});
+
+test('folding independent one-way imports does not claim an original cycle', () => {
+    const stages = [stage('a'), stage('a/x', 'a'), stage('a/y', 'a'), stage('b'), stage('b/x', 'b'), stage('b/y', 'b')];
+    const flows = [{ source: 'a/x', target: 'b/x', sourceFiles: ['a/x.ts'] }, { source: 'b/y', target: 'a/y', sourceFiles: ['b/y.ts'] }];
+    const folded = dependencyLevels(dependencyView({ stages, flows }, ['a', 'b']));
+    assert.equal(folded[0].cyclic, false); assert.equal(folded[0].foldedCycle, true);
+    const actual = dependencyLevels(dependencyView({ stages, flows: [...flows, { source: 'b/x', target: 'a/x', sourceFiles: ['b/x.ts'] }] }, ['a', 'b']));
+    assert.equal(actual[0].cyclic, true); assert.equal(actual[0].foldedCycle, false);
+});
+test('project-wide declarations remain distinct from importing files after folding', () => {
+    const stages = [stage('a'), stage('a/x', 'a'), stage('b')];
+    const flows = [{ source: 'a/x', target: 'b', sourceFiles: ['a/use.cs', 'a/GlobalUsings.cs'], projectSourceFiles: ['a/GlobalUsings.cs'] }];
+    const view = dependencyView({ stages, flows }, ['a', 'b']); assert.equal(view.flows[0].count, 2);
+    assert.equal(view.flows[0].label, '1개 파일 · 프로젝트 선언 1개');
+    assert.match(view.stages[0].outgoing[0].description, /1개 파일이 사용: use.cs · 프로젝트 공통 선언 1개: GlobalUsings.cs/);
+});
+
+test('namespace identity keeps its specific category over the generic package label', async () => {
+    const { label } = await import('../viewer/loop-map-shared.js');
+    assert.equal(label({ kind: 'package', kindLabel: '네임스페이스' }, { context: { kindLabel: () => '패키지' } }), '네임스페이스');
+});
+
+test('shared folder prefixes stop at the first distinct path segment', async () => {
+    const { sharedFolderPrefix, dependencyBandHeight } = await import('../viewer/dependency-layout.js');
+    assert.equal(sharedFolderPrefix(['src/Serilog/Core', 'src/Serilog/Settings/KeyValuePairs']), 'src/Serilog');
+    assert.equal(sharedFolderPrefix(['src/alpha/shared/a', 'src/beta/shared/b']), 'src');
+    assert.equal(sharedFolderPrefix(['src/only']), '');
+    assert.ok(dependencyBandHeight(0, 1100) >= 32, 'a skipped-level target port needs a free corridor');
+});
