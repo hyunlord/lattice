@@ -123,7 +123,7 @@ export function renderDependencyOverview(host: HTMLElement, ui: LoopUI): () => v
                         const files = element('ul', '', 'lm-file-previews');
                         for (const file of stage.filePreviews) {
                             const item = element('li'); const open = element('button', file.name, 'lm-file-open'); open.type = 'button'; open.title = file.name; open.dataset['node'] = file.id; open.onclick = () => ui.openFocus(file.id); item.append(open, element('p', file.summary, 'lm-file-role'));
-                            if (file.definition && (!file.interpretation || file.interpretation.stale)) item.append(element('p', `정의: ${file.definition.name} — ${file.definition.summary}`, 'lm-file-definition'));
+                            if (file.definition && !(file.summary.includes(file.definition.name) && file.summary.includes(file.definition.summary)) && (!file.interpretation || file.interpretation.stale)) item.append(element('p', `정의: ${file.definition.name} — ${file.definition.summary}`, 'lm-file-definition'));
                             if (file.references?.length) {
                                 const references = element('div', '', 'lm-file-references'); references.append(element('span', '이 파일이 타입을 참조 →', 'lm-role-source'));
                                 const referenceEvidence = element('details', '', 'lm-file-evidence'); referenceEvidence.append(element('summary', '타입 참조 근거'));

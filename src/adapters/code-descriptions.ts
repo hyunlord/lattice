@@ -1,5 +1,6 @@
 import { entryPoints, javascriptEvidence } from "./code-evidence.js";
 import { descriptiveProse } from "./description-prose.js";
+import { pythonDocProse } from "./python-doc-prose.js";
 import { plain } from "./markdown-inline.js";
 import type { JsonObject } from "../core/canonical.js";
 import type { CodeToken } from "./code-tokens.js";
@@ -190,8 +191,8 @@ export function publicDeclarationDocumentation(lines: readonly string[], languag
                 if (end >= 0) { closed = true; break; }
                 part = lines[++cursor] ?? "";
             }
-            const body = parts.join("\n"), summary = sentence(body);
-            return closed && descriptiveProse(body) && summary ? { ...definition, declarationDescription: { text: summary, kind: definition["kind"] === "type" ? "type-doc" : "function-doc", line: start + 1, endLine: cursor + 1 } } : definition;
+            const prose = pythonDocProse(parts), summary = prose ? sentence(prose.text) : '';
+            return closed && prose && descriptiveProse(prose.text) && summary ? { ...definition, declarationDescription: { text: summary, kind: definition["kind"] === "type" ? "type-doc" : "function-doc", line: start + prose.start + 1, endLine: start + prose.end + 1 } } : definition;
         }
         if (definition["kind"] === "function" && !new RegExp(`^[^{};=]*\\b${escapedName}(?:\\s*<[^>]*>)?\\s*\\(`, "u").test(declarationLine)) return definition;
         if (definition["kind"] === "type" && !new RegExp(`^\\s*${typePrefix}${escapedName}\\b`, "u").test(declarationLine)) return definition;

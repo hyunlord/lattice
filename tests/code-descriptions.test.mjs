@@ -341,3 +341,26 @@ test('Python inline suites never borrow the next top-level declaration docstring
     assert.equal(value.definitions.find(item => item.name === 'helper').declarationDescription, undefined);
     assert.equal(value.definitions.find(item => item.name === 'public').declarationDescription.text, 'The public operation.');
 });
+
+test('Python URL documentation selects prose after assignment and assert examples', () => {
+    const value = attributes('pkg/urls.py', `class URL:
+    """
+    url = httpx.URL("HTTPS://jo%40email.com:a%20secret@müller.de:1234/pa%20th?search=ab#anchorlink")
+
+    assert url.scheme == "https"
+    assert url.username == "jo@email.com"
+    assert url.password == "a secret"
+
+    The components of a URL are broken down like this:
+
+       https://jo%40email.com:a%20secret@müller.de:1234/pa%20th?search=ab#anchorlink
+    [scheme]   [  username  ] [password] [ host ][port][ path ] [ query ] [fragment]
+    """
+`);
+    assert.deepEqual(value.definitions[0].declarationDescription, { text: 'The components of a URL are broken down like this:', kind: 'type-doc', line: 9, endLine: 9 });
+});
+
+test('Python doctest-only documentation never becomes prose', () => {
+    const value = attributes('api.py', 'class Example:\n    """\n    >>> x = 1\n    >>> x + 1\n    2\n    """\n');
+    assert.equal(value.definitions[0].declarationDescription, undefined);
+});
