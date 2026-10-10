@@ -1,6 +1,6 @@
 # ADR 0004: Publish static maps and isolate consumer permissions
 
-Status: Accepted for L0 design; implementation pending.
+Status: Accepted; delivery implemented and verified through [L4 evidence](../review/l4-action.md).
 
 ## Decision
 Ship an npm CLI, self-contained static export, and stdio MCP server. Use hash routes so every exported node/view/comparison URL works on GitHub Pages without server rewrites. Serve mode binds to loopback and watches eligible files; static exports make no network or CDN dependency. Untrusted repository text is escaped.

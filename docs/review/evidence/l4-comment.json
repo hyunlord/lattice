@@ -1,0 +1,17 @@
+{
+  "repository": "hyunlord/bs-mobile",
+  "pullRequest": 161,
+  "sourceCommit": "d8a12fa5d4a8724483051bd85f3efbe2334d2b4b",
+  "runId": "38010662116",
+  "commentId": 6091875834,
+  "commentUrl": "https://github.com/hyunlord/bs-mobile/pull/161#issuecomment-6091875834",
+  "author": "github-actions[bot]",
+  "attempts": [
+    { "attempt": 1, "jobId": 114091095664, "status": "created", "commentId": 6091875834 },
+    { "attempt": 2, "jobId": 114091299314, "status": "unchanged", "commentId": 6091875834 }
+  ],
+  "matchingCommentsAfterRerun": 1,
+  "createdAt": "2026-10-10T00:56:04Z",
+  "updatedAtAfterRerun": "2026-10-10T00:56:04Z",
+  "limit": "Actual repeated identical report is unchanged; changed-body PATCH behavior is additionally covered by HTTP-backed tests."
+}

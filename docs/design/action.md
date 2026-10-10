@@ -4,6 +4,8 @@ The root composite action builds, checks, compares and exports a repository map.
 
 ## Install the reusable workflow
 
+Verified release: `v0.1.0-l4`, commit `b6e65efe6eed4771dcd220897b7ecfe06829c8cc` ([implementation PR43](https://github.com/hyunlord/lattice/pull/43)). Use this SHA for both placeholders below.
+
 Commit this caller in the consumer repository through its normal PR process:
 
 ```yaml
