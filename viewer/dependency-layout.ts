@@ -210,8 +210,7 @@ export function internalDependencyFacts(view: DependencyView, memberIds: readonl
         const sourceFiles = [...new Set(flow.sourceFiles ?? [])].sort();
         return { ...flow, sourceFiles, count: sourceFiles.length };
     }).sort((a, b) => b.count - a.count || a.source.localeCompare(b.source) || a.target.localeCompare(b.target));
-    const seen = new Set<string>();
-    return ranked.filter(flow => { if (seen.has(flow.source)) return false; seen.add(flow.source); return true; });
+    return ranked;
 }
 
 export function dependencyFlowDescription(flow: LoopFlow): string {

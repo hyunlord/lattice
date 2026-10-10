@@ -79,7 +79,8 @@ export function renderDependencyOverview(host: HTMLElement, ui: LoopUI): () => v
         for (const level of [...new Set(levels.map(group => group.level))]) {
             const row = element('div', '', 'lm-dependency-level'); row.dataset['level'] = String(level); const groups = levels.filter(group => group.level === level);
             for (const group of groups) {
-                const region = element('div', '', `lm-dependency-group${group.cyclic ? ' lm-dependency-cycle' : group.foldedCycle ? ' lm-dependency-aggregate' : ''}`); if (inlineRoles) { region.style.flexGrow = String(group.stages.length); region.style.minWidth = group.stages.length > 1 ? `${(group.stages.length > 3 ? 3 : 2) * 150 + 40}px` : '150px'; } if (group.cyclic || group.foldedCycle) region.append(element('span', '상호 참조 · 내부는 위아래 없음 · 방향은 아래 목록', 'lm-cycle-caption'));
+                const region = element('div', '', `lm-dependency-group${group.cyclic ? ' lm-dependency-cycle' : group.foldedCycle ? ' lm-dependency-aggregate' : ''}`); if (inlineRoles) { region.style.flexGrow = String(group.stages.length); region.style.minWidth = group.stages.length > 1 ? `${(group.stages.length > 3 ? 3 : 2) * 150 + 40}px` : '150px'; } if (group.cyclic || group.foldedCycle) region.append(element('span', '상호 참조 · 위아래 없음 · 사용: 폴더·파일 수', 'lm-cycle-caption'));
+                const internal = internalDependencyFacts(view, group.stages.map(stage => stage.id));
                 for (const stage of group.stages) {
                     const box = stage.filePreviews?.length ? element('article', '', 'lm-station lm-folder-files') : element('button', '', 'lm-station'); if (box instanceof HTMLButtonElement) box.type = 'button'; box.dataset['stage'] = stage.id; if (box instanceof HTMLButtonElement) box.setAttribute('aria-pressed', String(stage.id === selected));
                     box.dataset['entry'] = String(model.structuralEntryStageIds?.some(id => { let current: string | undefined = id; while (current) { if (current === stage.id) return true; current = byId.get(current)?.parentId; } return false; }) ?? false);
@@ -102,17 +103,13 @@ export function renderDependencyOverview(host: HTMLElement, ui: LoopUI): () => v
                         }
                         const allFiles = element('button', `파일 ${stage.nodeIds.length}개 모두 보기`, 'lm-file-all'); allFiles.type = 'button'; allFiles.onclick = () => { selectFolder(); for (const group of panel.querySelectorAll<HTMLDetailsElement>('details.lm-group')) group.open = true; panel.scrollIntoView({ block: 'start', behavior: 'smooth' }); }; box.append(files, allFiles);
                     } else box.onclick = selectFolder;
-                    region.append(box); boxes.set(stage.id, box);
-                } if (group.stages.length > 1) {
-                    const facts = element('div', '', 'lm-internal-facts'); const memberIds = new Set(group.stages.map(stage => stage.id)); const total = view.flows.filter(flow => memberIds.has(flow.source) && memberIds.has(flow.target)).length; const internal = internalDependencyFacts(view, group.stages.map(stage => stage.id)); facts.append(element('span', `안쪽 연결: 표시 ${internal.length} / 전체 ${total}개 · A → B: A가 B를 사용`, 'lm-internal-count'));
-                    for (const flow of internal) {
-                        const source = byId.get(flow.source)?.title ?? flow.source, target = byId.get(flow.target)?.title ?? flow.target;
-                        const projectCount = new Set(flow.projectSourceFiles ?? []).size;
-                        const count = (flow.count ?? 0) - projectCount;
-                        const fact = element('details', '', 'lm-internal-fact'); fact.append(element('summary', `${source} → ${target} · 사용 파일 ${count}개${projectCount ? ` · 프로젝트 공통 선언 ${projectCount}개` : ''}`), element('p', dependencyFlowDescription(flow)));
-                        facts.append(fact);
+                    const outgoing = internal.filter(flow => flow.source === stage.id);
+                    if (outgoing.length) {
+                        const dependencies = element('p', '사용: ', 'lm-card-dependencies');
+                        outgoing.forEach((flow, index) => { if (index) dependencies.append(document.createTextNode(' · ')); const target = pathText('span', byId.get(flow.target)?.title ?? flow.target, 'lm-card-dependency'); target.dataset['target'] = flow.target; target.dataset['count'] = String(flow.count ?? 0); const projectCount = new Set(flow.projectSourceFiles ?? []).size; target.append(document.createTextNode(` ${(flow.count ?? 0) - projectCount}${projectCount ? ` (+공통 ${projectCount})` : ''}`)); target.title = dependencyFlowDescription(flow); dependencies.append(target); });
+                        box.append(dependencies);
                     }
-                    region.append(facts);
+                    region.append(box); boxes.set(stage.id, box);
                 } if (group.stages.length > 1) { region.dataset['regionIds'] = JSON.stringify(group.stages.map(stage => stage.id)); for (const stage of group.stages) boxes.set(stage.id, region); } row.append(region);
             }
             diagram.append(row);
