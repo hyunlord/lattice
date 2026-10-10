@@ -162,8 +162,10 @@ export function applyLens(base: readonly ExtractedRecord[], lens: Lens, input: S
             const rule = object(value);
             if (!applies(rule, record.node)) return;
             const source = definition.fields[`/facets/${index}`];
-            const result = evaluate(rule["value"] ?? { op: "case", cases: rule["cases"] ?? [], default: rule["default"] ?? null }, { ...env, ...(source ? { expressionSource: source } : {}) }) ?? null;
-            facets.push({ id: `${string(rule["id"])}:${record.node.id}`, nodeId: record.node.id, key: string(rule["key"]), value: materializeValue(result), ruleId: string(rule["id"]), sources: [...env.sources.values(), ...(source ? [source] : [])] });
+            const facetEnv = { ...env, sources: new Map<string, Source>(), ...(source ? { expressionSource: source } : {}) };
+            addSources(facetEnv, record.node.sources);
+            const result = evaluateLocated(rule["value"] ?? { op: "case", cases: rule["cases"] ?? [], default: rule["default"] ?? null }, facetEnv);
+            facets.push({ id: `${string(rule["id"])}:${record.node.id}`, nodeId: record.node.id, key: string(rule["key"]), value: materializeValue(result.value ?? null), ruleId: string(rule["id"]), sources: [...facetEnv.sources.values(), ...(source ? [source] : [])] });
         });
     }
     const findings: Finding[] = array(lens.config["findings"] ?? []).map((value, index) => {
