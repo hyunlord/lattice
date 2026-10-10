@@ -786,10 +786,10 @@
     }
   },
   "limitations": [
-    "ruleProvenanceCandidate is the latest recorded package89a188 candidate for all three repositories. Earlier package records remain preserved with their original identities.",
-    "Client evidence remains on prior package3abdb704/source6a0fb5b until final published-source rerun.",
-    "Prior six-screen L2 evidence supplies unchanged-viewer coverage; bounded final reruns cover home/list/detail.",
-    "No performance pass or final consumer publication is claimed."
+    "Earlier package and artifact records remain historical observations with their original identities.",
+    "Latest public browser and actual clients agree on sourcec162509 and graph51a87de0; performance remains failed.",
+    "Prior six-screen L2 evidence supplies unchanged-viewer coverage; C&K/Click bounded reruns cover home/list/detail.",
+    "Runtime home object-valued facet distributions render long JSON blocks, a usability limitation rather than a runtime error."
   ],
   "priorArtifact": {
     "toolCandidateCommit": "61d419b",
@@ -2723,6 +2723,710 @@
         "serverClosed": true
       }
     },
-    "limitation": "All three repositories use this candidate; public Pages and actual-client final source reruns remain separate and pending."
+    "limitation": "Candidate artifact proof; subsequent public Pages and actual-client acceptance recorded separately at merged sourcec162509."
+  },
+  "consumerPublication": {
+    "pullRequest": "https://github.com/hyunlord/bs-mobile/pull/163",
+    "mergeCommit": "c162509897333940d7a8124d58b1be75963c35d4",
+    "fullCi": "https://github.com/hyunlord/bs-mobile/actions/runs/38015637809",
+    "fullCiConclusion": "success",
+    "premergeAdrCheck": {
+      "checkedAt": "2026-10-10T02:19:33.061809+00:00",
+      "main": "7aebd2e9046c4926d14fcb2d6f597dd02c5744f8",
+      "head": "3363bb1aaf4ae11c25a6889d457bdf1477914b6e",
+      "mainAdrPaths": [
+        "docs/adr/0001-unity-f2p.md",
+        "docs/adr/0002-pure-csharp-core.md",
+        "docs/adr/0003-data-driven-content.md",
+        "docs/adr/0004-one-default-extensible-model.md",
+        "docs/adr/0005-fantasy-consistent-causality.md",
+        "docs/adr/0006-layout-and-tooling.md",
+        "docs/adr/0007-durable-evidence.md",
+        "docs/adr/0008-complete-commit-evidence.md",
+        "docs/adr/0009-headless-world-and-controlled-experiments.md",
+        "docs/adr/0010-candidate-pool-and-explicit-runtime-profiles.md",
+        "docs/adr/0011-executable-prototypes-and-auditable-league.md",
+        "docs/adr/0012-external-evidence-and-tree-budget.md",
+        "docs/adr/0013-dependency-policy.md",
+        "docs/adr/0013-dependency-pr-51.md",
+        "docs/adr/0014-controlled-league-experiment.md",
+        "docs/adr/0015-local-remains-loop.md",
+        "docs/adr/0016-concise-evidence-and-retrospective-gates.md",
+        "docs/adr/0017-core-target-contracts.md",
+        "docs/adr/0018-unity-66-urp-baseline.md",
+        "docs/adr/0019-people-ablation-diagnostics.md",
+        "docs/adr/0020-test-sdk-18.md",
+        "docs/adr/0021-xunit-adapter-4.md",
+        "docs/adr/0022-weapon-level-tables-and-facing-sectors.md",
+        "docs/adr/0023-production-data-and-experiment-boundary.md",
+        "docs/adr/0024-generated-core-and-canonical-unity-bridge.md",
+        "docs/adr/0025-interactive-core-and-portable-replay.md",
+        "docs/adr/0026-portrait-fold-layout-and-local-unity-ci.md",
+        "docs/adr/0027-player-build-identity-and-frame-metrics.md",
+        "docs/adr/0028-urp2d-instanced-graybox-rendering.md",
+        "docs/adr/0029-first-playable-contract-and-historical-isolation.md",
+        "docs/adr/0030-authored-art-validation-and-lfs-ci.md",
+        "docs/adr/0031-first-playable-ui-state-and-local-preferences.md",
+        "docs/adr/0032-device-performance-evidence.md",
+        "docs/adr/0033-mac-playable-and-editor-capture.md",
+        "docs/adr/0034-bounded-meta-progression.md",
+        "docs/adr/0035-opt-in-native-mac-capture.md",
+        "docs/adr/0036-content-metadata-without-runtime-redesign.md",
+        "docs/adr/0037-lattice-map.md",
+        "docs/adr/0038-docs-only-ci.md",
+        "docs/adr/0039-versioned-design-catalog.md",
+        "docs/adr/0040-layered-lattice-catalog.md",
+        "docs/adr/0041-approved-design-primitives.md",
+        "docs/adr/0042-wave1a-runtime-isolation.md"
+      ],
+      "openPullRequests": [
+        {
+          "headRefOid": "3363bb1aaf4ae11c25a6889d457bdf1477914b6e",
+          "number": 163,
+          "title": "feat(lattice): expose source-derived prototype findings in YAML",
+          "adrFiles": [
+            {
+              "filename": "docs/adr/0040-layered-lattice-catalog.md",
+              "status": "modified"
+            }
+          ]
+        }
+      ],
+      "collision": false,
+      "checks": [
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-10T02:05:00Z",
+          "conclusion": "SKIPPED",
+          "detailsUrl": "https://github.com/hyunlord/bs-mobile/actions/runs/38015637809/job/114105153935",
+          "name": "dependency-context",
+          "startedAt": "2026-10-10T02:05:01Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-10T02:04:59Z",
+          "conclusion": "SKIPPED",
+          "detailsUrl": "https://github.com/hyunlord/bs-mobile/actions/runs/38015636757/job/114105150831",
+          "name": "prepare",
+          "startedAt": "2026-10-10T02:05:00Z",
+          "status": "COMPLETED",
+          "workflowName": "Dependency policy"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-10T02:05:44Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/hyunlord/bs-mobile/actions/runs/38015638247/job/114105153849",
+          "name": "map / build",
+          "startedAt": "2026-10-10T02:05:03Z",
+          "status": "COMPLETED",
+          "workflowName": "Lattice map"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-10T02:05:44Z",
+          "conclusion": "SKIPPED",
+          "detailsUrl": "https://github.com/hyunlord/bs-mobile/actions/runs/38015638247/job/114105298903",
+          "name": "map / publish",
+          "startedAt": "2026-10-10T02:05:45Z",
+          "status": "COMPLETED",
+          "workflowName": "Lattice map"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-10T02:19:21Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/hyunlord/bs-mobile/actions/runs/38015637809/job/114105153036",
+          "name": "quality",
+          "startedAt": "2026-10-10T02:05:03Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-10T02:05:13Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/hyunlord/bs-mobile/actions/runs/38015637809/job/114105153196",
+          "name": "secrets",
+          "startedAt": "2026-10-10T02:05:02Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-10T02:06:05Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/hyunlord/bs-mobile/actions/runs/38015638247/job/114105297605",
+          "name": "map / comment",
+          "startedAt": "2026-10-10T02:05:46Z",
+          "status": "COMPLETED",
+          "workflowName": "Lattice map"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-10T02:19:21Z",
+          "conclusion": "SKIPPED",
+          "detailsUrl": "https://github.com/hyunlord/bs-mobile/actions/runs/38015637809/job/114107937285",
+          "name": "dependency-results",
+          "startedAt": "2026-10-10T02:19:21Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        }
+      ]
+    },
+    "pagesRun": "https://github.com/hyunlord/bs-mobile/actions/runs/38016549996",
+    "pagesStatus": "success",
+    "publicBrowserStatus": "passed:20 route/width checks and7 interaction groups,0 errors",
+    "publishedSourceClientStatus": "passed: both actual8-tool catalogs,9calls,source/graph parity",
+    "pagesGraphHash": "51a87de0b5199ec4cdbec8927fbfbe12196c22584697e6f7c13b1090c7eeb042",
+    "page": "https://hyunlord.github.io/bs-mobile/#/home?layer=designed-v1"
+  },
+  "publishedBrowser": {
+    "artifactRun": "https://github.com/hyunlord/bs-mobile/actions/runs/38016549996",
+    "baselineOracle": {
+      "baseline": true,
+      "revision": "designed-v1",
+      "content": 151,
+      "systems": 13,
+      "influenceEdges": 41,
+      "findings": [
+        {
+          "id": "designed-bespoke",
+          "metrics": {
+            "count": 0,
+            "layer": "designed-v1",
+            "entries": 0
+          }
+        },
+        {
+          "id": "designed-later-wave-input",
+          "metrics": {
+            "count": 0,
+            "layer": "designed-v1"
+          }
+        },
+        {
+          "id": "designed-long-card-text",
+          "metrics": {
+            "count": 0,
+            "layer": "designed-v1"
+          }
+        },
+        {
+          "id": "designed-many-items-tool",
+          "metrics": {
+            "count": 3,
+            "layer": "designed-v1"
+          }
+        },
+        {
+          "id": "designed-many-items-weapon",
+          "metrics": {
+            "count": 0,
+            "layer": "designed-v1"
+          }
+        },
+        {
+          "id": "designed-missing-primitives",
+          "metrics": {
+            "count": 0,
+            "layer": "designed-v1",
+            "primitiveReferences": 0
+          }
+        },
+        {
+          "id": "designed-no-evolution-tool",
+          "metrics": {
+            "count": 0,
+            "layer": "designed-v1"
+          }
+        },
+        {
+          "id": "designed-no-evolution-weapon",
+          "metrics": {
+            "count": 6,
+            "layer": "designed-v1"
+          }
+        },
+        {
+          "id": "designed-no-item-tool",
+          "metrics": {
+            "count": 0,
+            "layer": "designed-v1"
+          }
+        },
+        {
+          "id": "designed-no-item-weapon",
+          "metrics": {
+            "count": 15,
+            "layer": "designed-v1"
+          }
+        },
+        {
+          "id": "designed-no-xp-return",
+          "metrics": {
+            "count": 12,
+            "layer": "designed-v1"
+          }
+        },
+        {
+          "id": "designed-wave-one-evolutions",
+          "metrics": {
+            "count": 0,
+            "layer": "designed-v1"
+          }
+        }
+      ],
+      "observed": {
+        "noEvolutionWeapons": 6,
+        "noItemWeapons": 15,
+        "seedBagLinkedItems": 11,
+        "carpenterHammerLinkedItems": 7,
+        "noXpReturnTools": 12,
+        "waveOneEvolutions": 0
+      }
+    },
+    "graphHash": "51a87de0b5199ec4cdbec8927fbfbe12196c22584697e6f7c13b1090c7eeb042",
+    "repository": {
+      "name": "bs-mobile",
+      "remoteUrl": "https://github.com/hyunlord/bs-mobile",
+      "commit": "c162509897333940d7a8124d58b1be75963c35d4",
+      "dirty": false,
+      "sourceFingerprint": "bdd4b67f706d37e107191319a7de8da774dc2b9ad4acc3ec7631161bf463a098"
+    },
+    "errors": [],
+    "checks": [
+      {
+        "name": "runtime home eight authored messages",
+        "findings": [
+          {
+            "id": "chapter-repetition",
+            "message": "챕터 10개 · 보스 종류 1개 · 순서 있는 지형 종류 조합 1개",
+            "metrics": {
+              "chapters": 10,
+              "bosses": 1,
+              "terrains": 1
+            }
+          },
+          {
+            "id": "economy-shared-costs",
+            "message": "장원·가신 소비처 10개 중 10개가 재료 4종 모두 요구",
+            "metrics": {
+              "sinks": 10,
+              "materials": 4,
+              "allMaterials": 10
+            }
+          },
+          {
+            "id": "enemy-target-diversity",
+            "message": "적 13개: 건물 4 · 익은 작물 3 · 군주 4 · 씨앗 1 · 사람 1",
+            "metrics": {
+              "selected": 13,
+              "building": 4,
+              "ripe": 3,
+              "lord": 4,
+              "seed": 1,
+              "people": 1
+            }
+          },
+          {
+            "id": "estate-loop-membership",
+            "message": "저자 순환 연결: 전투 20 · 성장 16 · 사람 10 · 수확 9 · 식량 5 · 비옥도 4",
+            "metrics": {
+              "combat": 20,
+              "growth": 16,
+              "people": 10,
+              "harvest": 9,
+              "food": 5,
+              "fertility": 4
+            }
+          },
+          {
+            "id": "item-stat-projection",
+            "message": "선택 물품 30개 중 24개는 원본 효과가 수치 덧셈입니다.",
+            "metrics": {
+              "selected": 30,
+              "stat": 24,
+              "layer": "runtime",
+              "content": 216,
+              "profileSelected": 77,
+              "referenceUnique": 20
+            }
+          },
+          {
+            "id": "tool-unique-projection",
+            "message": "선택 도구 8개 중 3개에 수치 덧셈 이외의 원본 효과가 있습니다.",
+            "metrics": {
+              "selected": 8,
+              "unique": 3,
+              "layer": "runtime",
+              "land": 3,
+              "building": 3,
+              "people": 2
+            }
+          },
+          {
+            "id": "vassal-design-gap",
+            "message": "이전 가신 설계 16명 · 프로필 선택 0명 · 별도 판 밖 가신 6명",
+            "metrics": {
+              "designed": 16,
+              "selected": 0,
+              "meta": 6
+            }
+          },
+          {
+            "id": "weapon-base-shapes",
+            "message": "선택 무기 10개의 기본 데이터 공격 형태는 4가지입니다.",
+            "metrics": {
+              "selected": 10,
+              "forms": 4,
+              "layer": "runtime",
+              "effectiveForms": 10,
+              "rays": 5,
+              "disk": 3,
+              "sector90": 1,
+              "sector180": 1
+            }
+          }
+        ]
+      },
+      {
+        "name": "typed facet list",
+        "route": "/list?layer=runtime&facet=selected&valueType=json&value=true",
+        "total": 77
+      },
+      {
+        "name": "typed facet list",
+        "route": "/list?layer=runtime&facet=referenceDepth&valueType=json&value=%22unique%22",
+        "total": 20
+      },
+      {
+        "name": "ash intent/effective effects/static handler support",
+        "status": "supported",
+        "runtimeExecutionProven": false
+      },
+      {
+        "name": "reward-source-matrix",
+        "rows": 4,
+        "numericColumns": 6,
+        "values": [
+          {
+            "material": "meta:grain",
+            "perFarm": 1,
+            "perBuilding": 0,
+            "perPerson": 0,
+            "perHarvest": 1,
+            "perLevel": 1,
+            "perBoss": 10
+          },
+          {
+            "material": "meta:timber",
+            "perFarm": 0,
+            "perBuilding": 3,
+            "perPerson": 0,
+            "perHarvest": 0,
+            "perLevel": 1,
+            "perBoss": 10
+          },
+          {
+            "material": "meta:iron",
+            "perFarm": 0,
+            "perBuilding": 1,
+            "perPerson": 0,
+            "perHarvest": 0,
+            "perLevel": 1,
+            "perBoss": 10
+          },
+          {
+            "material": "meta:charter",
+            "perFarm": 0,
+            "perBuilding": 0,
+            "perPerson": 1,
+            "perHarvest": 0,
+            "perLevel": 0,
+            "perBoss": 5
+          }
+        ]
+      },
+      {
+        "name": "sink-cost-matrix",
+        "rows": 10,
+        "numericColumns": 4,
+        "values": [
+          {
+            "name": "비옥도 측량관",
+            "grain": 12,
+            "timber": 8,
+            "iron": 6,
+            "charter": 2
+          },
+          {
+            "name": "고랑 방패수",
+            "grain": 12,
+            "timber": 8,
+            "iron": 6,
+            "charter": 2
+          },
+          {
+            "name": "징집 조장",
+            "grain": 12,
+            "timber": 8,
+            "iron": 6,
+            "charter": 2
+          },
+          {
+            "name": "귀환 대장",
+            "grain": 12,
+            "timber": 8,
+            "iron": 6,
+            "charter": 2
+          },
+          {
+            "name": "황금밭 호위",
+            "grain": 12,
+            "timber": 8,
+            "iron": 6,
+            "charter": 2
+          },
+          {
+            "name": "수확 서기",
+            "grain": 12,
+            "timber": 8,
+            "iron": 6,
+            "charter": 2
+          },
+          {
+            "name": "병영",
+            "grain": 35,
+            "timber": 25,
+            "iron": 15,
+            "charter": 5
+          },
+          {
+            "name": "대장간",
+            "grain": 35,
+            "timber": 25,
+            "iron": 15,
+            "charter": 5
+          },
+          {
+            "name": "곡물창고",
+            "grain": 35,
+            "timber": 25,
+            "iron": 15,
+            "charter": 5
+          },
+          {
+            "name": "기록소",
+            "grain": 35,
+            "timber": 25,
+            "iron": 15,
+            "charter": 5
+          }
+        ]
+      },
+      {
+        "name": "designed preserved",
+        "observed": {
+          "noEvolutionWeapons": 0,
+          "noItemWeapons": 0,
+          "seedBagLinkedItems": 2,
+          "carpenterHammerLinkedItems": 2,
+          "noXpReturnTools": 0,
+          "waveOneEvolutions": 3
+        }
+      }
+    ],
+    "screens": [
+      {
+        "name": "runtimeHome",
+        "route": "/home?layer=runtime",
+        "width": 375,
+        "geo": {
+          "width": 375,
+          "scroll": 375
+        }
+      },
+      {
+        "name": "runtimeHome",
+        "route": "/home?layer=runtime",
+        "width": 1280,
+        "geo": {
+          "width": 1280,
+          "scroll": 1280
+        }
+      },
+      {
+        "name": "selectedList",
+        "route": "/list?layer=runtime&facet=selected&valueType=json&value=true",
+        "width": 375,
+        "geo": {
+          "width": 375,
+          "scroll": 375
+        }
+      },
+      {
+        "name": "selectedList",
+        "route": "/list?layer=runtime&facet=selected&valueType=json&value=true",
+        "width": 1280,
+        "geo": {
+          "width": 1280,
+          "scroll": 1280
+        }
+      },
+      {
+        "name": "uniqueList",
+        "route": "/list?layer=runtime&facet=referenceDepth&valueType=json&value=%22unique%22",
+        "width": 375,
+        "geo": {
+          "width": 375,
+          "scroll": 375
+        }
+      },
+      {
+        "name": "uniqueList",
+        "route": "/list?layer=runtime&facet=referenceDepth&valueType=json&value=%22unique%22",
+        "width": 1280,
+        "geo": {
+          "width": 1280,
+          "scroll": 1280
+        }
+      },
+      {
+        "name": "ash",
+        "route": "/node/runtime%3Acore%3Aash_gathering_charm",
+        "width": 375,
+        "geo": {
+          "width": 375,
+          "scroll": 375
+        }
+      },
+      {
+        "name": "ash",
+        "route": "/node/runtime%3Acore%3Aash_gathering_charm",
+        "width": 1280,
+        "geo": {
+          "width": 1280,
+          "scroll": 1280
+        }
+      },
+      {
+        "name": "rewards",
+        "route": "/views/reward-source-matrix?origin=lens&layer=runtime",
+        "width": 375,
+        "geo": {
+          "width": 375,
+          "scroll": 375
+        }
+      },
+      {
+        "name": "rewards",
+        "route": "/views/reward-source-matrix?origin=lens&layer=runtime",
+        "width": 1280,
+        "geo": {
+          "width": 1280,
+          "scroll": 1280
+        }
+      },
+      {
+        "name": "costs",
+        "route": "/views/sink-cost-matrix?origin=lens&layer=runtime",
+        "width": 375,
+        "geo": {
+          "width": 375,
+          "scroll": 375
+        }
+      },
+      {
+        "name": "costs",
+        "route": "/views/sink-cost-matrix?origin=lens&layer=runtime",
+        "width": 1280,
+        "geo": {
+          "width": 1280,
+          "scroll": 1280
+        }
+      },
+      {
+        "name": "designedHome",
+        "route": "/home?layer=designed-v1",
+        "width": 375,
+        "geo": {
+          "width": 375,
+          "scroll": 375
+        }
+      },
+      {
+        "name": "designedHome",
+        "route": "/home?layer=designed-v1",
+        "width": 1280,
+        "geo": {
+          "width": 1280,
+          "scroll": 1280
+        }
+      },
+      {
+        "name": "designedList",
+        "route": "/list?layer=designed-v1",
+        "width": 375,
+        "geo": {
+          "width": 375,
+          "scroll": 375
+        }
+      },
+      {
+        "name": "designedList",
+        "route": "/list?layer=designed-v1",
+        "width": 1280,
+        "geo": {
+          "width": 1280,
+          "scroll": 1280
+        }
+      },
+      {
+        "name": "designedDetail",
+        "route": "/node/designed-v1.1%3Acore%3Acarpenter_hammer",
+        "width": 375,
+        "geo": {
+          "width": 375,
+          "scroll": 375
+        }
+      },
+      {
+        "name": "designedDetail",
+        "route": "/node/designed-v1.1%3Acore%3Acarpenter_hammer",
+        "width": 1280,
+        "geo": {
+          "width": 1280,
+          "scroll": 1280
+        }
+      },
+      {
+        "name": "influence",
+        "route": "/views/designed-influence?origin=lens&layer=designed-v1",
+        "width": 375,
+        "geo": {
+          "width": 375,
+          "scroll": 375
+        }
+      },
+      {
+        "name": "influence",
+        "route": "/views/designed-influence?origin=lens&layer=designed-v1",
+        "width": 1280,
+        "geo": {
+          "width": 1280,
+          "scroll": 1280
+        }
+      }
+    ],
+    "gaps": [
+      "Prototype content216 is an authored cohort metric, not total current-layer list count: referenceDepth facets222 include six extra meta-vassals; layers also separate16candidate records."
+    ],
+    "cleanup": {
+      "browserClosed": true,
+      "serverClosed": true
+    }
   }
 }

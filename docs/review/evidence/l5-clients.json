@@ -1,14 +1,14 @@
 {
   "schemaVersion": 1,
   "verification": "Real Claude Code and Codex MCP discovery and calls through transparent byte-preserving stdio proxy",
-  "toolCandidateCommit": "61d419b",
+  "toolCandidateCommit": "d8a689",
   "nodeVersion": "v24.21.0",
-  "packageSha256": "3abdb704a6ffbc1502d24d761ac1363b54fd6cdbefd442c0ab1d70ebf2a6bedb",
+  "packageSha256": "89a188a741c8d83960eba19e202c11376312879ef5be4f342e638bac92b0a765",
   "binarySha256": "fa86aa14990201f2d5fcd62144d2b3ce0957ba0748ea83398058b7fd81caaff3",
-  "sourceCommit": "6a0fb5b7ad5af6cd4244b34cc6053fcdb0dd5287",
+  "sourceCommit": "c162509897333940d7a8124d58b1be75963c35d4",
   "sourceCleanBefore": true,
   "sourceCleanAfter": true,
-  "graphHash": "7358f9dda9f51af1431d4c070a7906338cbe364e0046a4f627b615a3fadde807",
+  "graphHash": "51a87de0b5199ec4cdbec8927fbfbe12196c22584697e6f7c13b1090c7eeb042",
   "configuration": "Temporary explicit MCP configuration, separate external caches; no host configuration edits",
   "clients": [
     {
@@ -36,32 +36,32 @@
           },
           "result": {
             "isError": false,
-            "contentCharacters": 35162,
-            "contentSha256": "95f30d4eb895a26f6a1517e197123e578330f1bb5d78d1d176b5f63d04d81647",
-            "graphHash": "7358f9dda9f51af1431d4c070a7906338cbe364e0046a4f627b615a3fadde807",
+            "contentCharacters": 35027,
+            "contentSha256": "d4b46402c9535d192a3bd386c389048fda945289353789f18a0d86b3a730dc95",
+            "graphHash": "51a87de0b5199ec4cdbec8927fbfbe12196c22584697e6f7c13b1090c7eeb042",
             "layer": "runtime",
             "counts": {
               "nodes": 250,
               "edges": 540,
-              "facets": 1427,
+              "facets": 1357,
               "findings": 10
             },
             "freshness": {
               "status": "fresh",
               "mode": "content-hash",
-              "observedAt": "2026-10-10T01:40:31.549Z",
+              "observedAt": "2026-10-10T02:20:33.844Z",
               "wasStale": true,
               "rebuilt": true,
               "previousFingerprint": null,
-              "fingerprint": "54da6c11871d3b17c8aa0bf41895d093796435996c0d65714ab97dd75b395153",
+              "fingerprint": "9e38030c48ee84c2632597fa1b8a1403f98dc7180f30d365ae604f1679164416",
               "sourceFingerprint": "bdd4b67f706d37e107191319a7de8da774dc2b9ad4acc3ec7631161bf463a098",
               "checkedInputs": 230,
-              "observationMs": 184.0880830000001,
-              "rebuildMs": 2614.147625,
-              "durationMs": 2798.82525
+              "observationMs": 176.56925,
+              "rebuildMs": 1794.0955419999996,
+              "durationMs": 1971.229292
             },
             "timing": {
-              "totalMs": 2897.7005
+              "totalMs": 2067.916625
             }
           }
         },
@@ -80,26 +80,26 @@
           "result": {
             "isError": false,
             "contentCharacters": 5258,
-            "contentSha256": "9238a66529d51bfaed6314affdf6cb289b1bd780347c1ef3f0c571288a9eab59",
-            "graphHash": "7358f9dda9f51af1431d4c070a7906338cbe364e0046a4f627b615a3fadde807",
+            "contentSha256": "d02d1b71c453b21b4bde300beac76869c70eafc54b4d06553f0357baacbced73",
+            "graphHash": "51a87de0b5199ec4cdbec8927fbfbe12196c22584697e6f7c13b1090c7eeb042",
             "layer": "runtime",
             "total": 24,
             "freshness": {
               "status": "fresh",
               "mode": "content-hash",
-              "observedAt": "2026-10-10T01:40:34.329Z",
+              "observedAt": "2026-10-10T02:20:35.807Z",
               "wasStale": false,
               "rebuilt": false,
-              "previousFingerprint": "54da6c11871d3b17c8aa0bf41895d093796435996c0d65714ab97dd75b395153",
-              "fingerprint": "54da6c11871d3b17c8aa0bf41895d093796435996c0d65714ab97dd75b395153",
+              "previousFingerprint": "9e38030c48ee84c2632597fa1b8a1403f98dc7180f30d365ae604f1679164416",
+              "fingerprint": "9e38030c48ee84c2632597fa1b8a1403f98dc7180f30d365ae604f1679164416",
               "sourceFingerprint": "bdd4b67f706d37e107191319a7de8da774dc2b9ad4acc3ec7631161bf463a098",
               "checkedInputs": 230,
-              "observationMs": 64.96958300000006,
+              "observationMs": 70.99775000000045,
               "rebuildMs": 0,
-              "durationMs": 65.06924999999956
+              "durationMs": 71.03079200000047
             },
             "timing": {
-              "totalMs": 67.22583299999951
+              "totalMs": 73.03604199999972
             },
             "items": [
               {
@@ -122,27 +122,27 @@
           },
           "result": {
             "isError": false,
-            "contentCharacters": 20617,
-            "contentSha256": "8fecf85df09503d10e95f549cbe10bfd144f93d5ead045dfa31258c262729918",
-            "graphHash": "7358f9dda9f51af1431d4c070a7906338cbe364e0046a4f627b615a3fadde807",
+            "contentCharacters": 19940,
+            "contentSha256": "13e1d097e4f74dfbcd3bc99da4dd37e941ae5f935961983cf3c470d995228e83",
+            "graphHash": "51a87de0b5199ec4cdbec8927fbfbe12196c22584697e6f7c13b1090c7eeb042",
             "layer": "runtime",
             "total": 1,
             "freshness": {
               "status": "fresh",
               "mode": "content-hash",
-              "observedAt": "2026-10-10T01:40:35.949Z",
+              "observedAt": "2026-10-10T02:20:35.867Z",
               "wasStale": false,
               "rebuilt": false,
-              "previousFingerprint": "54da6c11871d3b17c8aa0bf41895d093796435996c0d65714ab97dd75b395153",
-              "fingerprint": "54da6c11871d3b17c8aa0bf41895d093796435996c0d65714ab97dd75b395153",
+              "previousFingerprint": "9e38030c48ee84c2632597fa1b8a1403f98dc7180f30d365ae604f1679164416",
+              "fingerprint": "9e38030c48ee84c2632597fa1b8a1403f98dc7180f30d365ae604f1679164416",
               "sourceFingerprint": "bdd4b67f706d37e107191319a7de8da774dc2b9ad4acc3ec7631161bf463a098",
               "checkedInputs": 230,
-              "observationMs": 49.36316599999918,
+              "observationMs": 57.31495799999993,
               "rebuildMs": 0,
-              "durationMs": 49.404082999999446
+              "durationMs": 57.36320800000067
             },
             "timing": {
-              "totalMs": 49.92158299999937
+              "totalMs": 57.87529199999972
             },
             "items": [
               {
@@ -169,9 +169,9 @@
         "mcp__lattice__lattice_find",
         "mcp__lattice__lattice_findings"
       ],
-      "rawTranscriptSha256": "9ac50faf2033efa4a0fce610866c1d527ac6c8fd28b50d09a35d12f09505eaf0",
-      "wireCaptureSha256": "bad6ef70101e44fd676a7238cd105335c0a537f268ba0067fa662da9e138e37e",
-      "callNotes": "Client invoked the requested three calls once."
+      "rawTranscriptSha256": "43d15f4082303bd553b4e05d002d0a218fdd2e50551cb4a04d3055af6b8671b8",
+      "wireCaptureSha256": "05abad442f3af28746399e0f98b240b15724a2c21027a36c95eb0ab5409926a1",
+      "callNotes": "Client made 3 calls; all actual requests and responses are retained, including repeats."
     },
     {
       "client": "codex",
@@ -198,32 +198,32 @@
           },
           "result": {
             "isError": false,
-            "contentCharacters": 35185,
-            "contentSha256": "bb742dffb7f6dbaf3c6db5950073eeda8f806289b367a646734538aa769f1eae",
-            "graphHash": "7358f9dda9f51af1431d4c070a7906338cbe364e0046a4f627b615a3fadde807",
+            "contentCharacters": 35050,
+            "contentSha256": "7a9ec8fb138f5b0c684cc0a2f08afaa59ae6ccb1b22edea0972ddc0000d5d861",
+            "graphHash": "51a87de0b5199ec4cdbec8927fbfbe12196c22584697e6f7c13b1090c7eeb042",
             "layer": "runtime",
             "counts": {
               "nodes": 250,
               "edges": 540,
-              "facets": 1427,
+              "facets": 1357,
               "findings": 10
             },
             "freshness": {
               "status": "fresh",
               "mode": "content-hash",
-              "observedAt": "2026-10-10T01:41:12.493Z",
+              "observedAt": "2026-10-10T02:21:07.775Z",
               "wasStale": true,
               "rebuilt": true,
               "previousFingerprint": null,
-              "fingerprint": "54da6c11871d3b17c8aa0bf41895d093796435996c0d65714ab97dd75b395153",
+              "fingerprint": "9e38030c48ee84c2632597fa1b8a1403f98dc7180f30d365ae604f1679164416",
               "sourceFingerprint": "bdd4b67f706d37e107191319a7de8da774dc2b9ad4acc3ec7631161bf463a098",
               "checkedInputs": 230,
-              "observationMs": 166.91591599999992,
-              "rebuildMs": 2605.0688339999997,
-              "durationMs": 2772.585874999999
+              "observationMs": 167.53520799999933,
+              "rebuildMs": 1848.2319580000003,
+              "durationMs": 2016.3377920000003
             },
             "timing": {
-              "totalMs": 2871.311583999999
+              "totalMs": 2116.7767910000002
             }
           }
         },
@@ -242,26 +242,26 @@
           "result": {
             "isError": false,
             "contentCharacters": 5258,
-            "contentSha256": "d7bedcedfbf3441e1a5f488787aecdfb7d8b4f7770a8fc1abeaf4743fb9410b3",
-            "graphHash": "7358f9dda9f51af1431d4c070a7906338cbe364e0046a4f627b615a3fadde807",
+            "contentSha256": "b0e43ce3c0aa1ac4d1baa3e65625ac2634a28befc62e3b189f5d4661e2da7a16",
+            "graphHash": "51a87de0b5199ec4cdbec8927fbfbe12196c22584697e6f7c13b1090c7eeb042",
             "layer": "runtime",
             "total": 24,
             "freshness": {
               "status": "fresh",
               "mode": "content-hash",
-              "observedAt": "2026-10-10T01:41:15.273Z",
+              "observedAt": "2026-10-10T02:21:09.777Z",
               "wasStale": false,
               "rebuilt": false,
-              "previousFingerprint": "54da6c11871d3b17c8aa0bf41895d093796435996c0d65714ab97dd75b395153",
-              "fingerprint": "54da6c11871d3b17c8aa0bf41895d093796435996c0d65714ab97dd75b395153",
+              "previousFingerprint": "9e38030c48ee84c2632597fa1b8a1403f98dc7180f30d365ae604f1679164416",
+              "fingerprint": "9e38030c48ee84c2632597fa1b8a1403f98dc7180f30d365ae604f1679164416",
               "sourceFingerprint": "bdd4b67f706d37e107191319a7de8da774dc2b9ad4acc3ec7631161bf463a098",
               "checkedInputs": 230,
-              "observationMs": 65.05241699999897,
+              "observationMs": 46.6400420000009,
               "rebuildMs": 0,
-              "durationMs": 65.14987499999916
+              "durationMs": 46.67308400000002
             },
             "timing": {
-              "totalMs": 67.27850000000035
+              "totalMs": 48.732624999998734
             },
             "items": [
               {
@@ -284,27 +284,27 @@
           },
           "result": {
             "isError": false,
-            "contentCharacters": 20618,
-            "contentSha256": "2c6847bf3d64f8d6a482ef5ebcf9d36107813fe92476545c5817d49653e0aeb1",
-            "graphHash": "7358f9dda9f51af1431d4c070a7906338cbe364e0046a4f627b615a3fadde807",
+            "contentCharacters": 19941,
+            "contentSha256": "38bb9298373e4ac51d3667a7c258a6cf1e03c52f47d23f5c40843c5ca5e899eb",
+            "graphHash": "51a87de0b5199ec4cdbec8927fbfbe12196c22584697e6f7c13b1090c7eeb042",
             "layer": "runtime",
             "total": 1,
             "freshness": {
               "status": "fresh",
               "mode": "content-hash",
-              "observedAt": "2026-10-10T01:41:15.322Z",
+              "observedAt": "2026-10-10T02:21:09.829Z",
               "wasStale": false,
               "rebuilt": false,
-              "previousFingerprint": "54da6c11871d3b17c8aa0bf41895d093796435996c0d65714ab97dd75b395153",
-              "fingerprint": "54da6c11871d3b17c8aa0bf41895d093796435996c0d65714ab97dd75b395153",
+              "previousFingerprint": "9e38030c48ee84c2632597fa1b8a1403f98dc7180f30d365ae604f1679164416",
+              "fingerprint": "9e38030c48ee84c2632597fa1b8a1403f98dc7180f30d365ae604f1679164416",
               "sourceFingerprint": "bdd4b67f706d37e107191319a7de8da774dc2b9ad4acc3ec7631161bf463a098",
               "checkedInputs": 230,
-              "observationMs": 44.366291000000274,
+              "observationMs": 48.05608299999949,
               "rebuildMs": 0,
-              "durationMs": 45.41862500000025
+              "durationMs": 48.092124999999214
             },
             "timing": {
-              "totalMs": 45.976292000001195
+              "totalMs": 48.59975000000122
             },
             "items": [
               {
@@ -332,32 +332,32 @@
           },
           "result": {
             "isError": false,
-            "contentCharacters": 35231,
-            "contentSha256": "bed7ea54ce428786af6b7da47d09977dcc087434e376a6ebcac80eddcabb74dd",
-            "graphHash": "7358f9dda9f51af1431d4c070a7906338cbe364e0046a4f627b615a3fadde807",
+            "contentCharacters": 35094,
+            "contentSha256": "ccb9ddeca6c8f801eda95573443bf0d16adbda937edd33c56e839653b16ce6bc",
+            "graphHash": "51a87de0b5199ec4cdbec8927fbfbe12196c22584697e6f7c13b1090c7eeb042",
             "layer": "runtime",
             "counts": {
               "nodes": 250,
               "edges": 540,
-              "facets": 1427,
+              "facets": 1357,
               "findings": 10
             },
             "freshness": {
               "status": "fresh",
               "mode": "content-hash",
-              "observedAt": "2026-10-10T01:41:20.570Z",
+              "observedAt": "2026-10-10T02:21:15.843Z",
               "wasStale": false,
               "rebuilt": false,
-              "previousFingerprint": "54da6c11871d3b17c8aa0bf41895d093796435996c0d65714ab97dd75b395153",
-              "fingerprint": "54da6c11871d3b17c8aa0bf41895d093796435996c0d65714ab97dd75b395153",
+              "previousFingerprint": "9e38030c48ee84c2632597fa1b8a1403f98dc7180f30d365ae604f1679164416",
+              "fingerprint": "9e38030c48ee84c2632597fa1b8a1403f98dc7180f30d365ae604f1679164416",
               "sourceFingerprint": "bdd4b67f706d37e107191319a7de8da774dc2b9ad4acc3ec7631161bf463a098",
               "checkedInputs": 230,
-              "observationMs": 54.36841699999786,
+              "observationMs": 49.89025000000038,
               "rebuildMs": 0,
-              "durationMs": 54.40495899999951
+              "durationMs": 49.91975000000093
             },
             "timing": {
-              "totalMs": 151.0002080000013
+              "totalMs": 140.5661250000012
             }
           }
         },
@@ -376,26 +376,26 @@
           "result": {
             "isError": false,
             "contentCharacters": 5259,
-            "contentSha256": "e2c8b84baa9d17506bb26a41b67c0b9e3d5189314ffca7d15671780d4296eda4",
-            "graphHash": "7358f9dda9f51af1431d4c070a7906338cbe364e0046a4f627b615a3fadde807",
+            "contentSha256": "293537acae24d3b2fd46f65892aa7ae0726d5131100aaccb7b46de3fe8017f40",
+            "graphHash": "51a87de0b5199ec4cdbec8927fbfbe12196c22584697e6f7c13b1090c7eeb042",
             "layer": "runtime",
             "total": 24,
             "freshness": {
               "status": "fresh",
               "mode": "content-hash",
-              "observedAt": "2026-10-10T01:41:20.721Z",
+              "observedAt": "2026-10-10T02:21:15.986Z",
               "wasStale": false,
               "rebuilt": false,
-              "previousFingerprint": "54da6c11871d3b17c8aa0bf41895d093796435996c0d65714ab97dd75b395153",
-              "fingerprint": "54da6c11871d3b17c8aa0bf41895d093796435996c0d65714ab97dd75b395153",
+              "previousFingerprint": "9e38030c48ee84c2632597fa1b8a1403f98dc7180f30d365ae604f1679164416",
+              "fingerprint": "9e38030c48ee84c2632597fa1b8a1403f98dc7180f30d365ae604f1679164416",
               "sourceFingerprint": "bdd4b67f706d37e107191319a7de8da774dc2b9ad4acc3ec7631161bf463a098",
               "checkedInputs": 230,
-              "observationMs": 49.402249999999185,
+              "observationMs": 47.540084000000206,
               "rebuildMs": 0,
-              "durationMs": 49.44370799999888
+              "durationMs": 47.58362500000294
             },
             "timing": {
-              "totalMs": 51.30949999999939
+              "totalMs": 49.27379099999962
             },
             "items": [
               {
@@ -418,27 +418,27 @@
           },
           "result": {
             "isError": false,
-            "contentCharacters": 20616,
-            "contentSha256": "b002473b28276425c0a156c26e2d9e8669389facabd7915e44fc9a07718496a7",
-            "graphHash": "7358f9dda9f51af1431d4c070a7906338cbe364e0046a4f627b615a3fadde807",
+            "contentCharacters": 19939,
+            "contentSha256": "69439cafe601b73bbfd27441033d6b1324b91164cc3b143d52ff7b152dd9a5d5",
+            "graphHash": "51a87de0b5199ec4cdbec8927fbfbe12196c22584697e6f7c13b1090c7eeb042",
             "layer": "runtime",
             "total": 1,
             "freshness": {
               "status": "fresh",
               "mode": "content-hash",
-              "observedAt": "2026-10-10T01:41:20.776Z",
+              "observedAt": "2026-10-10T02:21:16.037Z",
               "wasStale": false,
               "rebuilt": false,
-              "previousFingerprint": "54da6c11871d3b17c8aa0bf41895d093796435996c0d65714ab97dd75b395153",
-              "fingerprint": "54da6c11871d3b17c8aa0bf41895d093796435996c0d65714ab97dd75b395153",
+              "previousFingerprint": "9e38030c48ee84c2632597fa1b8a1403f98dc7180f30d365ae604f1679164416",
+              "fingerprint": "9e38030c48ee84c2632597fa1b8a1403f98dc7180f30d365ae604f1679164416",
               "sourceFingerprint": "bdd4b67f706d37e107191319a7de8da774dc2b9ad4acc3ec7631161bf463a098",
               "checkedInputs": 230,
-              "observationMs": 50.77899999999863,
+              "observationMs": 46.91479199999958,
               "rebuildMs": 0,
-              "durationMs": 50.81725000000006
+              "durationMs": 46.95141700000022
             },
             "timing": {
-              "totalMs": 51.28962500000125
+              "totalMs": 47.3784169999999
             },
             "items": [
               {
@@ -468,9 +468,9 @@
         "lattice_find",
         "lattice_findings"
       ],
-      "rawTranscriptSha256": "8c06639f11daf2520203bae97161e7678d627a95471cece88d6e5baa1c646b9a",
-      "wireCaptureSha256": "6b27b77c39aa6caf6fc0d0fa84a54f06e6d3e0dfc624fd95dadca59c8cfb4016",
-      "callNotes": "Client invoked the same three calls twice; all six successful wire results are retained."
+      "rawTranscriptSha256": "25fe4b7143e707e2039506c685fac99b4395dfe791a21673340aca09d48f9fc0",
+      "wireCaptureSha256": "95949977d01cf40e0985fb30fd9e85ffa3eda6d46ad6fcdfe1aad82f660f4670",
+      "callNotes": "Client made 6 calls; all actual requests and responses are retained, including repeats."
     }
   ],
   "limitations": [
@@ -478,5 +478,495 @@
     "Proxy records whitelisted repository result fields plus full content hash; raw client transcript remains external",
     "Client tool catalog discovered in full; this scenario invokes overview, find and findings only"
   ],
-  "selection": "All real-client tool calls and discovery names retained; repetitive repository fields and full prose answers omitted. Exact finding intent and metrics remain in call results; raw transcript and wire hashes retained."
+  "pagesParity": {
+    "sourceCommit": "c162509897333940d7a8124d58b1be75963c35d4",
+    "graphHash": "51a87de0b5199ec4cdbec8927fbfbe12196c22584697e6f7c13b1090c7eeb042",
+    "deployment": "https://github.com/hyunlord/bs-mobile/actions/runs/38016549996",
+    "page": "https://hyunlord.github.io/bs-mobile/#/home?layer=designed-v1",
+    "verifiedBy": "Parent agent public download after successful deployment",
+    "matchesClients": true
+  },
+  "selection": "All discovery names and real calls retained; repeated repository fields and full prose answers omitted. Exact finding text, metrics, response hashes and wire/transcript hashes retained.",
+  "historicalClientEvidence": {
+    "schemaVersion": 1,
+    "verification": "Real Claude Code and Codex MCP discovery and calls through transparent byte-preserving stdio proxy",
+    "toolCandidateCommit": "61d419b",
+    "nodeVersion": "v24.21.0",
+    "packageSha256": "3abdb704a6ffbc1502d24d761ac1363b54fd6cdbefd442c0ab1d70ebf2a6bedb",
+    "binarySha256": "fa86aa14990201f2d5fcd62144d2b3ce0957ba0748ea83398058b7fd81caaff3",
+    "sourceCommit": "6a0fb5b7ad5af6cd4244b34cc6053fcdb0dd5287",
+    "sourceCleanBefore": true,
+    "sourceCleanAfter": true,
+    "graphHash": "7358f9dda9f51af1431d4c070a7906338cbe364e0046a4f627b615a3fadde807",
+    "configuration": "Temporary explicit MCP configuration, separate external caches; no host configuration edits",
+    "clients": [
+      {
+        "client": "claude",
+        "version": "2.1.280",
+        "success": true,
+        "discoveryEvidence": "Transparent stdio capture of actual client tools/list request and server response",
+        "discoveredTools": [
+          "lattice_overview",
+          "lattice_find",
+          "lattice_node",
+          "lattice_trace",
+          "lattice_matrix",
+          "lattice_findings",
+          "lattice_diff",
+          "lattice_freshness"
+        ],
+        "discoveryResponseCount": 1,
+        "calls": [
+          {
+            "id": 2,
+            "tool": "lattice_overview",
+            "arguments": {
+              "layer": "runtime"
+            },
+            "result": {
+              "isError": false,
+              "contentCharacters": 35162,
+              "contentSha256": "95f30d4eb895a26f6a1517e197123e578330f1bb5d78d1d176b5f63d04d81647",
+              "graphHash": "7358f9dda9f51af1431d4c070a7906338cbe364e0046a4f627b615a3fadde807",
+              "layer": "runtime",
+              "counts": {
+                "nodes": 250,
+                "edges": 540,
+                "facets": 1427,
+                "findings": 10
+              },
+              "freshness": {
+                "status": "fresh",
+                "mode": "content-hash",
+                "observedAt": "2026-10-10T01:40:31.549Z",
+                "wasStale": true,
+                "rebuilt": true,
+                "previousFingerprint": null,
+                "fingerprint": "54da6c11871d3b17c8aa0bf41895d093796435996c0d65714ab97dd75b395153",
+                "sourceFingerprint": "bdd4b67f706d37e107191319a7de8da774dc2b9ad4acc3ec7631161bf463a098",
+                "checkedInputs": 230,
+                "observationMs": 184.0880830000001,
+                "rebuildMs": 2614.147625,
+                "durationMs": 2798.82525
+              },
+              "timing": {
+                "totalMs": 2897.7005
+              }
+            }
+          },
+          {
+            "id": 3,
+            "tool": "lattice_find",
+            "arguments": {
+              "layer": "runtime",
+              "kind": "item",
+              "facets": {
+                "selected": true,
+                "referenceDepth": "stat"
+              },
+              "limit": 2
+            },
+            "result": {
+              "isError": false,
+              "contentCharacters": 5258,
+              "contentSha256": "9238a66529d51bfaed6314affdf6cb289b1bd780347c1ef3f0c571288a9eab59",
+              "graphHash": "7358f9dda9f51af1431d4c070a7906338cbe364e0046a4f627b615a3fadde807",
+              "layer": "runtime",
+              "total": 24,
+              "freshness": {
+                "status": "fresh",
+                "mode": "content-hash",
+                "observedAt": "2026-10-10T01:40:34.329Z",
+                "wasStale": false,
+                "rebuilt": false,
+                "previousFingerprint": "54da6c11871d3b17c8aa0bf41895d093796435996c0d65714ab97dd75b395153",
+                "fingerprint": "54da6c11871d3b17c8aa0bf41895d093796435996c0d65714ab97dd75b395153",
+                "sourceFingerprint": "bdd4b67f706d37e107191319a7de8da774dc2b9ad4acc3ec7631161bf463a098",
+                "checkedInputs": 230,
+                "observationMs": 64.96958300000006,
+                "rebuildMs": 0,
+                "durationMs": 65.06924999999956
+              },
+              "timing": {
+                "totalMs": 67.22583299999951
+              },
+              "items": [
+                {
+                  "id": "runtime:core:ash_gathering_charm",
+                  "kind": "item"
+                },
+                {
+                  "id": "runtime:core:bitter_seed_dust",
+                  "kind": "item"
+                }
+              ]
+            }
+          },
+          {
+            "id": 4,
+            "tool": "lattice_findings",
+            "arguments": {
+              "layer": "runtime",
+              "rule": "item-stat-projection"
+            },
+            "result": {
+              "isError": false,
+              "contentCharacters": 20617,
+              "contentSha256": "8fecf85df09503d10e95f549cbe10bfd144f93d5ead045dfa31258c262729918",
+              "graphHash": "7358f9dda9f51af1431d4c070a7906338cbe364e0046a4f627b615a3fadde807",
+              "layer": "runtime",
+              "total": 1,
+              "freshness": {
+                "status": "fresh",
+                "mode": "content-hash",
+                "observedAt": "2026-10-10T01:40:35.949Z",
+                "wasStale": false,
+                "rebuilt": false,
+                "previousFingerprint": "54da6c11871d3b17c8aa0bf41895d093796435996c0d65714ab97dd75b395153",
+                "fingerprint": "54da6c11871d3b17c8aa0bf41895d093796435996c0d65714ab97dd75b395153",
+                "sourceFingerprint": "bdd4b67f706d37e107191319a7de8da774dc2b9ad4acc3ec7631161bf463a098",
+                "checkedInputs": 230,
+                "observationMs": 49.36316599999918,
+                "rebuildMs": 0,
+                "durationMs": 49.404082999999446
+              },
+              "timing": {
+                "totalMs": 49.92158299999937
+              },
+              "items": [
+                {
+                  "id": "item-stat-projection",
+                  "intent": "저자 해석: 장원 장치라는 이름과 의도에 비해 수치 덧셈은 플레이를 바꾸지 못한다는 비평이다. 예: 재 모으는 부적은 죽음의 흔적→비옥도라는 의도지만 원본 투영은 원거리 장비 조건의 공격력 +3이다. 재미 또는 실행 결과의 측정값은 아니다.",
+                  "metrics": {
+                    "selected": 30,
+                    "stat": 24,
+                    "layer": "runtime",
+                    "content": 216,
+                    "profileSelected": 77,
+                    "referenceUnique": 20
+                  },
+                  "message": "선택 물품 30개 중 24개는 원본 효과가 수치 덧셈입니다.",
+                  "ruleId": "item-stat-projection"
+                }
+              ]
+            }
+          }
+        ],
+        "onlyMcpCalls": true,
+        "actualClientTools": [
+          "mcp__lattice__lattice_overview",
+          "mcp__lattice__lattice_find",
+          "mcp__lattice__lattice_findings"
+        ],
+        "rawTranscriptSha256": "9ac50faf2033efa4a0fce610866c1d527ac6c8fd28b50d09a35d12f09505eaf0",
+        "wireCaptureSha256": "bad6ef70101e44fd676a7238cd105335c0a537f268ba0067fa662da9e138e37e",
+        "callNotes": "Client invoked the requested three calls once."
+      },
+      {
+        "client": "codex",
+        "version": "0.162.0",
+        "success": true,
+        "discoveryEvidence": "Transparent stdio capture of actual client tools/list request and server response",
+        "discoveredTools": [
+          "lattice_overview",
+          "lattice_find",
+          "lattice_node",
+          "lattice_trace",
+          "lattice_matrix",
+          "lattice_findings",
+          "lattice_diff",
+          "lattice_freshness"
+        ],
+        "discoveryResponseCount": 1,
+        "calls": [
+          {
+            "id": 2,
+            "tool": "lattice_overview",
+            "arguments": {
+              "layer": "runtime"
+            },
+            "result": {
+              "isError": false,
+              "contentCharacters": 35185,
+              "contentSha256": "bb742dffb7f6dbaf3c6db5950073eeda8f806289b367a646734538aa769f1eae",
+              "graphHash": "7358f9dda9f51af1431d4c070a7906338cbe364e0046a4f627b615a3fadde807",
+              "layer": "runtime",
+              "counts": {
+                "nodes": 250,
+                "edges": 540,
+                "facets": 1427,
+                "findings": 10
+              },
+              "freshness": {
+                "status": "fresh",
+                "mode": "content-hash",
+                "observedAt": "2026-10-10T01:41:12.493Z",
+                "wasStale": true,
+                "rebuilt": true,
+                "previousFingerprint": null,
+                "fingerprint": "54da6c11871d3b17c8aa0bf41895d093796435996c0d65714ab97dd75b395153",
+                "sourceFingerprint": "bdd4b67f706d37e107191319a7de8da774dc2b9ad4acc3ec7631161bf463a098",
+                "checkedInputs": 230,
+                "observationMs": 166.91591599999992,
+                "rebuildMs": 2605.0688339999997,
+                "durationMs": 2772.585874999999
+              },
+              "timing": {
+                "totalMs": 2871.311583999999
+              }
+            }
+          },
+          {
+            "id": 3,
+            "tool": "lattice_find",
+            "arguments": {
+              "layer": "runtime",
+              "kind": "item",
+              "facets": {
+                "selected": true,
+                "referenceDepth": "stat"
+              },
+              "limit": 2
+            },
+            "result": {
+              "isError": false,
+              "contentCharacters": 5258,
+              "contentSha256": "d7bedcedfbf3441e1a5f488787aecdfb7d8b4f7770a8fc1abeaf4743fb9410b3",
+              "graphHash": "7358f9dda9f51af1431d4c070a7906338cbe364e0046a4f627b615a3fadde807",
+              "layer": "runtime",
+              "total": 24,
+              "freshness": {
+                "status": "fresh",
+                "mode": "content-hash",
+                "observedAt": "2026-10-10T01:41:15.273Z",
+                "wasStale": false,
+                "rebuilt": false,
+                "previousFingerprint": "54da6c11871d3b17c8aa0bf41895d093796435996c0d65714ab97dd75b395153",
+                "fingerprint": "54da6c11871d3b17c8aa0bf41895d093796435996c0d65714ab97dd75b395153",
+                "sourceFingerprint": "bdd4b67f706d37e107191319a7de8da774dc2b9ad4acc3ec7631161bf463a098",
+                "checkedInputs": 230,
+                "observationMs": 65.05241699999897,
+                "rebuildMs": 0,
+                "durationMs": 65.14987499999916
+              },
+              "timing": {
+                "totalMs": 67.27850000000035
+              },
+              "items": [
+                {
+                  "id": "runtime:core:ash_gathering_charm",
+                  "kind": "item"
+                },
+                {
+                  "id": "runtime:core:bitter_seed_dust",
+                  "kind": "item"
+                }
+              ]
+            }
+          },
+          {
+            "id": 4,
+            "tool": "lattice_findings",
+            "arguments": {
+              "layer": "runtime",
+              "rule": "item-stat-projection"
+            },
+            "result": {
+              "isError": false,
+              "contentCharacters": 20618,
+              "contentSha256": "2c6847bf3d64f8d6a482ef5ebcf9d36107813fe92476545c5817d49653e0aeb1",
+              "graphHash": "7358f9dda9f51af1431d4c070a7906338cbe364e0046a4f627b615a3fadde807",
+              "layer": "runtime",
+              "total": 1,
+              "freshness": {
+                "status": "fresh",
+                "mode": "content-hash",
+                "observedAt": "2026-10-10T01:41:15.322Z",
+                "wasStale": false,
+                "rebuilt": false,
+                "previousFingerprint": "54da6c11871d3b17c8aa0bf41895d093796435996c0d65714ab97dd75b395153",
+                "fingerprint": "54da6c11871d3b17c8aa0bf41895d093796435996c0d65714ab97dd75b395153",
+                "sourceFingerprint": "bdd4b67f706d37e107191319a7de8da774dc2b9ad4acc3ec7631161bf463a098",
+                "checkedInputs": 230,
+                "observationMs": 44.366291000000274,
+                "rebuildMs": 0,
+                "durationMs": 45.41862500000025
+              },
+              "timing": {
+                "totalMs": 45.976292000001195
+              },
+              "items": [
+                {
+                  "id": "item-stat-projection",
+                  "intent": "저자 해석: 장원 장치라는 이름과 의도에 비해 수치 덧셈은 플레이를 바꾸지 못한다는 비평이다. 예: 재 모으는 부적은 죽음의 흔적→비옥도라는 의도지만 원본 투영은 원거리 장비 조건의 공격력 +3이다. 재미 또는 실행 결과의 측정값은 아니다.",
+                  "metrics": {
+                    "selected": 30,
+                    "stat": 24,
+                    "layer": "runtime",
+                    "content": 216,
+                    "profileSelected": 77,
+                    "referenceUnique": 20
+                  },
+                  "message": "선택 물품 30개 중 24개는 원본 효과가 수치 덧셈입니다.",
+                  "ruleId": "item-stat-projection"
+                }
+              ]
+            }
+          },
+          {
+            "id": 5,
+            "tool": "lattice_overview",
+            "arguments": {
+              "layer": "runtime"
+            },
+            "result": {
+              "isError": false,
+              "contentCharacters": 35231,
+              "contentSha256": "bed7ea54ce428786af6b7da47d09977dcc087434e376a6ebcac80eddcabb74dd",
+              "graphHash": "7358f9dda9f51af1431d4c070a7906338cbe364e0046a4f627b615a3fadde807",
+              "layer": "runtime",
+              "counts": {
+                "nodes": 250,
+                "edges": 540,
+                "facets": 1427,
+                "findings": 10
+              },
+              "freshness": {
+                "status": "fresh",
+                "mode": "content-hash",
+                "observedAt": "2026-10-10T01:41:20.570Z",
+                "wasStale": false,
+                "rebuilt": false,
+                "previousFingerprint": "54da6c11871d3b17c8aa0bf41895d093796435996c0d65714ab97dd75b395153",
+                "fingerprint": "54da6c11871d3b17c8aa0bf41895d093796435996c0d65714ab97dd75b395153",
+                "sourceFingerprint": "bdd4b67f706d37e107191319a7de8da774dc2b9ad4acc3ec7631161bf463a098",
+                "checkedInputs": 230,
+                "observationMs": 54.36841699999786,
+                "rebuildMs": 0,
+                "durationMs": 54.40495899999951
+              },
+              "timing": {
+                "totalMs": 151.0002080000013
+              }
+            }
+          },
+          {
+            "id": 6,
+            "tool": "lattice_find",
+            "arguments": {
+              "layer": "runtime",
+              "kind": "item",
+              "facets": {
+                "selected": true,
+                "referenceDepth": "stat"
+              },
+              "limit": 2
+            },
+            "result": {
+              "isError": false,
+              "contentCharacters": 5259,
+              "contentSha256": "e2c8b84baa9d17506bb26a41b67c0b9e3d5189314ffca7d15671780d4296eda4",
+              "graphHash": "7358f9dda9f51af1431d4c070a7906338cbe364e0046a4f627b615a3fadde807",
+              "layer": "runtime",
+              "total": 24,
+              "freshness": {
+                "status": "fresh",
+                "mode": "content-hash",
+                "observedAt": "2026-10-10T01:41:20.721Z",
+                "wasStale": false,
+                "rebuilt": false,
+                "previousFingerprint": "54da6c11871d3b17c8aa0bf41895d093796435996c0d65714ab97dd75b395153",
+                "fingerprint": "54da6c11871d3b17c8aa0bf41895d093796435996c0d65714ab97dd75b395153",
+                "sourceFingerprint": "bdd4b67f706d37e107191319a7de8da774dc2b9ad4acc3ec7631161bf463a098",
+                "checkedInputs": 230,
+                "observationMs": 49.402249999999185,
+                "rebuildMs": 0,
+                "durationMs": 49.44370799999888
+              },
+              "timing": {
+                "totalMs": 51.30949999999939
+              },
+              "items": [
+                {
+                  "id": "runtime:core:ash_gathering_charm",
+                  "kind": "item"
+                },
+                {
+                  "id": "runtime:core:bitter_seed_dust",
+                  "kind": "item"
+                }
+              ]
+            }
+          },
+          {
+            "id": 7,
+            "tool": "lattice_findings",
+            "arguments": {
+              "layer": "runtime",
+              "rule": "item-stat-projection"
+            },
+            "result": {
+              "isError": false,
+              "contentCharacters": 20616,
+              "contentSha256": "b002473b28276425c0a156c26e2d9e8669389facabd7915e44fc9a07718496a7",
+              "graphHash": "7358f9dda9f51af1431d4c070a7906338cbe364e0046a4f627b615a3fadde807",
+              "layer": "runtime",
+              "total": 1,
+              "freshness": {
+                "status": "fresh",
+                "mode": "content-hash",
+                "observedAt": "2026-10-10T01:41:20.776Z",
+                "wasStale": false,
+                "rebuilt": false,
+                "previousFingerprint": "54da6c11871d3b17c8aa0bf41895d093796435996c0d65714ab97dd75b395153",
+                "fingerprint": "54da6c11871d3b17c8aa0bf41895d093796435996c0d65714ab97dd75b395153",
+                "sourceFingerprint": "bdd4b67f706d37e107191319a7de8da774dc2b9ad4acc3ec7631161bf463a098",
+                "checkedInputs": 230,
+                "observationMs": 50.77899999999863,
+                "rebuildMs": 0,
+                "durationMs": 50.81725000000006
+              },
+              "timing": {
+                "totalMs": 51.28962500000125
+              },
+              "items": [
+                {
+                  "id": "item-stat-projection",
+                  "intent": "저자 해석: 장원 장치라는 이름과 의도에 비해 수치 덧셈은 플레이를 바꾸지 못한다는 비평이다. 예: 재 모으는 부적은 죽음의 흔적→비옥도라는 의도지만 원본 투영은 원거리 장비 조건의 공격력 +3이다. 재미 또는 실행 결과의 측정값은 아니다.",
+                  "metrics": {
+                    "selected": 30,
+                    "stat": 24,
+                    "layer": "runtime",
+                    "content": 216,
+                    "profileSelected": 77,
+                    "referenceUnique": 20
+                  },
+                  "message": "선택 물품 30개 중 24개는 원본 효과가 수치 덧셈입니다.",
+                  "ruleId": "item-stat-projection"
+                }
+              ]
+            }
+          }
+        ],
+        "onlyMcpCalls": true,
+        "actualClientTools": [
+          "lattice_overview",
+          "lattice_find",
+          "lattice_findings",
+          "lattice_overview",
+          "lattice_find",
+          "lattice_findings"
+        ],
+        "rawTranscriptSha256": "8c06639f11daf2520203bae97161e7678d627a95471cece88d6e5baa1c646b9a",
+        "wireCaptureSha256": "6b27b77c39aa6caf6fc0d0fa84a54f06e6d3e0dfc624fd95dadca59c8cfb4016",
+        "callNotes": "Client invoked the same three calls twice; all six successful wire results are retained."
+      }
+    ],
+    "limitations": [
+      "No L5 performance acceptance claim",
+      "Proxy records whitelisted repository result fields plus full content hash; raw client transcript remains external",
+      "Client tool catalog discovered in full; this scenario invokes overview, find and findings only"
+    ],
+    "selection": "All real-client tool calls and discovery names retained; repetitive repository fields and full prose answers omitted. Exact finding intent and metrics remain in call results; raw transcript and wire hashes retained."
+  }
 }

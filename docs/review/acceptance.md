@@ -43,7 +43,7 @@ Statuses: **designed** means a reviewed contract exists, not implementation; **p
 | L5-02 | Items 24/30; forms 4; boss 1; sinks 10/10 all 4 | lens metrics at prototype source commit, source evidence and labels | verified: [source, portability and actual client evidence](l5-acceptance.md) |
 | L5-03 | All 8 findings, classifications and intent comparisons | actual YAML rules, rendered text, metrics/targets/provenance match | verified: [source, portability and actual client evidence](l5-acceptance.md) |
 | L5-04 | Code handler support beyond prototype | positive/negative/comment-only/alternate-path tests at actual source | verified: [source, portability and actual client evidence](l5-acceptance.md) |
-| L5-05 | bs-mobile PR lens + Action + Pages (D1 replacement) | merged PR, CI and live URL | pending |
+| L5-05 | bs-mobile PR lens + Action + Pages (D1 replacement) | merged PR, CI and live URL | verified: [merged consumer, ADR check, public Pages and read-only portability](l5-acceptance.md) |
 | L5-06 | Charter & Kin minimal example, strictly read-only | real source graph + external cache/output + unchanged git status | verified: [source, portability and actual client evidence](l5-acceptance.md) |
 | L5-07 | Lensless public non-game repo, core unchanged | actual repository source SHA + useful screens/graph, same tool binary | verified: [source, portability and actual client evidence](l5-acceptance.md) |
 | L5-08 | bs full build ≤10s / unchanged freshness ≤50ms / MCP ≤1s | repeated timed runs with mode/hardware/Node/source/file count | pending: [recorded timing failures](l5-performance.md) |
@@ -52,7 +52,7 @@ Statuses: **designed** means a reviewed contract exists, not implementation; **p
 | L5-11 | Codex tool list and same query | real client transcript; protocol harness alone insufficient | verified: [source, portability and actual client evidence](l5-acceptance.md) |
 | INV-01 | No Graft code copy / no domain-aware core / no LLM stage | diff/source review and package dependency inspection | verified: [bounded shipped-scope review](l5-acceptance.md) |
 | INV-02 | No data editor, hosted auth, multiuser scope | scope review and shipped surface | verified: [bounded shipped-scope review](l5-acceptance.md) |
-| INV-03 | bs-mobile PR-only / Charter & Kin no commits | remote PR/history + before/after read-only checkout checks | pending |
+| INV-03 | bs-mobile PR-only / Charter & Kin no commits | remote PR/history + before/after read-only checkout checks | verified: [merged consumer, ADR check, public Pages and read-only portability](l5-acceptance.md) |
 | REPORT | L0–L5 ≤10-line summaries + commit/PR/CI | linked milestone reports | pending |
 
 ## Milestone evidence
@@ -109,4 +109,4 @@ L4 completion: [actual reusable delivery acceptance](l4-action.md) verifies all 
 
 L5 progress: [actual-source performance investigation](l5-performance.md) records faster builds and comparisons with identical graph semantics. Cold MCP and expanded YAML timings still exceed requested limits; no L5 row is promoted by this partial result.
 
-L5 partial acceptance: [source/oracle, portability and actual client evidence](l5-acceptance.md) verifies the recorded semantic and agent requirements. [Performance thresholds remain failed](l5-performance.md), and final expanded consumer publication is pending. This is not L5 completion.
+L5 partial acceptance: [source/oracle, portability and actual client evidence](l5-acceptance.md) verifies the recorded semantic and agent requirements. [Performance thresholds remain failed](l5-performance.md), while expanded consumer publication and actual client parity are verified. This is not L5 completion.
