@@ -1,4 +1,4 @@
-import { canonicalJson } from "./canonical.js";
+import { canonicalJson, validateCanonical } from "./canonical.js";
 import { validateDigest, validateGraph } from "./graph-validation.js";
 import type { Digest, Graph, GraphDraft, Source } from "./model.js";
 
@@ -41,7 +41,7 @@ function freezeTree(value: unknown): void {
 
 /** Accepts typed graph records from adapters; raw files require their adapter parser. */
 export function createGraph(input: GraphDraft, digest: Digest): Graph {
-    canonicalJson(input);
+    validateCanonical(input);
     validateGraph(input);
     const draft = cloneValidated(input);
     const semantic = recordProjector();

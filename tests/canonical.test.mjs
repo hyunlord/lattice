@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import * as lattice from '../dist/index.js';
+import * as canonical from '../dist/core/canonical.js';
 
 test('canonical JSON sorts object keys without sorting meaningful arrays', () => {
     const input = { z: [2, 1], a: { y: true, x: null } };
@@ -13,7 +14,11 @@ test('canonical JSON rejects values that would silently lose information', () =>
     const cyclic = {}; cyclic.self = cyclic;
     const getter = Object.defineProperty({}, 'value', { enumerable: true, get() { throw new Error('must not run'); } });
     for (const input of [undefined, NaN, Infinity, 1n, () => 1, new Date(), [undefined], Array(2), cyclic, getter, JSON.parse('{"__proto__":{}}')]) {
-        assert.throws(() => lattice.canonicalJson(input), { name: 'GraphInputError' });
+        let expected;
+        try { lattice.canonicalJson(input); } catch (error) { expected = error; }
+        assert.equal(expected?.name, 'GraphInputError');
+        assert.equal(typeof canonical.validateCanonical, 'function');
+        assert.throws(() => canonical.validateCanonical(input), { name: expected.name, path: expected.path, reason: expected.reason });
     }
 });
 
@@ -27,5 +32,6 @@ test('oversized sparse arrays fail before allocating their missing entries', () 
 
 test('shared JSON subobjects remain legal without being mistaken for cycles', () => {
     const shared = { label: 'shared' };
+    assert.doesNotThrow(() => canonical.validateCanonical({ a: shared, b: shared }));
     assert.equal(lattice.canonicalJson({ a: shared, b: shared }), '{"a":{"label":"shared"},"b":{"label":"shared"}}');
 });
