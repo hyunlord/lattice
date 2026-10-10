@@ -1,0 +1,36 @@
+{
+  "beforeProduct": "9ab8adc",
+  "afterProduct": "636fc458fabf7fb885eae0fbefb738298692b724",
+  "sources": {
+    "fastify": {
+      "commit": "86368086171305df4e235f6d6bec892c67ec2ae2",
+      "trackedStatus": ""
+    },
+    "httpx": {
+      "commit": "b5addb64f0161ff6bfe94c124ef76f6a1fba5254",
+      "trackedStatus": ""
+    }
+  },
+  "newComprehensionGrading": false,
+  "failedCandidatePreserved": "after/ (b87f197 HTTPX desktop1155.484px, mobile overflow106px)",
+  "images": [
+    {
+      "path": "fastify-httpx-before-after.png",
+      "sha256": "d70844eb06efa0a5b893bf69bcd7a998ee0779d6454055f47f2cd4b8d113164c"
+    }
+  ],
+  "checks": {
+    "viewportWidths": [
+      1280,
+      390
+    ],
+    "screens": 4,
+    "consoleErrors": 0,
+    "horizontalOverflow": 0,
+    "paintedRouteErrors": 0,
+    "fastifyRequireStatements": 18,
+    "fastifyImportingFiles": 1,
+    "metadataAndPythonSourceOracles": "pass",
+    "httpxDesktopContentBottom": 618.484375
+  }
+}

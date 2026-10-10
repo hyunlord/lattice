@@ -2,7 +2,7 @@
 
 A repository-neutral system map for people and agents. Deterministic extraction creates one graph for a static browser viewer and MCP tools; declarative lenses add repository-specific meaning.
 
-**Status: L8 readability accepted by the user; final reported compatibility fixes and consumer publication are in progress.** No-config comprehension is3/3/3 and the actual external-agent summary flow is4/4/4. The browser provides overview, focused-item and catalog views; reusable CI publishes consumer maps and PR differences. After the bounded CommonJS, metadata, Python-description and wording corrections are delivered, development returns to maintenance: automatic maps and PR comments, with further fixes only for user-reported problems. See the [acceptance ledger](docs/review/acceptance.md) and [L8 evidence](docs/review/l8-readable-repositories.md).
+**Status: L8 accepted; maintenance scope.** No-config comprehension is3/3/3 and the actual external-agent summary flow is4/4/4. The four final user-reported compatibility fixes pass403 tests and the Fastify/HTTPX desktop/mobile checks. The browser provides overview, focused-item and catalog views; reusable CI publishes consumer maps and PR differences. No proactive feature work or new sample reviews: maintain automatic maps and PR comments, and fix further problems only when reported during actual use. Consumer delivery is tracked in [bs-mobile#212](https://github.com/hyunlord/bs-mobile/issues/212). See the [acceptance ledger](docs/review/acceptance.md) and [L8 evidence](docs/review/l8-readable-repositories.md).
 
 - [Original v0.1 brief](docs/design/brief-v0.1.md)
 - [Architecture and lens contract](docs/design/lattice-v0.md)
