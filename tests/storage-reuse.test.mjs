@@ -5,13 +5,18 @@ import { realpathSync, mkdtempSync, rmSync, writeFileSync, readFileSync, statSyn
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { buildRepository } from '../bin/build.mjs';
-import { readGraph, atomic } from '../bin/storage.mjs';
+import { readGraph, atomic, persistBuild } from '../bin/storage.mjs';
 test('validated immutable graph is reused only while complete file bytes match', t => {
     const root = realpathSync(mkdtempSync(join(tmpdir(), 'lattice-storage-reuse-')));
     t.after(() => rmSync(root, { recursive: true, force: true }));
     execFileSync('git', ['init', '-q', root]);
-    writeFileSync(join(root, 'data.json'), '[{"id":"one","name":"Alpha"}]');
-    const graph = buildRepository({ root }).graph, path = join(root, 'graph.json');
+    writeFileSync(join(root, 'data.json'), '[{"id":"one","name":"한글😀Alpha"}]');
+    const build = buildRepository({ root });
+    const graph = build.graph, path = join(root, 'graph.json');
+    const persisted = persistBuild(root, build);
+    assert.equal(readFileSync(join(root, '.lattice/cache/graph.json'), 'utf8'), JSON.stringify(persisted) + '\n');
+    const repeated = persistBuild(root, build);
+    assert.equal(readFileSync(join(root, '.lattice/cache/graph.json'), 'utf8'), JSON.stringify(repeated) + '\n');
     atomic(path, graph);
     const first = readGraph(path);
     assert.equal(readGraph(path), first);
@@ -27,7 +32,7 @@ test('historical builds reuse immutable inputs but refresh current-lens projecti
     t.after(() => rmSync(root, { recursive: true, force: true }));
     execFileSync('git', ['init', '-q', root]);
     writeFileSync(join(root, '.gitignore'), '.lattice/\n');
-    writeFileSync(join(root, 'data.json'), '[{"id":"one","name":"Alpha"}]');
+    writeFileSync(join(root, 'data.json'), '[{"id":"one","name":"한글😀Alpha"}]');
     execFileSync('git', ['-C', root, 'add', '.']);
     execFileSync('git', ['-C', root, '-c', 'user.name=Test', '-c', 'user.email=test@example.invalid', 'commit', '-qm', 'fixture']);
     const options = { root };

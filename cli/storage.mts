@@ -40,18 +40,24 @@ export function readGraph(path: string) {
     rememberGraph(path, bytesHash, graph);
     return graph;
 }
-const serializedFields = new WeakMap<object, string>();
+const serializedFields = new WeakMap<object, Buffer>();
 function graphBytes(graph: Graph) {
-    const fields = Object.entries(graph).flatMap(([key, value]) => {
+    const parts: Buffer[] = [Buffer.from('{')];
+    let separator = '';
+    for (const [key, value] of Object.entries(graph)) {
         const immutable = value !== null && typeof value === 'object' && Object.isFrozen(value) ? value : undefined;
-        let text = immutable ? serializedFields.get(immutable) : undefined;
-        if (text === undefined) {
-            text = JSON.stringify(value);
-            if (immutable && text !== undefined) serializedFields.set(immutable, text);
+        let bytes = immutable ? serializedFields.get(immutable) : undefined;
+        if (bytes === undefined) {
+            const text = JSON.stringify(value);
+            if (text === undefined) continue;
+            bytes = Buffer.from(text);
+            if (immutable) serializedFields.set(immutable, bytes);
         }
-        return text === undefined ? [] : [`${JSON.stringify(key)}:${text}`];
-    });
-    return Buffer.from(`{${fields.join(',')}}\n`);
+        parts.push(Buffer.from(`${separator}${JSON.stringify(key)}:`), bytes);
+        separator = ',';
+    }
+    parts.push(Buffer.from('}\n'));
+    return Buffer.concat(parts);
 }
 function writeGraph(path: string, graph: Graph) {
     const bytes = graphBytes(graph), bytesHash = digest(bytes);
