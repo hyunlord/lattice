@@ -15,7 +15,7 @@ test('no lens uses actual folder dependencies without fabricating a cycle or run
     const nodes = [node('a', 'module', {}, 'src/a.py'), node('b', 'module', {}, 'lib/b.py'), node('f', 'function', {}, 'src/a.py')];
     const m = buildLoopMap(nodes, [edge('i', 'imports', 'a', 'b'), edge('i2', 'imports', 'a', 'b'), edge('c', 'contains', 'a', 'f')], [], { kinds: [] }, 'example');
     assert.equal(m.nodes.find(n => n.id === 'a').relationGroups.find(g => g.label === '참조하는 모듈').items.length, 1);
-    assert.equal(m.stages.length, 2); assert.deepEqual(m.flows, [{ source: 'folder:src', target: 'folder:lib', label: '1개 파일 사용', count: 1, sourceFiles: ['src/a.py'] }]); assert(m.nodes.every(n => n.status === 'unknown')); assert.equal(m.nodes.find(n => n.id === 'a').relationGroups.find(g => g.label === '정의한 타입·함수').items[0].id, 'f');
+    assert.equal(m.rootStageIds.length, 2); assert.deepEqual(m.flows, [{ source: 'folder:src', target: 'folder:lib', label: '1개 파일 사용', count: 1, sourceFiles: ['src/a.py'] }]); assert(m.nodes.every(n => n.status === 'unknown')); assert.equal(m.nodes.find(n => n.id === 'a').relationGroups.find(g => g.label === '정의한 타입·함수').items[0].id, 'f');
 });
 test('notes retain stale AI attribution and media stays attached to its actual node', () => {
     const m = buildLoopMap([node('a', 'module', {}, 'src/a.py')], [], [], { kinds: [], interpretations: [{ targetId: 'folder:src', summary: 'Evidence-backed explanation', status: 'stale', sources: [{ path: 'src/a.py', line: 1 }] }], mediaManifest: { a: { status: 'available', url: 'media/hash.png', sourcePath: 'art.png', sourceHash: 'hash', frame: { x: 1, y: 2, width: 3, height: 4 } } } }, 'example');
@@ -48,39 +48,39 @@ test('an intermediate display step keeps the final partner as context', () => {
     assert.deepEqual(result.nodes[0].relationGroups[0].items, [{ id: 'x', via: [{ id: 'b', name: 'b' }], note: '+ b' }]);
 });
 
-test('structural focus starts on the most connected module and leaves configured views unchanged', () => {
+test('structural overview starts without a utility selection and leaves configured views unchanged', () => {
     const nodes = [node('isolated', 'module', {}, 'source-manifest.csv'), node('a', 'module', {}, 'src/a.ts'), node('b', 'module', {}, 'src/b.ts'), node('c', 'module', {}, 'src/c.ts')];
     const edges = [edge('a', 'imports', 'a', 'b'), edge('b', 'imports', 'a', 'c'), edge('duplicate', 'imports', 'a', 'b')];
     const automatic = buildLoopMap(nodes, edges, [], { kinds: [] }, 'example');
-    assert.equal(automatic.defaultFocus, 'a');
+    assert.equal(automatic.defaultFocus, undefined); assert(automatic.structuralEntryStageIds.includes('folder:src'));
     const configured = buildLoopMap(nodes, edges, [], { kinds: [], loop: loopConfig({ stages: [{ id: 's', title: 'Modules', kinds: ['module'] }] }) }, 'example');
     assert.equal(configured.defaultFocus, undefined);
 });
 
-test('structural focus prefers production code over a busier test module', () => {
+test('entry highlights prefer production root code without selecting a busier test', () => {
     const nodes = [node('test', 'module', {}, 'test/test.ts'), node('prod', 'module', {}, 'src/main.ts'), node('helper', 'module', {}, 'src/helper.ts')];
     const model = buildLoopMap(nodes, [edge('a', 'imports', 'test', 'prod'), edge('b', 'imports', 'test', 'helper')], [], { kinds: [] }, 'example');
-    assert.equal(model.defaultFocus, 'helper');
+    assert.equal(model.defaultFocus, undefined); assert.deepEqual(model.structuralEntryStageIds, ['folder:src']);
 });
 
 test('repository namespace metadata labels logical groups without changing identity', () => {
     const m = buildLoopMap([node('Acme.Logging', 'package', { category: 'namespace', scope: 'repository', directories: ['one', 'two'], packageName: 'Acme.Logging' })], [], [], { kinds: [] }, 'example');
     assert.equal(m.nodes[0].kind, 'package');
     assert.equal(m.nodes[0].kindLabel, '저장소 네임스페이스');
-    assert.equal(m.stages.find(s => s.nodeIds.includes('Acme.Logging')).title, '저장소 네임스페이스 Acme.Logging');
-    assert.equal(m.stages.find(s => s.nodeIds.includes('Acme.Logging')).id, 'folder:패키지 Acme.Logging');
+    assert(m.stages.every(s => !s.nodeIds.includes('Acme.Logging')));
     assert.equal(m.nodes[0].name, 'Acme.Logging');
 });
 
 test('production and full trees retain original folder note identity and catalog IDs', () => {
     const nodes = [node('app', 'module', {}, 'src/app.go'), node('test', 'module', {}, 'src/app_test.go')];
     const m = buildLoopMap(nodes, [], [], { kinds: [], interpretations: [{ targetId: 'folder:src', summary: 'Source-linked summary', status: 'stale', sources: [{ path: 'src/app.go', line: 7 }] }] }, 'example');
-    for (const id of ['folder:src', 'all:folder:src']) {
+    for (const id of ['folder:src']) {
         const stage = m.stages.find(s => s.id === id);
-        assert.equal(stage.summary, 'Source-linked summary');
+        assert.equal(stage.summary, '역할 설명 없음 — 요약 실행 필요');
         assert.equal(stage.interpretation.stale, true);
         assert.equal(stage.interpretation.evidence[0].path, 'src/app.go');
     }
+    assert.equal(m.stages.find(s => s.id === 'all:folder:src').interpretation, undefined);
     assert.deepEqual(m.nodes.map(n => n.id), ['app', 'test']);
 });
 
@@ -93,12 +93,60 @@ test('production folder notes cannot borrow evidence from omitted same-folder te
     assert.equal(m.stages.find(s => s.id === 'all:folder:src').interpretation.summary, 'Runtime and test behavior');
 });
 
-test('AI stage replacements clear authored type detail arrays', () => {
+test('fresh scoped AI provides the role without promoting authored type details', () => {
     const n = node('a', 'module', { definitions: [{ name: 'Runner', kind: 'type', public: true, uses: 2, declarationDescription: { kind: 'type-doc', text: 'Runs actions.', line: 2 } }] }, 'src/a.ts');
     const baseline = buildLoopMap([n], [], [], { kinds: [] }, 'example');
-    assert.equal(baseline.stages[0].summaryDetails.length, 1);
+    assert.equal(baseline.stages[0].summary, '역할 설명 없음 — 요약 실행 필요'); assert.equal(baseline.stages[0].summaryDetails, undefined);
     const model = buildLoopMap([n], [], [], { kinds: [], interpretations: [{ targetId: 'folder:src', summary: 'Agent explanation.', status: 'fresh', sources: [{ path: 'src/a.ts', line: 2 }] }] }, 'example');
     assert.equal(model.stages[0].summary, 'Agent explanation.');
     assert.equal(model.stages[0].summaryDetail, undefined);
     assert.equal(model.stages[0].summaryDetails, undefined);
+});
+
+test('overview notes use exact scope identities and complete source membership', () => {
+    const nodes = [node('app', 'module', {}, 'src/app.go'), node('test', 'module', {}, 'src/app_test.go')];
+    const notes = [{ targetId: 'overview:production:folder:src', summary: 'Production role.', status: 'fresh', sources: [{ path: 'src/app.go', line: 1 }] }, { targetId: 'overview:all:all:folder:src', summary: 'Complete role.', status: 'fresh', sources: [{ path: 'src/app.go', line: 1 }, { path: 'src/app_test.go', line: 1 }] }];
+    const model = buildLoopMap(nodes, [], [], { kinds: [], interpretations: notes }, 'example');
+    assert.equal(model.stages.find(s => s.id === 'folder:src').summary, 'Production role.');
+    assert.equal(model.stages.find(s => s.id === 'all:folder:src').summary, 'Complete role.');
+    const partial = buildLoopMap(nodes, [], [], { kinds: [], interpretations: [{ ...notes[1], sources: notes[0].sources }] }, 'example');
+    assert.equal(partial.stages.find(s => s.id === 'all:folder:src').interpretation, undefined);
+});
+
+test('AI summary presentation removes inline Markdown while preserving original notes and evidence', () => {
+    const nodes = [node('app', 'module', {}, 'src/index.ts')];
+    const interpretations = [{ targetId: 'overview:production:folder:src', summary: '**실행 진입점**에서 `snake_case`를 연결합니다.', status: 'fresh', sources: [{ path: 'src/index.ts', line: 1 }] }, { targetId: 'app', summary: '_**공개 API**_ 와 `a * b`를 제공합니다.', status: 'fresh', sources: [{ path: 'src/index.ts', line: 1 }] }];
+    const original = structuredClone(interpretations);
+    const model = buildLoopMap(nodes, [], [], { kinds: [], interpretations }, 'example');
+    assert.equal(model.stages.find(s => s.id === 'folder:src').summary, '실행 진입점에서 snake_case를 연결합니다.');
+    assert.equal(model.nodes[0].interpretation.summary, '공개 API 와 a * b를 제공합니다.');
+    assert.deepEqual(interpretations, original);
+    assert.deepEqual(model.nodes[0].interpretation.evidence, original[1].sources);
+});
+
+test('flat file previews use fresh exact-module AI notes and keep stale prose labelled', () => {
+    const nodes = [node('module:args.go', 'module', {}, 'args.go'), node('module:command.go', 'module', {}, 'command.go')];
+    const notes = [
+        { targetId: 'module:args.go', summary: '`인자`를 검사한다.', status: 'fresh', sources: [{ path: 'args.go', line: 10, url: 'https://example.test/args.go#L10' }] },
+        { targetId: 'module:command.go', summary: '이전 명령 설명', status: 'stale', sources: [{ path: 'command.go', line: 20 }] },
+    ];
+    const model = buildLoopMap(nodes, [], [], { kinds: [], interpretations: notes }, 'example');
+    const previews = model.stages.find(s => s.id === 'folder:.').filePreviews;
+    const fresh = previews.find(file => file.id === 'module:args.go');
+    assert.equal(fresh.summary, '인자를 검사한다.');
+    assert.equal(fresh.interpretation.stale, false);
+    assert.deepEqual(fresh.interpretation.evidence, notes[0].sources);
+    const stale = previews.find(file => file.id === 'module:command.go');
+    assert.equal(stale.summary, '파일 설명 없음 — 요약 실행 필요');
+    assert.equal(stale.interpretation.stale, true);
+    assert.equal(stale.interpretation.summary, '이전 명령 설명');
+    assert.deepEqual(model.flows, []);
+    assert.equal(notes[0].summary, '`인자`를 검사한다.');
+});
+test('flat file summaries cannot borrow a different module note or evidence', () => {
+    const nodes = [node('module:args.go', 'module', {}, 'args.go')];
+    const model = buildLoopMap(nodes, [], [], { kinds: [], interpretations: [{ targetId: 'module:args.go', summary: 'Unrelated claim', status: 'fresh', sources: [{ path: 'other.go', line: 1 }] }] }, 'example');
+    const file = model.stages.find(s => s.id === 'folder:.').filePreviews[0];
+    assert.equal(file.summary, '파일 설명 없음 — 요약 실행 필요');
+    assert.equal(file.interpretation, undefined);
 });

@@ -92,3 +92,10 @@ test('unclosed code spans do not cross paragraph boundaries', () => {
     const document = lattice.extractMarkdown(input('a.md', '`unclosed\n\n[real](#)\n\n`'));
     assert.deepEqual(document.links.map(link => link.target), ['#']);
 });
+
+test('nested emphasis is plain in repository descriptions while literal code identifiers remain intact', () => {
+    const document = lattice.extractMarkdown(input('README.md', '# Toolkit\n\nToolkit - _**runs [small tools](https://example.invalid)**_ - preserves `snake_case` and `a * b`.\n\n```js\n@example fabricated code\n```\n'));
+    assert.equal(document.nodes[0].attributes.sourceDescription.text, 'Toolkit - runs small tools - preserves snake_case and a * b.');
+    const heading = lattice.extractMarkdown(input('README.md', '# _**Nested**_ and `literal_*_value`\n'));
+    assert.equal(heading.nodes[0].name, 'Nested and literal_*_value');
+});

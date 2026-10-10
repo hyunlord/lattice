@@ -29,8 +29,15 @@ function tickMatches(text: string): ReadonlyMap<number, { readonly close: number
 }
 export function plain(text: string): string {
     const matches = tickMatches(text);
-    const strip = (part: string): string => unescape(part.replace(/!?(\[([^\]]*)\])\([^)]*\)/gu, "$2")
-        .replace(/<[^>]*>/gu, "").replace(/(?<![\p{L}\p{N}])([*_]{1,2}|~~)(.+?)\1(?![\p{L}\p{N}])/gu, "$2"));
+    const strip = (part: string): string => {
+        let current = part.replace(/!?(\[([^\]]*)\])\([^)]*\)/gu, "$2").replace(/<[^>]*>/gu, "");
+        while (true) {
+            const next = current.replace(/(?<![\p{L}\p{N}\\])(_{1,2})(\S(?:.*?\S)?)\1(?![\p{L}\p{N}])/gu, "$2")
+                .replace(/(?<!\\)(\*{1,2}|~~)(\S(?:.*?\S)?)\1/gu, "$2");
+            if (next === current) return unescape(current);
+            current = next;
+        }
+    };
     let result = "";
     let start = 0;
     for (let offset = 0; offset < text.length; offset++) {

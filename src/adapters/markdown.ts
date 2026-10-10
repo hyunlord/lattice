@@ -102,7 +102,16 @@ export function extractMarkdown(input: SourceInput): MarkdownDocument {
         const body = visible.slice(heading.endLine, next === undefined ? visible.length : next.line - 1).filter((_, offset) => !definitionLines.has(heading.endLine + offset)).join("\n").trim();
         if (body !== "") metadata[key] = body;
     }
-    const documentDescription = markdownDescription(visible, 0, headings.find(heading => heading.level > 1)?.line ?? visible.length, /(?:^|\/)readme(?:\.[^/]*)?$/iu.test(input.path) ? input.path.split("/").at(-2) : undefined);
+    const isReadme = /(?:^|\/)readme(?:\.[^/]*)?$/iu.test(input.path);
+    const preferredName = isReadme ? input.path.split("/").at(-2) : undefined;
+    let documentDescription = markdownDescription(visible, 0, headings.find(heading => heading.level > 1)?.line ?? visible.length, preferredName);
+    if (!documentDescription && isReadme) {
+        const introduction = headings.find(heading => /^(?:introduction|overview|about(?:\s+.+)?|what is\s+.+|purpose|소개|개요)[?:]?$/iu.test(heading.text));
+        if (introduction) {
+            const next = headings.find(heading => heading.line > introduction.line);
+            documentDescription = markdownDescription(visible, introduction.endLine, (next?.line ?? (visible.length + 1)) - 1, preferredName);
+        }
+    }
     const nodes: NodeDraft[] = [{ id: documentId, kind: "document", name: title, attributes: { ...metadata, ...(documentDescription ? { sourceDescription: documentDescription } : {}) }, sources: [makeSource(input, "", 1, lines.length)] }];
     const edges: Edge[] = [];
     const usedAnchors = new Set<string>();

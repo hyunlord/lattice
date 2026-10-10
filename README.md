@@ -2,7 +2,7 @@
 
 A repository-neutral system map for people and agents. Deterministic extraction creates one graph for a static browser viewer and MCP tools; declarative lenses add repository-specific meaning.
 
-**Status: L1–L7 technical delivery is available; L8 readability work is in progress.** The browser opens a map with focused-item and catalog views, backed by eleven MCP tools. Reusable CI publishes consumer maps and PR differences; L5 uses the approved warm-response and full-build budgets. L7 was reviewed as partial, so L8 restores prototype details and improves unfamiliar-repository maps before maintenance. See the [acceptance ledger](docs/review/acceptance.md) and [L7 evidence](docs/review/l7-loop-experience.md).
+**Status: L8 accepted; maintenance scope.** No-config comprehension is3/3/3 and the actual external-agent summary flow is4/4/4. The four final user-reported compatibility fixes pass403 tests and the Fastify/HTTPX desktop/mobile checks. The browser provides overview, focused-item and catalog views; reusable CI publishes consumer maps and PR differences. No proactive feature work or new sample reviews: maintain automatic maps and PR comments, and fix further problems only when reported during actual use. Consumer delivery is tracked in [bs-mobile#212](https://github.com/hyunlord/bs-mobile/issues/212). See the [acceptance ledger](docs/review/acceptance.md) and [L8 evidence](docs/review/l8-readable-repositories.md).
 
 - [Original v0.1 brief](docs/design/brief-v0.1.md)
 - [Architecture and lens contract](docs/design/lattice-v0.md)
@@ -26,7 +26,7 @@ node bin/lattice.mjs diff HEAD~1 --root /path/to/repository --json
 node bin/lattice.mjs serve --root /path/to/repository --port 4173
 ```
 
-`init` creates a generic YAML lens and `.lattice/.gitignore` entries for cache/site output. Repeating it preserves an existing lens and unrelated files. It also installs managed AGENTS/Claude instructions and MCP/Codex settings alongside existing Graft configuration. Use `--no-global` to leave home configuration untouched; default init additionally registers this repository in global Codex settings. See [MCP setup and preservation limits](docs/design/mcp.md). YAML 1.2 mappings, sequences, multiline scalars, multiple documents and bounded aliases carry original source lines. See [YAML/init evidence and format limits](docs/review/l1-yaml-init.md).
+`init` creates a code-and-Markdown starter YAML lens and `.lattice/.gitignore` entries for cache/site output. JSON, YAML and CSV records are opt-in: add a record kind with explicit domain-data paths (a commented example is included), rather than selecting every repository configuration file. Selected data remains strictly parsed; the starter does not change existing or explicitly supplied lenses. Repeating it preserves an existing lens and unrelated files. It also installs managed AGENTS/Claude instructions and MCP/Codex settings alongside existing Graft configuration. Use `--no-global` to leave home configuration untouched; default init additionally registers this repository in global Codex settings. See [MCP setup and preservation limits](docs/design/mcp.md). YAML 1.2 mappings, sequences, multiline scalars, multiple documents and bounded aliases carry original source lines. See [YAML/init evidence and format limits](docs/review/l1-yaml-init.md).
 
 `check` rebuilds from current inputs and evaluates findings with an explicit `gate`. Exit codes are 0 when all gates pass (or none are configured), 1 for failed or unknown gates, and 2 for invalid configuration or build errors. Informational findings without gates do not fail the command. See [gate syntax and verification](docs/review/l1-check.md).
 
@@ -42,6 +42,8 @@ Builds reuse raw per-file extraction when content, path, selection and adapter i
 
 Use [the bs-mobile lens](examples/bs-mobile/lens.json) for that repository, or a YAML/JSON lens with your own file patterns and rules. Use `serve` for local source watching, or host the export directory with any static HTTP server. Installed packages provide the `lattice` command. Git is required. Without a lens, build discovers JSON, YAML, CSV, Markdown and code files, extracts records/headings/ADR metadata and resolves references/document links plus static JS/TS/Python/C#/Rust/Go/Java/Kotlin/Swift/GDScript imports and named definitions. A single `.lattice/lens.yaml`, `.lattice/lens.yml` or `.lattice/lens.json` is used when present; multiple defaults require an explicit `--lens`. Explicit lenses limit input to their patterns. Unsupported code languages retain file-only modules. Static extraction is not compiler or runtime verification. Unity tagged YAML is not supported. Optional Graft import uses validated source hashes and falls back to standalone extraction. See [document extraction evidence and limits](docs/review/l1-markdown.md).
 
+Go files also expose conservative same-package declaration-type references with exact use and definition locations. These are separate from imports and do not change importing-file counts. Qualified, shadowed, ambiguous or unsupported declarations are omitted; this is not a complete call graph or execution-order analysis. Flat-folder previews can use these references without inventing connections from AI prose.
+
 [Open the published bs-mobile map](https://hyunlord.github.io/bs-mobile/).
 
 See [module extraction evidence and limits](docs/review/l1-modules.md).
@@ -54,7 +56,7 @@ Run `lattice mcp --root /path/to/repository` for stdio MCP, or use `init` to con
 
 Use the reusable workflow at `hyunlord/lattice/.github/workflows/lattice.yml@<LATTICE_COMMIT_SHA>` and set its `tool-ref` input to the same complete commit SHA. It builds the actual PR head with read-only permissions, uploads map/report artifacts, and updates a bot-owned system-diff comment for same-repository PRs. Fork PRs retain artifacts without privileged comments. A separate job publishes successful default-branch builds only when Pages is already configured; `pages: false` keeps artifact-only delivery.
 
-The root composite action `hyunlord/lattice@<LATTICE_COMMIT_SHA>` is also available for custom build jobs. Optional `verification-script` runs consumer-specific checks only in the read-only source-build job. See [workflow examples, permissions, inputs and report schema](docs/design/action.md). L4 deployment acceptance remains pending until recorded in the ledger.
+The root composite action `hyunlord/lattice@<LATTICE_COMMIT_SHA>` is also available for custom build jobs. Optional `verification-script` runs consumer-specific checks only in the read-only source-build job. See [workflow examples, permissions, inputs and report schema](docs/design/action.md). L4 deployment acceptance is recorded in the ledger.
 
 ## Explore relationships
 

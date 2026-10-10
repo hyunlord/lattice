@@ -1,5 +1,7 @@
 import { entryPoints, javascriptEvidence } from "./code-evidence.js";
 import { descriptiveProse } from "./description-prose.js";
+import { pythonDocProse } from "./python-doc-prose.js";
+import { plain } from "./markdown-inline.js";
 import type { JsonObject } from "../core/canonical.js";
 import type { CodeToken } from "./code-tokens.js";
 
@@ -26,7 +28,37 @@ export function publicDeclaration(tokens: readonly CodeToken[], index: number, l
 }
 
 function sentence(value: string): string {
-    const clean = value.replace(/\{@(?:code|literal)\s+([^}]+)\}/gu, "$1").replace(/<see\s+cref=["']([^"']+)["']\s*\/>/gu, "$1").replace(/\{@(?:link|linkplain)\s+([^}]+)\}/gu, (_match, target: string) => target.trim().replace(/^\S+\s+(.+)$/u, "$1")).replace(/<[^>]*>/gu, " ").replace(/\s+/gu, " ").trim();
+    const summary = /<summary\b[^>]*>([\s\S]*?)<\/summary>/iu.exec(value)?.[1] ?? value;
+    const withoutExamples = summary.replace(/<(example|code|pre|script|style)\b[^>]*>[\s\S]*?<\/\1\s*>/giu, " ");
+    const prose: string[] = [];
+    let fence: { readonly marker: string; readonly width: number; } | undefined;
+    for (const line of withoutExamples.split(/\r\n|\r|\n/u)) {
+        const marker = /^\s*(`{3,}|~{3,})/u.exec(line)?.[1];
+        if (marker) {
+            if (!fence) fence = { marker: marker[0] ?? "", width: marker.length };
+            else if (marker[0] === fence.marker && marker.length >= fence.width) fence = undefined;
+            continue;
+        }
+        if (fence) continue;
+        if (/^\s*@(?:module|packageDocumentation)\b/u.test(line)) continue;
+        const content = line.replace(/^\s*@(?:fileoverview|file|description|summary)\s*/u, "");
+        if (/^\s*@\w+/u.test(content)) break;
+        prose.push(content.replace(/^\s*#{1,6}\s+/u, ""));
+    }
+    const inline = prose.join(" ").replace(/\{@(?:code|literal)\s+([^}]+)\}/gu, "$1")
+        .replace(/<see\s+cref=["']([^"']+)["']\s*\/>/gu, "$1")
+        .replace(/\{@(?:link|linkplain)\s+([^}]+)\}/gu, (_match, target: string) => target.trim().replace(/^\S+\s+(.+)$/u, "$1"))
+        .replace(/<[^>]*>/gu, " ");
+    const clean = plain(inline).replace(/&(?:amp|lt|gt|quot|apos|nbsp);/gu, entity => {
+        switch (entity) {
+            case "&amp;": return "&";
+            case "&lt;": return "<";
+            case "&gt;": return ">";
+            case "&quot;": return '"';
+            case "&apos;": return "'";
+            default: return " ";
+        }
+    }).replace(/\s+/gu, " ").trim();
     return (/^.*?[.!?](?:\s|$)/u.exec(clean)?.[0] ?? clean).trim().slice(0, 320);
 }
 
@@ -45,7 +77,7 @@ function scriptDescription(text: string): JsonObject | undefined {
             index++;
             parts.push((lines[index] ?? "").trim().replace(/^#+\s?/u, ""));
         }
-        const body = parts.join(" ");
+        const body = parts.join("\n");
         if (!descriptiveProse(body)) continue;
         const summary = sentence(body);
         if (summary.split(/\s+/u).length >= 3) return { text: summary, kind: "module-doc", line: start + 1, endLine: index + 1 };
@@ -94,7 +126,7 @@ export function sourceDescription(text: string, language: string): JsonObject | 
         const next = lines.slice(cursor).find(value => value.trim() && !(language === "java" && /^\s*@\w+(?:\.\w+)*(?:\([^)]*\))?\s*$/u.test(value)))?.trim() ?? "";
         const directive = (part: string): boolean => /^(?:eslint-(?:disable|enable)|@ts-(?:check|nocheck|ignore|expect-error)|prettier-ignore|biome-ignore|ruff:|pylint:|nolint\b|go:|ReSharper\s+(?:disable|restore)|noinspection\b)/iu.test(part.trim()) || (/^(?:import |from |using )/u.test(next) && /^(?:types?\s+only|type-only(?:\s+imports?)?|imports?\s+only)[!.\s]*$/iu.test(part.trim()));
         const prose = parts.map((part, index) => ({ part, index })).filter(({ part, index }) => !directive(part) && !/^\s*[-=]{3,}\s*$/u.test(part) && !/^\s*[-=]{3,}\s*$/u.test(parts[index + 1] ?? ""));
-        const content = prose.map(value => value.part).join(" ");
+        const content = prose.map(value => value.part).join("\n");
         if (!descriptiveProse(content)) continue;
         const summary = sentence(content);
         const filteredDirective = parts.some(directive);
@@ -126,19 +158,44 @@ export function descriptionAttributes(text: string, language: string, definition
         if (!seen.has(name)) { seen.add(name); names.push({ name, uses: Number(value["uses"] ?? 0), line: value["line"] ?? 1 }); }
     }
     names.sort((a, b) => Number(b.uses) - Number(a.uses) || String(a.name).localeCompare(String(b.name)));
-    return { ...(description ? { sourceDescription: description } : {}), publicNames: names.slice(0, 3), entryPoints: entryPoints(text, language, definitions), verificationNames: evidence.verificationNames };
+    const exportList = language === "python" ? /^__all__\s*=\s*\[([\s\S]*?)\]/mu.exec(text)?.[1] : undefined;
+    const declaredExports = exportList && /^(?:\s|,|'[^']*'|"[^"]*")*$/u.test(exportList) ? [...exportList.matchAll(/['"]([A-Za-z_]\w*)['"]/gu)].map(match => match[1] ?? "") : undefined;
+    return { ...(description ? { sourceDescription: description } : {}), ...(declaredExports ? { declaredExports } : {}), publicNames: names.slice(0, 3), entryPoints: entryPoints(text, language, definitions), verificationNames: evidence.verificationNames };
 }
 
 
-/** Public type prose is attributed to its declaration, never promoted to module documentation. */
-export function publicTypeDocumentation(lines: readonly string[], language: string, definitions: readonly JsonObject[]): readonly JsonObject[] {
+/** Public declaration prose stays attached to its own definition, never to its module. */
+export function publicDeclarationDocumentation(lines: readonly string[], language: string, definitions: readonly JsonObject[]): readonly JsonObject[] {
     return definitions.map(definition => {
-        if (definition["kind"] !== "type" || definition["public"] !== true) return definition;
+        if (!["type", "function"].includes(String(definition["kind"])) || definition["public"] !== true) return definition;
         const escapedName = String(definition["name"] ?? "").replace(/[.*+?^${}()|[\]\\]/gu, "\\$&");
         const modifiers = "(?:(?:public|export|default|internal|protected|private|abstract|final|sealed|static|partial|open|data|value|inline|pub)\\s+)*";
         const typePrefix = language === "go" ? "(?:type\\s+)?" : `${modifiers}(?:class|struct|interface|enum|trait|protocol|record|union|typealias|type|object)(?:\\s+(?:class|struct))?\\s+`;
         const declarationLine = lines[Number(definition["line"] ?? 1) - 1] ?? "";
-        if (!new RegExp(`^\\s*${typePrefix}${escapedName}\\b`, "u").test(declarationLine)) return definition;
+        if (language === "python") {
+            if (!/^(?:class |(?:async )?def )/u.test(declarationLine)) return definition;
+            let cursor = Number(definition["line"] ?? 1) - 1;
+            while (cursor < lines.length && cursor < Number(definition["line"] ?? 1) + 128 && !/:\s*(?:#.*)?$/u.test(lines[cursor] ?? "")) {
+                if (/\)\s*(?:->[^:]+)?\s*:\s*\S/u.test(lines[cursor] ?? "") || (cursor >= Number(definition["line"] ?? 1) && /^\S/u.test(lines[cursor] ?? ""))) return definition;
+                cursor++;
+            }
+            cursor++;
+            while (cursor < lines.length && /^\s*(?:#.*)?$/u.test(lines[cursor] ?? "")) cursor++;
+            const opening = /^\s+(?:[ru])?("""|''')(.*)$/iu.exec(lines[cursor] ?? "");
+            if (!opening) return definition;
+            const start = cursor, marker = opening[1] ?? "", parts: string[] = [];
+            let part = opening[2] ?? "", closed = false;
+            while (cursor < lines.length && cursor - start < 256) {
+                const end = part.indexOf(marker);
+                parts.push(end < 0 ? part : part.slice(0, end));
+                if (end >= 0) { closed = true; break; }
+                part = lines[++cursor] ?? "";
+            }
+            const prose = pythonDocProse(parts), summary = prose ? sentence(prose.text) : '';
+            return closed && prose && descriptiveProse(prose.text) && summary ? { ...definition, declarationDescription: { text: summary, kind: definition["kind"] === "type" ? "type-doc" : "function-doc", line: start + prose.start + 1, endLine: start + prose.end + 1 } } : definition;
+        }
+        if (definition["kind"] === "function" && !new RegExp(`^[^{};=]*\\b${escapedName}(?:\\s*<[^>]*>)?\\s*\\(`, "u").test(declarationLine)) return definition;
+        if (definition["kind"] === "type" && !new RegExp(`^\\s*${typePrefix}${escapedName}\\b`, "u").test(declarationLine)) return definition;
 
         let cursor = Number(definition["line"] ?? 1) - 2;
         const lower = Math.max(0, cursor - 255);
@@ -162,11 +219,10 @@ export function publicTypeDocumentation(lines: readonly string[], language: stri
             if (!parts.length || (cursor === lower && marker.test(lines[cursor - 1] ?? ""))) return definition;
         }
         const docLines = parts.map(part => part.trim().replace(/^\/\*+|\*\/$/gu, "").replace(/^(?:\/{2,3}|\*)\s?/u, ""));
-        const metadataStart = docLines.findIndex(part => /^\s*@(?:author|since|param|return|returns|throws|exception|see|version|deprecated|serial|serialField|serialData|apiNote|implSpec|implNote)\b/u.test(part));
-        const body = (metadataStart < 0 ? docLines : docLines.slice(0, metadataStart)).join(" ");
+        const body = docLines.join("\n");
         if (!descriptiveProse(body)) return definition;
         const text = sentence(body);
         if (!text || /^@|^<inheritdoc\b/iu.test(text)) return definition;
-        return { ...definition, declarationDescription: { text, kind: "type-doc", line: cursor + 1, endLine: end + 1 } };
+        return { ...definition, declarationDescription: { text, kind: definition["kind"] === "type" ? "type-doc" : "function-doc", line: cursor + 1, endLine: end + 1 } };
     });
 }

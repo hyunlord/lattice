@@ -11,8 +11,8 @@ const paging = { offset: { type: 'integer', minimum: 0, maximum: 10000000, defau
 const scope = { layer: { type: 'string', description: 'Exact layer; empty string selects unlayered nodes. Omission uses the viewer default layer.' } } as const;
 const filters = { ...scope, kind: text, q: text, tags: { type: 'array', items: text, maxItems: 50, description: 'Every tag must occur in node attributes.tags.' }, facets: { type: 'object', additionalProperties: true, description: 'AND filters of facet keys to exact typed JSON values; 1 differs from "1".' } } as const;
 const definitions = {
-    lattice_interpretation_context: { description: 'Read module and folder targets, exact source hashes and source excerpts for agent-authored summaries; includes fresh/stale notes.', properties: { ...paging }, required: [] },
-    lattice_write_interpretation: { description: 'Write an AI-attributed summary into .lattice/notes only. Sources must exactly match current target hashes. No source code is modified. Supply exactly one of record or records (1 to 500); batches validate before writing individual atomic files.', properties: { records: { type: 'array', minItems: 1, maxItems: 500, items: { type: 'object' } }, record: { type: 'object', description: 'schemaVersion=1, targetId, summary (one or two sentences), author, sources [{path,contentHash,line}]' } }, required: [] },
+    lattice_interpretation_context: { description: 'Read agent-summary evidence. Use scope=overview, compact=true, limit=9 for first-screen folder targets, their visibleFiles module targets, and bounded evidence samples; sourceSetToken binds the complete source set. overviewScope=all selects all code instead of production. Defaults preserve full legacy module/folder context.', properties: { ...paging, scope: { type: 'string', enum: ['all', 'folders', 'overview'] }, overviewScope: { type: 'string', enum: ['production', 'all'] }, compact: { type: 'boolean' } }, required: [] },
+    lattice_write_interpretation: { description: 'Write an AI-attributed summary into .lattice/notes only. Sources must exactly match current target hashes. No source code is modified. Supply exactly one of record or records (1 to 500); batches validate before writing individual atomic files.', properties: { records: { type: 'array', minItems: 1, maxItems: 500, items: { type: 'object' } }, record: { type: 'object', description: 'schemaVersion=1, targetId, summary (one or two sentences), author, exactly one of sources [{path,contentHash,line}] or sourceSetToken from compact context' } }, required: [] },
     lattice_draft_lens: { description: 'Validate and save a draft lens without activating it. Replacing an existing draft requires its SHA-256 expectedHash.', properties: { yaml: { type: 'string', maxLength: 1000000 }, expectedHash: text }, required: ['yaml'] },
     lattice_overview: { description: 'Summarize the same visible layer as the web home: counts, kind distribution, findings and views, with source provenance.', properties: { ...scope, ...paging }, required: [] },
     lattice_find: { description: 'Find visible nodes using AND-combined kind, text, tags and typed facet filters. Stable ID order and bounded pagination.', properties: { ...filters, ...paging }, required: [] },
@@ -32,6 +32,7 @@ export function parseArguments(name: ToolName, input: unknown): Record<string, u
     for (const [key, value] of Object.entries(input)) {
         if (!Object.hasOwn(definition.properties, key)) throw new McpArgumentError(key, 'unknown argument');
         switch (key) {
+            case 'compact': if (typeof value !== 'boolean') throw new McpArgumentError(key, 'expected boolean'); break;
             case 'records': if (!Array.isArray(value) || !value.length || value.length > 500 || !value.every(object)) throw new McpArgumentError(key, 'expected 1 to 500 interpretation objects'); break;
             case 'record': if (!object(value)) throw new McpArgumentError(key, 'expected interpretation object'); break;
             case 'yaml': if (typeof value !== 'string' || !value.length || value.length > 1000000) throw new McpArgumentError(key, 'expected bounded YAML text'); break;
@@ -49,7 +50,7 @@ export function parseArguments(name: ToolName, input: unknown): Record<string, u
                 break;
             default: {
                 if (typeof value !== 'string' || value.length > 4096 || (key !== 'layer' && !value.length)) throw new McpArgumentError(key, 'expected nonempty string (layer may be empty)');
-                const choices: Record<string, readonly string[]> = { direction: ['out', 'in', 'both'], severity: ['info', 'warning', 'error'], gate: ['pass', 'fail', 'unknown', 'none'] };
+                const choices: Record<string, readonly string[]> = { scope: ['all', 'folders', 'overview'], overviewScope: ['production', 'all'], direction: ['out', 'in', 'both'], severity: ['info', 'warning', 'error'], gate: ['pass', 'fail', 'unknown', 'none'] };
                 if (choices[key] && !choices[key].includes(value)) throw new McpArgumentError(key, `expected ${choices[key].join(', ')}`);
             }
         }

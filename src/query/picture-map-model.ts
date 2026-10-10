@@ -22,7 +22,13 @@ export function buildPictureMap(nodes: readonly Node[], edges: readonly Edge[], 
         const structural = buildStructuralMap(nodes, edges);
         const byId = new Map(nodes.map(n => [n.id, n]));
         const roots = structural.stages.filter(s => structural.rootStageIds.includes(s.id));
-        const owner = (id: string) => roots.filter(s => id === s.id || s.id === 'folder:.' || id.startsWith(s.id + '/')).sort((a, b) => b.id.length - a.id.length)[0];
+        const stages = new Map(structural.stages.map(stage => [stage.id, stage]));
+        const rootIds = new Set(structural.rootStageIds);
+        const owner = (id: string) => {
+            let stage = stages.get(id);
+            while (stage && !rootIds.has(stage.id)) stage = stage.parentId ? stages.get(stage.parentId) : undefined;
+            return stage;
+        };
         const hubs = roots.map(s => ({
             id: s.id, name: s.title, nodes: (s.descendantNodeIds ?? s.nodeIds).flatMap(id => {
                 const n = byId.get(id); if (!n) return [];

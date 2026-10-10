@@ -33,7 +33,7 @@ The result includes graph hash, repository commit/source fingerprint, observatio
 
 Default paging is 50, maximum 200; `offset` and `nextOffset` support later pages. Every page reports `total`, `truncated`, `offset` and `limit`. Nested attribute/metric arrays are also page objects; scalar types remain unchanged. Overview contains summary findings; use `lattice_findings` for evidence. Text search follows web Explore semantics. An omitted layer uses the viewer's default; node detail can infer the node's layer. Hidden kinds and layer totals follow viewer scope. Cross-layer counterparts remain separate records.
 
-Shared pure projections live in `src/query/`; viewer TypeScript re-exports them and the build copies their compiled browser-safe code into the flat static asset directory. MCP uses those same functions for traversal, matrix projections and semantic history. CLI diff additionally retains its original raw record-ID diff in cache; MCP/web Changes normalize identity namespaces using layer, kind and original ID. Both comparison paths read Git objects, never check out the consumer repository.
+Shared pure projections live in `src/query/`; viewer TypeScript re-exports them and the build copies their compiled browser-safe code into the flat static asset directory. MCP uses those same functions for traversal, matrix projections and semantic history. CLI diff additionally retains its original raw record-ID diff in cache; MCP/web Changes normalize identity namespaces using layer, kind and original ID. Both comparison paths read Git objects, never check out the consumer repository. Historical relative file symlinks resolve only to blobs in that pinned tree (including bounded chains), retaining the alias source path and target content hash. Absolute or escaping targets and cycles fail; dangling targets remain missing, matching working-tree reads. The historical reader never falls back to current filesystem contents.
 
 Links default to `http://127.0.0.1:4173/`; start `lattice serve` separately. `--viewer-url` sets an explicit public base and does not publish or synchronize that site. Compare the returned graph hash with the page to establish identical evidence. Clean saved snapshot pairs get comparison links; dirty comparisons return `link: null` and explain why.
 
@@ -54,3 +54,7 @@ No TOML dependency is added. The conservative editor supports normal table heade
 | `lattice_draft_lens` | Validate an inactive YAML lens draft; existing draft replacement requires expectedHash |
 
 [Storage, agent-init workflow, read-only source override and optional external CI runner](../review/l7-interpretation.md) define the interpretation contract.
+
+## Starter input scope
+
+New `lattice init` lenses select supported code and Markdown for the initial repository map. JSON, YAML and CSV domain records remain supported through explicit kind file patterns; the generated lens includes a commented `data/` example. Configuration files with comments and unrelated malformed data therefore do not block the starter map. An explicitly selected malformed record still fails with its source diagnostic. Existing lenses are never rewritten. Without a lens, broader discovery retains its existing unparsed-file diagnostics; it is distinct from an explicit starter lens.

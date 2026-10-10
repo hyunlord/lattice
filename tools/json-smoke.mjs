@@ -13,7 +13,7 @@ export async function verifyJson(cli, repository) {
   writeFileSync(source, '[{"id":"a","name":"First"}]');
   git(['add', '.']); git(['commit', '--quiet', '-m', 'Initial record']);
   const run = (command, args = [], status = 0) => {
-    const result = spawnSync(process.execPath, [cli, command, ...args, '--root', repository, '--json'], { encoding: 'utf8' });
+    const result = spawnSync(process.execPath, [cli, command, ...args, '--root', repository, '--json'], { encoding: 'utf8', timeout: 15000 });
     assert.equal(result.status, status, result.stderr + result.stdout);
     assert.equal(result.stderr, '');
     const output = JSON.parse(result.stdout);
@@ -27,6 +27,9 @@ export async function verifyJson(cli, repository) {
   const initialized = run('init', ['--no-global']);
   assert.equal(initialized.result.globalConfigurationChanged, false);
   assert.equal(initialized.result.lensPath, join(repository, '.lattice/lens.yaml'));
+  const starterPath = initialized.result.lensPath;
+  const starter = readFileSync(starterPath, 'utf8');
+  writeFileSync(starterPath, starter.replace('kinds:\n', 'kinds:\n  - id: record\n    label: Records\n    files: [records.json]\n'));
   const leadingJson = spawnSync(process.execPath, [cli, '--json', 'build', '--root', repository], { encoding: 'utf8' });
   assert.equal(leadingJson.status, 0, leadingJson.stderr);
   assert.equal(JSON.parse(leadingJson.stdout).command, 'build');

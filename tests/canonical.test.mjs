@@ -8,6 +8,8 @@ test('canonical JSON sorts object keys without sorting meaningful arrays', () =>
     assert.equal(typeof lattice.canonicalJson, 'function');
     const result = lattice.canonicalJson(input);
     assert.equal(result, '{"a":{"x":null,"y":true},"z":[2,1]}');
+    const repeatedNames = [{ 'quote"\\\n': 1, '한글': 2 }, { 'quote"\\\n': 3, '한글': 4 }];
+    assert.equal(lattice.canonicalJson(repeatedNames), JSON.stringify(repeatedNames));
 });
 
 test('canonical JSON rejects values that would silently lose information', () => {

@@ -14,6 +14,8 @@ export function verifyExport(cli, repository) {
   run(['build']);
   run(['export']);
   const first = contents();
+  assert.ok(first['structural-dependency-groups.js']);
+  assert.match(first['loop-map-model.js'], /\.\/structural-dependency-groups\.js/u);
   assert.equal(JSON.parse(first['.lattice-export.json']).generator, 'lattice');
   run(['export']);
   assert.deepEqual(contents(), first);

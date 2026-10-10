@@ -2,7 +2,7 @@ import { errorCode, errorStatus } from './types.mjs';
 import type { RepositoryReader } from './types.mjs';
 import { execFile, execFileSync } from 'node:child_process';
 import { readFileSync, realpathSync, statSync } from 'node:fs';
-import { basename, join, relative, sep } from 'node:path';
+import { basename, join, posix, relative, sep } from 'node:path';
 import { promisify } from 'node:util';
 import { inside } from './inputs.mjs';
 
@@ -75,14 +75,40 @@ export function historicalRepository(root: string, ref?: string): RepositoryRead
         if (match?.[1] && match[2] && match[3]) blobs.set(match[3], { mode: match[1], id: match[2] });
     }
     const prepared = new Map<string, string>();
+    const readBlob = (id: string, path: string): string => {
+        const cached = prepared.get(id);
+        if (cached !== undefined) return cached;
+        const size = Number(git(root, ['cat-file', '-s', id]));
+        if (size > 10 * 1024 * 1024) throw new Error(`Input exceeds 10 MiB: ${path}`);
+        const text = git(root, ['cat-file', 'blob', id]);
+        prepared.set(id, text);
+        return text;
+    };
+    const resolved = new Map<string, { mode: string; id: string; } | undefined>();
+    const resolveBlob = (requested: string) => {
+        if (resolved.has(requested)) return resolved.get(requested);
+        const visited = new Set<string>();
+        let path = requested;
+        let object = blobs.get(path);
+        while (object?.mode === '120000') {
+            if (visited.has(path) || visited.size >= 40) throw new Error(`Historical symbolic link cycle or depth limit: ${requested}`);
+            visited.add(path);
+            const target = readBlob(object.id, path);
+            const next = posix.join(posix.dirname(path), target);
+            if (posix.isAbsolute(target) || /^[A-Za-z]:|^\\/u.test(target) || next === '..' || next.startsWith('../')) throw new Error(`Historical input resolves outside repository: ${requested}`);
+            path = next;
+            object = blobs.get(path);
+        }
+        resolved.set(requested, object);
+        return object;
+    };
     return {
         ...identity(root), commit, dirty: false, paths: [...blobs.keys()].sort(),
         prepare(paths) {
             const selected = new Map<string, string>();
             for (const path of paths) {
-                const object = blobs.get(path);
+                const object = resolveBlob(path);
                 if (!object || prepared.has(object.id)) continue;
-                if (object.mode === '120000') throw new Error(`Historical symbolic link input is not supported: ${path}`);
                 selected.set(object.id, path);
             }
             if (!selected.size) return;
@@ -109,14 +135,8 @@ export function historicalRepository(root: string, ref?: string): RepositoryRead
             if (offset !== bytes.length) throw new Error('Unexpected historical blob response bytes');
         },
         readText(path) {
-            const object = blobs.get(path);
-            if (!object) return undefined;
-            if (object.mode === '120000') throw new Error(`Historical symbolic link input is not supported: ${path}`);
-            const cached = prepared.get(object.id);
-            if (cached !== undefined) return cached;
-            const size = Number(git(root, ['cat-file', '-s', object.id]));
-            if (size > 10 * 1024 * 1024) throw new Error(`Input exceeds 10 MiB: ${path}`);
-            return git(root, ['cat-file', 'blob', object.id]);
+            const object = resolveBlob(path);
+            return object ? readBlob(object.id, path) : undefined;
         },
     };
 }

@@ -154,7 +154,7 @@ function home() {
     for (const [label, path] of [['발견과 요약', '/overview'], ['목록', '/list'], ['행렬과 상태판', '/views'], ['관계 탐색', '/explore'], ['변화', '/changes']]) if (label && path) details.append(link(label, routeHref(path)));
     pageHeading('근거', undefined, evidence);
     const map = el('div', undefined, 'picture-home-map'); main.append(map, details, evidence);
-    disposeScreen = renderLoopMap(map, buildLoopMap(visibleNodes, graph.edges, graph.facets, presentation, graph.repository.name), { kindLabel, nodeHref, onEvidence: () => { evidence.hidden = !evidence.hidden; if (!evidence.hidden) evidence.scrollIntoView({ block: 'nearest' }); }, onDetails: () => { details.hidden = !details.hidden; if (!details.hidden) details.scrollIntoView({ block: 'nearest' }); } });
+    disposeScreen = renderLoopMap(map, buildLoopMap(visibleNodes, graph.edges, graph.facets, presentation, graph.repository.name), { kindLabel, nodeHref, onEvidence: () => { for (const old of evidence.querySelectorAll('.lm-analysis-evidence')) old.remove(); for (const source of map.querySelectorAll('.lm-analysis-evidence')) { const copy = source.cloneNode(true); if (copy instanceof HTMLElement) { copy.hidden = false; evidence.append(copy); } } evidence.hidden = !evidence.hidden; if (!evidence.hidden) evidence.scrollIntoView({ block: 'nearest' }); }, onDetails: () => { details.hidden = !details.hidden; if (!details.hidden) details.scrollIntoView({ block: 'nearest' }); } });
 }
 function selectControl(label: string, name: string, values: readonly (readonly string[])[], selected: string) {
     const wrapper = el('label', label); const select = el('select'); select.name = name;

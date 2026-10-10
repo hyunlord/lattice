@@ -10,11 +10,12 @@ export function canonicalJson(value: unknown): string {
 /** Reuse only within an operation whose input objects remain unchanged. */
 export function canonicalEncoder(): (value: unknown) => string {
     const encoded = new WeakMap<object, { readonly depth: number; readonly text: string; }>();
-    return value => encode(value, { ancestors: new Set(), depth: 0, encoded, output: true });
+    const propertyNames = new Map<string, string>();
+    return value => encode(value, { ancestors: new Set(), depth: 0, encoded, propertyNames, output: true });
 }
 
 export function validateCanonical(value: unknown): void {
-    encode(value, { ancestors: new Set(), depth: 0, encoded: new WeakMap(), output: false });
+    encode(value, { ancestors: new Set(), depth: 0, encoded: new WeakMap(), propertyNames: new Map(), output: false });
 }
 
 type Position = {
@@ -24,6 +25,7 @@ type Position = {
     readonly ancestors: Set<object>;
     readonly depth: number;
     readonly encoded: WeakMap<object, { readonly depth: number; readonly text: string; }>;
+    readonly propertyNames: Map<string, string>;
 };
 
 function errorPath(position: Position): string {
@@ -70,7 +72,7 @@ function encodeObject(value: object, position: Position): string {
     const keys = array ? Array.from({ length: value.length }, (_, index) => String(index)) : names.sort();
     const parts: string[] | undefined = position.output ? [] : undefined;
     for (const key of keys) {
-        const childPosition: Position = { parent: position, key, ancestors, depth: position.depth + 1, encoded: position.encoded, output: position.output };
+        const childPosition: Position = { parent: position, key, ancestors, depth: position.depth + 1, encoded: position.encoded, propertyNames: position.propertyNames, output: position.output };
         if (["__proto__", "constructor", "prototype"].includes(key)) throw new GraphInputError(errorPath(childPosition), "unsafe property name");
         const descriptor = Object.getOwnPropertyDescriptor(value, key);
         if (!descriptor || !("value" in descriptor) || !descriptor.enumerable) {
@@ -78,7 +80,17 @@ function encodeObject(value: object, position: Position): string {
         }
         const child: unknown = descriptor.value;
         const encoded = encode(child, childPosition);
-        if (parts) parts.push(array ? encoded : `${JSON.stringify(key)}:${encoded}`);
+        if (parts) {
+            if (array) parts.push(encoded);
+            else {
+                let propertyName = position.propertyNames.get(key);
+                if (propertyName === undefined) {
+                    propertyName = JSON.stringify(key);
+                    position.propertyNames.set(key, propertyName);
+                }
+                parts.push(`${propertyName}:${encoded}`);
+            }
+        }
     }
     const encoded = parts ? array ? `[${parts.join(",")}]` : `{${parts.join(",")}}` : "";
     ancestors.delete(value);

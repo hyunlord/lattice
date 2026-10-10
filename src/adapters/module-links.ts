@@ -9,7 +9,7 @@ import { nativeResolver } from "./native-links.js";
 import { codeLanguage } from "./code.js";
 import type { CodeModule, ModuleImport } from "./code.js";
 
-export type ModuleDiagnostic = { readonly code: "external-or-unresolved-module" | "unresolved-local-module" | "ambiguous-module" | "unresolved-configuration"; readonly specifier: string; readonly source: Source; readonly reason?: string; readonly evidence?: readonly Source[]; };
+export type ModuleDiagnostic = { readonly code: "external-or-unresolved-module" | "unresolved-local-module" | "ambiguous-module" | "unresolved-configuration" | "dynamic-module-reference" | "shadowed-module-reference"; readonly specifier: string; readonly source: Source; readonly reason?: string; readonly evidence?: readonly Source[]; };
 function normalize(path: string): string | undefined {
     const parts: string[] = [];
     for (const part of path.split("/")) {
@@ -53,6 +53,10 @@ export function resolveModuleLinks(modules: readonly CodeModule[], metadata: rea
     const diagnostics: ModuleDiagnostic[] = [];
     for (const module of modules) {
         for (const reference of module.imports) {
+            if (reference.form === "dynamic-require" || reference.form === "shadowed-require") {
+                diagnostics.push({ code: reference.form === "dynamic-require" ? "dynamic-module-reference" : "shadowed-module-reference", specifier: reference.specifier, source: reference.source, reason: reference.form === "dynamic-require" ? "require argument is not one static string literal" : "require is used as a local binding or value; loader scope is not resolved" });
+                continue;
+            }
             const native = nativeMatches(module, reference) ?? languageMatches(module, modules, reference);
             const configured = configuredPaths(module, reference);
             const self = configured ?? selfPackage(module, reference);

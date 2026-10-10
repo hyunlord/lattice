@@ -1,3 +1,4 @@
+import { codeTypeLinks } from "./code-type-links.js";
 import type { Edge, NodeDraft } from "../core/model.js";
 import type { CodeModule } from "./code.js";
 
@@ -17,5 +18,5 @@ export function codeStructure(modules: readonly CodeModule[]): { readonly nodes:
             edges.push({ id: `contains:${module.node.id}:${id}`, kind: "contains", source: module.node.id, target: id, directed: true, field: provenance.pointer, attributes: { evidence: "static-declaration" }, sources: [provenance] });
         }
     }
-    return { nodes, edges };
+    return { nodes, edges: [...edges, ...codeTypeLinks(modules)] };
 }

@@ -9,6 +9,8 @@ export function verifyInit(cli, repository) {
   writeFileSync(join(repository, 'records.yaml'), '- id: service:yaml\n  name: YAML service\n');
   writeFileSync(join(repository, 'records.json'), '[{"id":"service:json","name":"JSON service"}]');
   writeFileSync(join(repository, 'owners.csv'), 'id,name\nowner:one,Owner\n');
+  writeFileSync(join(repository, 'editor.json'), '// JSONC configuration\n{\"enabled\":true}');
+  writeFileSync(join(repository, 'broken.json'), '{');
   writeFileSync(join(repository, 'README.md'), '# Repository map\n');
   writeFileSync(join(repository, 'main.ts'), 'export const service = 1;\n');
   writeFileSync(join(repository, 'unrelated.txt'), 'Keep this file byte-for-byte.\n');
@@ -32,9 +34,15 @@ export function verifyInit(cli, repository) {
   assert.equal(read('.lattice/lens.yaml'), lens);
   assert.equal(read('.lattice/.gitignore'), ignore);
   run(['build']); run(['check']); run(['export']);
+  const starter = JSON.parse(read('.lattice/site/graph.json'));
+  for (const id of ['document:README.md', 'module:main.ts']) assert.ok(starter.nodes.some(node => node.id === id), id);
+  assert.ok(!starter.inputs.some(input => /\.(json|yaml|csv)$/u.test(input.path)));
+  const mixed = lens.replace('kinds:\n', 'kinds:\n  - id: record\n    label: Records\n    files: [\"records.json\", \"records.yaml\", \"owners.csv\"]\n');
+  writeFileSync(join(repository, '.lattice/lens.yaml'), mixed);
+  run(['build']); run(['check']); run(['export']);
   const graph = JSON.parse(read('.lattice/site/graph.json'));
   for (const id of ['service:yaml', 'service:json', 'owner:one', 'document:README.md', 'module:main.ts']) assert.ok(graph.nodes.some(node => node.id === id), id);
-  const edited = lens.replace(/^name:.*$/mu, 'name: "Edited repository map"');
+  const edited = mixed.replace(/^name:.*$/mu, 'name: "Edited repository map"');
   writeFileSync(join(repository, '.lattice/lens.yaml'), edited);
   run(['init', '--no-global']);
   assert.equal(read('.lattice/lens.yaml'), edited);
@@ -46,5 +54,5 @@ export function verifyInit(cli, repository) {
   assert.match(ambiguous.stderr, /Multiple default lenses/u);
   assert.equal(read('.lattice/lens.yaml'), edited);
   assert.equal(read('.lattice/.gitignore'), ignore);
-  console.log('Installed init: usable mixed-source YAML lens, build/check/export, byte-stable repeat, edited lens and unrelated content preservation, ambiguous lens refusal passed.');
+  console.log('Installed init: safe code/document starter, explicit mixed-source YAML lens, build/check/export, byte-stable repeat, edited lens and unrelated content preservation, ambiguous lens refusal passed.');
 }
