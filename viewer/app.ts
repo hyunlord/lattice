@@ -100,15 +100,25 @@ function pageHeading(title: string, description?: string) {
     provenance.append(el('span', document.querySelector('meta[name="lattice-generation"]') ? '로컬 지도 · 파일 변경 시 자동 갱신' : '정적 내보내기 · 이후 변경은 재빌드 필요'));
     head.append(provenance); main.append(head); layerControl();
 }
+function automaticFindingText(finding: Finding): { label: string; message: string; } | undefined {
+    const count = finding.metrics['count'];
+    switch (finding.ruleId) {
+        case 'auto:highest-degree-hubs': return { label: '연결이 많은 항목', message: `이 층에서 연결이 있는 ${finding.metrics['numberOfHubs']}개 항목 중 연결 수가 많은 ${count}개입니다. 층 간 연결은 제외하며 같은 연결은 한 번만 셉니다.` };
+        case 'auto:isolated-nodes': return { label: '연결이 없는 항목', message: `이 층 안에서 연결이 없는 항목이 ${count}개입니다. 층 간 연결은 제외합니다.` };
+        case 'auto:broken-references': return { label: '확인되지 않은 참조', message: `이 층의 추출 범위에 해결되지 않았거나 모호하거나 잘못된 참조가 ${count}개 있습니다. 대상이 추출 범위 밖에 있을 수 있으므로 저장소 파일이 없다는 뜻은 아닙니다.` };
+        default: return undefined;
+    }
+}
 function findingView(finding: Finding, compact = false) {
     const article = el('article', undefined, 'finding');
     const head = el('div', undefined, 'finding-head');
     const severity = { error: '오류', warning: '주의', info: '정보' }[finding.severity] || finding.severity;
     head.append(el('span', severity, 'badge severity-' + finding.severity));
-    head.append(el('code', finding.ruleId));
+    const automatic = automaticFindingText(finding);
+    head.append(el('span', automatic?.label ?? finding.ruleId));
     const basis = { computed: '계산 결과', 'authored-interpretation': '렌즈 작성자의 해석', 'source-support': '정적 소스 근거' }[finding.basis] || finding.basis;
     head.append(el('span', basis, 'meta'));
-    article.append(head, el('p', finding.message));
+    article.append(head, el('p', automatic?.message ?? finding.message));
     if (finding.intent) article.append(el('p', '의도: ' + finding.intent));
     if (finding.implementation) article.append(el('p', '구현: ' + finding.implementation));
     if (finding.gate) article.append(el('p', '관문 ' + ({ pass: '통과', fail: '실패', unknown: '미확인' }[finding.gate.status]) + ' · ' + finding.gate.metric + ' ' + finding.gate.comparator + ' ' + finding.gate.threshold, 'gate-' + finding.gate.status));

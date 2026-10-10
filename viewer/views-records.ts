@@ -28,7 +28,7 @@ export function recordFilters(container: HTMLElement, context: ViewsContext, nod
 function relations(node: Node, context: ViewsContext, edgeKinds: readonly string[]): HTMLElement {
     const result = element('details', '', 'record-relations');
     const edges = (context.allEdges ?? context.edges).filter(edge => edgeKinds.includes(edge.kind) && (edge.source === node.id || edge.target === node.id));
-    result.open = true; result.append(element('summary', `주요 관계 · ${edges.length}`));
+    result.append(element('summary', `주요 관계 · ${edges.length}`));
     if (!edges.length) result.append(element('p', '이 종류의 관계 근거가 없습니다.', 'meta'));
     for (const edge of edges) {
         const other = edge.source === node.id ? edge.target : edge.source;
@@ -52,10 +52,24 @@ export function renderRecords(container: HTMLElement, context: ViewsContext, vie
         }
         container.append(controls);
     }
+    const sortColumns = view.columns.filter(column => column.role === 'badge' || column.role === 'status');
+    const sortColumn = view.type === 'gallery' ? sortColumns.find(column => context.params.get('sort') === 'column:' + column.id) : undefined;
+    if (view.type === 'gallery') {
+        const controls = element('div', '', 'filters'), label = element('label', '정렬 기준'), select = element('select'), name = element('option', '이름');
+        name.value = 'name'; select.append(name);
+        for (const column of sortColumns) { const option = element('option', column.label); option.value = 'column:' + column.id; select.append(option); }
+        select.name = 'sort'; select.value = sortColumn ? 'column:' + sortColumn.id : 'name';
+        select.onchange = () => { location.hash = viewRoute(context, { sort: select.value, page: '0' }); }; label.append(select); controls.append(label); container.append(controls);
+    }
     const rows = view.rows.filter(row => view.columns.every(column => !context.params.get('status-' + column.id) || context.params.get('status-' + column.id) === valueText(row.values[column.id]))).filter(row => { const node = nodes.get(row.nodeId); return (!kind || node?.kind === kind) && (!query || `${node?.name} ${row.nodeId} ${JSON.stringify(row.values)}`.toLocaleLowerCase().includes(query)); });
+    if (view.type === 'gallery') {
+        const collator = new Intl.Collator('ko', { numeric: true });
+        rows.sort((left, right) => (sortColumn ? collator.compare(valueText(left.values[sortColumn.id]), valueText(right.values[sortColumn.id])) : 0) || collator.compare(nodes.get(left.nodeId)?.name ?? left.nodeId, nodes.get(right.nodeId)?.name ?? right.nodeId) || collator.compare(left.nodeId, right.nodeId));
+    }
     container.append(element('p', `${rows.length} / ${view.rows.length}개`, 'meta'));
     if (!rows.length) { container.append(element('p', '필터에 맞는 항목이 없습니다. 검색어나 종류를 바꾸거나 필터를 초기화하세요.', 'empty')); return; }
-    const page = pageNumber(context.params.get('page'), rows.length, 24), visible = rows.slice(page * 24, (page + 1) * 24);
+    const size = view.type === 'gallery' ? 8 : 24;
+    const page = pageNumber(context.params.get('page'), rows.length, size), visible = rows.slice(page * size, (page + 1) * size);
     if (view.type === 'gallery') {
         const cards = element('div', '', 'record-gallery');
         for (const row of visible) {
@@ -76,5 +90,5 @@ export function renderRecords(container: HTMLElement, context: ViewsContext, vie
         }
         table.append(body); container.append(region(table, '상태와 근거 표'));
     }
-    paging(container, context, { total: rows.length, size: 24, key: 'page' });
+    paging(container, context, { total: rows.length, size, key: 'page' });
 }

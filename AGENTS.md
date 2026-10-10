@@ -14,3 +14,7 @@ Build the complete [v0.1 brief](docs/design/brief-v0.1.md) in L0 → L1 → L2 �
 - Run meaningful tests, formatting, typecheck, and CI before merging. Visually exercise the real viewer; stdio probes alone do not prove agent integration.
 - Report each milestone in Korean, first line `관문: 통과/실패/부분 — ...`, at most ten summary lines plus commit/PR/CI links. At L2 completion put the working bs-mobile Pages link first. Never call L2 complete while the URL is unavailable.
 - No evidence ZIPs/CRCs/receipts. Use source, concise reports, CI logs, screenshot artifacts, and direct links.
+
+## Maintenance mode after L6
+
+The user has closed feature development after the final human-view polish. Maintain automatic consumer map rebuilds and PR system-difference comments. Open an issue when a consumer lens cannot interpret new source data; do not proactively add new feature stages or performance PRs. Performance work requires a reproducible warm response over one second or full build over ten seconds.

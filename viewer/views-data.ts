@@ -19,10 +19,12 @@ export function renderTable(container: HTMLElement, context: ViewsContext, view:
 }
 export function renderCycle(container: HTMLElement, context: ViewsContext, view: Extract<ViewProjection, { type: 'cycle' | 'graph'; }>): () => void {
     if (view.type === 'graph') {
-        const label = element('label', '중심 노드'), focus = element('select'); const any = element('option', '전체 노드'); any.value = ''; focus.append(any);
+        const label = element('label', '중심 노드'), focus = element('select'); const any = element('option', '중심 노드를 선택하세요'); any.value = ''; focus.append(any);
         for (const node of view.nodes) { const option = element('option', node.name); option.value = node.id; focus.append(option); } focus.name = 'focus'; focus.setAttribute('aria-label', '중심 노드'); focus.value = context.params.get('focus') ?? '';
         focus.onchange = () => { location.hash = viewRoute(context, { focus: focus.value, page: '0' }); }; label.append(focus); container.append(label);
-        const id = context.params.get('focus'); if (id && view.nodes.some(node => node.id === id)) { const edges = view.edges.filter(edge => edge.source === id || edge.target === id), ids = new Set([id, ...edges.flatMap(edge => [edge.source, edge.target])]); view = { ...view, nodes: view.nodes.filter(node => ids.has(node.id)), edges }; }
+        const id = context.params.get('focus');
+        if (!id || !view.nodes.some(node => node.id === id)) { focus.value = ''; container.append(element('p', '중심 노드를 고르면 직접 연결된 노드와 관계를 표시합니다.', 'empty')); return () => { }; }
+        const edges = view.edges.filter(edge => edge.source === id || edge.target === id), ids = new Set([id, ...edges.flatMap(edge => [edge.source, edge.target])]); view = { ...view, nodes: view.nodes.filter(node => ids.has(node.id)), edges };
     }
     const page = pageNumber(context.params.get('page'), view.nodes.length, 50); const nodes = view.nodes.slice(page * 50, (page + 1) * 50); const ids = new Set(nodes.map(node => node.id)); const edges = view.edges.filter(edge => ids.has(edge.source) && ids.has(edge.target));
     container.append(element('p', `쿼리 노드 ${view.nodes.length}개 · 관계 ${view.edges.length}개. 지도에는 현재 페이지 노드 ${nodes.length}개와 그 사이 관계 ${edges.length}개를 표시합니다. 모든 관계는 아래 근거 목록에서 확인할 수 있습니다. 닫힌 순환의 존재를 가정하지 않습니다.`, 'meta'));

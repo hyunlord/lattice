@@ -69,3 +69,5 @@ Borders-only depth. One-pixel separators, flat surfaces, no shadows. Selected ro
 ## Human reading views
 
 Gallery cards use the existing flat panel, 16px padding, 16px gaps and a minimum 256px (`--card-min-width`) column. Their title is the primary node link; labeled summary, badge and status fields are lens data, never inferred from domain IDs. Status remains text, including absent evidence. Matrix explanations wrap in 256px (`--matrix-text-width`) cells; the first column and header stay sticky within the scroll region. A target selector reduces dense matrices to one destination. Individual graph views default to a selected node and its neighborhood, with full names in a parallel accessible list. Curated home links precede findings. Detail summaries and named relationships precede raw attribute disclosure; provenance remains accessible.
+
+Final human-view polish uses the same tokens and DOM components: galleries show eight records per page, default to collapsed relationship evidence, and sort by name or lens badge/status fields. Individual graphs require a selected center. Grouped sentence matrices show member names without changing graph topology.
