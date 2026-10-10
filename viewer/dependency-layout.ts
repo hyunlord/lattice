@@ -24,7 +24,7 @@ export function dependencyView(model: LoopMap, ids: readonly string[]): Dependen
         const related = (direction: 'incoming' | 'outgoing') => flows.filter(flow => (direction === 'incoming' ? flow.target : flow.source) === stage.id).map(flow => ({ name: stageById.get(direction === 'incoming' ? flow.source : flow.target)?.title ?? '', description: dependencyFlowDescription(flow) }));
         return { ...stage, nodeIds, groups: [{ title: '모듈', items: nodeIds.map(id => ({ id })) }], incoming: related('incoming'), outgoing: related('outgoing') };
     });
-    const actualCycles = originalDependencyCycles(model.flows).map(cycle => [...new Set(cycle.flatMap(id => ancestor(id) ?? []))]).filter(cycle => cycle.length > 1);
+    const actualCycles = (model.verifiedCycleStageGroups ?? []).map(cycle => [...new Set(cycle.flatMap(id => ancestor(id) ?? []))]).filter(cycle => cycle.length > 1);
     return { stages: effective, flows: flows.filter(flow => ids.includes(flow.source) && ids.includes(flow.target)), actualCycles };
 }
 
@@ -62,7 +62,7 @@ export function dependencyLevels(view: DependencyView): readonly { readonly stag
     const assigned = new Set<string>(); const groups = view.stages.flatMap(stage => {
         if (assigned.has(stage.id)) return [];
         const stages = view.stages.filter(other => other.id === stage.id || reaches(stage.id, other.id) && reaches(other.id, stage.id)); stages.forEach(other => assigned.add(other.id));
-        const cyclic = stages.length > 1 && (view.actualCycles === undefined || view.actualCycles.some(cycle => stages.every(stage => cycle.includes(stage.id))));
+        const cyclic = stages.length > 1 && (view.actualCycles?.some(cycle => stages.every(stage => cycle.includes(stage.id))) ?? false);
         return [{ stages, cyclic, foldedCycle: stages.length > 1 && !cyclic, level: 0 }];
     });
     const owner = (id: string) => groups.findIndex(group => group.stages.some(stage => stage.id === id));
@@ -80,6 +80,14 @@ export function displayedDependencyFlows(view: DependencyView, selected: string 
 export function dependencyBandHeight(flowCount: number, width: number, rowHeight = 48): number {
     const columns = Math.max(1, Math.floor((width - 48) / 240));
     return flowCount ? 40 + Math.ceil(flowCount / columns) * rowHeight : 32;
+}
+
+export function factoredTitle(title: string, titles: readonly string[]): { readonly prefix: string; readonly name: string; } {
+    const parts = title.split('/'), leaf = parts.at(-1) ?? title;
+    if (leaf.length <= 24) return { prefix: '', name: title };
+    const candidates = [...leaf.matchAll(/\./g)].map(match => leaf.slice(0, (match.index ?? 0) + 1)).reverse();
+    const prefix = candidates.find(value => titles.some(other => other !== title && (other.split('/').at(-1) ?? other).startsWith(value)));
+    return prefix ? { prefix: [...parts.slice(0, -1), prefix].join('/'), name: leaf.slice(prefix.length) } : { prefix: '', name: title };
 }
 
 export function sharedFolderPrefix(paths: readonly string[]): string {
@@ -124,19 +132,4 @@ export function dependencyFlowDescription(flow: LoopFlow): string {
     const project = new Set(flow.projectSourceFiles ?? []), files = flow.sourceFiles ?? [];
     const names = (values: readonly string[]) => values.map(file => file.split('/').at(-1)).join(', ');
     return project.size ? `${files.length - project.size}개 파일이 사용: ${names(files.filter(file => !project.has(file)))} · 프로젝트 공통 선언 ${project.size}개: ${names([...project])} (프로젝트 전체 범위)` : `${flow.count ?? files.length}개 파일이 사용: ${names(files)}`;
-}
-function originalDependencyCycles(flows: readonly LoopFlow[]): readonly (readonly string[])[] {
-    const neighbors = new Map<string, string[]>();
-    for (const flow of flows) { const targets = neighbors.get(flow.source) ?? []; targets.push(flow.target); neighbors.set(flow.source, targets); if (!neighbors.has(flow.target)) neighbors.set(flow.target, []); }
-    const indices = new Map<string, number>(), low = new Map<string, number>(), stack: string[] = [], active = new Set<string>(), cycles: string[][] = []; let next = 0;
-    const visit = (id: string): void => {
-        indices.set(id, next); low.set(id, next++); stack.push(id); active.add(id);
-        for (const target of neighbors.get(id) ?? []) { if (!indices.has(target)) { visit(target); low.set(id, Math.min(low.get(id) ?? 0, low.get(target) ?? 0)); } else if (active.has(target)) low.set(id, Math.min(low.get(id) ?? 0, indices.get(target) ?? 0)); }
-        if (low.get(id) !== indices.get(id)) return;
-        const cycle: string[] = []; let member: string | undefined;
-        do { member = stack.pop(); if (member !== undefined) { active.delete(member); cycle.push(member); } } while (member !== id && member !== undefined);
-        if (cycle.length > 1) cycles.push(cycle);
-    };
-    for (const id of neighbors.keys()) if (!indices.has(id)) visit(id);
-    return cycles;
 }

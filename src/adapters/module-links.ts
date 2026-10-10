@@ -1,3 +1,4 @@
+import { typeScriptPathsResolver } from "./tsconfig-links.js";
 import { selfPackageResolver } from "./self-package-links.js";
 import type { ExtractedRecord } from "./types.js";
 import { canonicalJson } from "../core/canonical.js";
@@ -8,7 +9,7 @@ import { nativeResolver } from "./native-links.js";
 import { codeLanguage } from "./code.js";
 import type { CodeModule, ModuleImport } from "./code.js";
 
-export type ModuleDiagnostic = { readonly code: "external-or-unresolved-module" | "unresolved-local-module" | "ambiguous-module"; readonly specifier: string; readonly source: Source; readonly reason?: string; readonly evidence?: readonly Source[]; };
+export type ModuleDiagnostic = { readonly code: "external-or-unresolved-module" | "unresolved-local-module" | "ambiguous-module" | "unresolved-configuration"; readonly specifier: string; readonly source: Source; readonly reason?: string; readonly evidence?: readonly Source[]; };
 function normalize(path: string): string | undefined {
     const parts: string[] = [];
     for (const part of path.split("/")) {
@@ -44,6 +45,7 @@ function candidates(module: CodeModule, reference: ModuleImport): readonly (read
 export function resolveModuleLinks(modules: readonly CodeModule[], metadata: readonly ExtractedRecord[] = []): { readonly nodes: readonly NodeDraft[]; readonly membershipEdges: readonly Edge[]; readonly edges: readonly Edge[]; readonly diagnostics: readonly ModuleDiagnostic[]; } {
     const nativeMatches = nativeResolver(modules);
     const selfPackage = selfPackageResolver(modules, metadata);
+    const configuredPaths = typeScriptPathsResolver(modules, metadata);
     const paths = new Map(modules.map(module => [module.node.sources[0]?.path, module.node.id]));
     const edges: Edge[] = [];
     const packages = new Map<string, NodeDraft>();
@@ -52,7 +54,8 @@ export function resolveModuleLinks(modules: readonly CodeModule[], metadata: rea
     for (const module of modules) {
         for (const reference of module.imports) {
             const native = nativeMatches(module, reference) ?? languageMatches(module, modules, reference);
-            const self = selfPackage(module, reference);
+            const configured = configuredPaths(module, reference);
+            const self = configured ?? selfPackage(module, reference);
             const possible = self ? [self.paths] : native ? [native.paths] : candidates(module, reference);
             const matches = possible.map(group => [...new Set(group.filter(path => paths.has(path)))]).find(group => group.length > 0) ?? [];
             if (matches.length === 1 || (matches.length > 1 && native?.multiple)) {
@@ -62,7 +65,7 @@ export function resolveModuleLinks(modules: readonly CodeModule[], metadata: rea
                     if (target === undefined) continue;
                     edges.push({ id: `import:${canonicalJson([module.node.id, target, reference.source.pointer])}`, kind: "imports", source: module.node.id, target, directed: true, field: reference.source.pointer, sources: [reference.source, ...(self?.sources ?? [])], attributes: { specifier: reference.specifier, ...(reference.importScope ? { importScope: reference.importScope } : {}), ...(reference.form ? { importForm: reference.form } : {}), ...(reference.member ? { member: reference.member } : {}) } });
                 }
-            } else diagnostics.push({ code: matches.length > 1 ? "ambiguous-module" : (self !== undefined || reference.specifier.startsWith(".") || reference.form?.startsWith("mod") || reference.form === "script-path" || /^(?:crate|self|super)::/u.test(reference.specifier)) ? "unresolved-local-module" : "external-or-unresolved-module", specifier: reference.specifier, source: reference.source, ...(self ? { reason: self.reason, evidence: self.sources } : {}) });
+            } else diagnostics.push({ code: configured?.diagnosticCode ?? (matches.length > 1 ? "ambiguous-module" : (self !== undefined || reference.specifier.startsWith(".") || reference.form?.startsWith("mod") || reference.form === "script-path" || /^(?:crate|self|super)::/u.test(reference.specifier)) ? "unresolved-local-module" : "external-or-unresolved-module"), specifier: reference.specifier, source: reference.source, ...(self ? { reason: self.reason, evidence: self.sources } : {}) });
         }
     }
     const nodes = [...packages.values()].sort((a, b) => a.id.localeCompare(b.id));

@@ -66,8 +66,8 @@ test('structural focus prefers production code over a busier test module', () =>
 test('repository namespace metadata labels logical groups without changing identity', () => {
     const m = buildLoopMap([node('Acme.Logging', 'package', { category: 'namespace', scope: 'repository', directories: ['one', 'two'], packageName: 'Acme.Logging' })], [], [], { kinds: [] }, 'example');
     assert.equal(m.nodes[0].kind, 'package');
-    assert.equal(m.nodes[0].kindLabel, '내부 네임스페이스');
-    assert.equal(m.stages.find(s => s.nodeIds.includes('Acme.Logging')).title, '내부 네임스페이스 Acme.Logging');
+    assert.equal(m.nodes[0].kindLabel, '저장소 네임스페이스');
+    assert.equal(m.stages.find(s => s.nodeIds.includes('Acme.Logging')).title, '저장소 네임스페이스 Acme.Logging');
     assert.equal(m.stages.find(s => s.nodeIds.includes('Acme.Logging')).id, 'folder:패키지 Acme.Logging');
     assert.equal(m.nodes[0].name, 'Acme.Logging');
 });

@@ -15,7 +15,7 @@ test('folded dependency counts distinct importing files and excludes visible des
 test('dependency layering condenses actual cycles without treating unrelated siblings as a ring', () => {
     const stages = ['app', 'api', 'core', 'util'].map(id => stage(id));
     const flows = [{ source: 'app', target: 'api' }, { source: 'api', target: 'core' }, { source: 'core', target: 'api' }, { source: 'core', target: 'util' }];
-    const layers = dependencyLevels({ stages, flows });
+    const layers = dependencyLevels({ stages, flows, actualCycles: [['api', 'core']] });
     assert.deepEqual(layers.map(g => [g.stages.map(s => s.id), g.level, g.cyclic]), [[['app'], 0, false], [['api', 'core'], 1, true], [['util'], 2, false]]);
 });
 test('orthogonal dependency route goes around labels and boxes instead of crossing them', () => {
@@ -90,7 +90,7 @@ test('folding independent one-way imports does not claim an original cycle', () 
     const flows = [{ source: 'a/x', target: 'b/x', sourceFiles: ['a/x.ts'] }, { source: 'b/y', target: 'a/y', sourceFiles: ['b/y.ts'] }];
     const folded = dependencyLevels(dependencyView({ stages, flows }, ['a', 'b']));
     assert.equal(folded[0].cyclic, false); assert.equal(folded[0].foldedCycle, true);
-    const actual = dependencyLevels(dependencyView({ stages, flows: [...flows, { source: 'b/x', target: 'a/x', sourceFiles: ['b/x.ts'] }] }, ['a', 'b']));
+    const actual = dependencyLevels(dependencyView({ stages, verifiedCycleStageGroups: [['a/x', 'b/x']], flows: [...flows, { source: 'b/x', target: 'a/x', sourceFiles: ['b/x.ts'] }] }, ['a', 'b']));
     assert.equal(actual[0].cyclic, true); assert.equal(actual[0].foldedCycle, false);
 });
 test('project-wide declarations remain distinct from importing files after folding', () => {
@@ -112,4 +112,30 @@ test('shared folder prefixes stop at the first distinct path segment', async () 
     assert.equal(sharedFolderPrefix(['src/alpha/shared/a', 'src/beta/shared/b']), 'src');
     assert.equal(sharedFolderPrefix(['src/only']), '');
     assert.ok(dependencyBandHeight(0, 1100) >= 32, 'a skipped-level target port needs a free corridor');
+});
+
+test('long dotted components factor only a shared visible semantic prefix', async () => {
+    const { factoredTitle } = await import('../viewer/dependency-layout.js');
+    const paths = ['src/Library.Tests.Benchmarks', 'src/Library.DependencyInjectionExtensions', 'src/Library'];
+    assert.deepEqual(factoredTitle(paths[1], paths), { prefix: 'src/Library.', name: 'DependencyInjectionExtensions' });
+    assert.deepEqual(factoredTitle('src/UniqueVeryLongUnbrokenComponent', paths), { prefix: '', name: 'src/UniqueVeryLongUnbrokenComponent' });
+    assert.deepEqual(factoredTitle('package.json', ['package.json', 'package.lock']), { prefix: '', name: 'package.json' });
+});
+test('dense focused positions use visible dependencies without manufacturing cycles', async () => {
+    const { displayedDependencyFlows } = await import('../viewer/dependency-layout.js');
+    const stages = ['app', 'middle', 'base', 'leaf'].map(id => stage(id));
+    const flows = [{ source: 'app', target: 'middle' }, { source: 'middle', target: 'base' }, { source: 'base', target: 'leaf' }, { source: 'app', target: 'leaf' }, ...Array.from({ length: 9 }, () => ({ source: 'middle', target: 'base' }))];
+    const view = { stages, flows, actualCycles: [] };
+    const focused = dependencyLevels({ ...view, flows: displayedDependencyFlows(view, 'app', false) });
+    assert.equal(Math.max(...focused.map(group => group.level)), 1);
+    assert.ok(focused.every(group => !group.cyclic));
+    assert.equal(Math.max(...dependencyLevels(view).map(group => group.level)), 3);
+});
+
+test('folder SCCs without file-level proof never claim a verified file cycle', () => {
+    const stages = ['src', 'src/vanilla'].map(id => stage(id));
+    const flows = [{ source: 'src', target: 'src/vanilla' }, { source: 'src/vanilla', target: 'src' }];
+    for (const view of [{ stages, flows }, dependencyView({ stages, flows }, stages.map(item => item.id))]) {
+        const group = dependencyLevels(view)[0]; assert.equal(group.cyclic, false); assert.equal(group.foldedCycle, true);
+    }
 });

@@ -28,3 +28,5 @@ export type { GraftImport, GraftDiagnostic } from "./adapters/graft.js";
 export { automaticFindings } from "./core/automatic-findings.js";
 export type { AutomaticDiagnostic } from "./core/automatic-findings.js";
 export { codeStructure } from "./adapters/code-structure.js";
+
+export { extractTypeScriptConfig, typeScriptConfigPaths } from "./adapters/typescript-config.js";

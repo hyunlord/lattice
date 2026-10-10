@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { buildStructuralMap, structuralSummary } from '../dist/query/structural-map-model.js';
+import { buildStructuralMap, structuralSummary, productionSource } from '../dist/query/structural-map-model.js';
 const node = (id, path, attributes = {}, kind = 'module') => ({ id, kind, name: path, attributes, contentHash: 'h', sources: [{ path, line: 1, pointer: '', contentHash: 'h' }] });
 const edge = (id, source, target) => ({ id, source, target, kind: 'imports', directed: true, field: '', sources: [] });
 test('package dependency counts importing files rather than package members or duplicate statements', () => {
@@ -104,4 +104,68 @@ test('project-wide import declarations remain separate from local import evidenc
     assert.equal(model.flows[0].count, 2);
     assert.deepEqual(model.flows[0].projectSourceFiles, ['src/GlobalUsings.cs']);
     assert.equal(model.flows[0].label, '1개 파일 사용 · 프로젝트 선언 1개');
+});
+
+test('repository introduction prefers the root README over the GitHub fallback', () => {
+    const github = node('github', '.github/README.md', { sourceDescription: { kind: 'readme', text: 'GitHub introduction.', line: 9 } }, 'document');
+    const root = node('readme', 'README.md', { sourceDescription: { kind: 'readme', text: 'Root introduction.', line: 3 } }, 'document');
+    assert.equal(structuralSummary([], [github, root], '.'), 'Root introduction.');
+    assert.equal(structuralSummary([], [github], '.'), 'GitHub introduction.');
+    assert.equal(structuralSummary([], [{ ...root, attributes: { sourceDescription: { kind: 'readme', text: '   ' } } }, github], '.'), 'GitHub introduction.');
+});
+test('GitHub README fallback retains its exact evidence without borrowing nested project prose', () => {
+    const github = node('github', '.github/README.md', { sourceDescription: { kind: 'readme', text: 'Repository introduction.', line: 9 } }, 'document');
+    const nested = node('nested', 'packages/component/README.md', { sourceDescription: { kind: 'readme', text: 'Component introduction.', line: 5 } }, 'document');
+    const model = buildStructuralMap([node('root', 'main.cs'), node('assembly', 'src/CommonAssemblyInfo.cs'), github, nested], []);
+    const root = model.stages.find(s => s.id === 'folder:.');
+    assert.equal(root.summary, 'Repository introduction.');
+    assert.deepEqual(root.summaryEvidence, [{ path: '.github/README.md', line: 9 }]);
+    assert.equal(model.stages.find(s => s.id === 'folder:src').summary, '');
+    assert.equal(structuralSummary([], [nested], '.'), '');
+});
+
+test('cheap folds elsewhere preserve a connected child under a deeper parent', () => {
+    const nodes = [node('root', 'main.ts'), node('app', 'src/app/index.ts'), node('api', 'src/app/api/index.ts'), node('core', 'src/app/core/index.ts'), node('docs', 'docs/index.ts'), node('tests', 'tests/index.ts'), ...Array.from({ length: 5 }, (_, i) => node(`peer${i}`, `other/peer${i}/index.ts`))];
+    const edges = [edge('a', 'app', 'api'), edge('b', 'app', 'core'), ...Array.from({ length: 5 }, (_, i) => edge(`p${i}`, `peer${i}`, 'core'))];
+    const model = buildStructuralMap(nodes, edges);
+    assert.equal(model.rootStageIds.length, 9);
+    assert(model.rootStageIds.includes('folder:src/app/core'));
+    assert(model.rootStageIds.includes('folder:src/app/api'));
+    assert.equal(model.flows.length, edges.length);
+    const covered = model.stages.filter(s => model.rootStageIds.includes(s.id)).flatMap(s => s.descendantNodeIds);
+    assert.deepEqual(new Set(covered), new Set(nodes.map(n => n.id)));
+});
+
+test('folder bidirectionality through separate barrel files is not a verified file cycle', () => {
+    const nodes = [node('entry', 'src/index.ts'), node('core', 'src/core.ts'), node('leaf', 'src/child/index.ts')];
+    const model = buildStructuralMap(nodes, [edge('export', 'entry', 'leaf'), edge('use', 'leaf', 'core')]);
+    assert.equal(model.flows.length, 2);
+    assert.deepEqual(model.verifiedCycleStageGroups, []);
+});
+test('verified cycles require original file import edges rather than namespace or project declarations', () => {
+    const nodes = [node('a', 'app/a.ts'), node('b', 'lib/b.ts'), node('global', 'config/Global.cs'), node('pkg', 'lib/b.ts', { directories: ['lib'] }, 'package')];
+    const model = buildStructuralMap(nodes, [edge('a', 'a', 'b'), edge('b', 'b', 'a'), edge('pkg', 'global', 'pkg'), edge('reverse', 'pkg', 'global'), { ...edge('project', 'global', 'a'), attributes: { importScope: 'project' } }, edge('local', 'a', 'global')]);
+    assert.deepEqual(model.verifiedCycleStageGroups, [['folder:app', 'folder:lib']]);
+});
+
+
+test('auxiliary folder roles match exact separated tokens without excluding their dependencies', () => {
+    for (const path of ['src/Library.Tests/A.cs', 'src/Library_Benchmarks/A.cs', 'src/library-examples/demo/A.cs']) assert.equal(productionSource(path), false);
+    for (const path of ['src/Contest/A.cs', 'src/Latest/A.cs', 'src/Testament/A.cs', 'src/testing-support/A.cs']) assert.equal(productionSource(path), true);
+    const nodes = [node('app', 'src/Library/App.cs'), node('base', 'src/Foundation/Base.cs'), node('tests', 'src/Library.Tests/Test.cs'), node('nested', 'src/Library.Tests/nested/Test.cs')];
+    const edges = [edge('prod', 'app', 'base'), edge('test', 'tests', 'app'), edge('nested', 'nested', 'base')];
+    const model = buildStructuralMap(nodes, edges);
+    assert.equal(model.rootStageIds.includes('folder:src/Library.Tests/nested'), false);
+    assert(model.rootStageIds.includes('folder:src/Library.Tests'));
+    assert.notEqual(model.defaultStage, 'folder:src/Library.Tests');
+    assert.equal(model.flows.length, edges.length);
+    assert.equal(model.stages.find(s => s.id === 'folder:src/Library.Tests').descendantNodeIds.length, 2);
+});
+
+
+test('production default does not inherit a folded test subtree popularity', () => {
+    const nodes = [node('assembly', 'src/CommonAssemblyInfo.cs'), node('app', 'src/App/main.cs'), node('base', 'src/Base/base.cs'), ...Array.from({ length: 12 }, (_, i) => node(`test${i}`, `src/Project${i}.Tests/test.cs`))];
+    const model = buildStructuralMap(nodes, [edge('prod', 'app', 'base'), ...Array.from({ length: 12 }, (_, i) => edge(`test${i}`, `test${i}`, 'app'))]);
+    assert.equal(model.defaultStage, 'folder:src/App');
+    assert.equal(model.flows.length, 13);
 });

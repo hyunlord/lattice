@@ -95,7 +95,7 @@ export function sourceDescription(text: string, language: string): JsonObject | 
         const directive = (part: string): boolean => /^(?:eslint-(?:disable|enable)|@ts-(?:check|nocheck|ignore|expect-error)|prettier-ignore|biome-ignore|ruff:|pylint:|nolint\b|go:|ReSharper\s+(?:disable|restore)|noinspection\b)/iu.test(part.trim()) || (/^(?:import |from |using )/u.test(next) && /^(?:types?\s+only|type-only(?:\s+imports?)?|imports?\s+only)[!.\s]*$/iu.test(part.trim()));
         const prose = parts.map((part, index) => ({ part, index })).filter(({ part, index }) => !directive(part) && !/^\s*[-=]{3,}\s*$/u.test(part) && !/^\s*[-=]{3,}\s*$/u.test(parts[index + 1] ?? ""));
         const content = prose.map(value => value.part).join(" ");
-        if (!descriptiveProse(content) || /automatically generated|code generated|^go:build/iu.test(content)) continue;
+        if (!descriptiveProse(content)) continue;
         const summary = sentence(content);
         const filteredDirective = parts.some(directive);
         const substantive = prose.filter(value => value.part.trim());

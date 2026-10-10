@@ -98,7 +98,7 @@ export function extractMarkdown(input: SourceInput): MarkdownDocument {
         const body = visible.slice(heading.endLine, next === undefined ? visible.length : next.line - 1).filter((_, offset) => !definitionLines.has(heading.endLine + offset)).join("\n").trim();
         if (body !== "") metadata[key] = body;
     }
-    const documentDescription = markdownDescription(visible, 0, headings.find(heading => heading.level > 1)?.line ?? visible.length);
+    const documentDescription = markdownDescription(visible, 0, headings.find(heading => heading.level > 1)?.line ?? visible.length, /(?:^|\/)readme(?:\.[^/]*)?$/iu.test(input.path) ? input.path.split("/").at(-2) : undefined);
     const nodes: NodeDraft[] = [{ id: documentId, kind: "document", name: title, attributes: { ...metadata, ...(documentDescription ? { sourceDescription: documentDescription } : {}) }, sources: [makeSource(input, "", 1, lines.length)] }];
     const edges: Edge[] = [];
     const usedAnchors = new Set<string>();

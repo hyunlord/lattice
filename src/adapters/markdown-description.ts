@@ -4,11 +4,12 @@ import { maskMarkdownImages } from "./markdown-images.js";
 import { plain } from "./markdown-inline.js";
 
 /** visible lines already exclude fenced code and HTML comments. */
-export function markdownDescription(sourceLines: readonly string[], start: number, end: number): JsonObject | undefined {
+export function markdownDescription(sourceLines: readonly string[], start: number, end: number, preferredName?: string): JsonObject | undefined {
     const lineOffset = start;
     const lines = maskMarkdownImages(sourceLines.slice(start, end + 1).join("\n")).split("\n");
     end -= start;
     start = 0;
+    let fallback: JsonObject | undefined;
     let htmlDepth = 0;
     let marketingDepth = 0;
     let notice = false;
@@ -52,10 +53,15 @@ export function markdownDescription(sourceLines: readonly string[], start: numbe
             parts.push(next); last++;
         }
         index = last;
-        const content = plain(parts.join(" ")).replace(/<[^>]*>/gu, " ").replace(/\s+/gu, " ").trim();
+        const rawParagraph = parts.join(" ");
+        const navigation = rawParagraph.replace(/\[[^\]]*\]\([^)]*\)/gu, " ").replace(/`[^`]*`/gu, " ").replace(/https?:\/\/\S+/gu, " ").trim();
+        if (/^(?:visit|see|read|install|installation|download|run|get started)\b/iu.test(rawParagraph) && /^(?:(?:visit|see|read|install|installation|download|run|get started|with|via|using|or|and|at|the|documentation|docs|website|homepage)\b[\s:.,!-]*)+$/iu.test(navigation)) continue;
+        const content = plain(rawParagraph).replace(/<[^>]*>/gu, " ").replace(/\s+/gu, " ").trim();
         if (!descriptiveProse(content)) continue;
         const text = (/^.*?[.!?](?:\s|$)/u.exec(content)?.[0] ?? content).trim().slice(0, 320);
-        return { text, kind: "readme", line: lineOffset + first + 1, endLine: lineOffset + last + 1 };
+        const result = { text, kind: "readme", line: lineOffset + first + 1, endLine: lineOffset + last + 1 };
+        if (!preferredName || content.toLowerCase().split(/[^\p{L}\p{N}_.-]+/u).includes(preferredName.toLowerCase())) return result;
+        fallback ??= result;
     }
-    return undefined;
+    return fallback;
 }

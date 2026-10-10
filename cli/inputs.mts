@@ -3,7 +3,7 @@ import type { Selection, SelectedInput, SourceLink } from './types.mjs';
 import type { extractionCache } from './extraction-cache.mjs';
 import { parseRecords, parseDocument, parseModule } from './decode.mjs';
 import { isAbsolute, relative, sep } from 'node:path';
-import { extractJson, extractYaml, extractCsv, extractMarkdown, extractCode, codeLanguage, DataInputError } from '../dist/index.js';
+import { extractTypeScriptConfig, typeScriptConfigPaths, extractJson, extractYaml, extractCsv, extractMarkdown, extractCode, codeLanguage, DataInputError } from '../dist/index.js';
 import { createGlobMatcher, matchesGlob } from '../dist/lens/index.js';
 
 function isRecordValue(value: JsonValue): value is JsonObject {
@@ -44,15 +44,17 @@ export function collectInputs({ selected, lens, sourceLink, cache }: { readonly 
     const records: ExtractedRecord[] = [], documents: MarkdownDocument[] = [], modules: CodeModule[] = [], files: NodeDraft[] = [], inputs: InputDigest[] = [];
     const diagnostics: { code: string; path: string; line: number; message: string; }[] = [];
     const roots = new Map<string, readonly ExtractedRecord[]>();
+    const configPaths = typeScriptConfigPaths(selected.filter(selection => selection.format === 'json').map(selection => selection.input));
     for (const { input, kind, format } of selected) {
         const { path } = input;
+        const parserFormat = format === 'json' && configPaths.has(path) ? 'typescript-config' : format;
         inputs.push({ path, contentHash: input.contentHash });
         let namespace: string | undefined, namespaceSource: Source | undefined;
         if (kind?.namespaceFrom !== undefined) {
             const pointer = kind.namespaceFrom;
             if (!['json', 'yaml', 'yml'].includes(format) || !pointer.startsWith('/') || /~(?:[^01]|$)/u.test(pointer)) throw new Error(`namespaceFrom requires a JSON/YAML root pointer: ${path}`);
-            const rootKey = `${path}:${input.contentHash}:${format}`;
-            if (!roots.has(rootKey)) roots.set(rootKey, cache.extract(input, { format, selector: '' }, () => format === 'json' ? extractJson(input) : extractYaml(input), parseRecords));
+            const rootKey = `${path}:${input.contentHash}:${parserFormat}`;
+            if (!roots.has(rootKey)) roots.set(rootKey, cache.extract(input, { format: parserFormat, selector: '' }, () => format === 'json' ? configPaths.has(path) ? extractTypeScriptConfig(input) : extractJson(input) : extractYaml(input), parseRecords));
             const root = roots.get(rootKey);
             const first = root?.[0];
             if (!first || root?.length !== 1 || first.node.sources[0]?.pointer !== '') throw new Error(`namespaceFrom requires a single root mapping: ${path}`);
@@ -66,7 +68,7 @@ export function collectInputs({ selected, lens, sourceLink, cache }: { readonly 
             namespaceSource = first.fields[pointer];
             if (!namespaceSource) throw new Error(`Missing namespace source: ${path}${pointer}`);
         }
-        const extract = <T,>(parse: () => T, decode: (value: unknown) => T) => cache.extract(input, { format, selector: ['json', 'yaml', 'yml'].includes(format) ? kind?.records ?? '' : '' }, parse, decode);
+        const extract = <T,>(parse: () => T, decode: (value: unknown) => T) => cache.extract(input, { format: parserFormat, selector: ['json', 'yaml', 'yml'].includes(format) ? kind?.records ?? '' : '' }, parse, decode);
         if (format === 'code') {
             const module = extract(() => extractCode(input), parseModule);
             modules.push({ ...module, node: { ...module.node, sources: module.node.sources.map(sourceLink) }, imports: module.imports.map(reference => ({ ...reference, source: sourceLink(reference.source) })) });
@@ -83,7 +85,7 @@ export function collectInputs({ selected, lens, sourceLink, cache }: { readonly 
         }
         let extracted: readonly ExtractedRecord[];
         try {
-            extracted = extract(() => format === 'csv' ? extractCsv(input) : ['yaml', 'yml'].includes(format) ? extractYaml(input, kind?.records ?? '') : extractJson(input, kind?.records ?? ''), parseRecords);
+            extracted = extract(() => format === 'csv' ? extractCsv(input) : ['yaml', 'yml'].includes(format) ? extractYaml(input, kind?.records ?? '') : configPaths.has(path) ? extractTypeScriptConfig(input, kind?.records ?? '') : extractJson(input, kind?.records ?? ''), parseRecords);
         } catch (error) {
             if (lens || !(error instanceof DataInputError)) throw error;
             diagnostics.push({ code: 'unparsed-file', path, line: error.line, message: error.reason });
