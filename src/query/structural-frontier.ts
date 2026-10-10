@@ -55,7 +55,7 @@ export function structuralFrontier(input: readonly LoopStage[], flows: readonly 
         const prefix = common && !scopePaths.includes(common) ? common + '/' : '';
         const names = ordered.slice(0, 2).map(path => prefix ? path.slice(prefix.length) : path);
         const title = scopePaths.length === 1 ? scopePaths[0] ?? id : `${prefix}${names.join(' · ')}${scopePaths.length > 2 ? ` 외 ${scopePaths.length - 2}개 폴더` : ''}`;
-        stages.set(id, { id, title, summary: '', scopePaths, unit: '모듈', nodeIds: [], descendantNodeIds: nodeIds, childIds: children, groups: [], incoming: [], outgoing: [] });
+        stages.set(id, { id, title, headingParts: ordered.slice(0, 2), headingRemainder: Math.max(0, ordered.length - 2), summary: '', scopePaths, unit: '모듈', nodeIds: [], descendantNodeIds: nodeIds, childIds: children, groups: [], incoming: [], outgoing: [] });
         for (const child of children) { const stage = stages.get(child); if (stage) stages.set(child, { ...stage, parentId: id }); }
         for (const root of folded) roots.delete(root);
         roots.add(id); members.set(id, contents); cachedWeight.delete(id);

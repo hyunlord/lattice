@@ -66,7 +66,8 @@ export function buildLoopMap(nodes: readonly Node[], edges: readonly Edge[], fac
         const candidate = stage.scopePaths ? undefined : interpretation(stage.id.startsWith('all:') ? stage.id.slice(4) : stage.id);
         const paths = new Set(stage.nodeIds.flatMap(id => byId.get(id)?.sources.map(source => source.path) ?? []));
         const note = candidate?.evidence.length && candidate.evidence.every(source => paths.has(source.path)) ? candidate : undefined;
-        return { ...stage, ...(note ? { summary: note.summary, interpretation: note } : {}) };
+        const { summaryDetail: _detail, summaryDetails: _details, ...withoutDetail } = stage;
+        return { ...(note ? withoutDetail : stage), ...(note ? { summary: note.summary, interpretation: note } : {}) };
     }) : (config?.stages ?? []).map(stage => {
         const members = nodes.filter(n => stage.kinds.includes(n.kind));
         const systems = new Set(nodes.filter(n => stage.systemIds.includes(n.id) || stage.systemIds.includes(String(n.attributes['originalId'] ?? ''))).map(n => n.id));

@@ -1,3 +1,4 @@
+import { publicTypeUsage } from './public-type-usage.mjs';
 import { resolveMediaAssets } from './assets.mjs';
 import { parseMediaConfig } from '../dist/query/media-model.js';
 import type { Options, RepositoryReader, SourceLink } from './types.mjs';
@@ -24,7 +25,8 @@ export function buildRepository(options: Options, historical?: RepositoryReader,
         return { ...source, revision: repository.commit, url: `${url}#L${source.line}` };
     };
     const cache = extractionCache(root, options.cacheDir);
-    const { records, documents, modules, files, inputs: recordInputs, diagnostics } = collectInputs({ selected, lens, sourceLink, cache });
+    const { records, documents, modules: extractedModules, files, inputs: recordInputs, diagnostics } = collectInputs({ selected, lens, sourceLink, cache });
+    const modules = publicTypeUsage(extractedModules, selected.filter(input => input.format === 'code').map(input => input.input));
     const graft = buildGraft(graftObservation, selected, sourceLink);
     const inputs = [...new Map([...recordInputs, ...codeInputs.map(({ path, contentHash }) => ({ path, contentHash })), ...(graftObservation?.input ? [{ path: graftObservation.input.path, contentHash: graftObservation.input.contentHash }] : [])].map(input => [input.path, input])).values()].sort((a, b) => a.path < b.path ? -1 : a.path > b.path ? 1 : 0);
     const codeHashes = new Map(codeInputs.map(input => [input.path, input.contentHash]));

@@ -189,3 +189,55 @@ test('port selection excludes only its own padded card while retaining other obs
     const x = clearDependencyPort(box, 100, true, [own, caption, neighbor], own);
     assert.ok(x < 50);
 });
+
+test('group edge labels use actual representative paths before resolving ambiguity', async () => {
+    const { dependencyStageTitle } = await import('../viewer/dependency-layout.js');
+    const group = { ...stage('group'), title: 'unrelated legacy caption', headingParts: ['src/bind', 'src/annotations'], headingRemainder: 2, scopePaths: ['src/bind', 'src/annotations', 'src/a', 'src/b'] };
+    assert.equal(dependencyStageTitle(group), 'src/bind');
+    assert.equal(dependencyStageTitle(stage('src/core')), 'src/core');
+});
+
+test('selected panel preserves the scope of repository context and authored type summaries', async () => {
+    const { dependencyPanelSummary } = await import('../viewer/dependency-overview.js');
+    assert.equal(dependencyPanelSummary({ ...stage('folder:helper'), summary: 'Repository purpose.', summaryDetail: { label: '저장소 소개', text: 'Repository purpose.' } }), '저장소 소개 — Repository purpose.');
+    assert.equal(dependencyPanelSummary({ ...stage('folder:reader'), summary: '주요 타입 Reader — Reads input.', summaryDetail: { label: '주요 타입 Reader', text: 'Reads input.' } }), '주요 타입 Reader — Reads input.');
+});
+
+test('member counts never distinguish two otherwise identical dependency labels', async () => {
+    const { uniqueDependencyNames, dependencyStageTitle } = await import('../viewer/dependency-layout.js');
+    const stages = [{ ...stage('ordinary'), title: 'gson/src/main/java/com/google/gson/internal' }, { ...stage('group'), headingParts: ['gson/src/main/java-templates/com/google/gson/internal'], scopePaths: ['one', 'two', 'three'] }].map(item => ({ ...item, title: dependencyStageTitle(item) }));
+    const names = uniqueDependencyNames(stages);
+    assert.notEqual(names.get('ordinary'), names.get('group'));
+    assert.match(names.get('ordinary'), /java/);
+    assert.match(names.get('group'), /java-templates/);
+    assert.ok([...names.values()].every(name => !name.includes('(+')));
+});
+
+test('compact headings retain both named group members and immediate folder context', async () => {
+    const { dependencyHeadingParts } = await import('../viewer/dependency-layout.js');
+    const group = { ...stage('group'), headingParts: ['internal/complete', 'cmd/task'] };
+    const ast = { ...stage('ast'), title: 'taskfile/ast' };
+    assert.deepEqual(dependencyHeadingParts(group, [group, ast]), ['internal/complete', 'cmd/task']);
+    assert.deepEqual(dependencyHeadingParts(ast, [group, ast]), ['taskfile/ast']);
+});
+
+test('the selected panel lists every authored type fact once with its qualifier', async () => {
+    const { dependencyPanelSummary } = await import('../viewer/dependency-overview.js');
+    const first = { label: '주요 타입 Reader', text: 'Reads records.' };
+    assert.equal(dependencyPanelSummary({ ...stage('folder'), summaryDetail: first, summaryDetails: [first, { label: '주요 타입 Writer', text: 'Writes records.' }] }), '주요 타입 Reader — Reads records.\n주요 타입 Writer — Writes records.');
+});
+test('dotted endpoint labels factor a repeated base while retaining the distinguishing component', async () => {
+    const { dependencyLabelLines, factoredTitle } = await import('../viewer/dependency-layout.js');
+    const base = stage('Library'), extension = stage('Library.DependencyInjectionExtensions');
+    assert.deepEqual(factoredTitle(extension.title, [base.title, extension.title]), { prefix: 'Library.', name: 'DependencyInjectionExtensions' });
+    const lines = [...dependencyLabelLines({ stages: [base, extension], flows: [{ source: base.id, target: extension.id, label: '1개 파일' }] }).values()][0];
+    assert.ok(lines.join(' ').includes('DependencyInjectionExtensions'));
+    assert.ok(!lines.join(' ').includes('Library.DependencyInjectionExtensions'));
+});
+
+test('dependency labels explicitly distinguish a folder bundle from its representative member', async () => {
+    const { dependencyLabelLines } = await import('../viewer/dependency-layout.js');
+    const source = stage('root'), bundle = { ...stage('logger'), scopePaths: ['internal/logger', 'internal/execext'] };
+    const labels = [...dependencyLabelLines({ stages: [source, bundle], flows: [{ source: source.id, target: bundle.id, label: '11개 파일', count: 11 }] }).values()];
+    assert.deepEqual(labels, [['root → logger 묶음', '11개 파일']]);
+});

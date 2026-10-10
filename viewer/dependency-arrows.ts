@@ -21,6 +21,13 @@ export function drawDependencyArrows(scene: ArrowScene): void {
         const label: Obstacle = { x: 24 + (slot % columns) * 240, y: Math.ceil((rowBounds.bottom - bounds.top + 32) / 8) * 8 + Math.floor(slot / columns) * rowHeight, width: 192, height: rowHeight - 20 };
         return [{ flow, source, target, label, index }];
     });
+    for (const entry of labels) {
+        const { flow, label } = entry;
+        const titleText = `${view.stages.find(stage => stage.id === flow.source)?.title} → ${view.stages.find(stage => stage.id === flow.target)?.title}: ${flow.label}`;
+        const text = svg('text'); text.classList.add('lm-flow-label', 'lm-dependency-label'); text.setAttribute('x', String(label.x + label.width / 2)); text.setAttribute('y', String(label.y + 12)); text.setAttribute('text-anchor', 'middle'); for (const [index, line] of (labelLines.get(JSON.stringify([flow.source, flow.target])) ?? [flow.label]).entries()) { const span = svg('tspan'); span.setAttribute('x', String(label.x + label.width / 2)); span.setAttribute('dy', index ? '12' : '0'); span.textContent = line; text.append(span); } text.dataset['source'] = flow.source; text.dataset['target'] = flow.target; text.dataset['count'] = String(flow.count ?? 0);
+        const title = svg('title'); title.textContent = titleText; text.append(title); graph.append(text);
+        const actual = text.getBBox(); const right = Math.max(label.x + label.width, actual.x + actual.width), bottom = Math.max(label.y + label.height, actual.y + actual.height); const x = Math.min(label.x, actual.x), y = Math.min(label.y, actual.y); entry.label = { x, y, width: right - x, height: bottom - y };
+    }
     const cardObstacles = new Map([...rectangles].map(([id, box]) => [id, { x: box.x - 4, y: box.y - 4, width: box.width + 8, height: box.height + 8 }])); const obstacles = [...cardObstacles.values()];
     for (const caption of host.querySelectorAll('.lm-folder-prefix, .lm-cycle-caption')) { const rect = caption.getBoundingClientRect(); obstacles.push({ x: rect.left - bounds.left - 2, y: rect.top - bounds.top - 2, width: rect.width + 4, height: rect.height + 4 }); }
     for (const entry of labels) {
@@ -43,7 +50,6 @@ export function drawDependencyArrows(scene: ArrowScene): void {
         };
         if (first.length) draw([{ x: sx, y: source.y + source.height + 2 }, ...first], false);
         if (second.length) draw([...second, { x: tx, y: targetAbove ? target.y - 3 : target.y + target.height + 3 }], true);
-        const text = svg('text'); text.classList.add('lm-flow-label', 'lm-dependency-label'); text.setAttribute('x', String(label.x + label.width / 2)); text.setAttribute('y', String(label.y + 12)); text.setAttribute('text-anchor', 'middle'); for (const [index, line] of (labelLines.get(JSON.stringify([flow.source, flow.target])) ?? [flow.label]).entries()) { const span = svg('tspan'); span.setAttribute('x', String(label.x + label.width / 2)); span.setAttribute('dy', index ? '12' : '0'); span.textContent = line; text.append(span); } text.dataset['source'] = flow.source; text.dataset['target'] = flow.target; text.dataset['count'] = String(flow.count ?? 0);
-        const title = svg('title'); title.textContent = titleText; text.append(title); graph.append(text);
+
     }
 }

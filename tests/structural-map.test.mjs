@@ -85,7 +85,10 @@ test('collapsed parents do not use one child module description as their purpose
 test('virtual package descriptions only use the recorded package members', () => {
     const nodes = [node('a', 'main/pkg/package-info.java', { sourceDescription: { text: 'Package document nodes.', kind: 'module-doc' } }), node('b', 'test/pkg/Test.java'), node('outsider', 'other/Foo.java', { sourceDescription: { text: 'Unrelated purpose.', kind: 'module-doc' } }), node('pkg', 'main/pkg/package-info.java', { directories: ['main/pkg', 'test/pkg'], memberIds: ['a', 'b'], packageName: 'pkg' }, 'package')];
     const model = buildStructuralMap(nodes, []);
-    assert.equal(model.stages.find(s => s.id === 'folder:패키지 pkg').summary, 'Package document nodes.');
+    assert.equal(model.stages.find(s => s.id === 'folder:패키지 pkg').summary, '');
+    assert.equal(model.stages.find(s => s.id === 'folder:패키지 pkg').unit, '패키지');
+    assert.deepEqual(model.stages.find(s => s.id === 'folder:패키지 pkg').summaryDetails, []);
+    assert.equal(model.stages.find(s => s.id === 'folder:패키지 pkg').summaryDetail.label, '여러 폴더가 공유하는 패키지');
 });
 test('verification fallback preserves the authored name and evidence', () => {
     const model = buildStructuralMap([node('a', 'test/api.ts', { verificationNames: [{ name: 'returns JSON', line: 12, kind: 'test-registration' }] })], []);
@@ -125,10 +128,11 @@ test('GitHub README fallback retains its exact evidence without borrowing nested
     const nested = node('nested', 'packages/component/README.md', { sourceDescription: { kind: 'readme', text: 'Component introduction.', line: 5 } }, 'document');
     const model = buildStructuralMap([node('root', 'main.cs'), node('assembly', 'src/CommonAssemblyInfo.cs'), github, nested], []);
     const root = model.stages.find(s => s.id === 'folder:.');
-    assert.equal(root.summary, '');
+    assert.equal(root.summary, 'Repository introduction.');
+    assert.deepEqual(root.summaryDetail, { label: '저장소 소개', text: 'Repository introduction.' });
     assert.equal(structuralSummary([], [github, nested], '.'), 'Repository introduction.');
-    assert.deepEqual(root.summaryEvidence, []);
-    assert.equal(model.stages.find(s => s.id === 'folder:src').summary, '');
+    assert.deepEqual(root.summaryEvidence, [{ path: '.github/README.md', line: 9 }]);
+    assert.equal(model.stages.find(s => s.id === 'folder:src').summaryDetail.label, '저장소 소개');
     assert.equal(structuralSummary([], [nested], '.'), '');
 });
 
@@ -245,6 +249,7 @@ test('scoped cards label representative type prose and preserve its comment evid
     assert.equal(structuralSummary([], [readme], '.'), 'Repository purpose.');
     const model = buildStructuralMap([member, readme], []);
     assert.equal(model.stages[0].summary, '주요 타입 Runner — Processes manifests and runs their actions.');
+    assert.deepEqual(model.stages[0].summaryDetail, { label: '주요 타입 Runner', text: 'Processes manifests and runs their actions.' });
     assert.deepEqual(model.stages[0].summaryEvidence, [{ path: 'runner.go', line: 4 }]);
     const copy = node('copy', 'src/README.md', readme.attributes, 'document');
     assert.equal(structuralSummary([{ ...member, sources: [{ ...member.sources[0], path: 'src/runner.go' }] }], [readme, copy], 'src'), '주요 타입 Runner — Processes manifests and runs their actions.');
@@ -252,9 +257,72 @@ test('scoped cards label representative type prose and preserve its comment evid
     assert.equal(structuralSummary([module], [readme], '.'), 'Package runner evaluates input.');
 });
 test('residual cards keep actual folder names and label member type prose without broadening its claim', () => {
-    const nodes = [node('a', 'examples/alpha/a.ts', { definitions: [{ name: 'Alpha', kind: 'type', public: true, uses: 3, line: 10, declarationDescription: { kind: 'type-doc', text: 'Renders an example.', line: 8, endLine: 9 } }] }), node('b', 'examples/beta/b.ts')];
+    const nodes = [node('a', 'examples/alpha/a.ts', { definitions: [{ name: 'Alpha', kind: 'type', public: true, uses: 3, line: 10, declarationDescription: { kind: 'type-doc', text: 'Renders an example.', line: 8, endLine: 9 } }] }), node('b', 'examples/beta/b.ts'), node('hidden', 'examples/zzz/z.ts', { definitions: [{ name: 'Hidden', kind: 'type', public: true, uses: 500, mentionFiles: 500, declarationDescription: { kind: 'type-doc', text: 'Describes the hidden helper.', line: 2 } }] })];
     const model = buildStructuralMap(nodes, []), group = model.stages.find(s => s.scopePaths);
-    assert.equal(group.title, 'examples/alpha · beta');
+    assert.equal(group.title, 'examples/alpha · beta 외 1개 폴더');
+    assert.deepEqual(group.headingParts, ['examples/alpha', 'examples/beta']);
+    assert.equal(group.headingRemainder, 1);
     assert.equal(group.summary, '주요 타입 Alpha — Renders an example.');
+    assert.deepEqual(group.summaryDetails, [{ label: '주요 타입 Alpha', text: 'Renders an example.' }]);
     assert.deepEqual(group.summaryEvidence, [{ path: 'examples/alpha/a.ts', line: 8 }]);
+});
+
+test('cross-file lexical mentions outrank local repetitions without implying compiler binding', () => {
+    const type = (name, uses, mentionFiles) => ({ kind: 'type', public: true, name, uses, ...(mentionFiles === undefined ? {} : { mentionFiles, usageBasis: 'distinct-other-files-lexical' }), declarationDescription: { kind: 'type-doc', text: `${name} handles its documented task.`, line: 3 } });
+    const n = node('types', 'src/types.cs', { definitions: [type('LocalHelper', 100), type('MainApi', 2, 12), type('LocalException', 200, 1)] });
+    assert.equal(structuralSummary([n], [], 'src'), '주요 타입 MainApi — MainApi handles its documented task.');
+    const undocumented = { ...n, attributes: { definitions: n.attributes.definitions.map(({ declarationDescription, ...value }) => value) } };
+    assert.equal(structuralSummary([undocumented], [], 'src'), '공개 이름: MainApi · LocalException · LocalHelper');
+});
+test('explicit package warning does not override an authored representative type purpose', () => {
+    const n = node('a', 'src/a.java', { sourceDescription: { kind: 'module-doc', text: 'Do NOT use this package directly.' }, definitions: [{ kind: 'type', public: true, name: 'Factory', uses: 1, declarationDescription: { kind: 'type-doc', text: 'Creates requested values.', line: 8 } }] });
+    assert.equal(structuralSummary([n], [], 'src'), '주요 타입 Factory — Creates requested values.');
+    const warningOnly = buildStructuralMap([{ ...n, attributes: { sourceDescription: n.attributes.sourceDescription } }], []);
+    assert.equal(warningOnly.stages[0].summaryDetail.label, '사용 주의');
+});
+test('package endpoints deduplicate only when all member files already have one physical owner', async () => {
+    const { packageStages } = await import('../dist/query/structural-package-stages.js');
+    const stage = (id, ids, extra = {}) => ({ id, title: id, summary: '', unit: '모듈', nodeIds: ids, groups: [], incoming: [], outgoing: [], ...extra });
+    const nodes = [node('a', 'core/a.cs'), node('b', 'core/compat/b.cs'), node('consumer', 'app/main.cs'), node('pkg', 'core/a.cs', { category: 'namespace', memberIds: ['a', 'b'], directories: ['core', 'core/compat'] }, 'package')];
+    const stages = [stage('core', [], { childIds: ['a', 'b'], descendantNodeIds: ['a', 'b'] }), stage('a', ['a'], { parentId: 'core' }), stage('b', ['b'], { parentId: 'core' }), stage('app', ['consumer']), stage('namespace', ['pkg'])];
+    const flows = [{ source: 'app', target: 'namespace', sourceFiles: ['app/main.cs'], count: 1, label: '1개 파일 사용' }, { source: 'app', target: 'core', sourceFiles: ['app/main.cs'], count: 1, label: '1개 파일 사용' }];
+    const result = packageStages({ stages, flows, rootStageIds: ['core', 'app', 'namespace'], defaultStage: 'namespace' }, nodes);
+    assert.deepEqual(result.rootStageIds, ['core', 'app']); assert.equal(result.defaultStage, 'core');
+    assert.deepEqual(result.flows.map(f => [f.source, f.target, f.count, f.sourceFiles]), [['app', 'core', 1, ['app/main.cs']]]);
+    assert(nodes.some(n => n.id === 'pkg'));
+    const spanning = packageStages({ stages, flows, rootStageIds: ['a', 'b', 'app', 'namespace'], defaultStage: 'namespace' }, nodes);
+    assert(spanning.rootStageIds.includes('namespace'));
+    assert.equal(spanning.stages.find(s => s.id === 'namespace').summary, '');
+    assert.equal(spanning.stages.find(s => s.id === 'namespace').summaryDetail.label, '여러 폴더가 공유하는 네임스페이스');
+    assert.deepEqual(spanning.flows, flows);
+});
+
+test('package alias cleanup removes empty folded ancestors and refreshes mixed scope headings', async () => {
+    const { structuralFrontier } = await import('../dist/query/structural-frontier.js');
+    const { packageStages } = await import('../dist/query/structural-package-stages.js');
+    const stage = (path, nodeIds, childIds) => ({ id: `folder:${path}`, title: path, summary: '', unit: '모듈', nodeIds, ...(childIds ? { childIds } : {}), groups: [], incoming: [], outgoing: [] });
+    for (const count of [7, 8]) {
+        const nodes = [node('a', 'src/core/a.cs'), node('b', 'src/core/b.cs'), node('p1', 'src/core/a.cs', { memberIds: ['a'] }, 'package'), node('p2', 'src/core/b.cs', { memberIds: ['b'] }, 'package'), ...Array.from({ length: count }, (_, i) => node(`o${i}`, `other${i}/a.cs`))];
+        const leaves = [stage('src/core', ['a', 'b']), stage('virtual/one', ['p1']), stage('virtual/two', ['p2']), ...Array.from({ length: count }, (_, i) => stage(`other${i}`, [`o${i}`]))];
+        const flows = Array.from({ length: count }, (_, i) => ({ source: `folder:other${i}`, target: 'folder:src/core', count: 1, sourceFiles: [`other${i}/a.cs`], label: '1개 파일 사용' }));
+        const frontier = structuralFrontier([...leaves, stage('virtual', [], ['folder:virtual/one', 'folder:virtual/two']), stage('.', [], leaves.map(s => s.id))], flows, () => true);
+        const result = packageStages({ ...frontier, flows, defaultStage: 'folder:virtual' }, nodes);
+        assert(result.rootStageIds.includes(result.defaultStage));
+        assert(result.stages.every(s => s.nodeIds.length || s.childIds?.length));
+        assert(result.stages.every(s => !(s.scopePaths ?? []).some(path => path.startsWith('virtual'))));
+        assert(result.stages.every(s => !(s.headingParts ?? []).some(path => path.startsWith('virtual'))));
+        assert(result.stages.every(s => !s.title.includes('virtual')));
+        assert.equal(result.flows.reduce((sum, f) => sum + f.count, 0), count);
+    }
+});
+
+test('type role details retain three distinct ranked facts and only their exact source evidence', () => {
+    const member = (name, rank, path, line) => node(name + path, path, { definitions: [{ name, kind: 'type', public: true, mentionFiles: rank, uses: 1, declarationDescription: { kind: 'type-doc', text: `${name} performs its documented operation.`, line } }] });
+    const nodes = [member('First', 12, 'src/a.ts', 2), member('Second', 10, 'src/b.ts', 4), member('Third', 8, 'src/c.ts', 6), member('Fourth', 6, 'src/d.ts', 8), member('First', 5, 'src/e.ts', 10)];
+    const stage = buildStructuralMap(nodes, []).stages[0];
+    assert.deepEqual(stage.summaryDetails.map(d => d.label), ['주요 타입 First', '주요 타입 Second', '주요 타입 Third']);
+    assert.deepEqual(stage.summaryDetail, stage.summaryDetails[0]);
+    assert.deepEqual(stage.summaryEvidence, [{ path: 'src/a.ts', line: 2 }, { path: 'src/b.ts', line: 4 }, { path: 'src/c.ts', line: 6 }]);
+    const documented = nodes.map((n, i) => i ? n : { ...n, attributes: { ...n.attributes, sourceDescription: { kind: 'module-doc', text: 'This package executes operations.', line: 1 } } });
+    assert.equal(buildStructuralMap(documented, []).stages[0].summaryDetails, undefined);
 });

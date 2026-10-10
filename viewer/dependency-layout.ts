@@ -97,7 +97,7 @@ export function factoredTitle(title: string, titles: readonly string[]): { reado
     const parts = title.split('/'), leaf = parts.at(-1) ?? title;
     if (leaf.length <= 24) return { prefix: '', name: title };
     const candidates = [...leaf.matchAll(/\./g)].map(match => leaf.slice(0, (match.index ?? 0) + 1)).reverse();
-    const prefix = candidates.find(value => titles.some(other => other !== title && (other.split('/').at(-1) ?? other).startsWith(value)));
+    const prefix = candidates.find(value => titles.some(other => other !== title && ((other.split('/').at(-1) ?? other).startsWith(value) || (other.split('/').at(-1) ?? other) === value.slice(0, -1))));
     return prefix ? { prefix: [...parts.slice(0, -1), prefix].join('/'), name: leaf.slice(prefix.length) } : { prefix: '', name: title };
 }
 
@@ -105,6 +105,8 @@ export function sharedFolderPrefix(paths: readonly string[]): string {
     const candidates = new Set(paths.flatMap(path => { const parts = path.split('/'); return parts.slice(0, -1).map((_, index) => parts.slice(0, index + 1).join('/')); }));
     return [...candidates].map(prefix => ({ prefix, count: paths.filter(path => path.startsWith(`${prefix}/`)).length })).filter(item => item.count >= 2).sort((a, b) => b.count * b.prefix.length - a.count * a.prefix.length || a.prefix.localeCompare(b.prefix))[0]?.prefix ?? '';
 }
+
+export function dependencyStageTitle(stage: LoopStage): string { return stage.headingParts?.[0] ? stage.headingParts[0] : stage.title; }
 
 export function uniqueDependencyNames(stages: readonly LoopStage[]): ReadonlyMap<string, string> {
     return new Map(stages.map(stage => {
@@ -119,6 +121,10 @@ export function uniqueDependencyNames(stages: readonly LoopStage[]): ReadonlyMap
                         const shortened = shorten(stage.title);
                         if (stages.every(other => other.id === stage.id || shorten(other.title) !== shortened)) candidates.push(shortened);
                     }
+                    for (let start = 1; start < parts.length - 1; start++) {
+                        const shorten = (value: string): string => { const path = value.split('/'); return `…/${path[start] ?? ''}/…/${path.at(-1) ?? ''}`; };
+                        if (stages.every(other => other.id === stage.id || shorten(other.title) !== shorten(stage.title))) candidates.push(shorten(stage.title));
+                    }
                     const shortest = candidates.sort((a, b) => a.length - b.length || a.localeCompare(b))[0]; if (shortest) return [stage.id, shortest];
                 }
                 return [stage.id, name];
@@ -127,6 +133,12 @@ export function uniqueDependencyNames(stages: readonly LoopStage[]): ReadonlyMap
         return [stage.id, stage.title];
     }));
 }
+export function dependencyHeadingParts(stage: LoopStage, stages: readonly LoopStage[]): readonly string[] {
+    const paths = [...new Set(stages.flatMap(item => item.headingParts ?? [item.title]))];
+    const names = uniqueDependencyNames(paths.map(path => ({ ...stage, id: path, title: path })));
+    return (stage.headingParts ?? [stage.title]).map(path => { const name = names.get(path) ?? path; return name.includes('/') ? name : path.split('/').slice(-2).join('/'); });
+}
+
 export function dependencyPort(box: Obstacle, index: number, count: number): number {
     return Math.round((box.x + box.width / 2 + (index - (count - 1) / 2) * Math.min(8, (box.width - 24) / Math.max(1, count))) / 8) * 8;
 }
@@ -145,8 +157,8 @@ export function reserveDependencyRoute(points: readonly Point[], width: number, 
 }
 
 export function dependencyLabelLines(view: DependencyView): ReadonlyMap<string, readonly string[]> {
-    const names = uniqueDependencyNames(view.stages);
-    return new Map(view.flows.map(flow => { const from = names.get(flow.source) ?? flow.source, to = names.get(flow.target) ?? flow.target; const pair = `${from} → ${to}`; return [JSON.stringify([flow.source, flow.target]), pair.length <= 30 ? [pair, flow.label] : [from, `→ ${to}`, flow.label]]; }));
+    const originalNames = uniqueDependencyNames(view.stages); const values = [...originalNames.values()]; const names = new Map([...originalNames].map(([id, name]) => { const shortened = factoredTitle(name, values).name; return [id, values.filter(value => factoredTitle(value, values).name === shortened).length === 1 ? shortened : name]; }));
+    return new Map(view.flows.map(flow => { const endpoint = (id: string): string => { const stage = view.stages.find(item => item.id === id); const grouped = (stage?.scopePaths?.length ?? 0) > 1 || stage?.childIds?.some(child => !view.stages.some(item => item.id === child)); return `${names.get(id) ?? id}${grouped ? ' 묶음' : ''}`; }; const from = endpoint(flow.source), to = endpoint(flow.target); const pair = `${from} → ${to}`; return [JSON.stringify([flow.source, flow.target]), pair.length <= 30 ? [pair, flow.label] : [from, `→ ${to}`, flow.label]]; }));
 }
 
 export function dependencyLabelRowHeight(flows: readonly LoopFlow[], lines: ReadonlyMap<string, readonly string[]>): number {

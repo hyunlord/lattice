@@ -211,10 +211,10 @@ test('major public type docs preserve authored prose and exact declaration evide
         ['Parser.java', 'package example;\n/** Converts {@code Parser} values. More detail. */\n@example.CheckReturnValue\npublic class Parser {}', 'Parser', 'Converts Parser values.', 2, 2],
     ]) assert.deepEqual(attributes(path, text).definitions.find(value => value.name === name).declarationDescription, { text: expected, kind: 'type-doc', line, endLine });
 });
-test('type docs require adjacent comments and select most used public types, not first three', () => {
+test('type docs preserve every public candidate beyond three for repository-wide selection', () => {
     const text = 'package example\n// A purpose.\ntype A struct {}\n// B purpose.\ntype B struct {}\n// C purpose.\ntype C struct {}\n// D purpose.\ntype D struct {}\nvar _ D\nvar _ D\nvar _ B';
     const definitions = attributes('types.go', text).definitions;
-    assert.deepEqual(definitions.filter(value => value.declarationDescription).map(value => value.name), ['A', 'B', 'D']);
+    assert.deepEqual(definitions.filter(value => value.declarationDescription).map(value => value.name), ['A', 'B', 'C', 'D']);
     assert.equal(attributes('types.go', 'package example\n// Unrelated comment.\nvar x = 1\ntype Public struct {}').definitions.find(value => value.name === 'Public').declarationDescription, undefined);
 });
 
@@ -229,4 +229,11 @@ test('type documentation attaches only to the declaration owning the preceding l
     assert.equal(value.definitions.find(item => item.name === 'First').declarationDescription.text, 'Represents the first type.');
     assert.equal(value.definitions.find(item => item.name === 'Second').declarationDescription, undefined);
     for (const text of ['/// <summary>A namespace description.</summary>\nnamespace Demo { public class Nested {} }', '/// <summary>A containing type.</summary>\npublic class Outer { public class Nested {} }']) assert.equal(attributes('Types.cs', text).definitions.find(item => item.name === 'Nested').declarationDescription, undefined);
+});
+
+test('type prose excludes line-leading documentation block tags without removing ordinary text', () => {
+    const value = attributes('Parser.java', '/**\n * Parses structured values\n * @author Example Author\n * @since 1.0\n */\npublic class Parser {}');
+    assert.equal(value.definitions[0].declarationDescription.text, 'Parses structured values');
+    const prose = attributes('Parser.java', '/**\n * Sends status to support@example.org using {@code @author}.\n */\npublic class Parser {}');
+    assert.equal(prose.definitions[0].declarationDescription.text, 'Sends status to support@example.org using @author.');
 });

@@ -132,10 +132,8 @@ export function descriptionAttributes(text: string, language: string, definition
 
 /** Public type prose is attributed to its declaration, never promoted to module documentation. */
 export function publicTypeDocumentation(lines: readonly string[], language: string, definitions: readonly JsonObject[]): readonly JsonObject[] {
-    const selected = new Set(definitions.filter(value => value["kind"] === "type" && value["public"] === true)
-        .sort((a, b) => Number(b["uses"] ?? 0) - Number(a["uses"] ?? 0) || String(a["name"]).localeCompare(String(b["name"]))).slice(0, 3));
     return definitions.map(definition => {
-        if (!selected.has(definition)) return definition;
+        if (definition["kind"] !== "type" || definition["public"] !== true) return definition;
         const escapedName = String(definition["name"] ?? "").replace(/[.*+?^${}()|[\]\\]/gu, "\\$&");
         const modifiers = "(?:(?:public|export|default|internal|protected|private|abstract|final|sealed|static|partial|open|data|value|inline|pub)\\s+)*";
         const typePrefix = language === "go" ? "(?:type\\s+)?" : `${modifiers}(?:class|struct|interface|enum|trait|protocol|record|union|typealias|type|object)(?:\\s+(?:class|struct))?\\s+`;
@@ -163,7 +161,9 @@ export function publicTypeDocumentation(lines: readonly string[], language: stri
             cursor++;
             if (!parts.length || (cursor === lower && marker.test(lines[cursor - 1] ?? ""))) return definition;
         }
-        const body = parts.map(part => part.trim().replace(/^\/\*+|\*\/$/gu, "").replace(/^(?:\/{2,3}|\*)\s?/u, "")).join(" ");
+        const docLines = parts.map(part => part.trim().replace(/^\/\*+|\*\/$/gu, "").replace(/^(?:\/{2,3}|\*)\s?/u, ""));
+        const metadataStart = docLines.findIndex(part => /^\s*@(?:author|since|param|return|returns|throws|exception|see|version|deprecated|serial|serialField|serialData|apiNote|implSpec|implNote)\b/u.test(part));
+        const body = (metadataStart < 0 ? docLines : docLines.slice(0, metadataStart)).join(" ");
         if (!descriptiveProse(body)) return definition;
         const text = sentence(body);
         if (!text || /^@|^<inheritdoc\b/iu.test(text)) return definition;

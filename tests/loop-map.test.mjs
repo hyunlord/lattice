@@ -92,3 +92,13 @@ test('production folder notes cannot borrow evidence from omitted same-folder te
     assert.notEqual(m.stages.find(s => s.id === 'folder:src').summary, 'Runtime and test behavior');
     assert.equal(m.stages.find(s => s.id === 'all:folder:src').interpretation.summary, 'Runtime and test behavior');
 });
+
+test('AI stage replacements clear authored type detail arrays', () => {
+    const n = node('a', 'module', { definitions: [{ name: 'Runner', kind: 'type', public: true, uses: 2, declarationDescription: { kind: 'type-doc', text: 'Runs actions.', line: 2 } }] }, 'src/a.ts');
+    const baseline = buildLoopMap([n], [], [], { kinds: [] }, 'example');
+    assert.equal(baseline.stages[0].summaryDetails.length, 1);
+    const model = buildLoopMap([n], [], [], { kinds: [], interpretations: [{ targetId: 'folder:src', summary: 'Agent explanation.', status: 'fresh', sources: [{ path: 'src/a.ts', line: 2 }] }] }, 'example');
+    assert.equal(model.stages[0].summary, 'Agent explanation.');
+    assert.equal(model.stages[0].summaryDetail, undefined);
+    assert.equal(model.stages[0].summaryDetails, undefined);
+});

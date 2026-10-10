@@ -20,6 +20,9 @@ export type LoopStage = {
     readonly interpretation?: LoopInterpretation;
     readonly parentId?: string; readonly childIds?: readonly string[]; readonly descendantNodeIds?: readonly string[];
     readonly scopePaths?: readonly string[];
+    readonly headingParts?: readonly string[]; readonly headingRemainder?: number;
+    readonly summaryDetails?: readonly { readonly label: string; readonly text: string; }[];
+    readonly summaryDetail?: { readonly label: string; readonly text: string; };
     readonly summaryEvidence?: readonly { readonly path: string; readonly line: number; }[];
 };
 export type LoopFlow = { readonly source: string; readonly target: string; readonly label: string; readonly tone?: 'normal' | 'warning'; readonly auxiliary?: boolean; readonly count?: number; readonly sourceFiles?: readonly string[]; readonly projectSourceFiles?: readonly string[]; };
