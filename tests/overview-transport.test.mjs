@@ -19,7 +19,7 @@ test('overview preserves curated layers and exact model while deferring structur
     const before = JSON.stringify(graph), files = new Map(); writeOverview(graph, { kinds: [] }, (path, text) => files.set(path, text));
     const overview = parseOverview(JSON.parse(files.get('overview.json'))), layer = overview.layers[0], complete = JSON.parse(files.get(layer.path));
     assert.equal(JSON.stringify(graph), before); assert.equal(layer.deferred, true); assert.deepEqual(layer.model.nodes, []);
-    assert.equal(complete.model.nodes.length, 1); assert.deepEqual(layer.model.stages.map(s => s.nodeIds), complete.model.stages.map(s => s.nodeIds));
+    assert.equal(complete.model.nodes.length, 1); assert.ok(layer.model.stages.every(stage => stage.nodeIds.length === 0)); assert.equal(layer.model.stages[0].nodeCount, complete.model.stages[0].nodeIds.length);
     graph.nodes[0].attributes.layer = 'design'; graph.nodes[0].kind = 'object';
     writeOverview(graph, { kinds: [{ id: 'object', label: 'Object' }], defaultLayer: 'design', loop: { stages: [{ id: 'one', title: 'One', summary: 'Role', unit: 'items', kinds: ['object'], systemIds: [] }], flows: [], catalogKinds: ['object'] } }, (path, text) => files.set(path, text));
     const curated = parseOverview(JSON.parse(files.get('overview.json')));
@@ -46,4 +46,20 @@ test('unsupported-language counts are source-bound first-screen limitations', as
     const files = new Map(), graph = { hash: 'e'.repeat(64), repository: { name: 'source', dirty: false, sourceFingerprint: 'f'.repeat(64) }, nodes: [], edges: [], facets: [] };
     writeOverview(graph, { inputDiagnostics: [{ code: 'unsupported-language', language: 'c', fileCount: 17 }, { code: 'other', language: 'cpp', fileCount: 4 }] }, (path, text) => files.set(path, text));
     assert.deepEqual(parseOverview(JSON.parse(files.get('overview.json'))).limitations, [{ language: 'c', fileCount: 17 }]);
+});
+test('structural stage and focus navigation fetch bounded source-bound parts instead of the full layer', async t => {
+    const { writeOverview } = await import('../bin/export-overview.mjs');
+    const { createOverviewLoader, parseOverview } = await import('../viewer/overview-data.js');
+    const source = path => ({ path, line: 1, pointer: '', contentHash: 'a'.repeat(64) });
+    const graph = { hash: 'b'.repeat(64), repository: { name: 'parts', dirty: false, sourceFingerprint: 'c'.repeat(64) }, nodes: ['src/a/main.ts', 'src/b/other.ts'].map((path, i) => ({ id: `m${i}`, kind: 'module', name: path, attributes: { path }, sources: [source(path)], contentHash: 'a'.repeat(64) })), edges: [], facets: [] };
+    const files = new Map(); writeOverview(graph, {}, (path, text) => files.set(path, text));
+    const overview = parseOverview(JSON.parse(files.get('overview.json'))), layer = overview.layers[0];
+    assert.ok(layer.parts); assert.equal(layer.model.structuralProjection, 'summary');
+    assert.ok(layer.model.stages.every(stage => stage.nodeIds.length === 0 && (stage.descendantNodeIds?.length ?? 0) === 0));
+    const requests = []; t.mock.method(globalThis, 'fetch', async url => { const path = String(url).slice(2); requests.push(path); return new Response(files.get(path), { status: files.has(path) ? 200 : 404 }); });
+    const loader = createOverviewLoader(); const focus = await loader.model(overview, layer, new URLSearchParams({ view: 'focus', item: 'm0' }));
+    assert.ok(focus.nodes.some(node => node.id === 'm0')); assert.ok(focus.nodes.length < graph.nodes.length);
+    const selected = JSON.parse(files.get(layer.path)).model.stages.find(stage => stage.nodeIds.includes('m0'));
+    const model = await loader.model(overview, layer, new URLSearchParams({ stage: selected.id })); assert.ok(model.stages.some(stage => stage.id === selected.id));
+    assert.equal(requests.includes(layer.path), false); assert.equal(requests.some(path => path === 'graph.json'), false);
 });

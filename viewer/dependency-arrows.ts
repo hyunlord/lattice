@@ -74,7 +74,7 @@ export function drawDependencyArrows(scene: ArrowScene): readonly DependencyPair
         text.setAttribute('x', String(segment.center.x)); text.setAttribute('y', String(segment.center.y)); text.setAttribute('text-anchor', 'middle'); text.setAttribute('dominant-baseline', 'central'); const actualSources = dependencyPairSources(view, flow);
         const attribution = actualSources.join('·');
         const countLabel = dependencyCountLabel(flow);
-        const reverseLabel = dependencyCountLabel({ ...flow, count: flow.reverseCount ?? 0, sourceFiles: flow.reverseSourceFiles ?? [], projectSourceFiles: flow.reverseProjectSourceFiles ?? [] });
+        const reverseLabel = dependencyCountLabel({ ...flow, count: flow.reverseCount ?? 0, projectCount: flow.reverseProjectCount ?? 0, sourceFiles: flow.reverseSourceFiles ?? [], projectSourceFiles: flow.reverseProjectSourceFiles ?? [] });
         text.textContent = flow.reverseCount ? `${attribution} → ${countLabel} · ← ${reverseLabel}` : `${attribution} · ${countLabel}`;
         graph.append(text); text.dataset['sourceMembers'] = JSON.stringify(actualSources);
         const candidates = points.slice(1).flatMap((point, index) => {

@@ -312,6 +312,7 @@ async function mountFunctionLogic(host: HTMLElement, id: string): Promise<void> 
 }
 let routeRequest = 0;
 let homeDeferred = false;
+let loadedHomeRoute = '';
 async function route(): Promise<void> {
     const request = ++routeRequest;
     const [path = '/home', search = ''] = (location.hash.slice(1) || '/home').split('?'); const params = new URLSearchParams(search);
@@ -330,12 +331,12 @@ async function route(): Promise<void> {
             const data = firstOverview, layer = data.layers.find(item => item.id === (params.get('layer') ?? data.defaultLayer)) ?? data.layers[0];
             if (!layer) throw new Error('지도 층이 없습니다.');
             const hydrate = layer.deferred && needsModel(params);
-            const model = hydrate ? await overviewLoader.model(data, layer) : layer.model;
+            const model = hydrate ? await overviewLoader.model(data, layer, params) : layer.model;
             if (request !== routeRequest) return;
             ++renderVersion; disposeScreen?.(); disposeScreen = undefined; main.replaceChildren(); activeLayer = layer.id;
             document.body.classList.add('picture-home');
             document.querySelectorAll<HTMLAnchorElement>('[data-route]').forEach(item => { item.href = routeHref('/' + item.dataset['route']); if (item.dataset['route'] === 'home') item.setAttribute('aria-current', 'page'); else item.removeAttribute('aria-current'); });
-            homeDeferred = layer.deferred && !hydrate; home(model); document.title = `${model.title ?? '지도'} · Lattice`; return;
+            homeDeferred = Boolean(layer.parts) || layer.deferred && !hydrate; loadedHomeRoute = location.hash; home(model); document.title = `${model.title ?? '지도'} · Lattice`; return;
         }
         main.setAttribute('aria-busy', 'true');
         await requireGraph(); if (request !== routeRequest) return; render();
@@ -351,7 +352,7 @@ async function load(): Promise<void> {
         }
         await route(); addEventListener('hashchange', () => { void route(); }); addEventListener('popstate', () => { void route(); });
         // Internal map controls use pushState. Hydrate only after an explicit detail interaction.
-        main.addEventListener('click', () => { const params = new URLSearchParams(location.hash.split('?')[1]); if (homeDeferred && firstOverview && (location.hash.split('?')[0] || '#/home') === '#/home' && needsModel(params)) void route(); });
+        main.addEventListener('click', () => { if (homeDeferred && firstOverview && location.hash !== loadedHomeRoute && (location.hash.split('?')[0] || '#/home') === '#/home') void route(); });
     } catch (error) { loadFailure(error, () => { void load(); }); }
 }
 void load();
