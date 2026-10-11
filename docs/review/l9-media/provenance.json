@@ -1,0 +1,350 @@
+{
+  "schemaVersion": 1,
+  "presentationCandidate": "d4f4c5feebc481854f4446c772cf1f43e4a8a224",
+  "canonicalAnalysisCandidate": "d4f4c5feebc481854f4446c772cf1f43e4a8a224",
+  "baselineCandidate": "894ae5d",
+  "protocol": "Desktop1440x900 CPU1 one capture; mobile390x844 CPU4 three fresh contexts median. Images uniformly reduced for summary; mobile image is median sample. Gzip loopback, no artificial network delay.",
+  "runtimeOverview": "Fresh d4f4c5f analysis and export; actual final runtime screenshots",
+  "baselineRuntimeFailure": "Input exceeds10 MiB; build exit2; no screenshot exists. Orange panel explicitly records failed baseline.",
+  "repositories": [
+    {
+      "id": "click",
+      "sourceCommit": "2247b35ea1c47c727d7a06e51fa280e12a863ff6",
+      "graphHash": "620ffec5009c6f02d56f733aa66e7264e285566d19f0b013aa6e339356ac4275",
+      "mobileMedianMs": 495,
+      "captures": {
+        "before": {
+          "desktop": {
+            "file": "/Users/rexxa/lattice/.omo/evidence/l9-baseline/click/browser/1440-4.png",
+            "sha256": "cc7562c2c7c0558a0730d45eeba04fe05686017a669504c4336f947e02a41ead"
+          },
+          "mobile": {
+            "file": "/Users/rexxa/lattice/.omo/evidence/l9-baseline/click/browser/390-2.png",
+            "sha256": "2630a997ac6d8d56414afa8039122c164518b7f2749f6eb4e5a6de0e392bcfc9"
+          }
+        },
+        "after": {
+          "desktop": {
+            "file": "/Users/rexxa/lattice/.omo/evidence/l9-final-d4f4c5f/click/browser/1440-4.png",
+            "sha256": "bf7af41ff771c400c39ddc28bfa0e1f8cf41dc67b29780dacc3cd06721c80198"
+          },
+          "mobile": {
+            "file": "/Users/rexxa/lattice/.omo/evidence/l9-final-d4f4c5f/click/browser/390-3.png",
+            "sha256": "7bd0c707b29048e67b2b20e0b138ab7dfb5d06220cc2214f8928f715ab469a72"
+          }
+        }
+      }
+    },
+    {
+      "id": "excalidraw",
+      "sourceCommit": "e65eca999e071503efb893d3379a29fb96ff37c4",
+      "graphHash": "82bbcdeb8edfebe16344679cffe313445fd621a1911bdbd8e3d4a89aae374213",
+      "mobileMedianMs": 586.5,
+      "captures": {
+        "before": {
+          "desktop": {
+            "file": "/Users/rexxa/lattice/.omo/evidence/l9-baseline/excalidraw/browser/1440-4.png",
+            "sha256": "3f530df31d99b0fb92952f4d6373594bb11aef3cc02442b1f37fc51733836c4f"
+          },
+          "mobile": {
+            "file": "/Users/rexxa/lattice/.omo/evidence/l9-baseline/excalidraw/browser/390-3.png",
+            "sha256": "9e259857c1bb2f3aaee4fb4599ee9c548f079f1a34e4c54a05c57655176b5357"
+          }
+        },
+        "after": {
+          "desktop": {
+            "file": "/Users/rexxa/lattice/.omo/evidence/l9-final-d4f4c5f/excalidraw/browser/1440-4.png",
+            "sha256": "3f374e5677fab7a21650485f74e4c172ddbee3520dfd3d027f6dcf6d9c6901b9"
+          },
+          "mobile": {
+            "file": "/Users/rexxa/lattice/.omo/evidence/l9-final-d4f4c5f/excalidraw/browser/390-2.png",
+            "sha256": "21814b6c883889daa4196d985f5eba1aa914170989305e501c4d804bbc63e8be"
+          }
+        }
+      }
+    },
+    {
+      "id": "fzf",
+      "sourceCommit": "c0a193e031f01fb50bf6f7be4381990a3753f7cf",
+      "graphHash": "005d2126053a99deeeea312c5c17c986e08e862cecfb2793a1db8e15a0c5d51b",
+      "mobileMedianMs": 219,
+      "captures": {
+        "before": {
+          "desktop": {
+            "file": "/Users/rexxa/lattice/.omo/evidence/l9-baseline/fzf/browser/1440-4.png",
+            "sha256": "6dc418b920c6af978f07f3ac2bc8a02f32c503852f742c00bf010147ba1cd988"
+          },
+          "mobile": {
+            "file": "/Users/rexxa/lattice/.omo/evidence/l9-baseline/fzf/browser/390-1.png",
+            "sha256": "2c2550b261b20d238403257e301aa6ccddec22ce975bb8f5efd96f7c308b1221"
+          }
+        },
+        "after": {
+          "desktop": {
+            "file": "/Users/rexxa/lattice/.omo/evidence/l9-final-d4f4c5f/fzf/browser/1440-4.png",
+            "sha256": "5fc161415024f967afb7950764ca9fb8cf4148f98ead15c100671eb6678318c0"
+          },
+          "mobile": {
+            "file": "/Users/rexxa/lattice/.omo/evidence/l9-final-d4f4c5f/fzf/browser/390-1.png",
+            "sha256": "816f85bacfaa44f11167ce3894eb6649ee0c6b1f51e496304822f29a0ea3e0e4"
+          }
+        }
+      }
+    },
+    {
+      "id": "nowinandroid",
+      "sourceCommit": "a49ed253d75e61a2b6ab80a8da677b57437b08eb",
+      "graphHash": "1624d97d5f550462f31fa1325c447c1aa047871d68a6a4db5b2af99d55c162f6",
+      "mobileMedianMs": 743.1999999880791,
+      "captures": {
+        "before": {
+          "desktop": {
+            "file": "/Users/rexxa/lattice/.omo/evidence/l9-baseline/nowinandroid/browser/1440-4.png",
+            "sha256": "4de8c42e8986416aca1fd2dd3bb54c468200963fe36247b5e3add67f76c0ab74"
+          },
+          "mobile": {
+            "file": "/Users/rexxa/lattice/.omo/evidence/l9-baseline/nowinandroid/browser/390-2.png",
+            "sha256": "6e03b9b6158e774e059c2ea0fa2b14a160cb868d5fae48586e4c007b797e832b"
+          }
+        },
+        "after": {
+          "desktop": {
+            "file": "/Users/rexxa/lattice/.omo/evidence/l9-final-d4f4c5f/nowinandroid/browser/1440-4.png",
+            "sha256": "8404e1f72241ac44c0d5f7316905a8f0a8c95356710054d16c80e35704455421"
+          },
+          "mobile": {
+            "file": "/Users/rexxa/lattice/.omo/evidence/l9-final-d4f4c5f/nowinandroid/browser/390-3.png",
+            "sha256": "6dca9ee65ac038c5dc4dea00725b1f0f506b8dd246158bd4e4c2578758c420d4"
+          }
+        }
+      }
+    },
+    {
+      "id": "ripgrep",
+      "sourceCommit": "3fce3b5bb0236da2df6d99672afb8a719642eca7",
+      "graphHash": "a5341bbd0960c8d3725b0129e2bb8d580f44e875a4514401bde59d18f01035bb",
+      "mobileMedianMs": 440.10000002384186,
+      "captures": {
+        "before": {
+          "desktop": {
+            "file": "/Users/rexxa/lattice/.omo/evidence/l9-baseline/ripgrep/browser/1440-4.png",
+            "sha256": "e30527cdda01634c64752407f45e6d54ae28001ec6e0ac8301bf8121544627ff"
+          },
+          "mobile": {
+            "file": "/Users/rexxa/lattice/.omo/evidence/l9-baseline/ripgrep/browser/390-1.png",
+            "sha256": "5b8fc2fb0f7c27a7a84b0e54e94ab6a06e6b1e480fc9bcc6fc2f595d31843bc7"
+          }
+        },
+        "after": {
+          "desktop": {
+            "file": "/Users/rexxa/lattice/.omo/evidence/l9-final-d4f4c5f/ripgrep/browser/1440-4.png",
+            "sha256": "9a4f3368a76b124a8e863cd07e87e3012d8023810dfe1063eb52c3a6b288020a"
+          },
+          "mobile": {
+            "file": "/Users/rexxa/lattice/.omo/evidence/l9-final-d4f4c5f/ripgrep/browser/390-1.png",
+            "sha256": "b0611607d5895dde3bbfdf8ee2e8f95111f39c85377fae6b4ea7fcf8cadfc325"
+          }
+        }
+      }
+    },
+    {
+      "id": "spring-petclinic",
+      "sourceCommit": "500158f732419217507c7656904b8e6aa1bcc0d6",
+      "graphHash": "c36885a8a047cdfd1919ec556eee638991618001f288a308ac954d707e49f4a6",
+      "mobileMedianMs": 221.19999998807907,
+      "captures": {
+        "before": {
+          "desktop": {
+            "file": "/Users/rexxa/lattice/.omo/evidence/l9-baseline/spring-petclinic/browser/1440-4.png",
+            "sha256": "826df9f23f5c0acb3961c7ba3b204454f718a0b4729e4ffccd01c6191df9a960"
+          },
+          "mobile": {
+            "file": "/Users/rexxa/lattice/.omo/evidence/l9-baseline/spring-petclinic/browser/390-2.png",
+            "sha256": "042d10adb19bb4fac09ad8c3e0309cd4312a6622d051e5d8f8ce8f2cf9bbf731"
+          }
+        },
+        "after": {
+          "desktop": {
+            "file": "/Users/rexxa/lattice/.omo/evidence/l9-final-d4f4c5f/spring-petclinic/browser/1440-4.png",
+            "sha256": "88c3818511ee6db72ecb4e3fed90b7d5f0b4fa6ef821eda29d9de32ad2c11bff"
+          },
+          "mobile": {
+            "file": "/Users/rexxa/lattice/.omo/evidence/l9-final-d4f4c5f/spring-petclinic/browser/390-2.png",
+            "sha256": "20ca0dcb375a3d8f064ee883f9a48390a94663e1aa31efe1ef09a68a06690e17"
+          }
+        }
+      }
+    },
+    {
+      "id": "fastify",
+      "sourceCommit": "86368086171305df4e235f6d6bec892c67ec2ae2",
+      "graphHash": "b84d289a0fe854853e940be9cacc766954b151d27b352a1cc716d29bcea46078",
+      "mobileMedianMs": 236.19999998807907,
+      "captures": {
+        "before": {
+          "desktop": {
+            "file": "/Users/rexxa/lattice/.omo/evidence/l9-baseline/fastify/browser/1440-4.png",
+            "sha256": "30e9a74f33ae668cbd261d83abee519d3cb50213ac7316e3c92b276252686f22"
+          },
+          "mobile": {
+            "file": "/Users/rexxa/lattice/.omo/evidence/l9-baseline/fastify/browser/390-2.png",
+            "sha256": "92389981b5e52a8a1678cb044c3158c8229fcfe7c5cf1e69f2735d18ce253793"
+          }
+        },
+        "after": {
+          "desktop": {
+            "file": "/Users/rexxa/lattice/.omo/evidence/l9-final-d4f4c5f/fastify/browser/1440-4.png",
+            "sha256": "dd0b5b9fc497b5ef77c9fd124bc9647de278c3e4b2261f0275d5a9f310173a46"
+          },
+          "mobile": {
+            "file": "/Users/rexxa/lattice/.omo/evidence/l9-final-d4f4c5f/fastify/browser/390-2.png",
+            "sha256": "5830af90c73c795b73813ad7cdafc5398ec72ce9a45752eaa2b9b6a174711906"
+          }
+        }
+      }
+    },
+    {
+      "id": "httpx",
+      "sourceCommit": "b5addb64f0161ff6bfe94c124ef76f6a1fba5254",
+      "graphHash": "025829906682ee957399fddd88ba7bc00a66959f8d95ea7f1d49020eefb235b7",
+      "mobileMedianMs": 220.5,
+      "captures": {
+        "before": {
+          "desktop": {
+            "file": "/Users/rexxa/lattice/.omo/evidence/l9-baseline/httpx/browser/1440-4.png",
+            "sha256": "7964d88df02f910e111a182baafeabd2fee76d85539bed7766091e686bcbbc64"
+          },
+          "mobile": {
+            "file": "/Users/rexxa/lattice/.omo/evidence/l9-baseline/httpx/browser/390-3.png",
+            "sha256": "a503d244cac6d5596cfbbc84ab724260d52dcab2f997a31d4a7052eaaaa86408"
+          }
+        },
+        "after": {
+          "desktop": {
+            "file": "/Users/rexxa/lattice/.omo/evidence/l9-final-d4f4c5f/httpx/browser/1440-4.png",
+            "sha256": "3c0586b4c9b20a37c596ced675e77d8aee370d1a177aecefe0629b34e7f85ba4"
+          },
+          "mobile": {
+            "file": "/Users/rexxa/lattice/.omo/evidence/l9-final-d4f4c5f/httpx/browser/390-2.png",
+            "sha256": "753ffd51b113faee75e0dbd14ed576d129129c8f8314545e03ff44e9e2cf9b63"
+          }
+        }
+      }
+    },
+    {
+      "id": "unity-boatattack",
+      "sourceCommit": "6acf5f773a440030489cb5e2b3c009fb5fe1e8ce",
+      "graphHash": "26fd2a3c8e0b37700f2d14701ec612c3ccc94455fcf2aa333044a39d21751eec",
+      "mobileMedianMs": 486.2999999523163,
+      "captures": {
+        "before": {
+          "desktop": {
+            "file": "/Users/rexxa/lattice/.omo/evidence/l9-baseline/unity-boatattack/browser/1440-4.png",
+            "sha256": "d4e7c56fd64d804156d3e7635b8eecbb95339a17dbb31ba9c9a474cc8f23ea89"
+          },
+          "mobile": {
+            "file": "/Users/rexxa/lattice/.omo/evidence/l9-baseline/unity-boatattack/browser/390-2.png",
+            "sha256": "522287f895e30b703aa3c24669b0351aacfa7b78888a19f1b9448e86a7c057fd"
+          }
+        },
+        "after": {
+          "desktop": {
+            "file": "/Users/rexxa/lattice/.omo/evidence/l9-final-d4f4c5f/unity-boatattack/browser/1440-4.png",
+            "sha256": "513cfcfb2a33a5e4f711305fc667d0ed64f783519975432f6cb51e26c337298f"
+          },
+          "mobile": {
+            "file": "/Users/rexxa/lattice/.omo/evidence/l9-final-d4f4c5f/unity-boatattack/browser/390-2.png",
+            "sha256": "0b38ee0e16686327656cbaad43dbbcce069a0eea156c968c19c1a34dbf40ac0f"
+          }
+        }
+      }
+    },
+    {
+      "id": "godot-demos",
+      "sourceCommit": "b761b4cd5718a7118f2c95eb55f181d0a5f004f1",
+      "graphHash": "a21663cdb835dfdc9821864b659560f5a3a2751046c8dc3310bcb9882813a6d2",
+      "mobileMedianMs": 325.10000002384186,
+      "captures": {
+        "before": {
+          "desktop": {
+            "file": "/Users/rexxa/lattice/.omo/evidence/l9-baseline/godot-demos/browser/1440-4.png",
+            "sha256": "f661126778bbf2189bbb02523484a1039b10280e38d1ef53c537cc90f1aecaa3"
+          },
+          "mobile": {
+            "file": "/Users/rexxa/lattice/.omo/evidence/l9-baseline/godot-demos/browser/390-2.png",
+            "sha256": "9d92d24e7be6d9649c3e711fd46e1de8fd77408ee56b359676c5457eefb6a783"
+          }
+        },
+        "after": {
+          "desktop": {
+            "file": "/Users/rexxa/lattice/.omo/evidence/l9-final-d4f4c5f/godot-demos/browser/1440-4.png",
+            "sha256": "6589bc0ea22a1915f14764e0e9269f7d56f32cb4d313f4bcfc5c1b14ac3e6e5f"
+          },
+          "mobile": {
+            "file": "/Users/rexxa/lattice/.omo/evidence/l9-final-d4f4c5f/godot-demos/browser/390-3.png",
+            "sha256": "153bbc419ac3a1172cc64c027dab87a6545357083168458fc77982e21fb31d6b"
+          }
+        }
+      }
+    },
+    {
+      "id": "sqlite",
+      "sourceCommit": "6e35c19f170958b1e846e01c55318988f2d192e0",
+      "graphHash": "910257b7f95960633f47364211da3900d7de766fcf7698b2e1d71dca5e371e3a",
+      "mobileMedianMs": 257.5,
+      "captures": {
+        "before": {
+          "desktop": {
+            "file": "/Users/rexxa/lattice/.omo/evidence/l9-baseline/sqlite/browser/1440-4.png",
+            "sha256": "e0256a0df833e366b6538413e4da77da4af28fcaefba61b4fd5f213478556f0b"
+          },
+          "mobile": {
+            "file": "/Users/rexxa/lattice/.omo/evidence/l9-baseline/sqlite/browser/390-2.png",
+            "sha256": "99590db9883cca7792ad2d744126a68584b55a73c49ac045e83d985b60f11829"
+          }
+        },
+        "after": {
+          "desktop": {
+            "file": "/Users/rexxa/lattice/.omo/evidence/l9-final-d4f4c5f/sqlite/browser/1440-4.png",
+            "sha256": "de90e10911246bca21b78da5a316e9ae4dea899f65a76db4f5eb2f32f333db4c"
+          },
+          "mobile": {
+            "file": "/Users/rexxa/lattice/.omo/evidence/l9-final-d4f4c5f/sqlite/browser/390-1.png",
+            "sha256": "762587222efeae18a97813658c594624b5cd83a4464d71eb1bda9571be27e80d"
+          }
+        }
+      }
+    },
+    {
+      "id": "runtime",
+      "sourceCommit": "8630d8988107478d249e2fdb8162f8c7dcbd3dbb",
+      "graphHash": "dcb1ea8f2fbe9b48c135e11df41f3ec9d1be28206fae313f260eb0228c8bc334",
+      "mobileMedianMs": 323.19999998807907,
+      "captures": {
+        "before": {
+          "failure": "baseline-build-failed-no-image"
+        },
+        "after": {
+          "desktop": {
+            "file": "/tmp/l9-blind/harness/runtime-final-d4f4c5f-sample1-1440.png",
+            "sha256": "4cf1422a442b984702de05e2af615bd0c16de3f0107026f6b58aac294962e044"
+          },
+          "mobile": {
+            "file": "/tmp/l9-blind/harness/runtime-final-d4f4c5f-sample3-390.png",
+            "sha256": "c3b10226bfb1e6dced713321ef0313628ee1a0f054289ba976378378c5415889"
+          }
+        }
+      }
+    }
+  ],
+  "sheets": {
+    "desktop": {
+      "file": "l9-desktop-before-after.png",
+      "sha256": "0b6b23fc1c1211777a9ceae6d76fdf3d7ef47e2128713513a2f4aa7688654678"
+    },
+    "mobile": {
+      "file": "l9-mobile-before-after.png",
+      "sha256": "09721f810e4bdc3b6d674db3126c9a16f05467747c107b44fbe0fde5bf0e9b17"
+    }
+  }
+}

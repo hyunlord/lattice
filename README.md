@@ -2,7 +2,7 @@
 
 A repository-neutral system map for people and agents. Deterministic extraction creates one graph for a static browser viewer and MCP tools; declarative lenses add repository-specific meaning.
 
-**Status: L9 implementation and benchmark verification.** Maintenance was lifted to add build-manifest packages, conservative static function calls and entrypoints, bounded flow views, and a small initial map payload. The [twelve-repository benchmark](docs/benchmarks/l9/README.md) freezes source commits, questions, independent reference evidence and measurement rules before implementation. L9 acceptance remains pending until its per-repository gates and blind comparison are reported. Earlier [L8 evidence](docs/review/l8-readable-repositories.md) remains historical evidence.
+**Status: L9 implementation and benchmark verification.** Maintenance was lifted to add build-manifest packages, conservative static function calls and entrypoints, bounded flow views, and a small initial map payload. The [twelve-repository benchmark](docs/benchmarks/l9/README.md) freezes source commits, questions, independent reference evidence and measurement rules before implementation. The [L9 evidence report](docs/review/l9-package-logic.md) records per-repository coverage, dependency and call accuracy, first-screen timings, and independent map-versus-source answers. Numerical checks do not establish complete execution flows; unresolved dispatch, large warm MCP latency and publication verification remain explicitly distinguished. Earlier [L8 evidence](docs/review/l8-readable-repositories.md) remains historical evidence.
 
 - [Original v0.1 brief](docs/design/brief-v0.1.md)
 - [Architecture and lens contract](docs/design/lattice-v0.md)
