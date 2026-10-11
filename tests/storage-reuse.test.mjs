@@ -73,3 +73,50 @@ test('historical builds reuse immutable inputs but refresh current-lens projecti
     assert.equal(projected.difference.before.coverage, 'current-lens-projection');
     assert.equal(projected.before.nodes.find(node => node.id === 'one').kind, 'thing');
 });
+
+test('bulk persistence can avoid pinning current and historical graphs through WeakRefs', t => {
+    const root = realpathSync(mkdtempSync(join(tmpdir(), 'lattice-no-memo-')));
+    t.after(() => rmSync(root, { recursive: true, force: true }));
+    execFileSync('git', ['init', '-q', root]);
+    writeFileSync(join(root, '.gitignore'), '.lattice/\n'); writeFileSync(join(root, 'data.json'), '[{"id":"one"}]');
+    execFileSync('git', ['-C', root, 'add', '.']); execFileSync('git', ['-C', root, '-c', 'user.name=Test', '-c', 'user.email=test@example.invalid', 'commit', '-qm', 'fixture']);
+    const result = buildRepository({ root }); persistBuild(root, result);
+    const Original = globalThis.WeakRef; let created = 0;
+    globalThis.WeakRef = class extends Original { constructor(value) { super(value); created++; } };
+    try { const graph = persistBuild(root, result, undefined, { memoize: false }); assert.equal(graph.hash, result.graph.hash); assert.equal(created, 0); }
+    finally { globalThis.WeakRef = Original; }
+    const cache = join(root, '.lattice/cache'), catalog = JSON.parse(readFileSync(join(cache, 'snapshots.json'), 'utf8'));
+    atomic(join(cache, 'snapshots.json'), [{ ...catalog[0], graphHash: '0'.repeat(64) }]);
+    assert.throws(() => persistBuild(root, result, undefined, { memoize: false }), /Snapshot metadata mismatch/u);
+});
+
+test('prepared history validates before the current build and rejects changed bytes without decoding a second graph', async t => {
+    const { prepareSnapshots } = await import('../bin/storage.mjs');
+    const root = realpathSync(mkdtempSync(join(tmpdir(), 'lattice-prepared-history-')));
+    t.after(() => rmSync(root, { recursive: true, force: true }));
+    execFileSync('git', ['init', '-q', root]);
+    writeFileSync(join(root, '.gitignore'), '.lattice/\n');
+    writeFileSync(join(root, 'data.json'), '[{"id":"historical-unique-marker"}]');
+    execFileSync('git', ['-C', root, 'add', '.']);
+    execFileSync('git', ['-C', root, '-c', 'user.name=Test', '-c', 'user.email=test@example.invalid', 'commit', '-qm', 'fixture']);
+    persistBuild(root, buildRepository({ root }), undefined, { memoize: false });
+    const cache = join(root, '.lattice/cache');
+    const prepared = prepareSnapshots(cache);
+    writeFileSync(join(root, 'data.json'), '[{"id":"current"}]');
+    const result = buildRepository({ root });
+    const parse = JSON.parse;
+    JSON.parse = function (text, ...args) {
+        if (typeof text === 'string' && text.includes('historical-unique-marker')) throw new Error('historical graph decoded during persistence');
+        return parse(text, ...args);
+    };
+    try { assert.equal(persistBuild(root, result, undefined, { memoize: false, preparedSnapshots: prepared }).hash, result.graph.hash); }
+    finally { JSON.parse = parse; }
+    assert.throws(() => persistBuild(root, result, undefined, { preparedSnapshots: {} }), /Invalid prepared snapshot/u);
+    const catalogPath = join(cache, 'snapshots.json'), catalog = JSON.parse(readFileSync(catalogPath, 'utf8'));
+    const artifact = join(cache, catalog[0].artifactPath), original = readFileSync(artifact);
+    writeFileSync(artifact, Buffer.concat([original, Buffer.from(' ')]));
+    assert.throws(() => persistBuild(root, result, undefined, { preparedSnapshots: prepared }), /Snapshot artifacts changed/u);
+    writeFileSync(artifact, original);
+    writeFileSync(catalogPath, readFileSync(catalogPath, 'utf8') + ' ');
+    assert.throws(() => persistBuild(root, result, undefined, { preparedSnapshots: prepared }), /Snapshot catalog changed/u);
+});

@@ -4,7 +4,7 @@ import type { buildRepository } from './build.mjs';
 import { parseGraph, parseSnapshots } from './decode.mjs';
 import { createHash, randomUUID } from 'node:crypto';
 import { closeSync, existsSync, mkdirSync, openSync, readFileSync, readSync, renameSync, rmSync, writeFileSync, writeSync } from 'node:fs';
-import { dirname, join } from 'node:path';
+import { dirname, join, resolve } from 'node:path';
 import { canonicalJson, createGraph } from '../dist/index.js';
 import { readJsonObject } from './json-stream.mjs';
 
@@ -62,7 +62,7 @@ function fileDigest(path: string): string {
         return hash.digest('hex');
     } finally { closeSync(descriptor); }
 }
-function writeGraph(path: string, graph: Graph) {
+function writeGraph(path: string, graph: Graph, options: { readonly memoize?: boolean; } = {}) {
     mkdirSync(dirname(path), { recursive: true });
     const temporary = `${path}.${randomUUID()}.tmp`, hash = createHash('sha256');
     let descriptor: number | undefined;
@@ -96,7 +96,7 @@ function writeGraph(path: string, graph: Graph) {
         descriptor = undefined;
         const bytesHash = hash.digest('hex');
         if (!existsSync(path) || fileDigest(path) !== bytesHash) renameSync(temporary, path);
-        rememberGraph(path, bytesHash, graph);
+        if (options.memoize !== false) rememberGraph(path, bytesHash, graph);
     } finally {
         if (descriptor !== undefined) closeSync(descriptor);
         rmSync(temporary, { force: true });
@@ -142,12 +142,60 @@ export function readSnapshots(cache: string, options: { readonly memoize?: boole
         return snapshot;
     });
 }
-export function saveSnapshot(cache: string, graph: Graph, coverage: string) {
-    let snapshots = readSnapshots(cache);
+declare const preparedSnapshotBrand: unique symbol;
+export interface PreparedSnapshots { readonly [preparedSnapshotBrand]: true; }
+interface SnapshotProof {
+    readonly cache: string;
+    readonly catalogHash: string | undefined;
+    readonly artifacts: ReadonlyMap<string, string>;
+    readonly snapshots: readonly Snapshot[];
+}
+const snapshotProofs = new WeakMap<PreparedSnapshots, SnapshotProof>();
+function catalogDigest(cache: string) {
+    const path = join(cache, 'snapshots.json');
+    return existsSync(path) ? fileDigest(path) : undefined;
+}
+function checkSnapshotProof(cache: string, proof: SnapshotProof) {
+    if (resolve(cache) !== proof.cache) throw new Error('Invalid prepared snapshot cache');
+    if (catalogDigest(cache) !== proof.catalogHash) throw new Error('Snapshot catalog changed after validation');
+    for (const [path, hash] of proof.artifacts) {
+        if (!existsSync(path) || fileDigest(path) !== hash) throw new Error('Snapshot artifacts changed after validation');
+    }
+}
+export function prepareSnapshots(cache: string): PreparedSnapshots {
+    const catalogHash = catalogDigest(cache);
+    const catalog = catalogHash === undefined ? [] : parseSnapshots(JSON.parse(readFileSync(join(cache, 'snapshots.json'), 'utf8')));
+    if (catalog.length > 32) throw new Error('Invalid snapshot catalog');
+    const artifacts = new Map<string, string>();
+    for (const snapshot of catalog) {
+        if (!/^[a-f0-9]{64}$/u.test(snapshot.id) || snapshot.artifactPath !== `snapshots/${snapshot.id}.json`) throw new Error('Invalid snapshot identity');
+        const path = join(cache, snapshot.artifactPath);
+        artifacts.set(path, fileDigest(path));
+    }
+    const snapshots = readSnapshots(cache, { memoize: false });
+    if (canonicalJson(snapshots) !== canonicalJson(catalog)) throw new Error('Snapshot catalog changed during validation');
+    const proof = { cache: resolve(cache), catalogHash, artifacts, snapshots };
+    checkSnapshotProof(cache, proof);
+    const token = Object.freeze({}) as PreparedSnapshots;
+    snapshotProofs.set(token, proof);
+    return token;
+}
+interface PersistenceOptions {
+    readonly memoize?: boolean;
+    readonly preparedSnapshots?: PreparedSnapshots;
+}
+function preparedCatalog(cache: string, token: PreparedSnapshots): Snapshot[] {
+    const proof = snapshotProofs.get(token);
+    if (!proof) throw new Error('Invalid prepared snapshot proof');
+    checkSnapshotProof(cache, proof);
+    return [...proof.snapshots];
+}
+export function saveSnapshot(cache: string, graph: Graph, coverage: string, options: PersistenceOptions = {}) {
+    let snapshots = options.preparedSnapshots ? preparedCatalog(cache, options.preparedSnapshots) : readSnapshots(cache, options);
     if (graph.repository.commit && !graph.repository.dirty) {
         const id = digest(canonicalJson({ commit: graph.repository.commit, lens: graph.lensDigest, adapters: graph.adapterVersions, graph: graph.hash, coverage }));
         const snapshot = { id, commit: graph.repository.commit, graphHash: graph.hash, lensHash: graph.lensDigest, inputFingerprint: graph.repository.sourceFingerprint, coverage, artifactPath: `snapshots/${id}.json` };
-        writeGraph(join(cache, snapshot.artifactPath), graph);
+        writeGraph(join(cache, snapshot.artifactPath), graph, options);
         snapshots = [...snapshots.filter(entry => entry.id !== id), snapshot].slice(-32);
         atomic(join(cache, 'snapshots.json'), snapshots);
     }
@@ -155,13 +203,13 @@ export function saveSnapshot(cache: string, graph: Graph, coverage: string) {
     return Object.freeze({ ...graph, snapshots: Object.freeze(ordered.map(snapshot => Object.freeze({ ...snapshot }))) });
 }
 
-export function persistBuild(root: string, result: ReturnType<typeof buildRepository>, cacheDir?: string) {
+export function persistBuild(root: string, result: ReturnType<typeof buildRepository>, cacheDir?: string, options: PersistenceOptions = {}) {
     const cache = cacheDirectory(root, cacheDir);
-    const graph = saveSnapshot(cache, result.graph, result.coverage);
+    const graph = saveSnapshot(cache, result.graph, result.coverage, options);
     atomic(join(cache, 'presentation.json'), result.presentation);
     atomic(join(cache, 'diagnostics.json'), result.diagnostics);
     atomic(join(cache, 'inputs.json'), result.extraction.manifest);
     atomic(join(cache, 'build.json'), result.extraction.stats);
-    writeGraph(join(cache, 'graph.json'), graph);
+    writeGraph(join(cache, 'graph.json'), graph, options);
     return graph;
 }
