@@ -11,7 +11,7 @@ test('literal package metadata supplies a sourced repository introduction ahead 
         ['package.json', '{\n "description": "**HTTP client** for applications. More detail."\n}', 2],
         ['pyproject.toml', '[project]\nname = "project"\ndescription = "HTTP client for applications. More detail."\n[tool.other]\ndescription = "Wrong scope"', 3],
         ['Cargo.toml', '[package]\ndescription = "HTTP client for applications. More detail."', 2],
-        ['src/App.csproj', '<Project><PropertyGroup>\n<Description>HTTP client for applications. More detail.</Description>\n</PropertyGroup></Project>', 2],
+        ['App.csproj', '<Project><PropertyGroup>\n<Description>HTTP client for applications. More detail.</Description>\n</PropertyGroup></Project>', 2],
         ['pom.xml', '<project>\n<description>HTTP client for applications. More detail.</description>\n</project>', 2],
         ['project.gemspec', 'Gem::Specification.new do |s|\n s.summary = "HTTP client for applications. More detail."\nend', 2],
     ]) {

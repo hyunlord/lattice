@@ -46,7 +46,7 @@ export type LoopMap = {
 };
 export type LoopMapContext = {
     readonly kindLabel?: (kind: string) => string; readonly nodeHref?: (id: string) => string;
-    readonly onEvidence?: () => void; readonly onDetails?: () => void;
+    readonly onEvidence?: () => void; readonly onDetails?: () => void; readonly onMissingNode?: (id: string) => void;
 };
 export type LoopUI = {
     readonly model: LoopMap; readonly context: LoopMapContext; readonly byId: ReadonlyMap<string, LoopNode>;

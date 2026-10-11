@@ -22,7 +22,8 @@ export function verifyGraft(cli, repository) {
   run(['build']);
   assert.equal(graph().nodes.length, 4);
   assert.equal(graph().nodes.filter(node => node.kind === 'function').length, 2);
-  assert.equal(graph().edges.length, 3);
+  assert.equal(graph().edges.length, 4);
+  assert.equal(graph().edges.filter(edge => edge.kind === 'calls').length, 1);
   assert.equal(graph().edges.filter(edge => edge.kind === 'contains').length, 2);
   mkdirSync(join(repository, 'graft/.graph'), { recursive: true });
   const node = (id, path, name, kind, span) => ({ id, path, name, kind, span, signature: null, exported: true, origin: 'ast', body_hash: hash(files[path]), summary_state: 'pending', summary: null, crux: null });
@@ -65,7 +66,8 @@ export function verifyGraft(cli, repository) {
     save('graft/.graph/wiring.json', invalid); run(['build']);
     assert.equal(graph().nodes.length, 4);
   assert.equal(graph().nodes.filter(node => node.kind === 'function').length, 2);
-    assert.equal(graph().edges.length, 3);
+    assert.equal(graph().edges.length, 4);
+  assert.equal(graph().edges.filter(edge => edge.kind === 'calls').length, 1);
   assert.equal(graph().edges.filter(edge => edge.kind === 'contains').length, 2);
     assert.ok(read('.lattice/cache/diagnostics.json').some(value => value.code === 'graft-invalid'));
   }

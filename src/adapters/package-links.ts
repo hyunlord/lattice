@@ -1,4 +1,4 @@
-import type { Edge, NodeDraft } from "../core/model.js";
+import type { Edge, NodeDraft, Source } from "../core/model.js";
 import type { CodeModule } from "./code.js";
 
 /** Package membership is evidence of declaration, never evidence of file usage. */
@@ -18,8 +18,10 @@ export function packageNode(language: string, name: string, members: readonly Co
 export function packageMembership(node: NodeDraft): readonly Edge[] {
     const members = node.attributes["memberIds"];
     if (!Array.isArray(members)) return [];
+    const sources = new Map<string, Source[]>();
+    for (const source of node.sources) { const id = `module:${source.path}`, bucket = sources.get(id); if (bucket) bucket.push(source); else sources.set(id, [source]); }
     return members.flatMap(target => typeof target === "string" ? [{
         id: `package-member:${node.id}:${target}`, kind: "contains", source: node.id, target,
-        directed: true, field: "package", sources: node.sources.filter(source => `module:${source.path}` === target),
+        directed: true, field: "package", sources: sources.get(target) ?? [],
     }] : []);
 }

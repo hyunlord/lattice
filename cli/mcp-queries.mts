@@ -1,3 +1,4 @@
+import { logicEntrypoints, logicCalls, logicFlow } from '../dist/query/logic-model.js';
 import { canonicalJson } from '../dist/core/canonical.js';
 import type { Graph } from '../dist/core/model.js';
 import { automaticViews } from '../dist/query/views-model.js';
@@ -9,6 +10,9 @@ export function queryGraph(name: ToolName, args: Record<string, unknown>, graph:
     const scope = scopeGraph(graph, presentation, args);
     const summary = { graphHash: graph.hash, repository: graph.repository, layer: scope.layer };
     switch (name) {
+        case 'lattice_entrypoints': return { ...summary, ...logicEntrypoints(scope, { ...(typeof args['offset'] === 'number' ? { offset: args['offset'] } : {}), ...(typeof args['limit'] === 'number' ? { limit: args['limit'] } : {}) }), link: link('/logic', { layer: scope.layer }) };
+        case 'lattice_calls': return { ...summary, ...logicCalls(scope, { id: stringArg(args, 'id') ?? '', ...(typeof args['offset'] === 'number' ? { offset: args['offset'] } : {}), ...(typeof args['limit'] === 'number' ? { limit: args['limit'] } : {}), ...(args['direction'] === 'in' || args['direction'] === 'out' || args['direction'] === 'both' ? { direction: args['direction'] } : {}), includeEstimated: args['includeEstimated'] === true }), link: link('/logic', { layer: scope.layer, id: stringArg(args, 'id') ?? '' }) };
+        case 'lattice_flow': return { ...summary, ...logicFlow(scope, { id: stringArg(args, 'id') ?? '', ...(typeof args['depth'] === 'number' ? { depth: args['depth'] } : {}), ...(typeof args['maxNodes'] === 'number' ? { maxNodes: args['maxNodes'] } : {}), ...(typeof args['maxEdges'] === 'number' ? { maxEdges: args['maxEdges'] } : {}), includeEstimated: args['includeEstimated'] === true }), link: link('/logic', { layer: scope.layer, id: stringArg(args, 'id') ?? '' }) };
         case 'lattice_overview': {
             const distribution = [...new Set(scope.nodes.map(node => node.kind))].sort().map(kind => ({ kind, count: scope.nodes.filter(node => node.kind === kind).length }));
             const facetDistributions = [...new Set(scope.facets.map(facet => facet.key))].sort().map(key => {

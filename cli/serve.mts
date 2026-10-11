@@ -1,3 +1,5 @@
+import { writeLogic } from './export-logic.mjs';
+import { writeOverview } from './export-overview.mjs';
 import type { Options } from './types.mjs';
 import type { ServerResponse } from 'node:http';
 import { createServer } from 'node:http';
@@ -40,6 +42,8 @@ export async function serve(options: Options) {
                     const result = buildRepository(options, undefined, observed);
                     const graph = persistBuild(options.root, result, options.cacheDir);
                     const files = new Map([['/graph.json', JSON.stringify(graph)], ['/presentation.json', JSON.stringify(result.presentation)], ['/snapshots.json', JSON.stringify(graph.snapshots)]]);
+                    writeLogic(graph, (path, text) => files.set('/' + path, text));
+                    writeOverview(graph, result.presentation, (path, text) => files.set('/' + path, text));
                     for (const snapshot of graph.snapshots) files.set(`/${snapshot.artifactPath}`, JSON.stringify(readGraph(join(cache, snapshot.artifactPath))));
                     return { files, graph, result };
                 }, options.cacheDir);
@@ -82,10 +86,10 @@ export async function serve(options: Options) {
         if (mediaFile) { send(200, mediaFile.mimeType, mediaFile.bytes); return; }
         const asset = assets.get(url.pathname);
         if (asset) { send(200, url.pathname.endsWith('.css') ? 'text/css' : 'text/javascript', asset); return; }
-        if (error && !url.searchParams.has('generation') && ['/graph.json', '/presentation.json', '/snapshots.json'].includes(url.pathname)) { send(503, 'application/json', JSON.stringify({ error })); return; }
+        if (error && !url.searchParams.has('generation') && ['/overview.json', '/graph.json', '/presentation.json', '/snapshots.json'].includes(url.pathname)) { send(503, 'application/json', JSON.stringify({ error })); return; }
         const version = url.searchParams.get('generation') ?? String(generation);
         const files = generations.get(version);
-        if (!files && ['/graph.json', '/presentation.json', '/snapshots.json'].includes(url.pathname)) { send(503, 'application/json', JSON.stringify({ error: error ?? 'Generation expired; reload the page' })); return; }
+        if (!files && ['/overview.json', '/graph.json', '/presentation.json', '/snapshots.json'].includes(url.pathname)) { send(503, 'application/json', JSON.stringify({ error: error ?? 'Generation expired; reload the page' })); return; }
         const data = files?.get(url.pathname);
         if (data !== undefined) { send(200, 'application/json', data); return; }
         send(404, 'text/plain', 'Not found');

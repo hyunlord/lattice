@@ -1,4 +1,6 @@
 import type { Node, Edge } from '../core/model.js';
+import { manifestStructuralMap, manifestPackage, manifestProductSelection } from './structural-manifest-map.js';
+import { representativeNames } from './structural-name-facts.js';
 import { structuralFilePreviews } from './structural-file-previews.js';
 import { structuralFrontier } from './structural-frontier.js';
 import type { LoopStage, LoopFlow } from './loop-map-types.js';
@@ -8,11 +10,13 @@ const folder = (node: Node): string => parent(node.sources[0]?.path ?? node.name
 const within = (path: string, directory: string): boolean => directory === '.' || path === directory || path.startsWith(directory + '/');
 const strings = (value: unknown): string[] => Array.isArray(value) ? value.filter((v): v is string => typeof v === 'string') : [];
 const auxiliaryDirectory = (path: string): string | undefined => {
-    const parts = path.split('/');
-    const index = parts.findIndex(part => part.replace(/([a-z0-9])([A-Z])/gu, '$1-$2').replace(/([A-Z])([A-Z][a-z])/gu, '$1-$2').toLowerCase().split(/[._-]+/u).some(token => /^(?:tests?|specs?|examples?|samples?|docs?|documentation|testdata|fixtures|vitepress|benchmarks?|bench)$/u.test(token)));
+    const allParts = path.split('/');
+    const main = allParts.findIndex((part, index) => part === 'src' && allParts[index + 1] === 'main');
+    const parts = main < 0 ? allParts : allParts.slice(0, main);
+    const index = parts.findIndex(part => part.replace(/([a-z0-9])([A-Z])/gu, '$1-$2').replace(/([A-Z])([A-Z][a-z])/gu, '$1-$2').toLowerCase().split(/[._-]+/u).some(token => /^(?:tests?|specs?|testdata|fixtures)$/u.test(token)));
     return index < 0 ? undefined : parts.slice(0, index + 1).join('/');
 };
-export const productionSource = (path: string): boolean => auxiliaryDirectory(path) === undefined && !/(?:_test\.go|(?:^|[._-])(?:test|spec)\.[cm]?[jt]sx?|(?:^|\/)test_[^/]+\.py|[^/]*Tests?\.(?:java|cs))$/u.test(path);
+export const productionSource = (path: string): boolean => auxiliaryDirectory(path) === undefined && (/(?:^|\/)src\/main\//u.test(path) || !/(?:_test\.go|(?:^|[._-])(?:test|spec)\.[cm]?[jt]sx?|(?:^|\/)test_[^/]+\.py|[^/]*Tests?\.(?:java|cs))$/u.test(path));
 const descriptionKind = (node: Node): unknown => { const value = node.attributes['sourceDescription']; return value && typeof value === 'object' ? Reflect.get(value, 'kind') : undefined; };
 const descriptionText = (node: Node): string => { const value = node.attributes['sourceDescription']; const text: unknown = value && typeof value === 'object' ? Reflect.get(value, 'text') : undefined; return typeof text === 'string' ? text : ''; };
 export const structuralCategoryLabel = (node: Node): string => `${node.attributes['scope'] === 'repository' ? '저장소 ' : ''}${node.attributes['category'] === 'namespace' ? '네임스페이스' : '패키지'}`;
@@ -37,7 +41,7 @@ function folderDocument(members: readonly Node[], documents: readonly Node[], pa
 
 export function structuralSummary(members: readonly Node[], documents: readonly Node[], path: string): string {
     if (path === '.' && !members.length) {
-        const metadata = documents.filter(node => node.kind === 'document' && descriptionKind(node) === 'package-metadata' && descriptionText(node)).sort((a, b) => {
+        const metadata = documents.filter(node => node.kind === 'document' && parent(node.sources[0]?.path ?? '') === '.' && descriptionKind(node) === 'package-metadata' && descriptionText(node)).sort((a, b) => {
             const left = a.sources[0]?.path ?? '', right = b.sources[0]?.path ?? '';
             return left.split('/').length - right.split('/').length || left.localeCompare(right);
         })[0];
@@ -120,6 +124,8 @@ function verifiedCycles(nodes: readonly Node[], edges: readonly Edge[]): string[
 }
 
 export function buildStructuralMap(nodes: readonly Node[], edges: readonly Edge[]) {
+    const manifested = manifestStructuralMap(nodes, edges, buildStructuralMap);
+    if (manifested) return manifested;
     const modules = nodes.filter(node => node.kind === 'module');
     const sourceNodes = modules.length ? modules : nodes.filter(node => node.kind === 'file');
     const byId = new Map(nodes.map(node => [node.id, node]));
@@ -153,7 +159,8 @@ export function buildStructuralMap(nodes: readonly Node[], edges: readonly Edge[
         const text = doc ? sentence(descriptionText(doc)) : missingStructuralRole;
         const value = doc?.attributes['sourceDescription'];
         const line: unknown = value && typeof value === 'object' ? Reflect.get(value, 'line') : undefined;
-        return { id: `folder:${path}`, directoryPath: path, title: relativeTitle(path, source), summary: text, summaryEvidence: doc?.sources[0] ? [{ path: doc.sources[0].path, line: typeof line === 'number' ? line : doc.sources[0].line }] : [], unit: '파일', nodeIds: members.map(node => node.id), groups: [{ title: '파일', items: members.map(node => ({ id: node.id })) }], incoming: [], outgoing: [] };
+        const summaryDetail = doc ? undefined : representativeNames(members);
+        return { ...(summaryDetail ? { summaryDetail } : {}), id: `folder:${path}`, directoryPath: path, title: relativeTitle(path, source), summary: text, summaryEvidence: doc?.sources[0] ? [{ path: doc.sources[0].path, line: typeof line === 'number' ? line : doc.sources[0].line }] : [], unit: '파일', nodeIds: members.map(node => node.id), groups: [{ title: '파일', items: members.map(node => ({ id: node.id })) }], incoming: [], outgoing: [] };
     });
     const frontier = structuralFrontier(stages, flows, productionSource);
     const entryPaths = new Set(sourceNodes.filter(node => {
@@ -169,18 +176,23 @@ export function buildStructuralMap(nodes: readonly Node[], edges: readonly Edge[
 
 export function buildStructuralOverview(nodes: readonly Node[], edges: readonly Edge[]) {
     const modules = nodes.filter(n => n.kind === 'module'), sources = modules.length ? modules : nodes.filter(n => n.kind === 'file');
-    const productionCount = sources.filter(n => productionSource(n.sources[0]?.path ?? n.name)).length, auxiliaryCount = sources.length - productionCount;
+    const manifestSelection = manifestProductSelection(nodes);
+    const product = (node: Node): boolean => manifestSelection.get(node.id) ?? productionSource(node.sources[0]?.path ?? node.name);
+    const productionCount = sources.filter(n => product(n)).length, auxiliaryCount = sources.length - productionCount;
     const all = buildStructuralMap(nodes, edges);
     const primaryRoot = all.structuralSourceRoot;
-    const outsideCount = sources.filter(node => productionSource(node.sources[0]?.path ?? node.name) && !within(folder(node), primaryRoot)).length;
-    const excludedDescription = [`소스 루트 밖 제품 파일 ${outsideCount}개`, `테스트·예제·문서·벤치마크 파일 ${auxiliaryCount}개`].join(' · ');
+    const manifested = nodes.some(manifestPackage);
+    const inside = sources.filter(node => product(node) && within(folder(node), primaryRoot)).length;
+    const restrictRoot = !manifested && inside >= productionCount * 0.9;
+    const outsideCount = sources.filter(node => product(node) && restrictRoot && !within(folder(node), primaryRoot)).length;
+    const excludedDescription = [`소스 루트 밖 제품 파일 ${outsideCount}개`, `테스트·검사 자료 파일 ${auxiliaryCount}개`].join(' · ');
     if (!productionCount || (!auxiliaryCount && !outsideCount)) return { ...all, structuralScope: { default: productionCount ? 'production' as const : 'all' as const, productionCount, auxiliaryCount, allRootStageIds: all.rootStageIds, allDefaultStage: all.defaultStage, allSourceRoot: all.structuralSourceRoot, allEntryStageIds: all.structuralEntryStageIds, excludedDescription, outsideRootCount: outsideCount, selectedCount: productionCount - outsideCount } };
-    const allowed = new Set(nodes.filter(n => n.kind !== 'package' && productionSource(n.sources[0]?.path ?? n.name) && (n.kind === 'document' || within(folder(n), primaryRoot))).map(n => n.id));
+    const allowed = new Set(nodes.filter(n => n.kind !== 'package' && product(n) && (n.kind === 'document' || !restrictRoot || within(folder(n), primaryRoot))).map(n => n.id));
     const byId = new Map(nodes.map(n => [n.id, n]));
     const scopedNodes = nodes.flatMap(n => {
         if (n.kind !== 'package') return allowed.has(n.id) ? [n] : [];
         const recorded = strings(n.attributes['memberIds']), memberIds = recorded.filter(id => allowed.has(id));
-        if (!recorded.length) return productionSource(n.sources[0]?.path ?? n.name) ? [n] : [];
+        if (!recorded.length) return product(n) ? [n] : [];
         if (!memberIds.length) return [];
         const directories = [...new Set(memberIds.flatMap(id => { const member = byId.get(id); return member ? [folder(member)] : []; }))];
         return [{ ...n, attributes: { ...n.attributes, memberIds, directories } }];

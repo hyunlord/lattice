@@ -62,7 +62,7 @@ test('thirteen siblings remain physical page entries with raw dependencies prese
 });
 
 test('auxiliary trees fold without occupying production package slots or dropping files', () => {
-    const nodes = [node('app', 'src/main/java/pkg/App.java'), node('parser', 'src/main/java/pkg/parser/Parser.java'), node('model', 'src/main/java/pkg/model/Model.java'), ...Array.from({ length: 15 }, (_, i) => node(`test${i}`, `src/test/java/pkg/case${i}/Test.java`)), ...Array.from({ length: 12 }, (_, i) => node(`example${i}`, `_examples/case${i}/main.go`))];
+    const nodes = [node('app', 'src/main/java/pkg/App.java', { entryPoints: [{ name: 'main', line: 1 }] }), node('parser', 'src/main/java/pkg/parser/Parser.java'), node('model', 'src/main/java/pkg/model/Model.java'), ...Array.from({ length: 15 }, (_, i) => node(`test${i}`, `src/test/java/pkg/case${i}/Test.java`)), ...Array.from({ length: 12 }, (_, i) => node(`example${i}`, `_examples/case${i}/main.go`))];
     const edges = [...nodes.filter(n => n.id.startsWith('test')).map(n => edge(n.id, n.id, 'app')), edge('prod', 'app', 'parser')];
     const model = buildStructuralMap(nodes, edges);
     assert.deepEqual(new Set(model.rootStageIds), new Set(['folder:src/main/java/pkg', 'folder:src/main/java/pkg/parser', 'folder:src/main/java/pkg/model', 'directory:src/test/java/pkg', 'directory:_examples']));
@@ -156,8 +156,8 @@ test('verified cycles require original file import edges rather than namespace o
 
 
 test('auxiliary folder roles match exact separated tokens without excluding their dependencies', () => {
-    for (const path of ['src/Library.Tests/A.cs', 'src/Library_Benchmarks/A.cs', 'src/library-examples/demo/A.cs', 'testdata/a.go', 'fixtures/a.ts', 'docs/.vitepress/config.ts']) assert.equal(productionSource(path), false);
-    for (const path of ['src/Contest/A.cs', 'src/Latest/A.cs', 'src/Testament/A.cs', 'src/testing-support/A.cs']) assert.equal(productionSource(path), true);
+    for (const path of ['src/Library.Tests/A.cs', 'testdata/a.go', 'fixtures/a.ts']) assert.equal(productionSource(path), false);
+    for (const path of ['src/Contest/A.cs', 'src/Latest/A.cs', 'src/Testament/A.cs', 'src/testing-support/A.cs', 'src/Library_Benchmarks/A.cs', 'src/library-examples/demo/A.cs', 'docs/.vitepress/config.ts']) assert.equal(productionSource(path), true);
     const nodes = [node('app', 'src/Library/App.cs'), node('base', 'src/Foundation/Base.cs'), node('tests', 'src/Library.Tests/Test.cs'), node('nested', 'src/Library.Tests/nested/Test.cs')];
     const edges = [edge('prod', 'app', 'base'), edge('test', 'tests', 'app'), edge('nested', 'nested', 'base')];
     const model = buildStructuralMap(nodes, edges);
@@ -196,7 +196,7 @@ test('direct root identity survives folding without creating a dependency back t
 test('production scope omits auxiliary contributions and all scope retains exact import files', () => {
     const nodes = [node('app', 'main.go'), node('test', 'main_test.go'), node('lib', 'lib/a.go')];
     const model = buildStructuralOverview(nodes, [edge('prod', 'app', 'lib'), edge('test', 'test', 'lib')]);
-    assert.deepEqual(model.structuralScope, { default: 'production', productionCount: 2, auxiliaryCount: 1, allRootStageIds: ['all:folder:.', 'all:folder:lib'], allDefaultStage: 'all:folder:.', allSourceRoot: '.', allEntryStageIds: ['all:folder:.'], excludedDescription: '소스 루트 밖 제품 파일 0개 · 테스트·예제·문서·벤치마크 파일 1개', outsideRootCount: 0, selectedCount: 2 });
+    assert.deepEqual(model.structuralScope, { default: 'production', productionCount: 2, auxiliaryCount: 1, allRootStageIds: ['all:folder:.', 'all:folder:lib'], allDefaultStage: 'all:folder:.', allSourceRoot: '.', allEntryStageIds: ['all:folder:.'], excludedDescription: '소스 루트 밖 제품 파일 0개 · 테스트·검사 자료 파일 1개', outsideRootCount: 0, selectedCount: 2 });
     assert.deepEqual([...projected(model)[0].files], ['main.go']);
     assert.deepEqual([...projected(model, model.structuralScope.allRootStageIds)[0].files], ['main.go', 'main_test.go']);
     const testsOnly = buildStructuralOverview([node('test', 'tests/api.ts')], []);

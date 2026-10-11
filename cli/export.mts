@@ -1,3 +1,5 @@
+import { writeLogic } from './export-logic.mjs';
+import { writeOverview } from './export-overview.mjs';
 import { thinGraph } from './export-evidence.mjs';
 import { resolveMediaAssets } from './assets.mjs';
 import { parseMediaConfig } from '../dist/query/media-model.js';
@@ -58,6 +60,8 @@ export function exportSite(options: Options) {
         for (const file of ['index.html', 'styles.css', ...readdirSync(join(packageRoot, 'viewer')).filter(file => (file.endsWith('.js') || file.endsWith('.css')))]) copyFileSync(join(packageRoot, 'viewer', file), join(staging, file));
         const written = new Set<string>();
         const writeEvidence = (path: string, text: string) => { if (written.has(path)) return; mkdirSync(dirname(join(staging, path)), { recursive: true }); writeFileSync(join(staging, path), text); written.add(path); };
+        writeLogic(graph, writeEvidence);
+        writeOverview(graph, object(presentation) ? { ...presentation, mediaManifest: media.manifest } : {}, writeEvidence);
         writeFileSync(join(staging, 'graph.json'), JSON.stringify(thinGraph(graph, writeEvidence)));
         copyFileSync(join(cache, 'presentation.json'), join(staging, 'presentation.json'));
         writeFileSync(join(staging, 'media.json'), JSON.stringify(media.manifest, null, 2) + '\n');

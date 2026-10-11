@@ -56,9 +56,9 @@ export function extractMarkdown(input: SourceInput): MarkdownDocument {
             visible.push("");
         } else {
             const indented = /^(?: {4}|\t)/u.test(line);
-            const visibleParagraph = paragraphOpen || (!indented && /<p(?:\s[^>]*)?>/iu.test(line));
+            const visibleParagraph = paragraphOpen || (!indented && /<(?:p|h[1-6])(?:\s[^>]*)?>/iu.test(line));
             visible.push(indented && !paragraphOpen ? "" : line);
-            if (visibleParagraph) paragraphOpen = !/<\/p\s*>/iu.test(line);
+            if (visibleParagraph) paragraphOpen = !/<\/(?:p|h[1-6])\s*>/iu.test(line);
         }
     }
     const definitions = new Map<string, string>();
@@ -112,6 +112,7 @@ export function extractMarkdown(input: SourceInput): MarkdownDocument {
             documentDescription = markdownDescription(visible, introduction.endLine, (next?.line ?? (visible.length + 1)) - 1, preferredName);
         }
     }
+    if (!documentDescription && isReadme) documentDescription = markdownDescription(visible, 0, visible.length, preferredName);
     const nodes: NodeDraft[] = [{ id: documentId, kind: "document", name: title, attributes: { ...metadata, ...(documentDescription ? { sourceDescription: documentDescription } : {}) }, sources: [makeSource(input, "", 1, lines.length)] }];
     const edges: Edge[] = [];
     const usedAnchors = new Set<string>();

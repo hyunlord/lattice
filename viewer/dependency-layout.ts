@@ -81,14 +81,14 @@ export function orthogonalRoute(start: Point, end: Point, space: RouteSpace): re
 
 export const dependencyLevels = dependencyComponents;
 
-export type DependencyPair = LoopFlow & { readonly reverseCount?: number; readonly reverseSourceFiles?: readonly string[]; readonly weight: number; };
+export type DependencyPair = LoopFlow & { readonly reverseCount?: number; readonly reverseSourceFiles?: readonly string[]; readonly reverseProjectSourceFiles?: readonly string[]; readonly weight: number; };
 export function dependencyPairs(flows: readonly LoopFlow[]): readonly DependencyPair[] {
     const pairs = new Map<string, DependencyPair>();
     for (const flow of flows) {
         const key = JSON.stringify([flow.source, flow.target].sort()); const prior = pairs.get(key);
         const count = flow.sourceFiles?.length ? new Set(flow.sourceFiles).size : flow.count ?? 0;
         if (!prior) pairs.set(key, { ...flow, count, weight: count });
-        else if (prior.source !== flow.source) pairs.set(key, { ...prior, reverseCount: count, reverseSourceFiles: flow.sourceFiles ?? [], weight: prior.weight + count });
+        else if (prior.source !== flow.source) pairs.set(key, { ...prior, reverseCount: count, reverseSourceFiles: flow.sourceFiles ?? [], reverseProjectSourceFiles: flow.projectSourceFiles ?? [], weight: prior.weight + count });
     }
     return [...pairs.values()].sort((a, b) => b.weight - a.weight || a.source.localeCompare(b.source) || a.target.localeCompare(b.target));
 }
@@ -103,7 +103,8 @@ export function displayedDependencyFlows(view: DependencyView, selected: string 
         const key = JSON.stringify([source, target]); const previous = projected.get(key);
         const sourceFiles = [...new Set([...(previous?.sourceFiles ?? []), ...(flow.sourceFiles ?? [])])].sort();
         const count = sourceFiles.length || (previous?.count ?? 0) + (flow.count ?? 0);
-        projected.set(key, { ...flow, source, target, count, sourceFiles, label: `${count}개 파일` });
+        const projectSourceFiles = [...new Set([...(previous?.projectSourceFiles ?? []), ...(flow.projectSourceFiles ?? [])])].sort();
+        projected.set(key, { ...flow, source, target, count, sourceFiles, projectSourceFiles, label: `${count}개 연결 근거` });
     }
     const pairs = dependencyPairs([...projected.values()]);
     if (showAll) return pairs;
@@ -193,7 +194,7 @@ export function dependencyPairSources(view: DependencyView, pair: Pick<LoopFlow,
 export function dependencyCardRole(stage: LoopStage): { readonly text: string; readonly label: string; } {
     const fresh = stage.interpretation && !stage.interpretation.stale;
     const summary = fresh ? stage.interpretation?.summary : stage.summaryEvidence?.length ? stage.summary : undefined;
-    return { text: summary?.split(/(?<=[.!?。])\s/u)[0] || '역할 설명 없음 — 요약 실행 필요', label: fresh ? 'AI 요약' : summary ? '문서 설명' : '' };
+    return { text: summary?.split(/(?<=[.!?。])\s/u)[0] || stage.summaryDetail?.text || '역할 설명 없음 — 요약 실행 필요', label: fresh ? 'AI 요약' : summary ? '문서 설명' : stage.summaryDetail?.label ?? '' };
 }
 
 export function featuredDependencyRoles(view: DependencyView, entryStageIds: readonly string[]): readonly LoopStage[] {
@@ -219,4 +220,10 @@ export function dependencyFlowDescription(flow: LoopFlow): string {
     const project = new Set(flow.projectSourceFiles ?? []), files = flow.sourceFiles ?? [];
     const names = (values: readonly string[]) => values.map(file => file.split('/').at(-1)).join(', ');
     return project.size ? `${files.length - project.size}개 파일이 사용: ${names(files.filter(file => !project.has(file)))} · 프로젝트 공통 선언 ${project.size}개: ${names([...project])} (프로젝트 전체 범위)` : `${flow.count ?? files.length}개 파일이 사용: ${names(files)}`;
+}
+
+export function dependencyCountLabel(flow: LoopFlow): string {
+    const declarations = new Set(flow.projectSourceFiles ?? []).size;
+    const files = Math.max(0, (flow.sourceFiles?.length ?? flow.count ?? 0) - declarations);
+    return [files ? `${files}개 파일` : '', declarations ? `의존 선언 ${declarations}개` : ''].filter(Boolean).join(' · ') || '0개 파일';
 }

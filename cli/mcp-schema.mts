@@ -1,5 +1,5 @@
 import { canonicalJson } from '../dist/core/canonical.js';
-export const toolNames = ['lattice_overview', 'lattice_find', 'lattice_node', 'lattice_trace', 'lattice_matrix', 'lattice_findings', 'lattice_diff', 'lattice_freshness', 'lattice_interpretation_context', 'lattice_write_interpretation', 'lattice_draft_lens'] as const;
+export const toolNames = ['lattice_overview', 'lattice_find', 'lattice_node', 'lattice_trace', 'lattice_matrix', 'lattice_findings', 'lattice_diff', 'lattice_freshness', 'lattice_interpretation_context', 'lattice_write_interpretation', 'lattice_draft_lens', 'lattice_entrypoints', 'lattice_calls', 'lattice_flow'] as const;
 export type ToolName = typeof toolNames[number];
 export function isToolName(value: unknown): value is ToolName { return toolNames.some(name => name === value); }
 export class McpArgumentError extends Error {
@@ -10,7 +10,11 @@ const text = { type: 'string', minLength: 1, maxLength: 4096 } as const;
 const paging = { offset: { type: 'integer', minimum: 0, maximum: 10000000, default: 0 }, limit: { type: 'integer', minimum: 1, maximum: 200, default: 50 } } as const;
 const scope = { layer: { type: 'string', description: 'Exact layer; empty string selects unlayered nodes. Omission uses the viewer default layer.' } } as const;
 const filters = { ...scope, kind: text, q: text, tags: { type: 'array', items: text, maxItems: 50, description: 'Every tag must occur in node attributes.tags.' }, facets: { type: 'object', additionalProperties: true, description: 'AND filters of facet keys to exact typed JSON values; 1 differs from "1".' } } as const;
+const logicOptions = { includeEstimated: { type: 'boolean', default: false, description: 'Include explicitly estimated static calls; unresolved targets are never invented.' } } as const;
 const definitions = {
+    lattice_entrypoints: { description: 'List source-bound executable, public API and framework entrypoints. Static candidates are not proof of runtime execution.', properties: { ...scope, ...paging }, required: [] },
+    lattice_calls: { description: 'Read source-bound callers and callees of a callable ID, independently paginated in stable edge ID order. Exact static resolutions only by default.', properties: { ...scope, ...paging, ...logicOptions, id: text, direction: { type: 'string', enum: ['in', 'out', 'both'], default: 'both' } }, required: ['id'] },
+    lattice_flow: { description: 'Follow outgoing static calls breadth-first across package boundaries. Reports depth, cycles without revisiting, and explicit truncation. This is possible static reachability, not a runtime trace or execution order.', properties: { ...scope, ...logicOptions, id: text, depth: { type: 'integer', minimum: 0, maximum: 10, default: 3 }, maxNodes: { type: 'integer', minimum: 1, maximum: 500, default: 100 }, maxEdges: { type: 'integer', minimum: 1, maximum: 500, default: 100 } }, required: ['id'] },
     lattice_interpretation_context: { description: 'Read agent-summary evidence. Use scope=overview, compact=true, limit=9 for first-screen folder targets, their visibleFiles module targets, and bounded evidence samples; sourceSetToken binds the complete source set. overviewScope=all selects all code instead of production. Defaults preserve full legacy module/folder context.', properties: { ...paging, scope: { type: 'string', enum: ['all', 'folders', 'overview'] }, overviewScope: { type: 'string', enum: ['production', 'all'] }, compact: { type: 'boolean' } }, required: [] },
     lattice_write_interpretation: { description: 'Write an AI-attributed summary into .lattice/notes only. Sources must exactly match current target hashes. No source code is modified. Supply exactly one of record or records (1 to 500); batches validate before writing individual atomic files.', properties: { records: { type: 'array', minItems: 1, maxItems: 500, items: { type: 'object' } }, record: { type: 'object', description: 'schemaVersion=1, targetId, summary (one or two sentences), author, exactly one of sources [{path,contentHash,line}] or sourceSetToken from compact context' } }, required: [] },
     lattice_draft_lens: { description: 'Validate and save a draft lens without activating it. Replacing an existing draft requires its SHA-256 expectedHash.', properties: { yaml: { type: 'string', maxLength: 1000000 }, expectedHash: text }, required: ['yaml'] },
@@ -32,12 +36,13 @@ export function parseArguments(name: ToolName, input: unknown): Record<string, u
     for (const [key, value] of Object.entries(input)) {
         if (!Object.hasOwn(definition.properties, key)) throw new McpArgumentError(key, 'unknown argument');
         switch (key) {
-            case 'compact': if (typeof value !== 'boolean') throw new McpArgumentError(key, 'expected boolean'); break;
+            case 'includeEstimated': case 'compact': if (typeof value !== 'boolean') throw new McpArgumentError(key, 'expected boolean'); break;
             case 'records': if (!Array.isArray(value) || !value.length || value.length > 500 || !value.every(object)) throw new McpArgumentError(key, 'expected 1 to 500 interpretation objects'); break;
             case 'record': if (!object(value)) throw new McpArgumentError(key, 'expected interpretation object'); break;
             case 'yaml': if (typeof value !== 'string' || !value.length || value.length > 1000000) throw new McpArgumentError(key, 'expected bounded YAML text'); break;
-            case 'offset': case 'limit': case 'hops': {
-                const minimum = key === 'limit' ? 1 : 0, maximum = key === 'limit' ? 200 : key === 'hops' ? 10 : 10000000;
+            case 'offset': case 'limit': case 'hops': case 'depth': case 'maxNodes': case 'maxEdges': {
+                const budget = key === 'maxNodes' || key === 'maxEdges';
+                const minimum = key === 'limit' || budget ? 1 : 0, maximum = budget ? 500 : key === 'limit' ? 200 : key === 'hops' || key === 'depth' ? 10 : 10000000;
                 if (typeof value !== 'number' || !Number.isInteger(value) || value < minimum || value > maximum) throw new McpArgumentError(key, `expected integer ${minimum}..${maximum}`);
                 break;
             }

@@ -1,0 +1,13 @@
+# L9 structure and logic analysis
+
+Build packages come from Cargo workspaces, Gradle settings and local convention plugins, npm workspaces, Go modules, Python package metadata, Maven modules, MSBuild projects and Unity assembly definitions. Package membership follows source roots and the nearest unambiguous owner. Declared dependencies retain scope, condition and declaration evidence; file imports do not multiply into every file in the target package.
+
+The analyzer reads project data without executing project scripts, tasks, plugins or dependency installation. MSBuild handles bounded literal substitutions, ancestor imports and whitelisted pure path operations. Recognized SDK defaults retain their upstream rule provenance. Conditional or dynamic expressions that cannot be established from these inputs remain diagnostics; declaration evidence is not an evaluated build configuration.
+
+The CLI uses the [documented AST parser](l9-parser-decision.md) for JS/TS, Python, Go, Rust, Java/Kotlin and C#. Function identities include their source position. Lexical scope, explicit imports, unique static owners and package bindings constrain call resolution. Overloads, unknown receivers, reassigned bindings and parser errors cannot silently become exact calls. Source hash changes invalidate cached facts. Verified Graft symbols and AST symbols share identities only when their source locations and hashes agree unambiguously.
+
+Entrypoints carry the rule and source line: language main functions, package exports/bin targets, Python console scripts and main guards, Android lifecycle declarations, route registration and Spring markers. Framework markers describe possible entrypoints, not proof that a particular invocation occurs. Each function exposes callers and callees; bounded traversal reports its depth, cycles and truncation.
+
+Static export writes an overview and content-addressed logic pages. The first screen does not download the canonical graph. Bounded entrypoint, function and call requests validate graph identity and artifact hashes; navigation to legacy detailed views can load the graph explicitly. Evidence remains lazy and source-bound. Unsupported source languages retain file inventory with a visible notice rather than fabricated relationships.
+
+Validation uses the [frozen L9 benchmark protocol](../benchmarks/l9/README.md). Keep partial results, source-declaration versus evaluated-build evidence, and agent-only comprehension measurements distinct. The product coverage gate is90%; the complete large-repository build budget is300seconds. Neither a cached rebuild nor a small fixture substitutes for those measurements.

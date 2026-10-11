@@ -17,10 +17,10 @@ export function markdownDescription(sourceLines: readonly string[], start: numbe
         if (index + 1 < lines.length && /^\s*(?:=+|-+)\s*$/u.test(lines[index + 1] ?? "")) { index++; continue; }
         let first = index;
         let raw = (lines[index] ?? "").trim();
-        if (/^>\s*\[!/u.test(raw)) { notice = true; continue; }
+        if (/^>\s*(?:\[!|[*_]*(?:note|warning|important|caution|tip)\b)/iu.test(raw)) { notice = true; continue; }
         if (notice && raw.startsWith(">")) continue;
         if (!raw.startsWith(">")) notice = false;
-        const htmlParagraph = /^<p(?:\s[^>]*)?>/iu.test(raw);
+        const htmlParagraph = /^<(?:p|h[1-6])(?:\s[^>]*)?>/iu.test(raw);
         const wasHtml = htmlDepth > 0;
         const wasMarketing = marketingDepth > 0;
         let marketingLine = wasMarketing;
@@ -36,14 +36,16 @@ export function markdownDescription(sourceLines: readonly string[], start: numbe
         if ((wasHtml || htmlDepth > 0) && !htmlParagraph) continue;
         raw = raw.replace(/^>\s?/u, "");
         if (htmlParagraph) {
-            while (!/<\/p\s*>/iu.test(raw) && index + 1 < end) {
+            while (!/<\/(?:p|h[1-6])\s*>/iu.test(raw) && index + 1 < end) {
                 const next = lines[++index] ?? "";
                 if (!raw.replace(/<[^>]*>/gu, " ").trim() && next.replace(/<[^>]*>/gu, " ").trim()) first = index;
                 for (const tag of next.matchAll(/<(\/?)(div|kbd|table|details|section|aside|figure|p)(?:\s[^>]*)?>/giu)) htmlDepth = Math.max(0, htmlDepth + (tag[1] ? -1 : 1));
                 raw += ` ${next}`;
             }
+            if (!raw.replace(/<a\b[^>]*>[\s\S]*?<\/a>/giu, "").replace(/<[^>]*>/gu, "").replace(/[|\s]/gu, "")) continue;
             raw = raw.replace(/<[^>]*>/gu, " ").trim();
         }
+        if (/^\.\.(?:\s|$)/u.test(raw) || /^:[\w-]+:/u.test(raw)) continue;
         if (!raw || /^(?:#|[|>]|[-*+]\s|\d+[.)]\s|<|!\[|\[!\[|\[[^\]]+\]:)/u.test(raw) || /^[-=*]+$/u.test(raw)) continue;
         if (!raw.replace(/\[[^\]]*\]\([^)]*\)/gu, "").trim()) continue;
         const parts = [raw];
@@ -58,6 +60,7 @@ export function markdownDescription(sourceLines: readonly string[], start: numbe
         const navigation = rawParagraph.replace(/\[[^\]]*\]\([^)]*\)/gu, " ").replace(/`[^`]*`/gu, " ").replace(/https?:\/\/\S+/gu, " ").trim();
         if (/^(?:visit|see|read|install|installation|download|run|get started)\b/iu.test(rawParagraph) && /^(?:(?:visit|see|read|install|installation|download|run|get started|with|via|using|or|and|at|the|documentation|docs|website|homepage)\b[\s:.,!-]*)+$/iu.test(navigation)) continue;
         const content = plain(rawParagraph).replace(/<[^>]*>/gu, " ").replace(/\s+/gu, " ").trim();
+        if (/^(?:note|warning|important|caution|tip)\s*:/iu.test(content) || /^(?:see|please see|read|visit)\b/iu.test(content) || /^(?:first[, :]|you (?:first |will )?need to|make sure|install(?:ation)?\b|clone\b|run (?:the|this|following)\b)/iu.test(content)) continue;
         if (!descriptiveProse(content)) continue;
         const text = (/^.*?[.!?](?:\s|$)/u.exec(content)?.[0] ?? content).trim().slice(0, 320);
         const result = { text, kind: "readme", line: lineOffset + first + 1, endLine: lineOffset + last + 1 };
