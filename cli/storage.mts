@@ -54,7 +54,7 @@ function readGraphDraft(path: string): { readonly draft: GraphDraft; readonly ha
     if (stored['schemaVersion'] !== 1) throw new Error(`Unsupported graph schema: ${path}`);
     return { draft: parseGraph(stored), hash: stored['hash'] };
 }
-function fileDigest(path: string): string {
+export function fileDigest(path: string): string {
     const descriptor = openSync(path, 'r'), bytes = Buffer.allocUnsafe(65536), hash = createHash('sha256');
     try {
         let count: number;
@@ -162,7 +162,7 @@ function checkSnapshotProof(cache: string, proof: SnapshotProof) {
         if (!existsSync(path) || fileDigest(path) !== hash) throw new Error('Snapshot artifacts changed after validation');
     }
 }
-export function prepareSnapshots(cache: string): PreparedSnapshots {
+export function prepareSnapshots(cache: string, options: { readonly onGraph?: (snapshot: Snapshot, graph: Graph) => void; } = {}): PreparedSnapshots {
     const catalogHash = catalogDigest(cache);
     const catalog = catalogHash === undefined ? [] : parseSnapshots(JSON.parse(readFileSync(join(cache, 'snapshots.json'), 'utf8')));
     if (catalog.length > 32) throw new Error('Invalid snapshot catalog');
@@ -172,7 +172,7 @@ export function prepareSnapshots(cache: string): PreparedSnapshots {
         const path = join(cache, snapshot.artifactPath);
         artifacts.set(path, fileDigest(path));
     }
-    const snapshots = readSnapshots(cache, { memoize: false });
+    const snapshots = readSnapshots(cache, { memoize: false, ...options });
     if (canonicalJson(snapshots) !== canonicalJson(catalog)) throw new Error('Snapshot catalog changed during validation');
     const proof = { cache: resolve(cache), catalogHash, artifacts, snapshots };
     checkSnapshotProof(cache, proof);

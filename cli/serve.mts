@@ -1,3 +1,4 @@
+import { writeNodeDetails } from './export-details.mjs';
 import { writeLogic } from './export-logic.mjs';
 import { writeOverview } from './export-overview.mjs';
 import type { Options } from './types.mjs';
@@ -47,13 +48,14 @@ export async function serve(options: Options) {
                     let next;
                     try {
                         next = withCacheLock(options.root, () => {
-                            const preparedSnapshots = prepareSnapshots(cache);
+                            const write = (path: string, text: string) => { const target = join(directory, path); mkdirSync(dirname(target), { recursive: true }); writeFileSync(target, text); };
+                            const preparedSnapshots = prepareSnapshots(cache, { onGraph: (snapshot, graph) => writeNodeDetails(graph, write, `details/snapshots/${snapshot.id}`) });
                             const buildArtifacts = () => {
                                 const result = buildRepository(options, undefined, observed);
                                 const graph = persistBuild(options.root, result, options.cacheDir, { memoize: false, preparedSnapshots });
-                                const write = (path: string, text: string) => { const target = join(directory, path); mkdirSync(dirname(target), { recursive: true }); writeFileSync(target, text); };
                                 copyFileSync(join(cache, 'graph.json'), join(directory, 'graph.json'), constants.COPYFILE_FICLONE);
                                 write('presentation.json', JSON.stringify(result.presentation)); write('snapshots.json', JSON.stringify(graph.snapshots));
+                                writeNodeDetails(graph, write);
                                 writeLogic(graph, write); writeOverview(graph, result.presentation, write);
                                 return { hash: graph.hash, snapshots: graph.snapshots, media: result.media.files, extraction: result.extraction.stats, diagnostics: result.diagnostics };
                             };

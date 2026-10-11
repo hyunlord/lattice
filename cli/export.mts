@@ -1,3 +1,4 @@
+import { writeNodeDetails } from './export-details.mjs';
 import { writeLogic } from './export-logic.mjs';
 import { writeOverview } from './export-overview.mjs';
 import { writeJsonFile } from './export-json.mjs';
@@ -47,6 +48,7 @@ function destination(options: Options) {
 function exportCurrentGraph(cache: string, staging: string, root: string, presentation: unknown, writeEvidence: (path: string, text: string) => void): string {
     const graph = readGraph(join(cache, 'graph.json'), { memoize: false });
     const media = resolveMediaAssets(root, graph.nodes, parseMediaConfig(object(presentation) ? presentation['media'] : undefined));
+    writeNodeDetails(graph, writeEvidence);
     writeLogic(graph, writeEvidence);
     writeOverview(graph, object(presentation) ? { ...presentation, mediaManifest: media.manifest } : {}, writeEvidence);
     writeJsonFile(join(staging, 'graph.json'), write => writeThinGraph(graph, writeEvidence, write));
@@ -74,6 +76,7 @@ export function exportSite(options: Options) {
         hash = exportCurrentGraph(cache, staging, options.root, presentation, writeEvidence);
         const snapshots = readSnapshots(cache, {
             memoize: false, onGraph: (snapshot, graph) => {
+                writeNodeDetails(graph, writeEvidence, `details/snapshots/${snapshot.id}`);
                 mkdirSync(join(staging, 'snapshots'), { recursive: true });
                 writeJsonFile(join(staging, snapshot.artifactPath), write => writeThinGraph(graph, writeEvidence, write));
             }
