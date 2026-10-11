@@ -1,0 +1,29 @@
+{
+  "frozenBeforeLatticeInspection": true,
+  "questions": [
+    {
+      "id": "structure",
+      "question": "주요 패키지 또는 모듈과 각 역할은 무엇인가?"
+    },
+    {
+      "id": "dependencies",
+      "question": "어떤 내부 패키지 또는 모듈이 어떤 다른 내부 패키지 또는 모듈을 사용하는가?"
+    },
+    {
+      "id": "entry",
+      "question": "제품 실행 또는 공개 API 사용은 어디에서 시작하는가? 근거 파일과 줄을 제시하라."
+    },
+    {
+      "id": "flow",
+      "question": "대표 동작이 어떤 저장소 내부 함수들을 거치는가? 호출 순서와 근거를 제시하라."
+    }
+  ],
+  "representativeActions": {
+    "fzf": "기본 CLI 실행에서 입력 읽기와 검색 실행",
+    "click": "Command.main으로 명령 콜백 실행",
+    "spring-petclinic": "GET /owners 요청으로 소유자 검색",
+    "ripgrep": "기본 CLI 텍스트 검색",
+    "nowinandroid": "MainActivity 생성에서 앱 화면 구성",
+    "excalidraw": "앱 루트 마운트에서 캔버스 편집기 생성"
+  }
+}

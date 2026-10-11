@@ -1,0 +1,24 @@
+{
+  "version": 1,
+  "files": {
+    "docs/benchmarks/l9/README.md": "72eec0f2da0881d8102e094bf278049f18087eab07ca1a87a7bd165f2cf16631",
+    "docs/benchmarks/l9/core-questions.json": "c0b896521ef2af966775033e01d27d5c3f600d385ad3bd2d9c833cbb9c005026",
+    "docs/benchmarks/l9/core/click.md": "0cf6d0e923f5d1d0f37494b7cf53981d43d08aef92fea2a342502ca6a3c02a2d",
+    "docs/benchmarks/l9/core/excalidraw.md": "40d103f1f3098a3689d0b3024afc28ef82516e88fc5d66767343c5afd0f3c52f",
+    "docs/benchmarks/l9/core/fzf.md": "9de14dc2b94085c10b45bf9002511e0d9ca3a5bc282645416b5e0599a6055b45",
+    "docs/benchmarks/l9/core/nowinandroid.md": "48cb4fb6603184d1f8033634381a420e52b40e39e080438369ac99d79ea77061",
+    "docs/benchmarks/l9/core/ripgrep.md": "a7d85d6c25342579da1580f9febe7f60194ab38b2eaa738a33ba13e43b48c14b",
+    "docs/benchmarks/l9/core/spring-petclinic.md": "91e350ecbd3045f8e087178dceb719934421d2b128199be00e9b04dcd31c0187",
+    "docs/benchmarks/l9/extra-questions.json": "31badbbd8dc2c56d6ee1cb4b41f36ad010c04e4ed43bb29ca1263fb0fc9daa2a",
+    "docs/benchmarks/l9/extra-reference.json": "9348ed57ce6695468e4b88e692e2f549ecfa457226836d0cfab0d524e719337b",
+    "docs/benchmarks/l9/oracles/click.json": "d98a4e9f42a3ea5059fd596bc1f4bb701c8f201178f955666b1fde7e789320ba",
+    "docs/benchmarks/l9/oracles/excalidraw.json": "b332a69d7df79f6aca13b0d1e8a236d40e13606ce05979ac8192468a3396a363",
+    "docs/benchmarks/l9/oracles/fzf.json": "d98a4e9f42a3ea5059fd596bc1f4bb701c8f201178f955666b1fde7e789320ba",
+    "docs/benchmarks/l9/oracles/nowinandroid.json": "ad65f6199fe415adbe782798f9f8a02f1d91d6f52a208362d05df854f5f496d8",
+    "docs/benchmarks/l9/oracles/ripgrep.json": "c454b374f0f012fa9bd224f2b228b5d535fc9d32026049990053146727bef54c",
+    "docs/benchmarks/l9/oracles/runtime-project-reference-inventory.json": "73ab4adb5d336124f3c1e20dcae76da033ed6476e138bbc53710f2a29d942f48",
+    "docs/benchmarks/l9/oracles/spring-petclinic.json": "d98a4e9f42a3ea5059fd596bc1f4bb701c8f201178f955666b1fde7e789320ba",
+    "docs/benchmarks/l9/oracles/unity-assembly.json": "4079b454934423721c95b698929191145911e867cc981563ab187706007d2fcd",
+    "docs/benchmarks/l9/repositories.json": "88d7b07716a8aeb5fda7f58eeca137cd3b62193d5d3f4a29fcb69819ce867055"
+  }
+}

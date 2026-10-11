@@ -1,0 +1,177 @@
+{
+  "method": "cargo metadata --no-deps --format-version 1; all workspace packages, local path dependencies; optional/dev/build retained with scope labels",
+  "packages": [
+    {
+      "name": "globset",
+      "manifest": "crates/globset/Cargo.toml"
+    },
+    {
+      "name": "grep",
+      "manifest": "crates/grep/Cargo.toml"
+    },
+    {
+      "name": "grep-cli",
+      "manifest": "crates/cli/Cargo.toml"
+    },
+    {
+      "name": "grep-matcher",
+      "manifest": "crates/matcher/Cargo.toml"
+    },
+    {
+      "name": "grep-pcre2",
+      "manifest": "crates/pcre2/Cargo.toml"
+    },
+    {
+      "name": "grep-printer",
+      "manifest": "crates/printer/Cargo.toml"
+    },
+    {
+      "name": "grep-searcher",
+      "manifest": "crates/searcher/Cargo.toml"
+    },
+    {
+      "name": "grep-regex",
+      "manifest": "crates/regex/Cargo.toml"
+    },
+    {
+      "name": "grep-index",
+      "manifest": "crates/index/Cargo.toml"
+    },
+    {
+      "name": "ignore",
+      "manifest": "crates/ignore/Cargo.toml"
+    },
+    {
+      "name": "ripgrep",
+      "manifest": "Cargo.toml"
+    }
+  ],
+  "edges": [
+    {
+      "from": "grep",
+      "to": "grep-cli",
+      "kind": "normal",
+      "optional": false,
+      "manifest": "crates/grep/Cargo.toml"
+    },
+    {
+      "from": "grep",
+      "to": "grep-matcher",
+      "kind": "normal",
+      "optional": false,
+      "manifest": "crates/grep/Cargo.toml"
+    },
+    {
+      "from": "grep",
+      "to": "grep-pcre2",
+      "kind": "normal",
+      "optional": true,
+      "manifest": "crates/grep/Cargo.toml"
+    },
+    {
+      "from": "grep",
+      "to": "grep-printer",
+      "kind": "normal",
+      "optional": false,
+      "manifest": "crates/grep/Cargo.toml"
+    },
+    {
+      "from": "grep",
+      "to": "grep-regex",
+      "kind": "normal",
+      "optional": false,
+      "manifest": "crates/grep/Cargo.toml"
+    },
+    {
+      "from": "grep",
+      "to": "grep-searcher",
+      "kind": "normal",
+      "optional": false,
+      "manifest": "crates/grep/Cargo.toml"
+    },
+    {
+      "from": "grep-cli",
+      "to": "globset",
+      "kind": "normal",
+      "optional": false,
+      "manifest": "crates/cli/Cargo.toml"
+    },
+    {
+      "from": "grep-pcre2",
+      "to": "grep-matcher",
+      "kind": "normal",
+      "optional": false,
+      "manifest": "crates/pcre2/Cargo.toml"
+    },
+    {
+      "from": "grep-printer",
+      "to": "grep-matcher",
+      "kind": "normal",
+      "optional": false,
+      "manifest": "crates/printer/Cargo.toml"
+    },
+    {
+      "from": "grep-printer",
+      "to": "grep-searcher",
+      "kind": "normal",
+      "optional": false,
+      "manifest": "crates/printer/Cargo.toml"
+    },
+    {
+      "from": "grep-printer",
+      "to": "grep-regex",
+      "kind": "dev",
+      "optional": false,
+      "manifest": "crates/printer/Cargo.toml"
+    },
+    {
+      "from": "grep-searcher",
+      "to": "grep-matcher",
+      "kind": "normal",
+      "optional": false,
+      "manifest": "crates/searcher/Cargo.toml"
+    },
+    {
+      "from": "grep-searcher",
+      "to": "grep-regex",
+      "kind": "dev",
+      "optional": false,
+      "manifest": "crates/searcher/Cargo.toml"
+    },
+    {
+      "from": "grep-regex",
+      "to": "grep-matcher",
+      "kind": "normal",
+      "optional": false,
+      "manifest": "crates/regex/Cargo.toml"
+    },
+    {
+      "from": "ignore",
+      "to": "globset",
+      "kind": "normal",
+      "optional": false,
+      "manifest": "crates/ignore/Cargo.toml"
+    },
+    {
+      "from": "ripgrep",
+      "to": "grep",
+      "kind": "normal",
+      "optional": false,
+      "manifest": "Cargo.toml"
+    },
+    {
+      "from": "ripgrep",
+      "to": "grep-index",
+      "kind": "normal",
+      "optional": true,
+      "manifest": "Cargo.toml"
+    },
+    {
+      "from": "ripgrep",
+      "to": "ignore",
+      "kind": "normal",
+      "optional": false,
+      "manifest": "Cargo.toml"
+    }
+  ]
+}

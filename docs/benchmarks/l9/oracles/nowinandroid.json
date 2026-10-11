@@ -1,0 +1,780 @@
+{
+  "method": "settings include + all build.gradle.kts type-safe projects accessors; build-logic composite build recorded separately; Gradle executable oracle pending JDK (java -version reports unavailable)",
+  "packages": [
+    ":app",
+    ":app-nia-catalog",
+    ":benchmarks",
+    ":core:analytics",
+    ":core:common",
+    ":core:data",
+    ":core:data-test",
+    ":core:database",
+    ":core:datastore",
+    ":core:datastore-proto",
+    ":core:datastore-test",
+    ":core:designsystem",
+    ":core:domain",
+    ":core:model",
+    ":core:navigation",
+    ":core:network",
+    ":core:notifications",
+    ":core:screenshot-testing",
+    ":core:testing",
+    ":core:ui",
+    ":feature:foryou:api",
+    ":feature:foryou:impl",
+    ":feature:interests:api",
+    ":feature:interests:impl",
+    ":feature:bookmarks:api",
+    ":feature:bookmarks:impl",
+    ":feature:topic:api",
+    ":feature:topic:impl",
+    ":feature:search:api",
+    ":feature:search:impl",
+    ":feature:settings:impl",
+    ":lint",
+    ":sync:work",
+    ":sync:sync-test",
+    ":ui-test-hilt-manifest"
+  ],
+  "includedBuilds": [
+    "build-logic"
+  ],
+  "edges": [
+    {
+      "from": ":app",
+      "to": ":feature:interests:api",
+      "configuration": "implementation",
+      "file": "app/build.gradle.kts",
+      "line": 69
+    },
+    {
+      "from": ":app",
+      "to": ":feature:interests:impl",
+      "configuration": "implementation",
+      "file": "app/build.gradle.kts",
+      "line": 70
+    },
+    {
+      "from": ":app",
+      "to": ":feature:foryou:api",
+      "configuration": "implementation",
+      "file": "app/build.gradle.kts",
+      "line": 71
+    },
+    {
+      "from": ":app",
+      "to": ":feature:foryou:impl",
+      "configuration": "implementation",
+      "file": "app/build.gradle.kts",
+      "line": 72
+    },
+    {
+      "from": ":app",
+      "to": ":feature:bookmarks:api",
+      "configuration": "implementation",
+      "file": "app/build.gradle.kts",
+      "line": 73
+    },
+    {
+      "from": ":app",
+      "to": ":feature:bookmarks:impl",
+      "configuration": "implementation",
+      "file": "app/build.gradle.kts",
+      "line": 74
+    },
+    {
+      "from": ":app",
+      "to": ":feature:topic:api",
+      "configuration": "implementation",
+      "file": "app/build.gradle.kts",
+      "line": 75
+    },
+    {
+      "from": ":app",
+      "to": ":feature:topic:impl",
+      "configuration": "implementation",
+      "file": "app/build.gradle.kts",
+      "line": 76
+    },
+    {
+      "from": ":app",
+      "to": ":feature:search:api",
+      "configuration": "implementation",
+      "file": "app/build.gradle.kts",
+      "line": 77
+    },
+    {
+      "from": ":app",
+      "to": ":feature:search:impl",
+      "configuration": "implementation",
+      "file": "app/build.gradle.kts",
+      "line": 78
+    },
+    {
+      "from": ":app",
+      "to": ":feature:settings:impl",
+      "configuration": "implementation",
+      "file": "app/build.gradle.kts",
+      "line": 79
+    },
+    {
+      "from": ":app",
+      "to": ":core:common",
+      "configuration": "implementation",
+      "file": "app/build.gradle.kts",
+      "line": 81
+    },
+    {
+      "from": ":app",
+      "to": ":core:ui",
+      "configuration": "implementation",
+      "file": "app/build.gradle.kts",
+      "line": 82
+    },
+    {
+      "from": ":app",
+      "to": ":core:designsystem",
+      "configuration": "implementation",
+      "file": "app/build.gradle.kts",
+      "line": 83
+    },
+    {
+      "from": ":app",
+      "to": ":core:data",
+      "configuration": "implementation",
+      "file": "app/build.gradle.kts",
+      "line": 84
+    },
+    {
+      "from": ":app",
+      "to": ":core:model",
+      "configuration": "implementation",
+      "file": "app/build.gradle.kts",
+      "line": 85
+    },
+    {
+      "from": ":app",
+      "to": ":core:analytics",
+      "configuration": "implementation",
+      "file": "app/build.gradle.kts",
+      "line": 86
+    },
+    {
+      "from": ":app",
+      "to": ":sync:work",
+      "configuration": "implementation",
+      "file": "app/build.gradle.kts",
+      "line": 87
+    },
+    {
+      "from": ":app",
+      "to": ":ui-test-hilt-manifest",
+      "configuration": "debugImplementation",
+      "file": "app/build.gradle.kts",
+      "line": 112
+    },
+    {
+      "from": ":app",
+      "to": ":core:data-test",
+      "configuration": "testImplementation",
+      "file": "app/build.gradle.kts",
+      "line": 116
+    },
+    {
+      "from": ":app",
+      "to": ":core:datastore-test",
+      "configuration": "testImplementation",
+      "file": "app/build.gradle.kts",
+      "line": 117
+    },
+    {
+      "from": ":app",
+      "to": ":sync:sync-test",
+      "configuration": "testImplementation",
+      "file": "app/build.gradle.kts",
+      "line": 119
+    },
+    {
+      "from": ":app",
+      "to": ":core:screenshot-testing",
+      "configuration": "testDemoImplementation",
+      "file": "app/build.gradle.kts",
+      "line": 125
+    },
+    {
+      "from": ":app",
+      "to": ":core:testing",
+      "configuration": "testDemoImplementation",
+      "file": "app/build.gradle.kts",
+      "line": 126
+    },
+    {
+      "from": ":app",
+      "to": ":core:testing",
+      "configuration": "androidTestImplementation",
+      "file": "app/build.gradle.kts",
+      "line": 128
+    },
+    {
+      "from": ":app",
+      "to": ":core:data-test",
+      "configuration": "androidTestImplementation",
+      "file": "app/build.gradle.kts",
+      "line": 129
+    },
+    {
+      "from": ":app",
+      "to": ":core:datastore-test",
+      "configuration": "androidTestImplementation",
+      "file": "app/build.gradle.kts",
+      "line": 130
+    },
+    {
+      "from": ":app",
+      "to": ":benchmarks",
+      "configuration": "baselineProfile",
+      "file": "app/build.gradle.kts",
+      "line": 136
+    },
+    {
+      "from": ":app-nia-catalog",
+      "to": ":core:designsystem",
+      "configuration": "implementation",
+      "file": "app-nia-catalog/build.gradle.kts",
+      "line": 70
+    },
+    {
+      "from": ":app-nia-catalog",
+      "to": ":core:ui",
+      "configuration": "implementation",
+      "file": "app-nia-catalog/build.gradle.kts",
+      "line": 71
+    },
+    {
+      "from": ":core:data",
+      "to": ":core:common",
+      "configuration": "api",
+      "file": "core/data/build.gradle.kts",
+      "line": 29
+    },
+    {
+      "from": ":core:data",
+      "to": ":core:database",
+      "configuration": "api",
+      "file": "core/data/build.gradle.kts",
+      "line": 30
+    },
+    {
+      "from": ":core:data",
+      "to": ":core:datastore",
+      "configuration": "api",
+      "file": "core/data/build.gradle.kts",
+      "line": 31
+    },
+    {
+      "from": ":core:data",
+      "to": ":core:network",
+      "configuration": "api",
+      "file": "core/data/build.gradle.kts",
+      "line": 32
+    },
+    {
+      "from": ":core:data",
+      "to": ":core:analytics",
+      "configuration": "implementation",
+      "file": "core/data/build.gradle.kts",
+      "line": 34
+    },
+    {
+      "from": ":core:data",
+      "to": ":core:notifications",
+      "configuration": "implementation",
+      "file": "core/data/build.gradle.kts",
+      "line": 35
+    },
+    {
+      "from": ":core:data",
+      "to": ":core:datastore-test",
+      "configuration": "testImplementation",
+      "file": "core/data/build.gradle.kts",
+      "line": 39
+    },
+    {
+      "from": ":core:data",
+      "to": ":core:testing",
+      "configuration": "testImplementation",
+      "file": "core/data/build.gradle.kts",
+      "line": 40
+    },
+    {
+      "from": ":core:data-test",
+      "to": ":core:data",
+      "configuration": "api",
+      "file": "core/data-test/build.gradle.kts",
+      "line": 26
+    },
+    {
+      "from": ":core:database",
+      "to": ":core:model",
+      "configuration": "api",
+      "file": "core/database/build.gradle.kts",
+      "line": 29
+    },
+    {
+      "from": ":core:datastore",
+      "to": ":core:datastore-proto",
+      "configuration": "api",
+      "file": "core/datastore/build.gradle.kts",
+      "line": 32
+    },
+    {
+      "from": ":core:datastore",
+      "to": ":core:model",
+      "configuration": "api",
+      "file": "core/datastore/build.gradle.kts",
+      "line": 33
+    },
+    {
+      "from": ":core:datastore",
+      "to": ":core:common",
+      "configuration": "implementation",
+      "file": "core/datastore/build.gradle.kts",
+      "line": 35
+    },
+    {
+      "from": ":core:datastore",
+      "to": ":core:datastore-test",
+      "configuration": "testImplementation",
+      "file": "core/datastore/build.gradle.kts",
+      "line": 37
+    },
+    {
+      "from": ":core:datastore-test",
+      "to": ":core:common",
+      "configuration": "implementation",
+      "file": "core/datastore-test/build.gradle.kts",
+      "line": 27
+    },
+    {
+      "from": ":core:datastore-test",
+      "to": ":core:datastore",
+      "configuration": "implementation",
+      "file": "core/datastore-test/build.gradle.kts",
+      "line": 28
+    },
+    {
+      "from": ":core:designsystem",
+      "to": ":lint",
+      "configuration": "lintPublish",
+      "file": "core/designsystem/build.gradle.kts",
+      "line": 29
+    },
+    {
+      "from": ":core:designsystem",
+      "to": ":core:screenshot-testing",
+      "configuration": "testImplementation",
+      "file": "core/designsystem/build.gradle.kts",
+      "line": 47
+    },
+    {
+      "from": ":core:domain",
+      "to": ":core:data",
+      "configuration": "api",
+      "file": "core/domain/build.gradle.kts",
+      "line": 27
+    },
+    {
+      "from": ":core:domain",
+      "to": ":core:model",
+      "configuration": "api",
+      "file": "core/domain/build.gradle.kts",
+      "line": 28
+    },
+    {
+      "from": ":core:domain",
+      "to": ":core:testing",
+      "configuration": "testImplementation",
+      "file": "core/domain/build.gradle.kts",
+      "line": 32
+    },
+    {
+      "from": ":core:network",
+      "to": ":core:common",
+      "configuration": "api",
+      "file": "core/network/build.gradle.kts",
+      "line": 38
+    },
+    {
+      "from": ":core:network",
+      "to": ":core:model",
+      "configuration": "api",
+      "file": "core/network/build.gradle.kts",
+      "line": 39
+    },
+    {
+      "from": ":core:notifications",
+      "to": ":core:model",
+      "configuration": "api",
+      "file": "core/notifications/build.gradle.kts",
+      "line": 26
+    },
+    {
+      "from": ":core:notifications",
+      "to": ":core:common",
+      "configuration": "implementation",
+      "file": "core/notifications/build.gradle.kts",
+      "line": 28
+    },
+    {
+      "from": ":core:screenshot-testing",
+      "to": ":core:designsystem",
+      "configuration": "implementation",
+      "file": "core/screenshot-testing/build.gradle.kts",
+      "line": 33
+    },
+    {
+      "from": ":core:testing",
+      "to": ":core:analytics",
+      "configuration": "api",
+      "file": "core/testing/build.gradle.kts",
+      "line": 27
+    },
+    {
+      "from": ":core:testing",
+      "to": ":core:common",
+      "configuration": "api",
+      "file": "core/testing/build.gradle.kts",
+      "line": 28
+    },
+    {
+      "from": ":core:testing",
+      "to": ":core:data",
+      "configuration": "api",
+      "file": "core/testing/build.gradle.kts",
+      "line": 29
+    },
+    {
+      "from": ":core:testing",
+      "to": ":core:model",
+      "configuration": "api",
+      "file": "core/testing/build.gradle.kts",
+      "line": 30
+    },
+    {
+      "from": ":core:testing",
+      "to": ":core:notifications",
+      "configuration": "api",
+      "file": "core/testing/build.gradle.kts",
+      "line": 31
+    },
+    {
+      "from": ":core:ui",
+      "to": ":core:analytics",
+      "configuration": "api",
+      "file": "core/ui/build.gradle.kts",
+      "line": 28
+    },
+    {
+      "from": ":core:ui",
+      "to": ":core:designsystem",
+      "configuration": "api",
+      "file": "core/ui/build.gradle.kts",
+      "line": 29
+    },
+    {
+      "from": ":core:ui",
+      "to": ":core:model",
+      "configuration": "api",
+      "file": "core/ui/build.gradle.kts",
+      "line": 30
+    },
+    {
+      "from": ":core:ui",
+      "to": ":core:testing",
+      "configuration": "androidTestImplementation",
+      "file": "core/ui/build.gradle.kts",
+      "line": 37
+    },
+    {
+      "from": ":feature:foryou:api",
+      "to": ":core:navigation",
+      "configuration": "api",
+      "file": "feature/foryou/api/build.gradle.kts",
+      "line": 26
+    },
+    {
+      "from": ":feature:foryou:impl",
+      "to": ":core:domain",
+      "configuration": "implementation",
+      "file": "feature/foryou/impl/build.gradle.kts",
+      "line": 30
+    },
+    {
+      "from": ":feature:foryou:impl",
+      "to": ":core:notifications",
+      "configuration": "implementation",
+      "file": "feature/foryou/impl/build.gradle.kts",
+      "line": 31
+    },
+    {
+      "from": ":feature:foryou:impl",
+      "to": ":feature:foryou:api",
+      "configuration": "implementation",
+      "file": "feature/foryou/impl/build.gradle.kts",
+      "line": 32
+    },
+    {
+      "from": ":feature:foryou:impl",
+      "to": ":feature:topic:api",
+      "configuration": "implementation",
+      "file": "feature/foryou/impl/build.gradle.kts",
+      "line": 33
+    },
+    {
+      "from": ":feature:foryou:impl",
+      "to": ":core:testing",
+      "configuration": "testImplementation",
+      "file": "feature/foryou/impl/build.gradle.kts",
+      "line": 38
+    },
+    {
+      "from": ":feature:foryou:impl",
+      "to": ":core:screenshot-testing",
+      "configuration": "testDemoImplementation",
+      "file": "feature/foryou/impl/build.gradle.kts",
+      "line": 39
+    },
+    {
+      "from": ":feature:foryou:impl",
+      "to": ":core:testing",
+      "configuration": "androidTestImplementation",
+      "file": "feature/foryou/impl/build.gradle.kts",
+      "line": 42
+    },
+    {
+      "from": ":feature:interests:impl",
+      "to": ":core:domain",
+      "configuration": "implementation",
+      "file": "feature/interests/impl/build.gradle.kts",
+      "line": 28
+    },
+    {
+      "from": ":feature:interests:impl",
+      "to": ":feature:topic:api",
+      "configuration": "implementation",
+      "file": "feature/interests/impl/build.gradle.kts",
+      "line": 29
+    },
+    {
+      "from": ":feature:interests:impl",
+      "to": ":feature:interests:api",
+      "configuration": "implementation",
+      "file": "feature/interests/impl/build.gradle.kts",
+      "line": 30
+    },
+    {
+      "from": ":feature:interests:impl",
+      "to": ":core:testing",
+      "configuration": "testImplementation",
+      "file": "feature/interests/impl/build.gradle.kts",
+      "line": 37
+    },
+    {
+      "from": ":feature:interests:impl",
+      "to": ":core:data-test",
+      "configuration": "testImplementation",
+      "file": "feature/interests/impl/build.gradle.kts",
+      "line": 38
+    },
+    {
+      "from": ":feature:interests:impl",
+      "to": ":ui-test-hilt-manifest",
+      "configuration": "testImplementation",
+      "file": "feature/interests/impl/build.gradle.kts",
+      "line": 43
+    },
+    {
+      "from": ":feature:interests:impl",
+      "to": ":feature:topic:impl",
+      "configuration": "testImplementation",
+      "file": "feature/interests/impl/build.gradle.kts",
+      "line": 44
+    },
+    {
+      "from": ":feature:interests:impl",
+      "to": ":core:testing",
+      "configuration": "androidTestImplementation",
+      "file": "feature/interests/impl/build.gradle.kts",
+      "line": 48
+    },
+    {
+      "from": ":feature:bookmarks:impl",
+      "to": ":core:data",
+      "configuration": "implementation",
+      "file": "feature/bookmarks/impl/build.gradle.kts",
+      "line": 27
+    },
+    {
+      "from": ":feature:bookmarks:impl",
+      "to": ":feature:bookmarks:api",
+      "configuration": "implementation",
+      "file": "feature/bookmarks/impl/build.gradle.kts",
+      "line": 28
+    },
+    {
+      "from": ":feature:bookmarks:impl",
+      "to": ":feature:topic:api",
+      "configuration": "implementation",
+      "file": "feature/bookmarks/impl/build.gradle.kts",
+      "line": 29
+    },
+    {
+      "from": ":feature:bookmarks:impl",
+      "to": ":core:testing",
+      "configuration": "testImplementation",
+      "file": "feature/bookmarks/impl/build.gradle.kts",
+      "line": 31
+    },
+    {
+      "from": ":feature:bookmarks:impl",
+      "to": ":core:testing",
+      "configuration": "androidTestImplementation",
+      "file": "feature/bookmarks/impl/build.gradle.kts",
+      "line": 34
+    },
+    {
+      "from": ":feature:topic:impl",
+      "to": ":core:data",
+      "configuration": "implementation",
+      "file": "feature/topic/impl/build.gradle.kts",
+      "line": 28
+    },
+    {
+      "from": ":feature:topic:impl",
+      "to": ":feature:topic:api",
+      "configuration": "implementation",
+      "file": "feature/topic/impl/build.gradle.kts",
+      "line": 29
+    },
+    {
+      "from": ":feature:topic:impl",
+      "to": ":core:testing",
+      "configuration": "testImplementation",
+      "file": "feature/topic/impl/build.gradle.kts",
+      "line": 33
+    },
+    {
+      "from": ":feature:topic:impl",
+      "to": ":core:testing",
+      "configuration": "androidTestImplementation",
+      "file": "feature/topic/impl/build.gradle.kts",
+      "line": 37
+    },
+    {
+      "from": ":feature:search:api",
+      "to": ":core:domain",
+      "configuration": "implementation",
+      "file": "feature/search/api/build.gradle.kts",
+      "line": 26
+    },
+    {
+      "from": ":feature:search:impl",
+      "to": ":core:domain",
+      "configuration": "implementation",
+      "file": "feature/search/impl/build.gradle.kts",
+      "line": 28
+    },
+    {
+      "from": ":feature:search:impl",
+      "to": ":feature:interests:api",
+      "configuration": "implementation",
+      "file": "feature/search/impl/build.gradle.kts",
+      "line": 29
+    },
+    {
+      "from": ":feature:search:impl",
+      "to": ":feature:search:api",
+      "configuration": "implementation",
+      "file": "feature/search/impl/build.gradle.kts",
+      "line": 30
+    },
+    {
+      "from": ":feature:search:impl",
+      "to": ":feature:topic:api",
+      "configuration": "implementation",
+      "file": "feature/search/impl/build.gradle.kts",
+      "line": 31
+    },
+    {
+      "from": ":feature:search:impl",
+      "to": ":core:testing",
+      "configuration": "testImplementation",
+      "file": "feature/search/impl/build.gradle.kts",
+      "line": 33
+    },
+    {
+      "from": ":feature:search:impl",
+      "to": ":core:testing",
+      "configuration": "androidTestImplementation",
+      "file": "feature/search/impl/build.gradle.kts",
+      "line": 36
+    },
+    {
+      "from": ":feature:settings:impl",
+      "to": ":core:data",
+      "configuration": "implementation",
+      "file": "feature/settings/impl/build.gradle.kts",
+      "line": 30
+    },
+    {
+      "from": ":feature:settings:impl",
+      "to": ":core:testing",
+      "configuration": "testImplementation",
+      "file": "feature/settings/impl/build.gradle.kts",
+      "line": 32
+    },
+    {
+      "from": ":sync:work",
+      "to": ":core:analytics",
+      "configuration": "implementation",
+      "file": "sync/work/build.gradle.kts",
+      "line": 35
+    },
+    {
+      "from": ":sync:work",
+      "to": ":core:data",
+      "configuration": "implementation",
+      "file": "sync/work/build.gradle.kts",
+      "line": 36
+    },
+    {
+      "from": ":sync:work",
+      "to": ":core:notifications",
+      "configuration": "implementation",
+      "file": "sync/work/build.gradle.kts",
+      "line": 37
+    },
+    {
+      "from": ":sync:work",
+      "to": ":core:testing",
+      "configuration": "androidTestImplementation",
+      "file": "sync/work/build.gradle.kts",
+      "line": 45
+    },
+    {
+      "from": ":sync:sync-test",
+      "to": ":core:data",
+      "configuration": "implementation",
+      "file": "sync/sync-test/build.gradle.kts",
+      "line": 27
+    },
+    {
+      "from": ":sync:sync-test",
+      "to": ":sync:work",
+      "configuration": "implementation",
+      "file": "sync/sync-test/build.gradle.kts",
+      "line": 28
+    }
+  ]
+}

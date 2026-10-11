@@ -1,0 +1,146 @@
+[
+  {
+    "id": "fastify",
+    "repository": "fastify/fastify",
+    "commit": "86368086171305df4e235f6d6bec892c67ec2ae2",
+    "trackedFiles": 395,
+    "questions": [
+      {
+        "id": "fastify-q1",
+        "question": "주요 코드 덩어리 세 곳과 역할은?"
+      },
+      {
+        "id": "fastify-q2",
+        "question": "루트 공개 팩토리는 어떤 내부 덩어리를 가져다 쓰나?"
+      },
+      {
+        "id": "fastify-q3",
+        "question": "패키지 사용자가 실행을 시작하는 공개 진입점은?"
+      },
+      {
+        "id": "fastify-q4",
+        "question": "bodyless 요청이 등록된 사용자 핸들러까지 가는 대표 함수 경로는?"
+      }
+    ]
+  },
+  {
+    "id": "httpx",
+    "repository": "encode/httpx",
+    "commit": "b5addb64f0161ff6bfe94c124ef76f6a1fba5254",
+    "trackedFiles": 125,
+    "questions": [
+      {
+        "id": "httpx-q1",
+        "question": "주요 코드 덩어리와 역할은?"
+      },
+      {
+        "id": "httpx-q2",
+        "question": "간편 요청 API는 어떤 내부 모듈을 사용하나?"
+      },
+      {
+        "id": "httpx-q3",
+        "question": "공개 라이브러리와 CLI의 진입점은?"
+      },
+      {
+        "id": "httpx-q4",
+        "question": "동기 Client.request는 전송까지 어떤 함수를 거치나?"
+      }
+    ]
+  },
+  {
+    "id": "unity-boatattack",
+    "repository": "Unity-Technologies/BoatAttack",
+    "commit": "6acf5f773a440030489cb5e2b3c009fb5fe1e8ce",
+    "trackedFiles": 1376,
+    "questions": [
+      {
+        "id": "unity-boatattack-q1",
+        "question": "주요 덩어리 세 곳과 역할은?"
+      },
+      {
+        "id": "unity-boatattack-q2",
+        "question": "보트 로직과 편집기 조립체는 어떤 물 시스템을 사용하나?"
+      },
+      {
+        "id": "unity-boatattack-q3",
+        "question": "데모 경주 시작의 엔진 진입점은 어디인가?"
+      },
+      {
+        "id": "unity-boatattack-q4",
+        "question": "데모 경주 시작 시 어떤 함수들이 순서대로 연결되나?"
+      }
+    ]
+  },
+  {
+    "id": "godot-demos",
+    "repository": "godotengine/godot-demo-projects",
+    "commit": "b761b4cd5718a7118f2c95eb55f181d0a5f004f1",
+    "trackedFiles": 4071,
+    "questions": [
+      {
+        "id": "godot-demos-q1",
+        "question": "저장소 최상위 덩어리와 선택한 Dodge the Creeps 프로젝트의 역할은?"
+      },
+      {
+        "id": "godot-demos-q2",
+        "question": "Dodge the Creeps의 메인 씬은 무엇을 사용하나?"
+      },
+      {
+        "id": "godot-demos-q3",
+        "question": "Dodge the Creeps는 어느 씬에서 실행을 시작하나?"
+      },
+      {
+        "id": "godot-demos-q4",
+        "question": "시작 버튼을 누르면 플레이어와 게임 타이머까지 어떻게 이어지나?"
+      }
+    ]
+  },
+  {
+    "id": "sqlite",
+    "repository": "sqlite/sqlite",
+    "commit": "6e35c19f170958b1e846e01c55318988f2d192e0",
+    "trackedFiles": 2287,
+    "questions": [
+      {
+        "id": "sqlite-q1",
+        "question": "주요 덩어리와 역할은? C 분석 지원 여부도 말하라."
+      },
+      {
+        "id": "sqlite-q2",
+        "question": "CLI와 저장소 엔진의 알려진 관계는 무엇이며 지도에서 확정할 수 있는 범위는?"
+      },
+      {
+        "id": "sqlite-q3",
+        "question": "사용자 프로그램이 SQL 준비/실행을 시작하는 API와 분석 한계는?"
+      },
+      {
+        "id": "sqlite-q4",
+        "question": "SQL 문장 한 번 실행의 소스 기준 경로와 지도에서 모르는 부분은?"
+      }
+    ]
+  },
+  {
+    "id": "runtime",
+    "repository": "dotnet/runtime",
+    "commit": "8630d8988107478d249e2fdb8162f8c7dcbd3dbb",
+    "trackedFiles": 58427,
+    "questions": [
+      {
+        "id": "runtime-q1",
+        "question": "주요 덩어리 세 곳과 각 역할은?"
+      },
+      {
+        "id": "runtime-q2",
+        "question": "System.Net.Http는 어떤 내부 라이브러리 프로젝트를 사용하나?"
+      },
+      {
+        "id": "runtime-q3",
+        "question": "HTTP 요청 동작의 공개 관리 코드 진입점은 어디인가?"
+      },
+      {
+        "id": "runtime-q4",
+        "question": "HttpClient.SendAsync는 핸들러로 어떻게 요청을 전달하나?"
+      }
+    ]
+  }
+]
