@@ -1,3 +1,4 @@
+import { thinGraph } from './export-evidence.mjs';
 import { resolveMediaAssets } from './assets.mjs';
 import { parseMediaConfig } from '../dist/query/media-model.js';
 import { object } from './types.mjs';
@@ -55,14 +56,17 @@ export function exportSite(options: Options) {
     let backedUp = false;
     try {
         for (const file of ['index.html', 'styles.css', ...readdirSync(join(packageRoot, 'viewer')).filter(file => (file.endsWith('.js') || file.endsWith('.css')))]) copyFileSync(join(packageRoot, 'viewer', file), join(staging, file));
-        for (const file of ['graph.json', 'presentation.json']) copyFileSync(join(cache, file), join(staging, file));
+        const written = new Set<string>();
+        const writeEvidence = (path: string, text: string) => { if (written.has(path)) return; mkdirSync(dirname(join(staging, path)), { recursive: true }); writeFileSync(join(staging, path), text); written.add(path); };
+        writeFileSync(join(staging, 'graph.json'), JSON.stringify(thinGraph(graph, writeEvidence)));
+        copyFileSync(join(cache, 'presentation.json'), join(staging, 'presentation.json'));
         writeFileSync(join(staging, 'media.json'), JSON.stringify(media.manifest, null, 2) + '\n');
         if (object(presentation)) writeFileSync(join(staging, 'presentation.json'), JSON.stringify({ ...presentation, mediaManifest: media.manifest }, null, 2) + '\n');
         for (const file of media.files) { mkdirSync(dirname(join(staging, file.path)), { recursive: true }); writeFileSync(join(staging, file.path), file.bytes); }
         writeFileSync(join(staging, 'snapshots.json'), JSON.stringify(snapshots, null, 2) + '\n');
         for (const snapshot of snapshots) {
             mkdirSync(join(staging, 'snapshots'), { recursive: true });
-            copyFileSync(join(cache, snapshot.artifactPath), join(staging, snapshot.artifactPath));
+            writeFileSync(join(staging, snapshot.artifactPath), JSON.stringify(thinGraph(readGraph(join(cache, snapshot.artifactPath)), writeEvidence)));
         }
         writeFileSync(join(staging, '.nojekyll'), '');
         writeFileSync(join(staging, marker), JSON.stringify({ schemaVersion: 1, generator: 'lattice' }, null, 2) + '\n');

@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { execFileSync, spawnSync } from 'node:child_process';
-import { existsSync, mkdirSync, readFileSync, readdirSync, renameSync, writeFileSync } from 'node:fs';
+import { existsSync, lstatSync, mkdirSync, readFileSync, readdirSync, renameSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 
 export function verifyExport(cli, repository) {
@@ -10,11 +10,22 @@ export function verifyExport(cli, repository) {
   const run = args => execFileSync(process.execPath, [cli, ...args, '--root', repository], { encoding: 'utf8' });
   const attempt = args => spawnSync(process.execPath, [cli, ...args, '--root', repository], { encoding: 'utf8' });
   const output = join(repository, '.lattice/site');
-  const contents = () => Object.fromEntries(readdirSync(output).sort().map(file => [file, readFileSync(join(output, file), 'utf8')]));
+  const contents = () => Object.fromEntries(readdirSync(output, { recursive: true }).filter(file => lstatSync(join(output, file)).isFile()).sort().map(file => [file, readFileSync(join(output, file), 'utf8')]));
   run(['build']);
   run(['export']);
   const first = contents();
   assert.ok(first['structural-dependency-groups.js']);
+  assert.ok(first['evidence.js']);
+  assert.ok(first['source-groups.js']);
+  assert.doesNotMatch(first['source-groups.js'], /\.\.\/dist\//u);
+  const thin = JSON.parse(first['graph.json']);
+  const full = JSON.parse(readFileSync(join(repository, '.lattice/cache/graph.json'), 'utf8'));
+  for (const kind of ['edges', 'facets', 'findings', 'views']) for (const record of thin[kind]) {
+    const id = thin.evidence.records[kind]?.[record.id];
+    if (id) record.sources = thin.evidence.groups[id].pages.flatMap(path => JSON.parse(first[path]));
+  }
+  delete thin.evidence;
+  assert.deepEqual(thin, full);
   assert.match(first['loop-map-model.js'], /\.\/structural-dependency-groups\.js/u);
   assert.equal(JSON.parse(first['.lattice-export.json']).generator, 'lattice');
   run(['export']);

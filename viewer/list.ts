@@ -1,3 +1,4 @@
+import { sourceCount } from './source-groups.js';
 import { element, anchor, action, pager } from './explore-controls.js';
 import { projectList, cellValue, valueLabel } from './list-model.js';
 import { listControls, listRoute, type ListContext } from './list-controls.js';
@@ -27,7 +28,7 @@ export function renderList(container: HTMLElement, context: ListContext): void {
             const entry = cellValue(node, column, context.facets); const cell = element('td');
             if (entry.value !== null && typeof entry.value === 'object') { const detail = element('details'); detail.append(element('summary', '구조 값'), element('pre', JSON.stringify(entry.value, null, 2))); cell.append(detail); }
             else cell.append(element('span', column.type === 'facet' && entry.value !== undefined ? context.valueLabel(column.key, entry.value) : valueLabel(entry.value)));
-            if (column.type === 'facet' && entry.sources.length) { const evidence = element('details'); evidence.append(element('summary', '분류 근거'), context.sources(entry.sources)); cell.append(evidence); }
+            if (column.type === 'facet' && sourceCount(entry.sources)) { const evidence = element('details'); evidence.append(element('summary', '분류 근거'), context.sources(entry.sources)); cell.append(evidence); }
             row.append(cell);
         }
         const classification = element('td'); for (const facet of context.facets.filter(item => item.nodeId === node.id)) classification.append(element('div', `${context.facetLabel(facet.key)}: ${context.valueLabel(facet.key, facet.value)}`, 'meta'));

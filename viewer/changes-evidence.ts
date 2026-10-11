@@ -1,3 +1,4 @@
+import { rawRecord } from './evidence.js';
 import type { Node as GraphNode, Edge, Facet, Finding } from '../dist/core/model.js';
 import type { BrowserGraph } from './data.js';
 import { element, anchor } from './explore-controls.js';
@@ -27,7 +28,7 @@ function evidence(record: EvidenceRecord | undefined, label: string, context: Ch
         const gate = record.gate; result.append(element('p', gate ? `관문 ${gate.status} · ${gate.metric} ${gate.comparator} ${gate.threshold}` : '관문 없음 (발견만 표시)', 'meta'));
     }
     result.append(context.sources(record.sources));
-    const raw = element('details'); raw.append(element('summary', '원본 레코드 JSON'), element('pre', JSON.stringify(record, null, 2))); result.append(raw); return result;
+    result.append(rawRecord(record)); return result;
 }
 function disclosure(change: RecordChange<EvidenceRecord>, before: BrowserGraph, after: BrowserGraph, context: ChangesContext, status = change.status): HTMLElement {
     const record = change.current ?? change.previous; const result = element('details', '', 'change-record');
