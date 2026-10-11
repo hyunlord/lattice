@@ -2,7 +2,7 @@ import type { NodeDraft } from '../core/model.js';
 import type { CodeModule } from './code.js';
 import type { LogicCall, LogicDefinition, LogicFacts, LogicImport } from './logic-types.js';
 
-type Definition = { readonly fact: LogicFacts; readonly definition: LogicDefinition; };
+type Definition = { readonly fact: LogicFacts; readonly definition: LogicDefinition; readonly resolution?: 'estimated'; };
 const strings = (value: unknown): readonly string[] => Array.isArray(value) ? value.filter((item): item is string => typeof item === 'string') : [];
 const directory = (path: string): string => path.includes('/') ? path.slice(0, path.lastIndexOf('/')) : '';
 function normalized(path: string): string | undefined {
@@ -27,7 +27,13 @@ export function logicResolver(facts: readonly LogicFacts[], modules: readonly Co
         }
     }
     const named = (fact: LogicFacts, name: string): Definition[] => byName.get(fact.path + '\0' + name) ?? [];
-    const unique = (items: readonly Definition[]): Definition | undefined => items.length === 1 ? items[0] : undefined;
+    const unique = (items: readonly Definition[]): Definition | undefined => {
+        const target = items.length === 1 ? items[0] : undefined;
+        if (!target) return undefined;
+        const { definition } = target;
+        const localFunction = definition.parent && byId.get(definition.parent)?.definition.owner === definition.owner;
+        return definition.owner && !localFunction && !definition.static && ['java', 'csharp', 'kotlin'].includes(target.fact.language) ? { ...target, resolution: 'estimated' } : target;
+    };
     const imports = (fact: LogicFacts, binding: LogicImport): LogicFacts[] => {
         const specifier = binding.specifier, paths = new Set<string>();
         const add = (path: string) => { const clean = normalized(path); if (clean && byPath.has(clean)) paths.add(clean); };

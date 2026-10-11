@@ -56,3 +56,24 @@ test('lazy client crosses page boundaries and preserves exact static flow budget
         assert.ok(requested.length < 20);
     } finally { globalThis.fetch = original; await new Promise(resolve => server.close(resolve)); }
 });
+
+test('lazy flow does not spend accepted-edge budget on rejected target nodes', async () => {
+    const { createLogicProvider } = await import('../viewer/logic-data.js');
+    const { logicFlow } = await import('../dist/query/logic-model.js');
+    const edges = [['a', 'b'], ['a', 'c'], ['a', 'd'], ['b', 'a']].map(([source, target], index) => ({ ...graph.edges[0], id: String(index), source, target }));
+    const fixture = { ...graph, nodes: ['a', 'b', 'c', 'd'].map(node), edges };
+    const files = new Map(); exporter.writeLogic(fixture, (path, text) => files.set('./' + path, text));
+    const original = globalThis.fetch;
+    globalThis.fetch = async url => new Response(files.get(String(url)) ?? '{}', { status: files.has(String(url)) ? 200 : 404 });
+    try {
+        const options = { id: 'a', depth: 3, maxNodes: 2, maxEdges: 2 };
+        const expected = logicFlow(fixture, options);
+        assert.deepEqual(expected.edges.map(edge => edge.id), ['0', '3']);
+        const provider = createLogicProvider('g');
+        assert.deepEqual(await provider.flow(options), expected);
+        for (const depth of [0, 1, 3]) for (const maxNodes of [1, 2, 4]) for (const maxEdges of [1, 2, 3]) {
+            const limits = { id: 'a', depth, maxNodes, maxEdges };
+            assert.deepEqual(await provider.flow(limits), logicFlow(fixture, limits));
+        }
+    } finally { globalThis.fetch = original; }
+});

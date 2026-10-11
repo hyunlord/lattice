@@ -29,7 +29,7 @@ export function analyzeLogic(facts: readonly LogicFacts[], modules: readonly Cod
             const target = resolve(fact, call);
             if (!target) { unresolved++; fileUnresolved++; if (fileUnresolved === 1) firstUnresolvedLine = call.line; if (unresolvedExamples.length < 5) unresolvedExamples.push(`${call.receiver ? call.receiver + '.' : ''}${call.name || '<dynamic>'} (line ${call.line})`); continue; }
             const source = sourceFor(fact, call.line, call.endLine, `/logic/calls/${call.start}`);
-            edges.push({ id: `calls:${call.caller}:${target.definition.id}:${call.start}`, kind: 'calls', source: call.caller, target: target.definition.id, directed: true, field: source.pointer, attributes: { resolution: 'exact', evidence: 'static-call', name: call.name, receiver: call.receiver }, sources: [source] });
+            edges.push({ id: `calls:${call.caller}:${target.definition.id}:${call.start}`, kind: 'calls', source: call.caller, target: target.definition.id, directed: true, field: source.pointer, attributes: { resolution: target.resolution ?? 'exact', evidence: 'static-call', name: call.name, receiver: call.receiver }, sources: [source] });
         }
         if (fileUnresolved) diagnostics.push({ code: 'unresolved-call', path: fact.path, line: firstUnresolvedLine, message: `${fileUnresolved} callsites have no unique lexical or explicitly imported static target: ${unresolvedExamples.join(', ')}` });
     }

@@ -96,7 +96,7 @@ export function createLogicProvider(graphHash: string, suffix = ''): LogicProvid
         flow: async options => {
             const depth = Math.max(0, Math.min(10, options.depth ?? 3)), maxNodes = Math.max(1, Math.min(500, options.maxNodes ?? 100)), maxEdges = Math.max(1, Math.min(500, options.maxEdges ?? 100));
             const queue = [{ id: options.id, depth: 0 }], visited = new Set([options.id]), nodes = new Map<string, Node>(), edges = new Map<string, Edge>();
-            let clipped = false;
+            let clipped = false, edgeBudgetExceeded = false, acceptedEdges = 0;
             for (let cursor = 0; cursor < queue.length; cursor++) {
                 const current = queue[cursor]; if (!current) continue;
                 const { node } = await detail(current.id); nodes.set(current.id, node.node);
@@ -106,12 +106,15 @@ export function createLogicProvider(graphHash: string, suffix = ''): LogicProvid
                     for (const endpoint of result.relatedNodes) nodes.set(endpoint.id, endpoint);
                     for (const edge of result.outgoing.items) {
                         edges.set(edge.id, edge);
-                        if (!visited.has(edge.target) && visited.size < maxNodes) { visited.add(edge.target); queue.push({ id: edge.target, depth: current.depth + 1 }); }
-                        if (edges.size > maxEdges) break;
+                        if (acceptedEdges >= maxEdges) { edgeBudgetExceeded = true; break; }
+                        if (!visited.has(edge.target)) {
+                            if (visited.size >= maxNodes) continue;
+                            visited.add(edge.target); queue.push({ id: edge.target, depth: current.depth + 1 });
+                        }
+                        acceptedEdges++;
                     }
-                    if (edges.size > maxEdges || result.outgoing.nextOffset === null) break;
+                    if (edgeBudgetExceeded || result.outgoing.nextOffset === null) break;
                 }
-                if (edges.size > maxEdges) break;
             }
             const result = logicFlow({ nodes: [...nodes.values()], edges: [...edges.values()] }, options);
             return { ...result, nodes: result.nodes.map(item => ({ ...(descriptions.get(item.node.id) ?? item), depth: item.depth })), truncated: result.truncated || clipped, truncationReasons: [...new Set([...result.truncationReasons, ...(clipped ? ['depth' as const] : [])])].sort() };
