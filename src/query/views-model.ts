@@ -1,3 +1,4 @@
+import { mergeSourceGroups } from "./source-groups.js";
 import type { Node, Edge, Source, View } from '../core/model.js';
 import type { JsonObject, JsonValue } from '../core/canonical.js';
 export type Coverage = { readonly selected: number; readonly total: number; readonly excluded: number; };
@@ -24,7 +25,7 @@ function key(value: JsonValue | undefined): string {
 }
 function label(value: JsonValue | undefined): string { return value === undefined ? '미기재' : typeof value === 'string' ? value : key(value) + (typeof value === 'number' ? ' (숫자)' : typeof value === 'boolean' ? ' (논리)' : value === null ? ' (null)' : ''); }
 function unique(values: readonly string[]): string[] { return [...new Set(values)]; }
-function provenance(items: readonly { readonly sources: readonly Source[]; }[]): Source[] { return [...new Map(items.flatMap(item => item.sources).map(source => [JSON.stringify(source), source])).values()]; }
+function provenance(items: readonly { readonly sources: readonly Source[]; }[]): Source[] { return mergeSourceGroups(items.map(item => item.sources)); }
 export function distributionFields(nodes: readonly Node[]): string[] {
     return ['@kind', ...[...new Set(nodes.flatMap(node => Object.entries(node.attributes).filter(([, value]) => value === null || typeof value !== 'object').map(([name]) => name)))].sort().filter(name => name !== '@kind')];
 }

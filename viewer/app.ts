@@ -1,3 +1,5 @@
+import { renderSources } from './evidence.js';
+import { sourceCount } from './source-groups.js';
 import { renderLoopMap } from './loop-map.js';
 import { buildLoopMap } from './loop-map-model.js';
 import type { Node as GraphNode, Facet, Finding, Source, Snapshot } from '../dist/core/model.js';
@@ -40,7 +42,8 @@ function nodeHref(id: string) { return '#/node/' + encodeURIComponent(id); }
 function listHref(params: Record<string, string> = {}) { const query = new URLSearchParams({ ...(activeLayer ? { layer: activeLayer } : {}), ...params }); return '#/list' + (query.size ? '?' + query : ''); }
 function section(title: string, className = 'panel section') { const box = el('section', undefined, className); box.append(el('h2', title)); return box; }
 function empty(text: string) { return el('p', text, 'empty'); }
-function sources(items: readonly Source[]) {
+function sources(items: readonly Source[]) { return renderSources(items, inlineSources); }
+function inlineSources(items: readonly Source[]) {
     const list = el('ul', undefined, 'sources');
     const unique = new Map(items.map(source => [source.path + ':' + source.line + source.pointer, source]));
     for (const source of unique.values()) {
@@ -135,8 +138,8 @@ function findingView(finding: Finding, compact = false) {
         for (const id of finding.targetIds) { const item = el('li'); item.append(link(nodes.get(id)?.name || id, nodeHref(id))); targets.append(item); }
         detail.append(targets); article.append(detail);
     }
-    if (finding.sources.length) {
-        const detail = el('details'); detail.append(el('summary', '출처 ' + finding.sources.length + '개'), sources(finding.sources)); article.append(detail);
+    if (sourceCount(finding.sources)) {
+        const detail = el('details'); detail.append(el('summary', '출처 ' + sourceCount(finding.sources) + '개'), sources(finding.sources)); article.append(detail);
     }
     return article;
 }

@@ -1,3 +1,4 @@
+import { mergeSourceGroups } from './source-groups.js';
 import type { Node, Facet, Source } from '../dist/core/model.js';
 import type { JsonValue } from '../dist/core/canonical.js';
 import type { Presentation } from './data.js';
@@ -24,7 +25,7 @@ export function cellValue(node: Node, column: Column, facets: readonly Facet[]):
         case 'facet': {
             const selected = facets.filter(facet => facet.nodeId === node.id && facet.key === column.key);
             const values = [...new Map(selected.map(facet => [valueKey(facet.value), facet.value])).entries()].sort(([a], [b]) => compareText(a, b)).map(([, value]) => value);
-            const sources = [...new Map(selected.flatMap(facet => facet.sources).map(source => [JSON.stringify(source), source])).values()];
+            const sources = mergeSourceGroups(selected.map(facet => facet.sources));
             return { value: values.length > 1 ? values : values[0], sources };
         }
     }
