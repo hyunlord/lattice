@@ -39,6 +39,7 @@ export function writeOverviewParts(graph: Pick<Graph, 'hash' | 'repository'>, mo
         for (let index = 0; index < (stage.childIds?.length ?? 0); index += pageSize) page(scope, stage.id, index / pageSize);
     }
     const initial = project();
+    register('catalog', save({ ...initial, stages: [], flows: [], rootStageIds: [], structuralDependencyPages: [], structuralDependencyGroups: [], nodes: model.nodes.map(node => ({ ...node, fields: [], relationGroups: [] })) }));
     for (const node of model.nodes) {
         const ids = new Set([node.id, ...node.relationGroups.flatMap(group => group.items.map(item => item.id))]);
         register('focus:' + node.id, save({ ...initial, stages: [], flows: [], rootStageIds: [], structuralDependencyPages: [], structuralDependencyGroups: [], nodes: [...ids].flatMap(id => { const related = nodes.get(id); return related ? [{ ...related, relationGroups: id === node.id ? related.relationGroups : [] }] : []; }), defaultFocus: node.id }));

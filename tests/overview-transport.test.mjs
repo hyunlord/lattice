@@ -76,3 +76,16 @@ test('focus parts do not recursively duplicate neighbor relationship lists', asy
     assert.ok(model.nodes.find(node => node.id === 'hub').relationGroups.length > 0);
     assert.deepEqual(focused.nodes.find(node => node.id === 'hub').relationGroups, []);
 });
+test('structural catalog loads card records without full relationship and stage metadata', async t => {
+    const { writeOverview } = await import('../bin/export-overview.mjs');
+    const { createOverviewLoader, parseOverview } = await import('../viewer/overview-data.js');
+    const hash = 'a'.repeat(64), source = { path: 'src/main.ts', line: 1, pointer: '', contentHash: hash };
+    const graph = { hash, repository: { name: 'example', dirty: false, sourceFingerprint: hash }, nodes: [{ id: 'm', kind: 'module', name: 'Main', attributes: { path: source.path }, sources: [source], contentHash: hash }], edges: [], facets: [] }, files = new Map();
+    writeOverview(graph, {}, (path, text) => files.set(path, text));
+    const overview = parseOverview(JSON.parse(files.get('overview.json'))), layer = overview.layers[0], requests = [];
+    t.mock.method(globalThis, 'fetch', async url => { const path = String(url).slice(2); requests.push(path); return new Response(files.get(path), { status: files.has(path) ? 200 : 404 }); });
+    const catalog = await createOverviewLoader().model(overview, layer, new URLSearchParams({ view: 'catalog' }));
+    assert.equal(catalog.nodes.length, graph.nodes.length); assert.equal(catalog.nodes[0].name, JSON.parse(files.get(layer.path)).model.nodes[0].name);
+    assert.deepEqual(catalog.stages, []); assert.deepEqual(catalog.nodes[0].fields, []); assert.deepEqual(catalog.nodes[0].relationGroups, []);
+    assert.equal(requests.includes(layer.path), false);
+});

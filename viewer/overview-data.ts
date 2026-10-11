@@ -59,10 +59,10 @@ export function createOverviewLoader(suffix = '') {
         },
         async model(overview: Overview, layer: OverviewLayer, params?: URLSearchParams): Promise<LoopMap> {
             let path = layer.path;
-            if (layer.parts && params && params.get('view') !== 'catalog') {
+            if (layer.parts && params) {
                 const focus = params.get('view') === 'focus' ? params.get('item') ?? layer.model.defaultFocus : undefined;
                 const scope = params.get('scope') ?? layer.model.structuralScope?.default ?? 'production';
-                const key = focus ? 'focus:' + focus : params.get('stage') ? 'stage:' + params.get('stage') : 'page:' + JSON.stringify([scope, params.get('parent') ?? '', Math.max(0, Number(params.get('page')) || 0)]);
+                const key = params.get('view') === 'catalog' ? 'catalog' : focus ? 'focus:' + focus : params.get('stage') ? 'stage:' + params.get('stage') : 'page:' + JSON.stringify([scope, params.get('parent') ?? '', Math.max(0, Number(params.get('page')) || 0)]);
                 path = await partPath(overview, layer, key);
             }
             const key = overview.hash + ':' + path, prior = models.get(key); if (prior) return prior;
