@@ -1,5 +1,5 @@
 import type { Node } from 'web-tree-sitter';
-import { bindings, children, descendants, field, functionTypes, identifier } from './logic-facts-ast.mjs';
+import { bindings, children, descendants, field, callableTypes, identifier } from './logic-facts-ast.mjs';
 
 export function exportedNames(root: Node): ReadonlyMap<string, readonly string[]> {
     const result = new Map<string, string[]>();
@@ -16,7 +16,7 @@ export function exportedNames(root: Node): ReadonlyMap<string, readonly string[]
         } else {
             if (commonjsShadowed) continue;
             let ancestor = node.parent;
-            while (ancestor && !functionTypes.has(ancestor.type)) ancestor = ancestor.parent;
+            while (ancestor && !callableTypes.has(ancestor.type)) ancestor = ancestor.parent;
             if (ancestor) continue;
             const left = field(node, 'left'), right = field(node, 'right');
             if (!left || !right) continue;

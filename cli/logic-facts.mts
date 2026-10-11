@@ -1,7 +1,7 @@
 import type { Node } from 'web-tree-sitter';
 import type { SourceInput } from '../dist/adapters/types.js';
 import type { LogicFacts, LogicDefinition, LogicCall } from '../dist/adapters/logic-types.js';
-import { annotations, bindings, children, callTarget, callTypes, classTypes, definitionName, descendants, field, functionTypes, identifier, lexicalRange, ownerName, staticDefinition } from './logic-facts-ast.mjs';
+import { annotations, bindings, children, callTarget, callableTypes, callTypes, classTypes, definitionName, descendants, field, functionTypes, identifier, lexicalRange, ownerName, staticDefinition, unsupportedCallableTypes } from './logic-facts-ast.mjs';
 import { exportedNames } from './logic-facts-exports.mjs';
 import { logicImports } from './logic-facts-imports.mjs';
 
@@ -23,7 +23,7 @@ export function extractLogicFacts(input: SourceInput, language: string, root: No
     while (pending.length) {
         const current = pending.pop(); if (!current) break;
         const { node } = current;
-        if (node.type === 'ERROR' || node.isMissing) continue;
+        if (node.type === 'ERROR' || node.isMissing || unsupportedCallableTypes.has(node.type)) continue;
         let { parent, owner } = current;
         if (classTypes.has(node.type)) {
             owner = ownerName(node);
@@ -45,7 +45,7 @@ export function extractLogicFacts(input: SourceInput, language: string, root: No
     while (scan.length) {
         const current = scan.pop(); if (!current) break;
         const { node } = current;
-        if (node.type === 'ERROR' || node.isMissing || functionTypes.has(node.type) && !callableIds.has(node.id)) continue;
+        if (node.type === 'ERROR' || node.isMissing || callableTypes.has(node.type) && !callableIds.has(node.id)) continue;
         const caller = callableIds.get(node.id) ?? current.caller;
         if (callTypes.has(node.type) && !node.hasError) {
             const target = callTarget(node), argumentsNode = field(node, 'arguments') ?? children(node).find(child => ['call_suffix', 'value_arguments'].includes(child.type));

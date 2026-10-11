@@ -1,13 +1,15 @@
 import type { Node } from 'web-tree-sitter';
 
 export const functionTypes = new Set(['function_declaration', 'function_definition', 'function_item', 'method_declaration', 'method_definition', 'arrow_function', 'function_expression', 'generator_function_declaration', 'generator_function', 'local_function_statement']);
+export const unsupportedCallableTypes = new Set(['func_literal', 'lambda_literal', 'annotated_lambda', 'lambda_expression', 'anonymous_method_expression', 'closure_expression', 'lambda']);
+export const callableTypes = new Set([...functionTypes, ...unsupportedCallableTypes]);
 export const classTypes = new Set(['class_declaration', 'class_definition', 'struct_item', 'impl_item', 'object_declaration', 'struct_declaration', 'interface_declaration']);
 export const callTypes = new Set(['call_expression', 'call', 'method_invocation', 'invocation_expression']);
 export const field = (node: Node, name: string): Node | null => node.childForFieldName(name);
 export const children = (node: Node): readonly Node[] => node.namedChildren.filter((child): child is Node => child !== null);
 export function descendants(node: Node, accept: (node: Node) => boolean): Node[] {
     const result: Node[] = [], pending = [node];
-    while (pending.length) { const next = pending.pop(); if (!next) continue; if (accept(next)) result.push(next); pending.push(...children(next).toReversed()); }
+    while (pending.length) { const next = pending.pop(); if (!next || unsupportedCallableTypes.has(next.type)) continue; if (accept(next)) result.push(next); pending.push(...children(next).toReversed()); }
     return result;
 }
 export const identifier = (node: Node): boolean => ['identifier', 'simple_identifier', 'property_identifier', 'type_identifier', 'package_identifier', 'field_identifier'].includes(node.type);
@@ -51,7 +53,7 @@ export function bindings(node: Node): string[] {
     const pending = [...children(body)];
     while (pending.length) {
         const next = pending.pop(); if (!next) continue;
-        if (functionTypes.has(next.type) || classTypes.has(next.type)) continue;
+        if (callableTypes.has(next.type) || classTypes.has(next.type)) continue;
         const initializer = field(next, 'value') ?? field(next, 'right');
         if (initializer && (functionTypes.has(initializer.type) || initializer.type === 'call_expression' && field(initializer, 'function')?.text === 'require')) continue;
         const target = ['variable_declarator', 'let_declaration', 'assignment', 'assignment_expression', 'short_var_declaration', 'var_spec', 'const_spec', 'for_in_clause', 'for_statement', 'local_variable_declaration', 'parameter'].includes(next.type) ? field(next, 'name') ?? field(next, 'pattern') ?? field(next, 'left') : null;
@@ -84,7 +86,7 @@ export function callTarget(node: Node): { name: string; receiver: string; } {
 export function lexicalRange(node: Node, language: string): { scopeStart: number; scopeEnd: number; } {
     let parent = node.parent;
     while (parent) {
-        if (functionTypes.has(parent.type) || ['program', 'module', 'source_file', 'compilation_unit'].includes(parent.type) || language !== 'python' && ['statement_block', 'block', 'class_body', 'declaration_list'].includes(parent.type)) return { scopeStart: parent.startIndex, scopeEnd: parent.endIndex };
+        if (callableTypes.has(parent.type) || ['program', 'module', 'source_file', 'compilation_unit'].includes(parent.type) || language !== 'python' && ['statement_block', 'block', 'class_body', 'declaration_list'].includes(parent.type)) return { scopeStart: parent.startIndex, scopeEnd: parent.endIndex };
         parent = parent.parent;
     }
     return { scopeStart: 0, scopeEnd: node.endIndex };

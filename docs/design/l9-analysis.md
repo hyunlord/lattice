@@ -25,3 +25,7 @@ Verification: oversized Unicode attributes, colliding lookup buckets, all pages 
 ### Fresh MCP observations
 
 MCP refresh serializes asynchronous observations and streams artifact hashes. A rebuild validates historical snapshots before constructing the next graph, then uses the byte-bound validation proof during persistence without retaining the previous decoded graph. Failed observations and same-size cache corruption still propagate or trigger a fresh build; the queue never caches a failed response as current evidence. The first tool request may include repository rebuilding. Warm query timing and first-request latency must be reported separately.
+
+### Anonymous callable boundaries
+
+Calls inside an anonymous function or lambda without its own mapped callable identity are omitted. They must not inherit the containing named function as a caller. The same boundary isolates nested definitions, bindings and import/export discovery. Mapped JavaScript arrow/function expressions and named nested functions retain their own identities. The `logic-2` semantic parser version invalidates earlier cached facts; this deliberately trades recall for caller correctness.
