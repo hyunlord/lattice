@@ -39,8 +39,8 @@ export function packageFrontier(packages: readonly LoopStage[], nodes: ReadonlyM
         }));
         return [id, files.size];
     }));
-    const top = tree.get('.');
-    const roots = top ? [top] : [];
+    const top = tree.get('.'), topChildren = top ? stages.get(top)?.childIds ?? [] : [];
+    const roots = topChildren.length > 12 && topChildren.length <= 24 ? [...topChildren] : top ? [top] : [];
     while (true) {
         const candidate = roots.map((id, index) => ({ id, index, children: stages.get(id)?.childIds ?? [], path: stages.get(id)?.directoryPath ?? '.' }))
             .filter(item => item.children.length > 0 && roots.length - 1 + item.children.length <= 12)

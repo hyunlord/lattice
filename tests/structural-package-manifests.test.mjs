@@ -79,18 +79,18 @@ test('declared package dependencies do not masquerade as importing source files'
     assert.equal(dependencyCountLabel({ source: 'a', target: 'b', label: '', count: 2, sourceFiles: ['src/main.ts', 'package.json'], projectSourceFiles: ['package.json'] }), '1개 파일 · 의존 선언 1개');
 });
 
-test('a broad top-level tree respects the root budget without losing physical children', async () => {
+test('a broad top-level tree keeps real families visible within the existing bounded fallback', async () => {
     const { packageFrontier } = await import('../dist/query/structural-package-frontier.js');
     const stages = Array.from({ length: 28 }, (_, index) => ({ id: `manifest:${index}`, title: `unit-${index}`, directoryPath: `family-${Math.floor(index / 2)}/unit-${index}`, summary: '', unit: '파일', nodeIds: [`file:${index}`], descendantNodeIds: [`file:${index}`], childIds: [], groups: [], incoming: [], outgoing: [] }));
     const result = packageFrontier(stages, new Map());
-    assert(result.roots.length <= 12);
+    assert.equal(result.roots.length, 14);
     const byId = new Map(result.stages.map(stage => [stage.id, stage]));
     const pending = [...result.roots], reached = new Set();
     while (pending.length) { const id = pending.pop(); if (reached.has(id)) continue; reached.add(id); pending.push(...byId.get(id).childIds); }
     assert(stages.every(stage => reached.has(stage.id)));
     assert(result.stages.filter(stage => stage.directoryPath.startsWith('family-') && stage.childIds.length).length === 14);
     assert.equal(new Set(result.roots.flatMap(id => result.stages.find(stage => stage.id === id).descendantNodeIds)).size, 28);
-    assert(result.roots.every(id => result.stages.find(stage => stage.id === id).directoryPath === '.'));
+    assert(result.roots.every(id => result.stages.find(stage => stage.id === id).directoryPath.startsWith('family-')));
 });
 
 test('manifest product roots outrank misleading documentation, demo and test names', () => {
