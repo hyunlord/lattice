@@ -63,3 +63,16 @@ test('structural stage and focus navigation fetch bounded source-bound parts ins
     const model = await loader.model(overview, layer, new URLSearchParams({ stage: selected.id })); assert.ok(model.stages.some(stage => stage.id === selected.id));
     assert.equal(requests.includes(layer.path), false); assert.equal(requests.some(path => path === 'graph.json'), false);
 });
+test('focus parts do not recursively duplicate neighbor relationship lists', async () => {
+    const { writeOverviewParts } = await import('../bin/export-overview-parts.mjs');
+    const { buildLoopMap } = await import('../dist/query/loop-map-model.js');
+    const hash = 'a'.repeat(64), source = path => ({ path, line: 1, pointer: '', contentHash: hash });
+    const nodes = ['caller', 'hub', 'other'].map(id => ({ id, kind: 'module', name: id, attributes: { path: `src/${id}.ts` }, sources: [source(`src/${id}.ts`)], contentHash: hash }));
+    const edges = ['caller', 'other'].map(id => ({ id: `${id}-hub`, kind: 'imports', source: id, target: 'hub', attributes: {}, sources: [source(`src/${id}.ts`)], contentHash: hash }));
+    const model = buildLoopMap(nodes, edges, [], { kinds: [] }, 'example'), files = new Map();
+    writeOverviewParts({ hash, repository: { name: 'example', dirty: false } }, model, '', (path, text) => files.set(path, text));
+    const focused = [...files.values()].map(text => JSON.parse(text).model).find(value => value?.defaultFocus === 'caller' && value.stages.length === 0);
+    assert.ok(focused); assert.deepEqual(focused.nodes.find(node => node.id === 'caller').relationGroups, model.nodes.find(node => node.id === 'caller').relationGroups);
+    assert.ok(model.nodes.find(node => node.id === 'hub').relationGroups.length > 0);
+    assert.deepEqual(focused.nodes.find(node => node.id === 'hub').relationGroups, []);
+});

@@ -41,7 +41,7 @@ export function writeOverviewParts(graph: Pick<Graph, 'hash' | 'repository'>, mo
     const initial = project();
     for (const node of model.nodes) {
         const ids = new Set([node.id, ...node.relationGroups.flatMap(group => group.items.map(item => item.id))]);
-        register('focus:' + node.id, save({ ...initial, stages: [], flows: [], rootStageIds: [], structuralDependencyPages: [], structuralDependencyGroups: [], nodes: [...ids].flatMap(id => nodes.get(id) ?? []), defaultFocus: node.id }));
+        register('focus:' + node.id, save({ ...initial, stages: [], flows: [], rootStageIds: [], structuralDependencyPages: [], structuralDependencyGroups: [], nodes: [...ids].flatMap(id => { const related = nodes.get(id); return related ? [{ ...related, relationGroups: id === node.id ? related.relationGroups : [] }] : []; }), defaultFocus: node.id }));
     }
     for (let index = 0; index < 256; index++) { const key = index.toString(16).padStart(2, '0'); write(`${prefix}/lookup/${key}.json`, JSON.stringify({ schemaVersion: 1, hash: graph.hash, repository: graph.repository, records: buckets.get(key) ?? {} })); }
     return prefix;
