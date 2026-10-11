@@ -56,3 +56,16 @@ test('many target nodes share one exact large finding instead of duplicating its
     assert.deepEqual(first, last); assert.deepEqual(load(first).graph.findings[0].targetIds, finding.targetIds); assert.equal(load(first).graph.findings[0].message, finding.message);
     assert.ok([...files.values()].reduce((sum, text) => sum + Buffer.byteLength(text), 0) < 2_000_000);
 });
+
+test('configured detail groups preserve human labels, original relationship order and lightweight referenced labels', async () => {
+    const { detailLabelKey } = await import('../dist/query/node-detail-transport.js');
+    const value = { ...graph, nodes: [node('a'), { ...node('b'), name: 'Readable target' }], edges: [{ ...edges[0], id: 'second', source: 'a', target: 'b' }, { ...edges[0], id: 'first', source: 'b', target: 'a' }, { ...edges[0], id: 'third', source: 'b', target: 'a', directed: false }], facets: [], findings: [] };
+    const presentation = { detail: { summaryFields: [{ label: 'Related', path: ['related'] }], relationships: [{ label: 'Uses', edgeKinds: ['imports'], direction: 'outgoing' }, { label: 'Together', edgeKinds: ['imports'], direction: 'both' }, { label: 'Receives', edgeKinds: ['imports'], direction: 'incoming' }] } };
+    const files = new Map(); writeNodeDetails(value, (path, text) => files.set(path, text), 'details', presentation);
+    const read = path => JSON.parse(files.get(path)), load = ref => JSON.parse(ref.parts.map(part => read(part.path).records[part.key]).join(''));
+    const index = read('details/index.json'), lookup = key => { const bucket = read(`${index.lookupRoot}/${logicLookupBucket(key)}.json`), range = bucket.ranges.find(range => range.first <= key && range.last >= key); return range ? load(load(range.ref)[key]) : undefined; };
+    const detail = lookup(detailIdKey('a'));
+    assert.deepEqual(detail.presentationRelations.map(group => group.label), ['Uses', 'Together', 'Receives']);
+    assert.deepEqual(detail.presentationRelations.map(group => group.pages.pages.flatMap(ref => load(ref).graph.edges).map(edge => edge.id)), [['second'], ['second', 'first', 'third'], ['first', 'third']]);
+    const label = lookup(detailLabelKey('b')).graph.nodes[0]; assert.equal(label.name, 'Readable target'); assert.deepEqual(label.attributes, {}); assert.deepEqual(label.sources, []);
+});

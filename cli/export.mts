@@ -48,7 +48,7 @@ function destination(options: Options) {
 function exportCurrentGraph(cache: string, staging: string, root: string, presentation: unknown, writeEvidence: (path: string, text: string) => void): string {
     const graph = readGraph(join(cache, 'graph.json'), { memoize: false });
     const media = resolveMediaAssets(root, graph.nodes, parseMediaConfig(object(presentation) ? presentation['media'] : undefined));
-    writeNodeDetails(graph, writeEvidence);
+    writeNodeDetails(graph, writeEvidence, 'details', presentation);
     writeLogic(graph, writeEvidence);
     writeOverview(graph, object(presentation) ? { ...presentation, mediaManifest: media.manifest } : {}, writeEvidence);
     writeJsonFile(join(staging, 'graph.json'), write => writeThinGraph(graph, writeEvidence, write));

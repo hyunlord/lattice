@@ -40,8 +40,8 @@ export async function serve(options: Options) {
         const refresh = () => {
             checks++;
             try {
-                const observed = observeRepository(options);
-                if (observed.fingerprint !== fingerprint) {
+                const observedFingerprint = observeRepository(options).fingerprint;
+                if (observedFingerprint !== fingerprint) {
                     const startedAt = performance.now();
                     const directory = join(liveDirectory, String(generation + 1));
                     mkdirSync(directory);
@@ -51,13 +51,13 @@ export async function serve(options: Options) {
                             const write = (path: string, text: string) => { const target = join(directory, path); mkdirSync(dirname(target), { recursive: true }); writeFileSync(target, text); };
                             const preparedSnapshots = prepareSnapshots(cache, { onGraph: (snapshot, graph) => writeNodeDetails(graph, write, `details/snapshots/${snapshot.id}`) });
                             const buildArtifacts = () => {
-                                const result = buildRepository(options, undefined, observed);
+                                const result = buildRepository(options);
                                 const graph = persistBuild(options.root, result, options.cacheDir, { memoize: false, preparedSnapshots });
                                 copyFileSync(join(cache, 'graph.json'), join(directory, 'graph.json'), constants.COPYFILE_FICLONE);
                                 write('presentation.json', JSON.stringify(result.presentation)); write('snapshots.json', JSON.stringify(graph.snapshots));
-                                writeNodeDetails(graph, write);
+                                writeNodeDetails(graph, write, 'details', result.presentation);
                                 writeLogic(graph, write); writeOverview(graph, result.presentation, write);
-                                return { hash: graph.hash, snapshots: graph.snapshots, media: result.media.files, extraction: result.extraction.stats, diagnostics: result.diagnostics };
+                                return { hash: graph.hash, fingerprint: result.fingerprint, snapshots: graph.snapshots, media: result.media.files, extraction: result.extraction.stats, diagnostics: result.diagnostics };
                             };
                             const artifacts = buildArtifacts();
                             for (const snapshot of artifacts.snapshots) {
@@ -72,7 +72,7 @@ export async function serve(options: Options) {
                     graphHash = next.hash;
                     for (const file of next.media) mediaFiles.set('/' + file.path, file);
                     while (generations.size > 4) { const oldest = generations.keys().next().value; if (oldest === undefined) break; const expired = generations.get(oldest); generations.delete(oldest); if (expired) rmSync(expired, { recursive: true, force: true }); }
-                    fingerprint = observed.fingerprint;
+                    fingerprint = next.fingerprint;
                     const recovered = error !== null;
                     error = null;
                     publish();

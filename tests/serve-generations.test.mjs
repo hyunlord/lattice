@@ -15,7 +15,7 @@ test('live generations stream immutable disk artifacts, retain four versions and
     writeFileSync(join(root, '.lattice/lens.json'), JSON.stringify({ schemaVersion: 1, name: 'Test', kinds: [{ id: 'record', label: 'Records', files: ['records.json'] }] }));
     execFileSync('git', ['-C', root, 'add', '.']);
     const guard = join(temporary, 'guard.mjs');
-    writeFileSync(guard, `const original=JSON.stringify;JSON.stringify=function(value,...args){if(value?.schemaVersion===1&&value.hash&&Array.isArray(value.nodes)&&Array.isArray(value.edges))throw Error('whole graph serialization forbidden');return original.call(this,value,...args)};`);
+    writeFileSync(guard, `import fs from 'node:fs';import {syncBuiltinESMExports} from 'node:module';const write=fs.writeFileSync;let changed=false;fs.writeFileSync=function(path,...args){const result=write.call(this,path,...args);if(!changed&&String(path).endsWith('/writer.lock')){changed=true;write(${JSON.stringify(source)},'[{'+'"id":"a","name":"Observed under lock"}]');}return result;};syncBuiltinESMExports();const original=JSON.stringify;JSON.stringify=function(value,...args){if(value?.schemaVersion===1&&value.hash&&Array.isArray(value.nodes)&&Array.isArray(value.edges))throw Error('whole graph serialization forbidden');return original.call(this,value,...args)};`);
     const child = spawn(process.execPath, ['--import', pathToFileURL(guard).href, resolve('bin/lattice.mjs'), 'serve', '--root', root, '--cache-dir', cache, '--port', '0', '--json'], { stdio: ['ignore', 'pipe', 'pipe'] });
     let stdout = '', stderr = ''; child.stdout.on('data', chunk => stdout += chunk); child.stderr.on('data', chunk => stderr += chunk);
     const exited = new Promise(resolve => child.once('exit', (code, signal) => resolve({ code, signal })));
@@ -24,6 +24,9 @@ test('live generations stream immutable disk artifacts, retain four versions and
         const ready = await until(() => stdout.split('\n').filter(Boolean).map(line => JSON.parse(line)).find(event => event.event === 'ready'));
         const request = path => fetch(new URL(path, ready.url));
         const initial = await (await request('graph.json?generation=1')).json();
+        assert.equal(initial.nodes[0].name, 'Observed under lock');
+        await delay(650);
+        assert.equal((await (await request('__lattice/status')).json()).builds, 1);
         assert.equal((await request('graph.json/child')).status, 404);
         assert.equal((await request('snapshots/..%2F..%2Fgraph.json')).status, 404);
         assert.equal((await request('__lattice/status')).status, 200);

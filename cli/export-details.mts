@@ -1,15 +1,17 @@
+import { parsePresentation } from '../dist/query/map-presentation.js';
 import { createHash } from 'node:crypto';
 import type { Graph, Node, Edge, Facet, Finding } from '../dist/core/model.js';
 import type { DetailRef, DetailPages } from '../dist/query/node-detail-transport.js';
-import { detailIdKey, detailIdentityKey } from '../dist/query/node-detail-transport.js';
+import { detailIdKey, detailIdentityKey, detailLabelKey } from '../dist/query/node-detail-transport.js';
 import { nodeIdentity } from '../dist/query/history-model.js';
 import { logicLookupBucket } from '../dist/query/logic-model.js';
 import { thinGraph } from './export-evidence.mjs';
 const MAX_BYTES = 262144, PAGE_SIZE = 20;
 /** A packet contains fragments of requested records, never a complete repository graph. */
-export function writeNodeDetails(graph: Graph, write: (path: string, text: string) => void, scope = 'details'): void {
+export function writeNodeDetails(graph: Graph, write: (path: string, text: string) => void, scope = 'details', rawPresentation: unknown = {}): void {
+    const human = parsePresentation(rawPresentation).detail;
     const binding = { schemaVersion: 1, graphHash: graph.hash, repository: graph.repository };
-    const root = `details/data/${createHash('sha256').update(JSON.stringify(binding)).digest('hex')}`, lookupRoot = `${root}/lookup`;
+    const root = `details/data/${createHash('sha256').update(JSON.stringify({ binding, human })).digest('hex')}`, lookupRoot = `${root}/lookup`;
     const header = JSON.stringify(binding).slice(0, -1) + ',"records":{';
     let packet = 0, serial = 0, pending: string[] = [], bytes = Buffer.byteLength(header) + 2;
     const flush = () => {
@@ -29,6 +31,7 @@ export function writeNodeDetails(graph: Graph, write: (path: string, text: strin
         }
         return { parts };
     };
+    const edgeOrder = human ? new Map(graph.edges.map((edge, index) => [edge.id, index])) : undefined;
     const byId = new Map(graph.nodes.map(node => [node.id, node]));
     const incoming = new Map<string, Edge[]>(), outgoing = new Map<string, Edge[]>(), undirected = new Map<string, Edge[]>();
     const facets = new Map<string, Facet[]>(), findings = new Map<string, Finding[]>();
@@ -60,10 +63,18 @@ export function writeNodeDetails(graph: Graph, write: (path: string, text: strin
     for (const node of graph.nodes) {
         const relations = (rows: readonly Edge[]) => pages(rows, part => minimal(labels(part), part));
         const ref = save({
+            ...(human ? {
+                presentationRelations: human.relationships.map(relation => {
+                    const incident = [...new Set([...(incoming.get(node.id) ?? []), ...(outgoing.get(node.id) ?? []), ...(undirected.get(node.id) ?? [])])];
+                    const matches = incident.filter(edge => relation.edgeKinds.includes(edge.kind) && ((relation.direction !== 'incoming' && edge.source === node.id) || (relation.direction !== 'outgoing' && edge.target === node.id))).sort((a, b) => edgeOrder!.get(a.id)! - edgeOrder!.get(b.id)!);
+                    return { label: relation.label, pages: relations(matches) };
+                })
+            } : {}),
             graph: minimal([node]), facets: pages(facets.get(node.id) ?? [], part => minimal([], [], part)), findings: findingPages(findings.get(node.id) ?? []),
             relations: { incoming: relations(incoming.get(node.id) ?? []), outgoing: relations(outgoing.get(node.id) ?? []), undirected: relations(undirected.get(node.id) ?? []) }
         });
         register(detailIdKey(node.id), ref); register(detailIdentityKey(nodeIdentity(node)), ref);
+        if (human) register(detailLabelKey(node.id), save({ graph: minimal([{ ...node, attributes: node.attributes['layer'] === undefined ? {} : { layer: node.attributes['layer'] }, sources: [] }]) }));
     }
     for (let index = 0; index < 256; index++) {
         const bucket = index.toString(16).padStart(2, '0'), rows = (buckets.get(bucket) ?? []).sort(([a], [b]) => a < b ? -1 : a > b ? 1 : 0);

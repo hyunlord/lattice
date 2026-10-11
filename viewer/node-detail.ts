@@ -35,17 +35,40 @@ export function renderNodeDetail(host: HTMLElement, context: Context): void {
     const human = context.presentation.detail;
     if (human) {
         const summary = section('요약'); host.append(summary);
-        const drawSummary = (facets: BrowserGraph['facets']): void => { summary.replaceChildren(el('h2', '요약')); for (const field of human.summaryFieldsByKind?.[node.kind] ?? human.summaryFields) { let value: unknown = { ...node.attributes, facet: Object.fromEntries(facets.map(facet => [facet.key, facet.value])) }; for (const key of field.path) value = value !== null && typeof value === 'object' ? Reflect.get(value, key) : undefined; if (value === undefined || value === null || value === '') continue; const row = el('div', '', 'record-field'); row.append(el('strong', field.label), humanValue(value, { nodes: [node], nodeHref: context.nodeHref })); summary.append(row); } };
-        drawSummary([]);
-        const wanted = new Set((human.summaryFieldsByKind?.[node.kind] ?? human.summaryFields).filter(field => field.path[0] === 'facet').flatMap(field => field.path[1] ? [field.path[1]] : []));
-        if (wanted.size && context.record.facets.total) void (async () => { const selected: BrowserGraph['facets'] = []; for (let page = 0; page < context.record.facets.pages.length && wanted.size && context.current(); page++) { const data = await context.loader.page(context.index, context.record.facets, page); for (const facet of data.facets) if (wanted.has(facet.key)) { selected.push(facet); wanted.delete(facet.key); } } if (context.current()) drawSummary(selected); })().catch(error => { if (context.current()) summary.append(el('p', error instanceof Error ? error.message : String(error), 'empty')); });
+        const fields = human.summaryFieldsByKind?.[node.kind] ?? human.summaryFields;
+        const loadSummary = async (): Promise<void> => {
+            summary.replaceChildren(el('h2', '요약'), el('p', '요약을 읽는 중…', 'muted'));
+            try {
+                const facets: BrowserGraph['facets'] = [];
+                if (fields.some(field => field.path[0] === 'facet')) for (let page = 0; page < context.record.facets.pages.length && context.current(); page++) facets.push(...(await context.loader.page(context.index, context.record.facets, page)).facets);
+                const values = fields.flatMap(field => {
+                    let value: unknown = { ...node.attributes, facet: Object.fromEntries(facets.map(facet => [facet.key, facet.value])) };
+                    for (const key of field.path) value = value !== null && typeof value === 'object' ? Reflect.get(value, key) : undefined;
+                    return value === undefined || value === null || value === '' ? [] : [{ field, value }];
+                });
+                const ids = new Set<string>();
+                const collect = (value: unknown): void => { if (typeof value === 'string') ids.add(value); else if (Array.isArray(value)) value.forEach(collect); else if (value !== null && typeof value === 'object') Object.values(value).forEach(collect); };
+                values.forEach(item => collect(item.value));
+                const labels = [node];
+                for (const id of ids) { if (!context.current()) return; if (id !== node.id) { const label = await context.loader.label(context.index, id); if (label) labels.push(label); } }
+                if (!context.current()) return;
+                summary.replaceChildren(el('h2', '요약'));
+                for (const { field, value } of values) { const row = el('div', '', 'record-field'); row.append(el('strong', field.label), humanValue(value, { nodes: labels, nodeHref: context.nodeHref })); summary.append(row); }
+            } catch (error) { if (context.current()) summary.replaceChildren(el('h2', '요약'), el('p', error instanceof Error ? error.message : String(error), 'empty'), action('요약 다시 읽기', () => { void loadSummary(); })); }
+        };
+        void loadSummary();
+        for (const relation of context.record.presentationRelations ?? []) if (relation.pages.total) collection(host, relation.label, relation.pages, context, (graph, area) => {
+            const names = new Map(graph.nodes.map(item => [item.id, item.name])), list = el('ul', '', 'neighbors');
+            for (const edge of graph.edges) { const id = edge.source === node.id ? edge.target : edge.source, row = el('li'); row.append(link(names.get(id) ?? id, context.nodeHref(id))); const text = edge.attributes?.['label']; if (text && text !== edge.kind) row.append(el('p', String(text))); list.append(row); }
+            area.append(list);
+        });
     }
     const provenance = section('원본 출처'); provenance.append(context.sources(node.sources)); host.append(provenance);
     const raw = section('속성'); raw.append(attributes(node)); if (!Object.keys(node.attributes).length) raw.append(el('p', '기록된 속성이 없습니다.', 'empty'));
     if (human?.rawAttributes === 'collapsed') { const disclosure = el('details', '', 'section'); disclosure.append(el('summary', '원시 속성 및 분류'), raw); host.append(disclosure); } else host.append(raw);
-    collection(host, '분류', context.record.facets, context, (graph, area) => { for (const facet of graph.facets) { const row = el('div', '', 'record-field'); row.append(el('strong', context.facetLabel(facet.key)), el('span', context.valueLabel(facet.key, facet.value))); const evidence = el('details'); evidence.append(el('summary', '분류 출처'), context.sources(facet.sources)); row.append(evidence); area.append(row); } });
-    collection(host, '관련 발견', context.record.findings, context, (graph, area) => { for (const finding of graph.findings) area.append(context.finding(finding)); });
-    for (const [direction, label] of [['outgoing', '나가는 연결'], ['incoming', '들어오는 연결'], ['undirected', '방향 없는 연결']] as const) collection(host, label, context.record.relations[direction], context, (graph, area) => {
+    if (context.record.facets.total) collection(host, '분류', context.record.facets, context, (graph, area) => { for (const facet of graph.facets) { const row = el('div', '', 'record-field'); row.append(el('strong', context.facetLabel(facet.key)), el('span', context.valueLabel(facet.key, facet.value))); const evidence = el('details'); evidence.append(el('summary', '분류 출처'), context.sources(facet.sources)); row.append(evidence); area.append(row); } });
+    if (context.record.findings.total) collection(host, '관련 발견', context.record.findings, context, (graph, area) => { for (const finding of graph.findings) area.append(context.finding(finding)); });
+    for (const [direction, label] of [['outgoing', '나가는 연결'], ['incoming', '들어오는 연결'], ['undirected', '방향 없는 연결']] as const) if (context.record.relations[direction].total) collection(host, label, context.record.relations[direction], context, (graph, area) => {
         const names = new Map(graph.nodes.map(item => [item.id, item])), list = el('ul', '', 'neighbors');
         for (const edge of graph.edges) { const id = edge.source === node.id ? edge.target : edge.source, target = names.get(id), row = el('li'); const humanLabel = human?.relationships.find(relation => relation.edgeKinds.includes(edge.kind) && (relation.direction !== 'incoming' && edge.source === node.id || relation.direction !== 'outgoing' && edge.target === node.id))?.label; row.append(el('span', `${humanLabel ?? String(edge.attributes?.['label'] || edge.kind || edge.field)} · `), link(target?.name ?? id, context.nodeHref(id))); const neighborLayer = String(target?.attributes['layer'] ?? ''); if (neighborLayer !== layer) row.append(el('span', ' · ' + (context.layerLabel(neighborLayer)), 'badge')); if (humanLabel && edge.attributes?.['label']) row.append(el('p', String(edge.attributes['label']))); const evidence = el('details'); evidence.append(el('summary', '연결 출처'), context.sources(edge.sources)); row.append(evidence); list.append(row); }
         area.append(list);

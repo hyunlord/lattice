@@ -8,6 +8,7 @@ export type DetailRecord = {
     readonly graph: unknown;
     readonly facets: DetailPages;
     readonly findings: DetailPages;
+    readonly presentationRelations?: readonly { readonly label: string; readonly pages: DetailPages; }[];
     readonly relations: { readonly incoming: DetailPages; readonly outgoing: DetailPages; readonly undirected: DetailPages; };
 };
 export type DetailCollection = { readonly graph: unknown; readonly findingRefs?: readonly DetailRef[]; };
@@ -15,3 +16,5 @@ export type DetailPacket = DetailBinding & { readonly records: Readonly<Record<s
 /** Keys are tagged to distinguish literal node IDs from cross-snapshot identities. */
 export function detailIdKey(id: string): string { return `id:${id}`; }
 export function detailIdentityKey(identity: string): string { return `identity:${identity}`; }
+
+export function detailLabelKey(id: string): string { return `label:${id}`; }

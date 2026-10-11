@@ -1,9 +1,9 @@
 import type { Repository, Snapshot } from '../dist/core/model.js';
-import { detailIdKey, detailIdentityKey, type DetailBinding, type DetailIndex, type DetailPages, type DetailRef } from './node-detail-transport.js';
+import { detailIdKey, detailIdentityKey, detailLabelKey, type DetailBinding, type DetailIndex, type DetailPages, type DetailRef } from './node-detail-transport.js';
 import { nodeIdentity } from './history-model.js';
 import { logicLookupBucket } from './logic-model.js';
 import { object, parseGraph, type BrowserGraph } from './data.js';
-export type NodeDetailRecord = { readonly graph: BrowserGraph; readonly facets: DetailPages; readonly findings: DetailPages; readonly relations: { readonly incoming: DetailPages; readonly outgoing: DetailPages; readonly undirected: DetailPages; }; };
+export type NodeDetailRecord = { readonly graph: BrowserGraph; readonly presentationRelations?: readonly { readonly label: string; readonly pages: DetailPages; }[]; readonly facets: DetailPages; readonly findings: DetailPages; readonly relations: { readonly incoming: DetailPages; readonly outgoing: DetailPages; readonly undirected: DetailPages; }; };
 function path(value: unknown): value is string { return typeof value === 'string' && /^details\/[a-zA-Z0-9_./-]+\.json$/u.test(value) && !value.split('/').includes('..'); }
 function ref(value: unknown): value is DetailRef { return object(value) && Array.isArray(value['parts']) && value['parts'].length > 0 && value['parts'].every(part => object(part) && path(part['path']) && typeof part['key'] === 'string'); }
 function pages(value: unknown): value is DetailPages { return object(value) && Number.isSafeInteger(value['total']) && Number(value['total']) >= 0 && Array.isArray(value['pages']) && value['pages'].length === Math.ceil(Number(value['total']) / 20) && value['pages'].every(ref); }
@@ -40,19 +40,27 @@ export function createNodeDetailLoader(expected: { readonly hash: string; readon
     const graph = (value: unknown, binding: DetailIndex): BrowserGraph => {
         const result = parseGraph(value); bound({ schemaVersion: 1, graphHash: result.hash, repository: result.repository }, binding); return result;
     };
-    const node = async (binding: DetailIndex, id: string, identity = false): Promise<NodeDetailRecord | undefined> => {
-        const key = identity ? detailIdentityKey(id) : detailIdKey(id), lookup = await read(`${binding.lookupRoot}/${logicLookupBucket(key)}.json`, false, binding); bound(lookup, binding);
+    const lookupRecord = async (binding: DetailIndex, key: string): Promise<unknown> => {
+        const lookup = await read(`${binding.lookupRoot}/${logicLookupBucket(key)}.json`, false, binding); bound(lookup, binding);
         if (!Array.isArray(lookup['ranges']) || !lookup['ranges'].every(item => object(item) && typeof item['first'] === 'string' && typeof item['last'] === 'string' && item['first'] <= item['last'] && ref(item['ref']))) throw new Error('노드 상세 색인 형식이 올바르지 않습니다.');
         const range = lookup['ranges'].find((item: unknown) => object(item) && typeof item['first'] === 'string' && typeof item['last'] === 'string' && item['first'] <= key && key <= item['last']);
         if (!range) return undefined;
         if (!object(range) || !ref(range['ref'])) throw new Error('노드 상세 색인 참조가 올바르지 않습니다.');
         const mapping = await record(binding, range['ref']); if (!object(mapping)) throw new Error('노드 상세 색인이 올바르지 않습니다.');
         if (!Object.hasOwn(mapping, key)) return undefined; const reference = mapping[key]; if (!ref(reference)) throw new Error('노드 상세 참조가 올바르지 않습니다.');
-        const value = await record(binding, reference);
+        return record(binding, reference);
+    };
+    const label = async (binding: DetailIndex, id: string) => {
+        const value = await lookupRecord(binding, detailLabelKey(id)); if (value === undefined) return undefined; if (!object(value)) throw new Error('노드 표시명 형식이 올바르지 않습니다.'); const data = graph(value['graph'], binding); if (data.nodes.length !== 1 || data.nodes[0]?.id !== id) throw new Error('노드 표시명의 항목이 다릅니다.'); return data.nodes[0];
+    };
+    const node = async (binding: DetailIndex, id: string, identity = false): Promise<NodeDetailRecord | undefined> => {
+        const value = await lookupRecord(binding, identity ? detailIdentityKey(id) : detailIdKey(id)); if (value === undefined) return undefined;
         if (!object(value) || !pages(value['facets']) || !pages(value['findings']) || !object(value['relations']) || !pages(value['relations']['incoming']) || !pages(value['relations']['outgoing']) || !pages(value['relations']['undirected'])) throw new Error('노드 상세 형식이 올바르지 않습니다.');
         const result = graph(value['graph'], binding);
         if (result.nodes.length !== 1 || (identity ? nodeIdentity(result.nodes[0]!) !== id : result.nodes[0]?.id !== id)) throw new Error('노드 상세의 항목이 다릅니다.');
-        return { graph: result, facets: value['facets'], findings: value['findings'], relations: { incoming: value['relations']['incoming'], outgoing: value['relations']['outgoing'], undirected: value['relations']['undirected'] } };
+        const presentationRelations = value['presentationRelations'];
+        if (presentationRelations !== undefined && (!Array.isArray(presentationRelations) || !presentationRelations.every(item => object(item) && typeof item['label'] === 'string' && pages(item['pages'])))) throw new Error('사람용 관계 목록이 올바르지 않습니다.');
+        return { graph: result, ...(presentationRelations === undefined ? {} : { presentationRelations: presentationRelations as { label: string; pages: DetailPages; }[] }), facets: value['facets'], findings: value['findings'], relations: { incoming: value['relations']['incoming'], outgoing: value['relations']['outgoing'], undirected: value['relations']['undirected'] } };
     };
     const page = async (binding: DetailIndex, collection: DetailPages, number: number): Promise<BrowserGraph> => {
         const reference = collection.pages[number]; if (!reference) throw new Error('노드 상세 페이지가 없습니다.'); const value = await record(binding, reference); if (!object(value)) throw new Error('노드 상세 페이지 형식이 올바르지 않습니다.'); const result = graph(value['graph'], binding);
@@ -60,6 +68,6 @@ export function createNodeDetailLoader(expected: { readonly hash: string; readon
         return result;
     };
     const retryable = async <T>(run: () => Promise<T>): Promise<T> => { try { return await run(); } catch (error) { pending.clear(); throw error; } };
-    return { index: (snapshot?: Snapshot) => retryable(() => index(snapshot)), node: (binding: DetailIndex, id: string, identity = false) => retryable(() => node(binding, id, identity)), page: (binding: DetailIndex, collection: DetailPages, number: number) => retryable(() => page(binding, collection, number)) };
+    return { label: (binding: DetailIndex, id: string) => retryable(() => label(binding, id)), index: (snapshot?: Snapshot) => retryable(() => index(snapshot)), node: (binding: DetailIndex, id: string, identity = false) => retryable(() => node(binding, id, identity)), page: (binding: DetailIndex, collection: DetailPages, number: number) => retryable(() => page(binding, collection, number)) };
 }
 export type NodeDetailLoader = ReturnType<typeof createNodeDetailLoader>;
