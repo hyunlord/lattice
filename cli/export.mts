@@ -1,6 +1,7 @@
 import { writeLogic } from './export-logic.mjs';
 import { writeOverview } from './export-overview.mjs';
-import { thinGraph } from './export-evidence.mjs';
+import { writeJsonFile } from './export-json.mjs';
+import { writeThinGraph } from './export-evidence.mjs';
 import { resolveMediaAssets } from './assets.mjs';
 import { parseMediaConfig } from '../dist/query/media-model.js';
 import { object } from './types.mjs';
@@ -43,35 +44,42 @@ function destination(options: Options) {
     return output;
 }
 
+function exportCurrentGraph(cache: string, staging: string, root: string, presentation: unknown, writeEvidence: (path: string, text: string) => void): string {
+    const graph = readGraph(join(cache, 'graph.json'), { memoize: false });
+    const media = resolveMediaAssets(root, graph.nodes, parseMediaConfig(object(presentation) ? presentation['media'] : undefined));
+    writeLogic(graph, writeEvidence);
+    writeOverview(graph, object(presentation) ? { ...presentation, mediaManifest: media.manifest } : {}, writeEvidence);
+    writeJsonFile(join(staging, 'graph.json'), write => writeThinGraph(graph, writeEvidence, write));
+    copyFileSync(join(cache, 'presentation.json'), join(staging, 'presentation.json'));
+    writeFileSync(join(staging, 'media.json'), JSON.stringify(media.manifest, null, 2) + '\n');
+    if (object(presentation)) writeFileSync(join(staging, 'presentation.json'), JSON.stringify({ ...presentation, mediaManifest: media.manifest }, null, 2) + '\n');
+    for (const file of media.files) { mkdirSync(dirname(join(staging, file.path)), { recursive: true }); writeFileSync(join(staging, file.path), file.bytes); }
+    return graph.hash;
+}
+
 export function exportSite(options: Options) {
     const cache = cacheDirectory(options.root, options.cacheDir);
     const graphPath = join(cache, 'graph.json');
     if (!existsSync(graphPath)) throw new Error('Run lattice build before export');
-    const graph = readGraph(graphPath);
-    const snapshots = readSnapshots(cache);
     const presentation: unknown = JSON.parse(readFileSync(join(cache, 'presentation.json'), 'utf8'));
-    const media = resolveMediaAssets(options.root, graph.nodes, parseMediaConfig(object(presentation) ? presentation['media'] : undefined));
     const output = destination(options);
     mkdirSync(dirname(output), { recursive: true });
     const staging = mkdtempSync(join(dirname(output), `.${basename(output)}-lattice-`));
     const backup = `${staging}.previous`;
     let backedUp = false;
+    let hash: string;
     try {
         for (const file of ['index.html', 'styles.css', ...readdirSync(join(packageRoot, 'viewer')).filter(file => (file.endsWith('.js') || file.endsWith('.css')))]) copyFileSync(join(packageRoot, 'viewer', file), join(staging, file));
         const written = new Set<string>();
         const writeEvidence = (path: string, text: string) => { if (written.has(path)) return; mkdirSync(dirname(join(staging, path)), { recursive: true }); writeFileSync(join(staging, path), text); written.add(path); };
-        writeLogic(graph, writeEvidence);
-        writeOverview(graph, object(presentation) ? { ...presentation, mediaManifest: media.manifest } : {}, writeEvidence);
-        writeFileSync(join(staging, 'graph.json'), JSON.stringify(thinGraph(graph, writeEvidence)));
-        copyFileSync(join(cache, 'presentation.json'), join(staging, 'presentation.json'));
-        writeFileSync(join(staging, 'media.json'), JSON.stringify(media.manifest, null, 2) + '\n');
-        if (object(presentation)) writeFileSync(join(staging, 'presentation.json'), JSON.stringify({ ...presentation, mediaManifest: media.manifest }, null, 2) + '\n');
-        for (const file of media.files) { mkdirSync(dirname(join(staging, file.path)), { recursive: true }); writeFileSync(join(staging, file.path), file.bytes); }
+        hash = exportCurrentGraph(cache, staging, options.root, presentation, writeEvidence);
+        const snapshots = readSnapshots(cache, {
+            memoize: false, onGraph: (snapshot, graph) => {
+                mkdirSync(join(staging, 'snapshots'), { recursive: true });
+                writeJsonFile(join(staging, snapshot.artifactPath), write => writeThinGraph(graph, writeEvidence, write));
+            }
+        });
         writeFileSync(join(staging, 'snapshots.json'), JSON.stringify(snapshots, null, 2) + '\n');
-        for (const snapshot of snapshots) {
-            mkdirSync(join(staging, 'snapshots'), { recursive: true });
-            writeFileSync(join(staging, snapshot.artifactPath), JSON.stringify(thinGraph(readGraph(join(cache, snapshot.artifactPath)), writeEvidence)));
-        }
         writeFileSync(join(staging, '.nojekyll'), '');
         writeFileSync(join(staging, marker), JSON.stringify({ schemaVersion: 1, generator: 'lattice' }, null, 2) + '\n');
         if (existsSync(output)) { renameSync(output, backup); backedUp = true; }
@@ -80,5 +88,5 @@ export function exportSite(options: Options) {
         if (backedUp) rmSync(backup, { recursive: true });
     } finally { rmSync(staging, { recursive: true, force: true }); }
     if (!options.json) console.log(`Exported static map to ${output}`);
-    return options.json ? { outputPath: output, hash: graph.hash } : output;
+    return options.json ? { outputPath: output, hash } : output;
 }

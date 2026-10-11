@@ -1,5 +1,5 @@
 import { errorCode, object } from './types.mjs';
-import type { Graph, GraphDraft } from '../dist/index.js';
+import type { Graph, GraphDraft, Snapshot } from '../dist/index.js';
 import type { buildRepository } from './build.mjs';
 import { parseGraph, parseSnapshots } from './decode.mjs';
 import { createHash, randomUUID } from 'node:crypto';
@@ -38,15 +38,15 @@ function rememberGraph(path: string, bytesHash: string, graph: Graph) {
         if (oldest !== undefined) validatedGraphs.delete(oldest);
     }
 }
-export function readGraph(path: string) {
+export function readGraph(path: string, options: { readonly memoize?: boolean; } = {}) {
     const bytesHash = fileDigest(path);
-    const previous = validatedGraphs.get(path);
+    const previous = options.memoize === false ? undefined : validatedGraphs.get(path);
     const cached = previous?.bytesHash === bytesHash ? previous.graph.deref() : undefined;
     if (cached) return cached;
     const stored = readGraphDraft(path);
     const graph = createGraph(stored.draft, digest);
     if (stored.hash !== graph.hash) throw new Error(`Graph hash mismatch: ${path}`);
-    rememberGraph(path, bytesHash, graph);
+    if (options.memoize !== false) rememberGraph(path, bytesHash, graph);
     return graph;
 }
 function readGraphDraft(path: string): { readonly draft: GraphDraft; readonly hash: unknown; } {
@@ -129,15 +129,16 @@ export function withCacheLock<T>(root: string, run: () => T, cacheDir?: string):
     }
     finally { rmSync(lock); }
 }
-export function readSnapshots(cache: string) {
+export function readSnapshots(cache: string, options: { readonly memoize?: boolean; readonly onGraph?: (snapshot: Snapshot, graph: Graph) => void; } = {}) {
     const path = join(cache, 'snapshots.json');
     if (!existsSync(path)) return [];
     const catalog = parseSnapshots(JSON.parse(readFileSync(path, 'utf8')));
     if (catalog.length > 32) throw new Error('Invalid snapshot catalog');
     return catalog.map(snapshot => {
         if (!/^[a-f0-9]{64}$/u.test(snapshot.id) || snapshot.artifactPath !== `snapshots/${snapshot.id}.json`) throw new Error('Invalid snapshot identity');
-        const graph = readGraph(join(cache, snapshot.artifactPath));
+        const graph = readGraph(join(cache, snapshot.artifactPath), options);
         if (graph.hash !== snapshot.graphHash || graph.repository.commit !== snapshot.commit || graph.lensDigest !== snapshot.lensHash) throw new Error('Snapshot metadata mismatch');
+        options.onGraph?.(snapshot, graph);
         return snapshot;
     });
 }

@@ -16,7 +16,7 @@ export function writeOverview(graph: Pick<Graph, 'hash' | 'repository' | 'nodes'
     if (!layerIds.length) layerIds.push('');
     const layers = layerIds.map(id => {
         const nodes = visible.filter(node => String(node.attributes['layer'] ?? '') === id);
-        const model = buildLoopMap(nodes, graph.edges, graph.facets, presentation, graph.repository.name);
+        const model = buildLoopMap(nodes, graph.edges, graph.facets, presentation, graph.repository.name, { projection: 'overview' });
         const text = JSON.stringify({ schemaVersion: 1, hash: graph.hash, repository: graph.repository, model });
         const path = `overview/${createHash('sha256').update(text).digest('hex')}.json`;
         write(path, text);

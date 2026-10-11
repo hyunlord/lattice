@@ -5,7 +5,7 @@ import { realpathSync, mkdtempSync, rmSync, writeFileSync, readFileSync, statSyn
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { buildRepository } from '../bin/build.mjs';
-import { digest, readGraph, atomic, persistBuild } from '../bin/storage.mjs';
+import { digest, readGraph, readSnapshots, atomic, persistBuild } from '../bin/storage.mjs';
 test('incremental digest preserves canonical UTF-8 bytes without concatenating the document', () => {
     const chunks = ['{"label":', '"한글😀",', '"values":[1,true,null]}'];
     assert.equal(digest.stream(write => { for (const chunk of chunks) write(chunk); }), digest(chunks.join('')));
@@ -27,10 +27,31 @@ test('validated immutable graph is reused only while complete file bytes match',
     atomic(path, graph);
     const first = readGraph(path);
     assert.equal(readGraph(path), first);
+    const uncached = readGraph(path, { memoize: false });
+    assert.notEqual(uncached, first);
+    assert.deepEqual(uncached, first);
     const stat = statSync(path);
     writeFileSync(path, readFileSync(path, 'utf8').replace('Alpha', 'Omega'));
     utimesSync(path, stat.atime, stat.mtime);
     assert.throws(() => readGraph(path), /hash mismatch/u);
+});
+
+test('bulk snapshot visits validate provenance before exposing each graph', t => {
+    const root = realpathSync(mkdtempSync(join(tmpdir(), 'lattice-snapshot-visit-')));
+    t.after(() => rmSync(root, { recursive: true, force: true }));
+    execFileSync('git', ['init', '-q', root]);
+    writeFileSync(join(root, '.gitignore'), '.lattice/\n');
+    writeFileSync(join(root, 'data.json'), '[{"id":"one"}]');
+    execFileSync('git', ['-C', root, 'add', '.']);
+    execFileSync('git', ['-C', root, '-c', 'user.name=Test', '-c', 'user.email=test@example.invalid', 'commit', '-qm', 'fixture']);
+    const graph = persistBuild(root, buildRepository({ root })), cache = join(root, '.lattice/cache');
+    const seen = [];
+    const catalog = readSnapshots(cache, { memoize: false, onGraph(snapshot, value) { seen.push([snapshot.id, value.hash]); } });
+    assert.deepEqual(seen, [[catalog[0].id, graph.hash]]);
+    atomic(join(cache, 'snapshots.json'), [{ ...catalog[0], graphHash: '0'.repeat(64) }]);
+    let visited = false;
+    assert.throws(() => readSnapshots(cache, { memoize: false, onGraph() { visited = true; } }), /Snapshot metadata mismatch/u);
+    assert.equal(visited, false);
 });
 
 test('historical builds reuse immutable inputs but refresh current-lens projections', async t => {
