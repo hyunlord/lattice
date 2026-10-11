@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
 import { readFileSync, readdirSync } from 'node:fs';
-import { join, resolve } from 'node:path';
+import { join, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import ts from 'typescript';
 
@@ -14,15 +14,21 @@ export function repositorySpecializations(path, text, repositories) {
   }
   for (const name of distinct) if (new RegExp(`(?<![\\w-])${name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}(?![\\w-])`, 'iu').test(text)) errors.push(`${path}: benchmark name ${name}`);
   const source = ts.createSourceFile(path, text, ts.ScriptTarget.Latest, true);
+  const apiSpans = [];
   function visit(node) {
+    if (ts.isCallExpression(node) && node.arguments.length === 0 && ts.isPropertyAccessExpression(node.expression) && node.expression.name.text === 'click') apiSpans.push([node.expression.name.getStart(), node.expression.name.end]);
     if (ts.isStringLiteralLike(node) && ['click', 'runtime'].includes(node.text.toLowerCase())) {
       const call = node.parent;
       const event = node.text === 'click' && ts.isCallExpression(call) && call.arguments[0] === node && ts.isPropertyAccessExpression(call.expression) && ['addEventListener', 'removeEventListener'].includes(call.expression.name.text);
+      if (event) apiSpans.push([node.getStart(), node.end]);
       if (!event) errors.push(`${path}:${source.getLineAndCharacterOfPosition(node.getStart()).line + 1}: ambiguous benchmark literal ${node.text}`);
     }
     ts.forEachChild(node, visit);
   }
   visit(source);
+  let nonApiText = text;
+  for (const [start, end] of apiSpans.sort((a, b) => b[0] - a[0])) nonApiText = nonApiText.slice(0, start) + ' '.repeat(end - start) + nonApiText.slice(end);
+  if (names.includes('click') && /\bclick\b/iu.test(path + '\n' + nonApiText)) errors.push(`${path}: click is permitted only as a standard click API`);
   return errors;
 }
 
@@ -37,7 +43,7 @@ export function checkBenchmarkContract(root) {
     for (const entry of readdirSync(directory, { withFileTypes: true })) {
       const path = join(directory, entry.name);
       if (entry.isDirectory()) visit(path);
-      else if (/\.(?:[cm]?ts|tsx|[cm]?js|css|html)$/u.test(entry.name)) errors.push(...repositorySpecializations(path, readFileSync(path, 'utf8'), repositories));
+      else if (/\.(?:[cm]?ts|tsx|[cm]?js|css|html)$/u.test(entry.name)) errors.push(...repositorySpecializations(relative(root, path), readFileSync(path, 'utf8'), repositories));
     }
   }
   for (const directory of ['src', 'cli', 'viewer', 'browser']) visit(join(root, directory));

@@ -14,7 +14,7 @@ Validation uses the [frozen L9 benchmark protocol](../benchmarks/l9/README.md). 
 
 ### Bounded node detail transport
 
-`details/index.json` and `details/snapshots/<snapshot-id>/index.json` bind every derived request to the graph hash and complete repository metadata. Historical packets are emitted only inside the existing validated snapshot callback. The graph hash alone is insufficient because repository commit metadata is intentionally excluded from that semantic hash; the data directory additionally hashes the binding and configured detail presentation.
+`details/index.json` and `details/snapshots/<snapshot-id>/index.json` bind every derived request to the graph hash and complete repository metadata. Existing historical packets are emitted inside the validated snapshot callback. Live serving also emits a newly persisted clean snapshot from the same current graph, before publishing its generation; it does not reread or retain another historical graph. The graph hash alone is insufficient because repository commit metadata is intentionally excluded from that semantic hash; the data directory additionally hashes the binding and configured detail presentation.
 
 ID and semantic node-identity lookups use tagged keys, the existing 256-way lookup bucket function, and sorted 128-entry ranges. Missing keys mean an absent node; missing, malformed or mismatched files mean a failed observation rather than absence. A packet has at most 128 fragments and 256KiB. References list exact fragments; oversized selected attributes are reconstructed without truncation. Every loaded packet must match the expected graph hash, repository commit and source fingerprint before its records are used.
 
@@ -29,3 +29,9 @@ MCP refresh serializes asynchronous observations and streams artifact hashes. A 
 ### Anonymous callable boundaries
 
 Calls inside an anonymous function or lambda without its own mapped callable identity are omitted. They must not inherit the containing named function as a caller. The same boundary isolates nested definitions, bindings and import/export discovery. Mapped JavaScript arrow/function expressions and named nested functions retain their own identities. The `logic-2` semantic parser version invalidates earlier cached facts; this deliberately trades recall for caller correctness.
+
+### Dispatch certainty and benchmark names
+
+Java, Kotlin and C# instance-method declarations are estimated candidates when the available facts cannot prove nonvirtual dispatch. Named local functions require the same lexical owner as their parent; a method of a locally declared class is not a local function. Static calls retain their existing exact-resolution rules. Default calls and flows exclude estimated candidates; an explicit includeEstimated option exposes them. Missing modifier facts can conservatively classify even private/final/nonvirtual methods as estimated, so exact and estimated recall are reported separately.
+
+The user-authorized exception for the benchmark name `click` covers standard API use only. Repository identifiers, paths, comments and conditional branches receive no exception. The guard recognizes literal event arguments to addEventListener/removeEventListener and the zero-argument .click() invocation, and rejects other occurrences; ordinary runtime terminology does not authorize a repository-specific branch.
