@@ -15,10 +15,11 @@ test('live generations stream immutable disk artifacts, retain four versions and
     mkdirSync(join(root, '.lattice'), { recursive: true }); execFileSync('git', ['init', '-q', root]);
     const source = join(root, 'records.json');
     writeFileSync(source, '[{"id":"a","name":"First"}]');
-    writeFileSync(join(root, '.lattice/lens.json'), JSON.stringify({ schemaVersion: 1, name: 'Test', kinds: [{ id: 'record', label: 'Records', files: ['records.json'] }] }));
+    writeFileSync(join(root, 'icon.png'), Buffer.from([0, 255, 3, 128]));
+    writeFileSync(join(root, '.lattice/lens.json'), JSON.stringify({ schemaVersion: 1, name: 'Test', kinds: [{ id: 'record', label: 'Records', files: ['records.json'] }], presentation: { media: { nodes: { a: 'icon.png' } } } }));
     execFileSync('git', ['-C', root, 'add', '.']);
-    const guard = join(temporary, 'guard.mjs');
-    writeFileSync(guard, `import fs from 'node:fs';import {syncBuiltinESMExports} from 'node:module';const write=fs.writeFileSync;let changed=false;fs.writeFileSync=function(path,...args){const result=write.call(this,path,...args);if(!changed&&String(path).endsWith('/writer.lock')){changed=true;write(${JSON.stringify(source)},'[{'+'"id":"a","name":"Observed under lock"}]');}return result;};syncBuiltinESMExports();const original=JSON.stringify;JSON.stringify=function(value,...args){if(value?.schemaVersion===1&&value.hash&&Array.isArray(value.nodes)&&Array.isArray(value.edges))throw Error('whole graph serialization forbidden');return original.call(this,value,...args)};`);
+    const guard = join(temporary, 'guard.mjs'), retiring = join(temporary, 'retiring'), retired = join(temporary, 'retired');
+    writeFileSync(guard, `import fs from 'node:fs';import {syncBuiltinESMExports} from 'node:module';const write=fs.writeFileSync;let changed=false;fs.writeFileSync=function(path,...args){const result=write.call(this,path,...args);if(!changed&&String(path).endsWith('/writer.lock')){changed=true;write(${JSON.stringify(source)},'[{'+'"id":"a","name":"Observed under lock"}]');}return result;};syncBuiltinESMExports();const original=JSON.stringify;JSON.stringify=function(value,...args){if(value?.schemaVersion===1&&value.hash&&Array.isArray(value.nodes)&&Array.isArray(value.edges))throw Error('whole graph serialization forbidden');return original.call(this,value,...args)};const remove=fs.rmSync;fs.rmSync=function(path,...args){if(String(path).includes('/serve-')&&String(path).endsWith('/1')){write(${JSON.stringify(retiring)},'retiring');const until=Date.now()+30000;while(!fs.existsSync(${JSON.stringify(retired)})){if(Date.now()>until)throw Error('Retirement fixture was not released');Atomics.wait(new Int32Array(new SharedArrayBuffer(4)),0,0,25);}}return remove.call(this,path,...args)};syncBuiltinESMExports();`);
     const child = spawn(process.execPath, ['--import', pathToFileURL(guard).href, resolve('bin/lattice.mjs'), 'serve', '--root', root, '--cache-dir', cache, '--port', '0', '--json'], { stdio: ['ignore', 'pipe', 'pipe'] });
     let stdout = '', stderr = ''; child.stdout.on('data', chunk => stdout += chunk); child.stderr.on('data', chunk => stderr += chunk);
     const exited = new Promise(resolve => child.once('exit', (code, signal) => resolve({ code, signal })));
@@ -28,6 +29,10 @@ test('live generations stream immutable disk artifacts, retain four versions and
         const request = path => fetch(new URL(path, ready.url));
         const initial = await (await request('graph.json?generation=1')).json();
         assert.equal(initial.nodes[0].name, 'Observed under lock');
+        const presentation = await (await request('presentation.json?generation=1')).json();
+        const media = await request(presentation.mediaManifest.a.url);
+        assert.equal(media.headers.get('content-type'), 'image/png');
+        assert.deepEqual(Buffer.from(await media.arrayBuffer()), Buffer.from([0, 255, 3, 128]));
         await delay(650);
         assert.equal((await (await request('__lattice/status')).json()).builds, 1);
         assert.equal((await request('graph.json/child')).status, 404);
@@ -42,12 +47,15 @@ test('live generations stream immutable disk artifacts, retain four versions and
             const retained = await request(`graph.json?generation=${Math.max(1, revision - 3)}`); assert.equal(retained.status, 200);
             if (revision < 5) assert.equal((await (await request('graph.json?generation=1')).json()).hash, initial.hash);
         }
+        await until(() => readdirSync(temporary).includes('retiring'));
+        assert.equal((await (await request('__lattice/status')).json()).generation, '5');
         assert.equal((await request('graph.json?generation=1')).status, 503);
-        assert.equal(readdirSync(generations).length, 4);
+        writeFileSync(retired, 'published');
+        await until(() => readdirSync(generations).length === 4);
         const head = await request('graph.json?generation=5'); assert.equal((await head.json()).nodes[0].name, 'Revision 5');
         const bodyless = await fetch(new URL('graph.json?generation=5', ready.url), { method: 'HEAD' }); assert.equal(bodyless.status, 200); assert.equal(await bodyless.text(), '');
         child.kill('SIGTERM'); assert.deepEqual(await exited, { code: 0, signal: null }); assert.equal(directories().length, 0);
-    } finally { if (child.exitCode === null && child.signalCode === null) { child.kill('SIGKILL'); await exited; } rmSync(temporary, { recursive: true, force: true }); }
+    } finally { writeFileSync(retired, 'release'); if (child.exitCode === null && child.signalCode === null) { child.kill('SIGKILL'); await exited; } rmSync(temporary, { recursive: true, force: true }); }
 });
 
 test('new clean live generations publish bounded node history for their new snapshots', async () => {
