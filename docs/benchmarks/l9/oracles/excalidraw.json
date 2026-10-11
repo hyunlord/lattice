@@ -1,0 +1,107 @@
+{
+  "method": "root workspaces globs + member name and dependency tables; source alias imports distinct from declared manifest dependencies",
+  "packages": [
+    {
+      "name": "excalidraw-app",
+      "manifest": "excalidraw-app/package.json"
+    },
+    {
+      "name": "@excalidraw/fractional-indexing",
+      "manifest": "packages/fractional-indexing/package.json"
+    },
+    {
+      "name": "@excalidraw/element",
+      "manifest": "packages/element/package.json"
+    },
+    {
+      "name": "@excalidraw/excalidraw",
+      "manifest": "packages/excalidraw/package.json"
+    },
+    {
+      "name": "@excalidraw/utils",
+      "manifest": "packages/utils/package.json"
+    },
+    {
+      "name": "@excalidraw/laser-pointer",
+      "manifest": "packages/laser-pointer/package.json"
+    },
+    {
+      "name": "@excalidraw/math",
+      "manifest": "packages/math/package.json"
+    },
+    {
+      "name": "@excalidraw/common",
+      "manifest": "packages/common/package.json"
+    },
+    {
+      "name": "with-nextjs",
+      "manifest": "examples/with-nextjs/package.json"
+    },
+    {
+      "name": "with-script-in-browser",
+      "manifest": "examples/with-script-in-browser/package.json"
+    }
+  ],
+  "edges": [
+    {
+      "from": "@excalidraw/element",
+      "to": "@excalidraw/common",
+      "scope": "dependencies",
+      "file": "packages/element/package.json"
+    },
+    {
+      "from": "@excalidraw/element",
+      "to": "@excalidraw/math",
+      "scope": "dependencies",
+      "file": "packages/element/package.json"
+    },
+    {
+      "from": "@excalidraw/element",
+      "to": "@excalidraw/fractional-indexing",
+      "scope": "dependencies",
+      "file": "packages/element/package.json"
+    },
+    {
+      "from": "@excalidraw/excalidraw",
+      "to": "@excalidraw/common",
+      "scope": "dependencies",
+      "file": "packages/excalidraw/package.json"
+    },
+    {
+      "from": "@excalidraw/excalidraw",
+      "to": "@excalidraw/element",
+      "scope": "dependencies",
+      "file": "packages/excalidraw/package.json"
+    },
+    {
+      "from": "@excalidraw/excalidraw",
+      "to": "@excalidraw/laser-pointer",
+      "scope": "dependencies",
+      "file": "packages/excalidraw/package.json"
+    },
+    {
+      "from": "@excalidraw/excalidraw",
+      "to": "@excalidraw/math",
+      "scope": "dependencies",
+      "file": "packages/excalidraw/package.json"
+    },
+    {
+      "from": "@excalidraw/utils",
+      "to": "@excalidraw/laser-pointer",
+      "scope": "dependencies",
+      "file": "packages/utils/package.json"
+    },
+    {
+      "from": "@excalidraw/math",
+      "to": "@excalidraw/common",
+      "scope": "dependencies",
+      "file": "packages/math/package.json"
+    },
+    {
+      "from": "with-script-in-browser",
+      "to": "@excalidraw/excalidraw",
+      "scope": "dependencies",
+      "file": "examples/with-script-in-browser/package.json"
+    }
+  ]
+}

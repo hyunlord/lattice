@@ -1,0 +1,675 @@
+{
+  "version": 1,
+  "frozenBeforeLatticeRun": true,
+  "method": "Source inspection only; no Lattice output observed; no repository build scripts executed.",
+  "benchmarks": [
+    {
+      "id": "fastify",
+      "repository": "fastify/fastify",
+      "commit": "86368086171305df4e235f6d6bec892c67ec2ae2",
+      "trackedFiles": 395,
+      "checkout": "/tmp/l9-benchmark-extra/fastify",
+      "questions": [
+        {
+          "id": "fastify-q1",
+          "question": "주요 코드 덩어리 세 곳과 역할은?",
+          "referenceAnswer": "루트 fastify.js는 서버 인스턴스 조립과 공개 팩토리, lib/route.js는 라우팅, lib/handle-request.js는 요청 검증과 핸들러 호출을 담당한다.",
+          "evidence": [
+            {
+              "path": "package.json",
+              "startLine": 1,
+              "endLine": 7,
+              "url": "https://github.com/fastify/fastify/blob/86368086171305df4e235f6d6bec892c67ec2ae2/package.json#L1-L7",
+              "excerpt": "{\n  \"name\": \"fastify\",\n  \"version\": \"6.0.0-alpha.4\",\n  \"description\": \"Fast and low overhead web framework, for Node.js\",\n  \"main\": \"fastify.js\",\n  \"type\": \"commonjs\",\n  \"types\": \"fastify.d.ts\","
+            },
+            {
+              "path": "fastify.js",
+              "startLine": 40,
+              "endLine": 54,
+              "url": "https://github.com/fastify/fastify/blob/86368086171305df4e235f6d6bec892c67ec2ae2/fastify.js#L40-L54",
+              "excerpt": "const { createServer } = require('./lib/server')\nconst Reply = require('./lib/reply')\nconst Request = require('./lib/request')\nconst Context = require('./lib/context.js')\nconst decorator = require('./lib/decorate')\nconst ContentTypeParser = require('./lib/content-type-parser.js')\nconst SchemaController = require('./lib/schema-controller')\nconst { Hooks, hookRunnerApplication, supportedHooks } = require('./lib/hooks')\nconst { createChildLogger, defaultChildLoggerFactory, createLogger, createLogController, LogController } = require('./lib/logger-factory')\nconst pluginUtils = require('./lib/plugin-utils.js')\nconst { getGenReqId, reqIdGenFactory } = require('./lib/req-id-gen-factory.js')\nconst { buildRouting, validateBodyLimitOption, buildRouterOptions } = require('./lib/route')\nconst build404 = require('./lib/four-oh-four')\nconst getSecuredInitialConfig = require('./lib/initial-config-validation.js')\nconst override = require('./lib/plugin-override')"
+            },
+            {
+              "path": "fastify.js",
+              "startLine": 89,
+              "endLine": 102,
+              "url": "https://github.com/fastify/fastify/blob/86368086171305df4e235f6d6bec892c67ec2ae2/fastify.js#L89-L102",
+              "excerpt": "function fastify (serverOptions) {\n  const {\n    options,\n    genReqId,\n    logController,\n    hasLogger,\n    initialConfig\n  } = processOptions(serverOptions, defaultRoute, onBadUrl, onMaxParamLength)\n\n  // Default router\n  const router = buildRouting(options.routerOptions)\n\n  // 404 router, used for handling encapsulated 404 handlers\n  const fourOhFour = build404(options)"
+            },
+            {
+              "path": "lib/handle-request.js",
+              "startLine": 24,
+              "endLine": 36,
+              "url": "https://github.com/fastify/fastify/blob/86368086171305df4e235f6d6bec892c67ec2ae2/lib/handle-request.js#L24-L36",
+              "excerpt": "function handleRequest (err, request, reply) {\n  if (reply.sent === true) return\n  if (err != null) {\n    reply[kReplyIsError] = true\n    reply.send(err)\n    return\n  }\n\n  const method = request.method\n\n  if (this[kSupportedHTTPMethods].bodyless.has(method)) {\n    handler(request, reply)\n    return"
+            }
+          ]
+        },
+        {
+          "id": "fastify-q2",
+          "question": "루트 공개 팩토리는 어떤 내부 덩어리를 가져다 쓰나?",
+          "referenceAnswer": "fastify.js는 lib/server의 createServer, lib/route의 buildRouting, request/reply 및 hook/schema 모듈을 require한다. 외부 avvio와 node:http는 저장소 내부 패키지가 아니다.",
+          "evidence": [
+            {
+              "path": "fastify.js",
+              "startLine": 5,
+              "endLine": 7,
+              "url": "https://github.com/fastify/fastify/blob/86368086171305df4e235f6d6bec892c67ec2ae2/fastify.js#L5-L7",
+              "excerpt": "const Avvio = require('avvio')\nconst http = require('node:http')\nconst diagnostics = require('node:diagnostics_channel')"
+            },
+            {
+              "path": "fastify.js",
+              "startLine": 40,
+              "endLine": 54,
+              "url": "https://github.com/fastify/fastify/blob/86368086171305df4e235f6d6bec892c67ec2ae2/fastify.js#L40-L54",
+              "excerpt": "const { createServer } = require('./lib/server')\nconst Reply = require('./lib/reply')\nconst Request = require('./lib/request')\nconst Context = require('./lib/context.js')\nconst decorator = require('./lib/decorate')\nconst ContentTypeParser = require('./lib/content-type-parser.js')\nconst SchemaController = require('./lib/schema-controller')\nconst { Hooks, hookRunnerApplication, supportedHooks } = require('./lib/hooks')\nconst { createChildLogger, defaultChildLoggerFactory, createLogger, createLogController, LogController } = require('./lib/logger-factory')\nconst pluginUtils = require('./lib/plugin-utils.js')\nconst { getGenReqId, reqIdGenFactory } = require('./lib/req-id-gen-factory.js')\nconst { buildRouting, validateBodyLimitOption, buildRouterOptions } = require('./lib/route')\nconst build404 = require('./lib/four-oh-four')\nconst getSecuredInitialConfig = require('./lib/initial-config-validation.js')\nconst override = require('./lib/plugin-override')"
+            }
+          ]
+        },
+        {
+          "id": "fastify-q3",
+          "question": "패키지 사용자가 실행을 시작하는 공개 진입점은?",
+          "referenceAnswer": "package.json main은 fastify.js이고 CommonJS module.exports가 fastify 팩토리를 공개한다. 독립 프로그램 main 함수를 가정하지 않는다.",
+          "evidence": [
+            {
+              "path": "package.json",
+              "startLine": 1,
+              "endLine": 7,
+              "url": "https://github.com/fastify/fastify/blob/86368086171305df4e235f6d6bec892c67ec2ae2/package.json#L1-L7",
+              "excerpt": "{\n  \"name\": \"fastify\",\n  \"version\": \"6.0.0-alpha.4\",\n  \"description\": \"Fast and low overhead web framework, for Node.js\",\n  \"main\": \"fastify.js\",\n  \"type\": \"commonjs\",\n  \"types\": \"fastify.d.ts\","
+            },
+            {
+              "path": "fastify.js",
+              "startLine": 998,
+              "endLine": 1009,
+              "url": "https://github.com/fastify/fastify/blob/86368086171305df4e235f6d6bec892c67ec2ae2/fastify.js#L998-L1009",
+              "excerpt": " * - `const fastify = require('fastify')`\n * - `const { fastify } = require('fastify')`\n * - `import * as Fastify from 'fastify'`\n * - `import { fastify, TSC_definition } from 'fastify'`\n * - `import fastify from 'fastify'`\n * - `import fastify, { TSC_definition } from 'fastify'`\n */\nmodule.exports = fastify\nmodule.exports.errorCodes = errorCodes\nmodule.exports.LogController = LogController\nmodule.exports.fastify = fastify\nmodule.exports.default = fastify"
+            }
+          ]
+        },
+        {
+          "id": "fastify-q4",
+          "question": "bodyless 요청이 등록된 사용자 핸들러까지 가는 대표 함수 경로는?",
+          "referenceAnswer": "handleRequest → handler → preValidationCallback → preHandlerCallback → preHandlerCallbackInner → context.handler. hook/validation 분기가 있으며 마지막 사용자 콜백 대상은 동적이므로 임의 함수로 확정하면 안 된다.",
+          "evidence": [
+            {
+              "path": "lib/handle-request.js",
+              "startLine": 24,
+              "endLine": 36,
+              "url": "https://github.com/fastify/fastify/blob/86368086171305df4e235f6d6bec892c67ec2ae2/lib/handle-request.js#L24-L36",
+              "excerpt": "function handleRequest (err, request, reply) {\n  if (reply.sent === true) return\n  if (err != null) {\n    reply[kReplyIsError] = true\n    reply.send(err)\n    return\n  }\n\n  const method = request.method\n\n  if (this[kSupportedHTTPMethods].bodyless.has(method)) {\n    handler(request, reply)\n    return"
+            },
+            {
+              "path": "lib/handle-request.js",
+              "startLine": 89,
+              "endLine": 115,
+              "url": "https://github.com/fastify/fastify/blob/86368086171305df4e235f6d6bec892c67ec2ae2/lib/handle-request.js#L89-L115",
+              "excerpt": "function handler (request, reply) {\n  try {\n    if (request[kRouteContext].preValidation !== null) {\n      preValidationHookRunner(\n        request[kRouteContext].preValidation,\n        request,\n        reply,\n        preValidationCallback\n      )\n    } else {\n      preValidationCallback(null, request, reply)\n    }\n  } catch (err) {\n    preValidationCallback(err, request, reply)\n  }\n}\n\nfunction preValidationCallback (err, request, reply) {\n  if (reply.sent === true) return\n\n  if (err != null) {\n    reply[kReplyIsError] = true\n    reply.send(err)\n    return\n  }\n\n  const validationErr = validateSchema(reply[kRouteContext], request)"
+            },
+            {
+              "path": "lib/handle-request.js",
+              "startLine": 137,
+              "endLine": 155,
+              "url": "https://github.com/fastify/fastify/blob/86368086171305df4e235f6d6bec892c67ec2ae2/lib/handle-request.js#L137-L155",
+              "excerpt": "  if (request[kRouteContext].preHandler !== null) {\n    preHandlerHookRunner(\n      request[kRouteContext].preHandler,\n      request,\n      reply,\n      preHandlerCallback\n    )\n  } else {\n    preHandlerCallback(null, request, reply)\n  }\n}\n\nfunction preHandlerCallback (err, request, reply) {\n  if (reply.sent) return\n\n  const context = request[kRouteContext]\n\n  if (!channels.hasSubscribers || context[kFourOhFourContext] === null) {\n    preHandlerCallbackInner(err, request, reply)"
+            },
+            {
+              "path": "lib/handle-request.js",
+              "startLine": 171,
+              "endLine": 190,
+              "url": "https://github.com/fastify/fastify/blob/86368086171305df4e235f6d6bec892c67ec2ae2/lib/handle-request.js#L171-L190",
+              "excerpt": "function preHandlerCallbackInner (err, request, reply, store) {\n  const context = request[kRouteContext]\n\n  try {\n    if (err != null) {\n      reply[kReplyIsError] = true\n      if (store) {\n        store.error = err\n        // Set status code before publishing so subscribers see the correct value\n        setErrorStatusCode(reply, err)\n        channels.error.publish(store)\n      }\n      reply.send(err)\n      return\n    }\n\n    let result\n\n    try {\n      result = context.handler(request, reply)"
+            }
+          ]
+        }
+      ],
+      "dependencyOracle": "Single root package package.json. Enumerate internal relative require targets independently; package-level internal denominator is zero (N/A, not 100%).",
+      "notes": ""
+    },
+    {
+      "id": "httpx",
+      "repository": "encode/httpx",
+      "commit": "b5addb64f0161ff6bfe94c124ef76f6a1fba5254",
+      "trackedFiles": 125,
+      "checkout": "/tmp/l9-benchmark-extra/httpx",
+      "questions": [
+        {
+          "id": "httpx-q1",
+          "question": "주요 코드 덩어리와 역할은?",
+          "referenceAnswer": "httpx는 동기/비동기 HTTP 클라이언트 패키지다. _api는 간편 함수, _client는 세션 요청/인증/리다이렉트, _transports는 전송 구현이며 docs/tests는 제품 런타임과 구별한다.",
+          "evidence": [
+            {
+              "path": "README.md",
+              "startLine": 13,
+              "endLine": 15,
+              "url": "https://github.com/encode/httpx/blob/b5addb64f0161ff6bfe94c124ef76f6a1fba5254/README.md#L13-L15",
+              "excerpt": "</a>\n</p>\n"
+            },
+            {
+              "path": "httpx/_api.py",
+              "startLine": 4,
+              "endLine": 8,
+              "url": "https://github.com/encode/httpx/blob/b5addb64f0161ff6bfe94c124ef76f6a1fba5254/httpx/_api.py#L4-L8",
+              "excerpt": "from contextlib import contextmanager\n\nfrom ._client import Client\nfrom ._config import DEFAULT_TIMEOUT_CONFIG\nfrom ._models import Response"
+            },
+            {
+              "path": "httpx/_client.py",
+              "startLine": 594,
+              "endLine": 606,
+              "url": "https://github.com/encode/httpx/blob/b5addb64f0161ff6bfe94c124ef76f6a1fba5254/httpx/_client.py#L594-L606",
+              "excerpt": "class Client(BaseClient):\n    \"\"\"\n    An HTTP client, with connection pooling, HTTP/2, redirects, cookie persistence, etc.\n\n    It can be shared between threads.\n\n    Usage:\n\n    ```python\n    >>> client = httpx.Client()\n    >>> response = client.get('https://example.org')\n    ```\n"
+            },
+            {
+              "path": "httpx/__init__.py",
+              "startLine": 1,
+              "endLine": 12,
+              "url": "https://github.com/encode/httpx/blob/b5addb64f0161ff6bfe94c124ef76f6a1fba5254/httpx/__init__.py#L1-L12",
+              "excerpt": "from .__version__ import __description__, __title__, __version__\nfrom ._api import *\nfrom ._auth import *\nfrom ._client import *\nfrom ._config import *\nfrom ._content import *\nfrom ._exceptions import *\nfrom ._models import *\nfrom ._status_codes import *\nfrom ._transports import *\nfrom ._types import *\nfrom ._urls import *"
+            }
+          ]
+        },
+        {
+          "id": "httpx-q2",
+          "question": "간편 요청 API는 어떤 내부 모듈을 사용하나?",
+          "referenceAnswer": "_api는 _client.Client, _config 기본 시간제한, _models.Response, _urls.URL을 가져오며 client.request로 위임한다.",
+          "evidence": [
+            {
+              "path": "httpx/_api.py",
+              "startLine": 4,
+              "endLine": 20,
+              "url": "https://github.com/encode/httpx/blob/b5addb64f0161ff6bfe94c124ef76f6a1fba5254/httpx/_api.py#L4-L20",
+              "excerpt": "from contextlib import contextmanager\n\nfrom ._client import Client\nfrom ._config import DEFAULT_TIMEOUT_CONFIG\nfrom ._models import Response\nfrom ._types import (\n    AuthTypes,\n    CookieTypes,\n    HeaderTypes,\n    ProxyTypes,\n    QueryParamTypes,\n    RequestContent,\n    RequestData,\n    RequestFiles,\n    TimeoutTypes,\n)\nfrom ._urls import URL"
+            },
+            {
+              "path": "httpx/_api.py",
+              "startLine": 100,
+              "endLine": 115,
+              "url": "https://github.com/encode/httpx/blob/b5addb64f0161ff6bfe94c124ef76f6a1fba5254/httpx/_api.py#L100-L115",
+              "excerpt": "    ```\n    \"\"\"\n    with Client(\n        cookies=cookies,\n        proxy=proxy,\n        verify=verify,\n        timeout=timeout,\n        trust_env=trust_env,\n    ) as client:\n        return client.request(\n            method=method,\n            url=url,\n            content=content,\n            data=data,\n            files=files,\n            json=json,"
+            }
+          ]
+        },
+        {
+          "id": "httpx-q3",
+          "question": "공개 라이브러리와 CLI의 진입점은?",
+          "referenceAnswer": "httpx.__init__은 API/Client를 재수출한다. pyproject project.scripts httpx=\"httpx:main\"은 _main.main을 가리킨다. 없는 __main__.py를 만들어 추론하면 안 된다.",
+          "evidence": [
+            {
+              "path": "pyproject.toml",
+              "startLine": 58,
+              "endLine": 59,
+              "url": "https://github.com/encode/httpx/blob/b5addb64f0161ff6bfe94c124ef76f6a1fba5254/pyproject.toml#L58-L59",
+              "excerpt": "[project.scripts]\nhttpx = \"httpx:main\""
+            },
+            {
+              "path": "httpx/__init__.py",
+              "startLine": 1,
+              "endLine": 18,
+              "url": "https://github.com/encode/httpx/blob/b5addb64f0161ff6bfe94c124ef76f6a1fba5254/httpx/__init__.py#L1-L18",
+              "excerpt": "from .__version__ import __description__, __title__, __version__\nfrom ._api import *\nfrom ._auth import *\nfrom ._client import *\nfrom ._config import *\nfrom ._content import *\nfrom ._exceptions import *\nfrom ._models import *\nfrom ._status_codes import *\nfrom ._transports import *\nfrom ._types import *\nfrom ._urls import *\n\ntry:\n    from ._main import main\nexcept ImportError:  # pragma: no cover\n\n    def main() -> None:  # type: ignore"
+            }
+          ]
+        },
+        {
+          "id": "httpx-q4",
+          "question": "동기 Client.request는 전송까지 어떤 함수를 거치나?",
+          "referenceAnswer": "Client.request → send → _send_handling_auth → _send_handling_redirects → _send_single_request → 선택한 transport.handle_request. 마지막은 런타임 선택 객체이므로 구체 transport를 무조건 확정하지 않는다.",
+          "evidence": [
+            {
+              "path": "httpx/_client.py",
+              "startLine": 820,
+              "endLine": 825,
+              "url": "https://github.com/encode/httpx/blob/b5addb64f0161ff6bfe94c124ef76f6a1fba5254/httpx/_client.py#L820-L825",
+              "excerpt": "            headers=headers,\n            cookies=cookies,\n            timeout=timeout,\n            extensions=extensions,\n        )\n        return self.send(request, auth=auth, follow_redirects=follow_redirects)"
+            },
+            {
+              "path": "httpx/_client.py",
+              "startLine": 910,
+              "endLine": 919,
+              "url": "https://github.com/encode/httpx/blob/b5addb64f0161ff6bfe94c124ef76f6a1fba5254/httpx/_client.py#L910-L919",
+              "excerpt": "        self._set_timeout(request)\n\n        auth = self._build_request_auth(request, auth)\n\n        response = self._send_handling_auth(\n            request,\n            auth=auth,\n            follow_redirects=follow_redirects,\n            history=[],\n        )"
+            },
+            {
+              "path": "httpx/_client.py",
+              "startLine": 930,
+              "endLine": 946,
+              "url": "https://github.com/encode/httpx/blob/b5addb64f0161ff6bfe94c124ef76f6a1fba5254/httpx/_client.py#L930-L946",
+              "excerpt": "    def _send_handling_auth(\n        self,\n        request: Request,\n        auth: Auth,\n        follow_redirects: bool,\n        history: list[Response],\n    ) -> Response:\n        auth_flow = auth.sync_auth_flow(request)\n        try:\n            request = next(auth_flow)\n\n            while True:\n                response = self._send_handling_redirects(\n                    request,\n                    follow_redirects=follow_redirects,\n                    history=history,\n                )"
+            },
+            {
+              "path": "httpx/_client.py",
+              "startLine": 976,
+              "endLine": 979,
+              "url": "https://github.com/encode/httpx/blob/b5addb64f0161ff6bfe94c124ef76f6a1fba5254/httpx/_client.py#L976-L979",
+              "excerpt": "            for hook in self._event_hooks[\"request\"]:\n                hook(request)\n\n            response = self._send_single_request(request)"
+            },
+            {
+              "path": "httpx/_client.py",
+              "startLine": 1001,
+              "endLine": 1014,
+              "url": "https://github.com/encode/httpx/blob/b5addb64f0161ff6bfe94c124ef76f6a1fba5254/httpx/_client.py#L1001-L1014",
+              "excerpt": "    def _send_single_request(self, request: Request) -> Response:\n        \"\"\"\n        Sends a single request, without handling any redirections.\n        \"\"\"\n        transport = self._transport_for_url(request.url)\n        start = time.perf_counter()\n\n        if not isinstance(request.stream, SyncByteStream):\n            raise RuntimeError(\n                \"Attempted to send an async request with a sync Client instance.\"\n            )\n\n        with request_context(request=request):\n            response = transport.handle_request(request)"
+            }
+          ]
+        }
+      ],
+      "dependencyOracle": "Single pyproject project; project.scripts is entry oracle. Relative imports inside httpx give file relationships; no invented separate packaging units.",
+      "notes": ""
+    },
+    {
+      "id": "unity-boatattack",
+      "repository": "Unity-Technologies/BoatAttack",
+      "commit": "6acf5f773a440030489cb5e2b3c009fb5fe1e8ce",
+      "trackedFiles": 1376,
+      "checkout": "/tmp/l9-benchmark-extra/unity-boatattack",
+      "questions": [
+        {
+          "id": "unity-boatattack-q1",
+          "question": "주요 덩어리 세 곳과 역할은?",
+          "referenceAnswer": "Assets/Scripts의 GameSystem은 경주 설정/시작, Boat는 보트 엔진/조종, Packages/com.verasl.water-system은 파도/부력/수면 렌더링이다. Unity URP 보트 경주 데모다.",
+          "evidence": [
+            {
+              "path": "README.md",
+              "startLine": 3,
+              "endLine": 8,
+              "url": "https://github.com/Unity-Technologies/BoatAttack/blob/6acf5f773a440030489cb5e2b3c009fb5fe1e8ce/README.md#L3-L8",
+              "excerpt": "# Boat Attack\n###### Demo Project using the Universal RP from Unity3D\n\n[![Click for Youtube Video](https://media.githubusercontent.com/media/Verasl/BoatAttack/release/2019.3/Assets/Textures/UI/welcome-title.png)](https://drive.google.com/file/d/1PTNdhnqbhzSWUCfAinIefP5cfr6Dezuw/view)\n\nThis Unity project has been created to aid the testing and development of Universal RP. The project is a small vertical slice of a boat racing game, complete with race-able boats and island environment."
+            },
+            {
+              "path": "Assets/Scripts/GameSystem/RaceManager.cs",
+              "startLine": 116,
+              "endLine": 145,
+              "url": "https://github.com/Unity-Technologies/BoatAttack/blob/6acf5f773a440030489cb5e2b3c009fb5fe1e8ce/Assets/Scripts/GameSystem/RaceManager.cs#L116-L145",
+              "excerpt": "        public static IEnumerator SetupRace()\n        {\n            if(RaceData == null) RaceData = Instance.demoRaceData; // make sure we have the data, otherwise default to demo data\n            while (WaypointGroup.Instance == null) // TODO need to re-write whole game loading/race setup logic as it is dirty\n            {\n                yield return null;\n            }\n            WaypointGroup.Instance.Setup(RaceData.reversed); // setup waypoints\n            yield return Instance.StartCoroutine(CreateBoats()); // spawn boats;\n\n            switch (RaceData.game)\n            {\n                case GameType.Singleplayer:\n                    yield return Instance.StartCoroutine(CreatePlayerUi(0));\n                    SetupCamera(0); // setup camera for player 1\n                    break;\n                case GameType.LocalMultiplayer:\n                    break;\n                case GameType.Multiplayer:\n                    break;\n                case GameType.Spectator:\n                    ReplayCamera.Instance.EnableSpectatorMode();\n                    break;\n                case GameType.Benchmark:\n                    break;\n                default:\n                    throw new ArgumentOutOfRangeException();\n            }\n            \n            Instance.StartCoroutine(BeginRace());"
+            },
+            {
+              "path": "Assets/Scripts/Boat/Engine.cs",
+              "startLine": 43,
+              "endLine": 52,
+              "url": "https://github.com/Unity-Technologies/BoatAttack/blob/6acf5f773a440030489cb5e2b3c009fb5fe1e8ce/Assets/Scripts/Boat/Engine.cs#L43-L52",
+              "excerpt": "        private void FixedUpdate()\n        {\n            VelocityMag = RB.velocity.sqrMagnitude; // get the sqr mag\n            engineSound.pitch = Mathf.Max(VelocityMag * 0.01f, 0.3f); // use some magice numbers to control the pitch of the engine sound\n\n            // Get the water level from the engines position and store it\n            _point[0] = transform.TransformPoint(enginePosition);\n            GerstnerWavesJobs.UpdateSamplePoints(ref _point, _guid);\n            GerstnerWavesJobs.GetData(_guid, ref _heights, ref _normals);\n            _yHeight = _heights[0].y - _point[0].y;"
+            },
+            {
+              "path": "Packages/com.verasl.water-system/Scripts/WaterSystem.Runtime.asmdef",
+              "startLine": 1,
+              "endLine": 9,
+              "url": "https://github.com/Unity-Technologies/BoatAttack/blob/6acf5f773a440030489cb5e2b3c009fb5fe1e8ce/Packages/com.verasl.water-system/Scripts/WaterSystem.Runtime.asmdef#L1-L9",
+              "excerpt": "{\n    \"name\": \"WaterSystem\",\n    \"references\": [\n        \"GUID:d8b63aba1907145bea998dd612889d6b\",\n        \"GUID:15fc0a57446b3144c949da3e2b9737a9\",\n        \"GUID:df380645f10b7bc4b97d4f5eb6303d95\",\n        \"GUID:2665a8d13d1b3f18800f46e256720795\",\n        \"GUID:9e24947de15b9834991c9d8411ea37cf\"\n    ],"
+            }
+          ]
+        },
+        {
+          "id": "unity-boatattack-q2",
+          "question": "보트 로직과 편집기 조립체는 어떤 물 시스템을 사용하나?",
+          "referenceAnswer": "Engine은 WaterSystem.GerstnerWavesJobs로 표면 높이를 조회한다. WaterSystem.Editor asmdef의 GUID eee609...는 로컬 WaterSystem Runtime asmdef를 참조한다.",
+          "evidence": [
+            {
+              "path": "Assets/Scripts/Boat/Engine.cs",
+              "startLine": 1,
+              "endLine": 5,
+              "url": "https://github.com/Unity-Technologies/BoatAttack/blob/6acf5f773a440030489cb5e2b3c009fb5fe1e8ce/Assets/Scripts/Boat/Engine.cs#L1-L5",
+              "excerpt": "﻿using System;\nusing UnityEngine;\nusing Unity.Collections;\nusing Unity.Mathematics;\nusing WaterSystem;"
+            },
+            {
+              "path": "Assets/Scripts/Boat/Engine.cs",
+              "startLine": 48,
+              "endLine": 52,
+              "url": "https://github.com/Unity-Technologies/BoatAttack/blob/6acf5f773a440030489cb5e2b3c009fb5fe1e8ce/Assets/Scripts/Boat/Engine.cs#L48-L52",
+              "excerpt": "            // Get the water level from the engines position and store it\n            _point[0] = transform.TransformPoint(enginePosition);\n            GerstnerWavesJobs.UpdateSamplePoints(ref _point, _guid);\n            GerstnerWavesJobs.GetData(_guid, ref _heights, ref _normals);\n            _yHeight = _heights[0].y - _point[0].y;"
+            },
+            {
+              "path": "Packages/com.verasl.water-system/Editor/WaterSystem.editor.asmdef",
+              "startLine": 1,
+              "endLine": 8,
+              "url": "https://github.com/Unity-Technologies/BoatAttack/blob/6acf5f773a440030489cb5e2b3c009fb5fe1e8ce/Packages/com.verasl.water-system/Editor/WaterSystem.editor.asmdef#L1-L8",
+              "excerpt": "{\n    \"name\": \"WaterSystem.Editor\",\n    \"references\": [\n        \"GUID:eee6090a63a1e48e6857869e0cbe74dc\",\n        \"GUID:b75d3cd3037d383a8d1e2f9a26d73d8a\",\n        \"GUID:d8b63aba1907145bea998dd612889d6b\"\n    ],\n    \"includePlatforms\": ["
+            },
+            {
+              "path": "Packages/com.verasl.water-system/Scripts/WaterSystem.Runtime.asmdef.meta",
+              "startLine": 1,
+              "endLine": 2,
+              "url": "https://github.com/Unity-Technologies/BoatAttack/blob/6acf5f773a440030489cb5e2b3c009fb5fe1e8ce/Packages/com.verasl.water-system/Scripts/WaterSystem.Runtime.asmdef.meta#L1-L2",
+              "excerpt": "fileFormatVersion: 2\nguid: eee6090a63a1e48e6857869e0cbe74dc"
+            }
+          ]
+        },
+        {
+          "id": "unity-boatattack-q3",
+          "question": "데모 경주 시작의 엔진 진입점은 어디인가?",
+          "referenceAnswer": "EditorBuildSettings의 첫 활성 씬은 Assets/scenes/demo_Island.unity이고 DemoRun.Start Unity 생명주기 콜백이 RaceManager.SetupRace 코루틴을 시작한다. 직접 작성된 C# Main은 없다.",
+          "evidence": [
+            {
+              "path": "ProjectSettings/EditorBuildSettings.asset",
+              "startLine": 7,
+              "endLine": 15,
+              "url": "https://github.com/Unity-Technologies/BoatAttack/blob/6acf5f773a440030489cb5e2b3c009fb5fe1e8ce/ProjectSettings/EditorBuildSettings.asset#L7-L15",
+              "excerpt": "  m_Scenes:\n  - enabled: 1\n    path: Assets/scenes/demo_Island.unity\n    guid: b3bf1324da98a41e796a5881dd3812eb\n  - enabled: 0\n    path: Assets/scenes/main_menu.unity\n    guid: c817c1b09586c49e5b4a849ce1cf119b\n  - enabled: 0\n    path: Assets/scenes/_levels/level_Island.unity"
+            },
+            {
+              "path": "Assets/Scripts/Utility/DemoRun.cs",
+              "startLine": 1,
+              "endLine": 11,
+              "url": "https://github.com/Unity-Technologies/BoatAttack/blob/6acf5f773a440030489cb5e2b3c009fb5fe1e8ce/Assets/Scripts/Utility/DemoRun.cs#L1-L11",
+              "excerpt": "﻿using BoatAttack;\nusing UnityEngine;\nusing UnityEngine.SceneManagement;\n\npublic class DemoRun : MonoBehaviour\n{\n    private void Start()\n    {\n        StartCoroutine(RaceManager.SetupRace());\n    }\n}"
+            }
+          ]
+        },
+        {
+          "id": "unity-boatattack-q4",
+          "question": "데모 경주 시작 시 어떤 함수들이 순서대로 연결되나?",
+          "referenceAnswer": "DemoRun.Start → RaceManager.SetupRace → WaypointGroup.Setup 및 CreateBoats → (Singleplayer일 때 CreatePlayerUi/SetupCamera) → BeginRace. 코루틴/yield와 조건부 분기를 순차 일반 함수 호출과 구별한다.",
+          "evidence": [
+            {
+              "path": "Assets/Scripts/Utility/DemoRun.cs",
+              "startLine": 1,
+              "endLine": 11,
+              "url": "https://github.com/Unity-Technologies/BoatAttack/blob/6acf5f773a440030489cb5e2b3c009fb5fe1e8ce/Assets/Scripts/Utility/DemoRun.cs#L1-L11",
+              "excerpt": "﻿using BoatAttack;\nusing UnityEngine;\nusing UnityEngine.SceneManagement;\n\npublic class DemoRun : MonoBehaviour\n{\n    private void Start()\n    {\n        StartCoroutine(RaceManager.SetupRace());\n    }\n}"
+            },
+            {
+              "path": "Assets/Scripts/GameSystem/RaceManager.cs",
+              "startLine": 116,
+              "endLine": 145,
+              "url": "https://github.com/Unity-Technologies/BoatAttack/blob/6acf5f773a440030489cb5e2b3c009fb5fe1e8ce/Assets/Scripts/GameSystem/RaceManager.cs#L116-L145",
+              "excerpt": "        public static IEnumerator SetupRace()\n        {\n            if(RaceData == null) RaceData = Instance.demoRaceData; // make sure we have the data, otherwise default to demo data\n            while (WaypointGroup.Instance == null) // TODO need to re-write whole game loading/race setup logic as it is dirty\n            {\n                yield return null;\n            }\n            WaypointGroup.Instance.Setup(RaceData.reversed); // setup waypoints\n            yield return Instance.StartCoroutine(CreateBoats()); // spawn boats;\n\n            switch (RaceData.game)\n            {\n                case GameType.Singleplayer:\n                    yield return Instance.StartCoroutine(CreatePlayerUi(0));\n                    SetupCamera(0); // setup camera for player 1\n                    break;\n                case GameType.LocalMultiplayer:\n                    break;\n                case GameType.Multiplayer:\n                    break;\n                case GameType.Spectator:\n                    ReplayCamera.Instance.EnableSpectatorMode();\n                    break;\n                case GameType.Benchmark:\n                    break;\n                default:\n                    throw new ArgumentOutOfRangeException();\n            }\n            \n            Instance.StartCoroutine(BeginRace());"
+            }
+          ]
+        }
+      ],
+      "dependencyOracle": "Parse asmdef names/references and .asmdef.meta GUIDs. Resolve local GUIDs only; Unity/external registry assemblies stay external. WaterSystem.Editor→WaterSystem is certain. Default Assembly-CSharp autoReferenced dependencies are engine semantics, separately labelled.",
+      "notes": "LFS assets intentionally remain pointers; code and scene text present. No Unity import/build executed."
+    },
+    {
+      "id": "godot-demos",
+      "repository": "godotengine/godot-demo-projects",
+      "commit": "b761b4cd5718a7118f2c95eb55f181d0a5f004f1",
+      "trackedFiles": 4071,
+      "checkout": "/tmp/l9-benchmark-extra/godot-demos",
+      "questions": [
+        {
+          "id": "godot-demos-q1",
+          "question": "저장소 최상위 덩어리와 선택한 Dodge the Creeps 프로젝트의 역할은?",
+          "referenceAnswer": "저장소는 project.godot별 독립 데모 모음이다. 2d/dodge_the_creeps는 적을 피하며 버티는 게임으로 main이 진행, player가 플레이어, mob이 적, hud가 점수/시작 UI다.",
+          "evidence": [
+            {
+              "path": "README.md",
+              "startLine": 1,
+              "endLine": 5,
+              "url": "https://github.com/godotengine/godot-demo-projects/blob/b761b4cd5718a7118f2c95eb55f181d0a5f004f1/README.md#L1-L5",
+              "excerpt": "# Godot demo projects\n\nEach folder containing a `project.godot` file is a demo project meant to\nbe used with [Godot Engine](https://godotengine.org), the open source\n2D and 3D game engine."
+            },
+            {
+              "path": "2d/dodge_the_creeps/project.godot",
+              "startLine": 11,
+              "endLine": 21,
+              "url": "https://github.com/godotengine/godot-demo-projects/blob/b761b4cd5718a7118f2c95eb55f181d0a5f004f1/2d/dodge_the_creeps/project.godot#L11-L21",
+              "excerpt": "[application]\n\nconfig/name=\"Dodge the Creeps\"\nconfig/description=\"This is a simple game where your character must move\nand avoid the enemies for as long as possible.\n\nThis is a finished version of the game featured in the 'Your first 2D game'\ntutorial in the documentation. For more details, consider\nfollowing the tutorial in the documentation.\"\nconfig/tags=PackedStringArray(\"2d\", \"demo\", \"official\")\nrun/main_scene=\"res://main.tscn\""
+            },
+            {
+              "path": "2d/dodge_the_creeps/main.tscn",
+              "startLine": 3,
+              "endLine": 6,
+              "url": "https://github.com/godotengine/godot-demo-projects/blob/b761b4cd5718a7118f2c95eb55f181d0a5f004f1/2d/dodge_the_creeps/main.tscn#L3-L6",
+              "excerpt": "[ext_resource type=\"Script\" uid=\"uid://c4wt6ace7hycd\" path=\"res://main.gd\" id=\"1_0r6n5\"]\n[ext_resource type=\"PackedScene\" uid=\"uid://cao351pllxqpa\" path=\"res://mob.tscn\" id=\"2_50pww\"]\n[ext_resource type=\"PackedScene\" uid=\"uid://bwhlkliwp13p4\" path=\"res://player.tscn\" id=\"3_veqnc\"]\n[ext_resource type=\"PackedScene\" uid=\"uid://b0efehuavobda\" path=\"res://hud.tscn\" id=\"4_0qnje\"]"
+            }
+          ]
+        },
+        {
+          "id": "godot-demos-q2",
+          "question": "Dodge the Creeps의 메인 씬은 무엇을 사용하나?",
+          "referenceAnswer": "main.tscn은 main.gd 스크립트와 mob/player/hud 씬을 참조한다. HUD start_game 및 Player hit 신호가 main의 new_game/game_over로 연결된다.",
+          "evidence": [
+            {
+              "path": "2d/dodge_the_creeps/main.tscn",
+              "startLine": 3,
+              "endLine": 6,
+              "url": "https://github.com/godotengine/godot-demo-projects/blob/b761b4cd5718a7118f2c95eb55f181d0a5f004f1/2d/dodge_the_creeps/main.tscn#L3-L6",
+              "excerpt": "[ext_resource type=\"Script\" uid=\"uid://c4wt6ace7hycd\" path=\"res://main.gd\" id=\"1_0r6n5\"]\n[ext_resource type=\"PackedScene\" uid=\"uid://cao351pllxqpa\" path=\"res://mob.tscn\" id=\"2_50pww\"]\n[ext_resource type=\"PackedScene\" uid=\"uid://bwhlkliwp13p4\" path=\"res://player.tscn\" id=\"3_veqnc\"]\n[ext_resource type=\"PackedScene\" uid=\"uid://b0efehuavobda\" path=\"res://hud.tscn\" id=\"4_0qnje\"]"
+            },
+            {
+              "path": "2d/dodge_the_creeps/main.tscn",
+              "startLine": 55,
+              "endLine": 59,
+              "url": "https://github.com/godotengine/godot-demo-projects/blob/b761b4cd5718a7118f2c95eb55f181d0a5f004f1/2d/dodge_the_creeps/main.tscn#L55-L59",
+              "excerpt": "[connection signal=\"hit\" from=\"Player\" to=\".\" method=\"game_over\"]\n[connection signal=\"timeout\" from=\"MobTimer\" to=\".\" method=\"_on_MobTimer_timeout\"]\n[connection signal=\"timeout\" from=\"ScoreTimer\" to=\".\" method=\"_on_ScoreTimer_timeout\"]\n[connection signal=\"timeout\" from=\"StartTimer\" to=\".\" method=\"_on_StartTimer_timeout\"]\n[connection signal=\"start_game\" from=\"HUD\" to=\".\" method=\"new_game\"]"
+            }
+          ]
+        },
+        {
+          "id": "godot-demos-q3",
+          "question": "Dodge the Creeps는 어느 씬에서 실행을 시작하나?",
+          "referenceAnswer": "그 프로젝트 project.godot의 run/main_scene=res://main.tscn이다. 저장소 전체를 하나의 main이 있는 게임으로 오해하면 안 된다.",
+          "evidence": [
+            {
+              "path": "README.md",
+              "startLine": 1,
+              "endLine": 5,
+              "url": "https://github.com/godotengine/godot-demo-projects/blob/b761b4cd5718a7118f2c95eb55f181d0a5f004f1/README.md#L1-L5",
+              "excerpt": "# Godot demo projects\n\nEach folder containing a `project.godot` file is a demo project meant to\nbe used with [Godot Engine](https://godotengine.org), the open source\n2D and 3D game engine."
+            },
+            {
+              "path": "2d/dodge_the_creeps/project.godot",
+              "startLine": 11,
+              "endLine": 22,
+              "url": "https://github.com/godotengine/godot-demo-projects/blob/b761b4cd5718a7118f2c95eb55f181d0a5f004f1/2d/dodge_the_creeps/project.godot#L11-L22",
+              "excerpt": "[application]\n\nconfig/name=\"Dodge the Creeps\"\nconfig/description=\"This is a simple game where your character must move\nand avoid the enemies for as long as possible.\n\nThis is a finished version of the game featured in the 'Your first 2D game'\ntutorial in the documentation. For more details, consider\nfollowing the tutorial in the documentation.\"\nconfig/tags=PackedStringArray(\"2d\", \"demo\", \"official\")\nrun/main_scene=\"res://main.tscn\"\nconfig/features=PackedStringArray(\"4.7\")"
+            }
+          ]
+        },
+        {
+          "id": "godot-demos-q4",
+          "question": "시작 버튼을 누르면 플레이어와 게임 타이머까지 어떻게 이어지나?",
+          "referenceAnswer": "HUD._on_StartButton_pressed가 start_game을 emit → main.tscn 신호 연결 → main.new_game → Player.start, StartTimer.start 및 HUD 점수/메시지 갱신 → StartTimer timeout의 _on_StartTimer_timeout → MobTimer/ScoreTimer 시작. signal 연결은 일반 직접 함수 호출과 구별해야 한다.",
+          "evidence": [
+            {
+              "path": "2d/dodge_the_creeps/hud.gd",
+              "startLine": 24,
+              "endLine": 26,
+              "url": "https://github.com/godotengine/godot-demo-projects/blob/b761b4cd5718a7118f2c95eb55f181d0a5f004f1/2d/dodge_the_creeps/hud.gd#L24-L26",
+              "excerpt": "func _on_StartButton_pressed():\n\t$StartButton.hide()\n\tstart_game.emit()"
+            },
+            {
+              "path": "2d/dodge_the_creeps/main.tscn",
+              "startLine": 58,
+              "endLine": 59,
+              "url": "https://github.com/godotengine/godot-demo-projects/blob/b761b4cd5718a7118f2c95eb55f181d0a5f004f1/2d/dodge_the_creeps/main.tscn#L58-L59",
+              "excerpt": "[connection signal=\"timeout\" from=\"StartTimer\" to=\".\" method=\"_on_StartTimer_timeout\"]\n[connection signal=\"start_game\" from=\"HUD\" to=\".\" method=\"new_game\"]"
+            },
+            {
+              "path": "2d/dodge_the_creeps/main.gd",
+              "startLine": 14,
+              "endLine": 21,
+              "url": "https://github.com/godotengine/godot-demo-projects/blob/b761b4cd5718a7118f2c95eb55f181d0a5f004f1/2d/dodge_the_creeps/main.gd#L14-L21",
+              "excerpt": "func new_game():\n\tget_tree().call_group(&\"mobs\", &\"queue_free\")\n\tscore = 0\n\t$Player.start($StartPosition.position)\n\t$StartTimer.start()\n\t$HUD.update_score(score)\n\t$HUD.show_message(\"Get Ready\")\n\t$Music.play()"
+            },
+            {
+              "path": "2d/dodge_the_creeps/main.gd",
+              "startLine": 55,
+              "endLine": 57,
+              "url": "https://github.com/godotengine/godot-demo-projects/blob/b761b4cd5718a7118f2c95eb55f181d0a5f004f1/2d/dodge_the_creeps/main.gd#L55-L57",
+              "excerpt": "func _on_StartTimer_timeout():\n\t$MobTimer.start()\n\t$ScoreTimer.start()"
+            }
+          ]
+        }
+      ],
+      "dependencyOracle": "Each project.godot defines an independent project. res:// resolves relative to that project, never repository root. Internal scene/script references are from ext_resource, preload/load and connections; these are not package manifest deps.",
+      "notes": ""
+    },
+    {
+      "id": "sqlite",
+      "repository": "sqlite/sqlite",
+      "commit": "6e35c19f170958b1e846e01c55318988f2d192e0",
+      "trackedFiles": 2287,
+      "checkout": "/tmp/l9-benchmark-extra/sqlite",
+      "questions": [
+        {
+          "id": "sqlite-q1",
+          "question": "주요 덩어리와 역할은? C 분석 지원 여부도 말하라.",
+          "referenceAnswer": "SQLite SQL 엔진이다. 문서상 parse.y SQL 파서, vdbe.c 준비된 문장 실행 VM, btree.c 저장소, pager.c 트랜잭션, shell.c.in CLI가 있다. L9 C/C++ 호출 분석은 미지원으로 명시해야 한다.",
+          "evidence": [
+            {
+              "path": "README.md",
+              "startLine": 3,
+              "endLine": 6,
+              "url": "https://github.com/sqlite/sqlite/blob/6e35c19f170958b1e846e01c55318988f2d192e0/README.md#L3-L6",
+              "excerpt": "This repository contains the complete source code for the\n[SQLite database engine](https://sqlite.org/) going back\nto 2000-05-29.  The tree includes many tests and some\ndocumentation, though additional tests and most documentation"
+            },
+            {
+              "path": "README.md",
+              "startLine": 336,
+              "endLine": 370,
+              "url": "https://github.com/sqlite/sqlite/blob/6e35c19f170958b1e846e01c55318988f2d192e0/README.md#L336-L370",
+              "excerpt": "  *  **parse.y** - This file describes the LALR(1) grammar that SQLite uses\n     to parse SQL statements, and the actions that are taken at each step\n     in the parsing process.  The file is processed by the\n     [Lemon Parser Generator](./doc/lemon.html) to produce the actual C code\n     used for parsing.\n\n  *  **vdbe.c** - This file implements the virtual machine that runs\n     prepared statements.  There are various helper files whose names\n     begin with \"vdbe\".  The VDBE has access to the vdbeInt.h header file\n     which defines internal data objects.  The rest of SQLite interacts\n     with the VDBE through an interface defined by vdbe.h.\n\n  *  **where.c** - This file (together with its helper files named\n     by \"where*.c\") analyzes the WHERE clause and generates\n     virtual machine code to run queries efficiently.  This file is\n     sometimes called the \"query optimizer\".  It has its own private\n     header file, whereInt.h, that defines data objects used internally.\n\n  *  **btree.c** - This file contains the implementation of the B-Tree\n     storage engine used by SQLite.  The interface to the rest of the system\n     is defined by \"btree.h\".  The \"btreeInt.h\" header defines objects\n     used internally by btree.c and not published to the rest of the system.\n\n  *  **pager.c** - This file contains the \"pager\" implementation, the\n     module that implements transactions.  The \"pager.h\" header file\n     defines the interface between pager.c and the rest of the system.\n\n  *  **os_unix.c** and **os_win.c** - These two files implement the interface\n     between SQLite and the underlying operating system using the run-time\n     pluggable VFS interface.\n\n  *  **shell.c.in** - This file is not part of the core SQLite library.  This\n     is the file that, when linked against sqlite3.a, generates the\n     \"sqlite3.exe\" command-line shell.  The \"shell.c.in\" file is transformed\n     into \"shell.c\" as part of the build process."
+            }
+          ]
+        },
+        {
+          "id": "sqlite-q2",
+          "question": "CLI와 저장소 엔진의 알려진 관계는 무엇이며 지도에서 확정할 수 있는 범위는?",
+          "referenceAnswer": "문서상 shell.c.in은 sqlite3.a와 링크하는 별도 CLI이고 B-tree와 pager는 라이브러리 서브시스템이다. C 분석 미지원이라 자동 import/call 의존을 분석한 것처럼 표시하지 않는다.",
+          "evidence": [
+            {
+              "path": "README.md",
+              "startLine": 354,
+              "endLine": 370,
+              "url": "https://github.com/sqlite/sqlite/blob/6e35c19f170958b1e846e01c55318988f2d192e0/README.md#L354-L370",
+              "excerpt": "  *  **btree.c** - This file contains the implementation of the B-Tree\n     storage engine used by SQLite.  The interface to the rest of the system\n     is defined by \"btree.h\".  The \"btreeInt.h\" header defines objects\n     used internally by btree.c and not published to the rest of the system.\n\n  *  **pager.c** - This file contains the \"pager\" implementation, the\n     module that implements transactions.  The \"pager.h\" header file\n     defines the interface between pager.c and the rest of the system.\n\n  *  **os_unix.c** and **os_win.c** - These two files implement the interface\n     between SQLite and the underlying operating system using the run-time\n     pluggable VFS interface.\n\n  *  **shell.c.in** - This file is not part of the core SQLite library.  This\n     is the file that, when linked against sqlite3.a, generates the\n     \"sqlite3.exe\" command-line shell.  The \"shell.c.in\" file is transformed\n     into \"shell.c\" as part of the build process."
+            }
+          ]
+        },
+        {
+          "id": "sqlite-q3",
+          "question": "사용자 프로그램이 SQL 준비/실행을 시작하는 API와 분석 한계는?",
+          "referenceAnswer": "sqlite3_prepare_v2와 sqlite3_step이 공개 C API이다. 지도/MCP가 C를 지원하지 않으면 미지원이라고 답해야 하며 가짜 진입점 결과를 내지 않는다.",
+          "evidence": [
+            {
+              "path": "src/prepare.c",
+              "startLine": 958,
+              "endLine": 974,
+              "url": "https://github.com/sqlite/sqlite/blob/6e35c19f170958b1e846e01c55318988f2d192e0/src/prepare.c#L958-L974",
+              "excerpt": "int sqlite3_prepare_v2(\n  sqlite3 *db,              /* Database handle. */\n  const char *zSql,         /* UTF-8 encoded SQL statement. */\n  int nBytes,               /* Length of zSql in bytes. */\n  sqlite3_stmt **ppStmt,    /* OUT: A pointer to the prepared statement */\n  const char **pzTail       /* OUT: End of parsed string */\n){\n  int rc;\n  /* EVIDENCE-OF: R-37923-12173 The sqlite3_prepare_v2() interface works\n  ** exactly the same as sqlite3_prepare_v3() with a zero prepFlags\n  ** parameter.\n  **\n  ** Proof in that the 5th parameter to sqlite3LockAndPrepare is 0 */\n  rc = sqlite3LockAndPrepare(db,zSql,nBytes,SQLITE_PREPARE_SAVESQL,0,\n                             ppStmt,pzTail);\n  assert( rc==SQLITE_OK || ppStmt==0 || *ppStmt==0 );\n  return rc;"
+            },
+            {
+              "path": "src/vdbeapi.c",
+              "startLine": 980,
+              "endLine": 991,
+              "url": "https://github.com/sqlite/sqlite/blob/6e35c19f170958b1e846e01c55318988f2d192e0/src/vdbeapi.c#L980-L991",
+              "excerpt": "int sqlite3_step(sqlite3_stmt *pStmt){\n  int rc = SQLITE_OK;      /* Result from sqlite3Step() */\n  Vdbe *v = (Vdbe*)pStmt;  /* the prepared statement */\n  int cnt = 0;             /* Counter to prevent infinite loop of reprepares */\n  sqlite3 *db;             /* The database connection */\n\n  if( vdbeSafetyNotNull(v) ){\n    return SQLITE_MISUSE_BKPT;\n  }\n  db = v->db;\n  sqlite3_mutex_enter(db->mutex);\n  while( (rc = sqlite3Step(v))==SQLITE_SCHEMA"
+            }
+          ]
+        },
+        {
+          "id": "sqlite-q4",
+          "question": "SQL 문장 한 번 실행의 소스 기준 경로와 지도에서 모르는 부분은?",
+          "referenceAnswer": "준비 API sqlite3_prepare_v2→sqlite3LockAndPrepare; 실행 API sqlite3_step→sqlite3Step이다. 이는 소스 기준 정답이고 C 미지원 지도에는 해당 호출 경로를 모른다고 정직하게 표시해야 한다.",
+          "evidence": [
+            {
+              "path": "src/prepare.c",
+              "startLine": 958,
+              "endLine": 974,
+              "url": "https://github.com/sqlite/sqlite/blob/6e35c19f170958b1e846e01c55318988f2d192e0/src/prepare.c#L958-L974",
+              "excerpt": "int sqlite3_prepare_v2(\n  sqlite3 *db,              /* Database handle. */\n  const char *zSql,         /* UTF-8 encoded SQL statement. */\n  int nBytes,               /* Length of zSql in bytes. */\n  sqlite3_stmt **ppStmt,    /* OUT: A pointer to the prepared statement */\n  const char **pzTail       /* OUT: End of parsed string */\n){\n  int rc;\n  /* EVIDENCE-OF: R-37923-12173 The sqlite3_prepare_v2() interface works\n  ** exactly the same as sqlite3_prepare_v3() with a zero prepFlags\n  ** parameter.\n  **\n  ** Proof in that the 5th parameter to sqlite3LockAndPrepare is 0 */\n  rc = sqlite3LockAndPrepare(db,zSql,nBytes,SQLITE_PREPARE_SAVESQL,0,\n                             ppStmt,pzTail);\n  assert( rc==SQLITE_OK || ppStmt==0 || *ppStmt==0 );\n  return rc;"
+            },
+            {
+              "path": "src/vdbeapi.c",
+              "startLine": 980,
+              "endLine": 991,
+              "url": "https://github.com/sqlite/sqlite/blob/6e35c19f170958b1e846e01c55318988f2d192e0/src/vdbeapi.c#L980-L991",
+              "excerpt": "int sqlite3_step(sqlite3_stmt *pStmt){\n  int rc = SQLITE_OK;      /* Result from sqlite3Step() */\n  Vdbe *v = (Vdbe*)pStmt;  /* the prepared statement */\n  int cnt = 0;             /* Counter to prevent infinite loop of reprepares */\n  sqlite3 *db;             /* The database connection */\n\n  if( vdbeSafetyNotNull(v) ){\n    return SQLITE_MISUSE_BKPT;\n  }\n  db = v->db;\n  sqlite3_mutex_enter(db->mutex);\n  while( (rc = sqlite3Step(v))==SQLITE_SCHEMA"
+            }
+          ]
+        }
+      ],
+      "dependencyOracle": "Unsupported C/C++; no listed supported package manifests. Do not invent call/import coverage or treat zero analysis as zero real dependencies. Folder and documented subsystem overview can still be shown.",
+      "notes": "Negative capability control: truthful unsupported answers receive calibration credit, not fictitious C call coverage."
+    },
+    {
+      "id": "runtime",
+      "repository": "dotnet/runtime",
+      "commit": "8630d8988107478d249e2fdb8162f8c7dcbd3dbb",
+      "trackedFiles": 58427,
+      "checkout": "/tmp/l9-benchmark-extra/runtime",
+      "questions": [
+        {
+          "id": "runtime-q1",
+          "question": "주요 덩어리 세 곳과 각 역할은?",
+          "referenceAnswer": ".NET 런타임/표준 라이브러리 저장소. src/coreclr는 종합 실행 엔진, src/mono는 별도 경량 런타임, src/libraries는 CoreLib와 나머지 표준 DLL이다. native host/installer도 존재한다.",
+          "evidence": [
+            {
+              "path": "README.md",
+              "startLine": 16,
+              "endLine": 17,
+              "url": "https://github.com/dotnet/runtime/blob/8630d8988107478d249e2fdb8162f8c7dcbd3dbb/README.md#L16-L17",
+              "excerpt": "This repo contains the code to build the .NET runtime, libraries and shared host (`dotnet`) installers for\nall supported platforms, as well as the sources to .NET runtime and libraries."
+            },
+            {
+              "path": "docs/workflow/README.md",
+              "startLine": 63,
+              "endLine": 70,
+              "url": "https://github.com/dotnet/runtime/blob/8630d8988107478d249e2fdb8162f8c7dcbd3dbb/docs/workflow/README.md#L63-L70",
+              "excerpt": "\n- **Runtime**: The execution engine for managed code. There are two different implementations, both written in C or C++:\n  - *CoreCLR*: The comprehensive execution engine originally born from .NET Framework. Its source code lives under the [src/coreclr](/src/coreclr) subtree.\n  - *Mono*: A slimmer runtime than CoreCLR, originally born open-source to bring .NET and C# support to non-Windows platforms. Due to its lightweight nature, it is less affected in terms of speed when working with the *Debug* configuration. Its source code lives under the [src/mono](/src/mono) subtree.\n\n- **CoreLib** *(also known as System.Private.CoreLib)*: The lowest level managed library. It is directly related to the runtime, which means it must be built in the matching configuration (e.g. Building a *Debug* runtime means *CoreLib* must also be in *Debug*). The `clr` subset includes both, the *Runtime* and the *CoreLib* components, so you usually don't have to worry about that. There are, however, some special cases where you might need to build the components separately. The runtime agnostic code for this library can be found at [src/libraries/System.Private.CoreLib/src](/src/libraries/System.Private.CoreLib/src/README.md).\n\n- **Libraries**: The bulk of dll's providing the rest of the functionality to the runtime. The libraries can be built in their own configuration, regardless of which one the runtime is using. Their source code lives under the [src/libraries](/src/libraries) subtree."
+            },
+            {
+              "path": "docs/workflow/README.md",
+              "startLine": 89,
+              "endLine": 91,
+              "url": "https://github.com/dotnet/runtime/blob/8630d8988107478d249e2fdb8162f8c7dcbd3dbb/docs/workflow/README.md#L89-L91",
+              "excerpt": "- `Libs`: All the libraries components, excluding their tests. This includes the libraries' native parts, refs, source assemblies, and their packages and test infrastructure.\n- `Packs`: The shared framework packs, archives, bundles, installers, and the framework pack tests.\n- `Host`: The .NET hosts, packages, hosting libraries, and their tests."
+            }
+          ]
+        },
+        {
+          "id": "runtime-q2",
+          "question": "System.Net.Http는 어떤 내부 라이브러리 프로젝트를 사용하나?",
+          "referenceAnswer": "csproj의 ProjectReference로 System.Net.NameResolution, NetworkInformation, Primitives, Quic, Security, Sockets와 IO.Compression, DiagnosticSource 등을 사용한다. Debug/Windows/참조 어셈블리 조건은 구별한다.",
+          "evidence": [
+            {
+              "path": "src/libraries/System.Net.Http/src/System.Net.Http.csproj",
+              "startLine": 483,
+              "endLine": 510,
+              "url": "https://github.com/dotnet/runtime/blob/8630d8988107478d249e2fdb8162f8c7dcbd3dbb/src/libraries/System.Net.Http/src/System.Net.Http.csproj#L483-L510",
+              "excerpt": "    <ProjectReference Include=\"$(LibrariesProjectRoot)Microsoft.Win32.Primitives\\src\\Microsoft.Win32.Primitives.csproj\" />\n    <ProjectReference Include=\"$(LibrariesProjectRoot)System.Collections.NonGeneric\\src\\System.Collections.NonGeneric.csproj\" />\n    <ProjectReference Include=\"$(LibrariesProjectRoot)System.Console\\src\\System.Console.csproj\" Condition=\"'$(Configuration)' == 'Debug'\" />\n    <ProjectReference Include=\"$(LibrariesProjectRoot)System.Diagnostics.DiagnosticSource\\src\\System.Diagnostics.DiagnosticSource.csproj\" />\n    <ProjectReference Include=\"$(LibrariesProjectRoot)System.IO.Compression\\src\\System.IO.Compression.csproj\" />\n    <ProjectReference Include=\"$(LibrariesProjectRoot)System.Net.NameResolution\\src\\System.Net.NameResolution.csproj\" />\n    <ProjectReference Include=\"$(LibrariesProjectRoot)System.Net.NetworkInformation\\src\\System.Net.NetworkInformation.csproj\" />\n    <ProjectReference Include=\"$(LibrariesProjectRoot)System.Net.Primitives\\src\\System.Net.Primitives.csproj\" />\n    <ProjectReference Include=\"$(LibrariesProjectRoot)System.Net.Quic\\src\\System.Net.Quic.csproj\" />\n    <ProjectReference Include=\"$(LibrariesProjectRoot)System.Net.Security\\src\\System.Net.Security.csproj\" />\n    <ProjectReference Include=\"$(LibrariesProjectRoot)System.Net.Sockets\\src\\System.Net.Sockets.csproj\" />\n    <ProjectReference Include=\"$(LibrariesProjectRoot)System.Security.Claims\\src\\System.Security.Claims.csproj\" Condition=\"'$(TargetPlatformIdentifier)' == 'windows'\" />\n    <ProjectReference Include=\"$(LibrariesProjectRoot)System.Security.Cryptography\\src\\System.Security.Cryptography.csproj\" />\n    <ProjectReference Include=\"$(LibrariesProjectRoot)System.Security.Principal.Windows\\src\\System.Security.Principal.Windows.csproj\" />\n    <ProjectReference Include=\"$(LibrariesProjectRoot)System.Threading.Channels\\src\\System.Threading.Channels.csproj\" />\n    <ProjectReference Include=\"$(LibrariesProjectRoot)System.Threading.ThreadPool\\src\\System.Threading.ThreadPool.csproj\" />\n    <ProjectReference Include=\"$(LibrariesProjectRoot)System.IO.Compression.Brotli\\src\\System.IO.Compression.Brotli.csproj\" />\n\n  </ItemGroup>\n\n  <ItemGroup Condition=\"'$(TargetPlatformIdentifier)' != 'browser' and '$(TargetPlatformIdentifier)' != 'wasi' \">\n    <ProjectReference Include=\"$(LibrariesProjectRoot)System.Collections\\src\\System.Collections.csproj\" />\n    <ProjectReference Include=\"$(LibrariesProjectRoot)System.Collections.Concurrent\\src\\System.Collections.Concurrent.csproj\" />\n    <ProjectReference Include=\"$(LibrariesProjectRoot)System.Diagnostics.Tracing\\src\\System.Diagnostics.Tracing.csproj\" />\n    <ProjectReference Include=\"$(LibrariesProjectRoot)System.Memory\\src\\System.Memory.csproj\" />\n    <ProjectReference Include=\"$(LibrariesProjectRoot)System.Runtime\\src\\System.Runtime.csproj\" />\n    <ProjectReference Include=\"$(LibrariesProjectRoot)System.Runtime.InteropServices\\src\\System.Runtime.InteropServices.csproj\" />\n    <ProjectReference Include=\"$(LibrariesProjectRoot)System.Threading\\src\\System.Threading.csproj\" />"
+            }
+          ]
+        },
+        {
+          "id": "runtime-q3",
+          "question": "HTTP 요청 동작의 공개 관리 코드 진입점은 어디인가?",
+          "referenceAnswer": "System.Net.Http.HttpClient의 공개 SendAsync 오버로드가 진입 API이며 4인자 SendAsync가 실제 준비 후 Core 로컬 async 함수로 넘긴다. 거대한 저장소에 단 하나의 Main이 있다고 답하면 안 된다.",
+          "evidence": [
+            {
+              "path": "src/libraries/System.Net.Http/src/System/Net/Http/HttpClient.cs",
+              "startLine": 517,
+              "endLine": 545,
+              "url": "https://github.com/dotnet/runtime/blob/8630d8988107478d249e2fdb8162f8c7dcbd3dbb/src/libraries/System.Net.Http/src/System/Net/Http/HttpClient.cs#L517-L545",
+              "excerpt": "        public Task<HttpResponseMessage> SendAsync(HttpRequestMessage request) =>\n            SendAsync(request, DefaultCompletionOption, CancellationToken.None);\n\n        public override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken) =>\n            SendAsync(request, DefaultCompletionOption, cancellationToken);\n\n        public Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, HttpCompletionOption completionOption) =>\n            SendAsync(request, completionOption, CancellationToken.None);\n\n        public Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, HttpCompletionOption completionOption, CancellationToken cancellationToken)\n        {\n            // Called outside of async state machine to propagate certain exception even without awaiting the returned task.\n            CheckRequestBeforeSend(request);\n            (CancellationTokenSource cts, bool disposeCts, CancellationTokenSource pendingRequestsCts) = PrepareCancellationTokenSource(cancellationToken);\n\n            return Core(request, completionOption, cts, disposeCts, pendingRequestsCts, cancellationToken);\n\n            async Task<HttpResponseMessage> Core(\n                HttpRequestMessage request, HttpCompletionOption completionOption,\n                CancellationTokenSource cts, bool disposeCts, CancellationTokenSource pendingRequestsCts, CancellationToken originalCancellationToken)\n            {\n                bool telemetryStarted = StartSend(request);\n                bool responseContentTelemetryStarted = false;\n                HttpResponseMessage? response = null;\n                try\n                {\n                    // Wait for the send request to complete, getting back the response.\n                    response = await base.SendAsync(request, cts.Token).ConfigureAwait(false);\n                    ThrowForNullResponse(response);"
+            }
+          ]
+        },
+        {
+          "id": "runtime-q4",
+          "question": "HttpClient.SendAsync는 핸들러로 어떻게 요청을 전달하나?",
+          "referenceAnswer": "HttpClient.SendAsync → 내부 Core → base(HttpMessageInvoker).SendAsync → _handler.SendAsync (텔레메트리 분기에서는 SendAsyncWithTelemetry 경유). 마지막 추상 핸들러 대상은 런타임 인스턴스에 따라 달라 확정할 수 없다.",
+          "evidence": [
+            {
+              "path": "src/libraries/System.Net.Http/src/System/Net/Http/HttpClient.cs",
+              "startLine": 526,
+              "endLine": 545,
+              "url": "https://github.com/dotnet/runtime/blob/8630d8988107478d249e2fdb8162f8c7dcbd3dbb/src/libraries/System.Net.Http/src/System/Net/Http/HttpClient.cs#L526-L545",
+              "excerpt": "        public Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, HttpCompletionOption completionOption, CancellationToken cancellationToken)\n        {\n            // Called outside of async state machine to propagate certain exception even without awaiting the returned task.\n            CheckRequestBeforeSend(request);\n            (CancellationTokenSource cts, bool disposeCts, CancellationTokenSource pendingRequestsCts) = PrepareCancellationTokenSource(cancellationToken);\n\n            return Core(request, completionOption, cts, disposeCts, pendingRequestsCts, cancellationToken);\n\n            async Task<HttpResponseMessage> Core(\n                HttpRequestMessage request, HttpCompletionOption completionOption,\n                CancellationTokenSource cts, bool disposeCts, CancellationTokenSource pendingRequestsCts, CancellationToken originalCancellationToken)\n            {\n                bool telemetryStarted = StartSend(request);\n                bool responseContentTelemetryStarted = false;\n                HttpResponseMessage? response = null;\n                try\n                {\n                    // Wait for the send request to complete, getting back the response.\n                    response = await base.SendAsync(request, cts.Token).ConfigureAwait(false);\n                    ThrowForNullResponse(response);"
+            },
+            {
+              "path": "src/libraries/System.Net.Http/src/System/Net/Http/HttpMessageInvoker.cs",
+              "startLine": 67,
+              "endLine": 88,
+              "url": "https://github.com/dotnet/runtime/blob/8630d8988107478d249e2fdb8162f8c7dcbd3dbb/src/libraries/System.Net.Http/src/System/Net/Http/HttpMessageInvoker.cs#L67-L88",
+              "excerpt": "        public virtual Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)\n        {\n            ArgumentNullException.ThrowIfNull(request);\n\n            ObjectDisposedException.ThrowIf(_disposed, this);\n\n            if (ShouldSendWithTelemetry(request))\n            {\n                return SendAsyncWithTelemetry(_handler, request, cancellationToken);\n            }\n\n            return _handler.SendAsync(request, cancellationToken);\n\n            static async Task<HttpResponseMessage> SendAsyncWithTelemetry(HttpMessageHandler handler, HttpRequestMessage request, CancellationToken cancellationToken)\n            {\n                HttpTelemetry.Log.RequestStart(request);\n\n                HttpResponseMessage? response = null;\n                try\n                {\n                    response = await handler.SendAsync(request, cancellationToken).ConfigureAwait(false);\n                    return response;"
+            }
+          ]
+        }
+      ],
+      "dependencyOracle": "Independent XML parse .csproj ProjectReference; expand declared properties from relevant Directory.Build.props/targets without executing MSBuild. Report unresolved properties and conditional references separately, do not silently exclude. System.Net.Http has source vs reference configurations. All 58427 tracked files count toward scale, regardless supported language.",
+      "notes": ""
+    }
+  ]
+}

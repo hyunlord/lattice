@@ -1,0 +1,5 @@
+{
+  "method": "single root build package; no local multi-package manifest dependency edges; language module imports evaluated separately",
+  "packageCount": 1,
+  "edges": []
+}

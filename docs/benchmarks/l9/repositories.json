@@ -1,0 +1,72 @@
+{
+  "version": 1,
+  "baseline": "894ae5d25060c21d66703001fc6b2815b00ba8c6",
+  "repositories": [
+    {
+      "id": "click",
+      "repository": "pallets/click",
+      "commit": "2247b35ea1c47c727d7a06e51fa280e12a863ff6"
+    },
+    {
+      "id": "excalidraw",
+      "repository": "excalidraw/excalidraw",
+      "commit": "e65eca999e071503efb893d3379a29fb96ff37c4"
+    },
+    {
+      "id": "fzf",
+      "repository": "junegunn/fzf",
+      "commit": "c0a193e031f01fb50bf6f7be4381990a3753f7cf"
+    },
+    {
+      "id": "nowinandroid",
+      "repository": "android/nowinandroid",
+      "commit": "a49ed253d75e61a2b6ab80a8da677b57437b08eb"
+    },
+    {
+      "id": "ripgrep",
+      "repository": "BurntSushi/ripgrep",
+      "commit": "3fce3b5bb0236da2df6d99672afb8a719642eca7"
+    },
+    {
+      "id": "spring-petclinic",
+      "repository": "spring-projects/spring-petclinic",
+      "commit": "500158f732419217507c7656904b8e6aa1bcc0d6"
+    },
+    {
+      "id": "fastify",
+      "repository": "fastify/fastify",
+      "commit": "86368086171305df4e235f6d6bec892c67ec2ae2",
+      "trackedFiles": 395
+    },
+    {
+      "id": "httpx",
+      "repository": "encode/httpx",
+      "commit": "b5addb64f0161ff6bfe94c124ef76f6a1fba5254",
+      "trackedFiles": 125
+    },
+    {
+      "id": "unity-boatattack",
+      "repository": "Unity-Technologies/BoatAttack",
+      "commit": "6acf5f773a440030489cb5e2b3c009fb5fe1e8ce",
+      "trackedFiles": 1376
+    },
+    {
+      "id": "godot-demos",
+      "repository": "godotengine/godot-demo-projects",
+      "commit": "b761b4cd5718a7118f2c95eb55f181d0a5f004f1",
+      "trackedFiles": 4071
+    },
+    {
+      "id": "sqlite",
+      "repository": "sqlite/sqlite",
+      "commit": "6e35c19f170958b1e846e01c55318988f2d192e0",
+      "trackedFiles": 2287
+    },
+    {
+      "id": "runtime",
+      "repository": "dotnet/runtime",
+      "commit": "8630d8988107478d249e2fdb8162f8c7dcbd3dbb",
+      "trackedFiles": 58427
+    }
+  ]
+}
