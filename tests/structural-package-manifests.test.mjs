@@ -79,13 +79,18 @@ test('declared package dependencies do not masquerade as importing source files'
     assert.equal(dependencyCountLabel({ source: 'a', target: 'b', label: '', count: 2, sourceFiles: ['src/main.ts', 'package.json'], projectSourceFiles: ['package.json'] }), '1개 파일 · 의존 선언 1개');
 });
 
-test('a broad top-level directory tree stays visible instead of collapsing into one root', async () => {
+test('a broad top-level tree respects the root budget without losing physical children', async () => {
     const { packageFrontier } = await import('../dist/query/structural-package-frontier.js');
     const stages = Array.from({ length: 28 }, (_, index) => ({ id: `manifest:${index}`, title: `unit-${index}`, directoryPath: `family-${Math.floor(index / 2)}/unit-${index}`, summary: '', unit: '파일', nodeIds: [`file:${index}`], descendantNodeIds: [`file:${index}`], childIds: [], groups: [], incoming: [], outgoing: [] }));
     const result = packageFrontier(stages, new Map());
-    assert.equal(result.roots.length, 14);
+    assert(result.roots.length <= 12);
+    const byId = new Map(result.stages.map(stage => [stage.id, stage]));
+    const pending = [...result.roots], reached = new Set();
+    while (pending.length) { const id = pending.pop(); if (reached.has(id)) continue; reached.add(id); pending.push(...byId.get(id).childIds); }
+    assert(stages.every(stage => reached.has(stage.id)));
+    assert(result.stages.filter(stage => stage.directoryPath.startsWith('family-') && stage.childIds.length).length === 14);
     assert.equal(new Set(result.roots.flatMap(id => result.stages.find(stage => stage.id === id).descendantNodeIds)).size, 28);
-    assert(result.roots.every(id => result.stages.find(stage => stage.id === id).directoryPath.startsWith('family-')));
+    assert(result.roots.every(id => result.stages.find(stage => stage.id === id).directoryPath === '.'));
 });
 
 test('manifest product roots outrank misleading documentation, demo and test names', () => {
@@ -108,4 +113,36 @@ test('Unity test assembly status comes from assembly metadata, not a benchmark n
     const result = discoverBuildPackages(inputs, []);
     assert.equal(result.nodes.find(n => n.name === 'BenchmarkRuntime').attributes.isTestAssembly, false);
     assert.equal(result.nodes.find(n => n.name === 'Checks').attributes.isTestAssembly, true);
+});
+
+
+test('package frontier spends its budget on source-heavy families before tiny tooling', async () => {
+    const { packageFrontier } = await import('../dist/query/structural-package-frontier.js');
+    // Given a small early-sorting tree and three large product families.
+    for (const [small, large] of [['a-support', 'z-product'], ['z-support', 'a-product']]) {
+        const nodes = new Map(), stages = [];
+        const add = (path, count, noise = false) => {
+            const ids = Array.from({ length: count }, (_, index) => `${path}:${index}`);
+            for (const id of ids) nodes.set(id, node(id, `${path}/${id.split(':').at(-1)}.ts`, {}, 'file'));
+            const extra = `${path}:definition`; nodes.set(extra, node(extra, `${path}/index.ts`, {}, 'function'));
+            const members = noise ? [...ids, ...Array(100).fill(ids[0] ?? extra), extra] : ids;
+            stages.push({ id: `manifest:${path}`, title: path, directoryPath: path, summary: '', unit: '파일', nodeIds: members, descendantNodeIds: members, childIds: [], groups: [], incoming: [], outgoing: [] });
+        };
+        for (let index = 0; index < 10; index++) add(`${small}/tool-${index}`, index % 2, true);
+        for (const family of ['network', 'storage', 'display']) for (let index = 0; index < 10; index++) add(`${large}/${family}/unit-${index}`, 3);
+        // When input order changes, unique actual files still determine expansion.
+        const result = packageFrontier(stages, nodes), reversed = packageFrontier([...stages].reverse(), nodes);
+        assert.deepEqual(result.roots, reversed.roots);
+        const byId = new Map(result.stages.map(stage => [stage.id, stage]));
+        assert.deepEqual(new Set(result.roots.map(id => byId.get(id).directoryPath)), new Set([small, ...['network', 'storage', 'display'].map(family => `${large}/${family}`)]));
+        assert(result.roots.length <= 12);
+        assert(byId.get(result.roots[0]).directoryPath.startsWith(`${large}/`));
+        assert.equal(byId.get(result.roots.at(-1)).directoryPath, small);
+        // Then every leaf, including zero-file packages, remains navigable exactly under its real tree.
+        const reached = new Set(), pending = [...result.roots];
+        while (pending.length) { const id = pending.pop(); assert(!reached.has(id)); reached.add(id); pending.push(...byId.get(id).childIds); }
+        assert(stages.every(stage => reached.has(stage.id)));
+        const covered = new Set(result.roots.flatMap(id => byId.get(id).descendantNodeIds));
+        assert.deepEqual(covered, new Set(stages.flatMap(stage => stage.descendantNodeIds)));
+    }
 });

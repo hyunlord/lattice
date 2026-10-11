@@ -32,12 +32,22 @@ export function packageFrontier(packages: readonly LoopStage[], nodes: ReadonlyM
         stages.set(id, stage); packageCounts.set(id, count); tree.set(path, id);
         for (const child of childIds) { const childStage = stages.get(child); if (childStage) stages.set(child, { ...childStage, parentId: id }); }
     }
-    const top = tree.get('.'), topChildren = top ? stages.get(top)?.childIds ?? [] : [];
-    const roots = topChildren.length > 12 && topChildren.length <= 24 ? [...topChildren] : top ? [top] : [];
+    const weights = new Map([...stages].map(([id, stage]) => {
+        const files = new Set((stage.descendantNodeIds ?? stage.nodeIds).filter(member => {
+            const kind = nodes.get(member)?.kind;
+            return kind === 'module' || kind === 'file';
+        }));
+        return [id, files.size];
+    }));
+    const top = tree.get('.');
+    const roots = top ? [top] : [];
     while (true) {
-        const candidate = roots.map((id, index) => ({ id, index, children: stages.get(id)?.childIds ?? [] })).find(item => item.children.length > 0 && roots.length - 1 + item.children.length <= 12);
+        const candidate = roots.map((id, index) => ({ id, index, children: stages.get(id)?.childIds ?? [], path: stages.get(id)?.directoryPath ?? '.' }))
+            .filter(item => item.children.length > 0 && roots.length - 1 + item.children.length <= 12)
+            .sort((a, b) => (weights.get(b.id) ?? 0) - (weights.get(a.id) ?? 0) || a.path.localeCompare(b.path) || a.id.localeCompare(b.id))[0];
         if (!candidate) break;
         roots.splice(candidate.index, 1, ...candidate.children);
     }
+    roots.sort((a, b) => (weights.get(b) ?? 0) - (weights.get(a) ?? 0) || (stages.get(a)?.directoryPath ?? '.').localeCompare(stages.get(b)?.directoryPath ?? '.') || a.localeCompare(b));
     return { stages: [...stages.values()], roots };
 }
