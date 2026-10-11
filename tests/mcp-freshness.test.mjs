@@ -53,3 +53,18 @@ test('lens parse failure never returns previous graph; corrected lens recovers',
     assert.equal((await f.call('lattice_find', { kind: 'other' })).total, 2);
     assert.equal((await f.call('lattice_find', { kind: 'thing' })).total, 0);
 });
+test('concurrent cold queries build once and each later query still detects cache corruption', async t => {
+    const f = fixture(t);
+    const answers = await Promise.all(Array.from({ length: 3 }, () => f.call('lattice_freshness', {})));
+    assert.equal(answers.filter(answer => answer.freshness.rebuilt).length, 1);
+    assert.equal(new Set(answers.map(answer => answer.graphHash)).size, 1);
+    const graphPath = join(f.root, '.lattice/cache/graph.json');
+    const stat = statSync(graphPath), original = readFileSync(graphPath, 'utf8');
+    writeFileSync(graphPath, original.replace('Alpha', 'Omega'));
+    utimesSync(graphPath, stat.atime, stat.mtime);
+    const repaired = await f.call('lattice_find', { q: 'Alpha' });
+    assert.equal(repaired.freshness.rebuilt, true);
+    assert.equal(repaired.total, 1);
+    assert.equal(repaired.graphHash, answers[0].graphHash);
+    assert.equal((await f.call('lattice_freshness', {})).freshness.rebuilt, false);
+});

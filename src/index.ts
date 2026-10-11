@@ -31,3 +31,7 @@ export type { AutomaticDiagnostic } from "./core/automatic-findings.js";
 export { codeStructure } from "./adapters/code-structure.js";
 
 export { extractTypeScriptConfig, typeScriptConfigPaths } from "./adapters/typescript-config.js";
+
+export { discoverBuildPackages, resolveBuildPackageImports, buildManifestPath } from "./adapters/build-manifests.js";
+export { analyzeLogic } from "./adapters/logic-analysis.js";
+export type { LogicFacts, LogicDefinition, LogicCall } from "./adapters/logic-types.js";

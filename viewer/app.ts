@@ -1,3 +1,8 @@
+import { createNodeDetailLoader } from './node-detail-data.js';
+import { renderNodeDetail } from './node-detail.js';
+import { loopRouteEvent } from './loop-map-route.js';
+import { createOverviewLoader, type Overview } from './overview-data.js';
+import type { LoopMap } from './loop-map-types.js';
 import { renderSources } from './evidence.js';
 import { sourceCount } from './source-groups.js';
 import { renderLoopMap } from './loop-map.js';
@@ -58,6 +63,12 @@ function inlineSources(items: readonly Source[]) {
     return list;
 }
 let graph: BrowserGraph;
+let firstOverview: Overview | undefined;
+let fullGraphLoaded = false;
+let graphRequest: Promise<void> | undefined;
+const generation = document.querySelector<HTMLMetaElement>('meta[name="lattice-generation"]')?.content;
+const suffix = generation ? '?generation=' + encodeURIComponent(generation) : '';
+const overviewLoader = createOverviewLoader(suffix);
 let presentation: Presentation;
 let nodes: Map<string, GraphNode>;
 let visibleNodes: GraphNode[];
@@ -73,7 +84,7 @@ const layerOf = (node: GraphNode) => String(node.attributes['layer'] ?? '');
 const layerLabel = (layer: string) => (Array.isArray(presentation.layers) ? presentation.layers.find(item => item.id === layer)?.label : presentation.layers?.[layer]?.label) || layer || '층 미지정';
 function routeHref(path: string, params: Record<string, string> = {}) { const query = new URLSearchParams({ ...(activeLayer ? { layer: activeLayer } : {}), ...params }); return '#' + path + (query.size ? '?' + query : ''); }
 function layerControl(target: HTMLElement = main) {
-    const layers = [...new Set(allVisibleNodes.map(layerOf))];
+    const layers = firstOverview?.layers.map(layer => layer.id) ?? [...new Set(allVisibleNodes.map(layerOf))];
     if (layers.length < 2 && !layers[0]) return;
     const bar = el('div', undefined, 'filters layer-filter');
     const control = selectControl('데이터 층', 'layer', layers.map(value => [value, layerLabel(value)]), activeLayer);
@@ -134,8 +145,8 @@ function findingView(finding: Finding, compact = false) {
     }
     if (finding.targetIds.length) {
         const detail = el('details'); detail.append(el('summary', '관련 노드 ' + finding.targetIds.length + '개'));
-        const targets = el('ul', undefined, 'neighbors');
-        for (const id of finding.targetIds) { const item = el('li'); item.append(link(nodes.get(id)?.name || id, nodeHref(id))); targets.append(item); }
+        const targets = el('div');
+        const drawTargets = (page: number) => { targets.replaceChildren(); const list = el('ul', undefined, 'neighbors'); for (const id of finding.targetIds.slice(page * 100, (page + 1) * 100)) { const item = el('li'); item.append(link(nodes.get(id)?.name || id, nodeHref(id))); list.append(item); } targets.append(list); if (finding.targetIds.length > 100) pager(targets, { total: finding.targetIds.length, page, size: 100, change: drawTargets }); }; drawTargets(0);
         detail.append(targets); article.append(detail);
     }
     if (sourceCount(finding.sources)) {
@@ -151,13 +162,15 @@ function overview(version: number) {
         changesHref: (base, head) => routeHref('/changes', { base, head }),
     });
 }
-function home() {
+function home(model?: LoopMap) {
+    const limitations = firstOverview?.limitations ?? [];
+    if (limitations.length) { const labels = limitations.map(limitation => `${limitation.language === 'cpp' ? 'C++' : limitation.language === 'c' ? 'C' : limitation.language} 파일 ${limitation.fileCount}개`); main.append(el('p', `${labels.join(' · ')}: 구조·호출 분석은 지원하지 않습니다. 파일 위치만 표시합니다.`, 'panel unsupported-language')); }
     const evidence = el('section', undefined, 'picture-evidence'); evidence.hidden = true;
     const details = el('nav', undefined, 'picture-deeper'); details.hidden = true; details.setAttribute('aria-label', '자세히');
-    for (const [label, path] of [['발견과 요약', '/overview'], ['목록', '/list'], ['행렬과 상태판', '/views'], ['관계 탐색', '/explore'], ['변화', '/changes']]) if (label && path) details.append(link(label, routeHref(path)));
+    for (const [label, path] of [['실행 진입점과 흐름', '/logic'], ['발견과 요약', '/overview'], ['목록', '/list'], ['행렬과 상태판', '/views'], ['관계 탐색', '/explore'], ['변화', '/changes']]) if (label && path) details.append(link(label, routeHref(path)));
     pageHeading('근거', undefined, evidence);
     const map = el('div', undefined, 'picture-home-map'); main.append(map, details, evidence);
-    disposeScreen = renderLoopMap(map, buildLoopMap(visibleNodes, graph.edges, graph.facets, presentation, graph.repository.name), { kindLabel, nodeHref, onEvidence: () => { for (const old of evidence.querySelectorAll('.lm-analysis-evidence')) old.remove(); for (const source of map.querySelectorAll('.lm-analysis-evidence')) { const copy = source.cloneNode(true); if (copy instanceof HTMLElement) { copy.hidden = false; evidence.append(copy); } } evidence.hidden = !evidence.hidden; if (!evidence.hidden) evidence.scrollIntoView({ block: 'nearest' }); }, onDetails: () => { details.hidden = !details.hidden; if (!details.hidden) details.scrollIntoView({ block: 'nearest' }); } });
+    disposeScreen = renderLoopMap(map, model ?? buildLoopMap(visibleNodes, graph.edges, graph.facets, presentation, graph.repository.name), { kindLabel, nodeHref, onMissingNode: id => { location.hash = routeHref('/home', { view: 'focus', item: id }); }, onEvidence: () => { for (const old of evidence.querySelectorAll('.lm-analysis-evidence')) old.remove(); for (const source of map.querySelectorAll('.lm-analysis-evidence')) { const copy = source.cloneNode(true); if (copy instanceof HTMLElement) { copy.hidden = false; evidence.append(copy); } } evidence.hidden = !evidence.hidden; if (!evidence.hidden) evidence.scrollIntoView({ block: 'nearest' }); }, onDetails: () => { details.hidden = !details.hidden; if (!details.hidden) details.scrollIntoView({ block: 'nearest' }); } });
 }
 function selectControl(label: string, name: string, values: readonly (readonly string[])[], selected: string) {
     const wrapper = el('label', label); const select = el('select'); select.name = name;
@@ -176,6 +189,7 @@ function detail(id: string, version: number) {
     main.append(link('← 목록으로', listHref(), 'breadcrumb'));
     if (!node) { pageHeading('노드를 찾을 수 없습니다', id); main.append(empty('ID가 변경되었거나 현재 내보내기에 없는 노드입니다. 목록에서 다시 검색하세요.')); return; }
     pageHeading(node.name, kindLabel(node.kind) + (layerOf(node) ? ' · ' + layerLabel(layerOf(node)) : '')); main.append(el('code', node.id, 'detail-id'));
+    if (['function', 'method'].includes(node.kind)) void mountFunctionLogic(main, node.id);
     const actions = el('div', undefined, 'actions'); const status = el('span', '', 'meta'); status.setAttribute('role', 'status');
     actions.append(link('이웃 탐색', routeHref('/explore', { from: id, mode: 'neighbors', hops: '1', direction: 'both' })), button('링크 복사', async () => { try { await navigator.clipboard.writeText(location.href); status.textContent = '링크를 복사했습니다.'; } catch { status.textContent = '주소 표시줄의 URL을 복사하세요.'; } }), status); main.append(actions);
     const human = presentation.detail;
@@ -250,7 +264,7 @@ function render() {
     main.replaceChildren();
     const [path = '/home', search = ''] = (location.hash.slice(1) || '/home').split('?');
     const params = new URLSearchParams(search);
-    const layers = [...new Set(allVisibleNodes.map(layerOf))];
+    const layers = firstOverview?.layers.map(layer => layer.id) ?? [...new Set(allVisibleNodes.map(layerOf))];
     let node;
     if (path.startsWith('/node/')) { try { node = nodes.get(decodeURIComponent(path.slice(6))); } catch { } }
     activeLayer = node ? layerOf(node) : params.has('layer') ? (params.get('layer') || '') : layers.includes(presentation.defaultLayer || '') ? presentation.defaultLayer || '' : layers[0] || '';
@@ -263,20 +277,108 @@ function render() {
     main.querySelector('h1')?.focus({ preventScroll: true });
     window.scrollTo(0, 0);
 }
-async function load() {
-    try {
-        const generation = document.querySelector<HTMLMetaElement>('meta[name="lattice-generation"]')?.content;
-        const suffix = generation ? '?generation=' + encodeURIComponent(generation) : '';
-        const [graphResponse, presentationResponse] = await Promise.all([fetch('./graph.json' + suffix), fetch('./presentation.json' + suffix)]);
-        if (!graphResponse.ok) throw new Error('graph.json HTTP ' + graphResponse.status);
-        graph = parseGraph(await graphResponse.json()); presentation = parsePresentation(presentationResponse.ok ? await presentationResponse.json() : {});
-        if (graph.schemaVersion !== 1 || !Array.isArray(graph.nodes) || !Array.isArray(graph.facets) || !Array.isArray(graph.findings) || !Array.isArray(graph.edges) || !graph.repository || typeof graph.hash !== 'string') throw new Error('지원하지 않거나 불완전한 그래프 형식입니다.');
-        nodes = new Map(graph.nodes.map(node => [node.id, node])); facets = new Map();
-        for (const facet of graph.facets) { if (!facets.has(facet.nodeId)) facets.set(facet.nodeId, []); facets.get(facet.nodeId)?.push(facet); }
-        kinds = [...(Array.isArray(presentation.kinds) ? presentation.kinds : [])]; for (const kind of new Set(graph.nodes.map(node => node.kind))) if (!kinds.some(item => item.id === kind)) kinds.push({ id: kind, label: kind });
-        allVisibleNodes = graph.nodes.filter(node => !kinds.find(kind => kind.id === node.kind)?.hidden);
-        try { const response = await fetch('./snapshots.json'); if (response.ok) { snapshots = parseSnapshots(await response.json()); } } catch { /* History is optional. */ }
-        render(); addEventListener('hashchange', render);
-    } catch (error) { main.replaceChildren(); main.append(el('h1', '지도를 불러오지 못했습니다'), el('p', errorMessage(error), 'muted'), el('p', '내보내기에 graph.json이 포함되어 있는지 확인하세요. 파일을 직접 열었다면 HTTP 정적 서버를 사용하세요.'), button('다시 시도', () => location.reload())); }
+function indexGraph(): void {
+    nodes = new Map(graph.nodes.map(node => [node.id, node])); facets = new Map();
+    for (const facet of graph.facets) { if (!facets.has(facet.nodeId)) facets.set(facet.nodeId, []); facets.get(facet.nodeId)?.push(facet); }
+    kinds = [...presentation.kinds]; for (const kind of new Set(graph.nodes.map(node => node.kind))) if (!kinds.some(item => item.id === kind)) kinds.push({ id: kind, label: kind });
+    allVisibleNodes = graph.nodes.filter(node => !kinds.find(kind => kind.id === node.kind)?.hidden);
 }
-load();
+async function requireGraph(): Promise<void> {
+    if (fullGraphLoaded) return;
+    if (graphRequest) return graphRequest;
+    const pending = (async () => {
+        const [response, presentationResponse, snapshotResponse] = await Promise.all([fetch('./graph.json' + suffix), fetch('./presentation.json' + suffix), fetch('./snapshots.json' + suffix)]);
+        if (!response.ok) throw new Error('graph.json HTTP ' + response.status);
+        const next = parseGraph(await response.json());
+        if (firstOverview && next.hash !== firstOverview.hash) throw new Error('첫 화면과 그래프의 소스가 다릅니다. 지도를 새로 고치세요.');
+        graph = next; presentation = parsePresentation(presentationResponse.ok ? await presentationResponse.json() : {});
+        snapshots = snapshotResponse.ok ? parseSnapshots(await snapshotResponse.json()) : [];
+        indexGraph(); fullGraphLoaded = true;
+    })();
+    graphRequest = pending; try { await pending; } finally { graphRequest = undefined; }
+}
+function loadFailure(error: unknown, retry: () => void = () => { void route(); }): void {
+    main.replaceChildren(el('h1', '지도를 불러오지 못했습니다'), el('p', errorMessage(error), 'muted'), button('다시 시도', retry), button('새로 고침', () => location.reload()));
+}
+function needsModel(params: URLSearchParams): boolean {
+    return ['focus', 'catalog'].includes(params.get('view') ?? '') || ['stage', 'parent', 'item'].some(key => Boolean(params.get(key))) || params.get('scope') === 'all' || Number(params.get('page')) > 0;
+}
+const logicContext = { nodeHref: (id: string) => routeHref('/function/' + encodeURIComponent(id)), flowHref: (id: string, depth: number) => routeHref('/flow/' + encodeURIComponent(id), { depth: String(depth) }) };
+async function logicProvider() {
+    if (firstOverview) { const { createLogicProvider } = await import('./logic-data.js'); return createLogicProvider(firstOverview.hash, suffix); }
+    await requireGraph(); const { graphLogicProvider } = await import('./logic.js'); return graphLogicProvider(graph);
+}
+async function mountFunctionLogic(host: HTMLElement, id: string): Promise<void> {
+    const section = el('section'); host.append(section);
+    const [provider, ui] = await Promise.all([logicProvider(), import('./logic.js')]);
+    if (section.isConnected) ui.renderFunctionLogic(section, provider, id, logicContext);
+}
+let nodeDetailLoader: ReturnType<typeof createNodeDetailLoader> | undefined;
+let routeRequest = 0;
+let homeDeferred = false;
+let loadedHomeRoute = '';
+async function route(): Promise<void> {
+    const request = ++routeRequest;
+    const [path = '/home', search = ''] = (location.hash.slice(1) || '/home').split('?'); const params = new URLSearchParams(search);
+    try {
+        if (path === '/logic' || path.startsWith('/flow/') || path.startsWith('/function/')) {
+            const [provider, ui] = await Promise.all([logicProvider(), import('./logic.js')]);
+            if (request !== routeRequest) return;
+            ++renderVersion; disposeScreen?.(); disposeScreen = undefined; main.replaceChildren(); homeDeferred = false;
+            document.body.classList.remove('picture-home'); main.append(link('← 지도', routeHref('/home')));
+            if (path === '/logic') { main.append(el('h1', '실행 진입점과 흐름')); ui.renderLogicEntrypoints(main, provider, logicContext); }
+            else if (path.startsWith('/flow/')) ui.renderLogicFlow(main, provider, decodeURIComponent(path.slice(6)), logicContext, Math.min(10, Math.max(1, Number(params.get('depth')) || 3)));
+            else ui.renderFunctionLogic(main, provider, decodeURIComponent(path.slice(10)), logicContext);
+            document.title = '로직 구조 · Lattice'; return;
+        }
+        if (path.startsWith('/node/') && firstOverview && !fullGraphLoaded) {
+            nodeDetailLoader ??= createNodeDetailLoader(firstOverview, suffix);
+            const index = await nodeDetailLoader.index();
+            if (index) {
+                const id = decodeURIComponent(path.slice(6));
+                const [record, presentationResponse, snapshotResponse] = await Promise.all([nodeDetailLoader.node(index, id), fetch('./presentation.json' + suffix), fetch('./snapshots.json' + suffix)]);
+                const localPresentation = parsePresentation(presentationResponse.ok ? await presentationResponse.json() : {});
+                const localSnapshots = snapshotResponse.ok ? parseSnapshots(await snapshotResponse.json()) : [];
+                if (request !== routeRequest) return;
+                const version = ++renderVersion; disposeScreen?.(); disposeScreen = undefined; main.replaceChildren(); homeDeferred = false; document.body.classList.remove('picture-home');
+                if (!record) { pageHeading('노드를 찾을 수 없습니다', id); main.append(link('지도로 돌아가기', routeHref('/home'))); return; }
+                renderNodeDetail(main, {
+                    loader: nodeDetailLoader, index, record, presentation: localPresentation, snapshots: localSnapshots, params, current: () => version === renderVersion,
+                    nodeHref, homeHref: (item, layer) => '#/home?' + new URLSearchParams({ view: 'focus', item, layer }), sources, finding: item => findingView(item, true), kindLabel: kind => localPresentation.kinds.find(item => item.id === kind)?.label ?? kindLabel(kind), layerLabel, facetLabel: key => localPresentation.facets?.[key]?.label ?? key, valueLabel: (key, value) => localPresentation.facets?.[key]?.values?.[display(value)] ?? display(value),
+                    functionLogic: (host, item) => { void mountFunctionLogic(host, item); }
+                });
+                document.title = `${record.graph.nodes[0]?.name ?? '항목'} · Lattice`; main.querySelector('h1')?.focus({ preventScroll: true }); window.scrollTo(0, 0); return;
+            }
+        }
+        if (path === '/home' && firstOverview) {
+            const data = firstOverview, layer = data.layers.find(item => item.id === (params.get('layer') ?? data.defaultLayer)) ?? data.layers[0];
+            if (!layer) throw new Error('지도 층이 없습니다.');
+            const hydrate = layer.deferred && needsModel(params);
+            const model = hydrate ? await overviewLoader.model(data, layer, params) : layer.model;
+            if (request !== routeRequest) return;
+            ++renderVersion; disposeScreen?.(); disposeScreen = undefined; main.replaceChildren(); activeLayer = layer.id;
+            document.body.classList.add('picture-home');
+            document.querySelectorAll<HTMLAnchorElement>('[data-route]').forEach(item => { item.href = routeHref('/' + item.dataset['route']); if (item.dataset['route'] === 'home') item.setAttribute('aria-current', 'page'); else item.removeAttribute('aria-current'); });
+            homeDeferred = Boolean(layer.parts) || layer.deferred && !hydrate; loadedHomeRoute = location.hash; home(model); document.title = `${model.title ?? '지도'} · Lattice`; return;
+        }
+        main.setAttribute('aria-busy', 'true');
+        await requireGraph(); if (request !== routeRequest) return; render();
+    } catch (error) { if (request === routeRequest) loadFailure(error); }
+    finally { if (request === routeRequest) main.removeAttribute('aria-busy'); }
+}
+async function load(): Promise<void> {
+    try {
+        firstOverview = await overviewLoader.read();
+        if (firstOverview) {
+            graph = { schemaVersion: 1, hash: firstOverview.hash, repository: firstOverview.repository, nodes: [], edges: [], facets: [], findings: [], views: [] };
+            presentation = { kinds: [...firstOverview.kinds], layers: firstOverview.layers.map(layer => ({ id: layer.id, label: layer.label })), defaultLayer: firstOverview.defaultLayer }; indexGraph();
+        }
+        await route(); addEventListener('hashchange', () => { void route(); }); addEventListener('popstate', () => { void route(); });
+        addEventListener(loopRouteEvent, () => {
+            if (!homeDeferred || !firstOverview || location.hash === loadedHomeRoute || (location.hash.split('?')[0] || '#/home') !== '#/home') return;
+            const tabFocused = Boolean(document.activeElement?.closest('[role=tablist]'));
+            void route().then(() => { if (tabFocused) main.querySelector<HTMLButtonElement>('[role=tab][aria-selected=true]')?.focus({ preventScroll: true }); });
+        });
+    } catch (error) { loadFailure(error, () => { void load(); }); }
+}
+void load();

@@ -51,6 +51,8 @@ export function resolveModuleLinks(modules: readonly CodeModule[], metadata: rea
     const packages = new Map<string, NodeDraft>();
     const byPath = new Map(modules.map(module => [module.node.sources[0]?.path, module]));
     const diagnostics: ModuleDiagnostic[] = [];
+    const selectedMatches = new WeakMap<readonly string[], readonly string[]>();
+    const packageGroups = new WeakMap<readonly string[], NodeDraft>();
     for (const module of modules) {
         for (const reference of module.imports) {
             if (reference.form === "dynamic-require" || reference.form === "shadowed-require") {
@@ -61,9 +63,13 @@ export function resolveModuleLinks(modules: readonly CodeModule[], metadata: rea
             const configured = configuredPaths(module, reference);
             const self = configured ?? selfPackage(module, reference);
             const possible = self ? [self.paths] : native ? [native.paths] : candidates(module, reference);
-            const matches = possible.map(group => [...new Set(group.filter(path => paths.has(path)))]).find(group => group.length > 0) ?? [];
+            const matches = possible.map(group => { const cached = selectedMatches.get(group); if (cached) return cached; const selected = [...new Set(group.filter(path => paths.has(path)))]; selectedMatches.set(group, selected); return selected; }).find(group => group.length > 0) ?? [];
             if (matches.length === 1 || (matches.length > 1 && native?.multiple)) {
-                const group = native?.packageName === undefined ? undefined : packageNode(module.language === "kotlin" ? "jvm" : module.language === "java" ? "jvm" : module.language, native.packageName, matches.flatMap(path => { const member = byPath.get(path); return member ? [member] : []; }));
+                let group = native?.packageName === undefined ? undefined : packageGroups.get(matches);
+                if (!group && native?.packageName !== undefined) {
+                    group = packageNode(module.language === "kotlin" ? "jvm" : module.language === "java" ? "jvm" : module.language, native.packageName, matches.flatMap(path => { const member = byPath.get(path); return member ? [member] : []; }));
+                    packageGroups.set(matches, group);
+                }
                 if (group) packages.set(group.id, group);
                 for (const target of group ? [group.id] : matches.map(path => paths.get(path))) {
                     if (target === undefined) continue;

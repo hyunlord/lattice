@@ -1,3 +1,4 @@
+export const loopRouteEvent = 'lattice:route';
 export type LoopRoute = { readonly view: 'loop' | 'focus' | 'catalog'; readonly item?: string; readonly stage?: string; readonly scope?: 'production' | 'all'; readonly parent?: string; readonly page?: number; };
 
 export function readLoopRoute(): LoopRoute {
@@ -12,5 +13,5 @@ export function writeLoopRoute(values: Partial<LoopRoute>): void {
     const params = new URLSearchParams(search);
     for (const [key, value] of Object.entries(values)) { if (value === '') params.delete(key); else params.set(key, String(value)); }
     const hash = `#${path}?${params}`;
-    if (hash !== location.hash) history.pushState(null, '', hash);
+    if (hash !== location.hash) { history.pushState(null, '', hash); globalThis.dispatchEvent?.(new Event(loopRouteEvent)); }
 }

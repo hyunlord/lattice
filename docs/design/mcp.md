@@ -1,6 +1,6 @@
 # MCP and agent configuration
 
-`lattice mcp --root /absolute/repository` serves eight read-only graph tools and three interpretation tools over newline-delimited UTF-8 JSON-RPC on stdin/stdout. No HTTP MCP endpoint, source-code edits, network tools or subscription capability is advertised. Interpretation writes are confined to notes and an inactive draft lens; their MCP readOnlyHint is false. Generated graph/cache files are written as needed. Git remains required.
+`lattice mcp --root /absolute/repository` serves eleven read-only graph tools and three interpretation tools over newline-delimited UTF-8 JSON-RPC on stdin/stdout. No HTTP MCP endpoint, source-code edits, network tools or subscription capability is advertised. Interpretation writes are confined to notes and an inactive draft lens; their MCP readOnlyHint is false. Generated graph/cache files are written as needed. Git remains required.
 
 ```sh
 lattice mcp --root /path/to/repository --cache-dir /path/to/external-cache
@@ -58,3 +58,7 @@ No TOML dependency is added. The conservative editor supports normal table heade
 ## Starter input scope
 
 New `lattice init` lenses select supported code and Markdown for the initial repository map. JSON, YAML and CSV domain records remain supported through explicit kind file patterns; the generated lens includes a commented `data/` example. Configuration files with comments and unrelated malformed data therefore do not block the starter map. An explicitly selected malformed record still fails with its source diagnostic. Existing lenses are never rewritten. Without a lens, broader discovery retains its existing unparsed-file diagnostics; it is distinct from an explicit starter lens.
+
+## Static logic queries
+
+`lattice_entrypoints` lists source-backed static entrypoints. `lattice_calls` returns callers or callees for a function. `lattice_flow` follows exact calls with bounded depth (default3, maximum10) and explicit node/edge truncation. All three share the viewer projection, graph identity, evidence and deterministic pagination; they do not execute the analyzed repository. Ambiguous targets are omitted, so an absent edge is not proof that a runtime call cannot happen. See [L9 analysis](l9-analysis.md).

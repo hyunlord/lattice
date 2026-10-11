@@ -30,11 +30,12 @@
     "test": "npm run build && node --test tests/*.test.mjs",
     "format": "node tools/format.mjs --write",
     "format:check": "node tools/format.mjs",
-    "check": "npm run typecheck && npm run format:check && npm test && node tools/check-docs.mjs",
+    "check": "npm run typecheck && npm run format:check && npm test && node tools/check-docs.mjs && node tools/check-benchmarks.mjs",
     "prepack": "npm run build",
     "test:package": "npm run build && node tools/package-smoke.mjs"
   },
   "devDependencies": {
+    "@types/emscripten": "1.41.6",
     "@types/node": "20.19.43",
     "typescript": "5.9.3"
   },
@@ -42,6 +43,8 @@
     "lattice": "bin/lattice.mjs"
   },
   "dependencies": {
+    "tree-sitter-wasms": "0.1.13",
+    "web-tree-sitter": "0.25.10",
     "yaml": "2.9.1"
   }
 }

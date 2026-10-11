@@ -4,9 +4,14 @@
     "rootDir": "cli",
     "outDir": "bin",
     "types": [
-      "node"
+      "node",
+      "emscripten"
     ],
-    "declaration": false
+    "declaration": false,
+    "lib": [
+      "ES2023",
+      "DOM"
+    ]
   },
   "include": [
     "cli/**/*.mts"

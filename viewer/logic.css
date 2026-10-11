@@ -1,0 +1,10 @@
+.logic-controls { display: flex; flex-wrap: wrap; gap: var(--space-4); margin-block: var(--space-4); }
+.logic-entry-list, .logic-call-columns ul { padding-inline-start: var(--space-6); }
+.logic-entry-list li, .logic-call-columns li { margin-block: var(--space-3); }
+.logic-source { display: block; color: var(--muted); font: var(--type-meta); overflow-wrap: anywhere; }
+.logic-call-columns { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-6); }
+.logic-flow-levels { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 20rem), 1fr)); gap: var(--space-4); align-items: start; }
+.logic-flow-level, .logic-flow-node { min-width: 0; }
+.logic-flow-node { padding: var(--space-4); margin-block: var(--space-3); background: var(--surface); border: 1px solid var(--border); border-radius: 4px; overflow-wrap: anywhere; }
+.logic-flow-node ul { padding-inline-start: var(--space-4); }
+@media (max-width: 640px) { .logic-call-columns { grid-template-columns: 1fr; } }

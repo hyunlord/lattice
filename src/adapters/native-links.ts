@@ -2,24 +2,35 @@ import type { CodeModule, ModuleImport } from "./code.js";
 
 export type NativeMatches = { readonly paths: readonly string[]; readonly multiple: boolean; readonly packageName?: string; };
 function strings(value: unknown): readonly string[] { return Array.isArray(value) ? value.filter((item): item is string => typeof item === "string") : []; }
-export function csharpMatches(modules: readonly CodeModule[], reference: ModuleImport): NativeMatches {
-    const target = reference.specifier.replace(/^global::/u, "");
-    const scopes = reference.specifier.startsWith("global::") ? [] : (reference.scope ?? "").split(".").filter(Boolean);
-    const names: string[] = [];
-    for (let size = scopes.length; size >= 0; size--) names.push([...scopes.slice(0, size), target].join("."));
-    for (const name of names) {
-        const matches = modules.filter(module => module.language === "csharp" && (
-            (reference.form !== "type" && strings(module.node.attributes["namespaces"]).includes(name)) ||
-            (reference.form !== "namespace" && strings(module.node.attributes["declaredTypes"]).includes(name))
-        ));
-        if (matches.length) return {
-            paths: matches.flatMap(module => module.node.sources[0] ? [module.node.sources[0].path] : []),
-            multiple: matches.every(module => strings(module.node.attributes["namespaces"]).includes(name)),
-            ...(matches.every(module => strings(module.node.attributes["namespaces"]).includes(name)) ? { packageName: name } : {}),
-        };
-    }
-    return { paths: [], multiple: false };
+function csharpResolver(modules: readonly CodeModule[]): (reference: ModuleImport) => NativeMatches {
+    const namespaces = new Map<string, CodeModule[]>(), types = new Map<string, CodeModule[]>(), order = new Map<CodeModule, number>();
+    const declared = new Map<CodeModule, ReadonlySet<string>>(), cache = new Map<string, NativeMatches>();
+    const add = (map: Map<string, CodeModule[]>, name: string, module: CodeModule): void => { const bucket = map.get(name); if (bucket) bucket.push(module); else map.set(name, [module]); };
+    modules.forEach((module, index) => {
+        if (module.language !== "csharp") return;
+        order.set(module, index);
+        const names = new Set(strings(module.node.attributes["namespaces"])); declared.set(module, names);
+        for (const name of names) add(namespaces, name, module);
+        for (const name of new Set(strings(module.node.attributes["declaredTypes"]))) add(types, name, module);
+    });
+    return reference => {
+        const target = reference.specifier.replace(/^global::/u, "");
+        const scopes = reference.specifier.startsWith("global::") ? [] : (reference.scope ?? "").split(".").filter(Boolean);
+        for (let size = scopes.length; size >= 0; size--) {
+            const name = [...scopes.slice(0, size), target].join("."), key = JSON.stringify([name, reference.form]);
+            let result = cache.get(key);
+            if (!result) {
+                const matches = [...new Set([...(reference.form === "type" ? [] : namespaces.get(name) ?? []), ...(reference.form === "namespace" ? [] : types.get(name) ?? [])])].sort((a, b) => (order.get(a) ?? 0) - (order.get(b) ?? 0));
+                const multiple = matches.length > 0 && matches.every(module => declared.get(module)?.has(name));
+                result = { paths: matches.flatMap(module => module.node.sources[0] ? [module.node.sources[0].path] : []), multiple, ...(multiple ? { packageName: name } : {}) };
+                cache.set(key, result);
+            }
+            if (result.paths.length) return result;
+        }
+        return { paths: [], multiple: false };
+    };
 }
+export function csharpMatches(modules: readonly CodeModule[], reference: ModuleImport): NativeMatches { return csharpResolver(modules)(reference); }
 function rustRoot(path: string, modules: readonly CodeModule[], roots: Map<string, string>): string {
     const cached = roots.get(path);
     if (cached !== undefined) return cached;
@@ -79,5 +90,6 @@ function rustMatches(module: CodeModule, modules: readonly CodeModule[], referen
 
 export function nativeResolver(modules: readonly CodeModule[]): (module: CodeModule, reference: ModuleImport) => NativeMatches | undefined {
     const roots = new Map<string, string>();
-    return (module, reference) => module.language === "csharp" ? csharpMatches(modules, reference) : module.language === "rust" ? rustMatches(module, modules, reference, roots) : undefined;
+    const csharp = csharpResolver(modules);
+    return (module, reference) => module.language === "csharp" ? csharp(reference) : module.language === "rust" ? rustMatches(module, modules, reference, roots) : undefined;
 }

@@ -125,3 +125,23 @@ On2026-10-11 the user directly adjudicated `d14c5f8` AutoMapper AI comprehension
 The user authorized only the reported CommonJS, package-introduction, Python-definition-description and reader-wording corrections, with regression tests and same-width fastify8636808/httpxb5addb6 comparisons. No new sample grading is required. PR76, consumer Pages delivery and maintenance transition remain pending until their actual evidence is recorded. Subsequent work is limited to automatic map/PR-comment upkeep and user-reported issues.
 
 Final corrections at636fc45 pass403 tests and installed-package smoke. Fastify/HTTPX1280/390 actual-browser and independent source oracles pass; [the same-width comparison and retained failures](l8-readable-repositories.md#final-user-reported-compatibility-corrections) record the bounded follow-up. No new comprehension grading was performed. Consumer delivery is tracked by [bs-mobile#212](https://github.com/hyunlord/bs-mobile/issues/212); its PR and Pages workflow are the publication evidence. Feature development ends here under the maintenance contract in AGENTS.md.
+
+## L9 package and logic evidence
+
+The user reopened feature work for L9 and explicitly accepted90% product coverage and a300-second cold large-build budget. The [frozen twelve-repository protocol](../benchmarks/l9/README.md) precedes implementation. [The L9 report](l9-package-logic.md) distinguishes numerical gates, actual browser behavior, blind answers and remaining limitations; none substitutes for another.
+
+| Requirement | Recorded evidence | Status |
+|---|---|---|
+| Frozen sources/questions and generic implementation |19 immutable artifacts,12 pinned repositories, production specialization guard | verified by CI |
+| Manifest dependency recall | Cargo18/18, workspace10/10, Unity2/2, evaluated Gradle116/116; static MSBuild4782/4859 | verified within the stated oracle scopes; MSBuild is not evaluated configuration truth |
+| Exact calls | Original full-endpoint audit47/50 failed; final separately frozen sample50/50; bounded recall exact16/32 plus estimated5/32 | corrected precision verified; original failure preserved, incomplete recall disclosed |
+| Product coverage | Every repository97.58–100%; actual large overview19,570/19,897 | verified, folded descendants included |
+| Large cold build |58,427 tracked files,266.056s, default Node heap, source and graph hashes recorded | verified against300s |
+| Initial browser payload | Final twelve:390 CPU4x medians219–743.2ms; large323.2ms,172,432 transferred bytes | verified; final12 capture sheets source/hash bound |
+| Bounded interaction | Final twelve static sites: eleven89-step navigation plus actual large expansion, paging, focus, flow, detail, evidence, history and back; no full graph request | static site verified; largest detail task262ms disclosed |
+| Blind fixed questions | Final twelve map71/96 versus source93/96; large6/8, answers written in405.349s | partial comprehension; fixed comparison complete, no invented threshold |
+| Live generations |29b1e9c actual large serve:489ms first display,1010ms detail,67ms page; unchanged checks1→11, generation/build1, exit0, no owned directories or lock | verified;747.938s startup and6.333GB RSS disclosed |
+| Consumer publication |[bs-mobile issue228](https://github.com/hyunlord/bs-mobile/issues/228), restricted to two workflow pins and existing ADR0040 maintenance paragraph | tracked separately after Lattice merge |
+| Regression and packaging |578 tests, installed-package checks and Node20/22/24 CI at29b1e9c | verified; analysis/static viewer remain d4f4c5f |
+
+L9 does not turn the earlier L5 warm-response target into a pass: the final large-repository warm MCP requests took5.418–12.177seconds. Mobile readers still scroll to the main dependency group, and static analysis omits unresolved dispatch rather than inventing a complete execution trace.

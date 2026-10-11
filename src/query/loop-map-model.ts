@@ -13,17 +13,30 @@ export type LoopPresentation = {
     interpretations?: readonly { targetId: string; summary: string; status: string; sources: readonly { path: string; line?: number; url?: string; }[]; }[];
     mediaManifest?: MediaManifest;
 };
-export function buildLoopMap(nodes: readonly Node[], edges: readonly Edge[], facets: readonly Facet[], presentation: LoopPresentation, repositoryName: string): LoopMap {
+export function buildLoopMap(inputNodes: readonly Node[], inputEdges: readonly Edge[], facets: readonly Facet[], presentation: LoopPresentation, repositoryName: string, options: { readonly projection?: 'full' | 'overview'; } = {}): LoopMap {
     const config = presentation.loop;
+    const kinds = new Set(inputNodes.map(node => node.kind));
+    const automatic = !config?.stages.length || !config.stages.some(stage => stage.kinds.some(kind => kinds.has(kind)));
+    const structuralKinds = new Set(['module', 'file', 'package', 'document']);
+    const projected = automatic && options.projection === 'overview' && (kinds.has('module') || kinds.has('file'));
+    const nodes = projected ? inputNodes.filter(node => structuralKinds.has(node.kind)) : inputNodes;
+    const ids = projected ? new Set(nodes.map(node => node.id)) : undefined;
+    const edges = ids ? inputEdges.filter(edge => ids.has(edge.source) && ids.has(edge.target)) : inputEdges;
     const byId = new Map(nodes.map(n => [n.id, n]));
     const outgoing = new Map<string, Edge[]>(), incoming = new Map<string, Edge[]>();
-    for (const edge of edges) { outgoing.set(edge.source, [...outgoing.get(edge.source) ?? [], edge]); incoming.set(edge.target, [...incoming.get(edge.target) ?? [], edge]); }
+    for (const edge of edges) {
+        const from = outgoing.get(edge.source) ?? []; from.push(edge); outgoing.set(edge.source, from);
+        const to = incoming.get(edge.target) ?? []; to.push(edge); incoming.set(edge.target, to);
+    }
+    const facetIndex = new Map<string, Facet[]>();
+    for (const facet of facets) { const id = facet.nodeId; if (ids && !ids.has(id)) continue; const entries = facetIndex.get(id) ?? []; entries.push(facet); facetIndex.set(id, entries); }
+    const interpretations = new Map<string, NonNullable<LoopPresentation['interpretations']>[number]>();
+    for (const note of presentation.interpretations ?? []) if (!interpretations.has(note.targetId)) interpretations.set(note.targetId, note);
     const kindName = (kind: string) => presentation.kinds.find(k => k.id === kind)?.label ?? ({ module: '모듈', file: '파일', package: '패키지', type: '타입', function: '함수', class: '클래스', method: '메서드', interface: '인터페이스', enum: '열거형', struct: '구조체', trait: '트레이트' }[kind] ?? kind);
     const display = (key: string, value: unknown): string => typeof value === 'string' ? presentation.facets?.[key]?.values?.[value] ?? value : Array.isArray(value) ? value.map(v => display(key, v)).join(' · ') : typeof value === 'number' || typeof value === 'boolean' ? String(value) : '';
     const summary = (n: Node) => (config?.summaryFields ?? ['cardText', 'description', 'concept']).map(k => n.attributes[k]).find((v): v is string => typeof v === 'string') ?? '';
-    const interpretation = (id: string): LoopInterpretation | undefined => { const note = presentation.interpretations?.find(n => n.targetId === id); return note ? { summary: plain(note.summary), stale: note.status === 'stale', evidence: note.sources } : undefined; };
-    const automatic = !config?.stages.length || !config.stages.some(stage => nodes.some(n => stage.kinds.includes(n.kind)));
-    const structuralNodes = nodes.some(node => node.kind === 'module') ? nodes.filter(node => node.kind !== 'file') : nodes;
+    const interpretation = (id: string): LoopInterpretation | undefined => { const note = interpretations.get(id); return note ? { summary: plain(note.summary), stale: note.status === 'stale', evidence: note.sources } : undefined; };
+    const structuralNodes = nodes.filter(node => structuralKinds.has(node.kind) && (node.kind !== 'file' || !kinds.has('module')));
     const folderMap = automatic ? buildStructuralOverview(structuralNodes, edges) : undefined;
     const catalog = config?.catalogKinds?.length && !automatic ? nodes.filter(n => config.catalogKinds?.includes(n.kind)) : nodes.filter(n => ['module', 'file', 'package', 'type', 'function', 'class', 'method', 'interface', 'enum', 'struct', 'trait'].includes(n.kind));
     const selected = catalog.length ? catalog : nodes;
@@ -50,8 +63,9 @@ export function buildLoopMap(nodes: readonly Node[], edges: readonly Edge[], fac
             { side: 'outgoing' as const, label: '참조하는 모듈', items: (outgoing.get(n.id) ?? []).filter(e => e.kind === 'imports').map(e => ({ id: e.target })) },
             { side: 'outgoing' as const, label: '정의한 타입·함수', items: (outgoing.get(n.id) ?? []).filter(e => e.kind === 'contains').map(e => ({ id: e.target })) },
         ].filter(g => g.items.length > 0).map(g => ({ ...g, items: [...new Map(g.items.filter(i => byId.has(i.id)).map(item => [item.id, item])).values()] }));
-        const status = facets.find(f => f.nodeId === n.id && f.key === config?.statusFacet)?.value;
-        const fieldSource = { ...n.attributes, facet: Object.fromEntries(facets.filter(f => f.nodeId === n.id).map(f => [f.key, f.value])) };
+        const nodeFacets = facetIndex.get(n.id) ?? [];
+        const status = nodeFacets.find(f => f.key === config?.statusFacet)?.value;
+        const fieldSource = { ...n.attributes, facet: Object.fromEntries(nodeFacets.map(f => [f.key, f.value])) };
         const fields = (presentation.detail?.summaryFieldsByKind?.[n.kind] ?? presentation.detail?.summaryFields ?? []).flatMap(f => { let v: unknown = fieldSource; for (const part of f.path) v = v && typeof v === 'object' ? Reflect.get(v, part) : undefined; const value = display(f.path.at(-1) ?? '', v); return value ? [{ label: f.label, value }] : []; });
         if (automatic && n.sources[0]) fields.unshift({ label: '파일', value: n.sources[0].path });
         const note = interpretation(n.id), media = presentation.mediaManifest?.[n.id], baseStyle = config?.kindStyles?.[n.kind];
@@ -60,7 +74,7 @@ export function buildLoopMap(nodes: readonly Node[], edges: readonly Edge[], fac
         return { id: n.id, name: ['module', 'file'].includes(n.kind) ? (n.sources[0]?.path.split('/').at(-1) ?? n.name) : n.name, kind: n.kind, kindLabel: variant?.label ?? (n.kind === 'package' && n.attributes['category'] ? structuralCategoryLabel(n) : kindName(n.kind)), summary: summary(n) || (automatic ? structuralSummary([n], [], n.sources[0]?.path.split('/').slice(0, -1).join('/') || '.') : ''), status: status === 'present' || status === 'absent' ? status : 'unknown', fields, relationGroups: groups, catalogSummary: groups.slice(0, 2).map(g => `${g.label} ${g.items.length}`).join(' · '), ordinal: typeof n.attributes['order'] === 'number' ? n.attributes['order'] - 1 : ordinal, ...(style?.shape ? { kindShape: style.shape } : {}), ...(style?.color ? { kindColor: style.color } : {}), ...(note ? { interpretation: note } : {}), ...(media?.status === 'available' ? { media } : {}) };
     });
 
-    const groupNodes = (members: readonly Node[], field?: string) => { const groups = new Map<string, { id: string; }[]>(); for (const n of members) { const title = field ? display(field, n.attributes[field]) || kindName(n.kind) : kindName(n.kind); groups.set(title, [...groups.get(title) ?? [], { id: n.id }]); } return [...groups].map(([title, items]) => ({ title, items })); };
+    const groupNodes = (members: readonly Node[], field?: string) => { const groups = new Map<string, { id: string; }[]>(); for (const n of members) { const title = field ? display(field, n.attributes[field]) || kindName(n.kind) : kindName(n.kind); const items = groups.get(title) ?? []; items.push({ id: n.id }); groups.set(title, items); } return [...groups].map(([title, items]) => ({ title, items })); };
     const relatedSystemIds = new Set((config?.stages ?? []).flatMap(stage => stage.systemIds));
     const systemKinds = new Set(nodes.filter(n => relatedSystemIds.has(n.id) || relatedSystemIds.has(String(n.attributes['originalId'] ?? ''))).map(n => n.kind));
     const systemNodes = new Set(nodes.filter(n => systemKinds.has(n.kind)).map(n => n.id));

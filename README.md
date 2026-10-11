@@ -2,7 +2,7 @@
 
 A repository-neutral system map for people and agents. Deterministic extraction creates one graph for a static browser viewer and MCP tools; declarative lenses add repository-specific meaning.
 
-**Status: L8 accepted; maintenance scope.** No-config comprehension is3/3/3 and the actual external-agent summary flow is4/4/4. The four final user-reported compatibility fixes pass403 tests and the Fastify/HTTPX desktop/mobile checks. The browser provides overview, focused-item and catalog views; reusable CI publishes consumer maps and PR differences. No proactive feature work or new sample reviews: maintain automatic maps and PR comments, and fix further problems only when reported during actual use. Consumer delivery is tracked in [bs-mobile#212](https://github.com/hyunlord/bs-mobile/issues/212). See the [acceptance ledger](docs/review/acceptance.md) and [L8 evidence](docs/review/l8-readable-repositories.md).
+**Status: L9 implementation and benchmark verification.** Maintenance was lifted to add build-manifest packages, conservative static function calls and entrypoints, bounded flow views, and a small initial map payload. The [twelve-repository benchmark](docs/benchmarks/l9/README.md) freezes source commits, questions, independent reference evidence and measurement rules before implementation. The [L9 evidence report](docs/review/l9-package-logic.md) records per-repository coverage, dependency and call accuracy, first-screen timings, and independent map-versus-source answers. Numerical checks do not establish complete execution flows; unresolved dispatch, large warm MCP latency and publication verification remain explicitly distinguished. Earlier [L8 evidence](docs/review/l8-readable-repositories.md) remains historical evidence.
 
 - [Original v0.1 brief](docs/design/brief-v0.1.md)
 - [Architecture and lens contract](docs/design/lattice-v0.md)
@@ -48,9 +48,17 @@ Go files also expose conservative same-package declaration-type references with 
 
 See [module extraction evidence and limits](docs/review/l1-modules.md).
 
+## Code structure and logic
+
+Without a lens, build manifests define package boundaries and internal dependencies; source imports remain separate evidence. Package cards include folded descendants and distinguish manifest declarations from observed importing files. Root package metadata or README supplies the repository introduction. Deterministic module documentation and public names remain useful without AI summaries.
+
+The viewer's entrypoint list opens bounded function flows and caller/callee detail. JS/TS, Python, Go, Rust, Java/Kotlin and C# use CLI-side syntax trees. Only uniquely resolved lexical or imported targets produce exact call edges. Dynamic dispatch, ambiguous bindings and unsupported syntax remain explicit limits; a static flow is not observed execution. Unsupported languages retain file locations and a visible limitation notice.
+
+Initial navigation fetches a source-bound overview. Function records, calls and flow pages load on demand; legacy detailed graph views and source evidence retain their separate lazy paths. See [L9 extraction and transport](docs/design/l9-analysis.md).
+
 ## Query from agents
 
-Run `lattice mcp --root /path/to/repository` for stdio MCP, or use `init` to configure installed clients. Eight query tools inspect overview, filtered nodes, detail, paths, matrices, findings, Git differences and freshness. Three additional interpretation tools read source-bound module/folder context, write AI notes, and save an inactive lens draft. Each query checks actual file contents before serving graph evidence. See [agent notes and optional external CI summarization](docs/review/l7-interpretation.md). [Protocol, pagination, viewer links and setup](docs/design/mcp.md) describe the contract.
+Run `lattice mcp --root /path/to/repository` for stdio MCP, or use `init` to configure installed clients. Eleven read-only query tools inspect overview, filtered nodes, detail, paths, matrices, findings, Git differences, freshness, entrypoints, calls and bounded flows. Three additional interpretation tools read source-bound module/folder context, write AI notes, and save an inactive lens draft. Each query checks actual file contents before serving graph evidence. See [agent notes and optional external CI summarization](docs/review/l7-interpretation.md). [Protocol, pagination, viewer links and setup](docs/design/mcp.md) describe the contract.
 
 ## Automate maps in GitHub Actions
 

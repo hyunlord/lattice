@@ -95,4 +95,4 @@ export type Graph = Omit<GraphDraft, "nodes"> & {
     readonly hash: string;
     readonly nodes: readonly Node[];
 };
-export type Digest = (canonicalText: string) => string;
+export type Digest = ((canonicalText: string) => string) & { readonly stream?: (produce: (write: (chunk: string) => void) => void) => string; };

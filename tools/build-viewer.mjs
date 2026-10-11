@@ -6,7 +6,7 @@ const root = fileURLToPath(new URL('..', import.meta.url));
 for (const file of readdirSync(join(root, 'build/viewer'))) {
   if (file.endsWith('.js')) copyFileSync(join(root, 'build/viewer', file), join(root, 'viewer', file));
 }
-for (const file of ['source-groups.js', 'explore-model.js', 'views-model.js', 'history-model.js', 'picture-map-model.js', 'loop-map-model.js', 'structural-map-model.js', 'structural-dependency-groups.js', 'structural-file-previews.js', 'structural-frontier.js', 'structural-package-stages.js', 'loop-config.js', 'media-model.js']) {
+for (const file of ['node-detail-transport.js', 'structural-name-facts.js', 'structural-manifest-map.js', 'structural-package-frontier.js', 'logic-model.js', 'presentation.js', 'map-presentation.js', 'source-groups.js', 'explore-model.js', 'views-model.js', 'history-model.js', 'picture-map-model.js', 'loop-map-model.js', 'structural-map-model.js', 'structural-dependency-groups.js', 'structural-file-previews.js', 'structural-frontier.js', 'structural-package-stages.js', 'loop-config.js', 'media-model.js']) {
   const destination = join(root, 'viewer', file);
   copyFileSync(join(root, 'dist/query', file), destination);
   if (file === 'loop-map-model.js' || file === 'structural-file-previews.js') writeFileSync(destination, readFileSync(destination, 'utf8').replace('../adapters/markdown-inline.js', './markdown-inline.js'));

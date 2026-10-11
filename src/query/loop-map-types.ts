@@ -21,6 +21,7 @@ export type LoopStage = {
     readonly outgoing: readonly { readonly name: string; readonly description: string; }[];
     readonly interpretation?: LoopInterpretation;
     readonly parentId?: string; readonly childIds?: readonly string[]; readonly descendantNodeIds?: readonly string[];
+    readonly nodeCount?: number; readonly descendantNodeCount?: number;
     readonly scopePaths?: readonly string[];
     readonly directoryPath?: string; readonly folderCount?: number; readonly filePreviews?: readonly LoopFilePreview[];
     readonly headingParts?: readonly string[]; readonly headingRemainder?: number;
@@ -28,9 +29,12 @@ export type LoopStage = {
     readonly summaryDetail?: { readonly label: string; readonly text: string; };
     readonly summaryEvidence?: readonly { readonly path: string; readonly line: number; }[];
 };
-export type LoopFlow = { readonly source: string; readonly target: string; readonly label: string; readonly tone?: 'normal' | 'warning'; readonly auxiliary?: boolean; readonly count?: number; readonly sourceFiles?: readonly string[]; readonly projectSourceFiles?: readonly string[]; };
+export type LoopFlow = { readonly source: string; readonly target: string; readonly label: string; readonly tone?: 'normal' | 'warning'; readonly auxiliary?: boolean; readonly count?: number; readonly projectCount?: number; readonly sourceFiles?: readonly string[]; readonly projectSourceFiles?: readonly string[]; };
 export type LoopDependencyGroup = { readonly id: string; readonly scope: 'production' | 'all'; readonly stageIds: readonly string[]; readonly nodeIds: readonly string[]; readonly folded: boolean; readonly interpretation?: LoopInterpretation; };
+export type LoopDependencyPage = { readonly stageIds: readonly string[]; readonly nodeCounts: Readonly<Record<string, number>>; readonly flows: readonly LoopFlow[]; readonly relatedFlows: readonly LoopFlow[]; readonly actualCycles: readonly (readonly string[])[]; readonly displayFlows: readonly LoopFlow[]; };
 export type LoopMap = {
+    readonly structuralProjection?: 'summary';
+    readonly structuralDependencyPages?: readonly LoopDependencyPage[];
     readonly structuralDependencyGroups?: readonly LoopDependencyGroup[];
     readonly title?: string; readonly subtitle?: string; readonly lead: string;
     readonly verifiedCycleStageGroups?: readonly (readonly string[])[];
@@ -46,7 +50,7 @@ export type LoopMap = {
 };
 export type LoopMapContext = {
     readonly kindLabel?: (kind: string) => string; readonly nodeHref?: (id: string) => string;
-    readonly onEvidence?: () => void; readonly onDetails?: () => void;
+    readonly onEvidence?: () => void; readonly onDetails?: () => void; readonly onMissingNode?: (id: string) => void;
 };
 export type LoopUI = {
     readonly model: LoopMap; readonly context: LoopMapContext; readonly byId: ReadonlyMap<string, LoopNode>;

@@ -6,6 +6,13 @@ import { basename, join, posix, relative, sep } from 'node:path';
 import { promisify } from 'node:util';
 import { inside } from './inputs.mjs';
 
+export class InputSizeError extends Error {
+    constructor(readonly path: string, readonly bytes: number) {
+        super(`Input exceeds 10 MiB: ${path}`);
+        this.name = 'InputSizeError';
+    }
+}
+
 export function git(root: string, args: readonly string[]) {
     return execFileSync('git', ['--no-optional-locks', '-C', root, ...args], { encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'], maxBuffer: 32 * 1024 * 1024 });
 }
@@ -41,7 +48,7 @@ function workingReader(root: string, cachePath: string | undefined, statusText: 
             if (!inside(root, absolute)) throw new Error(`Input resolves outside repository: ${path}`);
             const info = statSync(absolute);
             if (!info.isFile()) return undefined;
-            if (info.size > 10 * 1024 * 1024) throw new Error(`Input exceeds 10 MiB: ${path}`);
+            if (info.size > 10 * 1024 * 1024) throw new InputSizeError(path, info.size);
             return readFileSync(absolute, 'utf8');
         },
     };
@@ -79,7 +86,7 @@ export function historicalRepository(root: string, ref?: string): RepositoryRead
         const cached = prepared.get(id);
         if (cached !== undefined) return cached;
         const size = Number(git(root, ['cat-file', '-s', id]));
-        if (size > 10 * 1024 * 1024) throw new Error(`Input exceeds 10 MiB: ${path}`);
+        if (size > 10 * 1024 * 1024) throw new InputSizeError(path, size);
         const text = git(root, ['cat-file', 'blob', id]);
         prepared.set(id, text);
         return text;
@@ -104,7 +111,7 @@ export function historicalRepository(root: string, ref?: string): RepositoryRead
     };
     return {
         ...identity(root), commit, dirty: false, paths: [...blobs.keys()].sort(),
-        prepare(paths) {
+        prepare(paths, options) {
             const selected = new Map<string, string>();
             for (const path of paths) {
                 const object = resolveBlob(path);
@@ -119,7 +126,10 @@ export function historicalRepository(root: string, ref?: string): RepositoryRead
                 const match = /^([a-f0-9]+) blob (\d+)$/u.exec(line);
                 if (!match?.[1] || match[2] === undefined || !selected.has(match[1])) throw new Error('Invalid historical blob metadata');
                 const size = Number(match[2]);
-                if (size > 10 * 1024 * 1024) throw new Error(`Input exceeds 10 MiB: ${selected.get(match[1])}`);
+                if (size > 10 * 1024 * 1024) {
+                    if (options?.skipOversized) { selected.delete(match[1]); continue; }
+                    throw new InputSizeError(selected.get(match[1]) ?? match[1], size);
+                }
                 sizes.set(match[1], size);
             }
             if (sizes.size !== selected.size) throw new Error('Incomplete historical blob metadata');

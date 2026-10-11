@@ -1,5 +1,5 @@
 import type { DependencyPair, DependencyView, Obstacle, Point } from './dependency-layout.js';
-import { dependencyPort, clearDependencyPort, dependencyPairSources, straightDependencyRoute, dependencyRouteIntersects, selectDependencyRoutes } from './dependency-layout.js';
+import { dependencyCountLabel, dependencyPort, clearDependencyPort, dependencyPairSources, straightDependencyRoute, dependencyRouteIntersects, selectDependencyRoutes } from './dependency-layout.js';
 import { svg } from './loop-map-shared.js';
 
 type ArrowScene = { readonly view: DependencyView; readonly host: HTMLElement; readonly graph: SVGSVGElement; readonly flows: readonly DependencyPair[]; readonly boxes: ReadonlyMap<string, HTMLElement>; };
@@ -73,7 +73,9 @@ export function drawDependencyArrows(scene: ArrowScene): readonly DependencyPair
         const text = svg('text'); text.classList.add('lm-flow-label', 'lm-dependency-label'); text.dataset['route'] = routeId; text.dataset['source'] = flow.source; text.dataset['target'] = flow.target; text.dataset['count'] = String(flow.count ?? 0);
         text.setAttribute('x', String(segment.center.x)); text.setAttribute('y', String(segment.center.y)); text.setAttribute('text-anchor', 'middle'); text.setAttribute('dominant-baseline', 'central'); const actualSources = dependencyPairSources(view, flow);
         const attribution = actualSources.join('·');
-        text.textContent = flow.reverseCount ? `${attribution} → ${flow.count ?? 0}개 파일 · ← ${flow.reverseCount}개 파일` : `${attribution}의 파일 ${flow.count ?? 0}개`;
+        const countLabel = dependencyCountLabel(flow);
+        const reverseLabel = dependencyCountLabel({ ...flow, count: flow.reverseCount ?? 0, projectCount: flow.reverseProjectCount ?? 0, sourceFiles: flow.reverseSourceFiles ?? [], projectSourceFiles: flow.reverseProjectSourceFiles ?? [] });
+        text.textContent = flow.reverseCount ? `${attribution} → ${countLabel} · ← ${reverseLabel}` : `${attribution} · ${countLabel}`;
         graph.append(text); text.dataset['sourceMembers'] = JSON.stringify(actualSources);
         const candidates = points.slice(1).flatMap((point, index) => {
             const before = points[index]; if (!before) return [];
@@ -94,14 +96,14 @@ export function drawDependencyArrows(scene: ArrowScene): readonly DependencyPair
             return undefined;
         };
         let halo = position();
-        if (!halo) { text.textContent = flow.reverseCount ? `→ ${flow.count ?? 0}개 파일 · ← ${flow.reverseCount}개 파일` : `${flow.count ?? 0}개 파일`; halo = position(); }
+        if (!halo) { text.textContent = flow.reverseCount ? `→ ${countLabel} · ← ${reverseLabel}` : countLabel; halo = position(); }
         if (!halo) { graph.dataset['unplacedLabels'] = String(Number(graph.dataset['unplacedLabels'] ?? 0) + 1); text.remove(); path.remove(); continue; }
         labelHalos.push(halo); labeledFlows.push(flow);
         const actualTargets = dependencyPairSources(view, flow, 'target');
         const targetNames = actualTargets.length ? actualTargets : view.stages.filter(stage => stage.id === flow.target).map(stage => stage.title);
         const from = actualSources.join(' · ') || flow.source; const to = targetNames.join(' · ') || flow.target;
         const reverse = { source: flow.target, target: flow.source }; const reverseFrom = dependencyPairSources(view, reverse).join(' · ') || to; const reverseTo = dependencyPairSources(view, reverse, 'target').join(' · ') || from;
-        const titleText = `${from} → ${to} (${from}의 파일 ${flow.count ?? 0}개가 ${to}를 씀)${flow.reverseCount ? `; ${reverseFrom} → ${reverseTo} (${reverseFrom}의 파일 ${flow.reverseCount}개가 ${reverseTo}를 씀)` : ''}`;
+        const titleText = `${from} → ${to} (${from}에서 사용: ${countLabel})${flow.reverseCount ? `; ${reverseFrom} → ${reverseTo} (${reverseFrom}에서 사용: ${reverseLabel})` : ''}`;
         const title = svg('title'); title.textContent = titleText; path.append(title); const labelTitle = svg('title'); labelTitle.textContent = titleText; text.append(labelTitle); graph.append(text);
     }
     return labeledFlows;

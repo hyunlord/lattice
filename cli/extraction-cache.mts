@@ -17,6 +17,10 @@ function implementationFingerprint() {
         }
     }
     visit(root, '');
+    const cliRoot = fileURLToPath(new URL('.', import.meta.url));
+    for (const entry of readdirSync(cliRoot, { withFileTypes: true })) {
+        if (entry.isFile() && /^logic-.*\.mjs$/u.test(entry.name)) sources.push({ path: `cli/${entry.name}`, hash: digest(readFileSync(join(cliRoot, entry.name), 'utf8')) });
+    }
     sources.sort((left, right) => left.path < right.path ? -1 : left.path > right.path ? 1 : 0);
     const manifest: unknown = JSON.parse(readFileSync(new URL('../package.json', import.meta.url), 'utf8'));
     return digest(canonicalJson({ sources, dependencies: object(manifest) ? manifest['dependencies'] ?? {} : {} }));

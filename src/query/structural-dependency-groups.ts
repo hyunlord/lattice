@@ -66,3 +66,21 @@ export function overviewDependencyGroups(model: Structure & { readonly rootStage
         return groups;
     });
 }
+
+/** Collapse displayed dependency groups while the original importing-file sets are still available. */
+export function displayedFlowProjection(view: { readonly stages: readonly LoopStage[]; readonly flows: readonly LoopFlow[]; readonly actualCycles?: readonly (readonly string[])[]; }): readonly LoopFlow[] {
+    const levels = dependencyComponents(view), owner = new Map(levels.flatMap((group, index) => group.stages.map(stage => [stage.id, index] as const)));
+    const projected = new Map<string, LoopFlow>();
+    for (const flow of view.flows) {
+        const sourceGroup = owner.get(flow.source), targetGroup = owner.get(flow.target);
+        if (sourceGroup !== undefined && sourceGroup === targetGroup) continue;
+        const source = sourceGroup === undefined ? flow.source : levels[sourceGroup]?.stages[0]?.id ?? flow.source;
+        const target = targetGroup === undefined ? flow.target : levels[targetGroup]?.stages[0]?.id ?? flow.target;
+        const key = JSON.stringify([source, target]), previous = projected.get(key);
+        const sourceFiles = [...new Set([...(previous?.sourceFiles ?? []), ...(flow.sourceFiles ?? [])])].sort();
+        const count = sourceFiles.length || (previous?.count ?? 0) + (flow.count ?? 0);
+        const projectSourceFiles = [...new Set([...(previous?.projectSourceFiles ?? []), ...(flow.projectSourceFiles ?? [])])].sort();
+        projected.set(key, { ...flow, source, target, count, sourceFiles, projectSourceFiles, label: `${count}개 연결 근거` });
+    }
+    return [...projected.values()];
+}

@@ -6,6 +6,7 @@ import { isAbsolute, relative, sep } from 'node:path';
 import { extractTypeScriptConfig, typeScriptConfigPaths, extractJson, extractYaml, extractCsv, extractMarkdown, extractCode, codeLanguage, DataInputError } from '../dist/index.js';
 import { createGlobMatcher, matchesGlob } from '../dist/lens/index.js';
 import { extractPackageDescription, packageDescriptionPath } from '../dist/index.js';
+import { buildManifestPath } from '../dist/adapters/build-manifests.js';
 
 function isRecordValue(value: JsonValue): value is JsonObject {
     return value !== null && typeof value === 'object' && !Array.isArray(value);
@@ -31,7 +32,7 @@ export function selectedInputs(paths: readonly string[], lens?: Lens) {
         if (lens && kinds.length === 0) continue;
         if (new Set(kinds.map(kind => kind.records ?? '')).size !== kinds.length) throw new Error(`Ambiguous kind patterns: ${path}`);
         const language = codeLanguage(path);
-        const format = language ? 'code' : /\.(json|yaml|yml|csv|md|markdown)$/iu.exec(path)?.[1]?.toLowerCase() ?? (!lens && packageDescriptionPath(path) ? 'package-metadata' : undefined);
+        const format = !lens && /^(?:README|README\.rst)$/iu.test(path) ? 'md' : language ? 'code' : /\.(json|yaml|yml|csv|md|markdown)$/iu.exec(path)?.[1]?.toLowerCase() ?? (!lens && packageDescriptionPath(path) ? 'package-metadata' : !lens && buildManifestPath(path) ? 'build-manifest' : undefined);
         if (!format) {
             if (lens) throw new Error(`No adapter for selected input: ${path}`);
             continue;
@@ -54,8 +55,9 @@ export function collectInputs({ selected, lens, sourceLink, cache }: { readonly 
             const parseDescription = (): MarkdownDocument => { const description = extractPackageDescription(input); return { nodes: description ? [description] : [], edges: [], links: [] }; };
             const doc = format === 'package-metadata' ? cache.extract(input, { format, selector: '' }, parseDescription, parseDocument) : parseDescription();
             documents.push({ ...doc, nodes: doc.nodes.map(node => ({ ...node, sources: node.sources.map(sourceLink) })) });
-            if (format === 'package-metadata') continue;
+            if (format === 'package-metadata' || format === 'build-manifest') continue;
         }
+        if (format === 'build-manifest') continue;
         let namespace: string | undefined, namespaceSource: Source | undefined;
         if (kind?.namespaceFrom !== undefined) {
             const pointer = kind.namespaceFrom;

@@ -8,7 +8,7 @@ import { basename, relative, resolve, sep } from 'node:path';
 import { canonicalJson } from '../dist/index.js';
 import { createGlobMatcher, parseLens } from '../dist/lens/index.js';
 import { inside, inInputScope, selectedInputs } from './inputs.mjs';
-import { workingRepository, workingRepositoryAsync } from './repository.mjs';
+import { InputSizeError, workingRepository, workingRepositoryAsync } from './repository.mjs';
 import { digest } from './storage.mjs';
 import { interpretationDirectory } from './interpretation-paths.mjs';
 import { regular } from './init-files.mjs';
@@ -46,13 +46,20 @@ function observeInputs(options: Options, repository: RepositoryReader, historica
     };
     plans.set(options, plan);
     const coverage = !lens ? 'no-lens' : historical ? historicalText === undefined ? 'current-lens-projection' : 'repository-lens' : inside(root, lensPath) ? 'repository-lens' : 'current-lens-projection';
-    repository.prepare?.([...plan.selected.map(selection => selection.path), ...plan.codePaths]);
+    repository.prepare?.([...plan.selected.map(selection => selection.path), ...plan.codePaths], { skipOversized: !lens });
+    const inputDiagnostics: { readonly code: 'oversized-input'; readonly path: string; readonly line: number; readonly bytes: number; readonly message: string; }[] = [];
     const selected: SelectedInput[] = [];
     const contents = new Map<string, SourceInput | undefined>();
     const readInput = (path: string) => {
         if (!contents.has(path)) {
-            const text = repository.readText(path);
-            contents.set(path, text === undefined ? undefined : { path, text, contentHash: digest(text) });
+            try {
+                const text = repository.readText(path);
+                contents.set(path, text === undefined ? undefined : { path, text, contentHash: digest(text) });
+            } catch (error) {
+                if (lens || !(error instanceof InputSizeError)) throw error;
+                inputDiagnostics.push({ code: 'oversized-input', path, line: 1, bytes: error.bytes, message: `${path}: ${error.bytes} bytes exceed the 10 MiB analysis limit; source is not analyzed.` });
+                contents.set(path, undefined);
+            }
         }
         return contents.get(path);
     };
@@ -81,8 +88,8 @@ function observeInputs(options: Options, repository: RepositoryReader, historica
     });
     const mediaConfig = parseMediaConfig(object(lens?.config['presentation']) ? lens.config['presentation']['media'] : undefined);
     const mediaCandidates = mediaConfig.field ? repository.paths.filter(path => /\.(png|jpe?g|webp|gif|svg|avif)$/iu.test(path)).map(path => ({ id: path, attributes: { [mediaConfig.field ?? '']: path } })) : [];
-    const fingerprint = digest(canonicalJson({ repository: { name: repository.name, remoteUrl: repository.remoteUrl ?? null, commit: repository.commit ?? null, dirty: repository.dirty }, lens: lensInput ?? null, interpretations, draftInterpretations, media: historical ? null : mediaFingerprint(root, mediaConfig, mediaCandidates), inputs: selected.map(({ input }) => ({ path: input.path, contentHash: input.contentHash })), ...(lens?.codeLinks.length ? { codeInputs: codeInputs.map(({ path, contentHash }) => ({ path, contentHash })) } : {}), ...(graft ? { graft: graft.input ? { path: graft.input.path, contentHash: graft.input.contentHash } : graft.diagnostic } : {}) }));
-    return { repository, lens, lensInput, coverage, selected, codeInputs, fingerprint, graft };
+    const fingerprint = digest(canonicalJson({ repository: { name: repository.name, remoteUrl: repository.remoteUrl ?? null, commit: repository.commit ?? null, dirty: repository.dirty }, lens: lensInput ?? null, inputDiagnostics, interpretations, draftInterpretations, media: historical ? null : mediaFingerprint(root, mediaConfig, mediaCandidates), inputs: selected.map(({ input }) => ({ path: input.path, contentHash: input.contentHash })), ...(lens?.codeLinks.length ? { codeInputs: codeInputs.map(({ path, contentHash }) => ({ path, contentHash })) } : {}), ...(graft ? { graft: graft.input ? { path: graft.input.path, contentHash: graft.input.contentHash } : graft.diagnostic } : {}) }));
+    return { repository, lens, lensInput, coverage, selected, codeInputs, fingerprint, graft, inputDiagnostics };
 }
 
 function verifyObservation(before: RepositoryReader, after: RepositoryReader) {

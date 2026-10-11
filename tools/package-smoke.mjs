@@ -1,3 +1,4 @@
+import { verifyInstalledLogic } from './logic-smoke.mjs';
 import { verifyMcp } from './mcp-smoke.mjs';
 import { verifyInit } from './init-smoke.mjs';
 import { verifyCodeLinks } from './code-links-smoke.mjs';
@@ -37,7 +38,7 @@ try {
   writeFileSync(join(temporary, 'package.json'), JSON.stringify({ private: true, type: 'module' }));
   execFileSync('npm', ['install', '--ignore-scripts', '--no-audit', '--no-fund', join(temporary, entry.filename)], { cwd: temporary, stdio: 'pipe' });
   const manifest = JSON.parse(readFileSync(join(temporary, 'node_modules/@hyunlord/lattice/package.json'), 'utf8'));
-  assert.deepEqual(manifest.dependencies, {yaml:'2.9.1'});
+  assert.deepEqual(manifest.dependencies, { 'tree-sitter-wasms': '0.1.13', 'web-tree-sitter': '0.25.10', yaml: '2.9.1' });
   const output = execFileSync(process.execPath, ['--input-type=module', '-e', `
     import assert from 'node:assert/strict';
     import { createHash } from 'node:crypto';
@@ -80,6 +81,7 @@ try {
   writeFileSync(join(repository, 'job.py'), 'from pkg import worker\nimport pkg.worker as worker_alias\n');
   writeFileSync(join(repository, 'Worker.cs'), 'public class Worker {}\n');
   const cli = join(temporary, 'node_modules/@hyunlord/lattice/bin/lattice.mjs');
+  verifyInstalledLogic(cli, join(temporary, 'logic'));
   const run = args => execFileSync(process.execPath, [cli, ...args, '--root', repository], {encoding:'utf8'});
   run(['build']);
   const graphPath = join(repository, '.lattice/cache/graph.json');
