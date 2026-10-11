@@ -1,3 +1,5 @@
+import { createNodeDetailLoader } from './node-detail-data.js';
+import { renderNodeDetail } from './node-detail.js';
 import { loopRouteEvent } from './loop-map-route.js';
 import { createOverviewLoader, type Overview } from './overview-data.js';
 import type { LoopMap } from './loop-map-types.js';
@@ -143,8 +145,8 @@ function findingView(finding: Finding, compact = false) {
     }
     if (finding.targetIds.length) {
         const detail = el('details'); detail.append(el('summary', '관련 노드 ' + finding.targetIds.length + '개'));
-        const targets = el('ul', undefined, 'neighbors');
-        for (const id of finding.targetIds) { const item = el('li'); item.append(link(nodes.get(id)?.name || id, nodeHref(id))); targets.append(item); }
+        const targets = el('div');
+        const drawTargets = (page: number) => { targets.replaceChildren(); const list = el('ul', undefined, 'neighbors'); for (const id of finding.targetIds.slice(page * 100, (page + 1) * 100)) { const item = el('li'); item.append(link(nodes.get(id)?.name || id, nodeHref(id))); list.append(item); } targets.append(list); if (finding.targetIds.length > 100) pager(targets, { total: finding.targetIds.length, page, size: 100, change: drawTargets }); }; drawTargets(0);
         detail.append(targets); article.append(detail);
     }
     if (sourceCount(finding.sources)) {
@@ -311,6 +313,7 @@ async function mountFunctionLogic(host: HTMLElement, id: string): Promise<void> 
     const [provider, ui] = await Promise.all([logicProvider(), import('./logic.js')]);
     if (section.isConnected) ui.renderFunctionLogic(section, provider, id, logicContext);
 }
+let nodeDetailLoader: ReturnType<typeof createNodeDetailLoader> | undefined;
 let routeRequest = 0;
 let homeDeferred = false;
 let loadedHomeRoute = '';
@@ -327,6 +330,25 @@ async function route(): Promise<void> {
             else if (path.startsWith('/flow/')) ui.renderLogicFlow(main, provider, decodeURIComponent(path.slice(6)), logicContext, Math.min(10, Math.max(1, Number(params.get('depth')) || 3)));
             else ui.renderFunctionLogic(main, provider, decodeURIComponent(path.slice(10)), logicContext);
             document.title = '로직 구조 · Lattice'; return;
+        }
+        if (path.startsWith('/node/') && firstOverview && !fullGraphLoaded) {
+            nodeDetailLoader ??= createNodeDetailLoader(firstOverview, suffix);
+            const index = await nodeDetailLoader.index();
+            if (index) {
+                const id = decodeURIComponent(path.slice(6));
+                const [record, presentationResponse, snapshotResponse] = await Promise.all([nodeDetailLoader.node(index, id), fetch('./presentation.json' + suffix), fetch('./snapshots.json' + suffix)]);
+                const localPresentation = parsePresentation(presentationResponse.ok ? await presentationResponse.json() : {});
+                const localSnapshots = snapshotResponse.ok ? parseSnapshots(await snapshotResponse.json()) : [];
+                if (request !== routeRequest) return;
+                const version = ++renderVersion; disposeScreen?.(); disposeScreen = undefined; main.replaceChildren(); homeDeferred = false; document.body.classList.remove('picture-home');
+                if (!record) { pageHeading('노드를 찾을 수 없습니다', id); main.append(link('지도로 돌아가기', routeHref('/home'))); return; }
+                renderNodeDetail(main, {
+                    loader: nodeDetailLoader, index, record, presentation: localPresentation, snapshots: localSnapshots, params, current: () => version === renderVersion,
+                    nodeHref, homeHref: (item, layer) => '#/home?' + new URLSearchParams({ view: 'focus', item, layer }), sources, finding: item => findingView(item, true), kindLabel: kind => localPresentation.kinds.find(item => item.id === kind)?.label ?? kindLabel(kind), layerLabel, facetLabel: key => localPresentation.facets?.[key]?.label ?? key, valueLabel: (key, value) => localPresentation.facets?.[key]?.values?.[display(value)] ?? display(value),
+                    functionLogic: (host, item) => { void mountFunctionLogic(host, item); }
+                });
+                document.title = `${record.graph.nodes[0]?.name ?? '항목'} · Lattice`; main.querySelector('h1')?.focus({ preventScroll: true }); window.scrollTo(0, 0); return;
+            }
         }
         if (path === '/home' && firstOverview) {
             const data = firstOverview, layer = data.layers.find(item => item.id === (params.get('layer') ?? data.defaultLayer)) ?? data.layers[0];
