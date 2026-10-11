@@ -23,8 +23,8 @@ export const structuralCategoryLabel = (node: Node): string => `${node.attribute
 export const missingStructuralRole = '역할 설명 없음 — 요약 실행 필요';
 const sentence = (value: string): string => value.replace(/\s+/gu, ' ').trim().split(/(?<=[.!?。])\s/u)[0] ?? '';
 
-function folderDocument(members: readonly Node[], documents: readonly Node[], path: string, primaryRoot?: string): Node | undefined {
-    const intro = structuralSummary([], documents, '.');
+function folderDocument(members: readonly Node[], documents: readonly Node[], path: string, primaryRoot?: string, rootIntro?: string): Node | undefined {
+    const intro = rootIntro ?? structuralSummary([], documents, '.');
     const direct = members.filter(node => folder(node) === path && productionSource(node.sources[0]?.path ?? node.name));
     const module = direct.filter(node => {
         if (descriptionKind(node) !== 'module-doc' || !descriptionText(node) || sentence(descriptionText(node)) === intro) return false;
@@ -140,13 +140,18 @@ export function buildStructuralMap(nodes: readonly Node[], edges: readonly Edge[
     const directories = new Set([...paths.values(), ...packages.values(), '.']);
     for (const path of [...directories]) { let p = path; while (p !== '.') { p = parent(p); directories.add(p); } }
     const source = sourceRoot(sourceNodes);
+    const populatedDirectories = new Set(paths.values()), parentDirectories = new Set([...directories].filter(path => path !== '.').map(parent));
+    const membersByFolder = new Map<string, Node[]>(), documentsByFolder = new Map<string, Node[]>();
+    for (const node of sourceNodes) { const path = paths.get(node.id) ?? '.'; const members = membersByFolder.get(path) ?? []; members.push(node); membersByFolder.set(path, members); }
+    const documents = nodes.filter(node => node.kind === 'document'), intro = structuralSummary([], documents, '.');
+    for (const node of documents) { const path = folder(node), list = documentsByFolder.get(path) ?? []; list.push(node); documentsByFolder.set(path, list); }
     const grouped = new Map<string, { source: string; target: string; files: Set<string>; projectFiles: Set<string>; }>();
     for (const edge of edges) {
         if (edge.kind !== 'imports') continue;
         const from = paths.get(edge.source), file = byId.get(edge.source)?.sources[0]?.path;
         const to = paths.get(edge.target) ?? packages.get(edge.target);
         if (!from || !to || !file) continue;
-        const packageTarget = packages.has(edge.target) && !sourceNodes.some(node => paths.get(node.id) === to) && [...directories].some(path => parent(path) === to && path !== to);
+        const packageTarget = packages.has(edge.target) && !populatedDirectories.has(to) && parentDirectories.has(to);
         const target = `${packageTarget ? 'directory' : 'folder'}:${to}`, origin = `folder:${from}`;
         if (origin === target) continue;
         const key = JSON.stringify([origin, target]);
@@ -155,7 +160,7 @@ export function buildStructuralMap(nodes: readonly Node[], edges: readonly Edge[
     }
     const flows: LoopFlow[] = [...grouped.values()].map(value => ({ source: value.source, target: value.target, count: value.files.size, sourceFiles: [...value.files].sort(), ...(value.projectFiles.size ? { projectSourceFiles: [...value.projectFiles].sort() } : {}), label: [value.files.size > value.projectFiles.size ? `${value.files.size - value.projectFiles.size}개 파일 사용` : '', value.projectFiles.size ? `프로젝트 선언 ${value.projectFiles.size}개` : ''].filter(Boolean).join(' · ') }));
     const stages: LoopStage[] = [...directories].sort().map(path => {
-        const members = sourceNodes.filter(node => paths.get(node.id) === path), doc = folderDocument(members, nodes, path, source);
+        const members = membersByFolder.get(path) ?? [], doc = folderDocument(members, documentsByFolder.get(path) ?? [], path, source, intro);
         const text = doc ? sentence(descriptionText(doc)) : missingStructuralRole;
         const value = doc?.attributes['sourceDescription'];
         const line: unknown = value && typeof value === 'object' ? Reflect.get(value, 'line') : undefined;
@@ -169,7 +174,8 @@ export function buildStructuralMap(nodes: readonly Node[], edges: readonly Edge[
     }).map(folder));
     if (!entryPaths.size && sourceNodes.some(node => folder(node) === source)) entryPaths.add(source);
     const entries = [...entryPaths].sort().map(path => `folder:${path}`);
-    const previewStages = frontier.rootStageIds.length <= 2 ? frontier.stages.map(stage => stage.nodeIds.length ? { ...stage, filePreviews: structuralFilePreviews(sourceNodes.filter(node => stage.nodeIds.includes(node.id)), edges) } : stage) : frontier.stages;
+    const sourceById = new Map(sourceNodes.map(node => [node.id, node]));
+    const previewStages = frontier.rootStageIds.length <= 2 ? frontier.stages.map(stage => stage.nodeIds.length ? { ...stage, filePreviews: structuralFilePreviews(stage.nodeIds.flatMap(id => sourceById.get(id) ?? []), edges) } : stage) : frontier.stages;
     return { ...frontier, stages: previewStages, flows, structuralSourceRoot: source, structuralEntryStageIds: entries, verifiedCycleStageGroups: verifiedCycles(nodes, edges) };
 }
 

@@ -69,7 +69,7 @@ export function manifestStructuralMap(nodes: readonly Node[], edges: readonly Ed
         }
     }
     const members = new Map<string, Node[]>();
-    for (const source of sources) { const id = owner.get(source.id); if (id) members.set(id, [...(members.get(id) ?? []), source]); }
+    for (const source of sources) { const id = owner.get(source.id); if (id) { const list = members.get(id) ?? []; list.push(source); members.set(id, list); } }
     const remaining = nodes.filter(node => !manifestPackage(node) && !owner.has(node.id));
     const folders = fallback(remaining, edges);
     const stageOwner = new Map<string, string>([...owner].map(([id, pkg]) => [id, `manifest:${pkg}`]));
