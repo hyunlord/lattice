@@ -343,3 +343,14 @@ test('horizontal member labels fit vertical routes by height, without discarding
     assert.equal(dependencyLabelFitsSegment({ width: 140, height: 14 }, { vertical: false, length: 43 }), false);
     assert.equal(dependencyLabelFitsSegment({ width: 140, height: 14 }, { vertical: true, length: 20 }), false);
 });
+
+test('overview keeps connected package layers intact and places isolated tools afterward', async () => {
+    const { dependencyOverviewLevels } = await import('../viewer/dependency-layout.js');
+    const view = { stages: [stage('app'), stage('base'), stage('tool')], flows: [{ source: 'app', target: 'base', count: 1 }] };
+    const original = dependencyLevels(view), overview = dependencyOverviewLevels(view);
+    const level = (groups, id) => groups.find(group => group.stages.some(s => s.id === id)).level;
+    assert.equal(level(overview, 'app'), level(original, 'app'));
+    assert.equal(level(overview, 'base'), level(original, 'base'));
+    assert(level(overview, 'tool') > level(overview, 'base'));
+    assert.deepEqual(dependencyOverviewLevels({ ...view, flows: [] }), dependencyLevels({ ...view, flows: [] }));
+});

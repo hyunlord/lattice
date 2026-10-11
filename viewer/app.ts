@@ -160,7 +160,8 @@ function overview(version: number) {
     });
 }
 function home(model?: LoopMap) {
-    for (const limitation of firstOverview?.limitations ?? []) { const language = limitation.language === 'cpp' ? 'C++' : limitation.language === 'c' ? 'C' : limitation.language; main.append(el('p', `${language} 파일 ${limitation.fileCount}개: 구조·호출 분석은 지원하지 않습니다. 파일 위치만 표시합니다.`, 'panel unsupported-language')); }
+    const limitations = firstOverview?.limitations ?? [];
+    if (limitations.length) { const labels = limitations.map(limitation => `${limitation.language === 'cpp' ? 'C++' : limitation.language === 'c' ? 'C' : limitation.language} 파일 ${limitation.fileCount}개`); main.append(el('p', `${labels.join(' · ')}: 구조·호출 분석은 지원하지 않습니다. 파일 위치만 표시합니다.`, 'panel unsupported-language')); }
     const evidence = el('section', undefined, 'picture-evidence'); evidence.hidden = true;
     const details = el('nav', undefined, 'picture-deeper'); details.hidden = true; details.setAttribute('aria-label', '자세히');
     for (const [label, path] of [['실행 진입점과 흐름', '/logic'], ['발견과 요약', '/overview'], ['목록', '/list'], ['행렬과 상태판', '/views'], ['관계 탐색', '/explore'], ['변화', '/changes']]) if (label && path) details.append(link(label, routeHref(path)));

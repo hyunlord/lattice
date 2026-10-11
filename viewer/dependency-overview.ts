@@ -1,7 +1,7 @@
 import type { LoopStage, LoopUI } from './loop-map-types.js';
 import { anchor, chip, element, interpretation, svg } from './loop-map-shared.js';
 import { readLoopRoute, writeLoopRoute } from './loop-map-route.js';
-import { dependencyFlowDescription, dependencyCoverage, dependencyCardRole, featuredDependencyRoles, internalDependencyFacts, dependencyLevels, dependencyView, displayedDependencyFlows, dependencyHeadingParts } from './dependency-layout.js';
+import { dependencyFlowDescription, dependencyCoverage, dependencyCardRole, featuredDependencyRoles, internalDependencyFacts, dependencyOverviewLevels, dependencyView, displayedDependencyFlows, dependencyHeadingParts } from './dependency-layout.js';
 import { drawDependencyArrows } from './dependency-arrows.js';
 
 function pathText<K extends keyof HTMLElementTagNameMap>(tag: K, value: string, className = ''): HTMLElementTagNameMap[K] {
@@ -68,7 +68,8 @@ export function renderDependencyOverview(host: HTMLElement, ui: LoopUI): () => v
         if (flat) connections.append(element('p', '파일 미리보기는 명시된 진입점, 파일 안의 공개 이름 출현 수, 파일명 순으로 고릅니다. 파일 간 의존 유무를 판정하는 표시는 아닙니다.'));
         const connectionList = element('ul', '', 'lm-influence'); for (const flow of view.flows) { const item = element('li'); item.append(pathText('span', byId.get(flow.source)?.title ?? flow.source), document.createTextNode(' → '), pathText('span', byId.get(flow.target)?.title ?? flow.target), document.createTextNode(` — ${dependencyFlowDescription(flow)}`)); connectionList.append(item); } connections.append(connectionList);
 
-        const levels = dependencyLevels(view); const boxes = new Map<string, HTMLElement>();
+        const levels = dependencyOverviewLevels(view);
+        const boxes = new Map<string, HTMLElement>();
         const probe = pathTitle(''); probe.classList.add('lm-member-title'); const probeBox = element('div', '', 'lm-station'); probeBox.append(probe); diagram.append(probeBox); const titleFont = getComputedStyle(probe).font; probeBox.remove(); const measure = document.createElement('canvas').getContext('2d'); if (measure) measure.font = titleFont; const dependencyProbe = element('p', '', 'lm-card-dependencies'); diagram.append(dependencyProbe); const dependencyFont = getComputedStyle(dependencyProbe).font; dependencyProbe.remove(); const dependencyMeasure = document.createElement('canvas').getContext('2d'); if (dependencyMeasure) dependencyMeasure.font = dependencyFont;
         roles.replaceChildren(roleHint);
         const entryIds = view.stages.filter(stage => model.structuralEntryStageIds?.some(id => { let current: string | undefined = id; while (current) { if (current === stage.id) return true; current = byId.get(current)?.parentId; } return false; })).map(stage => stage.id);
@@ -81,7 +82,7 @@ export function renderDependencyOverview(host: HTMLElement, ui: LoopUI): () => v
 
         for (const stage of [...featured, ...remaining]) { const role = element('section', '', 'lm-dependency-role'); role.dataset['roleStage'] = stage.id; role.classList.toggle('lm-featured-role', curated && featuredIds.has(stage.id)); const choose = element('button'); appendPathParts(choose, dependencyHeadingParts(stage, view.stages)); choose.type = 'button'; choose.title = `${stage.title} — 전체 설명 보기`; choose.onclick = () => { selected = stage.id; render(); saveRoute(); }; const heading = element('div', '', 'lm-role-heading'); heading.append(choose); role.append(heading); const facts = summaryFacts(stage); if (facts.length) for (const fact of facts) role.append(element('span', fact.label, 'lm-role-source'), element('p', fact.text, 'lm-role-description')); else role.append(element('p', stage.summary || '설명 근거가 아직 없습니다.', 'lm-role-description')); if (stage.summaryEvidence?.length) { const evidence = element('details', '', 'lm-role-evidence'); evidence.append(element('summary', '근거')); for (const source of stage.summaryEvidence) evidence.append(pathText('span', `${source.path}${source.line ? `:${source.line}` : ''}`)); heading.append(evidence); } const ai = interpretation(stage.interpretation); if (ai) { ai.classList.add('lm-role-ai'); role.append(ai); } (featuredIds.has(stage.id) ? roles : moreRoles).append(role); }
         if (remaining.length) roles.append(moreRoles);
-        for (const level of [...new Set(levels.map(group => group.level))]) {
+        for (const level of [...new Set(levels.map(group => group.level))].sort((a, b) => a - b)) {
             const row = element('div', '', 'lm-dependency-level'); row.dataset['level'] = String(level); const groups = levels.filter(group => group.level === level);
             for (const group of groups) {
                 const region = element('div', '', `lm-dependency-group${group.cyclic ? ' lm-dependency-cycle' : group.foldedCycle ? ' lm-dependency-aggregate' : ''}`); if (inlineRoles) { region.style.setProperty('--lm-member-basis', group.stages.length > 3 ? '200px' : '150px'); region.style.flexGrow = String(group.stages.length); region.style.minWidth = group.stages.length > 1 ? `${(group.stages.length > 3 ? 3 : 2) * 150 + 40}px` : '150px'; } if (group.cyclic || group.foldedCycle) region.append(element('div', '상호 참조 · 이 카드 → 사용하는 폴더 (파일 수)', 'lm-cycle-caption'));
@@ -128,7 +129,7 @@ export function renderDependencyOverview(host: HTMLElement, ui: LoopUI): () => v
                             const item = element('li'); const open = element('button', file.name, 'lm-file-open'); open.type = 'button'; open.title = file.name; open.dataset['node'] = file.id; open.onclick = () => ui.openFocus(file.id); item.append(open, element('p', file.summary, 'lm-file-role'));
                             if (file.definition && !(file.summary.includes(file.definition.name) && file.summary.includes(file.definition.summary)) && (!file.interpretation || file.interpretation.stale)) item.append(element('p', `정의: ${file.definition.name} — ${file.definition.summary}`, 'lm-file-definition'));
                             if (file.references?.length) {
-                                const references = element('div', '', 'lm-file-references'); references.append(element('span', '이 파일이 타입을 참조 →', 'lm-role-source'));
+                                const references = element('details', '', 'lm-file-references'); references.append(element('summary', `참조하는 파일 ${file.references.length}개`, 'lm-role-source'));
                                 const referenceEvidence = element('details', '', 'lm-file-evidence'); referenceEvidence.append(element('summary', '타입 참조 근거'));
                                 for (const reference of file.references) {
                                     const row = element('p', '', 'lm-file-reference'); row.dataset['target'] = reference.targetId; const target = element('button', reference.targetName, 'lm-file-reference-target'); target.type = 'button'; target.onclick = () => ui.openFocus(reference.targetId); row.append(target, document.createTextNode(` (${reference.names.join(' · ')})`)); references.append(row);

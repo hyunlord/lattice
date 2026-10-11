@@ -81,6 +81,14 @@ export function orthogonalRoute(start: Point, end: Point, space: RouteSpace): re
 
 export const dependencyLevels = dependencyComponents;
 
+/** Unconnected sources remain visible after the connected architecture. */
+export function dependencyOverviewLevels(view: DependencyView): ReturnType<typeof dependencyLevels> {
+    const levels = dependencyLevels(view), connected = new Set(view.flows.flatMap(flow => [flow.source, flow.target]));
+    const last = Math.max(-1, ...levels.filter(group => group.stages.some(stage => connected.has(stage.id))).map(group => group.level));
+    return levels.map(group => last >= 0 && group.stages.every(stage => !connected.has(stage.id)) ? { ...group, level: last + 1 } : group);
+}
+
+
 export type DependencyPair = LoopFlow & { readonly reverseCount?: number; readonly reverseSourceFiles?: readonly string[]; readonly reverseProjectSourceFiles?: readonly string[]; readonly weight: number; };
 export function dependencyPairs(flows: readonly LoopFlow[]): readonly DependencyPair[] {
     const pairs = new Map<string, DependencyPair>();
