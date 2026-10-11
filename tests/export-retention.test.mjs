@@ -1,0 +1,33 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { execFileSync } from 'node:child_process';
+import { mkdtempSync, realpathSync, writeFileSync, readFileSync, readdirSync, rmSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join, relative } from 'node:path';
+import { buildRepository } from '../bin/build.mjs';
+import { persistBuild } from '../bin/storage.mjs';
+import { exportSite } from '../bin/export.mjs';
+
+test('static export keeps shared evidence deterministic and preserves the previous site on snapshot tampering', t => {
+    const root = realpathSync(mkdtempSync(join(tmpdir(), 'lattice-export-retention-'))), output = root + '-site';
+    t.after(() => { rmSync(root, { recursive: true, force: true }); rmSync(output, { recursive: true, force: true }); });
+    execFileSync('git', ['init', '-q', root]);
+    writeFileSync(join(root, '.gitignore'), '.lattice/\n');
+    writeFileSync(join(root, 'module.js'), 'export function run() { return 1; }\n');
+    execFileSync('git', ['-C', root, 'add', '.']);
+    execFileSync('git', ['-C', root, '-c', 'user.name=Test', '-c', 'user.email=test@example.invalid', 'commit', '-qm', 'fixture']);
+    persistBuild(root, buildRepository({ root }), undefined, { memoize: false });
+    const options = { root, output, json: true };
+    exportSite(options);
+    const files = () => readdirSync(output, { recursive: true, withFileTypes: true }).filter(entry => entry.isFile()).map(entry => relative(output, join(entry.parentPath, entry.name))).sort();
+    const first = files().map(path => [path, readFileSync(join(output, path), 'utf8')]);
+    exportSite(options);
+    assert.deepEqual(files().map(path => [path, readFileSync(join(output, path), 'utf8')]), first);
+    const catalog = JSON.parse(readFileSync(join(root, '.lattice/cache/snapshots.json'), 'utf8'));
+    assert.equal(catalog.length, 1);
+    const path = join(root, '.lattice/cache', catalog[0].artifactPath);
+    const snapshot = JSON.parse(readFileSync(path, 'utf8')); snapshot.hash = '0'.repeat(64);
+    writeFileSync(path, JSON.stringify(snapshot));
+    assert.throws(() => exportSite(options), /Graph hash mismatch/u);
+    assert.deepEqual(files().map(path => [path, readFileSync(join(output, path), 'utf8')]), first);
+});

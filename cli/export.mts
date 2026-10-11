@@ -70,8 +70,7 @@ export function exportSite(options: Options) {
     let hash: string;
     try {
         for (const file of ['index.html', 'styles.css', ...readdirSync(join(packageRoot, 'viewer')).filter(file => (file.endsWith('.js') || file.endsWith('.css')))]) copyFileSync(join(packageRoot, 'viewer', file), join(staging, file));
-        const written = new Set<string>();
-        const writeEvidence = (path: string, text: string) => { if (written.has(path)) return; mkdirSync(dirname(join(staging, path)), { recursive: true }); writeFileSync(join(staging, path), text); written.add(path); };
+        const writeEvidence = (path: string, text: string) => { const target = join(staging, path); if (existsSync(target)) return; mkdirSync(dirname(target), { recursive: true }); writeFileSync(target, text); };
         hash = exportCurrentGraph(cache, staging, options.root, presentation, writeEvidence);
         const snapshots = readSnapshots(cache, {
             memoize: false, onGraph: (snapshot, graph) => {
