@@ -39,3 +39,17 @@ test('neutral folder pages retain parent and restore without selecting an item',
         assert.equal(readLoopRoute().page, undefined);
     } finally { globalThis.location = previousLocation; globalThis.history = previousHistory; }
 });
+test('programmatic and keyboard routes notify hydration once without requiring a mouse click', () => {
+    const prior = { location: globalThis.location, history: globalThis.history, dispatchEvent: globalThis.dispatchEvent };
+    const target = new EventTarget(), observed = [];
+    globalThis.location = { hash: '#/home?view=catalog' };
+    globalThis.history = { pushState: (_state, _unused, hash) => { location.hash = hash; } };
+    globalThis.dispatchEvent = event => target.dispatchEvent(event);
+    target.addEventListener('lattice:route', () => observed.push(readLoopRoute()));
+    try {
+        writeLoopRoute({ view: 'focus', item: 'module:neighbor' });
+        assert.deepEqual(observed, [{ view: 'focus', item: 'module:neighbor' }]);
+        writeLoopRoute({ view: 'focus', item: 'module:neighbor' });
+        assert.equal(observed.length, 1);
+    } finally { Object.assign(globalThis, prior); }
+});

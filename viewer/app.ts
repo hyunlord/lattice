@@ -1,3 +1,4 @@
+import { loopRouteEvent } from './loop-map-route.js';
 import { createOverviewLoader, type Overview } from './overview-data.js';
 import type { LoopMap } from './loop-map-types.js';
 import { renderSources } from './evidence.js';
@@ -351,8 +352,11 @@ async function load(): Promise<void> {
             presentation = { kinds: [...firstOverview.kinds], layers: firstOverview.layers.map(layer => ({ id: layer.id, label: layer.label })), defaultLayer: firstOverview.defaultLayer }; indexGraph();
         }
         await route(); addEventListener('hashchange', () => { void route(); }); addEventListener('popstate', () => { void route(); });
-        // Internal map controls use pushState. Hydrate only after an explicit detail interaction.
-        main.addEventListener('click', () => { if (homeDeferred && firstOverview && location.hash !== loadedHomeRoute && (location.hash.split('?')[0] || '#/home') === '#/home') void route(); });
+        addEventListener(loopRouteEvent, () => {
+            if (!homeDeferred || !firstOverview || location.hash === loadedHomeRoute || (location.hash.split('?')[0] || '#/home') !== '#/home') return;
+            const tabFocused = Boolean(document.activeElement?.closest('[role=tablist]'));
+            void route().then(() => { if (tabFocused) main.querySelector<HTMLButtonElement>('[role=tab][aria-selected=true]')?.focus({ preventScroll: true }); });
+        });
     } catch (error) { loadFailure(error, () => { void load(); }); }
 }
 void load();
