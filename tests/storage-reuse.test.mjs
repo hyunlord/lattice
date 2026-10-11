@@ -5,18 +5,25 @@ import { realpathSync, mkdtempSync, rmSync, writeFileSync, readFileSync, statSyn
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { buildRepository } from '../bin/build.mjs';
-import { readGraph, atomic, persistBuild } from '../bin/storage.mjs';
+import { digest, readGraph, atomic, persistBuild } from '../bin/storage.mjs';
+test('incremental digest preserves canonical UTF-8 bytes without concatenating the document', () => {
+    const chunks = ['{"label":', '"한글😀",', '"values":[1,true,null]}'];
+    assert.equal(digest.stream(write => { for (const chunk of chunks) write(chunk); }), digest(chunks.join('')));
+    assert.equal(digest.stream(() => { }), digest(''));
+});
 test('validated immutable graph is reused only while complete file bytes match', t => {
     const root = realpathSync(mkdtempSync(join(tmpdir(), 'lattice-storage-reuse-')));
     t.after(() => rmSync(root, { recursive: true, force: true }));
     execFileSync('git', ['init', '-q', root]);
-    writeFileSync(join(root, 'data.json'), '[{"id":"one","name":"한글😀Alpha"}]');
+    writeFileSync(join(root, 'data.json'), JSON.stringify(Array.from({ length: 1024 }, (_, index) => ({ id: `node-${index}`, name: `한글😀Alpha${index}`, description: '한글😀'.repeat(24) }))));
     const build = buildRepository({ root });
     const graph = build.graph, path = join(root, 'graph.json');
     const persisted = persistBuild(root, build);
     assert.equal(readFileSync(join(root, '.lattice/cache/graph.json'), 'utf8'), JSON.stringify(persisted) + '\n');
+    const beforeRepeat = statSync(join(root, '.lattice/cache/graph.json')).mtimeMs;
     const repeated = persistBuild(root, build);
     assert.equal(readFileSync(join(root, '.lattice/cache/graph.json'), 'utf8'), JSON.stringify(repeated) + '\n');
+    assert.equal(statSync(join(root, '.lattice/cache/graph.json')).mtimeMs, beforeRepeat);
     atomic(path, graph);
     const first = readGraph(path);
     assert.equal(readGraph(path), first);

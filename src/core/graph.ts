@@ -1,4 +1,4 @@
-import { canonicalJson, validateCanonical } from "./canonical.js";
+import { canonicalJson, validateCanonical, writeCanonical } from "./canonical.js";
 import { validateDigest, validateGraph } from "./graph-validation.js";
 import type { Digest, Graph, GraphDraft, Source } from "./model.js";
 
@@ -59,14 +59,25 @@ export function createGraph(input: GraphDraft, digest: Digest): Graph {
     const findings = byId(draft.findings).map(finding => ({ ...finding, targetIds: [...finding.targetIds].sort() }));
     const views = byId(draft.views);
     const inputs = [...draft.inputs].sort((a, b) => compare(a.path, b.path));
-    const payload = {
-        schemaVersion: 1,
-        nodes: nodes.map(semantic), edges: edges.map(semantic),
-        facets: facets.map(semantic), findings: findings.map(semantic),
-        views: views.map(semantic), lensDigest: draft.lensDigest,
-        adapterVersions: draft.adapterVersions, inputDigests: inputs,
-    };
-    const graph: Graph = { ...draft, schemaVersion: 1, hash: hashText(payload), nodes, edges, facets, findings, views, inputs, snapshots: byId(draft.snapshots) };
+    const collections = { nodes, edges, facets, findings, views };
+    const envelope = { schemaVersion: 1, lensDigest: draft.lensDigest, adapterVersions: draft.adapterVersions, inputDigests: inputs };
+    let hash: string;
+    if (digest.stream) {
+        hash = digest.stream(write => {
+            write("{"); let separator = "";
+            for (const key of [...Object.keys(collections), ...Object.keys(envelope)].sort()) {
+                write(separator + JSON.stringify(key) + ":"); separator = ",";
+                if (Object.hasOwn(collections, key)) {
+                    write("["); let itemSeparator = "";
+                    for (const record of collections[key as keyof typeof collections]) { write(itemSeparator); itemSeparator = ","; writeCanonical(semantic(record), write); }
+                    write("]");
+                } else writeCanonical(envelope[key as keyof typeof envelope], write);
+            }
+            write("}");
+        });
+        validateDigest(hash, "digest result");
+    } else hash = hashText({ ...envelope, nodes: nodes.map(semantic), edges: edges.map(semantic), facets: facets.map(semantic), findings: findings.map(semantic), views: views.map(semantic) });
+    const graph: Graph = { ...draft, schemaVersion: 1, hash, nodes, edges, facets, findings, views, inputs, snapshots: byId(draft.snapshots) };
     freezeTree(graph);
     return graph;
 }

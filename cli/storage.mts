@@ -1,13 +1,23 @@
 import { errorCode, object } from './types.mjs';
-import type { Graph } from '../dist/index.js';
+import type { Graph, GraphDraft } from '../dist/index.js';
 import type { buildRepository } from './build.mjs';
 import { parseGraph, parseSnapshots } from './decode.mjs';
 import { createHash, randomUUID } from 'node:crypto';
-import { existsSync, mkdirSync, readFileSync, renameSync, rmSync, writeFileSync } from 'node:fs';
+import { closeSync, existsSync, mkdirSync, openSync, readFileSync, readSync, renameSync, rmSync, writeFileSync, writeSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { canonicalJson, createGraph } from '../dist/index.js';
+import { readJsonObject } from './json-stream.mjs';
 
-export const digest = (text: string | Uint8Array) => createHash('sha256').update(text).digest('hex');
+export const digest = Object.assign(
+    (text: string | Uint8Array) => createHash('sha256').update(text).digest('hex'),
+    {
+        stream(produce: (write: (chunk: string) => void) => void): string {
+            const hash = createHash('sha256');
+            produce(chunk => { hash.update(chunk); });
+            return hash.digest('hex');
+        }
+    },
+);
 export function atomic(path: string, value: unknown) {
     writeAtomic(path, JSON.stringify(value) + '\n');
 }
@@ -29,40 +39,68 @@ function rememberGraph(path: string, bytesHash: string, graph: Graph) {
     }
 }
 export function readGraph(path: string) {
-    const bytes = readFileSync(path), bytesHash = digest(bytes);
+    const bytesHash = fileDigest(path);
     const previous = validatedGraphs.get(path);
     const cached = previous?.bytesHash === bytesHash ? previous.graph.deref() : undefined;
     if (cached) return cached;
-    const stored: unknown = JSON.parse(bytes.toString('utf8'));
-    if (!object(stored) || stored['schemaVersion'] !== 1) throw new Error(`Unsupported graph schema: ${path}`);
-    const graph = createGraph(parseGraph(stored), digest);
-    if (stored['hash'] !== graph.hash) throw new Error(`Graph hash mismatch: ${path}`);
+    const stored = readGraphDraft(path);
+    const graph = createGraph(stored.draft, digest);
+    if (stored.hash !== graph.hash) throw new Error(`Graph hash mismatch: ${path}`);
     rememberGraph(path, bytesHash, graph);
     return graph;
 }
-const serializedFields = new WeakMap<object, Buffer>();
-function graphBytes(graph: Graph) {
-    const parts: Buffer[] = [Buffer.from('{')];
-    let separator = '';
-    for (const [key, value] of Object.entries(graph)) {
-        const immutable = value !== null && typeof value === 'object' && Object.isFrozen(value) ? value : undefined;
-        let bytes = immutable ? serializedFields.get(immutable) : undefined;
-        if (bytes === undefined) {
-            const text = JSON.stringify(value);
-            if (text === undefined) continue;
-            bytes = Buffer.from(text);
-            if (immutable) serializedFields.set(immutable, bytes);
-        }
-        parts.push(Buffer.from(`${separator}${JSON.stringify(key)}:`), bytes);
-        separator = ',';
-    }
-    parts.push(Buffer.from('}\n'));
-    return Buffer.concat(parts);
+function readGraphDraft(path: string): { readonly draft: GraphDraft; readonly hash: unknown; } {
+    const stored = readJsonObject(path);
+    if (stored['schemaVersion'] !== 1) throw new Error(`Unsupported graph schema: ${path}`);
+    return { draft: parseGraph(stored), hash: stored['hash'] };
+}
+function fileDigest(path: string): string {
+    const descriptor = openSync(path, 'r'), bytes = Buffer.allocUnsafe(65536), hash = createHash('sha256');
+    try {
+        let count: number;
+        while ((count = readSync(descriptor, bytes, 0, bytes.length, null)) > 0) hash.update(bytes.subarray(0, count));
+        return hash.digest('hex');
+    } finally { closeSync(descriptor); }
 }
 function writeGraph(path: string, graph: Graph) {
-    const bytes = graphBytes(graph), bytesHash = digest(bytes);
-    if (!existsSync(path) || digest(readFileSync(path)) !== bytesHash) writeAtomic(path, bytes);
-    rememberGraph(path, bytesHash, graph);
+    mkdirSync(dirname(path), { recursive: true });
+    const temporary = `${path}.${randomUUID()}.tmp`, hash = createHash('sha256');
+    let descriptor: number | undefined;
+    try {
+        descriptor = openSync(temporary, 'wx');
+        const output = descriptor;
+        let pending = '';
+        const flush = () => {
+            const bytes = Buffer.from(pending);
+            hash.update(bytes);
+            let offset = 0;
+            while (offset < bytes.length) offset += writeSync(output, bytes, offset, bytes.length - offset);
+            pending = '';
+        };
+        const write = (text: string) => { pending += text; if (pending.length >= 65536) flush(); };
+        write('{');
+        let separator = '';
+        for (const [key, value] of Object.entries(graph)) {
+            if (value === undefined) continue;
+            write(`${separator}${JSON.stringify(key)}:`);
+            if (Array.isArray(value)) {
+                write('[');
+                for (let index = 0; index < value.length; index++) write(`${index ? ',' : ''}${JSON.stringify(value[index])}`);
+                write(']');
+            } else write(JSON.stringify(value));
+            separator = ',';
+        }
+        write('}\n');
+        flush();
+        closeSync(descriptor);
+        descriptor = undefined;
+        const bytesHash = hash.digest('hex');
+        if (!existsSync(path) || fileDigest(path) !== bytesHash) renameSync(temporary, path);
+        rememberGraph(path, bytesHash, graph);
+    } finally {
+        if (descriptor !== undefined) closeSync(descriptor);
+        rmSync(temporary, { force: true });
+    }
 }
 export function cacheDirectory(root: string, cacheDir?: string) {
     return cacheDir ?? join(root, '.lattice/cache');
