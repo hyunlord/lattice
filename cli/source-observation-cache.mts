@@ -8,8 +8,7 @@ import type { SourceInput } from '../dist/index.js';
 import { inside } from './inputs.mjs';
 import { errorCode } from './types.mjs';
 type PathWitness = { readonly leaf: Identity; readonly target: Identity | undefined; };
-type Record = { readonly identity: Identity; readonly input: SourceInput; };
-const sameWitness = (left: PathWitness | undefined, right: PathWitness | undefined): boolean => sameIdentity(left?.leaf, right?.leaf) && sameIdentity(left?.target, right?.target);
+type Record = { readonly identity: Identity; readonly input: SourceInput; readonly requested: string; readonly parent: string; readonly witness: PathWitness; };
 function pathWitness(path: string): PathWitness | undefined {
     let current: PathWitness | undefined;
     try {
@@ -18,6 +17,15 @@ function pathWitness(path: string): PathWitness | undefined {
         if (leaf.isSymbolicLink()) current = { leaf, target: statSync(path, { bigint: true }) };
     } catch (error) { if (errorCode(error) !== 'ENOENT') throw error; }
     return current;
+}
+function matchesPathWitness(path: string, witness: PathWitness | undefined): boolean {
+    let leaf: Identity | undefined, target: Identity | undefined;
+    try {
+        const current = lstatSync(path, { bigint: true });
+        leaf = current;
+        target = current.isSymbolicLink() ? statSync(path, { bigint: true }) : current;
+    } catch (error) { if (errorCode(error) !== 'ENOENT') throw error; }
+    return sameIdentity(leaf, witness?.leaf) && sameIdentity(target, witness?.target);
 }
 const localTypes = new Set([0x1an, 0xef53n, 0x9123683en]);
 /** Local filesystem witnesses reuse previously hashed bytes, never a watcher or TTL. */
@@ -43,30 +51,29 @@ export class SourceObservationCache {
     get mode(): 'metadata-witness' | 'content-hash' { return this.local ? 'metadata-witness' : 'content-hash'; }
     prune(paths: readonly string[]) { this.observed.clear(); this.directories.clear(); this.external.clear(); this.configurationPaths.clear(); const keep = new Set(paths); for (const path of this.records.keys()) if (!keep.has(path)) this.records.delete(path); }
     verify() {
-        for (const [path, witness] of this.configurationPaths) if (!sameWitness(pathWitness(path), witness)) throw new Error('Configuration paths changed during observation; retry the query');
+        for (const [path, witness] of this.configurationPaths) if (!matchesPathWitness(path, witness)) throw new Error('Configuration paths changed during observation; retry the query');
         for (const [path, key] of this.external) if (!sameIdentity(statSync(path, { bigint: true }), key)) throw new Error('Configuration changed during observation; retry the query');
         for (const [path, key] of this.observed) {
-            if (sameWitness(pathWitness(join(this.root, path)), key)) continue;
+            if (matchesPathWitness(this.records.get(path)?.requested ?? join(this.root, path), key)) continue;
             this.records.delete(path);
             throw new Error('Source changed across observation; retry the query');
         }
         this.directories.verify();
     }
     read(path: string, oversized: (bytes: number) => never): SourceInput | undefined {
-        const requested = join(this.root, path);
+        const cached = this.records.get(path), requested = cached?.requested ?? join(this.root, path);
         let leafIdentity: Identity | undefined;
         try {
-            const parent = dirname(requested);
+            const parent = cached?.parent ?? dirname(requested);
             if (!inside(this.root, this.directories.resolve(parent))) throw new Error(`Input resolves outside repository: ${path}`);
             const leaf = lstatSync(requested, { bigint: true });
-            leafIdentity = identity(leaf);
+            leafIdentity = cached && sameIdentity(cached.witness.leaf, leaf) ? cached.witness.leaf : identity(leaf);
             if (leaf.isSymbolicLink() && !inside(this.root, realpathSync.native(requested))) throw new Error(`Input resolves outside repository: ${path}`);
-            const before = leaf.isSymbolicLink() ? statSync(requested, { bigint: true }) : leaf, key = before === leaf ? leafIdentity : identity(before);
-            const witness = { leaf: leafIdentity, target: key };
+            const before = leaf.isSymbolicLink() ? statSync(requested, { bigint: true }) : leaf, key = before === leaf ? leafIdentity : cached && sameIdentity(cached.identity, before) ? cached.identity : identity(before);
+            const witness = cached && cached.witness.leaf === leafIdentity && cached.witness.target === key ? cached.witness : { leaf: leafIdentity, target: key };
             this.observed.set(path, witness);
             if (!before.isFile()) { this.records.delete(path); return undefined; }
             if (before.size > 10n * 1024n * 1024n) return oversized(Number(before.size));
-            const cached = this.records.get(path);
             const reusable = this.local && before.dev === this.device && before.ctimeNs % 1000000000n !== 0n;
             let input: SourceInput;
             if (reusable && cached && sameIdentity(cached.identity, key)) input = cached.input;
@@ -82,7 +89,7 @@ export class SourceObservationCache {
                 } finally { closeSync(descriptor); }
             }
             if ((!reusable || !sameIdentity(cached?.identity, key)) && !sameIdentity(statSync(requested, { bigint: true }), key)) throw new Error('Source changed during observation; retry the query');
-            if (!sameIdentity(cached?.identity, key) || cached?.input !== input) this.records.set(path, { identity: key, input });
+            if (cached?.witness !== witness || cached?.input !== input) this.records.set(path, { identity: key, input, requested, parent, witness });
             return input;
         } catch (error) {
             this.records.delete(path);
