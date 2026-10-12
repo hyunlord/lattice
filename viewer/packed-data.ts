@@ -147,11 +147,23 @@ export function createPackedLoader(base = './', suffix = '') {
         const direct = /^records\/(\d+)\/(\d+)\/[A-Za-z0-9_-]+\.json$/u.exec(path);
         if (direct) { const value = ['r', Number(direct[1]), Number(direct[2])]; return selection ? (await project(value, selection)).value : decode(value); }
         const zipped = info['indexEncoding'] === 'gzip';
-        const ranges = await read(`transport/files-${bucket(path)}.json${zipped ? '.gz' : ''}`, zipped);
-        if (!Array.isArray(ranges)) throw new Error('Invalid packed file index');
-        const range: unknown = ranges.find((item: unknown) => object(item) && typeof item['first'] === 'string' && typeof item['last'] === 'string' && item['first'] <= path && path <= item['last']);
-        if (!object(range) || typeof range['path'] !== 'string' || !/^transport\/files-[a-f0-9]{2}-\d+\.json(?:\.gz)?$/u.test(range['path'])) throw new Error(`Artifact HTTP 404: ${path}`);
-        const rows = await read(range['path'], range['path'].endsWith('.gz'));
+        const index = await read(`transport/files-${bucket(path)}.json${zipped ? '.gz' : ''}`, zipped);
+        let rows: unknown;
+        if (object(index)) {
+            rows = index['files'];
+            if (Object.keys(index).length !== 1 || !Array.isArray(rows)) throw new Error('Invalid inline file index');
+            let previous: string | undefined;
+            for (const row of rows) {
+                if (!Array.isArray(row) || row.length !== 2 || typeof row[0] !== 'string' || previous !== undefined && previous >= row[0] || !Array.isArray(row[1]) || row[1].length !== 3 || row[1][0] !== 'r' || !integer(row[1][1]) || !integer(row[1][2])) throw new Error('Invalid inline file row');
+                safe(row[0]); previous = row[0];
+            }
+        }
+        else {
+            if (!Array.isArray(index)) throw new Error('Invalid packed file index');
+            const range: unknown = index.find((item: unknown) => object(item) && typeof item['first'] === 'string' && typeof item['last'] === 'string' && item['first'] <= path && path <= item['last']);
+            if (!object(range) || typeof range['path'] !== 'string' || !/^transport\/files-[a-f0-9]{2}-\d+\.json(?:\.gz)?$/u.test(range['path'])) throw new Error(`Artifact HTTP 404: ${path}`);
+            rows = await read(range['path'], range['path'].endsWith('.gz'));
+        }
         if (!Array.isArray(rows)) throw new Error('Invalid packed file page');
         const row: unknown = rows.find((item: unknown) => Array.isArray(item) && item[0] === path);
         if (!Array.isArray(row) || row.length !== 2) throw new Error(`Artifact HTTP 404: ${path}`);

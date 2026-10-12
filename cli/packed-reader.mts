@@ -70,11 +70,24 @@ export function readPackedArtifact(directory: string, path: string): unknown {
     };
     const direct = /^records\/(\d+)\/(\d+)\/[A-Za-z0-9_-]+\.json$/u.exec(path);
     if (direct) return decode(['r', Number(direct[1]), Number(direct[2])]);
-    const ranges = read(`transport/files-${bucket(path)}.json${extension}`);
-    if (!Array.isArray(ranges)) throw new Error('Invalid packed file index');
-    const range: unknown = ranges.find((item: unknown) => object(item) && typeof item['first'] === 'string' && typeof item['last'] === 'string' && item['first'] <= path && path <= item['last']);
-    if (!object(range) || typeof range['path'] !== 'string' || !/^transport\/files-[a-f0-9]{2}-\d+\.json(?:\.gz)?$/u.test(range['path'])) throw new Error(`Packed artifact missing: ${path}`);
-    const rows = read(range['path']); if (!Array.isArray(rows)) throw new Error('Invalid packed file page');
+    const index = read(`transport/files-${bucket(path)}.json${extension}`);
+    let rows: unknown;
+    if (object(index)) {
+        rows = index['files'];
+        if (Object.keys(index).length !== 1 || !Array.isArray(rows)) throw new Error('Invalid inline file index');
+        let previous: string | undefined;
+        for (const row of rows) {
+            if (!Array.isArray(row) || row.length !== 2 || typeof row[0] !== 'string' || previous !== undefined && previous >= row[0] || !/^[A-Za-z0-9._/-]+$/u.test(row[0]) || row[0].split('/').some((part: string) => !part || part === '.' || part === '..') || !Array.isArray(row[1]) || row[1].length !== 3 || row[1][0] !== 'r' || !integer(row[1][1]) || !integer(row[1][2])) throw new Error('Invalid inline file row');
+            previous = row[0];
+        }
+    }
+    else {
+        if (!Array.isArray(index)) throw new Error('Invalid packed file index');
+        const range: unknown = index.find((item: unknown) => object(item) && typeof item['first'] === 'string' && typeof item['last'] === 'string' && item['first'] <= path && path <= item['last']);
+        if (!object(range) || typeof range['path'] !== 'string' || !/^transport\/files-[a-f0-9]{2}-\d+\.json(?:\.gz)?$/u.test(range['path'])) throw new Error(`Packed artifact missing: ${path}`);
+        rows = read(range['path']);
+    }
+    if (!Array.isArray(rows)) throw new Error('Invalid packed file page');
     const row: unknown = rows.find((item: unknown) => Array.isArray(item) && item[0] === path);
     if (!Array.isArray(row) || row.length !== 2) throw new Error(`Packed artifact missing: ${path}`);
     return decode(row[1]);

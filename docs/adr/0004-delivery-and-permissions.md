@@ -11,5 +11,7 @@ L4 separates untrusted PR build/export from privileged publication/comments. Do 
 
 `init` edits only managed regions, preserves existing Graft and unrelated configuration, supports project-only `--no-global`, and does not replace whole config files. Unparseable existing configuration fails without partial writes. Read-only consumers use external lens/cache/output locations; Charter & Kin receives no writes.
 
+L10 maintenance: a nonempty file-lookup bucket that fits the existing bounded page budget is stored directly as `{files: rows}` instead of a range descriptor pointing to its sole page. Larger buckets retain ranged pages; empty buckets retain the empty range array. This removes redundant index metadata without changing record order, evidence, source bindings, direct references, or the 256KiB encoded/decoded limits. The browser and CLI readers accept both tagged inline and historical plain/gzip ranged indexes. Older readers do not understand the tagged form; publish generated data with its matching viewer and use the updated CLI for offline reconstruction. No asset-loader, dependency or initial overview-fetch contract changes.
+
 ## Consequences
 L2 publication needs a narrowly scoped consumer PR before L4 automation. L5 agent acceptance requires actual Codex and Claude Code sessions listing and calling tools; a mock client is protocol testing only. Licensing remains an explicit decision issue until approved; do not claim MIT distribution authority from a recommendation alone.

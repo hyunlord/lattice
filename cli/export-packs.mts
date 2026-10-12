@@ -103,6 +103,9 @@ export function createPackedExport(directory: string) {
                 try { lines = readFileSync(join(spool, key), 'utf8').trimEnd().split('\n'); }
                 catch (error) { if (!object(error) || error['code'] !== 'ENOENT') throw error; lines = []; }
                 const rows: [string, Ref][] = lines.filter(Boolean).map(line => JSON.parse(line)); rows.sort(([a], [b]) => a < b ? -1 : a > b ? 1 : 0);
+                let inlineSize = 12;
+                for (const [index, row] of rows.entries()) { inlineSize += Buffer.byteLength(JSON.stringify(row)) + (index ? 1 : 0); if (inlineSize > TARGET) break; }
+                if (rows.length && inlineSize <= TARGET) { bounded(`files-${key}.json`, { files: rows }); continue; }
                 const ranges: { first: string; last: string; path: string; }[] = [];
                 for (let start = 0; start < rows.length;) {
                     const part: [string, Ref][] = []; let size = 2;
