@@ -53,11 +53,11 @@ export class SourceObservationCache {
     verify() {
         for (const [path, witness] of this.configurationPaths) if (!matchesPathWitness(path, witness)) throw new Error('Configuration paths changed during observation; retry the query');
         for (const [path, key] of this.external) if (!sameIdentity(statSync(path, { bigint: true }), key)) throw new Error('Configuration changed during observation; retry the query');
-        for (const [path, key] of this.observed) {
-            if (matchesPathWitness(this.records.get(path)?.requested ?? join(this.root, path), key)) continue;
+        this.observed.forEach((key, path) => {
+            if (matchesPathWitness(this.records.get(path)?.requested ?? join(this.root, path), key)) return;
             this.records.delete(path);
             throw new Error('Source changed across observation; retry the query');
-        }
+        });
         this.directories.verify();
     }
     read(path: string, oversized: (bytes: number) => never): SourceInput | undefined {
