@@ -1,5 +1,4 @@
-import { createNodeDetailLoader } from './node-detail-data.js';
-import { renderNodeDetail } from './node-detail.js';
+import type { NodeDetailLoader } from './node-detail-data.js';
 import { loopRouteEvent } from './loop-map-route.js';
 import { createOverviewLoader, type Overview } from './overview-data.js';
 import type { LoopMap } from './loop-map-types.js';
@@ -311,7 +310,7 @@ async function mountFunctionLogic(host: HTMLElement, id: string): Promise<void> 
     const [provider, ui] = await Promise.all([logicProvider(), import('./logic.js')]);
     if (section.isConnected) ui.renderFunctionLogic(section, provider, id, logicContext);
 }
-let nodeDetailLoader: ReturnType<typeof createNodeDetailLoader> | undefined;
+let nodeDetailLoader: NodeDetailLoader | undefined;
 let routeRequest = 0;
 let homeDeferred = false;
 let loadedHomeRoute = '';
@@ -330,6 +329,8 @@ async function route(): Promise<void> {
             document.title = '로직 구조 · Lattice'; return;
         }
         if (path.startsWith('/node/') && firstOverview && !fullGraphLoaded) {
+            const [{ createNodeDetailLoader }, { renderNodeDetail }] = await Promise.all([import('./node-detail-data.js'), import('./node-detail.js')]);
+            if (request !== routeRequest) return;
             nodeDetailLoader ??= createNodeDetailLoader(firstOverview, suffix);
             const index = await nodeDetailLoader.index();
             if (index) {
