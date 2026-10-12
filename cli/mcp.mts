@@ -21,7 +21,7 @@ export function createMcpHandler(options: Options) {
         return target.href;
     };
     const service = new FreshRepository(options);
-    return async (name: ToolName, args: Record<string, unknown>): Promise<object> => {
+    const handler = async (name: ToolName, args: Record<string, unknown>): Promise<object> => {
         const started = performance.now();
         const fresh = await service.ensureFreshAsync();
         let result: object;
@@ -46,5 +46,9 @@ export function createMcpHandler(options: Options) {
         } else result = queryGraph(name, args, fresh.graph, fresh.build.presentation, link);
         return { ...result, freshness: fresh.freshness, timing: { totalMs: performance.now() - started } };
     };
+    return Object.assign(handler, { dispose: () => service.dispose() });
 }
-export async function mcp(options: Options): Promise<void> { await runStdio(createMcpHandler(options)); }
+export async function mcp(options: Options): Promise<void> {
+    const handler = createMcpHandler(options);
+    try { await runStdio(handler); } finally { await handler.dispose(); }
+}

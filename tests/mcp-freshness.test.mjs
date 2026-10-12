@@ -14,7 +14,8 @@ function fixture(t) {
     writeFileSync(join(root, 'data.json'), JSON.stringify([{ id: 'one', name: 'Alpha' }, { id: 'two', name: 'Bravo', targetId: 'one' }]));
     execFileSync('git', ['-C', root, 'add', '.']);
     execFileSync('git', ['-C', root, '-c', 'user.name=Test', '-c', 'user.email=test@example.invalid', 'commit', '-qm', 'fixture']);
-    return { root, call: createMcpHandler({ root }) };
+    const call = createMcpHandler({ root }); t.after(() => call.dispose());
+    return { root, call };
 }
 test('all queries content-check, reuse unchanged graph and see same-size preserved-mtime edits', async t => {
     const f = fixture(t), first = await f.call('lattice_find', {}), unchanged = await f.call('lattice_freshness', {});

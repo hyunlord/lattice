@@ -65,7 +65,7 @@ test('lens draft remains inactive, source-bound, refuses unreviewed replacement'
 test('actual MCP handler writes, reads and invalidates AI notes without changing source', async t => {
     const { root } = fixture(t);
     const { createMcpHandler } = await import('../bin/mcp.mjs');
-    const call = createMcpHandler({ root });
+    const call = createMcpHandler({ root }); t.after(() => call.dispose());
     const context = await call('lattice_interpretation_context', {});
     const record = note(context.items.find(target => target.id === 'module:src/a.ts'));
     const saved = await call('lattice_write_interpretation', { record });
@@ -107,7 +107,7 @@ test('MCP accepts one batch of source-bound notes while keeping single-record co
     const records = interpretationContext(root, graph).items.map(note);
     const { createMcpHandler } = await import('../bin/mcp.mjs');
     const { parseArguments } = await import('../bin/mcp-schema.mjs');
-    const call = createMcpHandler({ root });
+    const call = createMcpHandler({ root }); t.after(() => call.dispose());
     const saved = await call('lattice_write_interpretation', parseArguments('lattice_write_interpretation', { records }));
     assert.equal(saved.updated, records.length);
     assert.deepEqual(saved.records.map(record => record.targetId), records.map(record => record.targetId));
@@ -154,7 +154,7 @@ test('MCP exposes bounded overview and folder scopes with compact write acknowle
     const { root } = fixture(t);
     const { createMcpHandler } = await import('../bin/mcp.mjs');
     const { parseArguments } = await import('../bin/mcp-schema.mjs');
-    const call = createMcpHandler({ root });
+    const call = createMcpHandler({ root }); t.after(() => call.dispose());
     const args = parseArguments('lattice_interpretation_context', { scope: 'overview', compact: true, limit: 9 });
     const context = await call('lattice_interpretation_context', args);
     const target = context.items[0];
