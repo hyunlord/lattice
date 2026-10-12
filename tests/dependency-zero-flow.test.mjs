@@ -8,6 +8,8 @@ const source = readFileSync(new URL('../viewer/dependency-package-arrows.ts', im
 const file = ts.createSourceFile('arrows.ts', source, ts.ScriptTarget.Latest, true);
 const helper = file.statements.find(node => ts.isFunctionDeclaration(node) && node.name?.text === 'drawPackageDependencyArrows');
 assert.ok(helper);
+const measurement = file.statements.find(node => ts.isFunctionDeclaration(node) && node.name?.text === 'measurePackageDependencyGeometry');
+assert.ok(measurement);
 
 function fixture() {
     const calls = { measurements: 0, route: 0, uuid: 0, svg: 0 };
@@ -28,13 +30,14 @@ function fixture() {
     const context = createContext({
         svg: tag => { calls.svg++; return node(tag); },
         crypto: { randomUUID: () => { calls.uuid++; return 'fixture'; } },
+        getComputedStyle: () => ({ font: '12px sans-serif', letterSpacing: 'normal', wordSpacing: 'normal', fontFeatureSettings: 'normal', fontVariationSettings: 'normal' }),
         countText: () => '1', dependencyCountLabel: () => '1', mobileDependencyRouteOrder: flows => flows,
         routePackageDependencies: (flows, _boxes, _width, _height, measure) => {
             calls.route++;
             return flows.map(flow => { measure(flow); return { flow, points: [{ x: 0, y: 0 }, { x: 8, y: 8 }], label: { x: 4, y: 4 } }; });
         }
     });
-    runInContext(ts.transpileModule(helper.getText(file).replace(/^export /, '') + '\nglobalThis.draw = drawPackageDependencyArrows;', { compilerOptions: { target: ts.ScriptTarget.ES2022 } }).outputText, context);
+    runInContext(ts.transpileModule([measurement, helper].map(node => node.getText(file).replace(/^export /, '')).join('\n') + '\nglobalThis.draw = drawPackageDependencyArrows;', { compilerOptions: { target: ts.ScriptTarget.ES2022 } }).outputText, context);
     return { graph, calls, draw: flows => context.draw({ host: { getBoundingClientRect: rect, querySelectorAll: () => [] }, graph, flows, boxes: new Map([['a', { getBoundingClientRect: rect }]]), names: new Map() }) };
 }
 
