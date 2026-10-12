@@ -44,7 +44,9 @@ async function boot(): Promise<void> {
     const plan = manifest(JSON.parse(new TextDecoder().decode(await fetchAsset('manifest.json'))));
     const groups = await Promise.all(plan.packs.map(async pack => {
         const bytes = await fetchAsset(pack.path);
-        if (bytes.length !== pack.encoded || packedHash(bytes) !== pack.hash) throw new Error('Viewer asset integrity mismatch');
+        if (bytes.length !== pack.encoded) throw new Error('Viewer asset integrity mismatch');
+        const digest = globalThis.crypto?.subtle ? [...new Uint8Array(await crypto.subtle.digest('SHA-256', bytes))].map(value => value.toString(16).padStart(2, '0')).join('') : packedHash(bytes);
+        if (digest !== pack.hash) throw new Error('Viewer asset integrity mismatch');
         const decoded = await bounded(new Blob([bytes]).stream().pipeThrough(new DecompressionStream('gzip')));
         if (decoded.length !== pack.decoded) throw new Error('Viewer asset decoded size mismatch');
         const value: unknown = JSON.parse(new TextDecoder('utf-8', { fatal: true }).decode(decoded));

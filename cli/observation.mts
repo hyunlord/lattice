@@ -20,6 +20,7 @@ import type { WorkingMetadata } from './repository.mjs';
 type SelectionPlan = { readonly lensInput: SourceInput | undefined; readonly lens: Lens | undefined; readonly paths: readonly string[]; readonly selected: ReturnType<typeof selectedInputs>; readonly codePaths: readonly string[]; };
 // Reuse derived selection; working inputs are verified separately by the observation reader.
 const plans = new WeakMap<Options, SelectionPlan>();
+const selectionWrappers = new WeakMap<SelectionPlan, readonly (SelectedInput | undefined)[]>();
 const fingerprintLists = new WeakMap<Options, { readonly inputs: InputDigestList; readonly code: InputDigestList; }>();
 const sourceCaches = new WeakMap<Options, SourceObservationCache>();
 const verifiedRepositories = new WeakMap<Options, WorkingMetadata>();
@@ -71,10 +72,18 @@ function observeInputs(options: Options, repository: RepositoryReader, historica
         }
         return contents.get(path);
     };
-    for (const selection of plan.selected) {
+    const previousWrappers = selectionWrappers.get(plan);
+    const wrappers: (SelectedInput | undefined)[] = [];
+    for (let index = 0; index < plan.selected.length; index++) {
+        const selection = plan.selected[index];
+        if (!selection) continue;
         const input = readInput(selection.path);
-        if (input) selected.push({ ...selection, input });
+        const previousWrapper = previousWrappers?.[index];
+        const wrapper = input ? previousWrapper?.input === input ? previousWrapper : { ...selection, input } : undefined;
+        wrappers[index] = wrapper;
+        if (wrapper) selected.push(wrapper);
     }
+    selectionWrappers.set(plan, wrappers);
     const codeInputs: SourceInput[] = [];
     for (const path of plan.codePaths) {
         const input = readInput(path);
