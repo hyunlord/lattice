@@ -7,9 +7,9 @@ import { sourceCount } from './source-groups.js';
 import { renderLoopMap } from './loop-map.js';
 import { buildLoopMap } from './loop-map-model.js';
 import type { Node as GraphNode, Facet, Finding, Source, Snapshot } from '../dist/core/model.js';
-import { renderExplore } from './explore.js';
+import type { renderExplore } from './explore.js';
 import { humanValue } from './views-records.js';
-import { renderViews } from './views.js';
+import type { renderViews } from './views.js';
 import { renderList } from './list.js';
 import { renderHome } from './home.js';
 import { renderChanges } from './changes.js';
@@ -234,7 +234,7 @@ function detail(id: string, version: number) {
     }
     void renderNodeHistory(main, { node, snapshots, readSnapshot, isCurrent: () => version === renderVersion, sources, changesHref: (base, head, identity) => routeHref('/changes', { base, head, node: identity }) });
 }
-function views(id: string, params: URLSearchParams) {
+function views(id: string, params: URLSearchParams, renderViews: typeof import('./views.js').renderViews) {
     const visibleIds = new Set(visibleNodes.map(node => node.id));
     disposeScreen = renderViews(main, {
         views: graph.views, nodes: visibleNodes, allNodes: graph.nodes, allEdges: graph.edges, layerLabel,
@@ -256,7 +256,8 @@ function changes(params: URLSearchParams, version: number) {
     });
 }
 
-function render() {
+type LazyView = { kind: 'explore'; render: typeof renderExplore; } | { kind: 'views'; render: typeof renderViews; };
+function render(lazyView?: LazyView) {
     const version = ++renderVersion;
     disposeScreen?.(); disposeScreen = undefined;
     main.replaceChildren();
@@ -270,7 +271,7 @@ function render() {
     const route = path === '/explore' ? 'explore' : path.startsWith('/views') ? 'views' : path.startsWith('/changes') ? 'changes' : path === '/home' ? 'home' : 'list';
     document.querySelectorAll<HTMLAnchorElement>('[data-route]').forEach(item => { item.href = routeHref('/' + item.dataset['route']); if (item.dataset['route'] === route) item.setAttribute('aria-current', 'page'); else item.removeAttribute('aria-current'); });
     document.body.classList.toggle('picture-home', path === '/home');
-    if (path === '/home') home(); else if (path === '/overview') overview(version); else if (path === '/explore') { pageHeading('관계 탐색', '종류와 분류로 좁히고, 방향 경로와 이웃을 따라 출처까지 탐색합니다.'); const visibleIds = new Set(visibleNodes.map(node => node.id)); disposeScreen = renderExplore(main, { nodes: visibleNodes, edges: graph.edges.filter(edge => visibleIds.has(edge.source) && visibleIds.has(edge.target)), facets: graph.facets.filter(facet => visibleIds.has(facet.nodeId)), params, kindLabel, facetLabel, valueLabel, nodeHref, href: values => routeHref('/explore', values) }); } else if (path === '/list') listing(params); else if (path.startsWith('/views')) views(path.slice(7), params); else if (path.startsWith('/changes')) changes(params, version); else if (path.startsWith('/node/')) { try { detail(decodeURIComponent(path.slice(6)), version); } catch { pageHeading('잘못된 노드 주소'); main.append(link('목록으로 돌아가기', listHref())); } } else { pageHeading('화면을 찾을 수 없습니다'); main.append(link('홈으로 돌아가기', routeHref('/home'))); }
+    if (path === '/home') home(); else if (path === '/overview') overview(version); else if (path === '/explore') { if (lazyView?.kind !== 'explore') throw new Error('Explore renderer is not loaded'); pageHeading('관계 탐색', '종류와 분류로 좁히고, 방향 경로와 이웃을 따라 출처까지 탐색합니다.'); const visibleIds = new Set(visibleNodes.map(node => node.id)); disposeScreen = lazyView.render(main, { nodes: visibleNodes, edges: graph.edges.filter(edge => visibleIds.has(edge.source) && visibleIds.has(edge.target)), facets: graph.facets.filter(facet => visibleIds.has(facet.nodeId)), params, kindLabel, facetLabel, valueLabel, nodeHref, href: values => routeHref('/explore', values) }); } else if (path === '/list') listing(params); else if (path.startsWith('/views')) { if (lazyView?.kind !== 'views') throw new Error('Views renderer is not loaded'); views(path.slice(7), params, lazyView.render); } else if (path.startsWith('/changes')) changes(params, version); else if (path.startsWith('/node/')) { try { detail(decodeURIComponent(path.slice(6)), version); } catch { pageHeading('잘못된 노드 주소'); main.append(link('목록으로 돌아가기', listHref())); } } else { pageHeading('화면을 찾을 수 없습니다'); main.append(link('홈으로 돌아가기', routeHref('/home'))); }
     document.title = `${main.querySelector('h1')?.textContent || '지도'} · Lattice`;
     main.querySelector('h1')?.focus({ preventScroll: true });
     window.scrollTo(0, 0);
@@ -315,8 +316,8 @@ let routeRequest = 0;
 let homeDeferred = false;
 let loadedHomeRoute = '';
 async function route(): Promise<void> {
-    const request = ++routeRequest;
-    const [path = '/home', search = ''] = (location.hash.slice(1) || '/home').split('?'); const params = new URLSearchParams(search);
+    const request = ++routeRequest, hash = location.hash;
+    const [path = '/home', search = ''] = (hash.slice(1) || '/home').split('?'); const params = new URLSearchParams(search);
     try {
         if (path === '/logic' || path.startsWith('/flow/') || path.startsWith('/function/')) {
             const [provider, ui] = await Promise.all([logicProvider(), import('./logic.js')]);
@@ -361,8 +362,13 @@ async function route(): Promise<void> {
             homeDeferred = Boolean(layer.parts) || layer.deferred && !hydrate; loadedHomeRoute = location.hash; home(model); document.title = `${model.title ?? '지도'} · Lattice`; return;
         }
         main.setAttribute('aria-busy', 'true');
-        await requireGraph(); if (request !== routeRequest) return; render();
-    } catch (error) { if (request === routeRequest) loadFailure(error); }
+        await requireGraph(); if (request !== routeRequest || hash !== location.hash) return;
+        let lazyView: LazyView | undefined;
+        if (path === '/explore') lazyView = { kind: 'explore', render: (await import('./explore.js')).renderExplore };
+        else if (path.startsWith('/views')) lazyView = { kind: 'views', render: (await import('./views.js')).renderViews };
+        if (request !== routeRequest || hash !== location.hash) return;
+        render(lazyView);
+    } catch (error) { if (request === routeRequest && hash === location.hash) loadFailure(error); }
     finally { if (request === routeRequest) main.removeAttribute('aria-busy'); }
 }
 async function load(): Promise<void> {
