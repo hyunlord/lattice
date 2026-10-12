@@ -18,6 +18,8 @@ for (const name of tools) {
         assert.equal(definition.inputSchema.properties.compact.type, 'boolean');
         assert.equal(definition.inputSchema.required.includes('compact'), false);
         assert.equal(definition.inputSchema.additionalProperties, false);
+        assert.match(definition.description, /compact=true/);
+        assert.match(definition.inputSchema.properties.compact.description, /sources\.preview\.fullRequest/);
     });
     test(`${name} rejects invalid compact types and unrelated arguments`, () => {
         // Given otherwise valid arguments, when parsing invalid input, then no coercion occurs.
