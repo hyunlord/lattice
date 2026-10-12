@@ -165,7 +165,7 @@ export function renderDependencyOverview(host: HTMLElement, ui: LoopUI): () => v
             const gap = element('div', '', 'lm-dependency-gap'); gap.dataset['flows'] = String(outgoing); diagram.append(gap);
         }
         const initial = view.stages.find(stage => stage.id === selected); panel.hidden = !initial; panel.replaceChildren(); if (initial) renderPanel(initial);
-        let packageGap = window.innerWidth > 700 ? 48 : 72;
+        let packageGap = window.innerWidth > 700 ? 48 : 32;
         redraw = () => {
             const flows = displayedDependencyFlows(view, selected, false); const sidebarRoles = roles.parentElement === overview; roles.style.maxHeight = sidebarRoles && window.innerWidth > 900 ? `${Math.max(200, window.innerHeight - roles.getBoundingClientRect().top - 12)}px` : ''; roleHint.hidden = !sidebarRoles || window.innerWidth <= 900 || roles.scrollHeight <= roles.clientHeight + 1;
             mode.replaceChildren(); mode.hidden = false;

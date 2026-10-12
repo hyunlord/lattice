@@ -28,6 +28,14 @@ test('live generations stream immutable disk artifacts, retain four versions and
     try {
         const ready = await until(() => stdout.split('\n').filter(Boolean).map(line => JSON.parse(line)).find(event => event.event === 'ready'));
         const request = path => fetch(new URL(path, ready.url));
+        const firstHtml = await (await request('index.html?generation=1')).text();
+        assert.match(firstHtml, /asset-bootstrap\.js/u); assert.match(firstHtml, /lattice-generation" content="1"/u);
+        assert.equal((await request('__lattice/live-client.js')).status, 200);
+        assert.equal((await request('asset-bootstrap.js')).headers.get('content-type'), 'text/javascript');
+        const assetManifest = await request('asset-archives/manifest.json?generation=1');
+        assert.equal(assetManifest.status, 200); assert.equal(assetManifest.headers.get('content-type'), 'application/json');
+        const initialAssetManifest = await assetManifest.json();
+
         const initial = await createPackedLoader(ready.url, '?generation=1').json('graph.json');
         assert.equal(initial.nodes[0].name, 'Observed under lock');
         const presentation = await (await request('presentation.json?generation=1')).json();
@@ -46,11 +54,16 @@ test('live generations stream immutable disk artifacts, retain four versions and
             writeFileSync(source, JSON.stringify([{ id: 'a', name: `Revision ${revision}` }]));
             await until(async () => (await (await request('__lattice/status')).json()).generation === String(revision));
             const retained = await request(`graph.json?generation=${Math.max(1, revision - 3)}`); assert.equal(retained.status, 200);
+            const html = await (await request(`index.html?generation=${revision}`)).text();
+            assert.match(html, /asset-bootstrap\.js/u); assert.ok(html.includes(`lattice-generation" content="${revision}"`));
+            assert.deepEqual(await (await request(`asset-archives/manifest.json?generation=${revision}`)).json(), initialAssetManifest);
+
             if (revision < 5) assert.equal((await (await request('graph.json?generation=1')).json()).hash, initial.hash);
         }
         await until(() => readdirSync(temporary).includes('retiring'));
         assert.equal((await (await request('__lattice/status')).json()).generation, '5');
         assert.equal((await request('graph.json?generation=1')).status, 503);
+        assert.equal((await request('index.html?generation=1')).status, 503);
         writeFileSync(retired, 'published');
         await until(() => readdirSync(generations).length === 4);
         const head = await createPackedLoader(ready.url, '?generation=5').json('graph.json'); assert.equal(head.nodes[0].name, 'Revision 5');
@@ -84,8 +97,9 @@ test('new clean live generations publish bounded node history for their new snap
                 const key = detailIdentityKey(nodeIdentity(graph.nodes[0]));
                 const lookup = await json(`${index.lookupRoot}/${logicLookupBucket(key)}.json`, generation);
                 const range = lookup.ranges.find(range => range.first <= key && range.last >= key); assert.ok(range);
-                const record = async ref => JSON.parse((await Promise.all(ref.parts.map(async part => { const packet = await json(part.path, generation); assert.equal(packet.graphHash, index.graphHash); assert.deepEqual(packet.repository, index.repository); return packet.records[part.key]; }))).join(''));
-                const mapping = await record(range.ref), detail = await record(mapping[key]);
+                const record = async ref => { const parts = 'record' in ref ? [{ path: `${index.lookupRoot.replace(/\/lookup$/u, '')}/packets/${Math.floor(ref.record / 32)}.json`, key: String(ref.record) }] : ref.parts; const values = await Promise.all(parts.map(async part => { const packet = await json(part.path, generation); assert.equal(packet.graphHash, index.graphHash); assert.deepEqual(packet.repository, index.repository); assert.equal(packet.detailVersion, index.detailVersion); return packet.records[part.key]; })); if (index.detailVersion === 2) { assert.equal(values.length, 1); return values[0]; } return JSON.parse(values.join('')); };
+                const mapping = await record(range.ref), reference = Array.isArray(mapping) ? mapping.find(row => row[0] === 1 && detailIdentityKey(JSON.stringify(row[1])) === key)?.[2] : mapping[key];
+                assert.ok(reference); const detail = await record(reference);
                 assert.equal(detail.graph.nodes[0].name, expected.get(snapshot.commit));
                 assert.ok(detail.graph.nodes[0].sources.length);
             }

@@ -1,3 +1,4 @@
+import { buildViewerArchives } from './viewer-archives.mjs';
 import { chmodSync, copyFileSync, readFileSync, readdirSync, writeFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { join } from 'node:path';
@@ -15,3 +16,5 @@ for (const file of ['node-detail-transport.js', 'structural-name-facts.js', 'str
 copyFileSync(join(root, 'dist/core/logic-policy.js'), join(root, 'viewer/logic-policy.js'));
 copyFileSync(join(root, 'dist/adapters/markdown-inline.js'), join(root, 'viewer/markdown-inline.js'));
 chmodSync(join(root, 'bin/lattice.mjs'), 0o755);
+
+buildViewerArchives(join(root, 'viewer'));

@@ -64,3 +64,14 @@ test('bounded function focus retains incoming and outgoing call cards', async ()
     assert.equal(model.defaultFocus, 'center');
     assert.deepEqual(model.nodes.find(node => node.id === 'center').relationGroups.map(group => [group.side, group.items.map(item => item.id)]), [['incoming', ['caller']], ['outgoing', ['callee']]]);
 });
+
+test('zero-incoming execution entries prefer exact outgoing calls while APIs prefer incoming usage', () => {
+    const fn = (id, category) => ({ id, kind: 'function', name: id, attributes: { entrypoints: category ? [{ category, rule: 'fixture', source: { path: `src/${id}.py`, line: 1, pointer: '/', contentHash: 'h' } }] : [] }, sources: [{ path: `src/${id}.py`, line: 1, pointer: '/', contentHash: 'h' }] });
+    const nodes = [fn('a-main', 'executable'), fn('z-main', 'module-execution'), fn('a-api', 'public-api'), fn('z-api', 'public-api'), fn('helper')];
+    const call = (source, target, resolution = 'exact') => ({ id: `${source}:${target}:${resolution}`, kind: 'calls', source, target, directed: true, attributes: { resolution }, sources: [] });
+    const edges = [call('a-main', 'helper'), call('z-main', 'helper'), call('z-main', 'z-api'), call('a-api', 'helper'), call('a-api', 'z-api'), call('a-main', 'a-api', 'estimated')];
+    const graph = { nodes, edges };
+    assert.deepEqual(logicEntrypoints(graph).items.map(item => item.node.id), ['z-main', 'a-main', 'z-api', 'a-api']);
+    assert.equal(logicOverviewMetadata(graph).defaultFocus, 'z-main');
+    assert.equal(rankedLogicFunctions(graph)[0].id, 'z-main');
+});

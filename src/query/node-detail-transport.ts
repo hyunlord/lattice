@@ -1,8 +1,8 @@
 import type { Repository } from '../core/model.js';
-export type DetailRef = { readonly parts: readonly { readonly path: string; readonly key: string; }[]; };
+export type DetailRef = { readonly record: number; } | { readonly parts: readonly { readonly path: string; readonly key: string; }[]; };
 export type DetailPages = { readonly total: number; readonly pages: readonly DetailRef[]; };
 export type DetailBinding = { readonly schemaVersion: 1; readonly graphHash: string; readonly repository: Repository; };
-export type DetailIndex = DetailBinding & { readonly lookupRoot: string; readonly pageSize: 20; readonly nodeCount: number; };
+export type DetailIndex = DetailBinding & { readonly detailVersion?: 2; readonly lookupRoot: string; readonly pageSize: 20; readonly nodeCount: number; };
 export type DetailLookup = DetailBinding & { readonly ranges: readonly { readonly first: string; readonly last: string; readonly ref: DetailRef; }[]; };
 export type DetailRecord = {
     readonly graph: unknown;

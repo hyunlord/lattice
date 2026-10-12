@@ -1,4 +1,6 @@
 import assert from 'node:assert/strict';
+import { gunzipSync } from 'node:zlib';
+import { createHash } from 'node:crypto';
 import { execFileSync, spawnSync } from 'node:child_process';
 import { existsSync, lstatSync, mkdirSync, readFileSync, readdirSync, renameSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
@@ -15,10 +17,20 @@ export function verifyExport(cli, repository) {
   run(['build']);
   run(['export']);
   const first = contents();
-  assert.ok(first['structural-dependency-groups.js']);
-  assert.ok(first['evidence.js']);
-  assert.ok(first['source-groups.js']);
-  assert.doesNotMatch(first['source-groups.js'], /\.\.\/dist\//u);
+  const manifest = JSON.parse(first['asset-archives/manifest.json']);
+  const modules = Object.fromEntries(manifest.packs.flatMap(pack => {
+    const bytes = readFileSync(join(output, 'asset-archives', pack.path));
+    assert.equal(createHash('sha256').update(bytes).digest('hex'), pack.hash);
+    assert.equal(bytes.length, pack.encoded); assert.ok(bytes.length <= 262144);
+    const decoded = gunzipSync(bytes); assert.equal(decoded.length, pack.decoded); assert.ok(decoded.length <= 262144);
+    return JSON.parse(decoded);
+  }));
+  assert.ok(modules['structural-dependency-groups.js']);
+  assert.ok(modules['evidence.js']);
+  assert.ok(modules['source-groups.js']);
+  assert.doesNotMatch(modules['source-groups.js'], /\.\.\/dist\//u);
+  assert.match(first['index.html'], /asset-bootstrap\.js/u);
+  assert.equal(first['app.js'], undefined);
   const thin = readPackedArtifact(output, 'graph.json');
   const full = JSON.parse(readFileSync(join(repository, '.lattice/cache/graph.json'), 'utf8'));
   for (const kind of thin.evidence ? ['edges', 'facets', 'findings', 'views'] : []) for (const record of thin[kind]) {
@@ -27,7 +39,7 @@ export function verifyExport(cli, repository) {
   }
   delete thin.evidence;
   assert.deepEqual(thin, full);
-  assert.match(first['loop-map-model.js'], /\.\/structural-dependency-groups\.js/u);
+  assert.match(modules['loop-map-model.js'], /lattice-viewer\/structural-dependency-groups\.js/u);
   assert.equal(JSON.parse(first['.lattice-export.json']).generator, 'lattice');
   run(['export']);
   assert.deepEqual(contents(), first);

@@ -120,3 +120,25 @@ test('prepared history validates before the current build and rejects changed by
     writeFileSync(catalogPath, readFileSync(catalogPath, 'utf8') + ' ');
     assert.throws(() => persistBuild(root, result, undefined, { preparedSnapshots: prepared }), /Snapshot catalog changed/u);
 });
+
+test('streamed graph loading shares identical full evidence without erasing provenance', async t => {
+    const { createGraph } = await import('../dist/index.js');
+    const root = realpathSync(mkdtempSync(join(tmpdir(), 'lattice-storage-evidence-')));
+    t.after(() => rmSync(root, { recursive: true, force: true }));
+    const source = { path: 'input.ts', line: 1, pointer: '', contentHash: 'a'.repeat(64), revision: 'first', url: 'https://example.invalid/first' };
+    const graph = createGraph({
+        repository: { name: 'fixture', dirty: false, sourceFingerprint: 'b'.repeat(64) }, lensDigest: null, adapterVersions: {}, inputs: [], edges: [], facets: [], findings: [], views: [], snapshots: [], nodes: [
+            { id: 'a', kind: 'module', name: 'A', attributes: {}, sources: [source] },
+            { id: 'b', kind: 'module', name: 'B', attributes: {}, sources: [source] },
+            { id: 'c', kind: 'module', name: 'C', attributes: {}, sources: [{ ...source, revision: 'second', url: 'https://example.invalid/second' }] },
+        ]
+    }, digest);
+    const path = join(root, 'graph.json'); atomic(path, graph);
+    const loaded = readGraph(path, { memoize: false });
+    assert.deepEqual(loaded, graph);
+    assert.equal(loaded.nodes[0].sources, loaded.nodes[1].sources);
+    assert.notEqual(loaded.nodes[0].sources[0], loaded.nodes[2].sources[0]);
+    assert.equal(loaded.nodes[2].sources[0].revision, 'second');
+    const corrupted = JSON.parse(readFileSync(path, 'utf8')); corrupted.nodes[1].sources[0].line = 'invalid'; atomic(path, corrupted);
+    assert.throws(() => readGraph(path, { memoize: false }), /finite number/);
+});

@@ -5,7 +5,7 @@ import { logicLookupBucket } from './logic-model.js';
 import { object, parseGraph, type BrowserGraph } from './data.js';
 export type NodeDetailRecord = { readonly graph: BrowserGraph; readonly presentationRelations?: readonly { readonly label: string; readonly pages: DetailPages; }[]; readonly facets: DetailPages; readonly findings: DetailPages; readonly relations: { readonly incoming: DetailPages; readonly outgoing: DetailPages; readonly undirected: DetailPages; }; };
 function path(value: unknown): value is string { return typeof value === 'string' && /^details\/[a-zA-Z0-9_./-]+\.json$/u.test(value) && !value.split('/').includes('..'); }
-function ref(value: unknown): value is DetailRef { return object(value) && Array.isArray(value['parts']) && value['parts'].length > 0 && value['parts'].every(part => object(part) && path(part['path']) && typeof part['key'] === 'string'); }
+function ref(value: unknown): value is DetailRef { return object(value) && (Number.isSafeInteger(value['record']) && Number(value['record']) >= 0 || Array.isArray(value['parts']) && value['parts'].length > 0 && value['parts'].every(part => object(part) && path(part['path']) && typeof part['key'] === 'string')); }
 function pages(value: unknown): value is DetailPages { return object(value) && Number.isSafeInteger(value['total']) && Number(value['total']) >= 0 && Array.isArray(value['pages']) && value['pages'].length === Math.ceil(Number(value['total']) / 20) && value['pages'].every(ref); }
 function bound(value: unknown, expected: { readonly graphHash: string; readonly repository?: Repository; }): asserts value is Record<string, unknown> & DetailBinding {
     if (!object(value) || value['schemaVersion'] !== 1 || value['graphHash'] !== expected.graphHash || !object(value['repository'])) throw new Error('노드 상세의 소스가 다릅니다. 지도를 새로 고치세요.');
@@ -30,16 +30,44 @@ export function createNodeDetailLoader(expected: { readonly hash: string; readon
         if (value === undefined) return undefined;
         bound(value, snapshot ? { graphHash: snapshot.graphHash } : { graphHash: expected.hash, repository: expected.repository });
         if (snapshot && value.repository.commit !== snapshot.commit) throw new Error('스냅샷 상세의 소스가 다릅니다.');
+        if (value['detailVersion'] !== undefined && value['detailVersion'] !== 2) throw new Error('Unsupported detail transport');
         if (typeof value['lookupRoot'] !== 'string' || !path(value['lookupRoot'] + '/00.json') || value['pageSize'] !== 20 || !Number.isSafeInteger(value['nodeCount'])) throw new Error('노드 상세 목록 형식이 올바르지 않습니다.');
         return value as DetailIndex;
     };
     const record = async (binding: DetailIndex, reference: DetailRef): Promise<unknown> => {
         if (!ref(reference)) throw new Error('노드 상세 조각 참조가 올바르지 않습니다.');
+        if (binding.detailVersion === 2) {
+            const part = 'record' in reference ? { path: `${binding.lookupRoot.replace(/\/lookup$/u, '')}/packets/${Math.floor(reference.record / 32)}.json`, key: String(reference.record) } : reference.parts.length === 1 ? reference.parts[0] : undefined;
+            if (!part) throw new Error('Invalid structured detail reference'); const value = await read(part.path, false, binding); bound(value, binding);
+            if (value['detailVersion'] !== 2 || !object(value['records']) || !Object.hasOwn(value['records'], part.key)) throw new Error('Missing structured detail record');
+            return value['records'][part.key];
+        }
+        if ('record' in reference) throw new Error('Invalid legacy detail reference');
         const chunks: string[] = [];
         for (const part of reference.parts) { const value = await read(part.path, false, binding); bound(value, binding); if (!object(value['records']) || !Object.hasOwn(value['records'], part.key) || typeof value['records'][part.key] !== 'string') throw new Error('노드 상세 조각이 없습니다.'); chunks.push(String(value['records'][part.key])); }
         return JSON.parse(chunks.join('')) as unknown;
     };
     const graph = (value: unknown, binding: DetailIndex): BrowserGraph => {
+        if (binding.detailVersion === 2) {
+            if (!object(value)) throw new Error('Invalid compact detail graph');
+            const groups: Record<string, unknown> = {}, records: Record<string, Record<string, string>> = {};
+            const data: Record<string, unknown> = { schemaVersion: 1, hash: binding.graphHash, repository: binding.repository, nodes: value['nodes'] ?? [], views: [] };
+            for (const kind of ['edges', 'facets', 'findings']) {
+                const items = value[kind] ?? []; if (!Array.isArray(items)) throw new Error('Invalid compact collection');
+                const mapping: Record<string, string> = {}; records[kind] = mapping;
+                data[kind] = items.map(item => {
+                    if (!Array.isArray(item) || item.length < 1 || item.length > 2 || !object(item[0])) throw new Error('Invalid compact record');
+                    const record = item[0], group = item[1];
+                    if (group !== undefined) {
+                        if (!object(group) || typeof group['id'] !== 'string' || typeof record['id'] !== 'string') throw new Error('Invalid compact evidence');
+                        Object.defineProperty(groups, group['id'], { value: { count: group['count'], pages: group['pages'] }, enumerable: true, configurable: true });
+                        Object.defineProperty(mapping, record['id'], { value: group['id'], enumerable: true, configurable: true });
+                    }
+                    return record;
+                });
+            }
+            data['evidence'] = { version: 1, groups, records }; value = data;
+        }
         const result = parseGraph(value); bound({ schemaVersion: 1, graphHash: result.hash, repository: result.repository }, binding); return result;
     };
     const lookupRecord = async (binding: DetailIndex, key: string): Promise<unknown> => {
@@ -48,7 +76,18 @@ export function createNodeDetailLoader(expected: { readonly hash: string; readon
         const range = lookup['ranges'].find((item: unknown) => object(item) && typeof item['first'] === 'string' && typeof item['last'] === 'string' && item['first'] <= key && key <= item['last']);
         if (!range) return undefined;
         if (!object(range) || !ref(range['ref'])) throw new Error('노드 상세 색인 참조가 올바르지 않습니다.');
-        const mapping = await record(binding, range['ref']); if (!object(mapping)) throw new Error('노드 상세 색인이 올바르지 않습니다.');
+        let mapping = await record(binding, range['ref']);
+        if (binding.detailVersion === 2 && Array.isArray(mapping)) {
+            const entries: Record<string, unknown> = {};
+            for (const row of mapping) {
+                if (!Array.isArray(row) || row.length !== 3 || !ref(row[2])) throw new Error('Invalid compact detail lookup');
+                const field = row[0] === 0 && typeof row[1] === 'string' ? detailIdKey(row[1]) : row[0] === 1 && Array.isArray(row[1]) && row[1].length === 3 ? detailIdentityKey(JSON.stringify(row[1])) : row[0] === 2 && typeof row[1] === 'string' ? detailLabelKey(row[1]) : undefined;
+                if (field === undefined || Object.hasOwn(entries, field)) throw new Error('Invalid compact detail key');
+                Object.defineProperty(entries, field, { value: row[2], enumerable: true });
+            }
+            mapping = entries;
+        }
+        if (!object(mapping)) throw new Error('노드 상세 색인이 올바르지 않습니다.');
         if (!Object.hasOwn(mapping, key)) return undefined; const reference = mapping[key]; if (!ref(reference)) throw new Error('노드 상세 참조가 올바르지 않습니다.');
         return record(binding, reference);
     };

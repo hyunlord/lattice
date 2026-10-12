@@ -61,17 +61,21 @@ export async function serve(options: Options) {
             clients.add(response); response.on('close', () => clients.delete(response)); return;
         }
         if (url.pathname === '/__lattice/status') { send(200, 'application/json', JSON.stringify(status())); return; }
+        const version = url.searchParams.get('generation') ?? String(generation);
+        const files = generations.get(version);
         if (url.pathname === '/' || url.pathname === '/index.html') {
-            const config = `<meta name="lattice-generation" content="${generation}"><script type="module" src="/__lattice/live-client.js"></script>`;
-            send(200, 'text/html; charset=utf-8', template.replace('</head>', `${config}</head>`)); return;
+            if (!files && url.searchParams.has('generation')) { send(503, 'text/plain', 'Generation expired; reload the page'); return; }
+            let generationTemplate: string;
+            try { generationTemplate = files ? readFileSync(join(files, 'index.html'), 'utf8') : template; }
+            catch { send(500, 'text/plain', 'Viewer artifact unavailable'); return; }
+            const config = `<meta name="lattice-generation" content="${version}"><script type="module" src="/__lattice/live-client.js"></script>`;
+            send(200, 'text/html; charset=utf-8', generationTemplate.replace('</head>', `${config}</head>`)); return;
         }
         const mediaFile = mediaFiles.get(url.pathname);
         if (mediaFile) { send(200, mediaFile.mimeType, mediaFile.bytes); return; }
         const asset = assets.get(url.pathname);
         if (asset) { send(200, url.pathname.endsWith('.css') ? 'text/css' : 'text/javascript', asset); return; }
         if (error && !url.searchParams.has('generation') && ['/overview.json', '/graph.json', '/presentation.json', '/snapshots.json'].includes(url.pathname)) { send(503, 'application/json', JSON.stringify({ error })); return; }
-        const version = url.searchParams.get('generation') ?? String(generation);
-        const files = generations.get(version);
         if (!files && ['/overview.json', '/graph.json', '/presentation.json', '/snapshots.json'].includes(url.pathname)) { send(503, 'application/json', JSON.stringify({ error: error ?? 'Generation expired; reload the page' })); return; }
         const relativePath = url.pathname.slice(1);
         const path = files && /^[A-Za-z0-9._/-]+$/u.test(relativePath) && relativePath.split('/').every(part => part && part !== '.' && part !== '..') ? join(files, relativePath) : undefined;

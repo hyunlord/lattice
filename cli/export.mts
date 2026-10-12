@@ -1,3 +1,4 @@
+import { writeViewerAssets } from './export-assets.mjs';
 import { writeNodeDetails } from './export-details.mjs';
 import { writeLogic } from './export-logic.mjs';
 import { writeOverview } from './export-overview.mjs';
@@ -46,9 +47,10 @@ function destination(options: Options) {
 
 function exportCurrentGraph(cache: string, staging: string, root: string, presentation: unknown, writeEvidence: (path: string, text: string) => void, packs: ReturnType<typeof createPackedExport>): string {
     const graph = readGraph(join(cache, 'graph.json'), { memoize: false });
+    for (const records of [graph.nodes, graph.edges, graph.facets, graph.findings, graph.views]) packs.identifiers(records);
     const media = resolveMediaAssets(root, graph.nodes, parseMediaConfig(object(presentation) ? presentation['media'] : undefined));
-    writeNodeDetails(graph, writeEvidence, 'details', presentation);
-    writeLogic(graph, writeEvidence);
+    writeNodeDetails(graph, writeEvidence, 'details', presentation, { json: packs.json, reference: packs.reference });
+    writeLogic(graph, writeEvidence, { reference: packs.reference });
     writeOverview(graph, object(presentation) ? { ...presentation, mediaManifest: media.manifest } : {}, writeEvidence);
     packs.json('graph.json', graph);
     writeFileSync(join(staging, 'graph.json'), JSON.stringify({ transportVersion: 2, document: 'graph.json', hash: graph.hash, repository: graph.repository, lensDigest: graph.lensDigest, counts: { nodes: graph.nodes.length, edges: graph.edges.length, facets: graph.facets.length, findings: graph.findings.length, views: graph.views.length } }));
@@ -71,13 +73,14 @@ export function exportSite(options: Options) {
     let backedUp = false;
     let hash: string;
     try {
-        for (const file of ['index.html', 'styles.css', ...readdirSync(join(packageRoot, 'viewer')).filter(file => (file.endsWith('.js') || file.endsWith('.css')))]) copyFileSync(join(packageRoot, 'viewer', file), join(staging, file));
+        writeViewerAssets(staging);
         const packs = createPackedExport(staging);
         const writeEvidence = (path: string, text: string) => { if (path === 'overview.json') writeFileSync(join(staging, path), text); else packs.write(path, text); };
         hash = exportCurrentGraph(cache, staging, options.root, presentation, writeEvidence, packs);
         const snapshots = readSnapshots(cache, {
             memoize: false, onGraph: (snapshot, graph) => {
-                writeNodeDetails(graph, writeEvidence, `details/snapshots/${snapshot.id}`);
+                for (const records of [graph.nodes, graph.edges, graph.facets, graph.findings, graph.views]) packs.identifiers(records);
+                writeNodeDetails(graph, writeEvidence, `details/snapshots/${snapshot.id}`, {}, { json: packs.json, reference: packs.reference });
                 mkdirSync(join(staging, 'snapshots'), { recursive: true });
                 packs.json(snapshot.artifactPath, graph);
                 writeFileSync(join(staging, snapshot.artifactPath), JSON.stringify({ transportVersion: 2, document: snapshot.artifactPath, hash: graph.hash, repository: graph.repository, lensDigest: graph.lensDigest, counts: { nodes: graph.nodes.length, edges: graph.edges.length, facets: graph.facets.length, findings: graph.findings.length, views: graph.views.length } }));

@@ -43,14 +43,15 @@ function buildIndex(graph: LogicGraph, includeEstimated: boolean) {
     for (const edge of graph.edges) if (edge.kind === 'contains' && packageSet.has(edge.source)) add(edge.target, edge.source);
     const describe = (node: Node): LogicNode => ({ node, entrypoints: entrypoints(node), packageIds: [...new Set([...(packageIds.get(node.id) ?? []), ...(packageIds.get(String(node.attributes['module'] ?? '')) ?? [])])].sort() });
     const edges = graph.edges.filter(edge => edge.kind === 'calls' && edge.directed && nodes.has(edge.source) && nodes.has(edge.target) && (edge.attributes?.['resolution'] === 'exact' || (includeEstimated && edge.attributes?.['resolution'] === 'estimated'))).sort(compare);
-    const incoming = new Map<string, Edge[]>(), outgoing = new Map<string, Edge[]>();
+    const incoming = new Map<string, Edge[]>(), outgoing = new Map<string, Edge[]>(), exactOutgoing = new Map<string, number>();
     for (const edge of edges) {
         const ins = incoming.get(edge.target) ?? []; ins.push(edge); incoming.set(edge.target, ins);
         const outs = outgoing.get(edge.source) ?? []; outs.push(edge); outgoing.set(edge.source, outs);
+        if (edge.attributes?.['resolution'] === 'exact') exactOutgoing.set(edge.source, (exactOutgoing.get(edge.source) ?? 0) + 1);
     }
     const described = [...nodes.values()].sort(compare).map(describe);
     const priority = (node: LogicNode): number => node.entrypoints.some(entry => executionCategory(entry.category)) ? 0 : node.entrypoints.some(entry => entry.category === 'public-api') ? 1 : 2;
-    const ranked = described.filter(item => productLogicPath(item.node.sources[0]?.path ?? '')).sort((a, b) => priority(a) - priority(b) || (incoming.get(b.node.id)?.length ?? 0) - (incoming.get(a.node.id)?.length ?? 0) || compare(a.node, b.node));
+    const ranked = described.filter(item => productLogicPath(item.node.sources[0]?.path ?? '')).sort((a, b) => priority(a) - priority(b) || (priority(a) === 0 ? (exactOutgoing.get(b.node.id) ?? 0) - (exactOutgoing.get(a.node.id) ?? 0) : 0) || (incoming.get(b.node.id)?.length ?? 0) - (incoming.get(a.node.id)?.length ?? 0) || compare(a.node, b.node));
     const entries = ranked.filter(item => item.entrypoints.length > 0);
     return { nodes, edges, describe, described, ranked, entries, incoming, outgoing };
 }

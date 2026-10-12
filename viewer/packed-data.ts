@@ -22,9 +22,9 @@ export function createPackedLoader(base = './', suffix = '') {
             if (!response.ok) throw new Error(`Packed artifact HTTP ${response.status}: ${path}`);
             const bytes = await bounded(response);
             if (compressed) {
-                if (!/^packs\/[a-f0-9]{64}\.json.gz$/u.test(path)) throw new Error('Invalid pack path');
+                if (!/^(?:packs\/[a-f0-9]{64}|transport\/(?:packs-\d+|files-[a-f0-9]{2}(?:-\d+)?))\.json.gz$/u.test(path)) throw new Error('Invalid pack path');
                 const digest = globalThis.crypto?.subtle ? [...new Uint8Array(await crypto.subtle.digest('SHA-256', bytes))].map(value => value.toString(16).padStart(2, '0')).join('') : packedHash(bytes);
-                if (path !== `packs/${digest}.json.gz`) throw new Error('Packed artifact hash mismatch');
+                if (path.startsWith('packs/') && path !== `packs/${digest}.json.gz`) throw new Error('Packed artifact hash mismatch');
                 const stream = new Blob([bytes]).stream().pipeThrough(new DecompressionStream('gzip'));
                 return JSON.parse(new TextDecoder('utf-8', { fatal: true }).decode(await bounded(new Response(stream))));
             }
@@ -41,7 +41,7 @@ export function createPackedLoader(base = './', suffix = '') {
             if (response.status === 404) return undefined;
             if (!response.ok) throw new Error(`Transport HTTP ${response.status}`);
             const value: unknown = JSON.parse(new TextDecoder().decode(await bounded(response)));
-            if (!object(value) || value['transportVersion'] !== 2 || value['packPageSize'] !== 256 || !integer(value['packCount']) || !integer(value['fileCount'])) throw new Error('Invalid transport manifest');
+            if (!object(value) || value['transportVersion'] !== 2 || value['indexEncoding'] !== undefined && value['indexEncoding'] !== 'gzip' || value['packPageSize'] !== 256 || !integer(value['packCount']) || !integer(value['fileCount'])) throw new Error('Invalid transport manifest');
             return value;
         })();
         metadata = pending; void pending.catch(() => { metadata = undefined; }); return pending;
@@ -55,7 +55,8 @@ export function createPackedLoader(base = './', suffix = '') {
                 if (value.length !== 3 || !integer(data) || !integer(key)) throw new Error('Invalid packed reference');
                 const identity = `${data}:${key}`; if (active.has(identity) || active.size > 256) throw new Error('Cyclic packed reference');
                 const info = await manifest(); if (!info || typeof info['packCount'] !== 'number' || data >= info['packCount']) throw new Error('Missing packed reference');
-                const catalog = await read(`transport/packs-${Math.floor(data / 256)}.json`);
+                const zipped = info['indexEncoding'] === 'gzip';
+                const catalog = await read(`transport/packs-${Math.floor(data / 256)}.json${zipped ? '.gz' : ''}`, zipped);
                 const path: unknown = Array.isArray(catalog) ? catalog[data % 256] : undefined;
                 if (typeof path !== 'string') throw new Error('Missing pack');
                 const pack = await read(path, true); if (!Array.isArray(pack) || key >= pack.length) throw new Error('Missing packed record');
@@ -69,10 +70,20 @@ export function createPackedLoader(base = './', suffix = '') {
                 if (value.length !== 2 || !Array.isArray(data)) throw new Error('Invalid packed object');
                 const result: Record<string, unknown> = {};
                 for (const entry of data) {
-                    if (!Array.isArray(entry) || entry.length !== 2 || typeof entry[0] !== 'string' || Object.hasOwn(result, entry[0])) throw new Error('Invalid packed object field');
-                    Object.defineProperty(result, entry[0], { value: await decode(entry[1], active), enumerable: true, configurable: true, writable: true });
+                    if (!Array.isArray(entry) || entry.length !== 2) throw new Error('Invalid packed object field');
+                    const field = await decode(entry[0], active);
+                    if (typeof field !== 'string' || Object.hasOwn(result, field)) throw new Error('Invalid packed object field');
+                    Object.defineProperty(result, field, { value: await decode(entry[1], active), enumerable: true, configurable: true, writable: true });
                 }
                 return result;
+            }
+            case 'c': {
+                if (value.length !== 2 || !Array.isArray(data)) throw new Error('Invalid packed array chunks');
+                const result: unknown[] = []; for (const ref of data) { const part = await decode(ref, active); if (!Array.isArray(part)) throw new Error('Invalid packed array chunk'); for (const item of part) result.push(item); } return result;
+            }
+            case 'm': {
+                if (value.length !== 2 || !Array.isArray(data)) throw new Error('Invalid packed object chunks');
+                const result: Record<string, unknown> = {}; for (const ref of data) { const part = await decode(ref, active); if (!object(part)) throw new Error('Invalid packed object chunk'); for (const [key, item] of Object.entries(part)) { if (Object.hasOwn(result, key)) throw new Error('Duplicate packed field'); Object.defineProperty(result, key, { value: item, enumerable: true, configurable: true, writable: true }); } } return result;
             }
             case 's': {
                 if (value.length !== 2) throw new Error('Invalid packed JSON string');
@@ -89,12 +100,16 @@ export function createPackedLoader(base = './', suffix = '') {
     };
     const json = async (path: string): Promise<unknown> => {
         safe(path);
-        if (!await manifest()) { const response = await fetch(base + path + suffix); if (!response.ok) throw new Error(`Artifact HTTP ${response.status}: ${path}`); return response.json(); }
-        const ranges = await read(`transport/files-${bucket(path)}.json`);
+        const info = await manifest();
+        if (!info) { const response = await fetch(base + path + suffix); if (!response.ok) throw new Error(`Artifact HTTP ${response.status}: ${path}`); return response.json(); }
+        const direct = /^records\/(\d+)\/(\d+)\/[A-Za-z0-9_-]+\.json$/u.exec(path);
+        if (direct) return decode(['r', Number(direct[1]), Number(direct[2])]);
+        const zipped = info['indexEncoding'] === 'gzip';
+        const ranges = await read(`transport/files-${bucket(path)}.json${zipped ? '.gz' : ''}`, zipped);
         if (!Array.isArray(ranges)) throw new Error('Invalid packed file index');
         const range: unknown = ranges.find((item: unknown) => object(item) && typeof item['first'] === 'string' && typeof item['last'] === 'string' && item['first'] <= path && path <= item['last']);
-        if (!object(range) || typeof range['path'] !== 'string' || !/^transport\/files-[a-f0-9]{2}-\d+\.json$/u.test(range['path'])) throw new Error(`Artifact HTTP 404: ${path}`);
-        const rows = await read(range['path']);
+        if (!object(range) || typeof range['path'] !== 'string' || !/^transport\/files-[a-f0-9]{2}-\d+\.json(?:\.gz)?$/u.test(range['path'])) throw new Error(`Artifact HTTP 404: ${path}`);
+        const rows = await read(range['path'], range['path'].endsWith('.gz'));
         if (!Array.isArray(rows)) throw new Error('Invalid packed file page');
         const row: unknown = rows.find((item: unknown) => Array.isArray(item) && item[0] === path);
         if (!Array.isArray(row) || row.length !== 2) throw new Error(`Artifact HTTP 404: ${path}`);

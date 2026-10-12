@@ -406,3 +406,16 @@ test('package routing handles empty and acyclic geometry deterministically', asy
     assert.equal(route().length, 1);
     assert.deepEqual(route(), route());
 });
+
+test('narrow package fan-in keeps ten directed routes and labels', async () => {
+    const { routePackageDependencies } = await import('../viewer/dependency-package-arrows.js');
+    const { dependencyRouteIntersects } = await import('../viewer/dependency-layout.js');
+    const boxes = new Map(Array.from({ length: 11 }, (_, i) => [`p${i}`, { x: i === 10 ? 24 : 24 + (i % 2) * 159, y: i === 10 ? 552 : 24 + Math.floor(i / 2) * 96, width: i === 10 ? 286 : 127, height: 64 }]));
+    const flows = [3, 0, 1, 2, 4, 5, 6, 7, 8, 9].map(i => ({ source: `p${i}`, target: 'p10', count: i === 3 ? 4 : 2, projectCount: 1, weight: i === 3 ? 4 : 2 }));
+    const routes = routePackageDependencies(flows, boxes, 334, 660, () => 20);
+    assert.equal(routes.length, 10);
+    for (const route of routes) {
+        assert.ok([...boxes.values()].every(box => !dependencyRouteIntersects(route.points, box)));
+        assert.ok(routes.filter(other => other !== route).every(other => !dependencyRouteIntersects(other.points, route.labelBox)));
+    }
+});

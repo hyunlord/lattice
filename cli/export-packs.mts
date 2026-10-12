@@ -15,18 +15,19 @@ export function createPackedExport(directory: string) {
     const packDirectory = join(directory, 'packs'), indexDirectory = join(directory, 'transport');
     const spool = join(directory, '.pack-index');
     mkdirSync(packDirectory, { recursive: true }); mkdirSync(indexDirectory, { recursive: true }); mkdirSync(spool);
-    const records = new Map<string, Ref>(), paths = new Set<string>(), packPaths: string[] = [], packSizes: number[] = [];
+    const identifiers = new Set<string>();
+    const records = new Map<string, number>(), paths = new Set<string>(), packPaths: string[] = [], packSizes: number[] = [];
     let pending: string[] = [], bytes = 2, finished = false;
     const flush = () => {
         if (!pending.length) return;
-        const text = '[' + pending.join(',') + ']', data = gzipSync(text, { level: 6 });
+        const text = '[' + pending.join(',') + ']', data = gzipSync(text, { level: 9 });
         if (Buffer.byteLength(text) > CAP || data.length > CAP) throw new Error('Packed artifact exceeds byte limit');
         const path = `packs/${hash(data)}.json.gz`;
         writeFileSync(join(directory, path), data); packPaths.push(path); packSizes.push(pending.length); pending = []; bytes = 2;
     };
     const save = (value: Value): Ref => {
-        const text = JSON.stringify(value), digest = hash(text), previous = records.get(digest);
-        if (previous) return previous;
+        const text = JSON.stringify(value), digest = createHash('sha256').update(text).digest('base64'), previous = records.get(digest);
+        if (previous !== undefined) return ['r', Math.floor(previous / CAP), previous % CAP];
         if (Buffer.byteLength(text) > TARGET) {
             const fragments: Value[] = [];
             for (let start = 0; start < text.length;) {
@@ -34,40 +35,64 @@ export function createPackedExport(directory: string) {
                 if (end < text.length && /[\uD800-\uDBFF]/u.test(text[end - 1] ?? '')) end--;
                 fragments.push(save(text.slice(start, end))); start = end;
             }
-            const ref = save(['j', fragments]); records.set(digest, ref); return ref;
+            const ref = save(['j', fragments]); records.set(digest, ref[1] * CAP + ref[2]); return ref;
         }
         const size = Buffer.byteLength(text) + (pending.length ? 1 : 0);
         if (bytes + size > TARGET) flush();
         const ref: Ref = ['r', packPaths.length, pending.length];
-        pending.push(text); bytes += size; records.set(digest, ref); return ref;
+        pending.push(text); bytes += size; records.set(digest, ref[1] * CAP + ref[2]); return ref;
     };
     const encode = (value: unknown, shared = true): Value => {
-        if (typeof value === 'string' && value.length > 128 && (value.startsWith('{') || value.startsWith('['))) {
-            let parsed: unknown;
-            try { parsed = JSON.parse(value); } catch (error) { if (!(error instanceof SyntaxError)) throw error; return value; }
-            if (JSON.stringify(parsed) === value) return ['s', encode(parsed)];
-        }
+        if (typeof value === 'string' && identifiers.has(value)) return save(value);
         if (value === null || typeof value === 'string' || typeof value === 'boolean' || typeof value === 'number') return value;
-        if (Array.isArray(value)) return ['a', value.map(item => encode(item))];
+        if (Array.isArray(value)) {
+            if (value.length <= 256) return ['a', value.map(item => encode(item))];
+            const parts: Value[] = [];
+            for (let offset = 0; offset < value.length; offset += 256) parts.push(save(['a', value.slice(offset, offset + 256).map(item => encode(item))]));
+            return ['c', parts];
+        }
         if (!object(value)) throw new Error('Packed artifacts must be JSON values');
-        const entries: Value[] = [];
-        for (const [key, item] of Object.entries(value)) if (item !== undefined) entries.push([key, encode(item)]);
-        const encoded: Value = ['o', entries];
+        if (shared && typeof value['id'] === 'string' && (Object.hasOwn(value, 'sources') || Object.hasOwn(value, 'attributes'))) {
+            const body: Record<string, unknown> = {}, fields: Value[] = [];
+            for (const key in value) if (Object.hasOwn(value, key)) {
+                if (key === 'sources' || key === 'attributes') { if (value[key] !== undefined) fields.push(save(['o', [[key, encode(value[key])]]])); }
+                else Object.defineProperty(body, key, { value: value[key], enumerable: true });
+            }
+            return save(['m', [save(encode(body, false)), ...fields]]);
+        }
+        let entries: Value[] = []; const parts: Value[] = [];
+        for (const key in value) if (Object.hasOwn(value, key) && value[key] !== undefined) {
+            entries.push([identifiers.has(key) ? save(key) : key, encode(value[key])]);
+            if (entries.length === 256) { parts.push(save(['o', entries])); entries = []; }
+        }
+        if (parts.length && entries.length) parts.push(save(['o', entries]));
+        const encoded: Value = parts.length ? ['m', parts] : ['o', entries];
         // Share immutable graph records and exact source records, preserving all provenance.
-        return shared && (typeof value['id'] === 'string' && Array.isArray(value['sources']) || typeof value['path'] === 'string' && typeof value['contentHash'] === 'string') ? save(encoded) : encoded;
+        return shared && (typeof value['id'] === 'string' || typeof value['path'] === 'string' && typeof value['contentHash'] === 'string') ? save(encoded) : encoded;
     };
     const json = (path: string, value: unknown) => {
-        safe(path); if (finished) throw new Error('Packed export is closed'); if (paths.has(path)) return;
-        paths.add(path); const ref = save(encode(value));
+        safe(path); if (path.startsWith('records/')) throw new Error('Reserved packed record path'); if (finished) throw new Error('Packed export is closed'); const identity = createHash('sha256').update(path).digest('base64'); if (paths.has(identity)) return;
+        paths.add(identity); const ref = save(encode(value));
         appendFileSync(join(spool, bucket(path)), JSON.stringify([path, ref]) + '\n');
     };
     const bounded = (path: string, value: unknown) => {
         const text = JSON.stringify(value);
         if (Buffer.byteLength(text) > CAP) throw new Error('Packed index exceeds byte limit');
-        writeFileSync(join(indexDirectory, path), text);
+        const data = gzipSync(text, { level: 9 });
+        if (data.length > CAP) throw new Error('Packed index exceeds byte limit');
+        writeFileSync(join(indexDirectory, path + '.gz'), data);
     };
     return {
         json,
+        identifiers(values: Iterable<{ readonly id: string; }>) {
+            if (finished) throw new Error('Packed export is closed');
+            for (const value of values) identifiers.add(value.id);
+        },
+        reference(value: unknown, label = 'value') {
+            if (finished || !/^[A-Za-z0-9_-]+$/u.test(label)) throw new Error('Invalid direct packed reference');
+            const [, pack, record] = save(encode(value));
+            return `records/${pack}/${record}/${label}.json`;
+        },
         write: (path: string, text: string) => json(path, JSON.parse(text)),
         finish() {
             if (finished) throw new Error('Packed export is closed'); flush();
@@ -82,7 +107,7 @@ export function createPackedExport(directory: string) {
                     const part: [string, Ref][] = []; let size = 2;
                     while (start < rows.length) { const row = rows[start]; if (!row) break; const extra = Buffer.byteLength(JSON.stringify(row)) + 1; if (part.length && size + extra > TARGET) break; part.push(row); size += extra; start++; }
                     const first = part[0], last = part.at(-1); if (!first || !last) throw new Error('Empty packed lookup');
-                    const path = `files-${key}-${ranges.length}.json`; bounded(path, part); ranges.push({ first: first[0], last: last[0], path: `transport/${path}` });
+                    const path = `files-${key}-${ranges.length}.json`; bounded(path, part); ranges.push({ first: first[0], last: last[0], path: `transport/${path}.gz` });
                 }
                 bounded(`files-${key}.json`, ranges);
             }
@@ -92,8 +117,8 @@ export function createPackedExport(directory: string) {
                 if (value[0] === 'r') {
                     const [, pack, key] = value;
                     if (value.length !== 3 || typeof pack !== 'number' || !Number.isSafeInteger(pack) || pack < 0 || typeof key !== 'number' || !Number.isSafeInteger(key) || key < 0 || key >= (packSizes[pack] ?? 0)) throw new Error('Invalid packed reference before publication');
-                } else if (value[0] === 'o' && Array.isArray(value[1])) { for (const entry of value[1]) if (Array.isArray(entry)) inspect(entry[1]); }
-                else if ((value[0] === 'a' || value[0] === 'j') && Array.isArray(value[1])) { for (const child of value[1]) inspect(child); }
+                } else if (value[0] === 'o' && Array.isArray(value[1])) { for (const entry of value[1]) if (Array.isArray(entry)) { inspect(entry[0]); inspect(entry[1]); } }
+                else if ((value[0] === 'a' || value[0] === 'j' || value[0] === 'c' || value[0] === 'm') && Array.isArray(value[1])) { for (const child of value[1]) inspect(child); }
                 else if (value[0] === 's') inspect(value[1]);
             };
             for (const path of new Set(packPaths)) {
@@ -103,8 +128,8 @@ export function createPackedExport(directory: string) {
                 const entries: unknown = JSON.parse(text); if (!Array.isArray(entries)) throw new Error('Invalid packed artifact');
                 for (const value of entries) inspect(value);
             }
-            writeFileSync(join(directory, 'transport.json'), JSON.stringify({ transportVersion: 2, packPageSize: PACK_PAGE, packCount: packPaths.length, fileCount: paths.size }));
-            rmSync(spool, { recursive: true }); records.clear(); paths.clear(); finished = true;
+            writeFileSync(join(directory, 'transport.json'), JSON.stringify({ transportVersion: 2, indexEncoding: 'gzip', packPageSize: PACK_PAGE, packCount: packPaths.length, fileCount: paths.size }));
+            rmSync(spool, { recursive: true }); records.clear(); paths.clear(); identifiers.clear(); finished = true;
         }
     };
 }

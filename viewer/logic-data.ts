@@ -22,7 +22,7 @@ export function createLogicProvider(graphHash: string, suffix = '', expectedRepo
     const transport = createPackedLoader('./', suffix);
     const requests = new Map<string, Promise<Record<string, unknown>>>(), names = new Map<string, string>(), descriptions = new Map<string, LogicNode>();
     const read = (path: string): Promise<Record<string, unknown>> => {
-        if (!/^logic\/(?:index\.json|entrypoints\/\d+\.json|lookup\/[a-f0-9]{2}\.json|nodes\/[a-f0-9]{64}\.json|calls\/[a-f0-9]{64}-(?:all-)?(?:in|out)-\d+\.json)$/u.test(path)) return Promise.reject(new Error('올바르지 않은 호출 정보 경로입니다.'));
+        if (!/^records\/\d+\/\d+\/logic\.json$/u.test(path) && !/^logic\/(?:index\.json|entrypoints\/\d+\.json|lookup\/[a-f0-9]{2}\.json|nodes\/[a-f0-9]{64}\.json|calls\/[a-f0-9]{64}-(?:all-)?(?:in|out)-\d+\.json)$/u.test(path)) return Promise.reject(new Error('올바르지 않은 호출 정보 경로입니다.'));
         const cached = requests.get(path); if (cached) return cached;
         const pending = (async () => {
             const value: unknown = await transport.json(path);
