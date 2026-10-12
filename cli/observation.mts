@@ -6,7 +6,7 @@ import type { Options, RepositoryReader, SelectedInput } from './types.mjs';
 import type { Lens, SourceInput } from '../dist/index.js';
 import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { basename, relative, resolve, sep } from 'node:path';
-import { canonicalJson } from '../dist/index.js';
+import { InputDigestList, observationFingerprint } from './observation-fingerprint.mjs';
 import { createGlobMatcher, parseLens } from '../dist/lens/index.js';
 import { inside, inInputScope, selectedInputs } from './inputs.mjs';
 import { InputSizeError, workingRepository, workingRepositoryAsync, withWorkingCache } from './repository.mjs';
@@ -20,6 +20,7 @@ import type { WorkingMetadata } from './repository.mjs';
 type SelectionPlan = { readonly lensInput: SourceInput | undefined; readonly lens: Lens | undefined; readonly paths: readonly string[]; readonly selected: ReturnType<typeof selectedInputs>; readonly codePaths: readonly string[]; };
 // Reuse derived selection; working inputs are verified separately by the observation reader.
 const plans = new WeakMap<Options, SelectionPlan>();
+const fingerprintLists = new WeakMap<Options, { readonly inputs: InputDigestList; readonly code: InputDigestList; }>();
 const sourceCaches = new WeakMap<Options, SourceObservationCache>();
 const verifiedRepositories = new WeakMap<Options, WorkingMetadata>();
 const samePaths = (left: readonly string[], right: readonly string[]) => left.length === right.length && left.every((path, index) => path === right[index]);
@@ -95,7 +96,9 @@ function observeInputs(options: Options, repository: RepositoryReader, historica
     });
     const mediaConfig = parseMediaConfig(object(lens?.config['presentation']) ? lens.config['presentation']['media'] : undefined);
     const mediaCandidates = mediaConfig.field ? repository.paths.filter(path => /\.(png|jpe?g|webp|gif|svg|avif)$/iu.test(path)).map(path => ({ id: path, attributes: { [mediaConfig.field ?? '']: path } })) : [];
-    const fingerprint = digest(canonicalJson({ repository: { name: repository.name, remoteUrl: repository.remoteUrl ?? null, commit: repository.commit ?? null, dirty: repository.dirty }, lens: lensInput ?? null, inputDiagnostics, interpretations, draftInterpretations, media: historical ? null : mediaFingerprint(root, mediaConfig, mediaCandidates), inputs: selected.map(({ input }) => ({ path: input.path, contentHash: input.contentHash })), ...(lens?.codeLinks.length ? { codeInputs: codeInputs.map(({ path, contentHash }) => ({ path, contentHash })) } : {}), ...(graft ? { graft: graft.input ? { path: graft.input.path, contentHash: graft.input.contentHash } : graft.diagnostic } : {}) }));
+    let lists = fingerprintLists.get(options);
+    if (!lists) { lists = { inputs: new InputDigestList(), code: new InputDigestList() }; fingerprintLists.set(options, lists); }
+    const fingerprint = observationFingerprint({ repository: { name: repository.name, remoteUrl: repository.remoteUrl ?? null, commit: repository.commit ?? null, dirty: repository.dirty }, lens: lensInput ?? null, inputDiagnostics, interpretations, draftInterpretations, media: historical ? null : mediaFingerprint(root, mediaConfig, mediaCandidates), ...(graft ? { graft: graft.input ? { path: graft.input.path, contentHash: graft.input.contentHash } : graft.diagnostic } : {}) }, lists.inputs.encode(selected.map(({ input }) => input)), lens?.codeLinks.length ? lists.code.encode(codeInputs) : undefined);
     return { repository, lens, lensInput, coverage, selected, codeInputs, fingerprint, graft, inputDiagnostics };
 }
 

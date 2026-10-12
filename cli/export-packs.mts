@@ -3,6 +3,7 @@ import { appendFileSync, mkdirSync, readFileSync, rmSync, writeFileSync } from '
 import { join } from 'node:path';
 import { gzipSync, gunzipSync } from 'node:zlib';
 import { object } from './types.mjs';
+import { DigestIndex } from './export-digest-index.mjs';
 
 type Ref = readonly ['r', number, number];
 type Value = null | boolean | number | string | readonly Value[];
@@ -16,7 +17,7 @@ export function createPackedExport(directory: string) {
     const spool = join(directory, '.pack-index');
     mkdirSync(packDirectory, { recursive: true }); mkdirSync(indexDirectory, { recursive: true }); mkdirSync(spool);
     const identifiers = new Set<string>();
-    const records = new Map<string, number>(), paths = new Set<string>(), packPaths: string[] = [], packSizes: number[] = [];
+    const records = new DigestIndex(), paths = new Set<string>(), packPaths: string[] = [], packSizes: number[] = [];
     let pending: string[] = [], bytes = 2, finished = false;
     const flush = () => {
         if (!pending.length) return;
@@ -26,7 +27,7 @@ export function createPackedExport(directory: string) {
         writeFileSync(join(directory, path), data); packPaths.push(path); packSizes.push(pending.length); pending = []; bytes = 2;
     };
     const save = (value: Value): Ref => {
-        const text = JSON.stringify(value), digest = createHash('sha256').update(text).digest('base64'), previous = records.get(digest);
+        const text = JSON.stringify(value), digest = createHash('sha256').update(text).digest(), previous = records.get(digest);
         if (previous !== undefined) return ['r', Math.floor(previous / CAP), previous % CAP];
         if (Buffer.byteLength(text) > TARGET) {
             const fragments: Value[] = [];

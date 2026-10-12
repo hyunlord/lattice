@@ -123,3 +123,20 @@ test('function focus loads each selected neighbor own call neighborhood lazily',
     assert.equal(last.defaultFocus, 'c'); assert.deepEqual(last.nodes.map(node => node.id).sort(), ['b', 'c']);
     assert.equal(requests.includes('graph.json'), false); assert.equal(requests.includes(layer.path), false);
 });
+
+test('structured overview export avoids whole-model serialization and preserves legacy documents exactly', async t => {
+    const { writeOverview } = await import('../bin/export-overview.mjs');
+    const source = path => ({ path, line: 1, pointer: '', contentHash: 'a'.repeat(64) });
+    const graph = { hash: 'b'.repeat(64), repository: { name: 'parts', dirty: false, sourceFingerprint: 'c'.repeat(64) }, nodes: ['src/a/main.ts', 'src/b/other.ts'].map((path, i) => ({ id: `m${i}`, kind: 'module', name: path, attributes: { path }, sources: [source(path)], contentHash: 'a'.repeat(64) })), edges: [], facets: [] };
+    const legacy = new Map(); writeOverview(graph, {}, (path, text) => legacy.set(path, JSON.parse(text)));
+    const stringify = JSON.stringify, structured = new Map();
+    t.mock.method(JSON, 'stringify', (value, ...args) => {
+        if (value && typeof value === 'object' && value.model) throw new Error('Whole model serialization forbidden');
+        return stringify(value, ...args);
+    });
+    writeOverview(graph, {}, (path, text) => {
+        assert.equal(path, 'overview.json', 'derived documents must use structured transport');
+        structured.set(path, JSON.parse(text));
+    }, { json: (path, value) => structured.set(path, JSON.parse(stringify(value))) });
+    assert.deepEqual(structured, legacy, 'paths, source binding and all document values remain identical');
+});

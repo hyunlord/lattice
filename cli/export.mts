@@ -51,7 +51,7 @@ function exportCurrentGraph(cache: string, staging: string, root: string, presen
     const media = resolveMediaAssets(root, graph.nodes, parseMediaConfig(object(presentation) ? presentation['media'] : undefined));
     writeNodeDetails(graph, writeEvidence, 'details', presentation, { json: packs.json, reference: packs.reference });
     writeLogic(graph, writeEvidence, { reference: packs.reference });
-    writeOverview(graph, object(presentation) ? { ...presentation, mediaManifest: media.manifest } : {}, writeEvidence);
+    writeOverview(graph, object(presentation) ? { ...presentation, mediaManifest: media.manifest } : {}, writeEvidence, { json: packs.json });
     packs.json('graph.json', graph);
     writeFileSync(join(staging, 'graph.json'), JSON.stringify({ transportVersion: 2, document: 'graph.json', hash: graph.hash, repository: graph.repository, lensDigest: graph.lensDigest, counts: { nodes: graph.nodes.length, edges: graph.edges.length, facets: graph.facets.length, findings: graph.findings.length, views: graph.views.length } }));
     copyFileSync(join(cache, 'presentation.json'), join(staging, 'presentation.json'));
