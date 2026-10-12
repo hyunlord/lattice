@@ -4,7 +4,7 @@ import { identity, sameIdentity } from './input-witness.mjs';
 import type { Identity } from './input-witness.mjs';
 import { errorCode } from './types.mjs';
 import { inside } from './inputs.mjs';
-type Directory = { readonly path: string; readonly witness: Identity; readonly resolved: string; readonly native: boolean; };
+type Directory = { readonly path: string; readonly witness: Identity; readonly resolved: string; readonly contained: boolean; readonly native: boolean; };
 // Ancestor resolution is shared only inside one observation, never between queries.
 export class SourceDirectoryObservation {
     private readonly directories = new Map<string, Directory>();
@@ -13,6 +13,7 @@ export class SourceDirectoryObservation {
     constructor(private readonly root: string, private readonly local: boolean, private readonly device: bigint) { }
     clear() { this.directories.clear(); this.ordered.length = 0; this.absent.clear(); }
     resolve(path: string): string { return this.read(path).resolved; }
+    containsResolved(path: string): boolean { return this.read(path).contained; }
     private read(path: string): Directory {
         const cached = this.directories.get(path);
         if (cached) return cached;
@@ -21,7 +22,7 @@ export class SourceDirectoryObservation {
             const stat = lstatSync(path, { bigint: true });
             const native = parent?.native === true || !this.local || stat.dev !== this.device || stat.ctimeNs % 1000000000n === 0n || !stat.isDirectory();
             const resolved = !parent || native ? realpathSync.native(path) : join(parent.resolved, basename(path));
-            const entry = { path, witness: identity(stat), resolved, native: native || (!parent && resolved !== path) };
+            const entry = { path, witness: identity(stat), resolved, contained: inside(this.root, resolved), native: native || (!parent && resolved !== path) };
             this.directories.set(path, entry); this.ordered.push(entry);
             return entry;
         } catch (error) { if (errorCode(error) === 'ENOENT') this.absent.add(path); throw error; }

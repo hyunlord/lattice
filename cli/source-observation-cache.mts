@@ -65,7 +65,7 @@ export class SourceObservationCache {
         let leafIdentity: Identity | undefined;
         try {
             const parent = cached?.parent ?? dirname(requested);
-            if (!inside(this.root, this.directories.resolve(parent))) throw new Error(`Input resolves outside repository: ${path}`);
+            if (!this.directories.containsResolved(parent)) throw new Error(`Input resolves outside repository: ${path}`);
             const leaf = lstatSync(requested, { bigint: true });
             leafIdentity = cached && sameIdentity(cached.witness.leaf, leaf) ? cached.witness.leaf : identity(leaf);
             if (leaf.isSymbolicLink() && !inside(this.root, realpathSync.native(requested))) throw new Error(`Input resolves outside repository: ${path}`);
