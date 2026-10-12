@@ -10,6 +10,48 @@ const file = ts.createSourceFile('routing.ts', source, ts.ScriptTarget.Latest, t
 const fn = file.statements.find(node => ts.isFunctionDeclaration(node) && node.name?.text === 'orthogonalRoute');
 assert.ok(fn);
 const compiled = ts.transpileModule(fn.getText(file), { compilerOptions: { target: ts.ScriptTarget.ES2023, module: ts.ModuleKind.ESNext } }).outputText;
+function predecessorAllocations(start, end, space) {
+    const allocations = { maps: 0, indexed: [] };
+    class ObservedMap extends Map {
+        constructor(...args) { super(...args); allocations.maps++; }
+    }
+    class ObservedInt32Array extends Int32Array {
+        constructor(length) { super(length); allocations.indexed.push(length); }
+    }
+    const route = new Function('Map', 'Int32Array', compiled.replace('export ', '') + '\nreturn orthogonalRoute;')(ObservedMap, ObservedInt32Array);
+    return { points: route(start, end, space), allocations };
+}
+test('failed probe uses bounded indexed predecessor storage without a Map', () => {
+    const start = { x: 8, y: 8 }, end = { x: 56, y: 56 };
+    const space = { width: 64, height: 64, obstacles: [{ x: 32, y: 0, width: 0, height: 64 }] };
+    const actual = predecessorAllocations(start, end, space);
+    assert.deepEqual(actual.points, bfsRoute(start, end, space));
+    assert.deepEqual(actual.allocations, { maps: 0, indexed: [81] });
+});
+test('successful probes do not allocate indexed predecessor storage', () => {
+    for (const end of [{ x: 56, y: 56 }, { x: 8, y: 8 }]) {
+        const start = { x: 8, y: 8 }, space = { width: 64, height: 64, obstacles: [] };
+        const actual = predecessorAllocations(start, end, space);
+        assert.deepEqual(actual.points, bfsRoute(start, end, space));
+        assert.deepEqual(actual.allocations.indexed, []);
+    }
+});
+test('large grids and out-of-range endpoints retain Map predecessor behavior', () => {
+    const cases = [
+        { start: { x: 0, y: 0 }, end: { x: 8, y: 16 }, space: { width: 8, height: 4194304, obstacles: [{ x: 0, y: 8, width: 8, height: 0 }] } },
+        { start: { x: -8, y: 0 }, end: { x: 16, y: 16 }, space: { width: 32, height: 32, obstacles: [{ x: 8, y: 0, width: 0, height: 32 }] } },
+    ];
+    for (const { start, end, space } of cases) {
+        const actual = predecessorAllocations(start, end, space);
+        assert.deepEqual(actual.points, bfsRoute(start, end, space));
+        assert.deepEqual(actual.allocations, { maps: 1, indexed: [] });
+    }
+});
+test('raw decimal endpoints retain exact 23f route goldens', () => {
+    const frozen = JSON.parse(readFileSync(new URL('./fixtures/dependency-decimal-route-goldens.json', import.meta.url), 'utf8'));
+    assert.equal(frozen.sourceCommit, '23f35764e0f31c03b3bd6966ed40d494f4bc1040');
+    for (const { input, expected } of frozen.cases) assert.deepEqual(orthogonalRoute(input.start, input.end, input.space), expected);
+});
 function measured(start, end, space, stats) {
     const probeMarker = 'const probeNext =';
     const bfsMarker = 'const current = queue[index];';

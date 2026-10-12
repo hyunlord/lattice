@@ -75,7 +75,13 @@ export function orthogonalRoute(start: Point, end: Point, space: RouteSpace): re
         if (probeNext === undefined) break;
         probeCurrent = probeNext; probe.push(probeCurrent);
     }
-    const queue = [from], previous = new Map<number, number>();
+    // Parent+1 leaves zero unseen; cap per-call scratch at 4 MiB without limiting the search.
+    const indexed = probeCurrent !== to && Number.isSafeInteger(columns) && columns > 0 && Number.isSafeInteger(rows) && rows > 0 && blocked.length <= 1048576 && Number.isInteger(from) && from >= 0 && from < blocked.length && Number.isInteger(to) && to >= 0 && to < blocked.length ? new Int32Array(blocked.length) : undefined;
+    const queue = [from], previous = indexed ? {
+        has: (index: number): boolean => (indexed[index] ?? 0) !== 0,
+        set: (index: number, prior: number): void => { indexed[index] = prior + 1; },
+        get: (index: number): number | undefined => { const prior = indexed[index] ?? 0; return prior === 0 ? undefined : prior - 1; },
+    } : new Map<number, number>();
     previous.set(from, from);
     if (probeCurrent === to) for (let index = 1; index < probe.length; index++) { const current = probe[index], prior = probe[index - 1]; if (current !== undefined && prior !== undefined) previous.set(current, prior); }
     for (let index = 0; index < queue.length && !previous.has(to); index++) {
