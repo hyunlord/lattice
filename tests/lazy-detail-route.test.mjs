@@ -27,7 +27,7 @@ function fixture() {
         firstOverview: { hash: 'hash', repository: { commit: 'commit' }, defaultLayer: 'layer', layers: [{ id: 'layer', deferred: false, model: { title: 'Home' } }] },
         fullGraphLoaded: false, nodeDetailLoader: undefined, suffix: '?generation=7', disposeScreen: undefined,
         document: { body: { classList: { add() { }, remove() { } } }, querySelectorAll: () => [], title: '' }, window: { scrollTo() { } },
-        loadModule: async path => { imports.push(path); await pending.promise; return path === './node-detail-data.js' ? { createNodeDetailLoader: (overview, suffix) => { events.push(['loader', overview.hash, suffix]); return loader; } } : { renderNodeDetail: (_main, options) => { events.push(['detail', options.record.graph.nodes[0].name]); } }; },
+        loadModule: async path => { imports.push(path); await pending.promise; return path === './node-detail-data.js' ? { createNodeDetailLoader: (overview, suffix) => { events.push(['loader', overview.hash, suffix]); return loader; } } : path === './node-history.js' ? { renderNodeHistory() { } } : path === './views-records.js' ? { humanValue() { } } : { renderNodeDetail: (_main, options) => { events.push(['detail', options.record.graph.nodes[0].name]); } }; },
         fetch: async url => { events.push(['fetch', url]); return { ok: true, json: async () => url.startsWith('./snapshots') ? [] : {} }; },
         parsePresentation: value => value, parseSnapshots: value => value, needsModel: () => false,
         home: model => events.push(['home', model.title]), render: () => events.push('full-render'), requireGraph: async () => events.push('full-graph'),
@@ -45,7 +45,7 @@ test('direct detail waits for both modules and preserves generation', async () =
     assert.deepEqual(item.imports.sort(), ['./node-detail-data.js', './node-detail.js']); assert.deepEqual(item.events, []);
     item.pending.resolve(); await request;
     assert.deepEqual(item.events.find(event => Array.isArray(event) && event[0] === 'loader'), ['loader', 'hash', '?generation=7']);
-    assert.ok(item.events.some(event => Array.isArray(event) && event[0] === 'detail'));
+    assert.ok(item.events.some(event => Array.isArray(event) && event[0] === 'detail')); assert.deepEqual(item.imports.sort(), ['./node-detail-data.js', './node-detail.js']);
     assert.deepEqual(item.events.filter(event => Array.isArray(event) && event[0] === 'fetch').map(event => event[1]), ['./presentation.json?generation=7', './snapshots.json?generation=7']);
 });
 test('navigation to home while imports wait prevents stale loader or detail work', async () => {
@@ -59,7 +59,18 @@ test('route retries a rejected importer; native browser fetch failures may requi
     item.context.loadModule = async path => path === './node-detail-data.js' ? { createNodeDetailLoader: () => ({ index: async () => undefined }) } : { renderNodeDetail() { } };
     await item.run(); assert.deepEqual(item.events.slice(1), ['full-graph', 'full-render']);
 });
-test('home and already loaded full graph do not load detail modules', async () => {
+test('home loads no helpers and full graph loads only legacy helpers', async () => {
     const home = fixture(); home.context.location.hash = '#/home'; await home.run(); assert.deepEqual(home.imports, []); assert.deepEqual(home.events, ['clear', ['home', 'Home']]);
-    const full = fixture(); full.context.fullGraphLoaded = true; await full.run(); assert.deepEqual(full.imports, []); assert.deepEqual(full.events, ['full-graph', 'full-render']);
+    const full = fixture(); full.context.fullGraphLoaded = true; full.pending.resolve(); await full.run(); assert.deepEqual(full.imports, ['./node-history.js', './views-records.js']); assert.deepEqual(full.events, ['full-graph', 'full-render']);
+});
+
+test('missing packed detail index falls through to graph and legacy helpers', async () => {
+    const item = fixture(); item.context.loadModule = async path => { item.imports.push(path); return path === './node-detail-data.js' ? { createNodeDetailLoader: () => ({ index: async () => undefined }) } : { renderNodeDetail() { }, renderNodeHistory() { }, humanValue() { } }; };
+    await item.run(); assert.deepEqual(item.imports, ['./node-detail-data.js', './node-detail.js', './node-history.js', './views-records.js']);
+    assert.deepEqual(item.events, ['full-graph', 'full-render']);
+});
+test('missing packed node record keeps not-found result without legacy imports', async () => {
+    const item = fixture(); item.context.loadModule = async path => { item.imports.push(path); return path === './node-detail-data.js' ? { createNodeDetailLoader: () => ({ index: async () => ({}), node: async () => undefined }) } : { renderNodeDetail() { throw new Error('unexpected detail'); } }; };
+    await item.run(); assert.deepEqual(item.imports, ['./node-detail-data.js', './node-detail.js']);
+    assert.ok(!item.events.includes('full-graph')); assert.ok(!item.events.includes('full-render'));
 });
