@@ -69,8 +69,8 @@ export function orthogonalRoute(start: Point, end: Point, space: RouteSpace): re
     for (let index = 0; index < queue.length && !previous.has(to); index++) {
         const current = queue[index]; if (current === undefined) continue;
         const x = current % columns, y = Math.floor(current / columns);
-        const neighbors = [x > 0 ? current - 1 : -1, x < columns - 1 ? current + 1 : -1, y > 0 ? current - columns : -1, y < rows - 1 ? current + columns : -1].filter(n => n >= 0 && !blocked[n] && !previous.has(n) && !space.occupied?.has([current, n].sort((a, b) => a - b).join(':')));
-        neighbors.sort((a, b) => { const p = point(a), q = point(b); return Math.abs(p.x - end.x) + Math.abs(p.y - end.y) - Math.abs(q.x - end.x) - Math.abs(q.y - end.y); });
+        const neighbors = [x > 0 ? current - 1 : -1, x < columns - 1 ? current + 1 : -1, y > 0 ? current - columns : -1, y < rows - 1 ? current + columns : -1].filter(n => n >= 0 && !blocked[n] && !previous.has(n) && !space.occupied?.has(current < n ? `${current}:${n}` : `${n}:${current}`));
+        neighbors.sort((a, b) => { return Math.abs(a % columns * step - end.x) + Math.abs(Math.floor(a / columns) * step - end.y) - Math.abs(b % columns * step - end.x) - Math.abs(Math.floor(b / columns) * step - end.y); });
         for (const next of neighbors) { previous.set(next, current); queue.push(next); }
     }
     if (!previous.has(to)) return [];
@@ -181,7 +181,7 @@ export function reserveDependencyRoute(points: readonly Point[], width: number, 
     for (let i = 1; i < points.length; i++) {
         const a = points[i - 1], b = points[i]; if (!a || !b) continue;
         let x = Math.round(a.x / 8), y = Math.round(a.y / 8); const tx = Math.round(b.x / 8), ty = Math.round(b.y / 8);
-        while (x !== tx || y !== ty) { const before = y * columns + x; if (x !== tx) x += Math.sign(tx - x); else y += Math.sign(ty - y); occupied.add([before, y * columns + x].sort((a, b) => a - b).join(':')); }
+        while (x !== tx || y !== ty) { const before = y * columns + x; if (x !== tx) x += Math.sign(tx - x); else y += Math.sign(ty - y); const after = y * columns + x; occupied.add(before < after ? `${before}:${after}` : `${after}:${before}`); }
     }
 }
 
