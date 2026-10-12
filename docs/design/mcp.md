@@ -63,11 +63,10 @@ New `lattice init` lenses select supported code and Markdown for the initial rep
 
 `lattice_entrypoints` lists source-backed static entrypoints. `lattice_calls` returns callers or callees for a function. `lattice_flow` follows exact calls with bounded depth (default3, maximum10) and explicit node/edge truncation. All three share the viewer projection, graph identity, evidence and deterministic pagination; they do not execute the analyzed repository. Ambiguous targets are omitted, so an absent edge is not proof that a runtime call cannot happen. See [L9 analysis](l9-analysis.md).
 
-## Opt-in compact reads (draft regression contract)
+## Opt-in compact reads
 
-The following contract is specified by regression tests; implementation and hosted
-verification are pending. `lattice_find`, `lattice_entrypoints` and `lattice_node`
-accept optional boolean `compact`. Omission or `false` preserves the exact existing
+`lattice_find`, `lattice_entrypoints` and `lattice_node` accept optional boolean
+`compact`. Omission or `false` preserves the exact existing
 response shape and complete evidence. Other values and unrelated argument names
 are rejected. This does not alter the interpretation-context compact option.
 
