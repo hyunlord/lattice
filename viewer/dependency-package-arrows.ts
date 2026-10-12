@@ -68,7 +68,13 @@ export function mobileDependencyRouteOrder(flows: readonly DependencyPair[], box
     return [...flows].sort((a, b) => distance(a) - distance(b));
 }
 export function drawPackageDependencyArrows(scene: { readonly host: HTMLElement; readonly graph: SVGSVGElement; readonly flows: readonly DependencyPair[]; readonly boxes: ReadonlyMap<string, HTMLElement>; readonly names: ReadonlyMap<string, string>; readonly compact?: boolean; }): readonly DependencyPair[] {
-    const { host, graph, flows, boxes, names } = scene; const bounds = host.getBoundingClientRect(); graph.replaceChildren();
+    const { host, graph, flows, boxes, names } = scene;
+    if (flows.length === 0) {
+        graph.replaceChildren(); graph.setAttribute('width', '0'); graph.setAttribute('height', '0'); graph.removeAttribute('viewBox');
+        graph.dataset['unrouted'] = '0'; graph.dataset['unplacedLabels'] = '0'; graph.dataset['unroutedPairs'] = '[]';
+        return [];
+    }
+    const bounds = host.getBoundingClientRect(); graph.replaceChildren();
     graph.setAttribute('viewBox', `0 0 ${bounds.width} ${bounds.height}`); graph.setAttribute('width', String(bounds.width)); graph.setAttribute('height', String(bounds.height));
     const markerId = `package-arrow-${crypto.randomUUID()}`, defs = svg('defs'), marker = svg('marker'); marker.id = markerId;
     for (const [key, value] of Object.entries({ viewBox: '0 0 10 10', refX: '9', refY: '5', markerWidth: '5', markerHeight: '5', orient: 'auto' })) marker.setAttribute(key, value);
