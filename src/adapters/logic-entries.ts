@@ -8,6 +8,7 @@ const stringLeaves = (value: unknown): string[] => typeof value === 'string' ? [
 export function logicEntries(facts: readonly LogicFacts[], packages: readonly NodeDraft[], metadata: readonly SourceInput[], sourceFor: (fact: LogicFacts, line: number, endLine: number, pointer: string) => Source): ReadonlyMap<string, readonly LogicEntry[]> {
     const entries = new Map<string, LogicEntry[]>();
     const add = (definition: LogicDefinition, category: string, rule: string, source: Source) => {
+        if (category === 'public-api' && definition.annotations.some(name => /(?:^|\.)overload$/u.test(name))) return;
         const values = entries.get(definition.id) ?? [];
         if (!values.some(item => item.category === category && item.rule === rule && item.source.path === source.path && item.source.line === source.line)) values.push({ category, rule, source });
         entries.set(definition.id, values);
@@ -24,7 +25,7 @@ export function logicEntries(facts: readonly LogicFacts[], packages: readonly No
             if (definition.annotations.some(name => /\.(?:route|get|post|put|delete|patch)(?:\(|$)/u.test(name))) add(definition, 'route-handler', 'python-route-decorator', source);
             const owner = fact.classes.find(item => item.name === definition.owner);
             if (owner?.annotations.some(name => /(?:^|\.)SpringBootApplication$/u.test(name)) && definition.name === 'main' && definition.static) add(definition, 'framework-callback', 'spring-application-main', sourceFor(fact, owner.line, owner.line, '/logic/spring-application'));
-            if (owner?.bases.some(base => ['Activity', 'ComponentActivity', 'AppCompatActivity', 'Application'].includes(base)) && ['onCreate', 'onStart', 'onResume'].includes(definition.name)) add(definition, 'framework-callback', 'android-lifecycle-override', source);
+            if (owner?.bases.some(base => ['Activity', 'ComponentActivity', 'AppCompatActivity', 'Application'].includes(base)) && ['onCreate', 'onStart', 'onResume'].includes(definition.name)) add(definition, 'executable', 'android-lifecycle-override', source);
         }
         for (const call of fact.calls.filter(call => call.route)) for (const id of call.callbackIds) {
             const definition = fact.definitions.find(item => item.id === id);
@@ -42,7 +43,7 @@ export function logicEntries(facts: readonly LogicFacts[], packages: readonly No
                 for (const path of stringLeaves(value[key])) {
                     const target = join(directory(input.path), path), fact = facts.find(item => item.path === target);
                     if (!fact) continue;
-                    for (const definition of fact.definitions.filter(item => category === 'public-api' ? item.exported : item.name === '<module>' || item.name === 'main')) add(definition, category, `package-${key}`, provenance(path));
+                    for (const definition of fact.definitions.filter(item => category === 'public-api' ? item.exported && !item.parent && !item.owner : item.name === '<module>' || item.name === 'main')) add(definition, category, `package-${key}`, provenance(path));
                 }
             }
         }
@@ -51,7 +52,7 @@ export function logicEntries(facts: readonly LogicFacts[], packages: readonly No
                 const owner = match[2]?.split('.').at(-1) ?? '';
                 const candidates = facts.filter(fact => ['java', 'kotlin'].includes(fact.language) && fact.classes.some(item => item.name === owner));
                 if (candidates.length !== 1) continue;
-                for (const fact of candidates) for (const definition of fact.definitions.filter(item => item.owner === owner && ['onCreate', 'onStart', 'onResume'].includes(item.name))) add(definition, 'framework-callback', 'android-manifest-component', provenance(match[0]));
+                for (const fact of candidates) for (const definition of fact.definitions.filter(item => item.owner === owner && ['onCreate', 'onStart', 'onResume'].includes(item.name))) add(definition, 'executable', 'android-manifest-component', provenance(match[0]));
             }
         }
         if (input.path.split('/').at(-1) === 'pyproject.toml') {
@@ -74,10 +75,20 @@ export function logicEntries(facts: readonly LogicFacts[], packages: readonly No
             if (typeof target !== 'string') continue;
             const fact = facts.find(item => item.path === target);
             if (!fact) continue;
-            for (const definition of fact.definitions.filter(item => item.exported && !item.parent)) {
+            for (const definition of fact.definitions.filter(item => item.exported && !item.parent && !item.owner)) {
                 const source = pkg.sources[0];
                 if (source && !entries.has(definition.id)) add(definition, 'public-api', 'manifest-public-target', source);
             }
+        }
+    }
+    const namespaces = facts.filter(fact => fact.language === 'python' && /(?:^|\/)__init__\.py$/u.test(fact.path));
+    for (const root of namespaces.filter(fact => !namespaces.some(parent => parent !== fact && (!directory(parent.path) || fact.path.startsWith(directory(parent.path) + '/'))))) {
+        for (const definition of root.definitions.filter(item => item.exported && !item.parent && !item.owner && !item.name.startsWith('_') && (!root.namespaceExports || root.namespaceExports.includes(item.name)))) add(definition, 'public-api', 'python-package-namespace', sourceFor(root, definition.line, definition.endLine, '/logic/public-api'));
+        for (const imported of root.imports.filter(item => !item.namespace && !item.local.startsWith('_') && item.scopeStart === 0 && (!root.namespaceExports || root.namespaceExports.includes(item.local)))) {
+            const relative = imported.specifier.startsWith('.') ? join(directory(root.path), imported.specifier.slice(1).replaceAll('.', '/')) : imported.specifier.replaceAll('.', '/');
+            const targets = facts.filter(fact => fact.path === relative + '.py' || fact.path === relative + '/__init__.py' || fact.path === 'src/' + relative + '.py');
+            if (targets.length !== 1) continue;
+            for (const target of targets) for (const definition of target.definitions.filter(item => !item.parent && !item.name.startsWith('_') && (item.owner === imported.imported || !item.owner && item.name === imported.imported))) add(definition, 'public-api', 'python-package-reexport', sourceFor(root, imported.line, imported.line, '/logic/public-api'));
         }
     }
     return entries;

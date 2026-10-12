@@ -1,3 +1,4 @@
+import type { SourceObservationCache } from './source-observation-cache.mjs';
 import { errorCode, errorStatus } from './types.mjs';
 import type { RepositoryReader } from './types.mjs';
 import { execFile, execFileSync } from 'node:child_process';
@@ -33,7 +34,7 @@ function workingCommands(root: string, cacheDir?: string) {
         origin: ['config', '--get', 'remote.origin.url'],
     };
 }
-function workingReader(root: string, cachePath: string | undefined, statusText: string, pathText: string, origin: string): RepositoryReader {
+function workingReader(root: string, cachePath: string | undefined, statusText: string, pathText: string, origin: string, cache?: SourceObservationCache): RepositoryReader {
     const status = statusText.split('\0').filter(Boolean);
     const oid = status.find(entry => entry.startsWith('# branch.oid '))?.slice('# branch.oid '.length);
     const commit = oid === '(initial)' ? undefined : oid;
@@ -41,7 +42,9 @@ function workingReader(root: string, cachePath: string | undefined, statusText: 
         ...identity(root, origin), ...(commit ? { commit } : {}),
         dirty: status.some(entry => !entry.startsWith('# ')),
         paths: [...new Set(pathText.split('\0').filter(path => path && (!cachePath || (path !== cachePath && !path.startsWith(cachePath + '/')))))].sort(),
+        ...(cache ? { readObservedText: (path: string) => cache.readObservedText(path), readInput: (path: string) => cache.read(path, bytes => { throw new InputSizeError(path, bytes); }), observationMode: cache.mode } : {}),
         readText(path) {
+            if (cache) return cache.read(path, bytes => { throw new InputSizeError(path, bytes); })?.text;
             let absolute;
             try { absolute = realpathSync(join(root, path)); }
             catch (error) { if (errorCode(error) === 'ENOENT') return undefined; throw error; }
@@ -62,14 +65,14 @@ async function gitAsync(root: string, args: readonly string[]) {
     const { stdout } = await executeGit('git', ['--no-optional-locks', '-C', root, ...args], { encoding: 'utf8', maxBuffer: 32 * 1024 * 1024 });
     return stdout;
 }
-export async function workingRepositoryAsync(root: string, cacheDir?: string): Promise<RepositoryReader> {
+export async function workingRepositoryAsync(root: string, cacheDir?: string, cache?: SourceObservationCache): Promise<RepositoryReader> {
     const commands = workingCommands(root, cacheDir);
     const origin = gitAsync(root, commands.origin).then(value => value.trimEnd(), (error: unknown) => {
         if (errorCode(error) === 1 || errorCode(error) === 128) return '';
         throw error;
     });
     const [status, paths, remote] = await Promise.all([gitAsync(root, commands.status), gitAsync(root, commands.paths), origin]);
-    return workingReader(root, commands.cachePath, status, paths, remote);
+    return workingReader(root, commands.cachePath, status, paths, remote, cache);
 }
 export function historicalRepository(root: string, ref?: string): RepositoryReader {
     if (!ref || ref.startsWith('-')) throw new Error('diff requires a valid commit reference');

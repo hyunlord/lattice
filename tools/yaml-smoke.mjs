@@ -3,6 +3,7 @@ import { execFileSync, spawnSync } from 'node:child_process';
 import { mkdirSync, readFileSync, renameSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { stringify } from 'yaml';
+import { readPackedArtifact } from '../bin/packed-reader.mjs';
 
 export function verifyYaml(cli, repository) {
   mkdirSync(join(repository, '.lattice'), { recursive: true });
@@ -36,7 +37,7 @@ export function verifyYaml(cli, repository) {
   assert.equal(difference.nodes.removed[0].id, 'service:worker');
   assert.equal(difference.nodes.changed[0].after.name, 'Changed API');
   run(['export']);
-  assert.equal(read('.lattice/site/graph.json').nodes.length, 1);
+  assert.equal(readPackedArtifact(join(repository, '.lattice/site'), 'graph.json').nodes.length, 1);
   const malformed = spawnSync(process.execPath, [cli, 'build', '--root', repository, '--lens', 'services.yml'], { encoding: 'utf8' });
   assert.equal(malformed.status, 2);
   console.log('Installed YAML: named records, exact source lines, declarative facets/gate, no-op cache reuse, historical YAML lens after JSON migration, and static export passed.');

@@ -354,3 +354,55 @@ test('overview keeps connected package layers intact and places isolated tools a
     assert(level(overview, 'tool') > level(overview, 'base'));
     assert.deepEqual(dependencyOverviewLevels({ ...view, flows: [] }), dependencyLevels({ ...view, flows: [] }));
 });
+
+test('package overview ranks twelve actual directed pairs including mutual references', async () => {
+    const { displayedDependencyFlows } = await import('../viewer/dependency-layout.js');
+    const stages = Array.from({ length: 15 }, (_, index) => stage(`manifest:${index}`));
+    const flows = Array.from({ length: 14 }, (_, index) => ({ source: stages[index].id, target: stages[14].id, count: index + 1 }));
+    flows.push({ source: stages[14].id, target: stages[13].id, count: 20 });
+    const view = { stages, flows, displayFlows: [] };
+    const visible = displayedDependencyFlows(view, undefined, false);
+    assert.equal(visible.length, 12);
+    assert.deepEqual(visible.slice(0, 2).map(flow => [flow.source, flow.target, flow.count]), [['manifest:14', 'manifest:13', 20], ['manifest:13', 'manifest:14', 14]]);
+    assert.ok(visible.every(flow => flow.reverseCount === undefined));
+    assert.equal(displayedDependencyFlows(view, undefined, true).length, 15);
+    assert.deepEqual(displayedDependencyFlows(view, 'manifest:0', false).map(flow => flow.source), ['manifest:0']);
+});
+
+test('package routing preserves all directed mutual-group edges around cards and captions', async () => {
+    const { routePackageDependencies } = await import('../viewer/dependency-package-arrows.js');
+    const { dependencyRouteIntersects } = await import('../viewer/dependency-layout.js');
+    for (const width of [358, 1120]) {
+        const mobile = width < 600;
+        const boxes = new Map(Array.from({ length: 6 }, (_, index) => [`p${index}`, { x: mobile ? 64 : 64 + (index % 3) * 336, y: 96 + (mobile ? index * 160 : Math.floor(index / 3) * 256), width: mobile ? 230 : 272, height: 88 }]));
+        boxes.set('caption', { x: 64, y: 48, width: 220, height: 24 });
+        const pairs = [[0, 1], [1, 2], [2, 0], [0, 3], [1, 3], [2, 3], [3, 4], [4, 5], [5, 3], [2, 5], [0, 5], [1, 4]];
+        const flows = pairs.map(([source, target], index) => ({ source: `p${source}`, target: `p${target}`, count: 20 - index, weight: 20 - index }));
+        const routes = routePackageDependencies(flows, boxes, width, mobile ? 1200 : 650, () => 16);
+        assert.equal(routes.length, 12, `${width}px: every requested direction is routed`);
+        assert.deepEqual(routes.map(route => route.flow), flows);
+        for (const route of routes) {
+            assert.ok([...boxes.values()].every(box => !dependencyRouteIntersects(route.points, box)));
+            assert.ok(routes.filter(other => other !== route).every(other => !dependencyRouteIntersects(other.points, route.labelBox)), 'labels never obscure another direction');
+            assert.ok(route.points.every(point => point.x >= 0 && point.x <= width));
+        }
+    }
+});
+
+test('package direction selection handles all-scope IDs and empty graphs without changing folder pairs', async () => {
+    const { displayedDependencyFlows } = await import('../viewer/dependency-layout.js');
+    const stages = ['all:manifest:first', 'all:manifest:second'].map(id => stage(id));
+    assert.deepEqual(displayedDependencyFlows({ stages, flows: [] }, undefined, false), []);
+    const flows = [{ source: stages[0].id, target: stages[1].id, count: 3 }, { source: stages[1].id, target: stages[0].id, count: 2 }];
+    assert.deepEqual(displayedDependencyFlows({ stages, flows }, undefined, false).map(flow => flow.count), [3, 2]);
+});
+
+test('package routing handles empty and acyclic geometry deterministically', async () => {
+    const { routePackageDependencies } = await import('../viewer/dependency-package-arrows.js');
+    const boxes = new Map([['a', { x: 64, y: 32, width: 224, height: 64 }], ['b', { x: 64, y: 176, width: 224, height: 64 }]]);
+    const flows = [{ source: 'a', target: 'b', count: 3, weight: 3 }];
+    const route = () => routePackageDependencies(flows, boxes, 358, 300, () => 16);
+    assert.deepEqual(routePackageDependencies([], boxes, 358, 300, () => 16), []);
+    assert.equal(route().length, 1);
+    assert.deepEqual(route(), route());
+});

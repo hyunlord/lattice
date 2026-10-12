@@ -91,6 +91,8 @@ export function dependencyOverviewLevels(view: DependencyView): ReturnType<typeo
 
 
 export type DependencyPair = LoopFlow & { readonly reverseCount?: number; readonly reverseSourceFiles?: readonly string[]; readonly reverseProjectSourceFiles?: readonly string[]; readonly reverseProjectCount?: number; readonly weight: number; };
+export const packageDependencyLimit = 12;
+export const packageDependencyView = (view: DependencyView): boolean => view.stages.some(stage => /^(?:all:)?manifest(?:-folder)?:/u.test(stage.id));
 export function dependencyPairs(flows: readonly LoopFlow[]): readonly DependencyPair[] {
     const pairs = new Map<string, DependencyPair>();
     for (const flow of flows) {
@@ -102,6 +104,13 @@ export function dependencyPairs(flows: readonly LoopFlow[]): readonly Dependency
     return [...pairs.values()].sort((a, b) => b.weight - a.weight || a.source.localeCompare(b.source) || a.target.localeCompare(b.target));
 }
 export function displayedDependencyFlows(view: DependencyView, selected: string | undefined, showAll: boolean): readonly DependencyPair[] {
+    if (packageDependencyView(view)) {
+        const flows = view.flows.filter(flow => flow.source !== flow.target && (!selected || flow.source === selected || flow.target === selected)).map(flow => {
+            const count = flow.sourceFiles?.length ? new Set(flow.sourceFiles).size : flow.count ?? 0;
+            return { ...flow, count, weight: count };
+        }).sort((a, b) => b.weight - a.weight || a.source.localeCompare(b.source) || a.target.localeCompare(b.target));
+        return showAll ? flows : flows.slice(0, packageDependencyLimit);
+    }
     const levels = dependencyLevels(view); const owner = new Map(levels.flatMap((group, index) => group.stages.map(stage => [stage.id, index] as const)));
     const pairs = dependencyPairs(view.displayFlows ?? displayedFlowProjection(view));
     if (showAll) return pairs;

@@ -13,7 +13,7 @@ let initialization: Promise<void> | undefined;
 const grammarHash = createHash('sha256');
 for (const grammar of Object.values(names).toSorted()) grammarHash.update(grammar).update(readFileSync(require.resolve(`tree-sitter-wasms/out/tree-sitter-${grammar}.wasm`)));
 grammarHash.update(readFileSync(require.resolve('web-tree-sitter/tree-sitter.wasm')));
-export const logicParserVersion = `web-tree-sitter@0.25.10/tree-sitter-wasms@0.1.13/logic-2/${grammarHash.digest('hex')}`;
+export const logicParserVersion = `web-tree-sitter@0.25.10/tree-sitter-wasms@0.1.13/logic-5/${grammarHash.digest('hex')}`;
 
 export async function prepareLogicParser(requested: readonly string[] = Object.keys(names)): Promise<void> {
     initialization ??= Parser.init();

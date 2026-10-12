@@ -13,7 +13,7 @@ test('folder frontier contains complete physical subtrees, never selected siblin
     assert.deepEqual(new Set(roots.map(stage => stage.directoryPath)), new Set(['src', ...['core', 'router', 'middleware', 'helper', 'adapter', 'jsx'].map(name => `src/${name}`)]));
     assert.equal(roots.flatMap(stage => stage.descendantNodeIds).length, nodes.length);
     for (const stage of roots.filter(stage => stage.childIds?.length)) assert.deepEqual(new Set(stage.descendantNodeIds), new Set(nodes.filter(n => n.sources[0].path.startsWith(stage.directoryPath + '/')).map(n => n.id)));
-    assert(model.structuralEntryStageIds.includes('folder:src'));
+    assert.deepEqual(model.structuralEntryStageIds, []);
 });
 test('flat wide folders expose real siblings across explicit pages without a synthetic remainder', () => {
     const nodes = Array.from({ length: 13 }, (_, i) => node(`m${i}`, `src/part${i}/index.ts`));
@@ -42,7 +42,7 @@ test('dominant language source root stays consistent with small compatibility tr
     assert.equal(model.structuralSourceRoot, 'src/main/java/org/example');
     assert.equal(model.stages.find(s => s.id === 'folder:src/main/java/org/example/parser').title, 'parser');
     assert.equal(model.stages.find(s => s.id === 'folder:src/main/java11/org/example').title, '저장소: src/main/java11/org/example');
-    assert.deepEqual(model.structuralEntryStageIds, ['folder:src/main/java/org/example']);
+    assert.deepEqual(model.structuralEntryStageIds, []);
 });
 
 test('dominant source scope exposes its real children while all scope retains outside product files', () => {

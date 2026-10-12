@@ -31,7 +31,7 @@ test('lazy page loading makes no request before use, shares in-flight reads and 
     const graph = fixture(), files = new Map(), thin = thinGraph(graph, (p, s) => files.set(p, s));
     const parsed = parseGraph(thin), group = deferredSources(parsed.edges[0].sources)[0];
     let calls = 0, fail = true;
-    t.mock.method(globalThis, 'fetch', async url => { calls++; return fail ? new Response('missing', { status: 404 }) : new Response(files.get(String(url).slice(2))); });
+    t.mock.method(globalThis, 'fetch', async url => { if (String(url).includes('transport.json')) return new Response(null, { status: 404 }); calls++; return fail ? new Response('missing', { status: 404 }) : new Response(files.get(String(url).slice(2))); });
     assert.equal(calls, 0);
     await assert.rejects(readEvidencePage(group.pages[0]), /HTTP 404/); assert.equal(calls, 1);
     fail = false; const [one, two] = await Promise.all([readEvidencePage(group.pages[0]), readEvidencePage(group.pages[0])]);
@@ -79,4 +79,15 @@ test('actual facet cells and automatic matrix projections retain deferred source
     const projection = normalizeView(view, graph.nodes, graph.edges);
     assert.equal(projection.type, 'matrix');
     assert.equal(deferredSources(projection.cells[0].sources)[0].count, 260);
+});
+test('lazy evidence stays bound to the page generation', async t => {
+    const text = JSON.stringify([source(654)]), path = `evidence/${createHash('sha256').update(text).digest('hex')}.json`, requests = [];
+    const previous = Object.getOwnPropertyDescriptor(globalThis, 'document');
+    Object.defineProperty(globalThis, 'document', { configurable: true, value: { querySelector: () => ({ content: 'old-generation' }) } });
+    t.after(() => { if (previous) Object.defineProperty(globalThis, 'document', previous); else delete globalThis.document; });
+    t.mock.method(globalThis, 'fetch', async url => { requests.push(String(url)); return String(url).includes('transport.json') ? new Response(null, { status: 404 }) : new Response(text); });
+    const { readEvidencePage } = await import('../viewer/evidence.js?generation-test');
+    assert.deepEqual(await readEvidencePage(path), [source(654)]);
+    assert.ok(requests.length >= 2);
+    assert.ok(requests.every(url => url.endsWith('?generation=old-generation')));
 });

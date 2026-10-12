@@ -3,6 +3,7 @@ import { execFileSync, spawn } from 'node:child_process';
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { setTimeout as delay } from 'node:timers/promises';
+import { createPackedLoader } from '../viewer/packed-data.js';
 
 export async function verifyServe(cli, repository) {
   mkdirSync(join(repository, '.lattice'), { recursive: true });
@@ -29,6 +30,7 @@ export async function verifyServe(cli, repository) {
   try {
     const base = await until(() => /http:\/\/127\.0\.0\.1:[0-9]+\//u.exec(stdout)?.[0]);
     const json = async path => { const response = await fetch(new URL(path, base)); assert.equal(response.status, 200); return response.json(); };
+    const generationGraph = generation => createPackedLoader(base, `?generation=${generation}`).json('graph.json');
     const first = await json('__lattice/status');
     assert.equal(first.builds, 1);
     const html = await (await fetch(base)).text();
@@ -40,7 +42,7 @@ export async function verifyServe(cli, repository) {
     }
     const stable = await until(async () => { const state = await json('__lattice/status'); return state.checks >= first.checks + 2 && state; });
     assert.equal(stable.builds, first.builds);
-    const graph = await json(`graph.json?generation=${first.generation}`);
+    const graph = await generationGraph(first.generation);
     const stream = await fetch(new URL('__lattice/events', base), { signal: abort.signal });
     assert.match(stream.headers.get('content-type'), /text\/event-stream/u);
     const reader = stream.body.getReader();
@@ -52,18 +54,18 @@ export async function verifyServe(cli, repository) {
     await until(() => events.includes('event: status'));
     writeFileSync(source, '[{"id":"service:a","name":"Changed API"}]');
     const edited = await until(async () => { const state = await json('__lattice/status'); return state.builds > first.builds && state; });
-    assert.equal((await json(`graph.json?generation=${edited.generation}`)).nodes[0].name, 'Changed API');
-    assert.equal((await json(`graph.json?generation=${first.generation}`)).hash, graph.hash);
+    assert.equal((await generationGraph(edited.generation)).nodes[0].name, 'Changed API');
+    assert.equal((await generationGraph(first.generation)).hash, graph.hash);
     await until(() => events.includes(`"generation":"${edited.generation}"`));
     writeFileSync(source, '{');
     const failed = await until(async () => { const state = await json('__lattice/status'); return state.error && state; });
     assert.equal(failed.generation, edited.generation);
     assert.equal((await fetch(new URL('graph.json', base))).status, 503);
-    assert.equal((await json(`graph.json?generation=${edited.generation}`)).nodes[0].name, 'Changed API');
+    assert.equal((await generationGraph(edited.generation)).nodes[0].name, 'Changed API');
     await until(() => events.includes('"error":"'));
     writeFileSync(source, '[{"id":"service:a","name":"Recovered API"}]');
     const recovered = await until(async () => { const state = await json('__lattice/status'); return !state.error && state.builds > edited.builds && state; });
-    assert.equal((await json(`graph.json?generation=${recovered.generation}`)).nodes[0].name, 'Recovered API');
+    assert.equal((await generationGraph(recovered.generation)).nodes[0].name, 'Recovered API');
     abort.abort(); await consume;
     child.kill('SIGTERM');
     const result = await Promise.race([exited, delay(5000).then(() => { throw new Error('Serve shutdown timed out'); })]);

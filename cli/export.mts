@@ -1,8 +1,7 @@
 import { writeNodeDetails } from './export-details.mjs';
 import { writeLogic } from './export-logic.mjs';
 import { writeOverview } from './export-overview.mjs';
-import { writeJsonFile } from './export-json.mjs';
-import { writeThinGraph } from './export-evidence.mjs';
+import { createPackedExport } from './export-packs.mjs';
 import { resolveMediaAssets } from './assets.mjs';
 import { parseMediaConfig } from '../dist/query/media-model.js';
 import { object } from './types.mjs';
@@ -45,13 +44,14 @@ function destination(options: Options) {
     return output;
 }
 
-function exportCurrentGraph(cache: string, staging: string, root: string, presentation: unknown, writeEvidence: (path: string, text: string) => void): string {
+function exportCurrentGraph(cache: string, staging: string, root: string, presentation: unknown, writeEvidence: (path: string, text: string) => void, packs: ReturnType<typeof createPackedExport>): string {
     const graph = readGraph(join(cache, 'graph.json'), { memoize: false });
     const media = resolveMediaAssets(root, graph.nodes, parseMediaConfig(object(presentation) ? presentation['media'] : undefined));
     writeNodeDetails(graph, writeEvidence, 'details', presentation);
     writeLogic(graph, writeEvidence);
     writeOverview(graph, object(presentation) ? { ...presentation, mediaManifest: media.manifest } : {}, writeEvidence);
-    writeJsonFile(join(staging, 'graph.json'), write => writeThinGraph(graph, writeEvidence, write));
+    packs.json('graph.json', graph);
+    writeFileSync(join(staging, 'graph.json'), JSON.stringify({ transportVersion: 2, document: 'graph.json', hash: graph.hash, repository: graph.repository, lensDigest: graph.lensDigest, counts: { nodes: graph.nodes.length, edges: graph.edges.length, facets: graph.facets.length, findings: graph.findings.length, views: graph.views.length } }));
     copyFileSync(join(cache, 'presentation.json'), join(staging, 'presentation.json'));
     writeFileSync(join(staging, 'media.json'), JSON.stringify(media.manifest, null, 2) + '\n');
     if (object(presentation)) writeFileSync(join(staging, 'presentation.json'), JSON.stringify({ ...presentation, mediaManifest: media.manifest }, null, 2) + '\n');
@@ -72,16 +72,19 @@ export function exportSite(options: Options) {
     let hash: string;
     try {
         for (const file of ['index.html', 'styles.css', ...readdirSync(join(packageRoot, 'viewer')).filter(file => (file.endsWith('.js') || file.endsWith('.css')))]) copyFileSync(join(packageRoot, 'viewer', file), join(staging, file));
-        const writeEvidence = (path: string, text: string) => { const target = join(staging, path); if (existsSync(target)) return; mkdirSync(dirname(target), { recursive: true }); writeFileSync(target, text); };
-        hash = exportCurrentGraph(cache, staging, options.root, presentation, writeEvidence);
+        const packs = createPackedExport(staging);
+        const writeEvidence = (path: string, text: string) => { if (path === 'overview.json') writeFileSync(join(staging, path), text); else packs.write(path, text); };
+        hash = exportCurrentGraph(cache, staging, options.root, presentation, writeEvidence, packs);
         const snapshots = readSnapshots(cache, {
             memoize: false, onGraph: (snapshot, graph) => {
                 writeNodeDetails(graph, writeEvidence, `details/snapshots/${snapshot.id}`);
                 mkdirSync(join(staging, 'snapshots'), { recursive: true });
-                writeJsonFile(join(staging, snapshot.artifactPath), write => writeThinGraph(graph, writeEvidence, write));
+                packs.json(snapshot.artifactPath, graph);
+                writeFileSync(join(staging, snapshot.artifactPath), JSON.stringify({ transportVersion: 2, document: snapshot.artifactPath, hash: graph.hash, repository: graph.repository, lensDigest: graph.lensDigest, counts: { nodes: graph.nodes.length, edges: graph.edges.length, facets: graph.facets.length, findings: graph.findings.length, views: graph.views.length } }));
             }
         });
         writeFileSync(join(staging, 'snapshots.json'), JSON.stringify(snapshots, null, 2) + '\n');
+        packs.finish();
         writeFileSync(join(staging, '.nojekyll'), '');
         writeFileSync(join(staging, marker), JSON.stringify({ schemaVersion: 1, generator: 'lattice' }, null, 2) + '\n');
         if (existsSync(output)) { renameSync(output, backup); backedUp = true; }

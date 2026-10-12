@@ -1,3 +1,4 @@
+import { createPackedLoader } from '../viewer/packed-data.js';
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import { mkdtempSync, mkdirSync, writeFileSync, readdirSync, rmSync } from 'node:fs';
@@ -25,7 +26,7 @@ test('published live generation stays readable while the producer is blocked obs
         writeFileSync(armed, 'observe');
         await until(() => readdirSync(temporary).includes('entered'));
         const response = await fetch(new URL('graph.json?generation=1', ready.url), { signal: AbortSignal.timeout(5000) });
-        assert.equal(response.status, 200); assert.equal((await response.json()).nodes[0].name, 'Published');
+        assert.equal(response.status, 200); assert.equal((await createPackedLoader(ready.url, '?generation=1').json('graph.json')).nodes[0].name, 'Published');
         assert.equal(readdirSync(temporary).includes('release'), false, 'HTTP must finish before the blocked producer is released');
         writeFileSync(release, 'resume');
         child.kill('SIGTERM'); assert.deepEqual(await exited, { code: 0, signal: null });

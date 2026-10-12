@@ -1,3 +1,4 @@
+import { createPackedLoader } from '../viewer/packed-data.js';
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import { mkdtempSync, mkdirSync, writeFileSync, readdirSync, rmSync } from 'node:fs';
@@ -27,7 +28,7 @@ test('live generations stream immutable disk artifacts, retain four versions and
     try {
         const ready = await until(() => stdout.split('\n').filter(Boolean).map(line => JSON.parse(line)).find(event => event.event === 'ready'));
         const request = path => fetch(new URL(path, ready.url));
-        const initial = await (await request('graph.json?generation=1')).json();
+        const initial = await createPackedLoader(ready.url, '?generation=1').json('graph.json');
         assert.equal(initial.nodes[0].name, 'Observed under lock');
         const presentation = await (await request('presentation.json?generation=1')).json();
         const media = await request(presentation.mediaManifest.a.url);
@@ -52,7 +53,7 @@ test('live generations stream immutable disk artifacts, retain four versions and
         assert.equal((await request('graph.json?generation=1')).status, 503);
         writeFileSync(retired, 'published');
         await until(() => readdirSync(generations).length === 4);
-        const head = await request('graph.json?generation=5'); assert.equal((await head.json()).nodes[0].name, 'Revision 5');
+        const head = await createPackedLoader(ready.url, '?generation=5').json('graph.json'); assert.equal(head.nodes[0].name, 'Revision 5');
         const bodyless = await fetch(new URL('graph.json?generation=5', ready.url), { method: 'HEAD' }); assert.equal(bodyless.status, 200); assert.equal(await bodyless.text(), '');
         child.kill('SIGTERM'); assert.deepEqual(await exited, { code: 0, signal: null }); assert.equal(directories().length, 0);
     } finally { writeFileSync(retired, 'release'); if (child.exitCode === null && child.signalCode === null) { child.kill('SIGKILL'); await exited; } rmSync(temporary, { recursive: true, force: true }); }
@@ -72,7 +73,8 @@ test('new clean live generations publish bounded node history for their new snap
     const until = async probe => { for (let i = 0; i < 300; i++) { const value = await probe(); if (value) return value; assert.equal(child.exitCode, null, stdout + stderr); await delay(50); } throw Error('Serve timeout: ' + stdout + stderr); };
     try {
         const ready = await until(() => stdout.split('\n').filter(Boolean).map(line => JSON.parse(line)).find(event => event.event === 'ready'));
-        const json = async (path, generation) => { const response = await fetch(new URL(`${path}?generation=${generation}`, ready.url)); assert.equal(response.status, 200, path); return response.json(); };
+        const loaders = new Map();
+        const json = async (path, generation) => { if (path === 'graph.json' || path.startsWith('details/')) { if (!loaders.has(generation)) loaders.set(generation, createPackedLoader(ready.url, `?generation=${generation}`)); return loaders.get(generation).json(path); } const response = await fetch(new URL(`${path}?generation=${generation}`, ready.url)); assert.equal(response.status, 200, path); return response.json(); };
         const inspect = async (generation, expected) => {
             const snapshots = await json('snapshots.json', generation); assert.equal(snapshots.length, expected.size);
             for (const snapshot of snapshots) {

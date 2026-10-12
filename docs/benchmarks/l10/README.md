@@ -2,6 +2,8 @@
 
 L10 follows main `ac54bf46dd125ad77f8422f4aa551c9faec0ef7f` and issue #84. The user approved the numerical choices below before implementation. Preserve all twelve repository pins, questions and reference answers in `../l9/`; do not resample to improve a result. The six initial capture subjects are fzf, click, spring-petclinic, ripgrep, nowinandroid and excalidraw. Performance and the three-arm comparison cover all twelve.
 
+The unchanged L9 [precision sample](precision-sample.json) and [recall oracle](recall-oracle.json) are retained here byte-for-byte with the preregistered hashes below. These files contain answers and are withheld from blind evaluators.
+
 ## Acceptance and units
 
 - Show the strongest twelve internal directed package dependencies initially, or all if fewer exist. Rank by distinct importing-file count, then stable package IDs. Opposite directions may share a line only with visible direction indicators and both counts. Report selected/rendered/remaining directions separately. Expose the remainder through expansion. Dependencies inside a mutually dependent group must retain direction; do not manufacture an internal hierarchy.

@@ -1,3 +1,4 @@
+import { SourceObservationCache } from './source-observation-cache.mjs';
 import { object } from './types.mjs';
 import { mediaFingerprint } from './assets.mjs';
 import { parseMediaConfig } from '../dist/query/media-model.js';
@@ -15,8 +16,9 @@ import { regular } from './init-files.mjs';
 import { observeGraft } from './graft.mjs';
 
 type SelectionPlan = { readonly lensInput: SourceInput | undefined; readonly lens: Lens | undefined; readonly paths: readonly string[]; readonly selected: ReturnType<typeof selectedInputs>; readonly codePaths: readonly string[]; };
-// Reuse derived parsing/selection only; source contents are still read and hashed on every observation.
+// Reuse derived selection; working inputs are verified separately by the observation reader.
 const plans = new WeakMap<Options, SelectionPlan>();
+const sourceCaches = new WeakMap<Options, SourceObservationCache>();
 const samePaths = (left: readonly string[], right: readonly string[]) => left.length === right.length && left.every((path, index) => path === right[index]);
 
 function observeInputs(options: Options, repository: RepositoryReader, historical?: RepositoryReader) {
@@ -33,7 +35,7 @@ function observeInputs(options: Options, repository: RepositoryReader, historica
     const lensPath = resolve(root, options.lens ?? historicalDefault ?? currentDefault ?? '.lattice/lens.yaml');
     const lensRelative = inside(root, lensPath) ? relative(root, lensPath).split(sep).join('/') : `.lattice/${basename(lensPath)}`;
     const historicalText = !options.noLens && historical && inside(root, lensPath) ? historical.readText(lensRelative) : undefined;
-    const currentText = !options.noLens && historicalText === undefined && (options.lens !== undefined || existsSync(lensPath)) ? readFileSync(lensPath, 'utf8') : undefined;
+    const currentText = !options.noLens && historicalText === undefined && (options.lens !== undefined || existsSync(lensPath)) ? (repository.readObservedText?.(lensPath) ?? readFileSync(lensPath, 'utf8')) : undefined;
     const lensText = options.noLens ? undefined : historicalText ?? currentText;
     const lensInput = lensText === undefined ? undefined : { path: lensRelative, text: lensText, contentHash: digest(lensText) };
     const previous = plans.get(options);
@@ -53,6 +55,7 @@ function observeInputs(options: Options, repository: RepositoryReader, historica
     const readInput = (path: string) => {
         if (!contents.has(path)) {
             try {
+                if (repository.readInput) { contents.set(path, repository.readInput(path)); return contents.get(path); }
                 const text = repository.readText(path);
                 contents.set(path, text === undefined ? undefined : { path, text, contentHash: digest(text) });
             } catch (error) {
@@ -78,13 +81,13 @@ function observeInputs(options: Options, repository: RepositoryReader, historica
     const interpretations = interpretationPaths.sort().map(path => {
         if (historical) { const input = readInput(path); return input ? { path, contentHash: input.contentHash } : undefined; }
         const absolute = resolve(noteDirectory, basename(path)); regular(absolute);
-        return { path, contentHash: digest(readFileSync(absolute, 'utf8')) };
+        return { path, contentHash: digest(repository.readObservedText?.(absolute) ?? readFileSync(absolute, 'utf8')) };
     }).filter(input => input !== undefined);
     const draftInterpretations = ['lens.draft.yaml', 'lens.draft.sources.json'].flatMap(file => {
         const path = `.lattice/${file}`;
         if (historical) { const input = readInput(path); return input ? [{ path, contentHash: input.contentHash }] : []; }
         const absolute = resolve(interpretationDirectory(root), file);
-        return regular(absolute) ? [{ path, contentHash: digest(readFileSync(absolute, 'utf8')) }] : [];
+        return regular(absolute) ? [{ path, contentHash: digest(repository.readObservedText?.(absolute) ?? readFileSync(absolute, 'utf8')) }] : [];
     });
     const mediaConfig = parseMediaConfig(object(lens?.config['presentation']) ? lens.config['presentation']['media'] : undefined);
     const mediaCandidates = mediaConfig.field ? repository.paths.filter(path => /\.(png|jpe?g|webp|gif|svg|avif)$/iu.test(path)).map(path => ({ id: path, attributes: { [mediaConfig.field ?? '']: path } })) : [];
@@ -102,8 +105,13 @@ export function observeRepository(options: Options, historical?: RepositoryReade
     return observed;
 }
 export async function observeRepositoryAsync(options: Options) {
-    const repository = await workingRepositoryAsync(options.root, options.cacheDir);
+    let base = sourceCaches.get(options);
+    if (!base) { base = new SourceObservationCache(options.root); sourceCaches.set(options, base); }
+    const cache = base.fork();
+    const repository = await workingRepositoryAsync(options.root, options.cacheDir, cache);
+    cache.prune(repository.paths);
     const observed = observeInputs(options, repository);
     verifyObservation(repository, await workingRepositoryAsync(options.root, options.cacheDir));
+    cache.verify();
     return observed;
 }

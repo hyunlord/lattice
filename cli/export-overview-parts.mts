@@ -4,7 +4,7 @@ import type { LoopMap } from '../dist/query/loop-map-types.js';
 import { createStructuralOverviewProjector } from '../dist/query/thin-structural-model.js';
 
 function bucket(id: string): string { let value = 0; for (const char of id) value = (value * 31 + (char.codePointAt(0) ?? 0)) >>> 0; return (value % 256).toString(16).padStart(2, '0'); }
-export function writeOverviewParts(graph: Pick<Graph, 'hash' | 'repository'>, model: LoopMap, layer: string, write: (path: string, text: string) => void): string {
+export function writeOverviewParts(graph: Pick<Graph, 'hash' | 'repository'>, model: LoopMap, layer: string, write: (path: string, text: string) => void, functionFocus?: LoopMap): string {
     const project = createStructuralOverviewProjector(model);
     const prefix = `overview-parts/${createHash('sha256').update(graph.hash + ':' + layer).digest('hex')}`;
     const buckets = new Map<string, Record<string, string>>();
@@ -44,6 +44,7 @@ export function writeOverviewParts(graph: Pick<Graph, 'hash' | 'repository'>, mo
         const ids = new Set([node.id, ...node.relationGroups.flatMap(group => group.items.map(item => item.id))]);
         register('focus:' + node.id, save({ ...initial, stages: [], flows: [], rootStageIds: [], structuralDependencyPages: [], structuralDependencyGroups: [], nodes: [...ids].flatMap(id => { const related = nodes.get(id); return related ? [{ ...related, relationGroups: id === node.id ? related.relationGroups : [] }] : []; }), defaultFocus: node.id }));
     }
+    if (functionFocus?.defaultFocus) register('focus:' + functionFocus.defaultFocus, save({ ...initial, ...functionFocus }));
     for (let index = 0; index < 256; index++) { const key = index.toString(16).padStart(2, '0'); write(`${prefix}/lookup/${key}.json`, JSON.stringify({ schemaVersion: 1, hash: graph.hash, repository: graph.repository, records: buckets.get(key) ?? {} })); }
     return prefix;
 }

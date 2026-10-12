@@ -8,7 +8,7 @@ test('logic export writes bounded source-bound entrypoints and adjacent call pag
     assert.equal(typeof exporter.writeLogic, 'function');
     const files = new Map(); exporter.writeLogic(graph, (path, text) => files.set(path, JSON.parse(text)));
     const index = files.get('logic/index.json'); assert.equal(index.graphHash, 'g'); assert.equal(index.entrypointCount, 2);
-    assert.equal(files.get('logic/entrypoints/0.json').items[0].node.id, 'a');
+    assert.deepEqual(files.get('logic/entrypoints/0.json').items.map(item => item.node.id), ['b', 'a']);
     const directory = [...files.entries()].find(([path, data]) => path.startsWith('logic/lookup/') && data.records?.a)?.[1];
     assert.ok(directory); const detail = files.get(directory.records.a);
     assert.equal(detail.outgoing.total, 1); assert.deepEqual(detail.outgoing.items[0].sources, [source]); assert.equal(detail.incoming.total, 0);

@@ -14,14 +14,14 @@ function fixture() {
 }
 test('bounded node detail preserves exact selected attributes and never loads full graph', async t => {
     const { createNodeDetailLoader } = await import('../viewer/node-detail-data.js'); const files = fixture(), requests = [];
-    t.mock.method(globalThis, 'fetch', async url => { requests.push(String(url)); const path = String(url).slice(2).split('?')[0]; return Response.json(files.get(path)); });
+    t.mock.method(globalThis, 'fetch', async url => { requests.push(String(url)); const path = String(url).slice(2).split('?')[0]; return files.has(path) ? Response.json(files.get(path)) : new Response(null, { status: 404 }); });
     const loader = createNodeDetailLoader({ hash: binding.graphHash, repository }, '?generation=7'); const index = await loader.index();
     const result = await loader.node(index, 'n'); assert.deepEqual(result.graph.nodes, [node]); assert.equal(await loader.node(index, 'missing'), undefined);
     assert.ok(requests.every(url => url.endsWith('?generation=7'))); assert.ok(!requests.some(url => url.includes('graph.json')));
 });
 test('node detail source mismatch fails closed and retries instead of retaining failed requests', async t => {
     const { createNodeDetailLoader } = await import('../viewer/node-detail-data.js'); const files = fixture(); let corrupt = true;
-    t.mock.method(globalThis, 'fetch', async url => { const path = String(url).slice(2); const value = files.get(path); return Response.json(path.includes('packet') && corrupt ? { ...value, repository: { ...repository, commit: 'wrong' } } : value); });
+    t.mock.method(globalThis, 'fetch', async url => { const path = String(url).slice(2); const value = files.get(path); if (!files.has(path)) return new Response(null, { status: 404 }); return Response.json(path.includes('packet') && corrupt ? { ...value, repository: { ...repository, commit: 'wrong' } } : value); });
     const loader = createNodeDetailLoader({ hash: binding.graphHash, repository }); const index = await loader.index();
     await assert.rejects(loader.node(index, 'n'), /소스/); corrupt = false; assert.equal((await loader.node(index, 'n')).graph.nodes[0].name, 'N');
 });

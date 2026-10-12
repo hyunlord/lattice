@@ -14,10 +14,12 @@ function bound(value: unknown, expected: { readonly graphHash: string; readonly 
 }
 export function createNodeDetailLoader(expected: { readonly hash: string; readonly repository: Repository; }, suffix = '') {
     const pending = new Map<string, Promise<unknown>>();
+    let transport: Promise<ReturnType<typeof import('./packed-data.js')['createPackedLoader']>> | undefined;
+    const readPacked = (file: string) => (transport ??= import('./packed-data.js').then(module => module.createPackedLoader('./', suffix))).then(loader => loader.json(file));
     const read = (file: string, optional = false, binding?: { readonly graphHash: string; readonly repository?: Repository; }): Promise<unknown> => {
         if (!path(file)) return Promise.reject(new Error('노드 상세 경로가 올바르지 않습니다.'));
         const cached = pending.get(file); if (cached) return cached;
-        const request = (async () => { const response = await fetch('./' + file + suffix); if (optional && response.status === 404) return undefined; if (!response.ok) throw new Error(`노드 상세 HTTP ${response.status}`); const value: unknown = await response.json(); if (binding) bound(value, binding); return value; })();
+        const request = (async () => { let value: unknown; try { value = await readPacked(file); } catch (error) { if (optional && error instanceof Error && /HTTP 404:/u.test(error.message)) return undefined; throw error; } if (binding) bound(value, binding); return value; })();
         pending.set(file, request); void request.then(value => { if (value === undefined) pending.delete(file); }, () => pending.delete(file));
         // Keep navigation memory bounded; active promises remain owned by their callers.
         if (pending.size > 32) { const first = pending.keys().next().value; if (first) pending.delete(first); }

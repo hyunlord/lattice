@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import { execFileSync, spawnSync } from 'node:child_process';
 import { existsSync, lstatSync, mkdirSync, readFileSync, readdirSync, renameSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
+import { readPackedArtifact } from '../bin/packed-reader.mjs';
 
 export function verifyExport(cli, repository) {
   mkdirSync(repository, { recursive: true });
@@ -18,11 +19,11 @@ export function verifyExport(cli, repository) {
   assert.ok(first['evidence.js']);
   assert.ok(first['source-groups.js']);
   assert.doesNotMatch(first['source-groups.js'], /\.\.\/dist\//u);
-  const thin = JSON.parse(first['graph.json']);
+  const thin = readPackedArtifact(output, 'graph.json');
   const full = JSON.parse(readFileSync(join(repository, '.lattice/cache/graph.json'), 'utf8'));
-  for (const kind of ['edges', 'facets', 'findings', 'views']) for (const record of thin[kind]) {
+  for (const kind of thin.evidence ? ['edges', 'facets', 'findings', 'views'] : []) for (const record of thin[kind]) {
     const id = thin.evidence.records[kind]?.[record.id];
-    if (id) record.sources = thin.evidence.groups[id].pages.flatMap(path => JSON.parse(first[path]));
+    if (id) record.sources = thin.evidence.groups[id].pages.flatMap(path => readPackedArtifact(output, path));
   }
   delete thin.evidence;
   assert.deepEqual(thin, full);

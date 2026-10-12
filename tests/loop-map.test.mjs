@@ -52,7 +52,7 @@ test('structural overview starts without a utility selection and leaves configur
     const nodes = [node('isolated', 'module', {}, 'source-manifest.csv'), node('a', 'module', {}, 'src/a.ts'), node('b', 'module', {}, 'src/b.ts'), node('c', 'module', {}, 'src/c.ts')];
     const edges = [edge('a', 'imports', 'a', 'b'), edge('b', 'imports', 'a', 'c'), edge('duplicate', 'imports', 'a', 'b')];
     const automatic = buildLoopMap(nodes, edges, [], { kinds: [] }, 'example');
-    assert.equal(automatic.defaultFocus, undefined); assert(automatic.structuralEntryStageIds.includes('folder:src'));
+    assert.equal(automatic.defaultFocus, undefined); assert.deepEqual(automatic.structuralEntryStageIds, []);
     const configured = buildLoopMap(nodes, edges, [], { kinds: [], loop: loopConfig({ stages: [{ id: 's', title: 'Modules', kinds: ['module'] }] }) }, 'example');
     assert.equal(configured.defaultFocus, undefined);
 });
@@ -60,7 +60,7 @@ test('structural overview starts without a utility selection and leaves configur
 test('entry highlights prefer production root code without selecting a busier test', () => {
     const nodes = [node('test', 'module', {}, 'test/test.ts'), node('prod', 'module', {}, 'src/main.ts'), node('helper', 'module', {}, 'src/helper.ts')];
     const model = buildLoopMap(nodes, [edge('a', 'imports', 'test', 'prod'), edge('b', 'imports', 'test', 'helper')], [], { kinds: [] }, 'example');
-    assert.equal(model.defaultFocus, undefined); assert.deepEqual(model.structuralEntryStageIds, ['folder:src']);
+    assert.equal(model.defaultFocus, undefined); assert.deepEqual(model.structuralEntryStageIds, []);
 });
 
 test('repository namespace metadata labels logical groups without changing identity', () => {

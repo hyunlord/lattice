@@ -1,3 +1,4 @@
+import { logicOverviewMetadata, type LogicOverviewMetadata } from './logic-model.js';
 import { overviewDependencyGroups } from './structural-dependency-groups.js';
 import { plain } from '../adapters/markdown-inline.js';
 import type { Node, Edge, Facet } from '../core/model.js';
@@ -13,12 +14,16 @@ export type LoopPresentation = {
     interpretations?: readonly { targetId: string; summary: string; status: string; sources: readonly { path: string; line?: number; url?: string; }[]; }[];
     mediaManifest?: MediaManifest;
 };
-export function buildLoopMap(inputNodes: readonly Node[], inputEdges: readonly Edge[], facets: readonly Facet[], presentation: LoopPresentation, repositoryName: string, options: { readonly projection?: 'full' | 'overview'; } = {}): LoopMap {
+export function buildLoopMap(inputNodes: readonly Node[], inputEdges: readonly Edge[], facets: readonly Facet[], presentation: LoopPresentation, repositoryName: string, options: { readonly projection?: 'full' | 'overview'; readonly logic?: LogicOverviewMetadata; } = {}): LoopMap {
     const config = presentation.loop;
     const kinds = new Set(inputNodes.map(node => node.kind));
     const automatic = !config?.stages.length || !config.stages.some(stage => stage.kinds.some(kind => kinds.has(kind)));
     const structuralKinds = new Set(['module', 'file', 'package', 'document']);
     const projected = automatic && options.projection === 'overview' && (kinds.has('module') || kinds.has('file'));
+    const logic = automatic ? options.logic ?? (projected ? undefined : logicOverviewMetadata({ nodes: inputNodes, edges: inputEdges })) : undefined;
+    const defaultFocus = logic?.defaultFocus;
+    const hasLogic = options.logic !== undefined || !projected && inputNodes.some(node => node.kind === 'function');
+    const executableModules = new Set(logic?.executableModuleIds ?? []);
     const nodes = projected ? inputNodes.filter(node => structuralKinds.has(node.kind)) : inputNodes;
     const ids = projected ? new Set(nodes.map(node => node.id)) : undefined;
     const edges = ids ? inputEdges.filter(edge => ids.has(edge.source) && ids.has(edge.target)) : inputEdges;
@@ -37,7 +42,7 @@ export function buildLoopMap(inputNodes: readonly Node[], inputEdges: readonly E
     const summary = (n: Node) => (config?.summaryFields ?? ['cardText', 'description', 'concept']).map(k => n.attributes[k]).find((v): v is string => typeof v === 'string') ?? '';
     const interpretation = (id: string): LoopInterpretation | undefined => { const note = interpretations.get(id); return note ? { summary: plain(note.summary), stale: note.status === 'stale', evidence: note.sources } : undefined; };
     const structuralNodes = nodes.filter(node => structuralKinds.has(node.kind) && (node.kind !== 'file' || !kinds.has('module')));
-    const folderMap = automatic ? buildStructuralOverview(structuralNodes, edges) : undefined;
+    const folderMap = automatic ? buildStructuralOverview(structuralNodes.map(node => ({ ...node, attributes: { ...node.attributes, ...(hasLogic ? { entryPoints: executableModules.has(node.id) ? ['executable'] : [] } : {}) } })), edges) : undefined;
     const catalog = config?.catalogKinds?.length && !automatic ? nodes.filter(n => config.catalogKinds?.includes(n.kind)) : nodes.filter(n => ['module', 'file', 'package', 'type', 'function', 'class', 'method', 'interface', 'enum', 'struct', 'trait'].includes(n.kind));
     const selected = catalog.length ? catalog : nodes;
     const traverse = (id: string, steps: NonNullable<LoopConfig['relationGroups']>[number]['steps'], displayStep = steps.length - 1, viaPrefix = '→'): LoopItem[] => {
@@ -59,6 +64,8 @@ export function buildLoopMap(inputNodes: readonly Node[], inputEdges: readonly E
     const loopNodes: LoopNode[] = selected.map((n, ordinal) => {
         let groups: LoopRelationGroup[] = (config?.relationGroups ?? []).filter(g => !g.kinds?.length || g.kinds.includes(n.kind)).map<LoopRelationGroup>(g => ({ side: g.side === 'left' ? 'incoming' : 'outgoing', label: g.label, items: traverse(n.id, g.steps, g.displayStep, g.viaPrefix) })).filter(g => g.items.length);
         if (!config?.relationGroups.length) groups = [
+            { side: 'incoming' as const, label: '이 함수를 부르는 곳', items: (incoming.get(n.id) ?? []).filter(e => e.kind === 'calls' && e.attributes?.['resolution'] === 'exact').map(e => ({ id: e.source })) },
+            { side: 'outgoing' as const, label: '이 함수가 부르는 것', items: (outgoing.get(n.id) ?? []).filter(e => e.kind === 'calls' && e.attributes?.['resolution'] === 'exact').map(e => ({ id: e.target })) },
             { side: 'incoming' as const, label: '이 모듈을 사용하는 곳', items: (incoming.get(n.id) ?? []).filter(e => e.kind === 'imports').map(e => ({ id: e.source })) },
             { side: 'outgoing' as const, label: '참조하는 모듈', items: (outgoing.get(n.id) ?? []).filter(e => e.kind === 'imports').map(e => ({ id: e.target })) },
             { side: 'outgoing' as const, label: '정의한 타입·함수', items: (outgoing.get(n.id) ?? []).filter(e => e.kind === 'contains').map(e => ({ id: e.target })) },
@@ -109,5 +116,11 @@ export function buildLoopMap(inputNodes: readonly Node[], inputEdges: readonly E
         const note = candidate?.evidence.length && (exact || candidate.stale) ? candidate : undefined;
         return { ...group, ...(note ? { interpretation: note } : {}) };
     }) : undefined;
-    return { ...(structuralDependencyGroups ? { structuralDependencyGroups } : {}), ...(folderMap ? { structural: true, structuralSourceRoot: folderMap.structuralSourceRoot, structuralEntryStageIds: folderMap.structuralEntryStageIds, structuralScope: folderMap.structuralScope, verifiedCycleStageGroups: folderMap.verifiedCycleStageGroups, rootStageIds: folderMap.rootStageIds, defaultStage: folderMap.defaultStage } : {}), showStatus: loopNodes.some(n => n.status !== 'unknown'), ...(config?.subtitle ? { subtitle: config.subtitle } : {}), ...(config?.defaultStage ? { defaultStage: config.defaultStage } : {}), title: config?.title ?? `${repositoryName} 지도`, lead: (config?.lead ?? (automatic ? structuralSummary([], nodes, '.') : '')) || '덩어리를 눌러 역할과 연결을 살펴보세요. 화살표 숫자는 가져다 쓰는 파일 수입니다.', ...(config?.center ? { center: config.center } : { center: { title: repositoryName, description: '구조와 의존 관계' } }), stages, flows: folderMap ? folderMap.flows : config?.flows ?? [], nodes: loopNodes, statusLabels: { present: '지금 빌드에 있음', absent: '설계에 있음', unknown: '실행 상태 미판정', ...config?.statusLabels }, kindOrder: config?.catalogKinds ?? [...new Set(loopNodes.map(n => n.kind))], strips: (config?.strips ?? []).map(s => ({ title: s.title, description: s.description, groups: s.kinds.map(kind => ({ title: kindName(kind), nodeIds: nodes.filter(n => n.kind === kind).map(n => n.id) })) })), ...(config?.places ? { places: { title: config.places.title, description: config.places.description, nodeIds: nodes.filter(n => config.places?.kinds.includes(n.kind)).map(n => n.id) } } : {}) };
+    return { ...(defaultFocus ? { defaultFocus } : {}), ...(structuralDependencyGroups ? { structuralDependencyGroups } : {}), ...(folderMap ? { structural: true, structuralSourceRoot: folderMap.structuralSourceRoot, structuralEntryStageIds: folderMap.structuralEntryStageIds, structuralScope: folderMap.structuralScope, verifiedCycleStageGroups: folderMap.verifiedCycleStageGroups, rootStageIds: folderMap.rootStageIds, defaultStage: folderMap.defaultStage } : {}), showStatus: loopNodes.some(n => n.status !== 'unknown'), ...(config?.subtitle ? { subtitle: config.subtitle } : {}), ...(config?.defaultStage ? { defaultStage: config.defaultStage } : {}), title: config?.title ?? `${repositoryName} 지도`, lead: (config?.lead ?? (automatic ? structuralSummary([], nodes, '.') : '')) || '덩어리를 눌러 역할과 연결을 살펴보세요. 화살표 숫자는 가져다 쓰는 파일 수입니다.', ...(config?.center ? { center: config.center } : { center: { title: repositoryName, description: '구조와 의존 관계' } }), stages, flows: folderMap ? folderMap.flows : config?.flows ?? [], nodes: loopNodes, statusLabels: { present: '지금 빌드에 있음', absent: '설계에 있음', unknown: '실행 상태 미판정', ...config?.statusLabels }, kindOrder: config?.catalogKinds ?? [...new Set(loopNodes.map(n => n.kind))], strips: (config?.strips ?? []).map(s => ({ title: s.title, description: s.description, groups: s.kinds.map(kind => ({ title: kindName(kind), nodeIds: nodes.filter(n => n.kind === kind).map(n => n.id) })) })), ...(config?.places ? { places: { title: config.places.title, description: config.places.description, nodeIds: nodes.filter(n => config.places?.kinds.includes(n.kind)).map(n => n.id) } } : {}) };
+}
+
+/** The exporter supplies only the center and its direct call neighbors from its adjacency index. */
+export function buildFunctionFocus(nodes: readonly Node[], edges: readonly Edge[], presentation: LoopPresentation, repositoryName: string, id: string): LoopMap {
+    const model = buildLoopMap(nodes, edges, [], presentation, repositoryName);
+    return { ...model, stages: [], flows: [], defaultFocus: id };
 }

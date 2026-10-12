@@ -80,7 +80,7 @@ export async function serve(options: Options) {
             if (path && stat?.isFile()) {
                 if (request.method === 'HEAD') { send(200, 'application/json', ''); return; }
                 const stream = createReadStream(path, { fd: openSync(path, 'r'), autoClose: true });
-                response.writeHead(200, { 'Content-Type': 'application/json', 'Content-Length': stat.size, 'Cache-Control': 'no-store', 'X-Content-Type-Options': 'nosniff' });
+                response.writeHead(200, { 'Content-Type': relativePath.endsWith('.gz') ? 'application/gzip' : 'application/json', 'Content-Length': stat.size, 'Cache-Control': 'no-store', 'X-Content-Type-Options': 'nosniff' });
                 stream.on('error', failure => response.destroy(failure)); response.on('close', () => stream.destroy()); stream.pipe(response); return;
             }
         } catch (failure) {

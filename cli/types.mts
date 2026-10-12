@@ -19,6 +19,9 @@ export interface RepositoryReader {
     readonly paths: readonly string[];
     prepare?(paths: readonly string[], options?: { readonly skipOversized?: boolean; }): void;
     readText(path: string): string | undefined;
+    readObservedText?(path: string): string;
+    readInput?(path: string): SourceInput | undefined;
+    readonly observationMode?: 'metadata-witness' | 'content-hash';
 }
 export interface Selection {
     readonly path: string;

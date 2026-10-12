@@ -246,8 +246,7 @@ function views(id: string, params: URLSearchParams) {
 }
 async function readSnapshot(snapshot: Snapshot): Promise<BrowserGraph> {
     const cached = snapshotGraphs.get(snapshot.id); if (cached) return cached;
-    const response = await fetch('./' + snapshot.artifactPath); if (!response.ok) throw new Error('스냅샷 HTTP ' + response.status);
-    const data = parseGraph(await response.json()); if (data.schemaVersion !== 1 || data.hash !== snapshot.graphHash || !Array.isArray(data.nodes) || !Array.isArray(data.findings)) throw new Error('스냅샷의 형식 또는 해시가 일치하지 않습니다.');
+    const data = parseGraph(await (await import('./packed-data.js')).packedLoader(suffix).json(snapshot.artifactPath)); if (data.schemaVersion !== 1 || data.hash !== snapshot.graphHash || data.repository.commit !== snapshot.commit || !Array.isArray(data.nodes) || !Array.isArray(data.findings)) throw new Error('스냅샷의 형식 또는 해시가 일치하지 않습니다.');
     snapshotGraphs.set(snapshot.id, data); return data;
 }
 function changes(params: URLSearchParams, version: number) {
@@ -287,10 +286,9 @@ async function requireGraph(): Promise<void> {
     if (fullGraphLoaded) return;
     if (graphRequest) return graphRequest;
     const pending = (async () => {
-        const [response, presentationResponse, snapshotResponse] = await Promise.all([fetch('./graph.json' + suffix), fetch('./presentation.json' + suffix), fetch('./snapshots.json' + suffix)]);
-        if (!response.ok) throw new Error('graph.json HTTP ' + response.status);
-        const next = parseGraph(await response.json());
-        if (firstOverview && next.hash !== firstOverview.hash) throw new Error('첫 화면과 그래프의 소스가 다릅니다. 지도를 새로 고치세요.');
+        const [data, presentationResponse, snapshotResponse] = await Promise.all([(await import('./packed-data.js')).packedLoader(suffix).json('graph.json'), fetch('./presentation.json' + suffix), fetch('./snapshots.json' + suffix)]);
+        const next = parseGraph(data);
+        if (firstOverview && (next.hash !== firstOverview.hash || next.repository.commit !== firstOverview.repository.commit || next.repository.sourceFingerprint !== firstOverview.repository.sourceFingerprint || next.repository.dirty !== firstOverview.repository.dirty)) throw new Error('첫 화면과 그래프의 소스가 다릅니다. 지도를 새로 고치세요.');
         graph = next; presentation = parsePresentation(presentationResponse.ok ? await presentationResponse.json() : {});
         snapshots = snapshotResponse.ok ? parseSnapshots(await snapshotResponse.json()) : [];
         indexGraph(); fullGraphLoaded = true;
@@ -305,7 +303,7 @@ function needsModel(params: URLSearchParams): boolean {
 }
 const logicContext = { nodeHref: (id: string) => routeHref('/function/' + encodeURIComponent(id)), flowHref: (id: string, depth: number) => routeHref('/flow/' + encodeURIComponent(id), { depth: String(depth) }) };
 async function logicProvider() {
-    if (firstOverview) { const { createLogicProvider } = await import('./logic-data.js'); return createLogicProvider(firstOverview.hash, suffix); }
+    if (firstOverview) { const { createLogicProvider } = await import('./logic-data.js'); return createLogicProvider(firstOverview.hash, suffix, firstOverview.repository); }
     await requireGraph(); const { graphLogicProvider } = await import('./logic.js'); return graphLogicProvider(graph);
 }
 async function mountFunctionLogic(host: HTMLElement, id: string): Promise<void> {

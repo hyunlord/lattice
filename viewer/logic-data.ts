@@ -1,4 +1,5 @@
-import type { Node, Edge } from '../dist/core/model.js';
+import { createPackedLoader } from './packed-data.js';
+import type { Node, Edge, Repository } from '../dist/core/model.js';
 import { logicNodes, logicFlow, logicLookupBucket, type LogicNode, type LogicPageOptions, type LogicCallOptions, type LogicFlowOptions, type logicEntrypoints, type logicCalls } from './logic-model.js';
 import { parseGraph, object } from './data.js';
 export type LogicProvider = {
@@ -17,15 +18,14 @@ function page<T>(items: readonly T[], total: number, options: LogicPageOptions) 
     return { items: [...items], total, offset, limit, truncated: offset > 0 || offset + limit < total, nextOffset: offset + limit < total ? offset + limit : null };
 }
 /** Fetches only discovery pages and requested function neighborhoods, bound to the current graph hash. */
-export function createLogicProvider(graphHash: string, suffix = ''): LogicProvider {
+export function createLogicProvider(graphHash: string, suffix = '', expectedRepository?: Repository): LogicProvider {
+    const transport = createPackedLoader('./', suffix);
     const requests = new Map<string, Promise<Record<string, unknown>>>(), names = new Map<string, string>(), descriptions = new Map<string, LogicNode>();
     const read = (path: string): Promise<Record<string, unknown>> => {
         if (!/^logic\/(?:index\.json|entrypoints\/\d+\.json|lookup\/[a-f0-9]{2}\.json|nodes\/[a-f0-9]{64}\.json|calls\/[a-f0-9]{64}-(?:all-)?(?:in|out)-\d+\.json)$/u.test(path)) return Promise.reject(new Error('올바르지 않은 호출 정보 경로입니다.'));
         const cached = requests.get(path); if (cached) return cached;
         const pending = (async () => {
-            const response = await fetch('./' + path + suffix);
-            if (!response.ok) throw new Error(`호출 정보 HTTP ${response.status}. 다시 시도하세요.`);
-            const value: unknown = await response.json();
+            const value: unknown = await transport.json(path);
             if (!object(value) || value['graphHash'] !== graphHash) throw new Error('호출 정보의 출처가 현재 지도와 다릅니다. 새로고침하세요.');
             return value;
         })();
@@ -33,6 +33,8 @@ export function createLogicProvider(graphHash: string, suffix = ''): LogicProvid
     };
     const index = async () => {
         const value = await read('logic/index.json');
+        const repository = value['repository'];
+        if (expectedRepository && (!object(repository) || repository['commit'] !== expectedRepository.commit || repository['sourceFingerprint'] !== expectedRepository.sourceFingerprint || repository['dirty'] !== expectedRepository.dirty)) throw new Error('호출 정보의 소스가 현재 지도와 다릅니다.');
         if (value['schemaVersion'] !== 1 || value['pageSize'] !== 100 || !integer(value['entrypointCount']) || !integer(value['callableCount']) || !object(value['packageNames'])) throw new Error('호출 정보 목록 형식이 올바르지 않습니다.');
         for (const [id, name] of Object.entries(value['packageNames'])) if (typeof name === 'string') names.set(id, name);
         return value;

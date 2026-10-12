@@ -19,21 +19,36 @@ export function pageJson(value: JsonValue, args: Record<string, unknown>): JsonV
     return Object.fromEntries(Object.entries(value).map(([key, child]) => [key, pageJson(child, args)]));
 }
 export const layerOf = (node: Node): string => String(node.attributes['layer'] ?? '');
-export function scopeGraph(graph: Graph, presentation: unknown, args: Record<string, unknown>) {
+type ResidentScope = { readonly layer: string; readonly layers: string[]; readonly nodes: Node[]; readonly edges: Graph['edges']; readonly facets: Graph['facets']; readonly findings: Graph['findings']; };
+type ResidentSelection = { readonly visible: Node[]; readonly byId: ReadonlyMap<string, Node>; readonly layers: string[]; readonly scopes: Map<string, ResidentScope>; };
+// Graph generations and presentation configurations are immutable after construction.
+const residentSelections = new WeakMap<Graph, Map<unknown, ResidentSelection>>();
+export function scopeGraph(graph: Graph, presentation: unknown, args: Record<string, unknown>): ResidentScope {
     const config = object(presentation) ? presentation : {}, kinds = config['kinds'];
     const hidden = new Set(Array.isArray(kinds) ? kinds.filter(object).filter(kind => kind['hidden'] === true).map(kind => kind['id']) : []);
-    const visible = graph.nodes.filter(node => !hidden.has(node.kind));
-    const layers = [...new Set(visible.map(layerOf))];
+    let configurations = residentSelections.get(graph);
+    if (!configurations) { configurations = new Map(); residentSelections.set(graph, configurations); }
+    let selection = configurations.get(presentation);
+    if (!selection) {
+        const visible = graph.nodes.filter(node => !hidden.has(node.kind));
+        selection = { visible, byId: new Map(visible.map(node => [node.id, node])), layers: [...new Set(visible.map(layerOf))], scopes: new Map() };
+        configurations.set(presentation, selection);
+    }
+    const { visible, layers } = selection;
     const requestedNode = stringArg(args, 'id');
-    const node = requestedNode ? visible.find(entry => entry.id === requestedNode) : undefined;
+    const node = requestedNode ? selection.byId.get(requestedNode) : undefined;
     const preferred = typeof config['defaultLayer'] === 'string' ? config['defaultLayer'] : '';
     const layer = stringArg(args, 'layer') ?? (node ? layerOf(node) : layers.includes(preferred) ? preferred : layers[0] ?? '');
+    const cached = selection.scopes.get(layer);
+    if (cached) return cached;
     const nodes = visible.filter(entry => layerOf(entry) === layer), ids = new Set(nodes.map(entry => entry.id));
     const allLayerIds = new Set(graph.nodes.filter(entry => layerOf(entry) === layer).map(entry => entry.id));
     const edges = graph.edges.filter(edge => ids.has(edge.source) && ids.has(edge.target));
     const facets = graph.facets.filter(facet => ids.has(facet.nodeId));
     const findings = graph.findings.filter(finding => finding.targetIds.length ? finding.targetIds.some(id => allLayerIds.has(id)) : !layer || finding.metrics['layer'] === layer);
-    return { layer, layers, nodes, edges, facets, findings };
+    const scope = { layer, layers, nodes, edges, facets, findings };
+    if (layers.includes(layer)) selection.scopes.set(layer, scope);
+    return scope;
 }
 export type Scope = ReturnType<typeof scopeGraph>;
 export function findNodes(scope: Scope, args: Record<string, unknown>) {

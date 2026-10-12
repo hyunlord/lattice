@@ -32,22 +32,22 @@ export function parseOverview(value: unknown): Overview {
 function bucket(id: string): string { let value = 0; for (const char of id) value = (value * 31 + (char.codePointAt(0) ?? 0)) >>> 0; return (value % 256).toString(16).padStart(2, '0'); }
 export function createOverviewLoader(suffix = '') {
     const models = new Map<string, Promise<LoopMap>>();
+    let transport: Promise<ReturnType<typeof import('./packed-data.js')['createPackedLoader']>> | undefined;
+    const readPacked = (path: string) => (transport ??= import('./packed-data.js').then(module => module.createPackedLoader('./', suffix))).then(loader => loader.json(path));
     const lookups = new Map<string, Promise<Record<string, string>>>();
     const matches = (value: unknown, overview: Overview): value is Record<string, unknown> => object(value) && value['schemaVersion'] === 1 && value['hash'] === overview.hash && repository(value['repository']) && value['repository'].sourceFingerprint === overview.repository.sourceFingerprint && value['repository'].commit === overview.repository.commit;
-    const partPath = async (overview: Overview, layer: OverviewLayer, key: string): Promise<string> => {
+    const partPath = async (overview: Overview, layer: OverviewLayer, key: string): Promise<string | undefined> => {
         const path = `${layer.parts}/lookup/${bucket(key)}.json`, cacheKey = overview.hash + ':' + path;
         let pending = lookups.get(cacheKey);
         if (!pending) {
             pending = (async () => {
-                const response = await fetch('./' + path + suffix);
-                if (!response.ok) throw new Error(`지도 항목 찾기 HTTP ${response.status}`);
-                const value: unknown = await response.json();
+                const value: unknown = await readPacked(path);
                 if (!matches(value, overview) || !object(value['records']) || !Object.values(value['records']).every(item => string(item) && item.startsWith(`${layer.parts}/data/`) && /^overview-parts\/[a-f0-9]{64}\/data\/[a-f0-9]{64}\.json$/u.test(item))) throw new Error('첫 화면과 상세의 소스가 다릅니다. 지도를 새로 고치세요.');
                 return value['records'] as Record<string, string>;
             })(); lookups.set(cacheKey, pending); pending.catch(() => lookups.delete(cacheKey));
         }
         const records = await pending;
-        if (!Object.hasOwn(records, key) || !records[key]) throw new Error('이 지도 항목을 찾을 수 없습니다. 지도를 새로 고치세요.');
+        if (!Object.hasOwn(records, key) || !records[key]) { if (key.startsWith('focus:')) return undefined; throw new Error('이 지도 항목을 찾을 수 없습니다. 지도를 새로 고치세요.'); }
         return records[key];
     };
     return {
@@ -58,18 +58,30 @@ export function createOverviewLoader(suffix = '') {
             return parseOverview(await response.json());
         },
         async model(overview: Overview, layer: OverviewLayer, params?: URLSearchParams): Promise<LoopMap> {
-            let path = layer.path;
+            let path: string | undefined = layer.path;
             if (layer.parts && params) {
                 const focus = params.get('view') === 'focus' ? params.get('item') ?? layer.model.defaultFocus : undefined;
                 const scope = params.get('scope') ?? layer.model.structuralScope?.default ?? 'production';
                 const key = params.get('view') === 'catalog' ? 'catalog' : focus ? 'focus:' + focus : params.get('stage') ? 'stage:' + params.get('stage') : 'page:' + JSON.stringify([scope, params.get('parent') ?? '', Math.max(0, Number(params.get('page')) || 0)]);
                 path = await partPath(overview, layer, key);
             }
-            const key = overview.hash + ':' + path, prior = models.get(key); if (prior) return prior;
+            if (path === undefined) {
+                const id = params?.get('item') ?? layer.model.defaultFocus; if (!id) throw new Error('함수를 찾을 수 없습니다.');
+                const key = overview.hash + ':function-focus:' + id, previous = models.get(key); if (previous) return previous;
+                const pending = (async () => {
+                    const [{ createLogicProvider }, { buildFunctionFocus }] = await Promise.all([import('./logic-data.js'), import('./loop-map-model.js')]);
+                    const calls = await createLogicProvider(overview.hash, suffix, overview.repository).calls({ id, direction: 'both', limit: 50 });
+                    if (!calls.found || !calls.node) throw new Error('함수를 찾을 수 없습니다.');
+                    const nodes = [...new Map([calls.node.node, ...calls.relatedNodes].map(node => [node.id, node])).values()];
+                    const edges = [...new Map([...calls.incoming.items, ...calls.outgoing.items].map(edge => [edge.id, edge])).values()];
+                    const model = buildFunctionFocus(nodes, edges, { kinds: [...overview.kinds] }, overview.repository.name, id);
+                    return { ...model, lead: `${model.lead} · 들어오는 호출 ${calls.incoming.items.length}/${calls.incoming.total}, 나가는 호출 ${calls.outgoing.items.length}/${calls.outgoing.total}` };
+                })(); models.set(key, pending); void pending.catch(() => models.delete(key)); return pending;
+            }
+            const selectedPath = path;
+            const key = overview.hash + ':' + selectedPath, prior = models.get(key); if (prior) return prior;
             const pending = (async () => {
-                const response = await fetch('./' + path + suffix);
-                if (!response.ok) throw new Error(`첫 화면 상세 HTTP ${response.status}`);
-                const value: unknown = await response.json();
+                const value: unknown = await readPacked(selectedPath);
                 if (!matches(value, overview) || !loopModel(value['model'])) throw new Error('첫 화면과 상세의 소스가 다릅니다. 지도를 새로 고치세요.');
                 return value['model'];
             })();

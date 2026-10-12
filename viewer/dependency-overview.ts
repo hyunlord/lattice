@@ -1,8 +1,9 @@
 import type { LoopStage, LoopUI } from './loop-map-types.js';
 import { anchor, chip, element, interpretation, svg } from './loop-map-shared.js';
 import { readLoopRoute, writeLoopRoute } from './loop-map-route.js';
-import { dependencyFlowDescription, dependencyCoverage, dependencyCardRole, featuredDependencyRoles, internalDependencyFacts, dependencyOverviewLevels, dependencyView, displayedDependencyFlows, dependencyHeadingParts } from './dependency-layout.js';
+import { dependencyFlowDescription, dependencyCoverage, dependencyCardRole, featuredDependencyRoles, internalDependencyFacts, dependencyOverviewLevels, dependencyView, displayedDependencyFlows, dependencyHeadingParts, packageDependencyLimit, packageDependencyView } from './dependency-layout.js';
 import { drawDependencyArrows } from './dependency-arrows.js';
+import { drawPackageDependencyArrows } from './dependency-package-arrows.js';
 
 function pathText<K extends keyof HTMLElementTagNameMap>(tag: K, value: string, className = ''): HTMLElementTagNameMap[K] {
     const result = element(tag, '', `${className} lm-path-text`);
@@ -28,7 +29,7 @@ export function renderDependencyOverview(host: HTMLElement, ui: LoopUI): () => v
     const overview = element('div', '', 'lm-dependency-overview'); const roles = element('aside', '', 'lm-dependency-roles'); const roleHint = element('p', '역할 목록 · 아래로 스크롤', 'lm-role-scroll-hint'); roleHint.hidden = true; roles.setAttribute('aria-label', '덩어리 역할과 설명 근거'); const roleDetails = element('details', '', 'lm-all-role-details'); roleDetails.append(element('summary', '전체 역할 설명'), roles); overview.append(diagram, roles);
     const panel = element('section', '', 'lm-panel'); panel.setAttribute('aria-live', 'polite'); host.append(nav, mode, overview, connections, hint, panel);
     const roots = model.rootStageIds ?? model.stages.filter(stage => !stage.parentId).map(stage => stage.id);
-    const packageOverview = model.stages.some(stage => stage.id.startsWith('manifest:') || stage.id.startsWith('manifest-folder:'));
+    const packageOverview = packageDependencyView(model);
     const pageSize = packageOverview ? Math.max(12, Math.min(24, roots.length)) : 9;
     const route = readLoopRoute(); const routed = route.stage; let selected = routed;
     let parentId = routed && !roots.includes(routed) ? byId.get(routed)?.parentId : route.parent && byId.has(route.parent) ? route.parent : undefined;
@@ -157,24 +158,33 @@ export function renderDependencyOverview(host: HTMLElement, ui: LoopUI): () => v
                     }
                     if (!flat && !stage.incoming.length && !stage.outgoing.length) analysis.append(element('p', `${stage.title}: 표시 범위의 명시 import 연결 없음`));
                     memberHost.append(box); boxes.set(stage.id, box);
-                } if (group.stages.length > 1) { region.dataset['regionIds'] = JSON.stringify(group.stages.map(stage => stage.id)); for (const stage of group.stages) boxes.set(stage.id, region); } row.append(region);
+                } if (group.stages.length > 1) { region.dataset['regionIds'] = JSON.stringify(group.stages.map(stage => stage.id)); if (!packageOverview) for (const stage of group.stages) boxes.set(stage.id, region); } row.append(region);
             }
             diagram.append(row);
             const outgoing = view.flows.filter(flow => groups.some(group => group.stages.some(stage => stage.id === flow.source))).length;
             const gap = element('div', '', 'lm-dependency-gap'); gap.dataset['flows'] = String(outgoing); diagram.append(gap);
         }
         const initial = view.stages.find(stage => stage.id === selected); panel.hidden = !initial; panel.replaceChildren(); if (initial) renderPanel(initial);
+        let packageGap = window.innerWidth > 700 ? 48 : 72;
         redraw = () => {
-            const flows = displayedDependencyFlows(view, selected, false).slice(0, 5); const sidebarRoles = roles.parentElement === overview; roles.style.maxHeight = sidebarRoles && window.innerWidth > 900 ? `${Math.max(200, window.innerHeight - roles.getBoundingClientRect().top - 12)}px` : ''; roleHint.hidden = !sidebarRoles || window.innerWidth <= 900 || roles.scrollHeight <= roles.clientHeight + 1;
+            const flows = displayedDependencyFlows(view, selected, false); const sidebarRoles = roles.parentElement === overview; roles.style.maxHeight = sidebarRoles && window.innerWidth > 900 ? `${Math.max(200, window.innerHeight - roles.getBoundingClientRect().top - 12)}px` : ''; roleHint.hidden = !sidebarRoles || window.innerWidth <= 900 || roles.scrollHeight <= roles.clientHeight + 1;
             mode.replaceChildren(); mode.hidden = false;
             const flatStage = flat ? view.stages[0] : undefined;
-            let shown = drawDependencyArrows({ host: diagram, graph, flows, boxes, view });
-            for (let count = flows.length - 1; count >= 0 && (Number(graph.dataset['unrouted']) > 0 || Number(graph.dataset['unplacedLabels']) > 0); count--) shown = drawDependencyArrows({ host: diagram, graph, flows: flows.slice(0, count), boxes, view });
+            const spaceRoutes = (): void => { for (const gap of diagram.querySelectorAll<HTMLElement>('.lm-dependency-gap')) gap.style.height = packageOverview ? `${packageGap}px` : window.innerWidth > 700 ? '48px' : '72px'; };
+            spaceRoutes();
+            let shown = packageOverview ? drawPackageDependencyArrows({ host: diagram, graph, flows, boxes, names: new Map(view.stages.map(stage => [stage.id, stage.title])) }) : drawDependencyArrows({ host: diagram, graph, flows, boxes, view });
+            if (packageOverview) for (const gap of [72, 96, 128]) {
+                if (shown.length === flows.length) break;
+                if (gap <= packageGap) continue;
+                packageGap = gap; spaceRoutes();
+                shown = drawPackageDependencyArrows({ host: diagram, graph, flows, boxes, names: new Map(view.stages.map(stage => [stage.id, stage.title])) });
+            }
+            if (!packageOverview) for (let count = flows.length - 1; count >= 0 && (Number(graph.dataset['unrouted']) > 0 || Number(graph.dataset['unplacedLabels']) > 0); count--) shown = drawDependencyArrows({ host: diagram, graph, flows: flows.slice(0, count), boxes, view });
             const coverage = dependencyCoverage(view, shown);
-            const status = element('span', flatStage ? `한 폴더의 파일 구성 · 파일 ${(flatStage.nodeCount ?? flatStage.nodeIds.length)}개 중 ${flatStage.filePreviews?.length ?? 0}개 미리보기` : (selected ? '선택한 폴더' : '')); mode.append(status); coverageEvidence.textContent = `외부 화살표 ${coverage.externalArrows}개 · 묶음 내부 ${coverage.internalDirections}방향 · 생략한 외부 화살표 ${coverage.hiddenExternalArrows}개`;
+            const status = element('span', flatStage ? `한 폴더의 파일 구성 · 파일 ${(flatStage.nodeCount ?? flatStage.nodeIds.length)}개 중 ${flatStage.filePreviews?.length ?? 0}개 미리보기` : packageOverview ? `의존 방향 ${shown.length}/${displayedDependencyFlows(view, selected, true).length}개 · 파일 수 순${flows.some(flow => (flow.projectCount ?? flow.projectSourceFiles?.length ?? 0) > 0) ? ' · 파일+선언' : ''}${shown.length < flows.length ? ` · 경로 미표시 ${flows.length - shown.length}개` : ''}` : (selected ? '선택한 폴더' : '')); mode.append(status); coverageEvidence.textContent = `외부 화살표 ${coverage.externalArrows}개 · 묶음 내부 ${coverage.internalDirections}방향 · 생략한 외부 화살표 ${coverage.hiddenExternalArrows}개`;
+            if (packageOverview) coverageEvidence.textContent = `표시한 의존 방향 ${shown.length}개 · 전체 ${view.flows.length}개 · 나머지 ${view.flows.length - shown.length}개는 전체 연결에서 확인`;
             if (selected) { const reset = element('button', '전체 구조'); reset.type = 'button'; reset.onclick = () => { selected = undefined; render(); saveRoute(); }; mode.append(reset); }
-            if (view.flows.length > 5) { const toggle = element('button', '전체 연결'); toggle.type = 'button'; toggle.onclick = () => { autoOpenedConnections = false; connections.open = true; connections.scrollIntoView({ block: 'start', behavior: 'smooth' }); }; mode.append(toggle); }
-            for (const gap of diagram.querySelectorAll<HTMLElement>('.lm-dependency-gap')) gap.style.height = window.innerWidth > 700 ? (packageOverview ? '32px' : '48px') : '72px';
+            if (view.flows.length > (packageOverview ? packageDependencyLimit : 5)) { const toggle = element('button', packageOverview ? `나머지 ${Math.max(0, view.flows.length - shown.length)}개 연결` : '전체 연결'); toggle.type = 'button'; toggle.setAttribute('aria-expanded', String(connections.open)); toggle.onclick = () => { autoOpenedConnections = false; connections.open = !connections.open; toggle.setAttribute('aria-expanded', String(connections.open)); if (connections.open) connections.scrollIntoView({ block: 'start', behavior: 'smooth' }); }; mode.append(toggle); }
             if (Number(graph.dataset['unrouted']) > 0 || Number(graph.dataset['unplacedLabels']) > 0) { if (!connections.open) autoOpenedConnections = true; connections.open = true; const summary = connections.querySelector('summary'); if (summary) summary.textContent = `전체 덩어리 연결 ${view.flows.length}개 · 밀집한 연결은 아래 목록에서 확인`; } else if (autoOpenedConnections) { connections.open = false; autoOpenedConnections = false; const summary = connections.querySelector('summary'); if (summary) summary.textContent = `전체 덩어리 연결 ${view.flows.length}개`; }
         }; requestAnimationFrame(redraw);
     };

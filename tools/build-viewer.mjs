@@ -9,7 +9,9 @@ for (const file of readdirSync(join(root, 'build/viewer'))) {
 for (const file of ['node-detail-transport.js', 'structural-name-facts.js', 'structural-manifest-map.js', 'structural-package-frontier.js', 'logic-model.js', 'presentation.js', 'map-presentation.js', 'source-groups.js', 'explore-model.js', 'views-model.js', 'history-model.js', 'picture-map-model.js', 'loop-map-model.js', 'structural-map-model.js', 'structural-dependency-groups.js', 'structural-file-previews.js', 'structural-frontier.js', 'structural-package-stages.js', 'loop-config.js', 'media-model.js']) {
   const destination = join(root, 'viewer', file);
   copyFileSync(join(root, 'dist/query', file), destination);
+  writeFileSync(destination, readFileSync(destination, 'utf8').replace('../core/logic-policy.js', './logic-policy.js'));
   if (file === 'loop-map-model.js' || file === 'structural-file-previews.js') writeFileSync(destination, readFileSync(destination, 'utf8').replace('../adapters/markdown-inline.js', './markdown-inline.js'));
 }
+copyFileSync(join(root, 'dist/core/logic-policy.js'), join(root, 'viewer/logic-policy.js'));
 copyFileSync(join(root, 'dist/adapters/markdown-inline.js'), join(root, 'viewer/markdown-inline.js'));
 chmodSync(join(root, 'bin/lattice.mjs'), 0o755);
