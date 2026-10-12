@@ -68,3 +68,21 @@ test('concurrent cold queries build once and each later query still detects cach
     assert.equal(repaired.graphHash, answers[0].graphHash);
     assert.equal((await f.call('lattice_freshness', {})).freshness.rebuilt, false);
 });
+for (const name of ['lattice_find', 'lattice_entrypoints', 'lattice_node']) {
+    test(`${name} compact observes preserved-mtime edits and refuses stale fallback`, async t => {
+        // Given an observed repository, when compact is requested after an edit, then freshness still rebuilds.
+        const f = fixture(t), args = name === 'lattice_node' ? { id: 'one' } : {};
+        const first = await f.call(name, args), path = join(f.root, 'data.json'), stat = statSync(path);
+        writeFileSync(path, readFileSync(path, 'utf8').replace('Alpha', 'Omega'));
+        utimesSync(path, stat.atime, stat.mtime);
+        const changed = await f.call(name, { ...args, compact: true });
+        assert.equal(changed.freshness.status, 'fresh');
+        assert.equal(changed.freshness.rebuilt, true);
+        assert.notEqual(changed.graphHash, first.graphHash);
+        if (name === 'lattice_find') assert.equal(changed.items.find(item => item.id === 'one').name, 'Omega');
+        if (name === 'lattice_node') assert.equal(changed.node.name, 'Omega');
+        mkdirSync(join(f.root, '.lattice'), { recursive: true });
+        writeFileSync(join(f.root, '.lattice/lens.yaml'), 'schemaVersion: [');
+        await assert.rejects(() => f.call(name, { ...args, compact: true }));
+    });
+}

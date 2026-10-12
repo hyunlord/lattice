@@ -62,3 +62,54 @@ New `lattice init` lenses select supported code and Markdown for the initial rep
 ## Static logic queries
 
 `lattice_entrypoints` lists source-backed static entrypoints. `lattice_calls` returns callers or callees for a function. `lattice_flow` follows exact calls with bounded depth (default3, maximum10) and explicit node/edge truncation. All three share the viewer projection, graph identity, evidence and deterministic pagination; they do not execute the analyzed repository. Ambiguous targets are omitted, so an absent edge is not proof that a runtime call cannot happen. See [L9 analysis](l9-analysis.md).
+
+## Opt-in compact reads (draft regression contract)
+
+The following contract is specified by regression tests; implementation and hosted
+verification are pending. `lattice_find`, `lattice_entrypoints` and `lattice_node`
+accept optional boolean `compact`. Omission or `false` preserves the exact existing
+response shape and complete evidence. Other values and unrelated argument names
+are rejected. This does not alter the interpretation-context compact option.
+
+Compact projection runs after ordinary visibility, ranking, filtering and page
+selection, with the same strict freshness observation. Graph/repository identity,
+links, layer and collection `total`, `offset`, `limit`, `truncated`, `nextOffset`
+remain unchanged. A compact page does not change the meaning of a continuation.
+
+- A node contains `id`, `kind`, `name` (the existing display label), `layer`,
+  `contentHash`, `summary`, `sources` and `omitted`. Find items additionally retain
+  their existing `link`. IDs and names are never truncated.
+- `summary` is the first 240 JavaScript string units of the existing string
+  `attributes.description`, or `null` when unavailable. It adds no inferred role,
+  fallback prose or interpretation. `omitted.summaryCharacters` reports removed
+  string units; `omitted.attributes` counts all top-level attribute keys excluded
+  from the response, including keys used to derive layer or summary.
+- `sources` retains the ordinary source page metadata and at most its first three
+  selected records, each containing only `path`, `line`, optional `endLine`, and
+  `contentHash`. No snippets, pointers, URLs or arbitrary source fields are emitted.
+  `omitted.sources` is the source page's full `total` minus emitted records, so it
+  includes records outside the requested page as well as the three-record cap.
+  It is not the count of extra records in the selected slice alone.
+- An entrypoint item keeps its node projection, the first three `packageIds` and
+  first three `entrypoints` in existing order. `omittedPackageIds` and
+  `omittedEntrypoints` count the remaining entries in each complete wrapper array.
+  Each entrypoint keeps its existing category and rule (at most 240 string units
+  each) and projected source span. Removed units are reported as
+  `omittedCategoryCharacters`/`omittedRuleCharacters` only when nonzero.
+- Node incoming/outgoing/undirected pages retain item order with only edge `id`,
+  `kind`, `source`, `target`, `directed`, `targetLayer`; facet pages retain `id`,
+  `nodeId`, `key`; finding pages retain `id`, `ruleId`, `severity`. Each item adds
+  `omittedFields`, the number of top-level fields removed from that selected full
+  item. The response omits top-level `intent` and `implementation` and reports
+  `omittedFields: 2`. No facet values, finding text/metrics, edge attributes or
+  nested evidence payloads are copied into these identity projections.
+
+Retrieve omitted detail with the existing full `lattice_node` request for the
+same ID, layer and page, then follow its independent collection pages. To retrieve
+source records capped inside a compact page, repeat that page without compact;
+its `nextOffset` only navigates ordinary pages and does not account for the cap.
+Full entrypoint requests also retain all classification and package membership
+records. No source graph or cache evidence is discarded. Compact is an output
+option, not a hard byte ceiling: exact IDs, names and paths can be long. Any token
+or latency improvement requires a separate measurement; these tests make no
+performance claim.
