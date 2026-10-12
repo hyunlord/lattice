@@ -1,0 +1,54 @@
+{
+  "baselineCommit": "efed2ec900b9685abedc1669b5a75b767136ce09",
+  "encoding": "sha256(canonicalJson(complete LogicFacts))",
+  "fixtures": [
+    {
+      "language": "javascript",
+      "path": "fixture.js",
+      "inputHash": "cd6324e4a5bbd42673000d9719673f40f419dd9d4e76e174c20a62db9b289adb",
+      "factsHash": "4f48d4705fe59b3c26f981c78edf7423b5fdc35912e9e0a172c624d5bfc4e7fe"
+    },
+    {
+      "language": "typescript",
+      "path": "fixture.ts",
+      "inputHash": "9731c76ca23d0b3d7bf9990d73a10983b630556a1bf9a0b7baedb9eaa881823a",
+      "factsHash": "664f56047ec3266b43b31322319172524331a5698d107ac9892b85b48275161f"
+    },
+    {
+      "language": "python",
+      "path": "fixture.py",
+      "inputHash": "2844be081d633d9c7e322e3712d6fe282c007c49574b5e66206a07b75b7339da",
+      "factsHash": "8aadd5ab2adcd44b4163f70bd799ff9afdb3ca2afb166732853c15482c3c38b2"
+    },
+    {
+      "language": "go",
+      "path": "fixture.go",
+      "inputHash": "c5b59ea58a89e19e9d44e7cb99c53457c75877bd19e1276ee23f2c20e9586116",
+      "factsHash": "ab4c63b9c543d383a8098a041a9d549f95c88a54f3f13ce02ed4454a5a301287"
+    },
+    {
+      "language": "rust",
+      "path": "fixture.rs",
+      "inputHash": "1530bca39e8d3d7776ad2b251f1f15cef89a0a17a7aba5166b5329914792e08b",
+      "factsHash": "6024d2289dbf215ec490837a9541c94e9777840caab08f3f5ae4e3be18070e59"
+    },
+    {
+      "language": "java",
+      "path": "Fixture.java",
+      "inputHash": "0c82da9e8ce35ca86e82b0b3a5dbe846424419f94e1e7775ac13fb92124302fa",
+      "factsHash": "11e5e8034f44ce055c22e7ebf0ceaa41e19988df808817747b46d9a1e65a4638"
+    },
+    {
+      "language": "kotlin",
+      "path": "Fixture.kt",
+      "inputHash": "1fa208d9de354064a0058314f5ecfd19c4b220ee71c9c5b3f6f7c4653234afa4",
+      "factsHash": "af06ee38fa8143e2e9682f806de5db7d80d5883245cb2f6763d5b9fb86aede0d"
+    },
+    {
+      "language": "csharp",
+      "path": "Fixture.cs",
+      "inputHash": "26e5de41365ad5499c71c07df514800b149397ee61f833840be17e994d403a1c",
+      "factsHash": "6389dacfa0484590b4a9116c6e550fa1cebb1c2bc10ee02e4c34fe3c058ebfbe"
+    }
+  ]
+}

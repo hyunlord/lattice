@@ -1,0 +1,42 @@
+[
+  {
+    "language": "javascript",
+    "path": "fixture.js",
+    "text": "export function first(){ return 1; } export function outer(){ const nested = () => first(); return nested(); }\n"
+  },
+  {
+    "language": "typescript",
+    "path": "fixture.ts",
+    "text": "export class Worker { public run(value: number = 1){ return value; } } export function outer(){ const worker = new Worker(); return worker.run(); }\n"
+  },
+  {
+    "language": "python",
+    "path": "fixture.py",
+    "text": "@first\n@second(value=1)\ndef outer(arg):\n    @inner\n    def nested():\n        return arg\n    callback = lambda: nested()\n    return nested()\n"
+  },
+  {
+    "language": "go",
+    "path": "fixture.go",
+    "text": "package fixture\nfunc helper() {}\nfunc Outer(){ callback := func(){ helper() }; helper(); _ = callback }\n"
+  },
+  {
+    "language": "rust",
+    "path": "fixture.rs",
+    "text": "#[first]\npub fn helper() {}\n#[second]\npub fn outer(){ let callback = || helper(); helper(); }\n"
+  },
+  {
+    "language": "java",
+    "path": "Fixture.java",
+    "text": "@First @Second class Fixture { @Third public static void helper(){} @Fourth public void outer(){ Runnable callback = () -> helper(); helper(); } }\n"
+  },
+  {
+    "language": "kotlin",
+    "path": "Fixture.kt",
+    "text": "@First\nclass Fixture {\n @Second\n fun helper() {}\n @Third\n fun outer() {\n  val callback = { helper() }\n  helper()\n }\n}\n"
+  },
+  {
+    "language": "csharp",
+    "path": "Fixture.cs",
+    "text": "[First] public class Fixture { [Second] public static void Helper() {} [Third] public void Outer(){ System.Action callback = () => Helper(); Helper(); } }\n"
+  }
+]
