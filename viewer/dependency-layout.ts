@@ -269,6 +269,15 @@ export function dependencyCountLabel(flow: LoopFlow): string {
     return [files ? `${files}개 파일` : '', declarations ? `의존 선언 ${declarations}개` : ''].filter(Boolean).join(' · ') || '0개 파일';
 }
 
+export const mobileDependencyCandidates = [
+    { order: 4, columns: 2, gap: 56, memberGap: 80 }, { order: 3, columns: 2, gap: 48, memberGap: 80 },
+    { order: 2, columns: 2, gap: 32, memberGap: 80 }, { order: 1, columns: 2, gap: 24, memberGap: 80 },
+    { order: 0, columns: 3, gap: 24, memberGap: 48 }, { order: 5, columns: 1, gap: 24, memberGap: 48 },
+] as const;
+export function chooseMobileDependencyFallback<T extends MobileDependencyLayout & { readonly order: number; }>(candidates: readonly T[], availableHeight: number): T | undefined {
+    return chooseMobileDependencyLayout([...candidates].sort((a, b) => a.order - b.order), availableHeight);
+}
+
 export type MobileDependencyLayout = { readonly columns: number; readonly gap: number; readonly height: number; readonly routed: number; readonly required: number; readonly contained?: boolean; };
 export function chooseMobileDependencyLayout<T extends MobileDependencyLayout>(candidates: readonly T[], availableHeight: number): T | undefined {
     return candidates.map((candidate, index) => ({ candidate, index })).sort((a, b) => {

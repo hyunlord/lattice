@@ -1,7 +1,7 @@
 import type { LoopStage, LoopUI } from './loop-map-types.js';
 import { anchor, chip, element, interpretation, svg } from './loop-map-shared.js';
 import { readLoopRoute, writeLoopRoute } from './loop-map-route.js';
-import { dependencyFlowDescription, dependencyCoverage, dependencyCardRole, featuredDependencyRoles, internalDependencyFacts, dependencyOverviewLevels, dependencyView, displayedDependencyFlows, dependencyHeadingParts, dependencyTitleSegments, packageDependencyLimit, packageDependencyView, chooseMobileDependencyLayout, compactDependencyLabels, mobileDependencyStageIds } from './dependency-layout.js';
+import { dependencyFlowDescription, dependencyCoverage, dependencyCardRole, featuredDependencyRoles, internalDependencyFacts, dependencyOverviewLevels, dependencyView, displayedDependencyFlows, dependencyHeadingParts, dependencyTitleSegments, packageDependencyLimit, packageDependencyView, mobileDependencyCandidates, chooseMobileDependencyFallback, compactDependencyLabels, mobileDependencyStageIds } from './dependency-layout.js';
 import { drawDependencyArrows } from './dependency-arrows.js';
 import { drawPackageDependencyArrows } from './dependency-package-arrows.js';
 
@@ -209,9 +209,9 @@ export function renderDependencyOverview(host: HTMLElement, ui: LoopUI): () => v
             let shown: ReturnType<typeof displayedDependencyFlows> = compact ? [] : packageOverview ? drawPackageDependencyArrows({ host: diagram, graph, flows, boxes: activeBoxes, names: new Map(view.stages.map(stage => [stage.id, stage.title])) }) : drawDependencyArrows({ host: diagram, graph, flows, boxes, view });
             if (compact) {
                 const availableHeight = window.innerHeight - (diagram.getBoundingClientRect().top + window.scrollY);
-                type Trial = { readonly columns: number; readonly gap: number; readonly memberGap: number; readonly height: number; readonly routed: number; readonly required: number; readonly contained: boolean; readonly wide: readonly HTMLElement[]; readonly drawing: readonly Node[]; readonly pairs: string; readonly shown: ReturnType<typeof displayedDependencyFlows>; };
-                let chosen: Trial | undefined;
-                for (const candidate of [{ columns: 3, gap: 24, memberGap: 48 }, { columns: 2, gap: 24, memberGap: 80 }, { columns: 2, gap: 32, memberGap: 80 }, { columns: 2, gap: 48, memberGap: 80 }, { columns: 2, gap: 56, memberGap: 80 }, { columns: 1, gap: 24, memberGap: 48 }]) {
+                type Trial = { readonly order: number; readonly columns: number; readonly gap: number; readonly memberGap: number; readonly height: number; readonly routed: number; readonly required: number; readonly contained: boolean; readonly wide: readonly HTMLElement[]; readonly drawing: readonly Node[]; readonly pairs: string; readonly shown: ReturnType<typeof displayedDependencyFlows>; };
+                let chosen: Trial | undefined; const trials: Trial[] = [];
+                for (const candidate of mobileDependencyCandidates) {
                     diagram.style.setProperty('--lm-compact-columns', String(candidate.columns));
                     diagram.style.setProperty('--lm-compact-gap', `${candidate.gap}px`); diagram.style.setProperty('--lm-compact-member-gap', `${candidate.memberGap}px`);
                     for (const row of diagram.querySelectorAll<HTMLElement>('.lm-dependency-level')) { const members = [...row.children].filter(child => !child.classList.contains('lm-secondary-packages')); row.classList.toggle('lm-single-package', members.length === 1); }
@@ -219,7 +219,6 @@ export function renderDependencyOverview(host: HTMLElement, ui: LoopUI): () => v
                     packageGap = candidate.gap; spaceRoutes();
                     const origin = diagram.getBoundingClientRect();
                     const readable = [...activeBoxes.values()].every(box => { const title = box.querySelector<HTMLElement>('.lm-member-title'); return !title || title.scrollWidth <= title.clientWidth + 1 && title.scrollHeight <= title.clientHeight + 1; });
-                    if (!readable && chosen) continue;
                     const routed = drawPackageDependencyArrows({ compact: true, host: diagram, graph, flows, boxes: activeBoxes, names: new Map(view.stages.map(stage => [stage.id, stage.title])) });
                     const rectangles = [...activeBoxes.values()].map(box => box.getBoundingClientRect());
                     for (const item of graph.querySelectorAll<SVGGraphicsElement>('.lm-dependency-flow, .lm-dependency-label')) {
@@ -236,9 +235,10 @@ export function renderDependencyOverview(host: HTMLElement, ui: LoopUI): () => v
                         }
                     }
                     const trial: Trial = { ...candidate, height: Math.max(0, ...rectangles.map(rect => rect.bottom - origin.top)), routed: routed.length, required: flows.length, contained: readable && rectangles.every(rect => rect.left >= 0 && rect.right <= window.innerWidth && rect.top >= 0), wide: [...diagram.querySelectorAll<HTMLElement>('[style]')].filter(item => item.style.gridColumn === '1 / -1'), drawing: [...graph.childNodes].map(node => node.cloneNode(true)), pairs: graph.dataset['unroutedPairs'] ?? '[]', shown: routed };
-                    chosen = chooseMobileDependencyLayout(chosen ? [chosen, trial] : [trial], availableHeight);
-                    if (trial.contained && trial.routed === trial.required && trial.height <= availableHeight) break;
+                    trials.push(trial);
+                    if (trial.contained && trial.routed === trial.required && trial.height <= availableHeight) { chosen = trial; break; }
                 }
+                chosen ??= chooseMobileDependencyFallback(trials, availableHeight);
                 if (chosen) {
                     diagram.style.setProperty('--lm-compact-columns', String(chosen.columns)); diagram.style.setProperty('--lm-compact-gap', `${chosen.gap}px`); diagram.style.setProperty('--lm-compact-member-gap', `${chosen.memberGap}px`);
                     for (const item of diagram.querySelectorAll<HTMLElement>('[style]')) if (item.style.gridColumn === '1 / -1') item.style.gridColumn = ''; for (const item of chosen.wide) item.style.gridColumn = '1 / -1';
