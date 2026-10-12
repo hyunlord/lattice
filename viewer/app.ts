@@ -163,11 +163,13 @@ function overview(version: number) {
 }
 function home(model?: LoopMap) {
     const limitations = firstOverview?.limitations ?? [];
-    if (limitations.length) { const labels = limitations.map(limitation => `${limitation.language === 'cpp' ? 'C++' : limitation.language === 'c' ? 'C' : limitation.language} 파일 ${limitation.fileCount}개`); main.append(el('p', `${labels.join(' · ')}: 구조·호출 분석은 지원하지 않습니다. 파일 위치만 표시합니다.`, 'panel unsupported-language')); }
+    let limitationText = '';
+    if (limitations.length) { const labels = limitations.map(limitation => `${limitation.language === 'cpp' ? 'C++' : limitation.language === 'c' ? 'C' : limitation.language} 파일 ${limitation.fileCount}개`); limitationText = `${labels.join(' · ')}: 구조·호출 분석은 지원하지 않습니다. 파일 위치만 표시합니다.`; const warning = el('p', undefined, 'panel unsupported-language'); warning.append(el('span', limitationText, 'unsupported-full'), el('span', '일부 언어는 파일 위치만 표시 · 근거 보기에서 확인', 'unsupported-compact')); main.append(warning); }
     const evidence = el('section', undefined, 'picture-evidence'); evidence.hidden = true;
     const details = el('nav', undefined, 'picture-deeper'); details.hidden = true; details.setAttribute('aria-label', '자세히');
     for (const [label, path] of [['실행 진입점과 흐름', '/logic'], ['발견과 요약', '/overview'], ['목록', '/list'], ['행렬과 상태판', '/views'], ['관계 탐색', '/explore'], ['변화', '/changes']]) if (label && path) details.append(link(label, routeHref(path)));
     pageHeading('근거', undefined, evidence);
+    if (limitationText) evidence.append(el('p', limitationText));
     const map = el('div', undefined, 'picture-home-map'); main.append(map, details, evidence);
     disposeScreen = renderLoopMap(map, model ?? buildLoopMap(visibleNodes, graph.edges, graph.facets, presentation, graph.repository.name), { kindLabel, nodeHref, onMissingNode: id => { location.hash = routeHref('/home', { view: 'focus', item: id }); }, onEvidence: () => { for (const old of evidence.querySelectorAll('.lm-analysis-evidence')) old.remove(); for (const source of map.querySelectorAll('.lm-analysis-evidence')) { const copy = source.cloneNode(true); if (copy instanceof HTMLElement) { copy.hidden = false; evidence.append(copy); } } evidence.hidden = !evidence.hidden; if (!evidence.hidden) evidence.scrollIntoView({ block: 'nearest' }); }, onDetails: () => { details.hidden = !details.hidden; if (!details.hidden) details.scrollIntoView({ block: 'nearest' }); } });
 }

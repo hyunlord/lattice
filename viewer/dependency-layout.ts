@@ -262,3 +262,27 @@ export function dependencyCountLabel(flow: LoopFlow): string {
     const files = Math.max(0, (flow.count ?? flow.sourceFiles?.length ?? 0) - declarations);
     return [files ? `${files}개 파일` : '', declarations ? `의존 선언 ${declarations}개` : ''].filter(Boolean).join(' · ') || '0개 파일';
 }
+
+export type MobileDependencyLayout = { readonly columns: number; readonly gap: number; readonly height: number; readonly routed: number; readonly required: number; readonly contained?: boolean; };
+export function chooseMobileDependencyLayout<T extends MobileDependencyLayout>(candidates: readonly T[], availableHeight: number): T | undefined {
+    return candidates.map((candidate, index) => ({ candidate, index })).sort((a, b) => {
+        const fits = (item: T): number => Number(item.contained !== false && item.routed === item.required && item.height <= availableHeight);
+        return fits(b.candidate) - fits(a.candidate) || Number(b.candidate.contained !== false) - Number(a.candidate.contained !== false) || b.candidate.routed - a.candidate.routed || a.candidate.height - b.candidate.height || a.index - b.index;
+    })[0]?.candidate;
+}
+
+export function mobileDependencyStageIds(view: DependencyView, flows: readonly LoopFlow[]): ReadonlySet<string> {
+    if (!flows.length) return new Set(view.stages.map(stage => stage.id));
+    const endpoints = new Set(flows.flatMap(flow => [flow.source, flow.target]));
+    return new Set(dependencyOverviewLevels(view).filter(group => group.stages.some(stage => endpoints.has(stage.id))).flatMap(group => group.stages.map(stage => stage.id)));
+}
+
+export function compactDependencyLabels(stages: readonly Pick<LoopStage, 'id' | 'title' | 'directoryPath' | 'childIds'>[]): ReadonlyMap<string, { readonly prefix: string; readonly name: string; }> {
+    const names = stages.map(stage => stage.childIds?.length && stage.directoryPath ? stage.directoryPath : stage.title);
+    return new Map(stages.map((stage, index) => {
+        const name = names[index] ?? stage.title;
+        const prefixes = [...name.matchAll(/[/:._-]/gu)].map(match => name.slice(0, (match.index ?? 0) + 1)).filter(prefix => prefix.length < name.length && (prefix.endsWith('/') ? prefix.length > 1 : prefix.length >= 8));
+        const prefix = prefixes.reverse().find(value => names.filter(other => other.startsWith(value) && other.length > value.length).length > 1) ?? '';
+        return [stage.id, { prefix, name: name.slice(prefix.length) }];
+    }));
+}

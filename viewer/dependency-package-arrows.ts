@@ -63,18 +63,22 @@ export function routePackageDependencies(flows: readonly DependencyPair[], boxes
     }
     return result;
 }
-export function drawPackageDependencyArrows(scene: { readonly host: HTMLElement; readonly graph: SVGSVGElement; readonly flows: readonly DependencyPair[]; readonly boxes: ReadonlyMap<string, HTMLElement>; readonly names: ReadonlyMap<string, string>; }): readonly DependencyPair[] {
+export function mobileDependencyRouteOrder(flows: readonly DependencyPair[], boxes: ReadonlyMap<string, Obstacle>): readonly DependencyPair[] {
+    const distance = (flow: DependencyPair): number => { const source = boxes.get(flow.source), target = boxes.get(flow.target); return source && target ? Math.abs(source.x + source.width / 2 - target.x - target.width / 2) + Math.abs(source.y + source.height / 2 - target.y - target.height / 2) : Infinity; };
+    return [...flows].sort((a, b) => distance(a) - distance(b));
+}
+export function drawPackageDependencyArrows(scene: { readonly host: HTMLElement; readonly graph: SVGSVGElement; readonly flows: readonly DependencyPair[]; readonly boxes: ReadonlyMap<string, HTMLElement>; readonly names: ReadonlyMap<string, string>; readonly compact?: boolean; }): readonly DependencyPair[] {
     const { host, graph, flows, boxes, names } = scene; const bounds = host.getBoundingClientRect(); graph.replaceChildren();
     graph.setAttribute('viewBox', `0 0 ${bounds.width} ${bounds.height}`); graph.setAttribute('width', String(bounds.width)); graph.setAttribute('height', String(bounds.height));
     const markerId = `package-arrow-${crypto.randomUUID()}`, defs = svg('defs'), marker = svg('marker'); marker.id = markerId;
     for (const [key, value] of Object.entries({ viewBox: '0 0 10 10', refX: '9', refY: '5', markerWidth: '5', markerHeight: '5', orient: 'auto' })) marker.setAttribute(key, value);
     const head = svg('path'); head.setAttribute('d', 'M0 0L10 5L0 10Z'); head.classList.add('lm-arrow-normal'); marker.append(head); defs.append(marker); graph.append(defs);
     const rectangles = new Map([...boxes].map(([id, box]) => { const rect = box.getBoundingClientRect(); return [id, { x: rect.left - bounds.left, y: rect.top - bounds.top, width: rect.width, height: rect.height }] as const; }));
-    for (const [index, item] of host.querySelectorAll<HTMLElement>('.lm-unified-title, .lm-cycle-caption, .lm-member-details > summary, .lm-dependency-group-summary').entries()) {
+    for (const [index, item] of host.querySelectorAll<HTMLElement>('.lm-unified-title, .lm-cycle-caption, .lm-member-details > summary, .lm-dependency-group-summary, .lm-compact-prefixes').entries()) {
         const rect = item.getBoundingClientRect(); rectangles.set(`caption:${index}`, { x: rect.left - bounds.left, y: rect.top - bounds.top, width: rect.width, height: rect.height });
     }
     const measure = svg('text'); measure.classList.add('lm-flow-label', 'lm-dependency-label'); graph.append(measure);
-    const routes = routePackageDependencies(flows, rectangles, bounds.width, bounds.height, flow => { measure.textContent = countText(flow); return measure.getBBox().width; }); measure.remove();
+    const routes = routePackageDependencies(scene.compact ? mobileDependencyRouteOrder(flows, rectangles) : flows, rectangles, bounds.width, bounds.height, flow => { measure.textContent = countText(flow); return measure.getBBox().width; }); measure.remove();
     graph.dataset['unrouted'] = String(flows.length - routes.length); graph.dataset['unplacedLabels'] = '0'; graph.dataset['unroutedPairs'] = JSON.stringify(flows.filter(flow => !routes.some(route => route.flow === flow)).map(flow => [flow.source, flow.target]));
     for (const [index, route] of routes.entries()) {
         const { flow, points, label } = route, path = svg('path'); const routeId = `${markerId}-${index}`; path.id = routeId;
