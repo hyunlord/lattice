@@ -24,7 +24,7 @@ function start(crypto, bytes = pack.bytes) {
             baseURI: 'https://example.test/map/',
             querySelector: () => null,
             getElementById: () => main,
-            createElement: () => ({ setAttribute() {}, addEventListener() {} }),
+            createElement: () => ({ setAttribute() { }, addEventListener() { } }),
             head: { append(map) { maps.push(JSON.parse(map.textContent)); } },
         },
         fetch: async url => {
@@ -41,10 +41,14 @@ function start(crypto, bytes = pack.bytes) {
 test('bootstrap prefers native SHA-256 and waits for verification before interpreting modules', async () => {
     let release, nativeCalls = 0;
     const pending = new Promise(resolve => { release = resolve; });
-    const state = start({ subtle: { async digest(algorithm, bytes) {
-        nativeCalls++; assert.equal(algorithm, 'SHA-256');
-        await pending; return webcrypto.subtle.digest(algorithm, bytes);
-    } } });
+    const state = start({
+        subtle: {
+            async digest(algorithm, bytes) {
+                nativeCalls++; assert.equal(algorithm, 'SHA-256');
+                await pending; return webcrypto.subtle.digest(algorithm, bytes);
+            }
+        }
+    });
     await new Promise(resolve => setImmediate(resolve));
     assert.equal(nativeCalls, 1);
     assert.deepEqual(state.events, []);
