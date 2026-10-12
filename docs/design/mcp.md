@@ -90,6 +90,11 @@ remain unchanged. A compact page does not change the meaning of a continuation.
   `omitted.sources` is the source page's full `total` minus emitted records, so it
   includes records outside the requested page as well as the three-record cap.
   It is not the count of extra records in the selected slice alone.
+  `sources.preview` adds `limit: 3`, `omittedInPage` (selected source records minus
+  emitted records), and `fullRequest: { name: "lattice_node", arguments: { id,
+  layer, offset, limit, compact: false } }`. Source-page `truncated`/`nextOffset`
+  describe the ordinary full page only; preview omissions are separately explicit
+  even on a final page with `nextOffset: null`.
 - An entrypoint item keeps its node projection, the first three `packageIds` and
   first three `entrypoints` in existing order. `omittedPackageIds` and
   `omittedEntrypoints` count the remaining entries in each complete wrapper array.
@@ -97,10 +102,13 @@ remain unchanged. A compact page does not change the meaning of a continuation.
   each) and projected source span. Removed units are reported as
   `omittedCategoryCharacters`/`omittedRuleCharacters` only when nonzero.
 - Node incoming/outgoing/undirected pages retain item order with only edge `id`,
-  `kind`, `source`, `target`, `directed`, `targetLayer`; facet pages retain `id`,
+  `kind`, `source`, `target`, `directed`, `targetLayer`, plus `resolution` from
+  the edge attributes (the original string, or `null` when absent/nonstring);
+  facet pages retain `id`,
   `nodeId`, `key`; finding pages retain `id`, `ruleId`, `severity`. Each item adds
   `omittedFields`, the number of top-level fields removed from that selected full
-  item. The response omits top-level `intent` and `implementation` and reports
+  item; derived `resolution` is not counted as a retained top-level field. The
+  response omits top-level `intent` and `implementation` and reports
   `omittedFields: 2`. No facet values, finding text/metrics, edge attributes or
   nested evidence payloads are copied into these identity projections.
 

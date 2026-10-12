@@ -8,7 +8,7 @@ const graph = { schemaVersion: 1, hash: 'graph', repository: { name: 'fixture', 
 const presentation = { defaultLayer: 'code' };
 const link = (route, params = {}) => `https://example.test/#${route}?${new URLSearchParams(params)}`;
 const query = (name, args = {}) => queryGraph(name, parseArguments(name, args), graph, presentation, link);
-const metadata = ({ items, ...rest }) => rest;
+const metadata = ({ items, preview, ...rest }) => rest;
 const tools = ['lattice_find', 'lattice_entrypoints', 'lattice_node'];
 
 for (const name of tools) {
@@ -69,14 +69,15 @@ test('compact node retains relation identities and collection pages with disclos
     for (const key of ['incoming', 'outgoing', 'undirected', 'facets', 'findings']) {
         assert.deepEqual(metadata(compact[key]), metadata(full[key]));
         assert.deepEqual(compact[key].items.map(item => item.id), full[key].items.map(item => item.id));
-        for (const [index, item] of compact[key].items.entries()) assert.equal(item.omittedFields, Object.keys(full[key].items[index]).length - (Object.keys(item).length - 1));
+        for (const [index, item] of compact[key].items.entries()) assert.equal(item.omittedFields, Object.keys(full[key].items[index]).filter(key => !(key in item)).length);
     }
-    assert.deepEqual(Object.keys(compact.outgoing.items[0]).sort(), ['id', 'kind', 'source', 'target', 'directed', 'targetLayer', 'omittedFields'].sort());
+    assert.deepEqual(Object.keys(compact.outgoing.items[0]).sort(), ['id', 'kind', 'source', 'target', 'directed', 'targetLayer', 'resolution', 'omittedFields'].sort());
     assert.deepEqual(Object.keys(compact.facets.items[0]).sort(), ['id', 'nodeId', 'key', 'omittedFields'].sort());
     assert.deepEqual(Object.keys(compact.findings.items[0]).sort(), ['id', 'ruleId', 'severity', 'omittedFields'].sort());
     assert.equal('intent' in compact, false);
     assert.equal('implementation' in compact, false);
     assert.equal(compact.omittedFields, 2);
+    assert.equal(compact.outgoing.items[0].resolution, 'exact');
 });
 
 test('compact entrypoints bound classifications without changing ranked identities', () => {
@@ -139,4 +140,24 @@ test('compact package membership and classification text disclose their exact om
     assert.equal(result.items[0].entrypoints[0].rule, 'x'.repeat(240));
     assert.equal(result.items[0].entrypoints[0].omittedRuleCharacters, 60);
     assert.equal(result.items[0].omittedEntrypoints, 0);
+});
+
+for (const args of [{}, { offset: 2, limit: 4 }, { offset: 3, limit: 4 }, { offset: 6, limit: 4 }]) {
+    test(`compact source preview discloses same-page omissions at ${JSON.stringify(args)}`, () => {
+        // Given an ordinary source page, when capped, then preview metadata supplies a complete full-page request.
+        const full = query('lattice_node', { id: 'a', ...args });
+        const compact = query('lattice_node', { id: 'a', ...args, compact: true });
+        assert.deepEqual(compact.node.sources.preview, { limit: 3, omittedInPage: Math.max(0, full.node.sources.items.length - 3), fullRequest: { name: 'lattice_node', arguments: { id: 'a', layer: 'code', offset: args.offset ?? 0, limit: args.limit ?? 50, compact: false } } });
+        const request = compact.node.sources.preview.fullRequest;
+        assert.deepEqual(query(request.name, request.arguments).node.sources, full.node.sources);
+        assert.equal(compact.node.sources.nextOffset, full.node.sources.nextOffset);
+    });
+}
+
+test('compact relations preserve estimated resolution and do not invent missing confidence', () => {
+    // Given exact, estimated and unclassified edges, when compacting, then their distinctions remain explicit.
+    const edges = ['exact', 'estimated', 'unresolved-receiver', null].map((resolution, index) => ({ ...graph.edges[0], id: `edge${index}`, attributes: resolution === null ? {} : { resolution } }));
+    const result = queryGraph('lattice_node', { id: 'a', compact: true }, { ...graph, edges }, presentation, link);
+    assert.deepEqual(result.outgoing.items.map(edge => edge.resolution), ['exact', 'estimated', 'unresolved-receiver', null]);
+    assert.equal(result.outgoing.items[0].omittedFields, 3);
 });
