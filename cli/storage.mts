@@ -6,7 +6,8 @@ import { readGraphDraft } from './graph-stream.mjs';
 import { createHash, randomUUID } from 'node:crypto';
 import { closeSync, existsSync, mkdirSync, openSync, readFileSync, readSync, renameSync, rmSync, writeFileSync, writeSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
-import { canonicalJson, createGraph } from '../dist/index.js';
+import { canonicalJson } from '../dist/index.js';
+import { createGraphFromOwnedDraft } from '../dist/core/graph.js';
 
 export const digest = Object.assign(
     (text: string | Uint8Array) => createHash('sha256').update(text).digest('hex'),
@@ -44,7 +45,7 @@ export function readGraph(path: string, options: { readonly memoize?: boolean; }
     const cached = previous?.bytesHash === bytesHash ? previous.graph.deref() : undefined;
     if (cached) return cached;
     const stored = readGraphDraft(path);
-    const graph = createGraph(stored.draft, digest);
+    const graph = createGraphFromOwnedDraft(stored.draft, digest);
     if (stored.hash !== graph.hash) throw new Error(`Graph hash mismatch: ${path}`);
     if (options.memoize !== false) rememberGraph(path, bytesHash, graph);
     return graph;

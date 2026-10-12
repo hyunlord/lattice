@@ -164,6 +164,8 @@ export function uniqueDependencyNames(stages: readonly LoopStage[]): ReadonlyMap
         return [stage.id, stage.title];
     }));
 }
+export function dependencyTitleSegments(value: string): readonly string[] { return value.split(value.includes('/') ? /(?<=\/)/u : /(?<=\.)/u); }
+
 export function dependencyHeadingParts(stage: LoopStage, _stages: readonly LoopStage[]): readonly string[] { return [stage.title]; }
 
 export function dependencyPort(box: Obstacle, index: number, count: number): number {

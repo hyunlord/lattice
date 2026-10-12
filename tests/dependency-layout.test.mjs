@@ -419,3 +419,12 @@ test('narrow package fan-in keeps ten directed routes and labels', async () => {
         assert.ok(routes.filter(other => other !== route).every(other => !dependencyRouteIntersects(other.points, route.labelBox)));
     }
 });
+
+test('dependency title segments preserve full labels and break only at semantic separators', async () => {
+    const { dependencyTitleSegments } = await import('../viewer/dependency-layout.js');
+    assert.deepEqual(dependencyTitleSegments('Vendor.Platform.HostLibrary'), ['Vendor.', 'Platform.', 'HostLibrary']);
+    assert.deepEqual(dependencyTitleSegments('@scope/worker-tools:public_api'), ['@scope/', 'worker-tools:public_api']);
+    assert.deepEqual(dependencyTitleSegments('folder/Library.Namespace_Name'), ['folder/', 'Library.Namespace_Name']);
+    assert.deepEqual(dependencyTitleSegments('worker-tools:public_api'), ['worker-tools:public_api']);
+    for (const name of ['', 'SingleVeryLongUnbrokenIdentifier', 'a..b', 'folder/path']) assert.equal(dependencyTitleSegments(name).join(''), name);
+});

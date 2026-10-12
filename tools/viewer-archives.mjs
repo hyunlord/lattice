@@ -5,15 +5,19 @@ import { mkdirSync, readdirSync, readFileSync, writeFileSync, rmSync } from 'nod
 import { join } from 'node:path';
 
 const limit = 256 * 1024;
-export function archiveModules(modules) {
+export function archiveModules(modules, entry = 'app.js') {
   const names = new Set(modules.map(([name]) => name));
   if (names.size !== modules.length) throw new Error('Duplicate viewer module names');
+  if (!names.has(entry)) throw new Error(`Missing viewer entry module: ${entry}`);
+  const dependencies = new Map();
   const rewritten = modules.map(([name, source]) => {
     if (!/^[a-zA-Z0-9_-]+\.js$/u.test(name)) throw new Error(`Invalid viewer module name: ${name}`);
     const file = ts.createSourceFile(name, source, ts.ScriptTarget.Latest, true, ts.ScriptKind.JS);
-    const edits = [];
+    const edits = [], imports = new Set();
+    dependencies.set(name, imports);
     const replace = node => {
       if (!ts.isStringLiteral(node) || !node.text.startsWith('./') || !names.has(node.text.slice(2))) throw new Error(`Unsupported viewer import in ${name}: ${node.getText(file)}; use a literal local module`);
+      imports.add(node.text.slice(2));
       edits.push([node.getStart(file), node.end, JSON.stringify(`lattice-viewer/${node.text.slice(2)}`)]);
     };
     const visit = node => {
@@ -29,8 +33,13 @@ export function archiveModules(modules) {
     for (const [start, end, text] of edits.sort((a, b) => b[0] - a[0])) source = source.slice(0, start) + text + source.slice(end);
     return [name, source];
   });
+  const reachable = new Set(), pending = [entry];
+  while (pending.length) {
+    const name = pending.pop(); if (reachable.has(name)) continue;
+    reachable.add(name); pending.push(...dependencies.get(name));
+  }
   const groups = []; let group = [];
-  for (const module of rewritten) {
+  for (const module of rewritten.filter(([name]) => reachable.has(name))) {
     if (Buffer.byteLength(JSON.stringify([module])) > limit) throw new Error(`Viewer module ${module[0]} exceeds 256KiB; split it before packaging`);
     if (Buffer.byteLength(JSON.stringify([...group, module])) > limit) { groups.push(group); group = []; }
     group.push(module);

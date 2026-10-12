@@ -175,7 +175,7 @@ test('packed logic records use direct addresses with paged query parity and sour
     const source = { path: 'main.ts', line: 1, pointer: '', contentHash: 'source' }, repository = { name: 'fixture', commit: 'current', dirty: false, sourceFingerprint: 'inputs' };
     const nodes = Array.from({ length: 202 }, (_, i) => ({ id: `fn-${i}`, kind: 'function', name: `fn-${i}`, attributes: { entrypoints: [{ category: 'executable', rule: 'main', source }] }, sources: [source], contentHash: String(i) }));
     const graph = { schemaVersion: 1, hash: 'graph', repository, nodes, edges: nodes.slice(1).map(node => ({ id: `edge-${node.id}`, kind: 'calls', source: 'fn-0', target: node.id, directed: true, field: '', attributes: { resolution: 'exact' }, sources: [source] })), facets: [], findings: [], views: [] };
-    let direct = 0; writeLogic(graph, writer.write, { reference: (...args) => { direct++; return writer.reference(...args); } }); writer.finish();
+    let direct = 0; writeLogic(graph, writer.write, { reference: (...args) => { direct++; return writer.reference(...args); }, json: writer.json }); writer.finish();
     assert.ok(direct > nodes.length);
     const nativeFetch = globalThis.fetch; t.mock.method(globalThis, 'fetch', (path, init) => nativeFetch(String(path).startsWith('./') ? f.base + String(path).slice(2) : path, init));
     const provider = createLogicProvider(graph.hash, '', repository), options = { id: 'fn-0', direction: 'out', offset: 100, limit: 100 };
@@ -183,7 +183,7 @@ test('packed logic records use direct addresses with paged query parity and sour
     await assert.rejects(createLogicProvider(graph.hash, '', { ...repository, commit: 'wrong' }).calls(options), /소스/);
     assert.ok(!f.requests.includes('graph.json'));
 });
-test('declared identifiers share one scalar across canonical records, endpoints and lookup keys', async t => {
+test('declared identifiers share one scalar across canonical records, endpoints and default lookup keys', async t => {
     const f = await fixture(t), writer = f.createPackedExport(f.directory), id = 'canonical-record-'.repeat(10);
     assert.equal(typeof writer.identifiers, 'function'); writer.identifiers([{ id }]);
     const value = { nodes: [{ id, attributes: {}, sources: [] }], edges: [{ id: 'edge', source: id, target: id }], mapping: { [id]: { record: 0 } } };
@@ -228,4 +228,71 @@ test('JSON-looking strings remain byte-exact and preserve recomputed canonical g
         assert.equal(result.nodes[0].attributes.literal, literal);
         assert.equal(createGraph(result, digest).hash, graph.hash);
     }
+});
+
+test('packed field projection hydrates selected records only and retains integrity retry', async t => {
+    const f = await fixture(t), writer = f.createPackedExport(f.directory);
+    const unusedText = Array.from({ length: 100000 }, (_, index) => index.toString(16).padStart(8, '0')).join('');
+    const unusedPath = writer.reference({ id: 'unused', text: unusedText });
+    const selected = { id: 'selected', sources: [{ path: 'selected.ts', contentHash: 'exact' }] };
+    const document = { graphHash: 'bound', repository: { commit: 'old' }, records: { selected, unused: { text: unusedText } } };
+    writer.json('packet.json', document); writer.finish();
+    const full = await f.createPackedLoader(f.base).json('packet.json');
+    f.requests.length = 0;
+    const loader = f.createPackedLoader(f.base);
+    const value = await loader.json('packet.json', { graphHash: true, repository: true, records: { selected: true } });
+    assert.deepEqual(value, { graphHash: full.graphHash, repository: full.repository, records: { selected: full.records.selected } });
+    const selectedRequests = new Set(f.requests);
+    f.requests.length = 0; await f.createPackedLoader(f.base).json(unusedPath);
+    const unusedPack = f.requests.find(path => path.startsWith('packs/') && !selectedRequests.has(path));
+    assert.ok(unusedPack, 'unused record has a pack omitted by selective read');
+    f.fail(unusedPack);
+    assert.deepEqual(await f.createPackedLoader(f.base).json('packet.json', { records: { selected: true } }), { records: { selected } });
+    await assert.rejects(loader.json(unusedPath));
+    f.fail(undefined); assert.equal((await loader.json(unusedPath)).id, 'unused');
+});
+
+test('selective hydration keeps duplicate, cycle, own-key and legacy checks', async t => {
+    const f = await fixture(t), writer = f.createPackedExport(f.directory); writer.finish();
+    const { gzipSync } = await import('node:zlib'), { createHash } = await import('node:crypto');
+    const install = records => {
+        const bytes = gzipSync(JSON.stringify(records)), path = `packs/${createHash('sha256').update(bytes).digest('hex')}.json.gz`;
+        writeFileSync(join(f.directory, path), bytes);
+        writeFileSync(join(f.directory, 'transport/packs-0.json.gz'), gzipSync(JSON.stringify([path])));
+        writeFileSync(join(f.directory, 'transport.json'), JSON.stringify({ transportVersion: 2, indexEncoding: 'gzip', packPageSize: 256, packCount: 1, fileCount: 0 }));
+    };
+    install([['o', [['kept', 1], ['other', 2], ['other', 3]]]]);
+    await assert.rejects(f.createPackedLoader(f.base).json('records/0/0/value.json', { kept: true }), /field/);
+    install([['m', [['o', [['kept', 1], ['other', 2]]], ['o', [['other', 3]]]]]]);
+    await assert.rejects(f.createPackedLoader(f.base).json('records/0/0/value.json', { kept: true }), /field/);
+    install([['o', [['kept', ['r', 0, 0]]]]]);
+    await assert.rejects(f.createPackedLoader(f.base).json('records/0/0/value.json', { kept: true }), /Cyclic/);
+    install([['o', [['__proto__', ['o', [['safe', true]]]], ['kept', 1]]]]);
+    const selection = Object.fromEntries([['__proto__', true]]);
+    const selected = await f.createPackedLoader(f.base).json('records/0/0/value.json', selection);
+    assert.equal(Object.getPrototypeOf(selected), Object.prototype); assert.deepEqual(selected.__proto__, { safe: true });
+    rmSync(join(f.directory, 'transport.json'));
+    writeFileSync(join(f.directory, 'legacy.json'), JSON.stringify({ records: { wanted: { value: 1 }, other: 2 } }));
+    assert.deepEqual(await f.createPackedLoader(f.base).json('legacy.json', { records: { wanted: true } }), { records: { wanted: { value: 1 } } });
+});
+
+test('packed references reject catalogue redirects into unhashed indexes', async t => {
+    const f = await fixture(t), writer = f.createPackedExport(f.directory); writer.json('one.json', { kept: 1 }); writer.finish();
+    const { gzipSync } = await import('node:zlib');
+    writeFileSync(join(f.directory, 'transport/files-aa.json.gz'), gzipSync(JSON.stringify([['o', [['kept', 'unverified']]]])));
+    writeFileSync(join(f.directory, 'transport/packs-0.json.gz'), gzipSync(JSON.stringify(['transport/files-aa.json.gz'])));
+    await assert.rejects(f.createPackedLoader(f.base).json('records/0/0/value.json', { kept: true }), /pack/i);
+    assert.equal(f.requests.includes('transport/files-aa.json.gz'), false);
+});
+
+test('lookup object keys are local and do not fetch unrelated canonical ID packs', async t => {
+    const f = await fixture(t), writer = f.createPackedExport(f.directory);
+    const ids = Array.from({ length: 16 }, (_, index) => `lookup-id-${index}`);
+    writer.identifiers(ids.map(id => ({ id })));
+    for (const id of ids) writer.reference({ id, attributes: { payload: Array.from({ length: 24000 }, (_, index) => `${id}:${index}`).join('|') } });
+    const records = Object.fromEntries(ids.map(id => [id, `address-${id}`]));
+    writer.json('lookup.json', { graphHash: 'bound', records }, { inlineKeys: true }); writer.finish();
+    const value = await f.createPackedLoader(f.base).json('lookup.json', { graphHash: true, records: { [ids[0]]: true } });
+    assert.deepEqual(value, { graphHash: 'bound', records: { [ids[0]]: records[ids[0]] } });
+    assert.ok(f.requests.filter(path => path.startsWith('packs/')).length <= 2, 'lookup keys must not chase canonical record packs');
 });

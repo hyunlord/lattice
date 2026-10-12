@@ -62,7 +62,7 @@ port.once('message', ({ options, liveDirectory }: ServeStart) => {
                             packedGraph('graph.json', graph);
                             write('presentation.json', JSON.stringify(result.presentation)); write('snapshots.json', JSON.stringify(graph.snapshots));
                             writeNodeDetails(graph, write, 'details', result.presentation, { json: packs.json, reference: packs.reference });
-                            writeLogic(graph, write, { reference: packs.reference }); writeOverview(graph, result.presentation, write, { json: packs.json });
+                            writeLogic(graph, write, { reference: packs.reference, json: packs.json }); writeOverview(graph, result.presentation, write, { json: packs.json });
                             return { hash: graph.hash, fingerprint: result.fingerprint, snapshots: graph.snapshots, media: result.media.files, extraction: result.extraction.stats, diagnostics: result.diagnostics };
                         };
                         const artifacts = buildArtifacts();

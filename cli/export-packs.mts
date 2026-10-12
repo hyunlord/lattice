@@ -43,27 +43,27 @@ export function createPackedExport(directory: string) {
         const ref: Ref = ['r', packPaths.length, pending.length];
         pending.push(text); bytes += size; records.set(digest, ref[1] * CAP + ref[2]); return ref;
     };
-    const encode = (value: unknown, shared = true): Value => {
+    const encode = (value: unknown, shared = true, inlineKeys = false): Value => {
         if (typeof value === 'string' && identifiers.has(value)) return save(value);
         if (value === null || typeof value === 'string' || typeof value === 'boolean' || typeof value === 'number') return value;
         if (Array.isArray(value)) {
-            if (value.length <= 256) return ['a', value.map(item => encode(item))];
+            if (value.length <= 256) return ['a', value.map(item => encode(item, true, inlineKeys))];
             const parts: Value[] = [];
-            for (let offset = 0; offset < value.length; offset += 256) parts.push(save(['a', value.slice(offset, offset + 256).map(item => encode(item))]));
+            for (let offset = 0; offset < value.length; offset += 256) parts.push(save(['a', value.slice(offset, offset + 256).map(item => encode(item, true, inlineKeys))]));
             return ['c', parts];
         }
         if (!object(value)) throw new Error('Packed artifacts must be JSON values');
         if (shared && typeof value['id'] === 'string' && (Object.hasOwn(value, 'sources') || Object.hasOwn(value, 'attributes'))) {
             const body: Record<string, unknown> = {}, fields: Value[] = [];
             for (const key in value) if (Object.hasOwn(value, key)) {
-                if (key === 'sources' || key === 'attributes') { if (value[key] !== undefined) fields.push(save(['o', [[key, encode(value[key])]]])); }
+                if (key === 'sources' || key === 'attributes') { if (value[key] !== undefined) fields.push(save(['o', [[key, encode(value[key], true, inlineKeys)]]])); }
                 else Object.defineProperty(body, key, { value: value[key], enumerable: true });
             }
-            return save(['m', [save(encode(body, false)), ...fields]]);
+            return save(['m', [save(encode(body, false, inlineKeys)), ...fields]]);
         }
         let entries: Value[] = []; const parts: Value[] = [];
         for (const key in value) if (Object.hasOwn(value, key) && value[key] !== undefined) {
-            entries.push([identifiers.has(key) ? save(key) : key, encode(value[key])]);
+            entries.push([!inlineKeys && identifiers.has(key) ? save(key) : key, encode(value[key], true, inlineKeys)]);
             if (entries.length === 256) { parts.push(save(['o', entries])); entries = []; }
         }
         if (parts.length && entries.length) parts.push(save(['o', entries]));
@@ -71,9 +71,9 @@ export function createPackedExport(directory: string) {
         // Share immutable graph records and exact source records, preserving all provenance.
         return shared && (typeof value['id'] === 'string' || typeof value['path'] === 'string' && typeof value['contentHash'] === 'string') ? save(encoded) : encoded;
     };
-    const json = (path: string, value: unknown) => {
+    const json = (path: string, value: unknown, options: { readonly inlineKeys?: boolean; } = {}) => {
         safe(path); if (path.startsWith('records/')) throw new Error('Reserved packed record path'); if (finished) throw new Error('Packed export is closed'); const identity = createHash('sha256').update(path).digest('base64'); if (paths.has(identity)) return;
-        paths.add(identity); const ref = save(encode(value));
+        paths.add(identity); const ref = save(encode(value, true, options.inlineKeys));
         appendFileSync(join(spool, bucket(path)), JSON.stringify([path, ref]) + '\n');
     };
     const bounded = (path: string, value: unknown) => {

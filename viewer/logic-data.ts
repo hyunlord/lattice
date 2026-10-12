@@ -1,3 +1,4 @@
+import type { PackedSelection } from './packed-data.js';
 import { createPackedLoader } from './packed-data.js';
 import type { Node, Edge, Repository } from '../dist/core/model.js';
 import { logicNodes, logicFlow, logicLookupBucket, type LogicNode, type LogicPageOptions, type LogicCallOptions, type LogicFlowOptions, type logicEntrypoints, type logicCalls } from './logic-model.js';
@@ -21,15 +22,16 @@ function page<T>(items: readonly T[], total: number, options: LogicPageOptions) 
 export function createLogicProvider(graphHash: string, suffix = '', expectedRepository?: Repository): LogicProvider {
     const transport = createPackedLoader('./', suffix);
     const requests = new Map<string, Promise<Record<string, unknown>>>(), names = new Map<string, string>(), descriptions = new Map<string, LogicNode>();
-    const read = (path: string): Promise<Record<string, unknown>> => {
+    const read = (path: string, selection?: PackedSelection): Promise<Record<string, unknown>> => {
         if (!/^records\/\d+\/\d+\/logic\.json$/u.test(path) && !/^logic\/(?:index\.json|entrypoints\/\d+\.json|lookup\/[a-f0-9]{2}\.json|nodes\/[a-f0-9]{64}\.json|calls\/[a-f0-9]{64}-(?:all-)?(?:in|out)-\d+\.json)$/u.test(path)) return Promise.reject(new Error('올바르지 않은 호출 정보 경로입니다.'));
-        const cached = requests.get(path); if (cached) return cached;
+        const cacheKey = path + ':' + JSON.stringify(selection);
+        const cached = requests.get(cacheKey); if (cached) return cached;
         const pending = (async () => {
-            const value: unknown = await transport.json(path);
+            const value: unknown = await transport.json(path, selection);
             if (!object(value) || value['graphHash'] !== graphHash) throw new Error('호출 정보의 출처가 현재 지도와 다릅니다. 새로고침하세요.');
             return value;
         })();
-        requests.set(path, pending); void pending.catch(() => { if (requests.get(path) === pending) requests.delete(path); }); return pending;
+        requests.set(cacheKey, pending); void pending.catch(() => { if (requests.get(cacheKey) === pending) requests.delete(cacheKey); }); return pending;
     };
     const index = async () => {
         const value = await read('logic/index.json');
@@ -51,10 +53,10 @@ export function createLogicProvider(graphHash: string, suffix = '', expectedRepo
         if (!item) throw new Error('함수를 찾을 수 없습니다.');
         const result = { ...item, packageIds: value['packageIds'] }; descriptions.set(item.node.id, result); return result;
     };
-    const detail = async (id: string) => {
+    const detail = async (id: string, fields: readonly string[] = []) => {
         const bucket = await read(`logic/lookup/${logicLookupBucket(id)}.json`), mapping = bucket['records'];
         if (!object(mapping) || !Object.hasOwn(mapping, id) || typeof mapping[id] !== 'string') throw new Error('함수 ID를 찾을 수 없습니다.');
-        const value = await read(mapping[id]); const node = await describe(value['node']);
+        const value = await read(mapping[id], Object.fromEntries(['graphHash', 'node', ...fields].map(field => [field, true as const]))); const node = await describe(value['node']);
         if (node.node.id !== id) throw new Error('함수 ID가 요청과 다릅니다.');
         return { value, node };
     };
@@ -75,7 +77,9 @@ export function createLogicProvider(graphHash: string, suffix = '', expectedRepo
         return { result: page(edges, total, options), related: [...related.values()].filter(node => ids.has(node.id)) };
     };
     const calls = async (options: LogicCallOptions): Promise<ReturnType<typeof logicCalls>> => {
-        const { value, node } = await detail(options.id), direction = options.direction ?? 'both';
+        const direction = options.direction ?? 'both';
+        const fields = [...(direction === 'out' ? [] : [options.includeEstimated ? 'allIncoming' : 'incoming']), ...(direction === 'in' ? [] : [options.includeEstimated ? 'allOutgoing' : 'outgoing'])];
+        const { value, node } = await detail(options.id, fields);
         const incoming = direction === 'out' ? { result: page<Edge>([], 0, options), related: [] } : await edgePage(value[options.includeEstimated ? 'allIncoming' : 'incoming'], options);
         const outgoing = direction === 'in' ? { result: page<Edge>([], 0, options), related: [] } : await edgePage(value[options.includeEstimated ? 'allOutgoing' : 'outgoing'], options);
         const related = new Map([...incoming.related, ...outgoing.related].map(node => [node.id, node]));

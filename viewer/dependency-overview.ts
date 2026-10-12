@@ -1,7 +1,7 @@
 import type { LoopStage, LoopUI } from './loop-map-types.js';
 import { anchor, chip, element, interpretation, svg } from './loop-map-shared.js';
 import { readLoopRoute, writeLoopRoute } from './loop-map-route.js';
-import { dependencyFlowDescription, dependencyCoverage, dependencyCardRole, featuredDependencyRoles, internalDependencyFacts, dependencyOverviewLevels, dependencyView, displayedDependencyFlows, dependencyHeadingParts, packageDependencyLimit, packageDependencyView } from './dependency-layout.js';
+import { dependencyFlowDescription, dependencyCoverage, dependencyCardRole, featuredDependencyRoles, internalDependencyFacts, dependencyOverviewLevels, dependencyView, displayedDependencyFlows, dependencyHeadingParts, dependencyTitleSegments, packageDependencyLimit, packageDependencyView } from './dependency-layout.js';
 import { drawDependencyArrows } from './dependency-arrows.js';
 import { drawPackageDependencyArrows } from './dependency-package-arrows.js';
 
@@ -11,7 +11,7 @@ function pathText<K extends keyof HTMLElementTagNameMap>(tag: K, value: string, 
 }
 function pathTitle(value: string): HTMLElement { return pathText('h3', value, 'lm-path-title'); }
 function appendPathParts(host: HTMLElement, paths: readonly string[], _context?: readonly string[]): void {
-    paths.forEach((path, index) => { if (index) host.append(document.createTextNode(' · '), element('wbr')); const factored = { prefix: '', name: path }; const member = element('span', '', 'lm-heading-member'); if (factored.prefix) member.append(pathText('span', factored.prefix, 'lm-stage-category')); member.append(pathText('span', factored.name)); host.append(member); });
+    paths.forEach((path, index) => { if (index) host.append(document.createTextNode(' · '), element('wbr')); const factored = { prefix: '', name: path }; const member = element('span', '', 'lm-heading-member'); if (factored.prefix) member.append(pathText('span', factored.prefix, 'lm-stage-category')); const name = element('span', '', 'lm-title-name'); for (const [partIndex, part] of dependencyTitleSegments(factored.name).entries()) { if (partIndex) name.append(element('wbr')); name.append(element('span', part, `lm-title-segment${factored.name.includes('/') || !/[-\s]/u.test(part) ? ' lm-title-atom' : ''}`)); } member.append(name); host.append(member); });
 }
 
 function summaryFacts(stage: LoopStage): readonly { readonly label: string; readonly text: string; }[] { return stage.summaryDetails?.length ? stage.summaryDetails : stage.summaryDetail ? [stage.summaryDetail] : []; }
@@ -124,7 +124,7 @@ export function renderDependencyOverview(host: HTMLElement, ui: LoopUI): () => v
                     box.dataset['entry'] = String(model.structuralEntryStageIds?.some(id => { let current: string | undefined = id; while (current) { if (current === stage.id) return true; current = byId.get(current)?.parentId; } return false; }) ?? false);
                     const parts = dependencyHeadingParts(stage, view.stages); const fullName = parts[0] ?? stage.title; const outgoing = internal.filter(flow => flow.source === stage.id); const targetWidths = outgoing.flatMap(flow => ((byId.get(flow.target)?.title ?? flow.target).match(/[^/]+\/?/g) ?? []).map(part => dependencyMeasure?.measureText(part).width ?? part.length * 8));
                     const minimum = `min(100%, calc(${Math.ceil(Math.max(...targetWidths, ...(fullName.match(/[^/]+\/?/g) ?? [fullName]).map(part => measure?.measureText(part).width ?? part.length * 10))) + 26}px))`; if (!grouped) box.style.minWidth = packageOverview && !flat ? 'min(100%, 220px)' : minimum; if (!group.cyclic && !group.foldedCycle) region.style.minWidth = packageOverview && !flat ? 'min(100%, 220px)' : minimum;
-                    const counts = `${(stage.nodeCount ?? stage.nodeIds.length)}개 파일${stage.folderCount ? ` · 하위 폴더 ${stage.folderCount}개` : ''}`; box.title = `${stage.title} — ${counts}`;
+                    const counts = `${(stage.nodeCount ?? stage.nodeIds.length)}개 파일${stage.folderCount ? ` · 하위 폴더 ${stage.folderCount}개` : ''}`; box.title = `${stage.title} — ${counts}`; box.setAttribute('aria-label', box.title);
                     const metadata = element('span', counts, 'lm-station-meta');
                     const heading = element('h3', '', 'lm-path-title lm-member-title'); appendPathParts(heading, parts); box.append(heading, metadata); if ((inlineRoles || grouped) && !showFiles) { const role = dependencyCardRole(stage); const summary = element('p', role.text, 'lm-inline-role'); summary.title = stage.summary; if (role.label) metadata.append(document.createTextNode(' · '), element('span', role.label, 'lm-inline-ai-label')); box.append(summary); }
                     if (grouped && !inlineRoles) { metadata.textContent = ` · ${(stage.nodeCount ?? stage.nodeIds.length)}개 파일`; heading.append(metadata); }

@@ -1,5 +1,6 @@
 import { object } from './data.js';
 import { packedHash } from './packed-hash.js';
+export type PackedSelection = { readonly [field: string]: true | PackedSelection; };
 const CAP = 262144;
 function safe(path: string): void { if (!/^[A-Za-z0-9._/-]+$/u.test(path) || path.split('/').some(part => !part || part === '.' || part === '..')) throw new Error('Invalid packed artifact path'); }
 function bucket(path: string): string { let value = 0; for (const char of path) value = (value * 31 + (char.codePointAt(0) ?? 0)) >>> 0; return (value % 256).toString(16).padStart(2, '0'); }
@@ -46,21 +47,25 @@ export function createPackedLoader(base = './', suffix = '') {
         })();
         metadata = pending; void pending.catch(() => { metadata = undefined; }); return pending;
     };
+    const reference = async (value: unknown[], active: ReadonlySet<string>) => {
+        const [, data, key] = value;
+        if (value.length !== 3 || !integer(data) || !integer(key)) throw new Error('Invalid packed reference');
+        const identity = `${data}:${key}`; if (active.has(identity) || active.size > 256) throw new Error('Cyclic packed reference');
+        const info = await manifest(); if (!info || typeof info['packCount'] !== 'number' || data >= info['packCount']) throw new Error('Missing packed reference');
+        const zipped = info['indexEncoding'] === 'gzip';
+        const catalog = await read(`transport/packs-${Math.floor(data / 256)}.json${zipped ? '.gz' : ''}`, zipped);
+        const path: unknown = Array.isArray(catalog) ? catalog[data % 256] : undefined;
+        if (typeof path !== 'string' || !/^packs\/[a-f0-9]{64}\.json\.gz$/u.test(path)) throw new Error('Missing or invalid pack');
+        const pack = await read(path, true); if (!Array.isArray(pack) || key >= pack.length) throw new Error('Missing packed record');
+        return { value: pack[key], active: new Set([...active, identity]) };
+    };
     const decode = async (value: unknown, active: ReadonlySet<string> = new Set()): Promise<unknown> => {
         if (value === null || ['string', 'boolean', 'number'].includes(typeof value)) return value;
         if (!Array.isArray(value)) throw new Error('Invalid packed record');
-        const [tag, data, key] = value;
+        const [tag, data] = value;
         switch (tag) {
             case 'r': {
-                if (value.length !== 3 || !integer(data) || !integer(key)) throw new Error('Invalid packed reference');
-                const identity = `${data}:${key}`; if (active.has(identity) || active.size > 256) throw new Error('Cyclic packed reference');
-                const info = await manifest(); if (!info || typeof info['packCount'] !== 'number' || data >= info['packCount']) throw new Error('Missing packed reference');
-                const zipped = info['indexEncoding'] === 'gzip';
-                const catalog = await read(`transport/packs-${Math.floor(data / 256)}.json${zipped ? '.gz' : ''}`, zipped);
-                const path: unknown = Array.isArray(catalog) ? catalog[data % 256] : undefined;
-                if (typeof path !== 'string') throw new Error('Missing pack');
-                const pack = await read(path, true); if (!Array.isArray(pack) || key >= pack.length) throw new Error('Missing packed record');
-                return decode(pack[key], new Set([...active, identity]));
+                const record = await reference(value, active); return decode(record.value, record.active);
             }
             case 'a': {
                 if (value.length !== 2 || !Array.isArray(data)) throw new Error('Invalid packed array');
@@ -98,12 +103,49 @@ export function createPackedLoader(base = './', suffix = '') {
             default: throw new Error('Unknown packed record version');
         }
     };
-    const json = async (path: string): Promise<unknown> => {
+    const projectPlain = (value: unknown, selection: PackedSelection): unknown => {
+        if (!object(value)) throw new Error('Selected packed value must be an object');
+        const result: Record<string, unknown> = {};
+        for (const key of Object.keys(selection)) if (Object.hasOwn(value, key)) Object.defineProperty(result, key, { value: selection[key] === true ? value[key] : projectPlain(value[key], selection[key] as PackedSelection), enumerable: true });
+        return result;
+    };
+    const project = async (value: unknown, selection: PackedSelection, active: ReadonlySet<string> = new Set()): Promise<{ value: Record<string, unknown>; keys: Set<string>; }> => {
+        if (!Array.isArray(value)) throw new Error('Selected packed value must be an object');
+        const [tag, data] = value;
+        if (tag === 'r') { const record = await reference(value, active); return project(record.value, selection, record.active); }
+        if (tag === 'j') {
+            if (value.length !== 2 || !Array.isArray(data)) throw new Error('Invalid packed fragments');
+            const pieces: string[] = [];
+            for (const ref of data) { const piece = await decode(ref, active); if (typeof piece !== 'string') throw new Error('Invalid packed fragment'); pieces.push(piece); }
+            return project(JSON.parse(pieces.join('')), selection, active);
+        }
+        if (value.length !== 2 || !Array.isArray(data) || tag !== 'o' && tag !== 'm') throw new Error('Selected packed value must be an object');
+        const result: Record<string, unknown> = {}, keys = new Set<string>();
+        if (tag === 'm') {
+            for (const ref of data) {
+                const part = await project(ref, selection, active);
+                for (const key of part.keys) { if (keys.has(key)) throw new Error('Duplicate packed field'); keys.add(key); }
+                for (const [key, item] of Object.entries(part.value)) Object.defineProperty(result, key, { value: item, enumerable: true });
+            }
+        } else {
+            for (const entry of data) {
+                if (!Array.isArray(entry) || entry.length !== 2) throw new Error('Invalid packed object field');
+                const field = await decode(entry[0], active);
+                if (typeof field !== 'string' || keys.has(field)) throw new Error('Invalid packed object field'); keys.add(field);
+                if (!Object.hasOwn(selection, field)) continue;
+                const child = selection[field];
+                const item = child === true ? await decode(entry[1], active) : (await project(entry[1], child as PackedSelection, active)).value;
+                Object.defineProperty(result, field, { value: item, enumerable: true });
+            }
+        }
+        return { value: result, keys };
+    };
+    const json = async (path: string, selection?: PackedSelection): Promise<unknown> => {
         safe(path);
         const info = await manifest();
-        if (!info) { const response = await fetch(base + path + suffix); if (!response.ok) throw new Error(`Artifact HTTP ${response.status}: ${path}`); return response.json(); }
+        if (!info) { const response = await fetch(base + path + suffix); if (!response.ok) throw new Error(`Artifact HTTP ${response.status}: ${path}`); const value: unknown = await response.json(); return selection ? projectPlain(value, selection) : value; }
         const direct = /^records\/(\d+)\/(\d+)\/[A-Za-z0-9_-]+\.json$/u.exec(path);
-        if (direct) return decode(['r', Number(direct[1]), Number(direct[2])]);
+        if (direct) { const value = ['r', Number(direct[1]), Number(direct[2])]; return selection ? (await project(value, selection)).value : decode(value); }
         const zipped = info['indexEncoding'] === 'gzip';
         const ranges = await read(`transport/files-${bucket(path)}.json${zipped ? '.gz' : ''}`, zipped);
         if (!Array.isArray(ranges)) throw new Error('Invalid packed file index');
@@ -113,7 +155,7 @@ export function createPackedLoader(base = './', suffix = '') {
         if (!Array.isArray(rows)) throw new Error('Invalid packed file page');
         const row: unknown = rows.find((item: unknown) => Array.isArray(item) && item[0] === path);
         if (!Array.isArray(row) || row.length !== 2) throw new Error(`Artifact HTTP 404: ${path}`);
-        return decode(row[1]);
+        return selection ? (await project(row[1], selection)).value : decode(row[1]);
     };
     const text = async (path: string): Promise<string> => {
         safe(path);

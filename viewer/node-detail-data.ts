@@ -1,3 +1,4 @@
+import type { PackedSelection } from './packed-data.js';
 import type { Repository, Snapshot } from '../dist/core/model.js';
 import { detailIdKey, detailIdentityKey, detailLabelKey, type DetailBinding, type DetailIndex, type DetailPages, type DetailRef } from './node-detail-transport.js';
 import { nodeIdentity } from './history-model.js';
@@ -15,12 +16,13 @@ function bound(value: unknown, expected: { readonly graphHash: string; readonly 
 export function createNodeDetailLoader(expected: { readonly hash: string; readonly repository: Repository; }, suffix = '') {
     const pending = new Map<string, Promise<unknown>>();
     let transport: Promise<ReturnType<typeof import('./packed-data.js')['createPackedLoader']>> | undefined;
-    const readPacked = (file: string) => (transport ??= import('./packed-data.js').then(module => module.createPackedLoader('./', suffix))).then(loader => loader.json(file));
-    const read = (file: string, optional = false, binding?: { readonly graphHash: string; readonly repository?: Repository; }): Promise<unknown> => {
+    const readPacked = (file: string, selection?: PackedSelection) => (transport ??= import('./packed-data.js').then(module => module.createPackedLoader('./', suffix))).then(loader => loader.json(file, selection));
+    const read = (file: string, optional = false, binding?: { readonly graphHash: string; readonly repository?: Repository; }, selection?: PackedSelection): Promise<unknown> => {
         if (!path(file)) return Promise.reject(new Error('노드 상세 경로가 올바르지 않습니다.'));
-        const cached = pending.get(file); if (cached) return cached;
-        const request = (async () => { let value: unknown; try { value = await readPacked(file); } catch (error) { if (optional && error instanceof Error && /HTTP 404:/u.test(error.message)) return undefined; throw error; } if (binding) bound(value, binding); return value; })();
-        pending.set(file, request); void request.then(value => { if (value === undefined) pending.delete(file); }, () => pending.delete(file));
+        const cacheKey = file + ':' + JSON.stringify(selection);
+        const cached = pending.get(cacheKey); if (cached) return cached;
+        const request = (async () => { let value: unknown; try { value = await readPacked(file, selection); } catch (error) { if (optional && error instanceof Error && /HTTP 404:/u.test(error.message)) return undefined; throw error; } if (binding) bound(value, binding); return value; })();
+        pending.set(cacheKey, request); void request.then(value => { if (value === undefined) pending.delete(cacheKey); }, () => pending.delete(cacheKey));
         // Keep navigation memory bounded; active promises remain owned by their callers.
         if (pending.size > 32) { const first = pending.keys().next().value; if (first) pending.delete(first); }
         return request;
@@ -38,7 +40,7 @@ export function createNodeDetailLoader(expected: { readonly hash: string; readon
         if (!ref(reference)) throw new Error('노드 상세 조각 참조가 올바르지 않습니다.');
         if (binding.detailVersion === 2) {
             const part = 'record' in reference ? { path: `${binding.lookupRoot.replace(/\/lookup$/u, '')}/packets/${Math.floor(reference.record / 32)}.json`, key: String(reference.record) } : reference.parts.length === 1 ? reference.parts[0] : undefined;
-            if (!part) throw new Error('Invalid structured detail reference'); const value = await read(part.path, false, binding); bound(value, binding);
+            if (!part) throw new Error('Invalid structured detail reference'); const value = await read(part.path, false, binding, { schemaVersion: true, graphHash: true, repository: true, detailVersion: true, records: { [part.key]: true } }); bound(value, binding);
             if (value['detailVersion'] !== 2 || !object(value['records']) || !Object.hasOwn(value['records'], part.key)) throw new Error('Missing structured detail record');
             return value['records'][part.key];
         }

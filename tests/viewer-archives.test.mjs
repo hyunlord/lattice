@@ -35,3 +35,17 @@ test('classic bootstrap uses existing hash implementation without an initial mod
     const source = bootstrapScript('export function packedHash(bytes){return bytes;}', 'import {packedHash} from "./packed-hash.js"; void import("lattice-viewer/app.js");');
     assert.doesNotMatch(source, /import \{/u); assert.doesNotMatch(source, /export function/u); assert.match(source, /import\("lattice-viewer/u);
 });
+
+test('viewer archives follow entry imports, reexports and lazy imports without shipping unreachable modules', () => {
+    const modules = [
+        ['app.js', 'import "./base.js"; export * from "./exports.js"; export const later=()=>import("./lazy.js");'],
+        ['base.js', 'import "./app.js";'],
+        ['exports.js', 'export const value=1;'],
+        ['lazy.js', 'export const value=2;'],
+        ['unused.js', 'throw new Error("unreachable");']
+    ];
+    const records = archiveModules(modules).flatMap(pack => JSON.parse(gunzipSync(pack.bytes)));
+    assert.deepEqual(records.map(([name]) => name), ['app.js', 'base.js', 'exports.js', 'lazy.js']);
+    assert.throws(() => archiveModules(modules.filter(([name]) => name !== 'lazy.js')), /Unsupported viewer import/u);
+    assert.throws(() => archiveModules(modules.filter(([name]) => name !== 'app.js')), /Missing viewer entry/u);
+});
