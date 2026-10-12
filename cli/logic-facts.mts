@@ -23,15 +23,15 @@ export function extractLogicFacts(input: SourceInput, language: string, root: No
     const pending: { node: Node; parent: string; owner: string; }[] = [{ node: root, parent: '', owner: '' }];
     while (pending.length) {
         const current = pending.pop(); if (!current) break;
-        const { node } = current;
-        if (node.type === 'ERROR' || node.isMissing || unsupportedCallableTypes.has(node.type)) continue;
+        const { node } = current, type = node.type;
+        if (type === 'ERROR' || node.isMissing || unsupportedCallableTypes.has(type)) continue;
         let { parent, owner } = current;
-        if (classTypes.has(node.type)) {
+        if (classTypes.has(type)) {
             owner = ownerName(node);
             const base = field(node, 'superclass') ?? field(node, 'bases') ?? children(node).find(child => ['class_heritage', 'extends_clause', 'base_list', 'delegation_specifiers', 'delegation_specifier', 'super_interfaces'].includes(child.type));
             classes.push({ name: owner, annotations: annotations(node), bases: base ? descendants(base, child => ['identifier', 'type_identifier', 'user_type'].includes(child.type)).map(child => child.text) : [], line: node.startPosition.row + 1 });
         }
-        if (functionTypes.has(node.type)) {
+        if (functionTypes.has(type)) {
             if (node.hasError) continue;
             if (language === 'go' && field(node, 'receiver')) owner = descendants(field(node, 'receiver') ?? node, child => child.type === 'type_identifier')[0]?.text ?? '<receiver>';
             const name = definitionName(node), id = `logic:${input.path}:${name}:${node.startIndex}`;
@@ -45,10 +45,10 @@ export function extractLogicFacts(input: SourceInput, language: string, root: No
     const scan: { node: Node; caller: string; }[] = [{ node: root, caller: moduleId }];
     while (scan.length) {
         const current = scan.pop(); if (!current) break;
-        const { node } = current;
-        if (node.type === 'ERROR' || node.isMissing || callableTypes.has(node.type) && !callableIds.has(node.id)) continue;
+        const { node } = current, type = node.type;
+        if (type === 'ERROR' || node.isMissing || callableTypes.has(type) && !callableIds.has(node.id)) continue;
         const caller = callableIds.get(node.id) ?? current.caller;
-        if (callTypes.has(node.type) && !node.hasError) {
+        if (callTypes.has(type) && !node.hasError) {
             const target = callTarget(node), argumentsNode = field(node, 'arguments') ?? children(node).find(child => ['call_suffix', 'value_arguments'].includes(child.type));
             const route = ['get', 'post', 'put', 'patch', 'delete', 'route', 'add_route', 'add_url_rule'].includes(target.name) && !!argumentsNode && descendants(argumentsNode, child => ['string', 'string_literal'].includes(child.type)).length > 0;
             const callbackIds = route && argumentsNode ? children(argumentsNode).flatMap(child => {

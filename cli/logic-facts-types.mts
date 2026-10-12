@@ -35,9 +35,11 @@ function receiverTypes(node: Node, language: string): LogicReceiver[] {
     const found: LogicReceiver[] = [], counts = new Map<string, number>(), assigned = new Set<string>();
     const pending = [...children(node)];
     while (pending.length) {
-        const item = pending.pop(); if (!item || callableTypes.has(item.type) || classTypes.has(item.type)) continue;
-        const isParam = ['parameter', 'formal_parameter', 'required_parameter', 'optional_parameter'].includes(item.type);
-        const isLocal = ['variable_declarator', 'let_declaration'].includes(item.type) || language === 'kotlin' && item.type === 'property_declaration';
+        const item = pending.pop(); if (!item) continue;
+        const itemType = item.type;
+        if (callableTypes.has(itemType) || classTypes.has(itemType)) continue;
+        const isParam = ['parameter', 'formal_parameter', 'required_parameter', 'optional_parameter'].includes(itemType);
+        const isLocal = ['variable_declarator', 'let_declaration'].includes(itemType) || language === 'kotlin' && itemType === 'property_declaration';
         if (isParam || isLocal) {
             const declaration = language === 'kotlin' && isLocal ? children(item).find(child => child.type === 'variable_declaration') ?? item : item;
             const name = field(declaration, 'name') ?? field(declaration, 'pattern') ?? children(declaration).find(identifier);
@@ -54,26 +56,27 @@ function receiverTypes(node: Node, language: string): LogicReceiver[] {
                 if (type) found.push({ name: name.text, type, constructed: !!constructed && constructed === type, start: isParam ? node.startIndex : item.endIndex, ...(isParam ? { scopeStart: node.startIndex, scopeEnd: node.endIndex } : lexicalRange(item, language)) });
             }
         }
-        if (['assignment_expression', 'assignment', 'augmented_assignment_expression', 'update_expression', 'postfix_unary_expression', 'prefix_unary_expression'].includes(item.type)) {
+        if (['assignment_expression', 'assignment', 'augmented_assignment_expression', 'update_expression', 'postfix_unary_expression', 'prefix_unary_expression'].includes(itemType)) {
             const target = field(item, 'left') ?? field(item, 'argument') ?? children(item)[0];
             if (target && identifier(target)) assigned.add(target.text);
         }
-        if (['catch_clause', 'for_in_statement', 'for_in_clause', 'catch_formal_parameter'].includes(item.type)) {
+        if (['catch_clause', 'for_in_statement', 'for_in_clause', 'catch_formal_parameter'].includes(itemType)) {
             const binding = field(item, 'parameter') ?? field(item, 'left') ?? field(item, 'name');
             if (binding) for (const id of descendants(binding, identifier)) counts.set(id.text, (counts.get(id.text) ?? 0) + 1);
         }
-        if (item.type === 'argument' && /^(?:ref|out)\s/u.test(item.text)) for (const id of children(item).filter(identifier)) assigned.add(id.text);
+        if (itemType === 'argument' && /^(?:ref|out)\s/u.test(item.text)) for (const id of children(item).filter(identifier)) assigned.add(id.text);
         pending.push(...children(item));
     }
     if (!found.length) return [];
     const nested = [...children(node)];
     while (nested.length) {
         const item = nested.pop(); if (!item) continue;
-        if (['assignment_expression', 'assignment', 'augmented_assignment_expression', 'update_expression', 'postfix_unary_expression', 'prefix_unary_expression'].includes(item.type)) {
+        const itemType = item.type;
+        if (['assignment_expression', 'assignment', 'augmented_assignment_expression', 'update_expression', 'postfix_unary_expression', 'prefix_unary_expression'].includes(itemType)) {
             const target = field(item, 'left') ?? field(item, 'argument') ?? children(item)[0];
             if (target && identifier(target)) assigned.add(target.text);
         }
-        if (item.type === 'argument' && /^(?:ref|out)\s/u.test(item.text)) for (const id of children(item).filter(identifier)) assigned.add(id.text);
+        if (itemType === 'argument' && /^(?:ref|out)\s/u.test(item.text)) for (const id of children(item).filter(identifier)) assigned.add(id.text);
         nested.push(...children(item));
     }
     return found.filter(item => counts.get(item.name) === 1 && !assigned.has(item.name));
