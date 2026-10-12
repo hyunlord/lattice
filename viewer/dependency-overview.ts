@@ -169,6 +169,7 @@ export function renderDependencyOverview(host: HTMLElement, ui: LoopUI): () => v
         const initial = view.stages.find(stage => stage.id === selected); panel.hidden = !initial; panel.replaceChildren(); if (initial) renderPanel(initial);
         let packageGap = window.innerWidth > 700 ? 48 : 32;
         let previousGeometry = '';
+        let modePrimed = false;
         let headingsCompacted = false;
         const originalHeadings = new Map([...boxes].map(([id, box]) => [id, [...(box.querySelector('.lm-member-title')?.childNodes ?? [])].map(node => node.cloneNode(true))]));
         redraw = () => {
@@ -191,11 +192,18 @@ export function renderDependencyOverview(host: HTMLElement, ui: LoopUI): () => v
             }
             if (!compact) delete graph.dataset['viewportFit'];
             const activeBoxes = compact ? new Map([...boxes].filter(([id]) => mobileIds.has(id))) : boxes;
+            const flatStage = flat ? view.stages[0] : undefined;
+            const renderMode = (shown: ReturnType<typeof displayedDependencyFlows>): void => {
+                mode.hidden = false; mode.replaceChildren();
+                const status = element('span', flatStage ? `한 폴더의 파일 구성 · 파일 ${(flatStage.nodeCount ?? flatStage.nodeIds.length)}개 중 ${flatStage.filePreviews?.length ?? 0}개 미리보기` : packageOverview ? `의존 방향 ${shown.length}/${displayedDependencyFlows(view, selected, true).length}개 · 파일 수 순${flows.some(flow => (flow.projectCount ?? flow.projectSourceFiles?.length ?? 0) > 0) ? ' · 파일+선언' : ''}${shown.length < flows.length ? ` · 경로 미표시 ${flows.length - shown.length}개` : ''}` : (selected ? '선택한 폴더' : '')); mode.append(status);
+                if (packageOverview && !flat && window.innerWidth <= 700) { const expand = element('button', expandedMap ? '지도 접기' : `전체 ${view.stages.length}개 펼치기`); expand.type = 'button'; expand.setAttribute('aria-expanded', String(expandedMap)); expand.onclick = () => { expandedMap = !expandedMap; render(); }; mode.append(expand); }
+                if (selected) { const reset = element('button', '전체 구조'); reset.type = 'button'; reset.onclick = () => { selected = undefined; render(); saveRoute(); }; mode.append(reset); }
+                if (view.flows.length > (packageOverview ? packageDependencyLimit : 5)) { const toggle = element('button', packageOverview ? `나머지 ${Math.max(0, view.flows.length - shown.length)}개 연결` : '전체 연결'); toggle.type = 'button'; toggle.setAttribute('aria-expanded', String(connections.open)); toggle.onclick = () => { autoOpenedConnections = false; connections.open = !connections.open; toggle.setAttribute('aria-expanded', String(connections.open)); if (connections.open) connections.scrollIntoView({ block: 'start', behavior: 'smooth' }); }; mode.append(toggle); }
+            };
+            if (!modePrimed) { renderMode(flows); modePrimed = true; }
             const geometry = (): string => `${compact}:${selected ?? ''}:${diagram.clientWidth}:${diagram.clientHeight}:${window.innerHeight}:${diagram.getBoundingClientRect().top + window.scrollY}:${flows.map(flow => `${flow.source}:${flow.target}:${flow.count}`).join('|')}`;
             if (compact && geometry() === previousGeometry) return;
             const sidebarRoles = roles.parentElement === overview; roles.style.maxHeight = sidebarRoles && window.innerWidth > 900 ? `${Math.max(200, window.innerHeight - roles.getBoundingClientRect().top - 12)}px` : ''; roleHint.hidden = !sidebarRoles || window.innerWidth <= 900 || roles.scrollHeight <= roles.clientHeight + 1;
-            mode.hidden = false;
-            const flatStage = flat ? view.stages[0] : undefined;
             const spaceRoutes = (): void => { for (const gap of diagram.querySelectorAll<HTMLElement>('.lm-dependency-gap')) gap.style.height = packageOverview ? `${packageGap}px` : window.innerWidth > 700 ? '48px' : '72px'; };
             spaceRoutes();
             let shown: ReturnType<typeof displayedDependencyFlows> = compact ? [] : packageOverview ? drawPackageDependencyArrows({ host: diagram, graph, flows, boxes: activeBoxes, names: new Map(view.stages.map(stage => [stage.id, stage.title])) }) : drawDependencyArrows({ host: diagram, graph, flows, boxes, view });
@@ -248,13 +256,9 @@ export function renderDependencyOverview(host: HTMLElement, ui: LoopUI): () => v
             }
             if (!packageOverview) for (let count = flows.length - 1; count >= 0 && (Number(graph.dataset['unrouted']) > 0 || Number(graph.dataset['unplacedLabels']) > 0); count--) shown = drawDependencyArrows({ host: diagram, graph, flows: flows.slice(0, count), boxes, view });
             const coverage = dependencyCoverage(view, shown);
-            const measuredTop = diagram.getBoundingClientRect().top; mode.replaceChildren();
-            const status = element('span', flatStage ? `한 폴더의 파일 구성 · 파일 ${(flatStage.nodeCount ?? flatStage.nodeIds.length)}개 중 ${flatStage.filePreviews?.length ?? 0}개 미리보기` : packageOverview ? `의존 방향 ${shown.length}/${displayedDependencyFlows(view, selected, true).length}개 · 파일 수 순${flows.some(flow => (flow.projectCount ?? flow.projectSourceFiles?.length ?? 0) > 0) ? ' · 파일+선언' : ''}${shown.length < flows.length ? ` · 경로 미표시 ${flows.length - shown.length}개` : ''}` : (selected ? '선택한 폴더' : '')); mode.append(status);
-            if (packageOverview && !flat && window.innerWidth <= 700) { const expand = element('button', expandedMap ? '지도 접기' : `전체 ${view.stages.length}개 펼치기`); expand.type = 'button'; expand.setAttribute('aria-expanded', String(expandedMap)); expand.onclick = () => { expandedMap = !expandedMap; render(); }; mode.append(expand); }
+            const measuredTop = diagram.getBoundingClientRect().top; renderMode(shown);
             coverageEvidence.textContent = `외부 화살표 ${coverage.externalArrows}개 · 묶음 내부 ${coverage.internalDirections}방향 · 생략한 외부 화살표 ${coverage.hiddenExternalArrows}개`;
             if (packageOverview) coverageEvidence.textContent = `표시한 의존 방향 ${shown.length}개 · 전체 ${view.flows.length}개 · 나머지 ${view.flows.length - shown.length}개는 전체 연결에서 확인`;
-            if (selected) { const reset = element('button', '전체 구조'); reset.type = 'button'; reset.onclick = () => { selected = undefined; render(); saveRoute(); }; mode.append(reset); }
-            if (view.flows.length > (packageOverview ? packageDependencyLimit : 5)) { const toggle = element('button', packageOverview ? `나머지 ${Math.max(0, view.flows.length - shown.length)}개 연결` : '전체 연결'); toggle.type = 'button'; toggle.setAttribute('aria-expanded', String(connections.open)); toggle.onclick = () => { autoOpenedConnections = false; connections.open = !connections.open; toggle.setAttribute('aria-expanded', String(connections.open)); if (connections.open) connections.scrollIntoView({ block: 'start', behavior: 'smooth' }); }; mode.append(toggle); }
             if (Number(graph.dataset['unrouted']) > 0 || Number(graph.dataset['unplacedLabels']) > 0) { if (!connections.open) autoOpenedConnections = true; connections.open = true; const summary = connections.querySelector('summary'); if (summary) summary.textContent = `전체 덩어리 연결 ${view.flows.length}개 · 밀집한 연결은 아래 목록에서 확인`; } else if (autoOpenedConnections) { connections.open = false; autoOpenedConnections = false; const summary = connections.querySelector('summary'); if (summary) summary.textContent = `전체 덩어리 연결 ${view.flows.length}개`; }
             if (Math.abs(diagram.getBoundingClientRect().top - measuredTop) > 1) requestAnimationFrame(redraw); else previousGeometry = geometry();
         }; requestAnimationFrame(redraw);
