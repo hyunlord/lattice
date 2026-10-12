@@ -65,44 +65,43 @@ export function orthogonalRoute(start: Point, end: Point, space: RouteSpace): re
     const from = cell(start), to = cell(end); const blocked = new Uint8Array(columns * rows);
     for (const box of space.obstacles) for (let y = Math.max(0, Math.ceil(box.y / step)); y <= Math.min(rows - 1, Math.floor((box.y + box.height) / step)); y++) for (let x = Math.max(0, Math.ceil(box.x / step)); x <= Math.min(columns - 1, Math.floor((box.x + box.width) / step)); x++) blocked[y * columns + x] = 1;
     blocked[from] = 0; blocked[to] = 0;
-    type Label = { readonly cell: number; readonly g: number; readonly code: string; readonly f: number; readonly parent?: Label; };
-    const heuristic = (index: number): number => Math.abs(index % columns - to % columns) + Math.abs(Math.floor(index / columns) - Math.floor(to / columns));
-    const first: Label = { cell: from, g: 0, code: '', f: heuristic(from) };
-    const queue: Label[] = [first], best = new Map<number, Label>([[from, first]]);
-    const before = (a: Label, b: Label): boolean => a.f < b.f || a.f === b.f && a.code < b.code;
-    const push = (label: Label): void => {
-        let index = queue.length; queue.push(label);
-        while (index > 0) { const parentIndex = Math.floor((index - 1) / 2), parent = queue[parentIndex]; if (!parent || !before(label, parent)) break; queue[index] = parent; index = parentIndex; }
-        queue[index] = label;
-    };
-    let goal: Label | undefined;
-    while (queue.length) {
-        const current = queue[0], last = queue.pop();
-        if (queue.length && last) {
-            let index = 0;
-            while (index * 2 + 1 < queue.length) {
-                let childIndex = index * 2 + 1; const left = queue[childIndex], right = queue[childIndex + 1];
-                if (left && right && before(right, left)) childIndex++;
-                const child = queue[childIndex]; if (!child || !before(child, last)) break;
-                queue[index] = child; index = childIndex;
-            }
-            queue[index] = last;
-        }
-        if (!current) continue;
-        const known = best.get(current.cell); if (!known || current.g !== known.g || current.code !== known.code) continue;
-        if (current.cell === to) { goal = current; break; }
-        const x = current.cell % columns, y = Math.floor(current.cell / columns);
-        const neighbors = [x > 0 ? current.cell - 1 : -1, x < columns - 1 ? current.cell + 1 : -1, y > 0 ? current.cell - columns : -1, y < rows - 1 ? current.cell + columns : -1].filter(n => n >= 0 && !blocked[n] && !space.occupied?.has(current.cell < n ? `${current.cell}:${n}` : `${n}:${current.cell}`));
+    const distance = (index: number): number => Math.abs(index % columns - to % columns) + Math.abs(Math.floor(index / columns) - Math.floor(to / columns));
+    const probe = [from]; let probeCurrent = from;
+    while (probeCurrent !== to) {
+        const x = probeCurrent % columns, y = Math.floor(probeCurrent / columns);
+        const neighbors = [x > 0 ? probeCurrent - 1 : -1, x < columns - 1 ? probeCurrent + 1 : -1, y > 0 ? probeCurrent - columns : -1, y < rows - 1 ? probeCurrent + columns : -1].filter(n => n >= 0 && !blocked[n] && !space.occupied?.has(probeCurrent < n ? `${probeCurrent}:${n}` : `${n}:${probeCurrent}`));
+        neighbors.sort((a, b) => Math.abs(a % columns * step - end.x) + Math.abs(Math.floor(a / columns) * step - end.y) - Math.abs(b % columns * step - end.x) - Math.abs(Math.floor(b / columns) * step - end.y));
+        const probeNext = neighbors.find(next => distance(next) < distance(probeCurrent));
+        if (probeNext === undefined) break;
+        probeCurrent = probeNext; probe.push(probeCurrent);
+    }
+    const queue = [from], previous = new Map<number, number>();
+    previous.set(from, from);
+    if (probeCurrent === to) for (let index = 1; index < probe.length; index++) { const current = probe[index], prior = probe[index - 1]; if (current !== undefined && prior !== undefined) previous.set(current, prior); }
+    for (let index = 0; index < queue.length && !previous.has(to); index++) {
+        const current = queue[index];
+        if (current === undefined)
+            continue;
+        const x = current % columns, y = Math.floor(current / columns);
+        const neighbors = [x > 0 ? current - 1 : -1, x < columns - 1 ? current + 1 : -1, y > 0 ? current - columns : -1, y < rows - 1 ? current + columns : -1].filter(n => n >= 0 && !blocked[n] && !previous.has(n) && !space.occupied?.has(current < n ? `${current}:${n}` : `${n}:${current}`));
         neighbors.sort((a, b) => { return Math.abs(a % columns * step - end.x) + Math.abs(Math.floor(a / columns) * step - end.y) - Math.abs(b % columns * step - end.x) - Math.abs(Math.floor(b / columns) * step - end.y); });
-        for (const [rank, next] of neighbors.entries()) {
-            const g = current.g + 1, code = current.code + rank, previous = best.get(next);
-            if (previous && (previous.g < g || previous.g === g && previous.code <= code)) continue;
-            const label: Label = { cell: next, g, code, f: g + heuristic(next), parent: current }; best.set(next, label); push(label);
+        for (const next of neighbors) {
+            previous.set(next, current);
+            queue.push(next);
         }
     }
-    if (!goal) return [];
+    if (!previous.has(to))
+        return [];
     const reversed: Point[] = [];
-    for (let current: Label | undefined = goal; current; current = current.parent) reversed.push(point(current.cell));
+    let current = to;
+    while (current !== from) {
+        reversed.push(point(current));
+        const prior = previous.get(current);
+        if (prior === undefined)
+            return [];
+        current = prior;
+    }
+    reversed.push(point(from));
     const route = [start, ...reversed.reverse(), end];
     return route.filter((p, index) => { const before = route[index - 1], after = route[index + 1]; return !before || !after || (before.x !== p.x || p.x !== after.x) && (before.y !== p.y || p.y !== after.y); });
 }
