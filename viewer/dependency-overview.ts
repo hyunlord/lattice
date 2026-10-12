@@ -3,7 +3,7 @@ import { anchor, chip, element, interpretation, svg } from './loop-map-shared.js
 import { readLoopRoute, writeLoopRoute } from './loop-map-route.js';
 import { dependencyFlowDescription, dependencyCoverage, dependencyCardRole, featuredDependencyRoles, internalDependencyFacts, dependencyOverviewLevels, dependencyView, displayedDependencyFlows, dependencyHeadingParts, dependencyTitleSegments, packageDependencyLimit, packageDependencyView, mobileDependencyCandidates, chooseMobileDependencyFallback, compactDependencyLabels, mobileDependencyStageIds } from './dependency-layout.js';
 import { drawDependencyArrows } from './dependency-arrows.js';
-import { drawPackageDependencyArrows } from './dependency-package-arrows.js';
+import { drawPackageDependencyArrows, measurePackageDependencyGeometry } from './dependency-package-arrows.js';
 
 function pathText<K extends keyof HTMLElementTagNameMap>(tag: K, value: string, className = ''): HTMLElementTagNameMap[K] {
     const result = element(tag, '', `${className} lm-path-text`);
@@ -169,6 +169,7 @@ export function renderDependencyOverview(host: HTMLElement, ui: LoopUI): () => v
         const initial = view.stages.find(stage => stage.id === selected); panel.hidden = !initial; panel.replaceChildren(); if (initial) renderPanel(initial);
         let packageGap = window.innerWidth > 700 ? 48 : 32;
         let previousGeometry = '';
+        let desktopGeometry: string | undefined, desktopDrawing = '';
         let modePrimed = false;
         let headingsCompacted = false;
         const originalHeadings = new Map([...boxes].map(([id, box]) => [id, [...(box.querySelector('.lm-member-title')?.childNodes ?? [])].map(node => node.cloneNode(true))]));
@@ -206,7 +207,14 @@ export function renderDependencyOverview(host: HTMLElement, ui: LoopUI): () => v
             const sidebarRoles = roles.parentElement === overview; roles.style.maxHeight = sidebarRoles && window.innerWidth > 900 ? `${Math.max(200, window.innerHeight - roles.getBoundingClientRect().top - 12)}px` : ''; roleHint.hidden = !sidebarRoles || window.innerWidth <= 900 || roles.scrollHeight <= roles.clientHeight + 1;
             const spaceRoutes = (): void => { for (const gap of diagram.querySelectorAll<HTMLElement>('.lm-dependency-gap')) gap.style.height = packageOverview ? `${packageGap}px` : window.innerWidth > 700 ? '48px' : '72px'; };
             spaceRoutes();
-            let shown: ReturnType<typeof displayedDependencyFlows> = compact ? [] : packageOverview ? drawPackageDependencyArrows({ host: diagram, graph, flows, boxes: activeBoxes, names: new Map(view.stages.map(stage => [stage.id, stage.title])) }) : drawDependencyArrows({ host: diagram, graph, flows, boxes, view });
+            const desktop = packageOverview && !compact && window.innerWidth > 700 && flows.length > 0;
+            const packageScene = { host: diagram, graph, flows, boxes: activeBoxes, names: new Map(view.stages.map(stage => [stage.id, stage.title])) };
+            let measured = desktop ? measurePackageDependencyGeometry(packageScene) : undefined;
+            const desktopKey = (snapshot: typeof measured): string | undefined => snapshot?.key === undefined ? undefined : JSON.stringify([snapshot.key, snapshot.bounds.top + window.scrollY, window.innerWidth, window.innerHeight, selected, expandedMap, packageGap]);
+            let drawnGeometry = desktopKey(measured);
+            if (drawnGeometry !== undefined && drawnGeometry === desktopGeometry && graph.childNodes.length > 0 && graph.outerHTML === desktopDrawing) return;
+            desktopGeometry = undefined;
+            let shown: ReturnType<typeof displayedDependencyFlows> = compact ? [] : packageOverview ? drawPackageDependencyArrows(packageScene, measured) : drawDependencyArrows({ host: diagram, graph, flows, boxes, view });
             if (compact) {
                 const availableHeight = window.innerHeight - (diagram.getBoundingClientRect().top + window.scrollY);
                 type Trial = { readonly order: number; readonly columns: number; readonly gap: number; readonly memberGap: number; readonly height: number; readonly routed: number; readonly required: number; readonly contained: boolean; readonly wide: readonly HTMLElement[]; readonly drawing: readonly Node[]; readonly pairs: string; readonly shown: ReturnType<typeof displayedDependencyFlows>; };
@@ -252,7 +260,8 @@ export function renderDependencyOverview(host: HTMLElement, ui: LoopUI): () => v
                 if (shown.length === flows.length) break;
                 if (gap <= packageGap) continue;
                 packageGap = gap; spaceRoutes();
-                shown = drawPackageDependencyArrows({ host: diagram, graph, flows, boxes: activeBoxes, names: new Map(view.stages.map(stage => [stage.id, stage.title])) });
+                measured = desktop ? measurePackageDependencyGeometry(packageScene) : undefined; drawnGeometry = desktopKey(measured);
+                shown = drawPackageDependencyArrows(packageScene, measured);
             }
             if (!packageOverview) for (let count = flows.length - 1; count >= 0 && (Number(graph.dataset['unrouted']) > 0 || Number(graph.dataset['unplacedLabels']) > 0); count--) shown = drawDependencyArrows({ host: diagram, graph, flows: flows.slice(0, count), boxes, view });
             const coverage = dependencyCoverage(view, shown);
@@ -260,9 +269,12 @@ export function renderDependencyOverview(host: HTMLElement, ui: LoopUI): () => v
             coverageEvidence.textContent = `외부 화살표 ${coverage.externalArrows}개 · 묶음 내부 ${coverage.internalDirections}방향 · 생략한 외부 화살표 ${coverage.hiddenExternalArrows}개`;
             if (packageOverview) coverageEvidence.textContent = `표시한 의존 방향 ${shown.length}개 · 전체 ${view.flows.length}개 · 나머지 ${view.flows.length - shown.length}개는 전체 연결에서 확인`;
             if (Number(graph.dataset['unrouted']) > 0 || Number(graph.dataset['unplacedLabels']) > 0) { if (!connections.open) autoOpenedConnections = true; connections.open = true; const summary = connections.querySelector('summary'); if (summary) summary.textContent = `전체 덩어리 연결 ${view.flows.length}개 · 밀집한 연결은 아래 목록에서 확인`; } else if (autoOpenedConnections) { connections.open = false; autoOpenedConnections = false; const summary = connections.querySelector('summary'); if (summary) summary.textContent = `전체 덩어리 연결 ${view.flows.length}개`; }
-            if (Math.abs(diagram.getBoundingClientRect().top - measuredTop) > 1) requestAnimationFrame(redraw); else previousGeometry = geometry();
+            const settledGeometry = desktop ? desktopKey(measurePackageDependencyGeometry(packageScene)) : undefined;
+            const changedDesktop = drawnGeometry !== undefined && settledGeometry !== undefined && drawnGeometry !== settledGeometry;
+            if (drawnGeometry !== undefined && drawnGeometry === settledGeometry) { desktopGeometry = drawnGeometry; desktopDrawing = graph.outerHTML; }
+            if (changedDesktop || Math.abs(diagram.getBoundingClientRect().top - measuredTop) > 1) requestAnimationFrame(redraw); else previousGeometry = geometry();
         }; requestAnimationFrame(redraw);
     };
-    const resize = (): void => redraw(); const observer = new ResizeObserver(resize); observer.observe(diagram); window.addEventListener('resize', resize); render();
-    return () => { disposed = true; observer.disconnect(); window.removeEventListener('resize', resize); };
+    const resize = (): void => redraw(); const observer = new ResizeObserver(resize); observer.observe(diagram); window.addEventListener('resize', resize); document.fonts?.addEventListener('loadingdone', resize); render();
+    return () => { disposed = true; observer.disconnect(); window.removeEventListener('resize', resize); document.fonts?.removeEventListener('loadingdone', resize); };
 }
