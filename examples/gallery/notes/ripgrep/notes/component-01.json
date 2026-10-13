@@ -1,0 +1,140 @@
+{
+  "schemaVersion": 1,
+  "targetId": "component:module:crates/cli/src/decompress.rs",
+  "summary": "Provides the search command entry point and helpers for input and terminal output.",
+  "author": "Codex (external agent)",
+  "sources": [
+    {
+      "path": "crates/cli/src/decompress.rs",
+      "contentHash": "eaceb58ab4c650f0f9f62de1181fd6611b9e6b5b162816546760d49514045b37",
+      "line": 1
+    },
+    {
+      "path": "crates/cli/src/escape.rs",
+      "contentHash": "b3ac4121dd2d81be59f22f39bb9e4e473775c2631cc33b063715059ba63ed180",
+      "line": 1
+    },
+    {
+      "path": "crates/cli/src/hostname.rs",
+      "contentHash": "3c0eebe1182d54d2caedd4c62515c849bf9e1c4384b79d1181ef7e257b302d07",
+      "line": 1
+    },
+    {
+      "path": "crates/cli/src/human.rs",
+      "contentHash": "b85f1391a01ccdfed20951cdf07bd641bf190256c48caccfe83f8ec14e2b1636",
+      "line": 1
+    },
+    {
+      "path": "crates/cli/src/lib.rs",
+      "contentHash": "b27d0e7de21515df33714d79d4959b17aa3d28c168b1c5233c21c333a8a8c695",
+      "line": 1
+    },
+    {
+      "path": "crates/cli/src/pattern.rs",
+      "contentHash": "22b94d38be203aa3c252bf010cce238349f39cb5c494991ac57b52de1dab722f",
+      "line": 1
+    },
+    {
+      "path": "crates/cli/src/process.rs",
+      "contentHash": "1452fb92570a07c3c5135dc9efc293a30edd3322580cc93d0b342107c2593e3f",
+      "line": 1
+    },
+    {
+      "path": "crates/cli/src/wtr.rs",
+      "contentHash": "44d2f5192c2e0c74a838a190fee4c8065747d7c643ddb3f8b4d0985e6eb172a9",
+      "line": 1
+    },
+    {
+      "path": "crates/core/flags/defs.rs",
+      "contentHash": "779953a821d814ba7f66877d0e581f2a7d7b44099b2cd5c6c7a7271b517ebd1f",
+      "line": 1
+    },
+    {
+      "path": "crates/core/flags/hiargs.rs",
+      "contentHash": "4269c0129575a379a725d4023382d33277e73bc9928e6c81f5e8fa4824019169",
+      "line": 1
+    },
+    {
+      "path": "crates/core/flags/lowargs.rs",
+      "contentHash": "53f7a3b6831a9223794e297d8aeaaab291c4194f1d068c178d57d6660f9ec9c6",
+      "line": 1
+    },
+    {
+      "path": "crates/core/haystack.rs",
+      "contentHash": "8766d52fd5acedf59bf7613d5ed9e77186e97a1ffe77d0b516c6ec807e1a9157",
+      "line": 1
+    },
+    {
+      "path": "crates/core/index/mod.rs",
+      "contentHash": "05a94f6c1bba194cd3a55871e9d5ce018ad5b36eb1d34a456828d92844afb10d",
+      "line": 1
+    },
+    {
+      "path": "crates/core/logger.rs",
+      "contentHash": "057c6449256af78acb88c4b267774e51d416fdee878d6f1bdf6600b5d6086119",
+      "line": 1
+    },
+    {
+      "path": "crates/core/main.rs",
+      "contentHash": "21c10c3b35114543b90f38f27fd9102703a099bd504db950e1f10d2739b1444c",
+      "line": 1
+    },
+    {
+      "path": "crates/core/messages.rs",
+      "contentHash": "e239cd545de23c03ba13061e6f16d805b247abbaeedb2ab4f01e41e7d0c5892d",
+      "line": 1
+    },
+    {
+      "path": "crates/core/search.rs",
+      "contentHash": "53627fe6d2216552d3919586cd8746da3f392ba44e3bf59ccdc432c7c14e82d1",
+      "line": 1
+    },
+    {
+      "path": "crates/grep/src/lib.rs",
+      "contentHash": "de71633dfaa300e1d4eb518ca76d48dfb38ca80a178e43b6610d4ae3ddb068cc",
+      "line": 1
+    }
+  ],
+  "claims": [
+    {
+      "purpose": "component-name",
+      "text": "Search command and utilities",
+      "citations": [
+        {
+          "path": "crates/core/main.rs",
+          "contentHash": "21c10c3b35114543b90f38f27fd9102703a099bd504db950e1f10d2739b1444c",
+          "startLine": 1,
+          "endLine": 18,
+          "excerpt": "/*!\nThe main entry point into ripgrep.\n*/\n\nuse std::{io::Write, process::ExitCode};\n\nuse ignore::WalkState;\n\nuse crate::flags::{HiArgs, SearchMode};\n\n#[macro_use]\nmod messages;\n\nmod flags;\nmod haystack;\nmod index;\nmod logger;\nmod search;"
+        },
+        {
+          "path": "crates/cli/src/lib.rs",
+          "contentHash": "b27d0e7de21515df33714d79d4959b17aa3d28c168b1c5233c21c333a8a8c695",
+          "startLine": 1,
+          "endLine": 32,
+          "excerpt": "/*!\nThis crate provides common routines used in command line applications, with a\nfocus on routines useful for search oriented applications. As a utility\nlibrary, there is no central type or function. However, a key focus of this\ncrate is to improve failure modes and provide user friendly error messages\nwhen things go wrong.\n\nTo the best extent possible, everything in this crate works on Windows, macOS\nand Linux.\n\n\n# Standard I/O\n\n[`is_readable_stdin`] determines whether stdin can be usefully read from. It\nis useful when writing an application that changes behavior based on whether\nthe application was invoked with data on stdin. For example, `rg foo` might\nrecursively search the current working directory for occurrences of `foo`, but\n`rg foo < file` might only search the contents of `file`.\n\n\n# Coloring and buffering\n\nThe [`stdout`], [`stdout_buffered_block`] and [`stdout_buffered_line`] routines\nare alternative constructors for [`StandardStream`]. A `StandardStream`\nimplements `termcolor::WriteColor`, which provides a way to emit colors to\nterminals. Its key use is the encapsulation of buffering style. Namely,\n`stdout` will return a line buffered `StandardStream` if and only if\nstdout is connected to a tty, and will otherwise return a block buffered\n`StandardStream`. Line buffering is important for use with a tty because it\ntypically decreases the latency at which the end user sees output. Block\nbuffering is used otherwise because it is faster, and redirecting stdout to a\nfile typically doesn't benefit from the decreased latency that line buffering"
+        }
+      ]
+    },
+    {
+      "purpose": "component-role",
+      "text": "Provides the search command entry point and helpers for input and terminal output.",
+      "citations": [
+        {
+          "path": "crates/core/main.rs",
+          "contentHash": "21c10c3b35114543b90f38f27fd9102703a099bd504db950e1f10d2739b1444c",
+          "startLine": 1,
+          "endLine": 18,
+          "excerpt": "/*!\nThe main entry point into ripgrep.\n*/\n\nuse std::{io::Write, process::ExitCode};\n\nuse ignore::WalkState;\n\nuse crate::flags::{HiArgs, SearchMode};\n\n#[macro_use]\nmod messages;\n\nmod flags;\nmod haystack;\nmod index;\nmod logger;\nmod search;"
+        },
+        {
+          "path": "crates/cli/src/lib.rs",
+          "contentHash": "b27d0e7de21515df33714d79d4959b17aa3d28c168b1c5233c21c333a8a8c695",
+          "startLine": 1,
+          "endLine": 32,
+          "excerpt": "/*!\nThis crate provides common routines used in command line applications, with a\nfocus on routines useful for search oriented applications. As a utility\nlibrary, there is no central type or function. However, a key focus of this\ncrate is to improve failure modes and provide user friendly error messages\nwhen things go wrong.\n\nTo the best extent possible, everything in this crate works on Windows, macOS\nand Linux.\n\n\n# Standard I/O\n\n[`is_readable_stdin`] determines whether stdin can be usefully read from. It\nis useful when writing an application that changes behavior based on whether\nthe application was invoked with data on stdin. For example, `rg foo` might\nrecursively search the current working directory for occurrences of `foo`, but\n`rg foo < file` might only search the contents of `file`.\n\n\n# Coloring and buffering\n\nThe [`stdout`], [`stdout_buffered_block`] and [`stdout_buffered_line`] routines\nare alternative constructors for [`StandardStream`]. A `StandardStream`\nimplements `termcolor::WriteColor`, which provides a way to emit colors to\nterminals. Its key use is the encapsulation of buffering style. Namely,\n`stdout` will return a line buffered `StandardStream` if and only if\nstdout is connected to a tty, and will otherwise return a block buffered\n`StandardStream`. Line buffering is important for use with a tty because it\ntypically decreases the latency at which the end user sees output. Block\nbuffering is used otherwise because it is faster, and redirecting stdout to a\nfile typically doesn't benefit from the decreased latency that line buffering"
+        }
+      ]
+    }
+  ]
+}

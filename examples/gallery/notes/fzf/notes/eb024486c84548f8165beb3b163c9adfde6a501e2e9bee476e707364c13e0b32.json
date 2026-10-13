@@ -1,0 +1,79 @@
+{
+  "schemaVersion": 1,
+  "targetId": "component:module:main.go",
+  "summary": "Loads command options and starts the finder, with platform protection helpers.",
+  "author": "Codex (external agent)",
+  "sources": [
+    {
+      "path": "main.go",
+      "contentHash": "dfa587a659dbc3b54ffb95c95a5069fa260c1a1ef7f73fe5c278a4fff33014c5",
+      "line": 1
+    },
+    {
+      "path": "src/protector/protector_openbsd.go",
+      "contentHash": "2e79e27d0959c3d6949d05981a7c65922c08f037da74520b2b09c4f470621015",
+      "line": 1
+    },
+    {
+      "path": "src/protector/protector.go",
+      "contentHash": "955dbaa50e31edfb6789bd9b18248e9562b8512b8d341c2879414d1d05af9fd4",
+      "line": 1
+    }
+  ],
+  "claims": [
+    {
+      "purpose": "component-name",
+      "text": "Command startup",
+      "citations": [
+        {
+          "path": "main.go",
+          "contentHash": "dfa587a659dbc3b54ffb95c95a5069fa260c1a1ef7f73fe5c278a4fff33014c5",
+          "startLine": 57,
+          "endLine": 64,
+          "excerpt": "func main() {\n\tprotector.Protect()\n\n\toptions, err := fzf.ParseOptions(true, os.Args[1:])\n\tif err != nil {\n\t\texit(fzf.ExitError, err)\n\t\treturn\n\t}"
+        },
+        {
+          "path": "main.go",
+          "contentHash": "dfa587a659dbc3b54ffb95c95a5069fa260c1a1ef7f73fe5c278a4fff33014c5",
+          "startLine": 111,
+          "endLine": 115,
+          "excerpt": "\t}\n\n\tcode, err := fzf.Run(options)\n\texit(code, err)\n}"
+        },
+        {
+          "path": "src/protector/protector_openbsd.go",
+          "contentHash": "2e79e27d0959c3d6949d05981a7c65922c08f037da74520b2b09c4f470621015",
+          "startLine": 5,
+          "endLine": 10,
+          "excerpt": "import \"golang.org/x/sys/unix\"\n\n// Protect calls OS specific protections like pledge on OpenBSD\nfunc Protect() {\n\tunix.PledgePromises(\"stdio cpath dpath wpath rpath inet fattr unix tty proc exec\")\n}"
+        }
+      ]
+    },
+    {
+      "purpose": "component-role",
+      "text": "Loads command options and starts the finder, with platform protection helpers.",
+      "citations": [
+        {
+          "path": "main.go",
+          "contentHash": "dfa587a659dbc3b54ffb95c95a5069fa260c1a1ef7f73fe5c278a4fff33014c5",
+          "startLine": 57,
+          "endLine": 64,
+          "excerpt": "func main() {\n\tprotector.Protect()\n\n\toptions, err := fzf.ParseOptions(true, os.Args[1:])\n\tif err != nil {\n\t\texit(fzf.ExitError, err)\n\t\treturn\n\t}"
+        },
+        {
+          "path": "main.go",
+          "contentHash": "dfa587a659dbc3b54ffb95c95a5069fa260c1a1ef7f73fe5c278a4fff33014c5",
+          "startLine": 111,
+          "endLine": 115,
+          "excerpt": "\t}\n\n\tcode, err := fzf.Run(options)\n\texit(code, err)\n}"
+        },
+        {
+          "path": "src/protector/protector_openbsd.go",
+          "contentHash": "2e79e27d0959c3d6949d05981a7c65922c08f037da74520b2b09c4f470621015",
+          "startLine": 5,
+          "endLine": 10,
+          "excerpt": "import \"golang.org/x/sys/unix\"\n\n// Protect calls OS specific protections like pledge on OpenBSD\nfunc Protect() {\n\tunix.PledgePromises(\"stdio cpath dpath wpath rpath inet fattr unix tty proc exec\")\n}"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,84 @@
+{
+  "schemaVersion": 1,
+  "targetId": "component:module:src/main/java/org/springframework/samples/petclinic/vet/VetController.java",
+  "summary": "Serves paginated veterinarian pages and a list response backed by cached repository reads.",
+  "author": "Codex (external agent)",
+  "sources": [
+    {
+      "path": "src/main/java/org/springframework/samples/petclinic/vet/package-info.java",
+      "contentHash": "a30b355dc2cfabd423e1c9171331288f5e343d8746ad8d12363e9d3f87816fc3",
+      "line": 1
+    },
+    {
+      "path": "src/main/java/org/springframework/samples/petclinic/vet/VetController.java",
+      "contentHash": "8fb67351a3d4b28c220a870178cb72998ef6dfaa303dd65f2e8c242eb2ddbbfa",
+      "line": 1
+    },
+    {
+      "path": "src/main/java/org/springframework/samples/petclinic/vet/VetRepository.java",
+      "contentHash": "732888e66084f9f94dd79c181e29dbbe2c752959c10ebf82b0940700f61c0dde",
+      "line": 1
+    },
+    {
+      "path": "src/main/java/org/springframework/samples/petclinic/vet/Vets.java",
+      "contentHash": "8a9b86de5dd337047eacd492f03526974d82e3765e0a628341a190ffb1bb1707",
+      "line": 1
+    }
+  ],
+  "claims": [
+    {
+      "purpose": "component-name",
+      "text": "Veterinarian browsing",
+      "citations": [
+        {
+          "path": "src/main/java/org/springframework/samples/petclinic/vet/VetController.java",
+          "contentHash": "8fb67351a3d4b28c220a870178cb72998ef6dfaa303dd65f2e8c242eb2ddbbfa",
+          "startLine": 45,
+          "endLine": 62,
+          "excerpt": "\t@GetMapping(\"/vets.html\")\n\tpublic String showVetList(@RequestParam(defaultValue = \"1\") int page, Model model,\n\t\t\tRedirectAttributes redirectAttributes) {\n\t\tPage<Vet> paginated = findPaginated(page);\n\t\tif (page < 1 || page > Math.max(paginated.getTotalPages(), 1)) {\n\t\t\tredirectAttributes.addAttribute(\"page\", 1);\n\t\t\treturn \"redirect:/vets.html\";\n\t\t}\n\t\treturn addPaginationModel(page, paginated, model);\n\t}\n\n\tprivate String addPaginationModel(int page, Page<Vet> paginated, Model model) {\n\t\tList<Vet> listVets = paginated.getContent();\n\t\tmodel.addAttribute(\"currentPage\", page);\n\t\tmodel.addAttribute(\"totalPages\", paginated.getTotalPages());\n\t\tmodel.addAttribute(\"totalItems\", paginated.getTotalElements());\n\t\tmodel.addAttribute(\"listVets\", listVets);\n\t\treturn \"vets/vetList\";"
+        },
+        {
+          "path": "src/main/java/org/springframework/samples/petclinic/vet/VetController.java",
+          "contentHash": "8fb67351a3d4b28c220a870178cb72998ef6dfaa303dd65f2e8c242eb2ddbbfa",
+          "startLine": 72,
+          "endLine": 78,
+          "excerpt": "\t@GetMapping({ \"/vets\" })\n\tpublic @ResponseBody Vets showResourcesVetList() {\n\t\t// Here we are returning an object of type 'Vets' rather than a collection of Vet\n\t\t// objects so it is simpler for JSon/Object mapping\n\t\tVets vets = new Vets();\n\t\tvets.getVetList().addAll(this.vetRepository.findAll());\n\t\treturn vets;"
+        },
+        {
+          "path": "src/main/java/org/springframework/samples/petclinic/vet/VetRepository.java",
+          "contentHash": "732888e66084f9f94dd79c181e29dbbe2c752959c10ebf82b0940700f61c0dde",
+          "startLine": 38,
+          "endLine": 56,
+          "excerpt": "public interface VetRepository extends Repository<Vet, Integer> {\n\n\t/**\n\t * Retrieve all <code>Vet</code>s from the data store.\n\t * @return a <code>Collection</code> of <code>Vet</code>s\n\t */\n\t@Transactional(readOnly = true)\n\t@Cacheable(\"vets\")\n\tCollection<Vet> findAll() throws DataAccessException;\n\n\t/**\n\t * Retrieve all <code>Vet</code>s from data store in Pages\n\t * @param pageable\n\t * @return\n\t * @throws DataAccessException\n\t */\n\t@Transactional(readOnly = true)\n\t@Cacheable(\"vets\")\n\tPage<Vet> findAll(Pageable pageable) throws DataAccessException;"
+        }
+      ]
+    },
+    {
+      "purpose": "component-role",
+      "text": "Serves paginated veterinarian pages and a list response backed by cached repository reads.",
+      "citations": [
+        {
+          "path": "src/main/java/org/springframework/samples/petclinic/vet/VetController.java",
+          "contentHash": "8fb67351a3d4b28c220a870178cb72998ef6dfaa303dd65f2e8c242eb2ddbbfa",
+          "startLine": 45,
+          "endLine": 62,
+          "excerpt": "\t@GetMapping(\"/vets.html\")\n\tpublic String showVetList(@RequestParam(defaultValue = \"1\") int page, Model model,\n\t\t\tRedirectAttributes redirectAttributes) {\n\t\tPage<Vet> paginated = findPaginated(page);\n\t\tif (page < 1 || page > Math.max(paginated.getTotalPages(), 1)) {\n\t\t\tredirectAttributes.addAttribute(\"page\", 1);\n\t\t\treturn \"redirect:/vets.html\";\n\t\t}\n\t\treturn addPaginationModel(page, paginated, model);\n\t}\n\n\tprivate String addPaginationModel(int page, Page<Vet> paginated, Model model) {\n\t\tList<Vet> listVets = paginated.getContent();\n\t\tmodel.addAttribute(\"currentPage\", page);\n\t\tmodel.addAttribute(\"totalPages\", paginated.getTotalPages());\n\t\tmodel.addAttribute(\"totalItems\", paginated.getTotalElements());\n\t\tmodel.addAttribute(\"listVets\", listVets);\n\t\treturn \"vets/vetList\";"
+        },
+        {
+          "path": "src/main/java/org/springframework/samples/petclinic/vet/VetController.java",
+          "contentHash": "8fb67351a3d4b28c220a870178cb72998ef6dfaa303dd65f2e8c242eb2ddbbfa",
+          "startLine": 72,
+          "endLine": 78,
+          "excerpt": "\t@GetMapping({ \"/vets\" })\n\tpublic @ResponseBody Vets showResourcesVetList() {\n\t\t// Here we are returning an object of type 'Vets' rather than a collection of Vet\n\t\t// objects so it is simpler for JSon/Object mapping\n\t\tVets vets = new Vets();\n\t\tvets.getVetList().addAll(this.vetRepository.findAll());\n\t\treturn vets;"
+        },
+        {
+          "path": "src/main/java/org/springframework/samples/petclinic/vet/VetRepository.java",
+          "contentHash": "732888e66084f9f94dd79c181e29dbbe2c752959c10ebf82b0940700f61c0dde",
+          "startLine": 38,
+          "endLine": 56,
+          "excerpt": "public interface VetRepository extends Repository<Vet, Integer> {\n\n\t/**\n\t * Retrieve all <code>Vet</code>s from the data store.\n\t * @return a <code>Collection</code> of <code>Vet</code>s\n\t */\n\t@Transactional(readOnly = true)\n\t@Cacheable(\"vets\")\n\tCollection<Vet> findAll() throws DataAccessException;\n\n\t/**\n\t * Retrieve all <code>Vet</code>s from data store in Pages\n\t * @param pageable\n\t * @return\n\t * @throws DataAccessException\n\t */\n\t@Transactional(readOnly = true)\n\t@Cacheable(\"vets\")\n\tPage<Vet> findAll(Pageable pageable) throws DataAccessException;"
+        }
+      ]
+    }
+  ]
+}

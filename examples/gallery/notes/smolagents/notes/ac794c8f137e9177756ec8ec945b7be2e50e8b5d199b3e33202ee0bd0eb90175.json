@@ -1,0 +1,51 @@
+{
+  "schemaVersion": 1,
+  "targetId": "component:module:src/smolagents/__init__.py",
+  "summary": "Loads a model and selected tools, then runs a code or tool-calling agent.",
+  "author": "Codex (external agent)",
+  "sources": [
+    {
+      "path": "src/smolagents/__init__.py",
+      "contentHash": "efac0cfd51f49d083a25297eb4cad6c498d28616f615095cf1c154c49b963254",
+      "line": 1
+    },
+    {
+      "path": "src/smolagents/cli.py",
+      "contentHash": "c7cd04f6312242fbdb16917c48b9b5a672cb5a0652f9553c718b68dd3e2b5d62",
+      "line": 1
+    },
+    {
+      "path": "src/smolagents/vision_web_browser.py",
+      "contentHash": "c7b2260468b7f95e86aa57d9106475184a5f39c30927ab8b6e9bafc0d3a2338d",
+      "line": 1
+    }
+  ],
+  "claims": [
+    {
+      "purpose": "component-name",
+      "text": "Agent command interface",
+      "citations": [
+        {
+          "path": "src/smolagents/cli.py",
+          "contentHash": "c7cd04f6312242fbdb16917c48b9b5a672cb5a0652f9553c718b68dd3e2b5d62",
+          "startLine": 230,
+          "endLine": 258,
+          "excerpt": "    load_dotenv()\n\n    model = load_model(model_type, model_id, api_base=api_base, api_key=api_key, provider=provider)\n\n    available_tools = []\n\n    for tool_name in tools:\n        if \"/\" in tool_name:\n            space_name = tool_name.split(\"/\")[-1].lower().replace(\"-\", \"_\").replace(\".\", \"_\")\n            description = f\"Tool loaded from Hugging Face Space: {tool_name}\"\n            available_tools.append(Tool.from_space(space_id=tool_name, name=space_name, description=description))\n        else:\n            if tool_name in TOOL_MAPPING:\n                available_tools.append(TOOL_MAPPING[tool_name]())\n            else:\n                raise ValueError(f\"Tool {tool_name} is not recognized either as a default tool or a Space.\")\n\n    if action_type == \"code\":\n        agent = CodeAgent(\n            tools=available_tools,\n            model=model,\n            additional_authorized_imports=imports,\n            stream_outputs=True,\n        )\n    elif action_type == \"tool_calling\":\n        agent = ToolCallingAgent(tools=available_tools, model=model, stream_outputs=True)\n    else:\n        raise ValueError(f\"Unsupported action type: {action_type}\")\n"
+        }
+      ]
+    },
+    {
+      "purpose": "component-role",
+      "text": "Loads a model and selected tools, then runs a code or tool-calling agent.",
+      "citations": [
+        {
+          "path": "src/smolagents/cli.py",
+          "contentHash": "c7cd04f6312242fbdb16917c48b9b5a672cb5a0652f9553c718b68dd3e2b5d62",
+          "startLine": 230,
+          "endLine": 258,
+          "excerpt": "    load_dotenv()\n\n    model = load_model(model_type, model_id, api_base=api_base, api_key=api_key, provider=provider)\n\n    available_tools = []\n\n    for tool_name in tools:\n        if \"/\" in tool_name:\n            space_name = tool_name.split(\"/\")[-1].lower().replace(\"-\", \"_\").replace(\".\", \"_\")\n            description = f\"Tool loaded from Hugging Face Space: {tool_name}\"\n            available_tools.append(Tool.from_space(space_id=tool_name, name=space_name, description=description))\n        else:\n            if tool_name in TOOL_MAPPING:\n                available_tools.append(TOOL_MAPPING[tool_name]())\n            else:\n                raise ValueError(f\"Tool {tool_name} is not recognized either as a default tool or a Space.\")\n\n    if action_type == \"code\":\n        agent = CodeAgent(\n            tools=available_tools,\n            model=model,\n            additional_authorized_imports=imports,\n            stream_outputs=True,\n        )\n    elif action_type == \"tool_calling\":\n        agent = ToolCallingAgent(tools=available_tools, model=model, stream_outputs=True)\n    else:\n        raise ValueError(f\"Unsupported action type: {action_type}\")\n"
+        }
+      ]
+    }
+  ]
+}

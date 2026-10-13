@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "targetId": "component:module:pkg/brew/ripgrep-bin.rb",
+  "summary": "Installs the search binary, manual page, and shell completions through a Homebrew formula.",
+  "author": "Codex (external agent)",
+  "sources": [
+    {
+      "path": "pkg/brew/ripgrep-bin.rb",
+      "contentHash": "97cbd57670a192d1a6effa30063b53bceb3243d95a94df189e912df5ca41b16b",
+      "line": 1
+    }
+  ],
+  "claims": [
+    {
+      "purpose": "component-name",
+      "text": "Binary package installation",
+      "citations": [
+        {
+          "path": "pkg/brew/ripgrep-bin.rb",
+          "contentHash": "97cbd57670a192d1a6effa30063b53bceb3243d95a94df189e912df5ca41b16b",
+          "startLine": 1,
+          "endLine": 22,
+          "excerpt": "class RipgrepBin < Formula\n  version '15.0.0'\n  desc \"Recursively search directories for a regex pattern.\"\n  homepage \"https://github.com/BurntSushi/ripgrep\"\n\n  if OS.mac?\n      url \"https://github.com/BurntSushi/ripgrep/releases/download/#{version}/ripgrep-#{version}-x86_64-apple-darwin.tar.gz\"\n      sha256 \"af7825fcc69a2afc7a7aea55fc9af90e26421d8f20fe59df32e233c0b8a231c1\"\n  elsif OS.linux?\n      url \"https://github.com/BurntSushi/ripgrep/releases/download/#{version}/ripgrep-#{version}-x86_64-unknown-linux-musl.tar.gz\"\n      sha256 \"33e15bcf1624b25cdd2a55813a47a2f95dbe126268203e76aa6a585d1e7b149c\"\n  end\n\n  conflicts_with \"ripgrep\"\n\n  def install\n    bin.install \"rg\"\n    man1.install \"doc/rg.1\"\n\n    bash_completion.install \"complete/rg.bash\"\n    zsh_completion.install \"complete/_rg\"\n  end"
+        }
+      ]
+    },
+    {
+      "purpose": "component-role",
+      "text": "Installs the search binary, manual page, and shell completions through a Homebrew formula.",
+      "citations": [
+        {
+          "path": "pkg/brew/ripgrep-bin.rb",
+          "contentHash": "97cbd57670a192d1a6effa30063b53bceb3243d95a94df189e912df5ca41b16b",
+          "startLine": 1,
+          "endLine": 22,
+          "excerpt": "class RipgrepBin < Formula\n  version '15.0.0'\n  desc \"Recursively search directories for a regex pattern.\"\n  homepage \"https://github.com/BurntSushi/ripgrep\"\n\n  if OS.mac?\n      url \"https://github.com/BurntSushi/ripgrep/releases/download/#{version}/ripgrep-#{version}-x86_64-apple-darwin.tar.gz\"\n      sha256 \"af7825fcc69a2afc7a7aea55fc9af90e26421d8f20fe59df32e233c0b8a231c1\"\n  elsif OS.linux?\n      url \"https://github.com/BurntSushi/ripgrep/releases/download/#{version}/ripgrep-#{version}-x86_64-unknown-linux-musl.tar.gz\"\n      sha256 \"33e15bcf1624b25cdd2a55813a47a2f95dbe126268203e76aa6a585d1e7b149c\"\n  end\n\n  conflicts_with \"ripgrep\"\n\n  def install\n    bin.install \"rg\"\n    man1.install \"doc/rg.1\"\n\n    bash_completion.install \"complete/rg.bash\"\n    zsh_completion.install \"complete/_rg\"\n  end"
+        }
+      ]
+    }
+  ]
+}

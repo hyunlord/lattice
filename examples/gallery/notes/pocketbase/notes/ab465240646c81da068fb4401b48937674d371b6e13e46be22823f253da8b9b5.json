@@ -1,0 +1,345 @@
+{
+  "schemaVersion": 1,
+  "targetId": "component:module:core/auth_origin_model.go",
+  "summary": "Defines collection tables and fields, validates models and saves them to the application database.",
+  "author": "Codex (external agent)",
+  "sources": [
+    {
+      "path": "core/auth_origin_model.go",
+      "contentHash": "1fcb60ccb0c193387c0806fb4be50378af641063c9c192c56f03b3eb7ecbf605",
+      "line": 1
+    },
+    {
+      "path": "core/auth_origin_query.go",
+      "contentHash": "041427094bfdd45e7be4b0c88cd94e020892693e43e8f42fc20d6d532035d5a0",
+      "line": 1
+    },
+    {
+      "path": "core/backup_restore.go",
+      "contentHash": "b751cbdd67c6b45702fd2c15c13f8f36b874a3f4ea82678071f31796a200ab9a",
+      "line": 1
+    },
+    {
+      "path": "core/backup.go",
+      "contentHash": "d8ba65c6a365273b526a1d87b1c91db0a5861243bb4dbde6ff284498a1bbc474",
+      "line": 1
+    },
+    {
+      "path": "core/collection_import.go",
+      "contentHash": "e0e8d7bd91572aaca5d9d7033c2715a4a3a90117205cc6be6f088457fcfc6de2",
+      "line": 1
+    },
+    {
+      "path": "core/collection_model_auth_templates.go",
+      "contentHash": "9c6276188d318603983600adf8760b51630695536f8f6d56a546687105a6da6f",
+      "line": 1
+    },
+    {
+      "path": "core/collection_model_base_options.go",
+      "contentHash": "76072f07a5a00ba8a85f5dd85e79f14ddd97824777b7b3f9edd9bf29cc27ff8b",
+      "line": 1
+    },
+    {
+      "path": "core/collection_model_view_options.go",
+      "contentHash": "53ec4ae459ed091b858c10e9d93894cd7b422cb6475aae4a7229984de312fc79",
+      "line": 1
+    },
+    {
+      "path": "core/collection_model.go",
+      "contentHash": "870252ec5dc71483c3a7ddfa83f1d31b3fa785ea0f99729c2fb876ffaeb924ea",
+      "line": 1
+    },
+    {
+      "path": "core/collection_record_table_sync.go",
+      "contentHash": "3c25fe1a21dfa9619409d235f25804a981ad43f6be0cadd05e3c4984c119d3bb",
+      "line": 1
+    },
+    {
+      "path": "core/db_builder.go",
+      "contentHash": "1e42a1a505219b29129679a79d62fe1f554bc6811869d649cc18cc265238e4e7",
+      "line": 1
+    },
+    {
+      "path": "core/db_connect_nodefaultdriver.go",
+      "contentHash": "a7bccb7da10ac09808fac8524655c06301cea99bd013ae8caff9c018692b9418",
+      "line": 1
+    },
+    {
+      "path": "core/db_connect.go",
+      "contentHash": "dbaa05d73f900cc76f30c4d71a2ebec1801627202b3c05f15327ce05d1f21b5c",
+      "line": 1
+    },
+    {
+      "path": "core/db_model.go",
+      "contentHash": "cdc3f5fe57623f9f41b47f2d5ee1cd68b0fc0d4764bc12cbef3a8f0aafa3a1c1",
+      "line": 1
+    },
+    {
+      "path": "core/db_retry.go",
+      "contentHash": "0079902034c6c45f98a01b0e1471d3d42046218fdcf6d19ee2d798351ca5c058",
+      "line": 1
+    },
+    {
+      "path": "core/db_table.go",
+      "contentHash": "d5074fba41ef34ffd2082213d10d28760aece5536043035880f925a2e6d827de",
+      "line": 1
+    },
+    {
+      "path": "core/db_tx.go",
+      "contentHash": "e9b598bdcd9e592e8f0d8a3b39fb6c5d91d7d2ee1c9b86448108abd9b7a3a513",
+      "line": 1
+    },
+    {
+      "path": "core/db.go",
+      "contentHash": "ab6f008ec0abae8f26699ee611f9b430b7189f724d2410f75ca74a8ca9d08ce9",
+      "line": 1
+    },
+    {
+      "path": "core/event_request_batch.go",
+      "contentHash": "de6fc5cd2d8b09c2341435069921f13a56bed4796c13fbfd435f4c0e182d4ecf",
+      "line": 1
+    },
+    {
+      "path": "core/event_request.go",
+      "contentHash": "ec65a3a54922f61aaa2e7104f6ef89cb61b15b821736ff3855253638212db293",
+      "line": 1
+    },
+    {
+      "path": "core/events.go",
+      "contentHash": "c6172bf7e395b41d41238e25de7fc35f160f0221ef685b609a072e5dd6fc3964",
+      "line": 1
+    },
+    {
+      "path": "core/external_auth_model.go",
+      "contentHash": "bcda78d266dde4c34099f85a43a18df06353af60ae2cf4ccaca5512b7cad499e",
+      "line": 1
+    },
+    {
+      "path": "core/external_auth_query.go",
+      "contentHash": "9901832cdc7d69335bee41fab84e3bab5a2c51f0fcc5751d133f58492419e84a",
+      "line": 1
+    },
+    {
+      "path": "core/field_autodate.go",
+      "contentHash": "76adb4a0b44570cd5cde6b406415725ac9034ddc269d7ef67220dc02b5bf025a",
+      "line": 1
+    },
+    {
+      "path": "core/field_bool.go",
+      "contentHash": "3fa59d913ed604a37fff8608d1a019ff1b3fc6180b03b5651aba7fdd907ef8db",
+      "line": 1
+    },
+    {
+      "path": "core/field_date.go",
+      "contentHash": "da15c268e5017be9b044bf208edbec0564ed84a3fddc2bfbd937b36e2b75364a",
+      "line": 1
+    },
+    {
+      "path": "core/field_editor.go",
+      "contentHash": "bba52c7bef08ca8ceecbc829cb00ca71d84456b6867d798acb75d97c4e6bce85",
+      "line": 1
+    },
+    {
+      "path": "core/field_email.go",
+      "contentHash": "8fb3f59070994262a727840ecc1f7f2d30ae4483a43fb4571bc3a8d28fb39f81",
+      "line": 1
+    },
+    {
+      "path": "core/field_geo_point.go",
+      "contentHash": "cf476d4a085b899875e6fe77ab389c5f62e0f6f2ee2ceee11a38470ea8a69371",
+      "line": 1
+    },
+    {
+      "path": "core/field_json.go",
+      "contentHash": "b2567741cf9e98b1bbb42e43398a46d259a8150ca90f63a397a983c519c0ce29",
+      "line": 1
+    },
+    {
+      "path": "core/field_number.go",
+      "contentHash": "870255334681169522af38feb943f9612db17293c1855bd3d799ba2c8211b198",
+      "line": 1
+    },
+    {
+      "path": "core/field_password.go",
+      "contentHash": "51bd97b8a8a53905a3f27c360d3c29164c446a57a7bc50be191513656b578d07",
+      "line": 1
+    },
+    {
+      "path": "core/field_text.go",
+      "contentHash": "4a0fd17de5730411808e2c7c2eee73abfd70422b173eed93c03fb8fbe237c910",
+      "line": 1
+    },
+    {
+      "path": "core/field_url.go",
+      "contentHash": "27e33335c2f35648a65bf569199bd5206330dd078e496f5d4a741dd4538a8525",
+      "line": 1
+    },
+    {
+      "path": "core/fields_list.go",
+      "contentHash": "1733119f63295b0af6c6a495e2d9026f251d174a3a2e7db1fdcd2e831965c254",
+      "line": 1
+    },
+    {
+      "path": "core/log_model.go",
+      "contentHash": "0b0a4ca4e79dafa9bf1295439d66626fe1cb6e7a4fe386508a00c12e999af0c5",
+      "line": 1
+    },
+    {
+      "path": "core/log_query.go",
+      "contentHash": "ba2147fff71d49c7421750849208c93ccdcfbf176170ffc1f3d9cea04cba8c46",
+      "line": 1
+    },
+    {
+      "path": "core/mfa_model.go",
+      "contentHash": "811ffe07ff77b863cb1a2b99a225d3cf09649a3a75eb76be3728c4c05b7633a8",
+      "line": 1
+    },
+    {
+      "path": "core/mfa_query.go",
+      "contentHash": "9e86026c691b9e823f2b266924ecfabd9ea477084387d41c5e40a5136e177b01",
+      "line": 1
+    },
+    {
+      "path": "core/migrations_list.go",
+      "contentHash": "77adc3fe6d777e10ea413bbce496b14c094a1beadf76e38984cefcfad15c5183",
+      "line": 1
+    },
+    {
+      "path": "core/migrations_runner.go",
+      "contentHash": "2371ecf1929ee6599d602cf711372740a50199285301b9e94c5e568efaa68f75",
+      "line": 1
+    },
+    {
+      "path": "core/otp_model.go",
+      "contentHash": "702940ddb8e09b4536b58fa1b2d81549f3437b88a702d2ba34a3248271bd8730",
+      "line": 1
+    },
+    {
+      "path": "core/otp_query.go",
+      "contentHash": "40f8c66de73a516dbdce92e073bf895f7f9b62a3460055a312d0e5b47ec87033",
+      "line": 1
+    },
+    {
+      "path": "core/record_field_resolver_replace_expr.go",
+      "contentHash": "73e446b4bd58bba9eac3528558250eec6044346a4ec708795cc8f5493ffce656",
+      "line": 1
+    },
+    {
+      "path": "core/record_field_resolver.go",
+      "contentHash": "7d56d3d0a8aebd78dda103d03efe28205aa3f74ae35f4d11784d103757d65d0e",
+      "line": 1
+    },
+    {
+      "path": "core/record_model_auth.go",
+      "contentHash": "beef40331171b136b6a744152dfe05458526abf14554f0a54d89870f740deb1b",
+      "line": 1
+    },
+    {
+      "path": "core/record_model_superusers.go",
+      "contentHash": "f073e7a47f5ee6d5478ae7fb6b0282d86238b008ee8632811400334948207d22",
+      "line": 1
+    },
+    {
+      "path": "core/record_proxy.go",
+      "contentHash": "8545e01dbd4cc783b2ef27981401b9df542b951778589d6ea30974bedf002a25",
+      "line": 1
+    },
+    {
+      "path": "core/record_tokens.go",
+      "contentHash": "756394de39418906b79e855d8f7b8d57c1ad5d27ed4a9af7f025311ae8cb361a",
+      "line": 1
+    },
+    {
+      "path": "core/settings_model.go",
+      "contentHash": "7433fc8c67484805d2a6372631422c455432d9e0c51020920458313d9ed7e333",
+      "line": 1
+    },
+    {
+      "path": "core/settings_query.go",
+      "contentHash": "4500c8507a4b2abedef0f14f9868b405dbc77d64c49244b4f22cb3c62f198903",
+      "line": 1
+    },
+    {
+      "path": "core/syscall_wasm.go",
+      "contentHash": "2043860bb8e7d0ec3ae7b98e404b38ddf610d8796aa69063b12bfe5aced24feb",
+      "line": 1
+    },
+    {
+      "path": "core/syscall.go",
+      "contentHash": "e5664e6a0f2ce2ca11d1dfd3117f368fff3d1413290a27f71b742671ee1f67e3",
+      "line": 1
+    },
+    {
+      "path": "core/system_alert.go",
+      "contentHash": "e083f5ce2f8a0eb8aa769448833ec22a0c0acc21d13e563cff69c08651cd212e",
+      "line": 1
+    },
+    {
+      "path": "core/validators/db.go",
+      "contentHash": "c7084155be9513dce310181aabf59314e48c4a18d501511ae1d6e9192bf4462e",
+      "line": 1
+    },
+    {
+      "path": "core/validators/equal.go",
+      "contentHash": "cf0eec1bb7a81388404ea5425bc617d0b8b9a9462b6418f0b4ae818d2fd404c1",
+      "line": 1
+    },
+    {
+      "path": "core/validators/file.go",
+      "contentHash": "aac0057491c7e7fbfe209f5b26be65168f300a288abb76f2fed16eeaee29e5ca",
+      "line": 1
+    },
+    {
+      "path": "core/validators/string.go",
+      "contentHash": "c7710095b9b4d5da4af4172bafdbbd246d499e040131b3125b105cd891138464",
+      "line": 1
+    },
+    {
+      "path": "core/validators/validators.go",
+      "contentHash": "2d7596304be57b8a787f7dfef59c4077c6ca6bf79ad0bac43f91b94041888bd0",
+      "line": 1
+    }
+  ],
+  "claims": [
+    {
+      "purpose": "component-name",
+      "text": "Database models and collections",
+      "citations": [
+        {
+          "path": "core/collection_model.go",
+          "contentHash": "870252ec5dc71483c3a7ddfa83f1d31b3fa785ea0f99729c2fb876ffaeb924ea",
+          "startLine": 381,
+          "endLine": 398,
+          "excerpt": "// Collection defines the table, fields and various options related to a set of records.\ntype Collection struct {\n\tbaseCollection\n\tcollectionAuthOptions\n\tcollectionViewOptions\n}\n\n// NewCollection initializes and returns a new Collection model with the specified type and name.\n//\n// It also loads the minimal default configuration for the collection\n// (eg. system fields, indexes, type specific options, etc.).\nfunc NewCollection(typ, name string, optId ...string) *Collection {\n\tswitch typ {\n\tcase CollectionTypeAuth:\n\t\treturn NewAuthCollection(name, optId...)\n\tcase CollectionTypeView:\n\t\treturn NewViewCollection(name, optId...)\n\tdefault:"
+        },
+        {
+          "path": "core/db.go",
+          "contentHash": "ab6f008ec0abae8f26699ee611f9b430b7189f724d2410f75ca74a8ca9d08ce9",
+          "startLine": 175,
+          "endLine": 187,
+          "excerpt": "// Save validates and saves the specified model into the regular app database.\n//\n// If you don't want to run validations, use [App.SaveNoValidate()].\nfunc (app *BaseApp) Save(model Model) error {\n\treturn app.SaveWithContext(context.Background(), model)\n}\n\n// SaveWithContext is the same as [App.Save()] but allows specifying a context to limit the db execution.\n//\n// If you don't want to run validations, use [App.SaveNoValidateWithContext()].\nfunc (app *BaseApp) SaveWithContext(ctx context.Context, model Model) error {\n\treturn app.save(ctx, model, true, false)\n}"
+        }
+      ]
+    },
+    {
+      "purpose": "component-role",
+      "text": "Defines collection tables and fields, validates models and saves them to the application database.",
+      "citations": [
+        {
+          "path": "core/collection_model.go",
+          "contentHash": "870252ec5dc71483c3a7ddfa83f1d31b3fa785ea0f99729c2fb876ffaeb924ea",
+          "startLine": 381,
+          "endLine": 398,
+          "excerpt": "// Collection defines the table, fields and various options related to a set of records.\ntype Collection struct {\n\tbaseCollection\n\tcollectionAuthOptions\n\tcollectionViewOptions\n}\n\n// NewCollection initializes and returns a new Collection model with the specified type and name.\n//\n// It also loads the minimal default configuration for the collection\n// (eg. system fields, indexes, type specific options, etc.).\nfunc NewCollection(typ, name string, optId ...string) *Collection {\n\tswitch typ {\n\tcase CollectionTypeAuth:\n\t\treturn NewAuthCollection(name, optId...)\n\tcase CollectionTypeView:\n\t\treturn NewViewCollection(name, optId...)\n\tdefault:"
+        },
+        {
+          "path": "core/db.go",
+          "contentHash": "ab6f008ec0abae8f26699ee611f9b430b7189f724d2410f75ca74a8ca9d08ce9",
+          "startLine": 175,
+          "endLine": 187,
+          "excerpt": "// Save validates and saves the specified model into the regular app database.\n//\n// If you don't want to run validations, use [App.SaveNoValidate()].\nfunc (app *BaseApp) Save(model Model) error {\n\treturn app.SaveWithContext(context.Background(), model)\n}\n\n// SaveWithContext is the same as [App.Save()] but allows specifying a context to limit the db execution.\n//\n// If you don't want to run validations, use [App.SaveNoValidateWithContext()].\nfunc (app *BaseApp) SaveWithContext(ctx context.Context, model Model) error {\n\treturn app.save(ctx, model, true, false)\n}"
+        }
+      ]
+    }
+  ]
+}

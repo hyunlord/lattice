@@ -1,0 +1,84 @@
+{
+  "schemaVersion": 1,
+  "targetId": "component:module:src/smolagents/default_tools.py",
+  "summary": "Provides built-in tools and executes Python in local or remote environments.",
+  "author": "Codex (external agent)",
+  "sources": [
+    {
+      "path": "src/smolagents/default_tools.py",
+      "contentHash": "84e0bcb9c2aae16f493fd0f9553da4d4442bcfc7f832be840228c4b8a3f9f14c",
+      "line": 1
+    },
+    {
+      "path": "src/smolagents/local_python_executor.py",
+      "contentHash": "41859e622bae8ad85ed861b7abef12b02f9106133a273c2f4d8a1e37a743d1ca",
+      "line": 1
+    },
+    {
+      "path": "src/smolagents/remote_executors.py",
+      "contentHash": "d14480b4dc512605df941594bd37e08aa19a92c18913775e9af7c71d5c209ab9",
+      "line": 1
+    },
+    {
+      "path": "src/smolagents/serialization.py",
+      "contentHash": "1dea2a4e98136c822cad9d222e39e89cf2e680eca52b8bcdc022f1cb14e0344c",
+      "line": 1
+    }
+  ],
+  "claims": [
+    {
+      "purpose": "component-name",
+      "text": "Tools and code execution",
+      "citations": [
+        {
+          "path": "src/smolagents/default_tools.py",
+          "contentHash": "84e0bcb9c2aae16f493fd0f9553da4d4442bcfc7f832be840228c4b8a3f9f14c",
+          "startLine": 39,
+          "endLine": 48,
+          "excerpt": "class PythonInterpreterTool(Tool):\n    name = \"python_interpreter\"\n    description = \"This is a tool that evaluates python code. It can be used to perform calculations.\"\n    inputs = {\n        \"code\": {\n            \"type\": \"string\",\n            \"description\": \"The python code to run in interpreter\",\n        }\n    }\n    output_type = \"string\""
+        },
+        {
+          "path": "src/smolagents/local_python_executor.py",
+          "contentHash": "41859e622bae8ad85ed861b7abef12b02f9106133a273c2f4d8a1e37a743d1ca",
+          "startLine": 1688,
+          "endLine": 1695,
+          "excerpt": "class LocalPythonExecutor(PythonExecutor):\n    \"\"\"\n    Executor of Python code in a local environment.\n\n    This executor evaluates Python code with restricted access to imports and built-in functions.\n    It is not a security sandbox: for isolated execution of untrusted code, use a remote executor.\n    It maintains state between executions, allows for custom tools and functions to be made available\n    to the code, and captures print outputs separately from return values."
+        },
+        {
+          "path": "src/smolagents/remote_executors.py",
+          "contentHash": "d14480b4dc512605df941594bd37e08aa19a92c18913775e9af7c71d5c209ab9",
+          "startLine": 53,
+          "endLine": 58,
+          "excerpt": "class RemotePythonExecutor(PythonExecutor):\n    \"\"\"\n    Executor of Python code in a remote environment.\n\n    Args:\n        additional_imports (`list[str]`): Additional Python packages to install."
+        }
+      ]
+    },
+    {
+      "purpose": "component-role",
+      "text": "Provides built-in tools and executes Python in local or remote environments.",
+      "citations": [
+        {
+          "path": "src/smolagents/default_tools.py",
+          "contentHash": "84e0bcb9c2aae16f493fd0f9553da4d4442bcfc7f832be840228c4b8a3f9f14c",
+          "startLine": 39,
+          "endLine": 48,
+          "excerpt": "class PythonInterpreterTool(Tool):\n    name = \"python_interpreter\"\n    description = \"This is a tool that evaluates python code. It can be used to perform calculations.\"\n    inputs = {\n        \"code\": {\n            \"type\": \"string\",\n            \"description\": \"The python code to run in interpreter\",\n        }\n    }\n    output_type = \"string\""
+        },
+        {
+          "path": "src/smolagents/local_python_executor.py",
+          "contentHash": "41859e622bae8ad85ed861b7abef12b02f9106133a273c2f4d8a1e37a743d1ca",
+          "startLine": 1688,
+          "endLine": 1695,
+          "excerpt": "class LocalPythonExecutor(PythonExecutor):\n    \"\"\"\n    Executor of Python code in a local environment.\n\n    This executor evaluates Python code with restricted access to imports and built-in functions.\n    It is not a security sandbox: for isolated execution of untrusted code, use a remote executor.\n    It maintains state between executions, allows for custom tools and functions to be made available\n    to the code, and captures print outputs separately from return values."
+        },
+        {
+          "path": "src/smolagents/remote_executors.py",
+          "contentHash": "d14480b4dc512605df941594bd37e08aa19a92c18913775e9af7c71d5c209ab9",
+          "startLine": 53,
+          "endLine": 58,
+          "excerpt": "class RemotePythonExecutor(PythonExecutor):\n    \"\"\"\n    Executor of Python code in a remote environment.\n\n    Args:\n        additional_imports (`list[str]`): Additional Python packages to install."
+        }
+      ]
+    }
+  ]
+}

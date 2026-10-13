@@ -1,0 +1,60 @@
+{
+  "schemaVersion": 1,
+  "targetId": "component:module:shared/typings/styles.d.ts",
+  "summary": "Declares CSS modules and checks that index strings contain printable ASCII characters.",
+  "author": "Codex (external agent)",
+  "sources": [
+    {
+      "path": "shared/typings/styles.d.ts",
+      "contentHash": "35d26ea66c86da9701e4f4b467913481ffeae910761cea34c775c5dacb7f8eaa",
+      "line": 1
+    },
+    {
+      "path": "shared/utils/indexCharacters.ts",
+      "contentHash": "0dc4196105eb5caa285dbc65ff36261815e67e8b25d4cad01d06c6a07fee2fc8",
+      "line": 1
+    }
+  ],
+  "claims": [
+    {
+      "purpose": "component-name",
+      "text": "Style types and index validation",
+      "citations": [
+        {
+          "path": "shared/typings/styles.d.ts",
+          "contentHash": "35d26ea66c86da9701e4f4b467913481ffeae910761cea34c775c5dacb7f8eaa",
+          "startLine": 1,
+          "endLine": 1,
+          "excerpt": "declare module \"*.css\";"
+        },
+        {
+          "path": "shared/utils/indexCharacters.ts",
+          "contentHash": "0dc4196105eb5caa285dbc65ff36261815e67e8b25d4cad01d06c6a07fee2fc8",
+          "startLine": 1,
+          "endLine": 2,
+          "excerpt": "export const validateIndexCharacters = (index: string) =>\n  new RegExp(\"^[\\x20-\\x7E]+$\").test(index);"
+        }
+      ]
+    },
+    {
+      "purpose": "component-role",
+      "text": "Declares CSS modules and checks that index strings contain printable ASCII characters.",
+      "citations": [
+        {
+          "path": "shared/typings/styles.d.ts",
+          "contentHash": "35d26ea66c86da9701e4f4b467913481ffeae910761cea34c775c5dacb7f8eaa",
+          "startLine": 1,
+          "endLine": 1,
+          "excerpt": "declare module \"*.css\";"
+        },
+        {
+          "path": "shared/utils/indexCharacters.ts",
+          "contentHash": "0dc4196105eb5caa285dbc65ff36261815e67e8b25d4cad01d06c6a07fee2fc8",
+          "startLine": 1,
+          "endLine": 2,
+          "excerpt": "export const validateIndexCharacters = (index: string) =>\n  new RegExp(\"^[\\x20-\\x7E]+$\").test(index);"
+        }
+      ]
+    }
+  ]
+}

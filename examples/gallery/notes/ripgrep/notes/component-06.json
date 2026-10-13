@@ -1,0 +1,101 @@
+{
+  "schemaVersion": 1,
+  "targetId": "component:module:crates/printer/src/color.rs",
+  "summary": "Formats matching results as readable text, JSON messages, or aggregate summaries.",
+  "author": "Codex (external agent)",
+  "sources": [
+    {
+      "path": "crates/printer/src/color.rs",
+      "contentHash": "f37f3a667459590e9defc0537246d34401521ec40757aaf787df88086dfa1097",
+      "line": 1
+    },
+    {
+      "path": "crates/printer/src/counter.rs",
+      "contentHash": "ea4c5558d8ca442f91c06108dce64aa01c87517213c6731f9cc5a70cf39eca04",
+      "line": 1
+    },
+    {
+      "path": "crates/printer/src/hyperlink/aliases.rs",
+      "contentHash": "5512800babddbef9354ab5755f4734d56d68165c31bbbebdcde82139a52a8249",
+      "line": 1
+    },
+    {
+      "path": "crates/printer/src/hyperlink/mod.rs",
+      "contentHash": "8887b066987643638d822ec53ebd44f10b9d1a1bab00d9152579a56dfad284fb",
+      "line": 1
+    },
+    {
+      "path": "crates/printer/src/json.rs",
+      "contentHash": "310471057be8d646754ff073c75607050ae2f3b355554c59631089ab6223ad74",
+      "line": 1
+    },
+    {
+      "path": "crates/printer/src/jsont.rs",
+      "contentHash": "bf5de4c4a28b53cf66b8a2d5f30eb5878abe120b4a72a4465633821d7635379e",
+      "line": 1
+    },
+    {
+      "path": "crates/printer/src/lib.rs",
+      "contentHash": "1d81cc139f7aa416b909ebf69baafe2b025bf7d11143f5ddf9f68a923b69c6d8",
+      "line": 1
+    },
+    {
+      "path": "crates/printer/src/macros.rs",
+      "contentHash": "fba6a3f245286c63f6f031a3a3d1bee56bf1eab83bd81a258ad2ddd32aadbb67",
+      "line": 1
+    },
+    {
+      "path": "crates/printer/src/path.rs",
+      "contentHash": "733d31ce45d34bc521d35fa63494f10b0fc73760496c5181a51a1473b672d234",
+      "line": 1
+    },
+    {
+      "path": "crates/printer/src/standard.rs",
+      "contentHash": "8fc94a8cba6add7dbe8394cd2c6f24dffb773b9f85852ee6d4e97747d40e7460",
+      "line": 1
+    },
+    {
+      "path": "crates/printer/src/stats.rs",
+      "contentHash": "fa7c96c4dd83892f19d9bc5d9a0e486c6d7b252f6c7f507da3cd090809bb48a1",
+      "line": 1
+    },
+    {
+      "path": "crates/printer/src/summary.rs",
+      "contentHash": "76ac78ad878a2a6a45a19563659e710b9080678397fbcffdb68746f5eefe3655",
+      "line": 1
+    },
+    {
+      "path": "crates/printer/src/util.rs",
+      "contentHash": "59d984c9b7586592faaa8fc146a67346ece2aed3365f8ccc8a211c12744d9484",
+      "line": 1
+    }
+  ],
+  "claims": [
+    {
+      "purpose": "component-name",
+      "text": "Search result formatting",
+      "citations": [
+        {
+          "path": "crates/printer/src/lib.rs",
+          "contentHash": "1d81cc139f7aa416b909ebf69baafe2b025bf7d11143f5ddf9f68a923b69c6d8",
+          "startLine": 1,
+          "endLine": 21,
+          "excerpt": "/*!\nThis crate provides featureful and fast printers that interoperate with the\n[`grep-searcher`](https://docs.rs/grep-searcher)\ncrate.\n\n# Brief overview\n\nThe [`Standard`] printer shows results in a human readable format, and is\nmodeled after the formats used by standard grep-like tools. Features include,\nbut are not limited to, cross platform terminal coloring, search & replace,\nmulti-line result handling and reporting summary statistics.\n\nThe [`JSON`] printer shows results in a machine readable format.\nTo facilitate a stream of search results, the format uses [JSON\nLines](https://jsonlines.org/) by emitting a series of messages as search\nresults are found.\n\nThe [`Summary`] printer shows *aggregate* results for a single search in a\nhuman readable format, and is modeled after similar formats found in standard\ngrep-like tools. This printer is useful for showing the total number of matches\nand/or printing file paths that either contain or don't contain matches."
+        }
+      ]
+    },
+    {
+      "purpose": "component-role",
+      "text": "Formats matching results as readable text, JSON messages, or aggregate summaries.",
+      "citations": [
+        {
+          "path": "crates/printer/src/lib.rs",
+          "contentHash": "1d81cc139f7aa416b909ebf69baafe2b025bf7d11143f5ddf9f68a923b69c6d8",
+          "startLine": 1,
+          "endLine": 21,
+          "excerpt": "/*!\nThis crate provides featureful and fast printers that interoperate with the\n[`grep-searcher`](https://docs.rs/grep-searcher)\ncrate.\n\n# Brief overview\n\nThe [`Standard`] printer shows results in a human readable format, and is\nmodeled after the formats used by standard grep-like tools. Features include,\nbut are not limited to, cross platform terminal coloring, search & replace,\nmulti-line result handling and reporting summary statistics.\n\nThe [`JSON`] printer shows results in a machine readable format.\nTo facilitate a stream of search results, the format uses [JSON\nLines](https://jsonlines.org/) by emitting a series of messages as search\nresults are found.\n\nThe [`Summary`] printer shows *aggregate* results for a single search in a\nhuman readable format, and is modeled after similar formats found in standard\ngrep-like tools. This printer is useful for showing the total number of matches\nand/or printing file paths that either contain or don't contain matches."
+        }
+      ]
+    }
+  ]
+}

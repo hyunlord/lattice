@@ -1,0 +1,1645 @@
+{
+  "schemaVersion": 1,
+  "targetId": "component:module:server/config/database.js",
+  "summary": "Configures PostgreSQL connections and defines database schema migrations.",
+  "author": "Codex (external agent)",
+  "sources": [
+    {
+      "path": "server/config/database.js",
+      "contentHash": "0912dbfd38440fc9e4cb12d2f9f56dfe77c29e7c964d5d27bea4c2128b0490fb",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20160619080644-initial.js",
+      "contentHash": "2c60b34dc0d61ac5ba23bb81d80c6b52808054cc7d10203ecabdd2c9d93b7864",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20160622043741-add-parent-document.js",
+      "contentHash": "bc41ca406a4041f916b4169bf07891aed6b412301f9f44c2e1d8bc2956046330",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20160626063409-add-indexes.js",
+      "contentHash": "53a374438978207a7f5983a3516fb49ee3415d84e7c757092a9159e0d8146bd0",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20160626175224-add-revisions.js",
+      "contentHash": "48d737884a693062af4a51e537dc4682550250675a2fa2381de14bbb21c5c1f5",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20160711071958-search-index.js",
+      "contentHash": "5d2b37433b77a10824549aeed9fc37e845b82813c55e85cb597ff9c285a7d96e",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20160726061511-atlas-creator.js",
+      "contentHash": "b24f06ba0ea25a40fe342dcbe65a40190b85632f1610fa206631c22fb809e843",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20160812145029-document-atlas-soft-delete.js",
+      "contentHash": "083b74a68fdc8878c3def6d08253dc924da19d034bdc8d882fc7a48dd3d8331d",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20160814083127-paranoia-indeces.js",
+      "contentHash": "e60451c3d1e21eb5a712cd4a3856d673e52be334fb18067cf3cc5fa5ec3c523b",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20160814095336-add-document-createdById.js",
+      "contentHash": "093fd8f59282eb9ff40100e1529cb09ecfe8e2bce7c8e6aed0af5d78e4b06baa",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20160814111419-add-document-collaboratorIds.js",
+      "contentHash": "44aa0619fba008eb6391efd164130e3828ce6bbdf804803cdd437d3bd3eb20c7",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20160815142720-app-collection-urlId.js",
+      "contentHash": "190a4d2587528a6d6f01ea604bd8bd77dd4fb01a712dc8139b212631d1ea78b0",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20160816082738-add-revision-index.js",
+      "contentHash": "5d7e208821061ae9077dc18dce50c114ee4f7f2cd7ea3d028daab89e2897efc6",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20160824061730-add-apikeys.js",
+      "contentHash": "5bb994d13a5aca9709baee9f81c2c1c36f664377e1e200b99a84a83445850530",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20160824062457-add-apikey-indeces.js",
+      "contentHash": "9c3c873e61287ee72331fd1b679f6bee2e901a241ea8adc4d95f96f3bc07fea8",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20160911230444-user-optional-slack-id.js",
+      "contentHash": "d9a93dabf2bcd95b127b48f310cd59f5822bd169cc8abc255bfdaa6d79fed66e",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20160911232911-user-unique-fields.js",
+      "contentHash": "36db62b044ebb69b60140099883ae0492176e792ccaba23e17339d018a17ec8c",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20160911234928-user-password.js",
+      "contentHash": "b6c1a329ae74f0d40c16aa615903f369129624ff60f9715108c57e55b553b200",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20170603185012-add-collection-documentStructure-migration.js",
+      "contentHash": "1cb61410c0df08fad1f43812a4bc6c5932de8cc3d388bead54841ea67e017087",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20170604052346-add-views.js",
+      "contentHash": "464f5f7ea773c7d41de48a2a622af00afc46aa7595367244bfb6e18e0b5ebc98",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20170604052347-add-stars.js",
+      "contentHash": "fb66e01ed5c9ff0acdffcca993cb3437f52cc541ccc2f9f9ad6393d585e206fe",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20170712055148-non-unique-email.js",
+      "contentHash": "af7693a2f2798e2e586019557b942e12b8341423bd30fb1066a4c477bbf2de64",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20170712072234-uniq-slack-id.js",
+      "contentHash": "8e792a5302ceecc53162bfcee8a98e017449e85189c63938472889fd70b722dc",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20170729215619-emoji.js",
+      "contentHash": "c7b21a4c5c974bfc46105e4f006de213760b26d4e9f6f4d91fa53bc66f04ca19",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20170827182423-improve-references.js",
+      "contentHash": "73d9e11ded9e8d93e679ead3aafa8a948d636b205081f32a60ab12483d1e2fce",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20170904202454-allow-null-username.js",
+      "contentHash": "7a2b0601d46ea60cfb42ccb30079c59a358a6c30bc276d23a070d399a4cdd698",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20171010042938-add-event.js",
+      "contentHash": "8410ad6f25a06389d2fd797b5ca34b2bd1557fac680b2eada68145f87ab62b4c",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20171016012353-remove-collection-navigationtree.js",
+      "contentHash": "2f1397a5a69c52ce474521177e76aac8be94476dd13977c447bcd95dc8ffd43c",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20171017055026-remove-document-html.js",
+      "contentHash": "895a13ebb5d6b7369c3202c3a56f33d90cd0f0e7a6edb6d3dd754440d76567f7",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20171019071915-user-avatar-url.js",
+      "contentHash": "1de97eb82751144ea14412528b7fabad8dfe562f7cf971dd02080481e0398db0",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20171023064220-collection-color.js",
+      "contentHash": "1d28c2e5a046cd574c49b70fe7e63396b8653ca199eb19a64c03b4dd10b28eb6",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20171218043717-add-authentications.js",
+      "contentHash": "702b1a2101e40409883640f3a284ad723efe9d4c8d5bb534bc61a8ca42f02d43",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20171225143838-set-admins.js",
+      "contentHash": "d1ea9a45791f5cf1c6dc7bf981ba8bc70f77590183339b34924520967beb6a2d",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20180115021837-add-drafts.js",
+      "contentHash": "eab134a7152b7993417d813b828522f103e060315f143dcb2d2798bc434084d1",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20180212033504-add-integrations.js",
+      "contentHash": "24c44964291cf06159d407d99f50ca22e456d1d05b64f716e0165572d632765e",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20180225203847-document-pinning.js",
+      "contentHash": "482e78a73de7766454f44b2d3df82dad215013b1a9f61cc9e4eae4d6903875ab",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20180303193036-suspended-users.js",
+      "contentHash": "872bb70ed8151b8c9b378f848d3a826098343e08e3f01ffdf5b4309c5567d588",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20180324214403-serializer-upgrade.js",
+      "contentHash": "822948cd36ec344d1757328b6fff6432c66f09b42d43939f162f9ae20b9d6b66",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20180513041057-add-share-links.js",
+      "contentHash": "e8e40f7336a1078e24b131c6890df47f9ca7fd5b1ff01ea2d506f80064231702",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20180528233909-google-auth.js",
+      "contentHash": "e4d924abd110b3a045af181bc565489f0f412c2ade1fb4d26d0c0801cef63a42",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20180528233910-rename-serviceid.js",
+      "contentHash": "3e3231871a1e1586fc57220cf18d27f3a33a40e66dc2142ea2d6c1d66a4f5b7f",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20180604182823-user-tracking.js",
+      "contentHash": "126841a6902b3665ffaae5be3a9f52c5ef59e17318c07e3c0d17b1eb8daf0fba",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20180604191743-revoke-share-links.js",
+      "contentHash": "8f421bd726e09dbaa5a4e8a724c1d2ecde60697bdf6d369ee2e07ceae6e43636",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20180707220121-more-soft-delete.js",
+      "contentHash": "a1a31ce89518ec592785bc90dfe56a3492a7b6ff3b628f7ce625fc790e317f06",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20180707231201-remove-passwords.js",
+      "contentHash": "b52430e1261fc1f516196a362c339a150efac39f665df9493a4cd1c9681446ef",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20180708231200-serviceid-null.js",
+      "contentHash": "0c93dd5aba07cf6e008ef80680c34e83e6ce2930da47582c40006dfec6b2f9e3",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20180808061353-cleanup.js",
+      "contentHash": "d1248339c2c392a54b32ad023b47cff4d52c7aedf0e25b2f92843050dd442249",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20180819054252-disable-sharing.js",
+      "contentHash": "87a7fd45e9de084124fda310080e71f6e37ebc0c60d7369d62a1dbff61029cec",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20181031015046-add-subdomain-to-team.js",
+      "contentHash": "0d7bffb3f36094ee93516cc317d08b6846b94b7fd8a834d7bb14ea8be9617a18",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20181124000438-add-notifications.js",
+      "contentHash": "eda2167ba43cc586997f7461fbc05e4089117ccc6327a1b9104edcae4f440b02",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20181215192422-document-embeds.js",
+      "contentHash": "25d145f2c82dcc5ee40325ca8c54f81f2a6dd0488e7d6bdf1a837b1c865f5570",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20181227001547-collection-permissions.js",
+      "contentHash": "d418afd8578ccb52155167b589795c1fa3bf92156f2f797029b39e53f047866f",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20190404035736-add-archive.js",
+      "contentHash": "8658fb86dee01e397d039df0685d4c99ab87e65d208b0329c38a6e3de8488376",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20190423051708-add-search-indexes.js",
+      "contentHash": "1efce2fa82f836197d698968003d42dc869ec92d10f9cd4ba6096c00194de039",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20190606035733-events.js",
+      "contentHash": "458aa7e330bdf34141fbc9673f568def91ded62e98c9924c9eefbc585ba540f7",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20190704070630-welcome-docs.js",
+      "contentHash": "0df9f87a9e3f572f6423176fc1b1f8eea0e43815c3e9f88ba8a9ac18e78f9c27",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20190706213213-backlinks.js",
+      "contentHash": "376c1995e7e45473100a7156b9875d51fe3806e1dc05db5e722f9a0a17cbf075",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20190811231511-maintainers.js",
+      "contentHash": "614ddf100e6b6840c07860cd31a0809f178c9d9a89938d5d69da3c5490c2c705",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20191118023010-cascade-delete.js",
+      "contentHash": "b4428e5f0bc244f1db3c76b439f99e89f14121251b810ddc42404f81b342334d",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20191119023010-cascade-backlinks.js",
+      "contentHash": "c109f0b4ab29611af8d807062dc53b847981f210c56981766bf6369b17d6a22f",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20191119023011-cascade-parent-documents.js",
+      "contentHash": "1e43c59734b559b6c5d2dcf1ed50543866a2c809be326a661029890eed539030",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20191119023012-cascade-shares.js",
+      "contentHash": "f9e8bc64e7e2a788bd5cdc49405d7949aaf1fb54a35eb5c471b748c452960a16",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20191119023013-cascade-backlinks2.js",
+      "contentHash": "02f0000b68aa666f335d354c2c574209e034c90e937c37e7adba3e356b5a32eb",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20191121035144-guest-invite.js",
+      "contentHash": "20fcfe4ed992c32bb166596bfd26c20909bc2a29f242da0a0f652cc24afc490c",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20191211044318-create-groups.js",
+      "contentHash": "44f846f0220da38baf7088e465edb0b79d96cee6c7a1389f890aedb8f4299ec2",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20191211044319-create-group-users.js",
+      "contentHash": "00605e227bb89fcb5adcaab62c13094ae8a53961eac6522a96d2987ad8f5547b",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20191228031525-edit-presence.js",
+      "contentHash": "31d8bca76ad9146f0bda516ad504a7661ef1711ed8f1fa2de65c445883e635d8",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20200104233831-attachments.js",
+      "contentHash": "79904f482278b00ba4b113f8d0aa6dba06b92ec00e17bf0724f1891321e2ea8e",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20200122083721-create-collection-groups.js",
+      "contentHash": "6f31de78f2bb4a54c90d4f70cae50dbc230e9eccd371d3e25d8b3ff5b249d362",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20200316040755-document-editor-version.js",
+      "contentHash": "d07b0ed35d6c6883f56afd634c21bfffc84b79a5f3cc1c47b33adca8e16e5a34",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20200328175012-cascade-delete.js",
+      "contentHash": "d6fbe4092ad8663027c5f0bbeb71966141a3d7048eb7147d9b9ec3e438ba4103",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20200330053639-document-version.js",
+      "contentHash": "98ca549e6caddf8a52d675b38420a5ffe072f6edac732edf3ac4b2aef312f55a",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20200519032353-text-backup.js",
+      "contentHash": "19c185d057f947af28f3c98b80c945c93bae7cb25c0e6bb9128be4ccef3311d9",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20200522054958-collection-icon.js",
+      "contentHash": "7d72f4d13e82264a280a9201ee62c43d5b6d01eb211d7f4d79a916177a2ab237",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20200723055414-add-published-to-shares.js",
+      "contentHash": "f4d657d078be8127111ea62017a03e4c3340b4a591a2eae8c9e1569739dafa86",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20200727051157-add-templates.js",
+      "contentHash": "ee6b105b365f82f248190dcdc7d02655aaa563e979eab96144393f3500a14981",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20200812170227-remove-collection-type.js",
+      "contentHash": "a8130135ca879752a75add9c865e02c35fadc37ee56d3eea389ff06cee0dc7af",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20200915010511-create-search-queries.js",
+      "contentHash": "70d4583e8c9c272c11299938d6c5827712482be549a2d8114ce5ef8d4ce93291",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20200926204620-add-missing-indexes.js",
+      "contentHash": "a4496753a7621ecd2c0ab2211684225adcd81862a29bb1749ebcda0cc3f2e88b",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20201028043021-reverse-document-id-index.js",
+      "contentHash": "d439b58e4aee05f1242bed26d4151225f9227d24c02ed5b8d1addc247d71fd8b",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20201103050534-custom-domains.js",
+      "contentHash": "b2ea7739cc4713930409572e5cc51f1edcf7b3de580627e5a5e04f4c4e705275",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20201106122752-i18n.js",
+      "contentHash": "c695a2c36feef5c8d566b8a263f579427234433fd6347ab4a21ea3796458065a",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20201206210619-update-attachment-cols.js",
+      "contentHash": "15f9fa143fa4717e4215af09355b92cf744efa0a96c718615a372c3b33e79dfd",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20201211080408-attachment-no-cascade.js",
+      "contentHash": "413dccfb138618ba5fa1239e0e57cad43a56815eda4971fa0407f65b77a8473f",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20201230031607-collection-sort.js",
+      "contentHash": "27a5587045dfd0788f9b1c28db8fedabed284ed24ceb3c0b351bc60529e5fe4a",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20210110143902-collection-rename-creator-id.js",
+      "contentHash": "14a65e9087a11e098c201209d6d700637b7e34bd90c7b50568dd231f66ad4b54",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20210208062816-disable-collection-sharing.js",
+      "contentHash": "6269cbdca50bed886fad82618fb17dc5e8adf980d1925190ca6cd61445d82e07",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20210218111237-add-collection-index.js",
+      "contentHash": "112c37eaec8a1163a585e2723bfdeeb7f7b92881182e9163cc9128593196d468",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20210226232041-authentication-providers.js",
+      "contentHash": "7c96e801e64422e7bb984fcb7231e0d5b6bbc5f4472cc9508205e01b4349a036",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20210310051804-passport.js",
+      "contentHash": "ea5fdd5d9bb2d600c1b51d24a0c7460d651d5830a24ddcb25b949c829399c21c",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20210314173941-isViewer.js",
+      "contentHash": "29198f4e549e9b85761336ce9fef21cedff4ab3573e25dedb29132075829c574",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20210327005406-read-only-collections.js",
+      "contentHash": "2b2aa54f70058156a37cdd9eea1e433a53b779b905b43acc8e566d9fefefdf60",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20210418053152-share-last-viewed.js",
+      "contentHash": "e14fb2a41b6858f8f36c8a8178709c1a34978e46bf0400f36236e449ca7b18cd",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20210426055334-nested-document-sharing.js",
+      "contentHash": "cc4b877bc0da21b93f525dad26b9a291622be9100d8e724fbd1c173e18189abc",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20210430024222-marketing-tracking.js",
+      "contentHash": "1645ff529006fb1d824da8d1345ee5f5f5a0da0259ce9890f02c903360130081",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20210716064654-introduce-previousTitles.js",
+      "contentHash": "0dbe84e82296504914707af9fffed2f21e1109107dee00bcbcf504d44a0a7ead",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20210716071454-search-index-previousTitles.js",
+      "contentHash": "8598079e76985749b34243e8e4f7c02219327ce76fe3a55f330696a693ce78f1",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20210716162923-events-indexes.js",
+      "contentHash": "0294541694cbe48fb46466842f30335507b87b5029137ce31fd940b58418ea23",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20210730042450-remove-unused-indexes.js",
+      "contentHash": "0463a8b16c8003a690071e6fbc29ed5f7c9e6e28dd44ae6bc5eac8f93556cc3f",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20210730044247-remove-backup-column.js",
+      "contentHash": "2e59d0c649b4116a49d7566413d6f53613dc30209fdfe152a41c8bb42ea8cad5",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20210730044248-create-realtime.js",
+      "contentHash": "700cb4ce59b6cae017160a199f15521672d51efc19b2a4ec52d1bc688b317e5d",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20210730210120-add-fileOperations.js",
+      "contentHash": "bf5750ba6e6eda582ad737084ccd0d5ad4946f3802cddddf4af567b5debbac24",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20210915051740-collaborative-collections.js",
+      "contentHash": "842ecc32846f9d98374e487d3c73d4207a22a4897588a4d2b086cae57dcc13dd",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20210921031555-missing-cascades.js",
+      "contentHash": "d969c8648cdfcfaadba51ec11ee3327638b7f0fc59e07cf2a77adb0cb72af986",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20210923031555-missing-cascades.js",
+      "contentHash": "01e9ca61a2b6547e4cf40c5eb220a2e2625357c21b2ff65c5f8128059f2db5f1",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20211003021903-missing-cascades.js",
+      "contentHash": "23082eaa35fad9b137dd941330d91642f4d9909906eaca74c6290c864df8c224",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20211015170955-add-defaultUserRole.js",
+      "contentHash": "131697e8c0a8a77a97f37e7fd5945b3cbe450f5bd398f7f7abfe1a946b6f921f",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20211107021900-missing-cascades.js",
+      "contentHash": "5e66c24a05b722ba7d1bb239b124b301a0e85c34b2f674b7cec529a541b1eb14",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20211217054419-integration-events.js",
+      "contentHash": "f23367a0c7b75204da4237c5c58a565eb7fdcbaf9665a96d62167227091463a3",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20211218185045-remove-unused-indexes.js",
+      "contentHash": "29da6010ce2a0aab75db9d2d5efad3e8338da5f2b6b2b82a5284f291c0bc0d70",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20211218193004-documents-full-width.js",
+      "contentHash": "cfbc8eb47765ee90d0e6fc7ea6898c64fb68c1aad4f99af07be3af8e8d4a04fe",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20211221031430-create-pins.js",
+      "contentHash": "5e887ddb5f1949fa093fe2eb55629d45e6869a0a8d28a363ae53e73e0206ae2e",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20220117012250-add-starred-sorting.js",
+      "contentHash": "d442daf1f09e741da71406aff41fb6b1b3ed4df3e6f8b2a3418deb255a9cb51e",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20220127000000-index-fixes.js",
+      "contentHash": "74f97b8ed6d7e49542ce30c32f05ab9ad3e6312e6dba2d739373794ed2aeaba2",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20220129092607-add-defaultCollectionId.js",
+      "contentHash": "9ff652da0059a883001a84bd1faf2caa22e92e5a33d5142deff9f45f4871a402",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20220206225006-add-error-to-file-operation.js",
+      "contentHash": "463c3eec7d8a4b80cfad4d0b6aaa5f64509e6694757e91707b21c9dd097477ac",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20220305195830-create-comments.js",
+      "contentHash": "55cf2bf60e513607cdc53e9ffe592afe3aec6bde4daf3053f301f6844e5f3551",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20220311020825-views-indexes.js",
+      "contentHash": "77931ef4dd46bb5f7185446b40b54e84828836278d7760530e2c4ff6685ffd0a",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20220319022812-events-indexes.js",
+      "contentHash": "1977d1e0edcc97e1e7a115c99e7c9208ff981d55f32256985648911ce5cb4eee",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20220319060408-collection-create-permission.js",
+      "contentHash": "4c5daeabccaa8dc9f047a9d7bdb82f89b53934e2293dcfe72c9fe7ae43c2f279",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20220328215615-add-shareId-to-search-queries.js",
+      "contentHash": "30d94e08be1dbc878f0470d2ed7bf378e83016b197ef06892812ba7e802dbf98",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20220402032204-starred-collections.js",
+      "contentHash": "973a6ed33990e8cd61814d286caa3eb5225400205eadcf5d00736f72539926e8",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20220409222213-user-flags.js",
+      "contentHash": "dc659b28ae96a8ae8fab6cb6df85920b7c5e64a2774f5a81beebcd891388eff3",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20220409225935-user-invited-by.js",
+      "contentHash": "cbec4ff6c3719564decef909e6e16b11978b2660346969dc7a39239685211786",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20220413213537-add-inviteRequired-to-teams.js",
+      "contentHash": "98be8b2f81f2a16af7bbb06623137c90be8a0bb7c681be1bb3185e40d557dac3",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20220419052832-create-team-domains.js",
+      "contentHash": "149b78373af32bb2e78eaece79a7cb2a709b1305f450e8acc2cb15064201f958",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20220421052253-create-file-operation-format.js",
+      "contentHash": "485c2ffeb6c9bc02495c86c2c6417186467ea46dbfae56b7be8bd07a79316d63",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20220430043135-collection-sort-backfill.js",
+      "contentHash": "90cd1bc72dedbda7c747026701a5e6582d20d7803b3729d17f7ffad7e6155852",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20220521164111-create-webhook-subscription.js",
+      "contentHash": "db25b2acde54b7dec36c9eea0bface9ad9a7e1e144cf7824b154e4bf406c2f74",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20220525054603-user-authentication-expires-at.js",
+      "contentHash": "d6fc8cfaf61f5420765821748607fddc4b63386095d6b1a96f3ac872134fdf38",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20220606031139-create-webhook-delivieries.js",
+      "contentHash": "9374664283a1283f418674d8a116e0fccc8436f861695cea476b07ead28570aa",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20220702132722-add-webhooks-deleted-at.js",
+      "contentHash": "2434c3fd137f89b026062804670e1c2bf6a287c91847ff93c59590de2b81683f",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20220719121200-create-subscriptions.js",
+      "contentHash": "d835e747ae66bba02ceffa3522d16d376b62072db5697f6bac449b01f20f66e6",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20220720221531-remove-deprecated-columns.js",
+      "contentHash": "8f614df195a6a54d098afb6646e0f68279a5c1185b047bb2c19dbdfe9c697ca5",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20220722184916-remove-event-updatedat.js",
+      "contentHash": "dcba39de1f7737062ce88ae0373fadfc8781dbc79fcd3c652ec351e346b7c833",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20220810185000-scope-provider-id-uniqueness-to-team.js",
+      "contentHash": "1cff0925d69dc61735e36f78c2163affc016a022c4937391ad4cbf44fa0eacd3",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20220812115059-scope-user-auth-provider-id-uniqueness-to-user.js",
+      "contentHash": "3dbed950c2ccb3bd7a53a9ecd3261dde198bd1d4d804285620aad5c55c56412a",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20220816070527-change-column-authentication-id-nullable.js",
+      "contentHash": "5fbf50dcc9a81eaf7ae27c458ae4f1cdcad6cbfe5edf75d04a0f65ffae5ef576",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20220816175234-user-email-index.js",
+      "contentHash": "c401a798110b4175e1ed20d566bb3a14f4b7bf52163c63f91de86a46b7907185",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20220828144837-add-columns-to-notifications-for-tracking.js",
+      "contentHash": "c4c50a396d6192d2c69cdc27f91ba7714e65ff347f8cba31184c2c9bdec9a91a",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20220830215146-add-shares-views.js",
+      "contentHash": "727009027ae19752e102deb6eb279fdbf306362b411261205a69911878be75bb",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20220907132304-user-preferences.js",
+      "contentHash": "363c8ec8fd4c296512e8ce35fc78fc262400fae31bbdc3502d37793e90fccf57",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20220907140227-team-preferences.js",
+      "contentHash": "f77a89094a6b6a2ccca7d7a977e8f04b1c60cee13ac5d4ead9609b7fc7c43bfd",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20220909203454-fix-notification-constraints.js",
+      "contentHash": "decfebb0d3f4086048539b6e7c8ab4e6d7c041af278edf726d1cf82beb8a8632",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20220922073737-webhook-signing-secret.js",
+      "contentHash": "535be7082c5d8baafff8b158201f54c2fa3470f3b7fc70ba185e73562ec54a46",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20220928030442-fix-avatar-urls.js",
+      "contentHash": "adf6030126c597c54696b3da7eeedeedc95392ca9e54482c1be460f8ba8bfe52",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20221111171828-fix-user-constraints.js",
+      "contentHash": "7471dbbc535bae6e69d45f667eed4669615a1bc57d4b9cdebe2ec21aa7cafd41",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20221112152649-import-document-relationship.js",
+      "contentHash": "1ffda0ad0777313d70b7e5f1b415db3839a042f76b295c10e793c44ae3bb358d",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20221112162341-attachment-tracking.js",
+      "contentHash": "8a3432b3310e8286a27c8c0da22355bf74df31d6c96ee54de53c5fe7b4dd62d9",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20221120151710-attachment-expiry.js",
+      "contentHash": "f14b462cd204c127e9ea488d38d6e9641c3306670eb85ed62125f6ec4b998d38",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20221206163421-add-share-url-slug.js",
+      "contentHash": "8ae48e491dd56553bfb75afecf3dfdc13ab9b98652fe057a698804c62d412e68",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20221218013627-fix-webhook-subscription-constraints.js",
+      "contentHash": "31a5e08d8d1d27baa1810a2bb3401909319eb95e43042fd9dd783d5af8b0e70b",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20221219013835-fix-integration-constraints.js",
+      "contentHash": "39ff0bebc75ffd0efd838d50f0ec129d9bbdff2c62619137bfc65577a9e371a0",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20221230234256-add-stars-cascade.js",
+      "contentHash": "d635d6f51d7d65fde055357cd2e682c08efe5b8e2bf40c48a918f23286971c2d",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20230101144349-integration-indexes.js",
+      "contentHash": "faf1d5a2c156da368def5cd64330dd3711c562570567617f9e61f56e9185335d",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20230204191035-update-tsvector-trigger.js",
+      "contentHash": "d3622e2ccacd5a252209cc8132805bb156d5e8494e3880e52461bf25aea0f5c4",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20230314013103-move-notification-settings.js",
+      "contentHash": "5ccb65272ae30c16da39b7451b7d30b5397b1ada382899d1d5c81b38a1153a2d",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20230317144617-remove-user-username.js",
+      "contentHash": "bf8bacddba325552dd932ec3c96df1c974fcf5fad30bbed24fd8645c3693cffd",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20230330181038-remove-column-userId-from-documents.js",
+      "contentHash": "685e42631b41ef42f41e972ba846cd28ef93754f3a0359e034b50d71f4c94c5a",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20230403120315-add-comment-to-notifications.js",
+      "contentHash": "bd5cffacd47996adb9cbf0259148a4841e36a2ea942618cf54dba6e6258fe130",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20230419124305-add-archivedat-col-to-notifications.js",
+      "contentHash": "187c8ec800d89c91b259624794720181c00fe1820d48e551c9356c4cd7331636",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20230419132159-add-indexes-to-notifications.js",
+      "contentHash": "f98025bb9b5934390fa80092713329ec085ceb9d58f76f189603859dcc2ceba5",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20230429005039-collection-admins.js",
+      "contentHash": "2e0615dee282f9bbd473feb7b8af3b8e1fa983f9629a80bdb3bf9141c910084e",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20230430213332-remove-notification-settings.js",
+      "contentHash": "216a69dae5f3644d6f39ad63d87159bb46e63fb9a153c975fc6ec5375cb1711d",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20230621004649-add-include-attachments-file-operation.js",
+      "contentHash": "b62360816e2427fe020cd2a79ec5368dc1f0b709770e216187be21d5c75511e8",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20230720002422-add-insights-control.js",
+      "contentHash": "62d97f4f7f1a133a0b11e907778b6f3822dbbe1fc37ed95213cd911333382738",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20230723231806-fix-file-operation-constraints.js",
+      "contentHash": "daabd99589b9ddbe8c385fa254c3e0f07ad69dd495655e25ee5f5d39cc5da65c",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20230815063830-add-emoji-to-revisions.js",
+      "contentHash": "0908c66d32974ced120e5ff95d76fe75f61f2cef1ef341b91e4db4840f6c3406",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20230815063834-migrate-emoji-in-document-title.js",
+      "contentHash": "f8960a72a41e5c79f9cd372296e20fec56948973e3a467e53f41ee0c22ff509a",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20230827234031-migrate-emoji-in-revision-title.js",
+      "contentHash": "f8960a72a41e5c79f9cd372296e20fec56948973e3a467e53f41ee0c22ff509a",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20230920032853-add-key-index.js",
+      "contentHash": "54d4a0df2fa06b27123d1128e7ece5cdf8e08046ad7a546f1182b4113a3771f6",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20230921071140-rename-collection-groups.js",
+      "contentHash": "72b21796af102db7682352e0abea1cfd4ce085e5993b19b97a323092bc8b4f6e",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20230922105047-rename-collection-users.js",
+      "contentHash": "2bde66a76e3b74cf620beec10cc9e4f9d51c1fa38c3d931fee892090941de4ea",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20231001032754-file-operation-paranoid.js",
+      "contentHash": "82cb0e3f78bc818f5f478c5e79b8884a815ea980ee4879e534e4fea47398d6f4",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20231101021239-share-domain.js",
+      "contentHash": "ecbdea4c94d3182dcd1d7c0e33beba5eed8cc9fb55bbe22559062bd50b84a7ad",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20231103114720-add-column-index-to-user-permissions.js",
+      "contentHash": "ab579e874fc4bcffb99395d1f6716bca8598854f66c7d324108931cccac1e93d",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20231111023920-add-source-metadata.js",
+      "contentHash": "df575b60326ce2144f9dff0768e18f04cb613214b82bfb6eea3dc579c7a0a29e",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20231118195149-add-content-to-documents.js",
+      "contentHash": "e5d3ab30d7e35d3b04de33f071241de8627c21bfeff9f7992177bbbb76739883",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20231120074257-add-column-id-to-user-permissions.js",
+      "contentHash": "31cd2b5ead441946cf891d7f2da8eb362298d79be463442b9dc94afbf5ac6870",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20231120142213-add-column-id-to-group-permissions.js",
+      "contentHash": "ac73294f1689eb3a5ecc7f2cb95b10cf96313393a7e993307222d4be62345df8",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20231123022323-add-suspended-at-teams.js",
+      "contentHash": "5e886465c49be36dbe362505412865326a49d63e3dd21269150b71911b9aeb2b",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20231129011114-cascade-delete.js",
+      "contentHash": "209a1f196f5a1e36d67fc66f2dd0024e4fab56a6c47716e44f6bd287a32fe3ae",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20231206041706-search-query-score.js",
+      "contentHash": "3f458b84fbbb4014d603291dce083209bbde13ac7c49f3f9d09d36db7a40b8ac",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20231212011038-search-query-answer.js",
+      "contentHash": "e82586e49280449fea2c3ace33c8459fb0e24af4fe3f97e73e9794f044365f20",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20231227040129-update-tsvector-trigger.js",
+      "contentHash": "6362a85e611b1cd710711029142457b39ead5f9704dad1a8e356cae8f21a19e9",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20240113143315-user-permission-source-id.js",
+      "contentHash": "ccbf3e33ba6aab6ab3ba70d9a31c0145c4fa315c13c7f46243886a1972d40b01",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20240121172253-add-missing-cascades.js",
+      "contentHash": "d828694b0dc53bc58cfa78b0d2cb6086349f5d1236f4273c8f719ea389b2ad0b",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20240203061519-integration-soft-delete.js",
+      "contentHash": "188412e435df38ca708da1dfe167c8b8a805a13f5d9cbbed760835a5cec16ec7",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20240204171556-add-event-changeset.js",
+      "contentHash": "778dc56bb955b6ad0a4c175fe9c70dccd0d3aea09013105390344e1ae786e23d",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20240204185157-team-last-active-at.js",
+      "contentHash": "9558c569047ab9f3671d53b3394e84789a54863bef02aedff3caa98997ce9563",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20240216182003-add-summary-to-documents.js",
+      "contentHash": "f12d6a377d5d074f1b399052f86701cca15c620bfad8c5bd95b15e77398a8a08",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20240229034214-search-query-relationship.js",
+      "contentHash": "4dfc93c9742ce98c7f183726611ef16b76edfc11146181edf9c706822dd7d30a",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20240317171826-add-authentication-refresh-token.js",
+      "contentHash": "0aeb868656262372e1f3baadf21a0b1838d745d45857dc0a11e893ed59665821",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20240319230356-fix-user-permissions-createdby-constraint.js",
+      "contentHash": "54548155db34ade565275da5598de1b539b47cacb8db093698ed8fffea5286ff",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20240327015248-add-user-role.js",
+      "contentHash": "4e4dbf6762d211cb7aaa916af70f49b1f004db048efda03e57f87fbbe0aa2bcb",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20240327235446-role-non-nullable.js",
+      "contentHash": "7951b292b4b6f7633070aa53a6228d1979b85b686dda6eaf50bbefb907d302ab",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20240329012958-remove-old-role-columns.js",
+      "contentHash": "ae86fabcd992ef741f92815c758a40d3a70a20d3a867622ea5c367b9bb4c64b2",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20240413010743-add-options-to-file-operation.js",
+      "contentHash": "b1604d122232d1f22d62d17236c9b87ba2d8bdf2bbc615d9a6f258445e8470fc",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20240413042634-member-team-create.js",
+      "contentHash": "4cb5fb3229bf83ad1db914c9f73c55b8753472f79a0e04c5a8c1f4d6bfe16618",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20240524234042-add-content-to-collection.js",
+      "contentHash": "7b7126cff4673db18b11578b0411cbf435a862cca9e18636d2665140dd8c43a8",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20240617030911-add-apikey-expiry.js",
+      "contentHash": "4f430e60e1354e9f0c9e8ed5cd1a1a4021b076047928d66fab007392fb9cec09",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20240617151506-add-icon-to-document.js",
+      "contentHash": "ea6cab6d05f30b7d93601e34217b5cb80bfd988478ee58350043852a2b6d12b6",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20240618201908-add-lastActiveAt-to-apikey.js",
+      "contentHash": "3c20de2fca9821c0f9cdd0c95058512aa43c074b5dd02cda4f022774ed70da51",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20240625051656-remove-emoji-column.js",
+      "contentHash": "0c5f6c73b7119c4aabd97789e7a77d9d875d6599be3df60ae594b9ad3b9f4388",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20240709031512-group-permission-source-id.js",
+      "contentHash": "9297f94811d611684663923d0d54017d1f0a6ade49cc09dd657d9139d8395f5e",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20240717061527-add-column-archivedAt-collections.js",
+      "contentHash": "c21baf6f03b8f6e07f510d259a17dd1de80e543a01021b10b1f57f74c532dce0",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20240806080954-group-users-paranoid.js",
+      "contentHash": "7d42f4cc72650aff5b5eea3f8374e921b246e97aaf38b9dc4cb945d447396390",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20240809054702-add-column-archivedById-to-collections.js",
+      "contentHash": "98bac47a7256a0aec32b90cf6ccfe4e2b5c6b2f29e1b0ff9f3be044235b85714",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20240810080954-group-users-remove-deleted-at.js",
+      "contentHash": "d019db3a04c145740b4b00f1d0f921b2b2fe3b28aafcb0d0465f897cf38b77bb",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20240821001616-add-notifications-index.js",
+      "contentHash": "5158cf80bf7783142bf1ae6637d2c8d7d8a6837830a3960dbb2eb37e3ba4f4f5",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20240821002344-add-user-permission-index.js",
+      "contentHash": "df2c856ebe41520c3306f01a884bad7a517bb178bb9c638ad23e96a5018e9035",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20240821002502-add-user-authentication-index.js",
+      "contentHash": "0d207b5508b96766355faea8e423e826f99ac6933d4210d0f62b1e25fe9d4343",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20240828081032-add-notifications-index.js",
+      "contentHash": "94eadf48e6ff5d49f9440ecfbd9931e7ca9bdb0f6374ce976f709937c7f377a6",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20240912222438-add-unaccent-extension.js",
+      "contentHash": "dc65ccec2c2b303cbb42ca8f8cc2078c440f3263091049ed789d1a3f95e87524",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20240929194201-add-hash-to-api-key.js",
+      "contentHash": "33487f35de6abcea0a349c947237eb0ed7913f4f0794ead16152217dc0af8506",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20240930113921-hash-api-keys.js",
+      "contentHash": "65a0fd57fcbaf7fc8df4764090f21f4a7482c26b55f51da867c79d3a07314246",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20241013080608-create-reactions.js",
+      "contentHash": "6df89c34c33e976783956bb5ad4ad138746b7d49a83f976ac140835a38589862",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20241030235556-event-auth-type.js",
+      "contentHash": "4e620c23aabea54522a24b9305e097be28a1339e5e622ee24371291775cee2fb",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20241105132600-add-allowIndexing-to-shares.js",
+      "contentHash": "ecff2abfd74675da5ed18010c0a2543b4fe12f75956794071aadb7f436a9fa3d",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20241105203523-add-user-timezone.js",
+      "contentHash": "dca42b0083a091663b4f33dd93881a1ef5e7b3c8eb5fe2c8d6265d9160f6fec5",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20241127151705-attachment-tracking.js",
+      "contentHash": "fb75aa8cfab0f693b3e02fc0e3266360006da5b1b372866d99d849a7cafe0898",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20241219023150-group-external-id.js",
+      "contentHash": "9e72c2edc873bf84060918f24cdacce4d43eea59952abdb28a7668358ab27971",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20241231045203-add-attachments-teamId-index.js",
+      "contentHash": "6ce2fbb5bf781456eb9f1f21f203d4ea569c968400a57bef9de020e0c4bd9360",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20250125031823-add-api-key-scopes.js",
+      "contentHash": "637e6dbbc0e6c9638cc36686121468c98053a0b585e0f62142bfd7e1179a4765",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20250207120103-add-collectionId-to-subscriptions.js",
+      "contentHash": "f3ec481e15514e18b29dd181f7edf4d9283949220335ae817e11ee90c08403f1",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20250217012609-document-title-index.js",
+      "contentHash": "b4976e8491a7265692e8da1f18b1fd0cc1d01df213f31aa36e14f1de45e78949",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20250217230810-add-team-previous-subdomains.js",
+      "contentHash": "0e5384ebb9c196a265a78d8a168da58f910fa1df9de0ad5100f269ade7480850",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20250223142558-cascade-team-domain.js",
+      "contentHash": "582d89471991a708770628c1d7103673a507b8f9127bb14751fd5687a3b5ddfe",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20250225153529-add-notification-membershipId.js",
+      "contentHash": "a5aca2b2c0a252d823b8b204c6699ce36858dcd871309f5314d3bb4ca39b80fb",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20250301234423-add-name-to-revisions.js",
+      "contentHash": "e258410e28539e3c29d0117b214ba1ba9e790dc280ac09354d0d72af41ea12e0",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20250306181804-create-imports.js",
+      "contentHash": "4c7e885fc67c9e81c10d24c8c4c860c614b84ecd2891d206395b8bb5b45649ee",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20250310043011-create-import-tasks.js",
+      "contentHash": "e89b74d597c1a6968c86bbeec87e0f26cf1bd714d47727a3a5474e6717578ca9",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20250314105847-add-apiImportId-to-collections-and-documents.js",
+      "contentHash": "bb2b881ac6b08e35e8ed12186c308e2c1e77c79aa3a1cf222b4bed8fa25d049c",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20250327062414-resolve-collection-index-collisions.js",
+      "contentHash": "65a0fd57fcbaf7fc8df4764090f21f4a7482c26b55f51da867c79d3a07314246",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20250327110739-add-error-to-imports.js",
+      "contentHash": "dc8bd622ec4f999e6f284d77cc457786da5aa65ff04f9fe4ea8adbd6fd791920",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20250331231413-add-oauth-server-models.js",
+      "contentHash": "1d92995a3ebdc23993a4b111c011e202748acfcf3c549b9aa66d86de1acc60e6",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20250409184249-add-issueSources-to-integrations.js",
+      "contentHash": "1a608158027347191ae8867178017ffcc11b2fad4e038920b1956a4a239cb92f",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20250429130521-add-collection-commenting.js",
+      "contentHash": "cfc7df86c3dfe5a18247d113983cf85c249ee35695ac32468dbd733a882e0106",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20250515031645-add-revisions-deleted-at.js",
+      "contentHash": "b04928f7f71c548afb40cb960811b2a1ce96533b85f17c5ffe07b93f170c50b7",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20250530235814-add-collaborator-ids-to-revisions.js",
+      "contentHash": "734c6c07f705c08e8d7389761fe8edc794116f345dd5226b2a99cecb3662a4f6",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20250531002344-add-description-to-teams.js",
+      "contentHash": "17f0a689326103177891cb5da033af995b6b6fb3ac5182d1f909f0253f841d22",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20250531003217-add-show-last-updated-to-shares.js",
+      "contentHash": "c37e8a3cd84c9fd33e70b71cb8a93acefd33518e109e234e4d54a96f0f51078b",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20250601223331-migrate-backlink-to-relationship.js",
+      "contentHash": "de7005ea11f856d7829412e51e91881c51c3ca32e46098d556fbdcd9f116ac16",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20250630100046-add-oauth-to-search-queries-source.js",
+      "contentHash": "3c63ae163fab11b511ff982444559dbc521fad7daf48761b9968da68e3844cfd",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20250630175759-add-collection-id-to-shares.js",
+      "contentHash": "c4cb9c2d9cfc0ada209452f0c4383e05415b57e63db9012f3ce8ca158342e403",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20250719063818-add-documentId-to-fileOperation.js",
+      "contentHash": "592af26fa56d37c5930b0a5baaeacb859cbf371cad1f9a1a2d195063cdae65de",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20250810173939-remove-team-name-nullable.js",
+      "contentHash": "93d5d0e8ba5aca8d64c7c5283aeae863fbfe85dd35967107005cd956b62c9a14",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20250810210844-add-data-to-notifications.js",
+      "contentHash": "dd6022dd429befdf631cd873fd7596d7d01b03808847bd19dda5738c03ee1d4b",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20250826204500-modify-shares-unique-constraint-with-revoked-condition.js",
+      "contentHash": "0e724975747774719edc9a01ee96fedf0a50d17268e050729fee887faac34f5d",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20250828094500-update-group-user-role.js",
+      "contentHash": "20adad38b079ce37ea91ee981c84e22edfaa2b2b22d2e95a61062c5540080a20",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20250830060500-add-expires-at-to-authentications.js",
+      "contentHash": "d16897c5629317265692756543328c736450adab5d9ed9308f01651e2bb1b332",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20250907220205-add-missing-indexes.js",
+      "contentHash": "a2361d2018e43d1913faafe98da3e1fdbc26638419d9d837b4bdf91ebf04cda1",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20250913202342-add-source-metadata-to-collections.js",
+      "contentHash": "b12be40475493149eb83d645c411361336d96e67123808b66e515f9b27a32895",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20250917124000-fix-shares-collection-cascade.js",
+      "contentHash": "74d22bd46f257d0d1d6f9b727ec5a4712101fcec0a9953c632e5d95efff5c87d",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20251001133733-shares-show-toc.js",
+      "contentHash": "b3c564ab458d62a5223fa2d1bad8615c5ea22e8599c8b23e69e36f039cb763a6",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20251013204025-add-group-to-notifications.js",
+      "contentHash": "e729a5ac3f77dea70716d93be955590f5ab95b104d92b0537dd6965a25cd2f51",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20251020204139-create-emojis.js",
+      "contentHash": "5de899716c888b8aaa4c91b5801a8f000d1b180755166d403a52d26ca15c592d",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20251023031630-add-disable-mentions-to-groups.js",
+      "contentHash": "4dcc1c75c5ee9cde6e3bd8fe32024ef1a254ac636821d341ede5392a4b7ebe83",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20251029200610-add-description-to-groups.js",
+      "contentHash": "9a8ed11b9c4d488df489c120e1126b98a5790809240d3e8e876032aa86dbea42",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20251104013803-document-language.js",
+      "contentHash": "4705898e24b64ffa84f0ef4827fce4e865044fdc9f59eba7f0d0155f0365fdcc",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20251125012929-add-popularity-score-to-documents.js",
+      "contentHash": "60ec5f6be13fd78114f1f9d3cfe3607273cc7937eac6f923e5baf68dbd99d2ac",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20251125012930-add-popularity-score-index.js",
+      "contentHash": "0f91a9544eeef6197aa6dfb157e623583dc2e050e6ddbe51feb1a74d0e6b85d4",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20251203124235-add-client-type-to-oauth-clients.js",
+      "contentHash": "ac7cd1e77e778e2c54f8ba767b8345c368291adb85238515e5dfcd563108e805",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20251212232400-add-authentications-service-teamid-index.js",
+      "contentHash": "119827a06973377f78dfdc99fb3882ab4420b022b01843f1809314aa4f28b5b0",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20251212232500-add-integrations-service-type-settings-indexes.js",
+      "contentHash": "98c21e31d398c2d9d861941cd51239a6a09c8e402a9604c14e0452dbe2e6d4f1",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20251213004745-add-search-queries-source-index.js",
+      "contentHash": "b90254433b16a2f1f1ca3e27dbe47ca8c294c02916c20d7bdae718a3bcfdaadc",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20251217161051-remove-unused-indexes.js",
+      "contentHash": "88fb01236e2bb310f8e789b15e10fd5589efc8aaeae13fca3f6105bb221556ec",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20251217204338-add-integration-performance-indexes.js",
+      "contentHash": "9562d02b2d3101b64a3f47e7cc777a28ed72ea147c741b42896edd92a7da10bf",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20251218223224-add-grant-id-to-oauth-models.js",
+      "contentHash": "f2e2eb980c12100363b6693c355bc932b239bd0d62d676dc53d974aaa0b52fe3",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20260104155138-team-passkeys-enabled.js",
+      "contentHash": "9afddaadab05364bfd6af8cfd9214f9c8a2aca3bfc0c32c8799aff971eb38a91",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20260104155139-create-user-passkeys.js",
+      "contentHash": "777871fdd4fda198159f3800bb84cb7b42f9ce84949630f2332d88c9a6881239",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20260107213946-create-access-requests.js",
+      "contentHash": "a1816eb85dd55a845bfb0209e43d6e3d1b05159e566f0436f3019307d05f10dc",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20260107220000-add-access-request-to-notifications.js",
+      "contentHash": "2d39d891bc51c6c1734b27f8ba06fb6557fc6dac95725ea1db22418a4a96c7f6",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20260215215401-update-oauth-clients.js",
+      "contentHash": "86a157039336cafe989be98b6a344f3b1e66485eaca8ef374d8cd0334fa183fa",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20260221131935-add-client-credentials-to-authentications.js",
+      "contentHash": "dad1cfaf1115ac81b96c756ae72b79a2666f1dc756e6c7f8b08eaf8d1b4883bf",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20260222000000-add-settings-to-authentication-providers.js",
+      "contentHash": "bc94703f20e9883e2d7b4e6e6ae76c22631474dd076ba46d29231b1f28cea38c",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20260222000001-create-external-groups.js",
+      "contentHash": "60ad583853e2b1d4428980164e92e0bc7d6029efa5446704dc127f8e4ea6722d",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20260224021319-add-subscription-event-indexes.js",
+      "contentHash": "cbc61ae9a9305fc2281d5c41f650750041d32ecd9c1a20319b539a7aefdb5c97",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20260314000000-add-team-flags.js",
+      "contentHash": "cd3b286c07f5ee9cc1707cc6ee410a522470630f398016d01e43291e1bf5e840",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20260319221917-add-collection-template-management.js",
+      "contentHash": "6750eba39ffcf5704577af84109bdcee176de8cbcd67155916aebd306a4d4fc0",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20260320000000-add-team-guidance-mcp.js",
+      "contentHash": "3bdff787080c2eaddf9a31a2f89476a4d7c5f38f367379a71d4a6bade8844c6e",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20260330000000-create-share-subscriptions.js",
+      "contentHash": "e632b2b09a67428a0d6b5e6c7f8dcfe9daa936a2347a2242395a87a9aa49129b",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20260331000000-add-allowSubscriptions-to-shares.js",
+      "contentHash": "dc7f23aa9ba8d0edd599a8c2b662a8ff44fa30967b2c8ca9083b95aa2776b60c",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20260401000000-add-documentId-to-share-subscriptions.js",
+      "contentHash": "94f176fa384b9e66053a60250a9618a580e0856a8807d37d2aa331d7fe363cf2",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20260411000000-add-title-and-iconUrl-to-shares.js",
+      "contentHash": "e0c74132d79df91e03835bc636a48a876b44c25f684d698b79fe843aacc3ef39",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20260416000000-create-document-insights.js",
+      "contentHash": "2369673d4ad938690021392d5ee90168ec010753e6a0d6c37d1d03becc7a43f6",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20260419000000-add-period-to-document-insights.js",
+      "contentHash": "2cbcb517daec37fdc1c45377ae7f76b115860d4f5259151c8e97443b3406642a",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20260514000000-cascade-resolved-to-reply-comments.js",
+      "contentHash": "c60b9180a1ecbd204650ab5528fdfff2c4c053a5865d92c81cd2a9685e28968b",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20260515000000-make-imports-integration-nullable.js",
+      "contentHash": "8bdab3e8685d277ab0caaa9dfa8be2a1cea41dae4cb8e15c7d09588e8645a2f9",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20260516000000-add-import-task-phase-and-import-scratch.js",
+      "contentHash": "97eb2ae09f68cc232f3a8053ea77b614c99cf38c09fcfccf82381c18b74b0296",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20260526092836-add-document-foreign-key-indexes.js",
+      "contentHash": "6a903413be4e37e2f85743acb00e808679b0595da2342debcec59cac8359ed26",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20260603000000-commenting-access-preference.js",
+      "contentHash": "90f00606b4705ee84a9d1c35d2423bafbb0569bf21c666777264da051f556adc",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20260604140753-increase-url-column-lengths.js",
+      "contentHash": "1c295295b7346d341732165b03a42918eba56efad94237bfa0e99eb2c001c070",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20260611000000-drop-team-collaborative-editing.js",
+      "contentHash": "c6eec8adeb39eeb3f94f88b7df22ae72e7d1cde7a90c7d2852da26b141bd40b5",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20260619000000-add-duration-to-search-queries.js",
+      "contentHash": "4cbe3ae72b97206073bdbaeb5aaeb1af73aa7b379f7be319b1da9fc274dddae4",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20260621000000-add-search-queries-user-created-index.js",
+      "contentHash": "88b285e1acbc84b0495a8d9a8997d47f7e433848992ec5d909fe012fcdcfce80",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20260714000000-add-mcp-to-search-queries-source.js",
+      "contentHash": "f32561431fbcbed02e3a7d698bfa6177034858d02d8812c0c496186f1015a6e2",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20260718134528-add-search-queries-created-at-index.js",
+      "contentHash": "88f1b4b0fcae8311ff70239c97bf6ca36648a8ab9ed98df4f8775d7acfda61e1",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20260803143858-add-documents-team-search-vector-index.js",
+      "contentHash": "f16356b871f9c7599b452dcc45b91fef9b4de67be717bb77bf4c6c23da08b331",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20260804130000-add-documents-active-popularity-index.js",
+      "contentHash": "e5c8632e8198b39919f7dd5eb7fd9f068343b36984606dafd0ba8408970e4d9d",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20260805120000-add-revisions-source-metadata.js",
+      "contentHash": "1dd7eb2f7a205729ee49da6582ad6e83c8d8b19769a2c1bf8dfc04c4e5f0c6f8",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20260818120000-add-deletedById-to-documents.js",
+      "contentHash": "24be36484504e072f1837b2eab352bc2a6c036f2f655b2b10874d3daa1ae4900",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20260821164024-add-preferences-to-documents.js",
+      "contentHash": "55bd83c28347a12aae880ec2fe5ef50b146f5ec8217534fbcdd2df1aa8389108",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20260902125149-limit-document-search-trigger-columns.js",
+      "contentHash": "e4d0b27ec1ba09ab6dd2958d7774c6873bdc81fdbc10aeed48e7e5162a06753c",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20260903145856-add-document-createdbyid-index.js",
+      "contentHash": "a30ec3f5537aa2ac203408d94b1bead4abc0a0609bfe11a5794d179909b3a823",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20260917003126-add-deprecated-reason-to-documents-and-collections.js",
+      "contentHash": "4b09638c2a88100cf5b727e506ec4366f7b7a34f614eb84c5f59b212415a16cf",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20260921120000-tolerate-tsvector-limit-in-document-search-trigger.js",
+      "contentHash": "f792e5bec4969da1aa432dd46af79168cf6f371168a20f32a03222aff4cbbf09",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20261006120000-add-views-user-id-updated-at-index.js",
+      "contentHash": "2024506ae14282a65465167d27de250304c3564938bb6c9c3a1c32fd18f67402",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20261009120000-add-icon-and-color-to-groups.js",
+      "contentHash": "f8b0d4ff7bcec9ae7fbdbc3da3221b51178eb1992378459a8f117e24cf0b53cc",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20261010120000-add-client-metadata-documents-to-oauth-clients.js",
+      "contentHash": "710bbf8f16435c77b9b92ffb9fe0c16a8c6dbcdf726cc12656a9013a3d8b4a9d",
+      "line": 1
+    },
+    {
+      "path": "server/migrations/20261010120001-add-oauth-client-id-indexes.js",
+      "contentHash": "a1fb2b4381b8ca35c17a2da2698b0b5282ceeeb9789518b9039343341e0070d2",
+      "line": 1
+    },
+    {
+      "path": "server/typings/index.d.ts",
+      "contentHash": "5e4b8a610bdb3961e4ce9c4bc52d22b8953c12b1c0b576e43cb31b8060afef97",
+      "line": 1
+    },
+    {
+      "path": "server/typings/outlinewiki__koa-passport.d.ts",
+      "contentHash": "97fcb258df43fa3bae3d5e87545559881c941b9795246816e61c421358f8d569",
+      "line": 1
+    },
+    {
+      "path": "server/typings/outlinewiki__passport-azure-ad-oauth2.d.ts",
+      "contentHash": "dcba668b24967cc4e25ab00681fef2dc13552d63df7d813bb3a5b377ba9cf1b0",
+      "line": 1
+    },
+    {
+      "path": "server/typings/passport-google-oauth2.d.ts",
+      "contentHash": "a52ab984ff3e7a6ba1108af93a850a9dd42b71cf9e0b32a990314407219f292e",
+      "line": 1
+    },
+    {
+      "path": "server/typings/passport-slack-oauth2.d.ts",
+      "contentHash": "e1f3444114dbe334ebccdc352f0462f4af3dcf4d86005a45cb2a1e04bdd43b41",
+      "line": 1
+    },
+    {
+      "path": "server/typings/sequelize.d.ts",
+      "contentHash": "7d22a8bccf1ca9d42503a8031e0358e3595341104ac980c7bb075a8505755451",
+      "line": 1
+    },
+    {
+      "path": "server/typings/tunnel-agent.d.ts",
+      "contentHash": "f6974c56d97c7dad25bea877c36b4f3b803abdb8c25409124f8058b14e166082",
+      "line": 1
+    },
+    {
+      "path": "server/typings/yazl.d.ts",
+      "contentHash": "b75fb5994f8b1950c406ecb11c27022b4749bd3d12ddaf068476730ac62e471d",
+      "line": 1
+    }
+  ],
+  "claims": [
+    {
+      "purpose": "component-name",
+      "text": "Database configuration and migrations",
+      "citations": [
+        {
+          "path": "server/config/database.js",
+          "contentHash": "0912dbfd38440fc9e4cb12d2f9f56dfe77c29e7c964d5d27bea4c2128b0490fb",
+          "startLine": 1,
+          "endLine": 23,
+          "excerpt": "const shared = {\n  use_env_variable: process.env.DATABASE_URL ? \"DATABASE_URL\" : undefined,\n  dialect: \"postgres\",\n  host: process.env.DATABASE_HOST,\n  port: process.env.DATABASE_PORT || 5432,\n  username: process.env.DATABASE_USER,\n  password: process.env.DATABASE_PASSWORD || undefined,\n  database: process.env.DATABASE_NAME,\n};\n\nmodule.exports = {\n  development: shared,\n  test: shared,\n  \"production-ssl-disabled\": shared,\n  production: {\n    ...shared,\n    dialectOptions: {\n      ssl: {\n        rejectUnauthorized: false,\n      },\n    },\n  },\n};"
+        },
+        {
+          "path": "server/migrations/20160619080644-initial.js",
+          "contentHash": "2c60b34dc0d61ac5ba23bb81d80c6b52808054cc7d10203ecabdd2c9d93b7864",
+          "startLine": 1,
+          "endLine": 25,
+          "excerpt": "module.exports = {\n  up: async (queryInterface, Sequelize) => {\n    await queryInterface.createTable(\"teams\", {\n      id: {\n        type: \"UUID\",\n        allowNull: false,\n        primaryKey: true,\n      },\n      name: {\n        type: \"CHARACTER VARYING\",\n        allowNull: true,\n      },\n      slackId: {\n        type: \"CHARACTER VARYING\",\n        allowNull: true,\n        unique: true,\n      },\n      slackData: {\n        type: \"JSONB\",\n        allowNull: true,\n      },\n      createdAt: {\n        type: \"TIMESTAMP WITH TIME ZONE\",\n        allowNull: false,\n      },"
+        }
+      ]
+    },
+    {
+      "purpose": "component-role",
+      "text": "Configures PostgreSQL connections and defines database schema migrations.",
+      "citations": [
+        {
+          "path": "server/config/database.js",
+          "contentHash": "0912dbfd38440fc9e4cb12d2f9f56dfe77c29e7c964d5d27bea4c2128b0490fb",
+          "startLine": 1,
+          "endLine": 23,
+          "excerpt": "const shared = {\n  use_env_variable: process.env.DATABASE_URL ? \"DATABASE_URL\" : undefined,\n  dialect: \"postgres\",\n  host: process.env.DATABASE_HOST,\n  port: process.env.DATABASE_PORT || 5432,\n  username: process.env.DATABASE_USER,\n  password: process.env.DATABASE_PASSWORD || undefined,\n  database: process.env.DATABASE_NAME,\n};\n\nmodule.exports = {\n  development: shared,\n  test: shared,\n  \"production-ssl-disabled\": shared,\n  production: {\n    ...shared,\n    dialectOptions: {\n      ssl: {\n        rejectUnauthorized: false,\n      },\n    },\n  },\n};"
+        },
+        {
+          "path": "server/migrations/20160619080644-initial.js",
+          "contentHash": "2c60b34dc0d61ac5ba23bb81d80c6b52808054cc7d10203ecabdd2c9d93b7864",
+          "startLine": 1,
+          "endLine": 25,
+          "excerpt": "module.exports = {\n  up: async (queryInterface, Sequelize) => {\n    await queryInterface.createTable(\"teams\", {\n      id: {\n        type: \"UUID\",\n        allowNull: false,\n        primaryKey: true,\n      },\n      name: {\n        type: \"CHARACTER VARYING\",\n        allowNull: true,\n      },\n      slackId: {\n        type: \"CHARACTER VARYING\",\n        allowNull: true,\n        unique: true,\n      },\n      slackData: {\n        type: \"JSONB\",\n        allowNull: true,\n      },\n      createdAt: {\n        type: \"TIMESTAMP WITH TIME ZONE\",\n        allowNull: false,\n      },"
+        }
+      ]
+    }
+  ]
+}

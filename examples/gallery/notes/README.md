@@ -1,0 +1,9 @@
+# External, source-cited gallery notes
+
+These notes were authored by an external Codex agent from the pinned source files. Lattice does not call a model or contain repository-specific naming rules. Component names and roles are interpretations, labeled **AI summary**; citations link to the exact source revision and lines. They do not create dependencies or assert observed runtime execution.
+
+Each repository directory contains `provenance.json` with the source repository and commit, plus `notes/*.json` using the normal interpretation schema. Every component record binds the complete component source set by path, SHA-256 and line. Each title and role has a separate claim and one or more exact source excerpts. Source hashes, membership and excerpts are verified when exporting; stale or invalid claims are not displayed as fresh summaries.
+
+The gallery manifest's optional `notes` field points to `notes/<id>` relative to its directory. The builder rejects path escapes, symlinks, non-JSON records and a mismatched repository/commit. It sets `LATTICE_INTERPRETATION_DIR` explicitly, so inherited local notes cannot affect the build, and never writes to the source checkout. Omit `notes` for the deterministic fallback. `testOnly: true` builds a direct-link map without listing it on the gallery front page, avoiding introductions before a blind human test.
+
+For another repository, ask an external agent to request `lattice_interpretation_context` with `scope: "components"`, read the member sources, then use `lattice_write_interpretation` with `component-name` and `component-role` claims. Sentence citations must entail the text; structural validation of a hash and excerpt is not a semantic truth check. Do not infer execution order from imports. Refresh or remove notes whenever the source pin changes.

@@ -98,3 +98,9 @@ git diff --check
 ```
 
 Node >=20 is supported; CI runs Node 20, 22 and 24. The library, CLI, static viewer and live-refresh client are checked with strict TypeScript. Authored sources live in `src/`, `cli/`, `viewer/*.ts` and `browser/`; `npm run build` emits the existing `dist/`, `bin/` and `viewer/*.js` runtime paths. Generated JavaScript is included in npm packages and excluded from Git. `@types/node` supplies development-only Node 20 API declarations; browser builds use DOM types without Node globals. bs-mobile integration is PR-only; Charter & Kin is read-only. No Graft implementation is copied. Licensed under MIT.
+
+## Source-cited component labels
+
+The default home uses a directed structure diagram. External agents can request `lattice_interpretation_context` with `scope: "components"`, `compact: false` to inspect its exact component memberships. After reading the bound sources, write two short cited claims through `lattice_write_interpretation`: `purpose: "component-name"` for the human label and `purpose: "component-role"` for the responsibility. Preserve the returned target ID and complete source set. Every claim requires a content hash, exact excerpt and file/line range; citation validity alone does not establish that the prose is true. Never convert static imports into a claimed runtime sequence.
+
+This is an optional external-agent workflow, not an embedded model or API. Without an agent/key, or when source hashes change, the diagram still uses deterministic source descriptions and identities. The checked-in gallery notes are explicit example inputs bound to pinned repositories; they are not built-in repository-specific rules.

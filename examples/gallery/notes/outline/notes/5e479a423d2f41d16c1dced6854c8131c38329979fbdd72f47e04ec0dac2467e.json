@@ -1,0 +1,1961 @@
+{
+  "schemaVersion": 1,
+  "targetId": "component:module:app/actions/definitions/collections.tsx",
+  "summary": "Offers collection creation and editing actions with permission-aware dialogs.",
+  "author": "Codex (external agent)",
+  "sources": [
+    {
+      "path": "app/actions/definitions/collections.tsx",
+      "contentHash": "8ff5742f5c9d2d0ecc1078ebd875e556cf4626e0dff57b68882330b7142ff3d7",
+      "line": 1
+    },
+    {
+      "path": "app/actions/definitions/comments.tsx",
+      "contentHash": "1678e636304ada682797a23f8564c168a759ae97c8c7d007dad85a5a634cf3a6",
+      "line": 1
+    },
+    {
+      "path": "app/actions/definitions/common.tsx",
+      "contentHash": "d14bc6d32c3b699f876fffbd68de59c78aac7b9ed1eb5ada6fcd1e84a0159fda",
+      "line": 1
+    },
+    {
+      "path": "app/actions/definitions/documents.tsx",
+      "contentHash": "1eea56809e000ad40795a89fb5ea005546b73544963fa90ec5773f677bcddf8f",
+      "line": 1
+    },
+    {
+      "path": "app/actions/definitions/integrations.tsx",
+      "contentHash": "371cc2cce7a29627fb4c2a41ce633a0a109cc01e7477fc96b5b6b3d4f11fd68d",
+      "line": 1
+    },
+    {
+      "path": "app/actions/definitions/navigation.tsx",
+      "contentHash": "75bec9b4fa42b20292d7ec071c558df5c6332c29006baebbb0e8b812bb2c4481",
+      "line": 1
+    },
+    {
+      "path": "app/actions/definitions/notifications.tsx",
+      "contentHash": "747549596e4a6858c6cd00cc34bb6d0d88a08728adbc30d9fecac73fded44592",
+      "line": 1
+    },
+    {
+      "path": "app/actions/definitions/revisions.tsx",
+      "contentHash": "cf68aef481fc8cd45040e97b6d88383abb22dffe015e3d54e3e10528b40704ee",
+      "line": 1
+    },
+    {
+      "path": "app/actions/definitions/settings.tsx",
+      "contentHash": "0babd31c24c77b5deba6df4c3333a44e34b481a03876958ca88ac5c46e43abee",
+      "line": 1
+    },
+    {
+      "path": "app/actions/definitions/webmcp.ts",
+      "contentHash": "7c0bafd68860b06ce41e08a78f8f529a6a43b6fe968b720b566a974d655b9df6",
+      "line": 1
+    },
+    {
+      "path": "app/actions/index.ts",
+      "contentHash": "7c86dfdbc175804f45df39708e0d3dd4a9c2979eee21c8b50449700f6750c0fc",
+      "line": 1
+    },
+    {
+      "path": "app/actions/root.ts",
+      "contentHash": "b9057ee5583f724436686fef5e69f822e7006d62f9b71931df26a7cbd8623b3e",
+      "line": 1
+    },
+    {
+      "path": "app/actions/sections.ts",
+      "contentHash": "6706dbc1cf80693aa6fab98c440ce4c8f4291f17a5944436f8f542b09083b3cd",
+      "line": 1
+    },
+    {
+      "path": "app/components/ActionButton.tsx",
+      "contentHash": "e9c6de277245970ba413dc46d580eaf72306433c581ca10a0d3423efa1211231",
+      "line": 1
+    },
+    {
+      "path": "app/components/Actions.ts",
+      "contentHash": "8189261acc585385ea1f6726cb78858102d27d97580938c5761ea565a18c53a4",
+      "line": 1
+    },
+    {
+      "path": "app/components/Analytics.tsx",
+      "contentHash": "75bc9d9f56bd1189bf710a9c05dd2e386f9f8f443b6aee9124fe29405f6546be",
+      "line": 1
+    },
+    {
+      "path": "app/components/Avatar/Avatar.tsx",
+      "contentHash": "823ddede72028798f590205bcf9a0e4414fd8145a97858f6f25b568ece18dc90",
+      "line": 1
+    },
+    {
+      "path": "app/components/Avatar/AvatarWithHoverCard.tsx",
+      "contentHash": "379846f642e588a4846a4fc6396325c3e0bb3f1fea9e064af3993589599ecc20",
+      "line": 1
+    },
+    {
+      "path": "app/components/Avatar/AvatarWithPresence.tsx",
+      "contentHash": "38719d2a1ba388c5e17ee7834f792a155042bf24bdb4f876350d8f6f70189c0f",
+      "line": 1
+    },
+    {
+      "path": "app/components/Avatar/index.ts",
+      "contentHash": "7662112a25e4f2898c535e6c937d9baa7de9601bdb27ebfcfb9a48fd8eb04954",
+      "line": 1
+    },
+    {
+      "path": "app/components/Avatar/Initials.tsx",
+      "contentHash": "b75b1bcb52d74e638271ab891ed45b5a4995c752ada394ce9471dfb5abf9baf5",
+      "line": 1
+    },
+    {
+      "path": "app/components/Badge.ts",
+      "contentHash": "6029b87986707246d7b3d9881359b41bdc13e796047992656d432f466ebdaca2",
+      "line": 1
+    },
+    {
+      "path": "app/components/Button.tsx",
+      "contentHash": "35073bcbda34c1e4a8c18de733eb637d1ee860a6cc16f1f97a92946d769a3dde",
+      "line": 1
+    },
+    {
+      "path": "app/components/Collapsible.tsx",
+      "contentHash": "74e223e390841505af76e0d70b6459f2a0962a6fc8a1dc52256e9a653573088e",
+      "line": 1
+    },
+    {
+      "path": "app/components/Collection/CollectionEdit.tsx",
+      "contentHash": "32068edbb677fea54f235545cc5694ec52a4e8cebd113c233a66517f9888be6f",
+      "line": 1
+    },
+    {
+      "path": "app/components/Collection/CollectionForm.tsx",
+      "contentHash": "246d3da7c2e91ab362f98a04b480cadac840be544cf92cfc594551928a2abb41",
+      "line": 1
+    },
+    {
+      "path": "app/components/Collection/CollectionNew.tsx",
+      "contentHash": "4c857d37ea7f541f46e8528eafab0beb10f613c73aae3aa5e1e7a3e83be26778",
+      "line": 1
+    },
+    {
+      "path": "app/components/CollectionDeleteDialog.tsx",
+      "contentHash": "f910d386396f4abe54417a2f2c6a53d6b3a90e6432220f7220af73ced392c388",
+      "line": 1
+    },
+    {
+      "path": "app/components/CollectionDuplicateDialog.tsx",
+      "contentHash": "926305f09b64c2128a072c03c31acf14b6be342db5b713d159b8810ee50e5c7f",
+      "line": 1
+    },
+    {
+      "path": "app/components/CommandBar/useRecentDocumentActions.tsx",
+      "contentHash": "6b7938def8f3091acce7fe0027486acb7e5e6bd6b188a6e747b405f4dd16fc4e",
+      "line": 1
+    },
+    {
+      "path": "app/components/CommentDeleteDialog.tsx",
+      "contentHash": "c8c2889a8be1ef271c91891e9f67704024d80bb3783365ea6b8fdfc885243786",
+      "line": 1
+    },
+    {
+      "path": "app/components/CopyToClipboard.ts",
+      "contentHash": "3eaba40cb5e19a82f9eb4eade20b8508c8b44dc7e22c11dbfffe984822cf5351",
+      "line": 1
+    },
+    {
+      "path": "app/components/DelayedMount.ts",
+      "contentHash": "12c785ec4898c3f63f64a3187b58c32a8fc52c86f0233c373a131ae3977d8892",
+      "line": 1
+    },
+    {
+      "path": "app/components/DialogContext.tsx",
+      "contentHash": "f9b60b1efb58a067b32172c2528407c5efabbf839abf151330bf7b3f07e56f52",
+      "line": 1
+    },
+    {
+      "path": "app/components/Dialogs.tsx",
+      "contentHash": "69b4950e3749b9be98f33c3ac65aad135cb5259628e5cee2d3fe25720ac54518",
+      "line": 1
+    },
+    {
+      "path": "app/components/DialogTitle.tsx",
+      "contentHash": "9c24e21c4876ccdfd91cb977162ffc276577ef53fd6dc73c428511bd04e21211",
+      "line": 1
+    },
+    {
+      "path": "app/components/DocumentArchiveDialog.tsx",
+      "contentHash": "a713009d42ffa81a014962b7479cc8f72cf28d7fc8d08b3da6857b3afe12be7a",
+      "line": 1
+    },
+    {
+      "path": "app/components/DocumentBreadcrumb.tsx",
+      "contentHash": "7a32e17de8c1cf07a930ffab786213179b9b520625ca44d50e805de7a22fc526",
+      "line": 1
+    },
+    {
+      "path": "app/components/DocumentCard.tsx",
+      "contentHash": "1155a7dca675f60fceb70359860d6dd25fb548be2abfe4658d5be46c7c822ce2",
+      "line": 1
+    },
+    {
+      "path": "app/components/DocumentChip.tsx",
+      "contentHash": "e1f6d6bcaceb180fc388fb7e70507afc004a454b5694bf4b556dc49481360eb6",
+      "line": 1
+    },
+    {
+      "path": "app/components/DocumentExplorer/DocumentExplorer.tsx",
+      "contentHash": "dc0399ee741e306fcc995af87c75d9a490807186739a5295f2ef8e83a4662a04",
+      "line": 1
+    },
+    {
+      "path": "app/components/DocumentExplorer/DocumentExplorerNode.tsx",
+      "contentHash": "a2d83cd0cdb793105fa0cb2edd3ddc6b0f7cb67430e00e67a91d94dbd0e090bc",
+      "line": 1
+    },
+    {
+      "path": "app/components/DocumentExplorer/DocumentExplorerSearchResult.tsx",
+      "contentHash": "11ec0221f57800a5ed4a01233adfd6b19abac898e9325e3fb159c37758b68bd2",
+      "line": 1
+    },
+    {
+      "path": "app/components/DocumentExplorer/index.ts",
+      "contentHash": "41ecb91e2d5be67082021bdf6098797fe2ee724d9e689ff614880097105e2f00",
+      "line": 1
+    },
+    {
+      "path": "app/components/DocumentListItem.tsx",
+      "contentHash": "f6519d3bfb1cae323bab4710ff225ce3c742622d575fda8ab002f6308119a7ab",
+      "line": 1
+    },
+    {
+      "path": "app/components/EditableTitle.tsx",
+      "contentHash": "c887ffe048840d73a5fcf142c091b4cf032233624250a08b66c5014916e50449",
+      "line": 1
+    },
+    {
+      "path": "app/components/ErrorBoundary.tsx",
+      "contentHash": "24fc05c1544d7e71dd0b33acdf5f3083bf5a17510f5afaed1a8c2db781f47f3d",
+      "line": 1
+    },
+    {
+      "path": "app/components/Fade.tsx",
+      "contentHash": "e1a84260061e776119ab837805cf6dc59bec9ac535f36524c8974719cddd21a6",
+      "line": 1
+    },
+    {
+      "path": "app/components/Flex.tsx",
+      "contentHash": "07f618f95608ea5fb30947030b91b8f3a026226f1e8ce35d082c3a6804fdb4e4",
+      "line": 1
+    },
+    {
+      "path": "app/components/Guide.tsx",
+      "contentHash": "aee4fbf3ee096b0573773d2a04f212f03a4213266d9a420db81def2561902783",
+      "line": 1
+    },
+    {
+      "path": "app/components/Heading.ts",
+      "contentHash": "0516e91c5030460ceffe4dd30b1dd467a9422b093cac31930048ee3e13759a13",
+      "line": 1
+    },
+    {
+      "path": "app/components/IconPicker/components/PopoverButton.tsx",
+      "contentHash": "b3bcee577945892449c1f38e12cdeb72886dc7f2304483cc67761c9b83871471",
+      "line": 1
+    },
+    {
+      "path": "app/components/IconPicker/index.tsx",
+      "contentHash": "632ec4700d3cafb87a07365ca056873a84a9236306cb20534aeaec2e66f7841c",
+      "line": 1
+    },
+    {
+      "path": "app/components/Icons/CollectionIcon.tsx",
+      "contentHash": "c4ccf4369795a83f78921508800fabc0686a1b949eda2b0c25b8cb16506ef46f",
+      "line": 1
+    },
+    {
+      "path": "app/components/Icons/ConnectedIcon.tsx",
+      "contentHash": "f806468c0348001dbcaf61268eaff277da8dbf3ebe3537318d3678d5e9227f69",
+      "line": 1
+    },
+    {
+      "path": "app/components/InputSearchPage.tsx",
+      "contentHash": "14d5e695bcd5281e8794d9284b837e9106dade35de7a035a7413064dae3fbfe6",
+      "line": 1
+    },
+    {
+      "path": "app/components/Lightbox.tsx",
+      "contentHash": "a5927895ddc8965ce6c6df304eac974a89e3d15163beb736a6fe54c864d39e7b",
+      "line": 1
+    },
+    {
+      "path": "app/components/LightboxState.ts",
+      "contentHash": "8efe3bb81799c8bdcda34118901afff659799fc0e1558ce8f639bc8640e351e8",
+      "line": 1
+    },
+    {
+      "path": "app/components/List/Placeholder.tsx",
+      "contentHash": "3757a20ba0e6fc82493b203aa7654b5e7ff94bbcf65d18b3ca053a034d5a847b",
+      "line": 1
+    },
+    {
+      "path": "app/components/Menu/ContextMenu.tsx",
+      "contentHash": "6d444604926f63928061fbb40a3f36065f1d5ffb7c4acae78bc3912ab91fb578",
+      "line": 1
+    },
+    {
+      "path": "app/components/Menu/DropdownMenu.tsx",
+      "contentHash": "db8a6b25194f9fc2c73a25c19364e6b38eba6739c889b08fa16af69bbeabc129",
+      "line": 1
+    },
+    {
+      "path": "app/components/Modal.tsx",
+      "contentHash": "ec09cec923fd057d020f392a55954d58f8f4f6950dc3b0cfdb45bc9c826455b1",
+      "line": 1
+    },
+    {
+      "path": "app/components/NotificationBadge.tsx",
+      "contentHash": "28d28f47944a0e8542de499a5ced3b81c080f441b9e6057befa6fe4b2bbb5685",
+      "line": 1
+    },
+    {
+      "path": "app/components/Notifications/AccessRequestActions.tsx",
+      "contentHash": "13bd074a7eda35ad3803be3f08b6cbee7911d6627036cdef6a667d47260bf9ca",
+      "line": 1
+    },
+    {
+      "path": "app/components/Notifications/NotificationListItem.tsx",
+      "contentHash": "9646d093098a93539c7fa432452365d78d56ba0ebddca59271574a3379758d3d",
+      "line": 1
+    },
+    {
+      "path": "app/components/Notifications/Notifications.tsx",
+      "contentHash": "2e7f7201356a49648d7ad4dfb513a1beaa109982e7868a4300514c9626ef898e",
+      "line": 1
+    },
+    {
+      "path": "app/components/NudeButton.tsx",
+      "contentHash": "7557f32ba0e5b65d7d5e1cc839d6c7bb7c42d5e24e41d11690e492bc009e090c",
+      "line": 1
+    },
+    {
+      "path": "app/components/OneTimePasswordInput.tsx",
+      "contentHash": "78c8168972fcad901e2dc040d1a6f2fa6b59148d7c0379d70854b7e350911fa5",
+      "line": 1
+    },
+    {
+      "path": "app/components/PinnedDocuments.tsx",
+      "contentHash": "a19f78326a88fb96134f778a37d30d34911c2b7f9bae5a5a417b5b8c0ac0bb97",
+      "line": 1
+    },
+    {
+      "path": "app/components/PlaceholderText.tsx",
+      "contentHash": "d627e8a59a0c9743c3c5c8e80a1d0ae971b62118d02768e49b133162f4894d02",
+      "line": 1
+    },
+    {
+      "path": "app/components/primitives/components/InputSelect.tsx",
+      "contentHash": "6465e8cecce1719f7e9999fb36c9964463dd17428b6440c798760f950344609e",
+      "line": 1
+    },
+    {
+      "path": "app/components/primitives/HStack.tsx",
+      "contentHash": "63f815d92f77cdba721c6d4755b3b141e94a99491dc953726eee59c848847911",
+      "line": 1
+    },
+    {
+      "path": "app/components/primitives/InputSelect.tsx",
+      "contentHash": "8a0e35a4449235b5aa44469691bc7d388d99f06b5400e001a10049ce258530ef",
+      "line": 1
+    },
+    {
+      "path": "app/components/primitives/Menu/MenuContext.tsx",
+      "contentHash": "62d733c43cfb5e6e6cc8b42993ec9a7857ce611658649e0bf1c95fee00b89176",
+      "line": 1
+    },
+    {
+      "path": "app/components/primitives/Popover.tsx",
+      "contentHash": "decd3e7a77787bf08acbf8dcf15295c19e4444c71671ea8eed15e47af63aae3f",
+      "line": 1
+    },
+    {
+      "path": "app/components/primitives/SplitButton.tsx",
+      "contentHash": "2ba2c3e7ed44e30026eae9e5c7b371e46e2152b7e472cd939773a605e48ec91a",
+      "line": 1
+    },
+    {
+      "path": "app/components/Reactions/Reaction.tsx",
+      "contentHash": "2b72f6b0c6cd1fa579fec046f1bf621b215a4f794ca18ec7d447d2af2b396314",
+      "line": 1
+    },
+    {
+      "path": "app/components/Reactions/ReactionList.tsx",
+      "contentHash": "fc449c7954eb2df92945c1f0b59752e2609dd5ac4dfe079be739b523d449f88d",
+      "line": 1
+    },
+    {
+      "path": "app/components/Reactions/ViewReactionsDialog.tsx",
+      "contentHash": "667d499b22fce6cf3db6388ec20863bbdcbf7cf79029467d8c3ffa054fe36e3c",
+      "line": 1
+    },
+    {
+      "path": "app/components/ResizingHeightContainer.tsx",
+      "contentHash": "6451a1c4c9a1ff9216584a40ff659b5fa058f092774b5026d17f509616fbea76",
+      "line": 1
+    },
+    {
+      "path": "app/components/Scene.tsx",
+      "contentHash": "6c4205de176eec242877146e5e65812b09abeb415ba9ad51c5e9f16a335978ab",
+      "line": 1
+    },
+    {
+      "path": "app/components/Scrollable.tsx",
+      "contentHash": "7e7c30e7869f40e9ad4672cf87e5f5a79b19c7e9ad0fef6cc912f94afe764d1d",
+      "line": 1
+    },
+    {
+      "path": "app/components/Sharing/Collection/AccessControlList.tsx",
+      "contentHash": "35d80ea8d43c08ac91f62598bd5cc5fe4c3c0f0b50b0f715bf63c1d26d4f97cc",
+      "line": 1
+    },
+    {
+      "path": "app/components/Sharing/Collection/PublicAccess.tsx",
+      "contentHash": "c2d678b4cf07e8136d9fe87bef0678db86d09b9658f8e0bf9b4c4a7f54911408",
+      "line": 1
+    },
+    {
+      "path": "app/components/Sharing/Collection/SharePopover.tsx",
+      "contentHash": "0ee96a06a4ac454a32d1bafa5c3ad3a0d8da0c3792cc73186593395c39f605b1",
+      "line": 1
+    },
+    {
+      "path": "app/components/Sharing/components/Actions.tsx",
+      "contentHash": "0b5b6133861e767a02ce2b0192a51180d10c051fdb753b828b77d0fd048f91e1",
+      "line": 1
+    },
+    {
+      "path": "app/components/Sharing/components/AuthenticatedIsland.tsx",
+      "contentHash": "00c02f1e05fe9738cf03675f0e06a1672f9400e58eb2e7d6102fec0a1266be77",
+      "line": 1
+    },
+    {
+      "path": "app/components/Sharing/components/CopyLinkButton.tsx",
+      "contentHash": "9319a2f63e0f64e4e25e4dc75097cbd2d25389106a8ab150c40cb2caf29666c4",
+      "line": 1
+    },
+    {
+      "path": "app/components/Sharing/components/GroupMembersPopover.tsx",
+      "contentHash": "352cdd01c09daeef6d7b4d10a7a69b472289d72512733cd28818dff28202a528",
+      "line": 1
+    },
+    {
+      "path": "app/components/Sharing/components/index.tsx",
+      "contentHash": "9df86fdc09d6998b2159fefd7fd84dfa5c659521e28fdac7714dbd695490f13f",
+      "line": 1
+    },
+    {
+      "path": "app/components/Sharing/components/ListItem.tsx",
+      "contentHash": "5f1eef74897fc578e4392b774426fbc10bc7994f580b3e7766145598c7dcc811",
+      "line": 1
+    },
+    {
+      "path": "app/components/Sharing/components/Placeholder.tsx",
+      "contentHash": "3262afda8ec5ac448df6ae9818d29900457a0f27f2ab39f3e680265673945f77",
+      "line": 1
+    },
+    {
+      "path": "app/components/Sharing/components/SearchInput.tsx",
+      "contentHash": "9a91ee609ae0109e891ac9fcf73b27fa47eb24782e031c32b1392bb4685b298c",
+      "line": 1
+    },
+    {
+      "path": "app/components/Sharing/components/ShareSubscribeForm.tsx",
+      "contentHash": "a6a78dcd2fd4fe4fb77e36dab95e7c1de8e0311ad427de3603ba6fff21c2ed10",
+      "line": 1
+    },
+    {
+      "path": "app/components/Sharing/components/Suggestions.tsx",
+      "contentHash": "d89d931c0c536f71130700e9751d05a161c41e35c5469f804a80e595edc51463",
+      "line": 1
+    },
+    {
+      "path": "app/components/Sharing/Document/AccessControlList.tsx",
+      "contentHash": "75ddfa55a9d5a70d2b1fd62d65f09918c6d0c6c4a4f14c03c0cc7250b020b514",
+      "line": 1
+    },
+    {
+      "path": "app/components/Sharing/Document/DocumentMemberList.tsx",
+      "contentHash": "ba983178a19cee517b108d1b558d7269eed3ebcbd932522944617371a3280695",
+      "line": 1
+    },
+    {
+      "path": "app/components/Sharing/Document/DocumentMemberListItem.tsx",
+      "contentHash": "a151fc4c36a7b3e60154e5725a8c79206d473d78c975630ffc9eeba2dbe0cbbd",
+      "line": 1
+    },
+    {
+      "path": "app/components/Sharing/Document/index.tsx",
+      "contentHash": "13af387391ba03a6d46f959c3fbb2f47cceb1e1d7ef73ed085c79cf98814f5cc",
+      "line": 1
+    },
+    {
+      "path": "app/components/Sharing/Document/PublicAccess.tsx",
+      "contentHash": "6e92a24999b4e1c5174cd3c7cf905eb49262c2d2d7573a9b681ea0e132facd68",
+      "line": 1
+    },
+    {
+      "path": "app/components/Sharing/Document/SharePopover.tsx",
+      "contentHash": "fcd0f72526bd291904b59c3d7d21d23fd46bb2891e97277be694f7198830afd3",
+      "line": 1
+    },
+    {
+      "path": "app/components/Sidebar/components/ArchivedCollectionLink.tsx",
+      "contentHash": "12328ddfad7f9f5590d052d9d483c301353a2ab9b5705f83fc341ee8c32ed1c2",
+      "line": 1
+    },
+    {
+      "path": "app/components/Sidebar/components/ArchiveLink.tsx",
+      "contentHash": "6f81d472931bcd4749243a5ec715dcca9cf4e1df2bdf905919053d003ad77bf5",
+      "line": 1
+    },
+    {
+      "path": "app/components/Sidebar/components/CollectionLink.tsx",
+      "contentHash": "2edbb7b450092da238a52f3aeecb0182659d781f28b70841be65b46d131500dd",
+      "line": 1
+    },
+    {
+      "path": "app/components/Sidebar/components/CollectionRow.tsx",
+      "contentHash": "8f4058dc0449bb107465f179196a5fd93d4de652e4b627127a16943fb9e9494c",
+      "line": 1
+    },
+    {
+      "path": "app/components/Sidebar/components/Collections.tsx",
+      "contentHash": "98e43efadf1e919597ea52396f13232376b1208a171dcb5773add491ac521967",
+      "line": 1
+    },
+    {
+      "path": "app/components/Sidebar/components/Disclosure.tsx",
+      "contentHash": "f6ddcf537be92ca56edc835e3afb30ee7376efaf2b2c33c621e1124509ab815c",
+      "line": 1
+    },
+    {
+      "path": "app/components/Sidebar/components/DismissableSidebarAction.tsx",
+      "contentHash": "bc5491e20797de49acf20ae678e4684c060a38f18501a09fa55848aa30ddf155",
+      "line": 1
+    },
+    {
+      "path": "app/components/Sidebar/components/DocumentLink.tsx",
+      "contentHash": "834d397a8f03996f9d166eb5521e104ef8f172c8aa28e522796b588828704a6b",
+      "line": 1
+    },
+    {
+      "path": "app/components/Sidebar/components/DraftsLink.tsx",
+      "contentHash": "7e7718cb858abd92784cf386cedde8a8106a85df54eccfc802077f520b986893",
+      "line": 1
+    },
+    {
+      "path": "app/components/Sidebar/components/DragPlaceholder.tsx",
+      "contentHash": "521c9bfda9d2bd8a98f8539317ad58ea3cde30128f2ab6e79f7d29c4dea332c3",
+      "line": 1
+    },
+    {
+      "path": "app/components/Sidebar/components/DropCursor.tsx",
+      "contentHash": "7014249ae94b4bb287fcde9bda5ada8a59b196a41c846a2cb1c2f88829dbe3f5",
+      "line": 1
+    },
+    {
+      "path": "app/components/Sidebar/components/Header.tsx",
+      "contentHash": "a1ccbc2672ae9954351896cdd75f9dd465a2cffb30709995318a2cba1ad07e0e",
+      "line": 1
+    },
+    {
+      "path": "app/components/Sidebar/components/HistoryNavigation.tsx",
+      "contentHash": "aec49ca51fdc1e410f37c69073d84c2e81fb1b3e59683711d9eef7ec41bd76ef",
+      "line": 1
+    },
+    {
+      "path": "app/components/Sidebar/components/PlaceholderCollections.tsx",
+      "contentHash": "4cd1ebd293c46c100f80769748f53e55e9a8870af988c2738fb00545b4d79576",
+      "line": 1
+    },
+    {
+      "path": "app/components/Sidebar/components/SharedCollectionLink.tsx",
+      "contentHash": "e4a94e42c261a3dced7d05b9b5e4baa4f30a493054b4138cd5ba36e49bd5228d",
+      "line": 1
+    },
+    {
+      "path": "app/components/Sidebar/components/SharedDocumentLink.tsx",
+      "contentHash": "cbd0bc49ef92ac6f55388d5e48fa8f05e994d8e4f46ce2dcb12a6bbb3dfe962b",
+      "line": 1
+    },
+    {
+      "path": "app/components/Sidebar/components/SharedWithMe.tsx",
+      "contentHash": "b3b310749718a8415ccd1abca4c5fc3d46bacb7d3a1aeb4b51259bac06d36349",
+      "line": 1
+    },
+    {
+      "path": "app/components/Sidebar/components/SidebarAction.tsx",
+      "contentHash": "adee078b922b9ef781d611858c24883e788cf4b597c489e708b3da1311837781",
+      "line": 1
+    },
+    {
+      "path": "app/components/Sidebar/components/SidebarActions.tsx",
+      "contentHash": "451633cd4128798549069bbdf16acc02124105fcc3d5ee17bbf76dd0d640ba02",
+      "line": 1
+    },
+    {
+      "path": "app/components/Sidebar/components/SidebarButton.tsx",
+      "contentHash": "2b0a22f8c01dfc0299d16546ca55eae18c4af1ef1f9132132ba806062545ef80",
+      "line": 1
+    },
+    {
+      "path": "app/components/Sidebar/components/SidebarContext.ts",
+      "contentHash": "27ab7a2535eaa8b9b3be539468d065b1fa15e23c76017b2ec5747e3517859c66",
+      "line": 1
+    },
+    {
+      "path": "app/components/Sidebar/components/SidebarExpansionContext.ts",
+      "contentHash": "74e8bca243aa1bdcd297bfec92bd98f533c3016f1265ea28b400aae1f0919bd2",
+      "line": 1
+    },
+    {
+      "path": "app/components/Sidebar/components/SidebarNavigation.tsx",
+      "contentHash": "9dc4801632ea82e686b30706b3aab91cd9f862693b7335d6947d4336ac4bd7b2",
+      "line": 1
+    },
+    {
+      "path": "app/components/Sidebar/components/Starred.tsx",
+      "contentHash": "0f1a6f708431a20989915d9fbe73857b21b9b09c7ac0c1cf7b068d6d5f4ad2ec",
+      "line": 1
+    },
+    {
+      "path": "app/components/Sidebar/components/StarredLink.tsx",
+      "contentHash": "dad420d6b06dca0b04a0ac38da8efe81144f01352c296e991c2aaad44583d82a",
+      "line": 1
+    },
+    {
+      "path": "app/components/Sidebar/components/ToggleButton.tsx",
+      "contentHash": "172f1b896eec9399e5d9c1e219a90f8da213ace3b0630a90f5fa4630523232ee",
+      "line": 1
+    },
+    {
+      "path": "app/components/Sidebar/components/TrashLink.tsx",
+      "contentHash": "a7c2d482c6c55c170cb617a0daad3051438f219cc9e6941adaa8ab4a76ed29a9",
+      "line": 1
+    },
+    {
+      "path": "app/components/Sidebar/components/Version.tsx",
+      "contentHash": "c5660e1c105e4bfb9f595fe32aff9bc8a61902a4c70073747636bab5f852e182",
+      "line": 1
+    },
+    {
+      "path": "app/components/Sidebar/hooks/useDragAndDrop.tsx",
+      "contentHash": "20bc5a83c03b0be977aa4fc7d20f8d620a6090b0cfdf0c326497a4a292822a61",
+      "line": 1
+    },
+    {
+      "path": "app/components/Sidebar/hooks/useSidebarLabelAndIcon.tsx",
+      "contentHash": "67307495fa7f2dda9077c77e7ddde3228d79a9ec6ebc68ac4cef90afa0269d18",
+      "line": 1
+    },
+    {
+      "path": "app/components/Sidebar/Settings.tsx",
+      "contentHash": "3e935da10fd75712118e0c0a4b3479cc0d3d8897621dd61127df6b63cfbc73e0",
+      "line": 1
+    },
+    {
+      "path": "app/components/Sidebar/Shared.tsx",
+      "contentHash": "393aa89ddcc3c36ea11cd14f902e1ef9fdc38d33e7281edc499623b2873281a9",
+      "line": 1
+    },
+    {
+      "path": "app/components/Sidebar/Sidebar.tsx",
+      "contentHash": "767c2529b018fd4667b9adbf356572bf6d57649e5fd7f6ce0f944fe416553c1c",
+      "line": 1
+    },
+    {
+      "path": "app/components/Star.tsx",
+      "contentHash": "a00ae6934bd393fa642bee83f7c134247d3ce8be5d2de0b002b427cded5b5cf3",
+      "line": 1
+    },
+    {
+      "path": "app/components/Switch.tsx",
+      "contentHash": "320d546c946181bc6e593f8dbf8102e504d271addf5805f3e9a13153b25acc93",
+      "line": 1
+    },
+    {
+      "path": "app/components/Template/TemplateForm.tsx",
+      "contentHash": "9516e52928d5bd4e7297000fa6c976cf64b190bd59192542c5618488218864f9",
+      "line": 1
+    },
+    {
+      "path": "app/components/Text.ts",
+      "contentHash": "5709a130285e70de797e9a1bcd1a82950f6c993a8acc5d9970d268e55286a9bf",
+      "line": 1
+    },
+    {
+      "path": "app/components/TooltipContext.tsx",
+      "contentHash": "4daea7043b5fe715ac28828558cbf768a0f59dfbfea26c6a72428fbd05f97d4d",
+      "line": 1
+    },
+    {
+      "path": "app/components/UnreadBadge.tsx",
+      "contentHash": "479db1cfcf6231c2ab008c5ef49a359bd137406c17a94a791869f89e2344ec95",
+      "line": 1
+    },
+    {
+      "path": "app/components/UserDialogs.tsx",
+      "contentHash": "6b1eca960919f79663b7448c24ad1aeef4da17d895980141540c06de81839e24",
+      "line": 1
+    },
+    {
+      "path": "app/components/UserHoverCard.tsx",
+      "contentHash": "503f2d8f5533239df4b4d478283016124f968c2e79ff41c5bf8a8f851b9dbf2d",
+      "line": 1
+    },
+    {
+      "path": "app/components/UserLabel.tsx",
+      "contentHash": "f7e19eba518e6efd3f90263b9f27ecf60c317a53da2a5d97ad2f775150243255",
+      "line": 1
+    },
+    {
+      "path": "app/components/WebsocketProvider.tsx",
+      "contentHash": "93ec2780389d91af9f6fb8de9f5f5dd668c15e1d246139752538fc34b9db73ba",
+      "line": 1
+    },
+    {
+      "path": "app/editor/components/ComponentView.tsx",
+      "contentHash": "a3f38f4a147bff9e73bce30bf1d6fba9ed93b8346b4e4bc6bf49695ac6becf9f",
+      "line": 1
+    },
+    {
+      "path": "app/editor/components/FindAndReplace.tsx",
+      "contentHash": "ffe3be6696f701bb276e672c9aae6a307d8be2cb514434d759a8bb6d30de8ccd",
+      "line": 1
+    },
+    {
+      "path": "app/editor/components/FloatingToolbar.tsx",
+      "contentHash": "0591dfebcc25e2a2d50369dc33a36f85dfb6f4c9fadefe34734754f23f20e466",
+      "line": 1
+    },
+    {
+      "path": "app/editor/components/MentionMenu.tsx",
+      "contentHash": "8a054b890f10cff13fee9eb4a69b360cc49fc930ab379f925fa3811f3bcba3d5",
+      "line": 1
+    },
+    {
+      "path": "app/editor/components/NodeViewRenderer.tsx",
+      "contentHash": "929fe2e363d656d3b7aa5bd1e7792e84941fd208364c037bbf6684b04500676a",
+      "line": 1
+    },
+    {
+      "path": "app/editor/components/PasteMenu.tsx",
+      "contentHash": "55becb3d463be747224d05b339c4b542cdc4bea6f09dd4c75c01410fff02a32b",
+      "line": 1
+    },
+    {
+      "path": "app/editor/components/WithTheme.tsx",
+      "contentHash": "da7b1c7aa6bef7232406c0ee7347a4bae9e28cda1a87557bcb83a23f2f451d74",
+      "line": 1
+    },
+    {
+      "path": "app/editor/index.tsx",
+      "contentHash": "aa9dcadc547980bbf48a0540d7eb55e5a5f4d9ada5155a1ec46ca4ffa7d2727d",
+      "line": 1
+    },
+    {
+      "path": "app/editor/menus/block.tsx",
+      "contentHash": "3c1efc228fe4aea46b3acc8e3c4a6673814a85c9cdc56be069a5cc08977d6ec0",
+      "line": 1
+    },
+    {
+      "path": "app/editor/toastNotice.ts",
+      "contentHash": "3e63e79836808646189d8479945244f043926eabc3116dafd65c9e1d4e8723e4",
+      "line": 1
+    },
+    {
+      "path": "app/env.ts",
+      "contentHash": "bfc2b912b240687bd0ed6d7c3b4e794cadf4b2472012678760922527b916f9ce",
+      "line": 1
+    },
+    {
+      "path": "app/hooks/useActiveSidebarContext.ts",
+      "contentHash": "340ca2ea379a080f9d64b0b480ac657e65176aa535a719bef3f86f4421a76494",
+      "line": 1
+    },
+    {
+      "path": "app/hooks/useBoolean.ts",
+      "contentHash": "a992a3f036dd3ebd224532ee4dd6bcdc347d690707db9b2f669b70fb04b0937c",
+      "line": 1
+    },
+    {
+      "path": "app/hooks/useClearSearchHighlight.ts",
+      "contentHash": "754ac1eb4adc72d2753b77fdd7055698e06fab6cec5142abd5e2174cdce404d5",
+      "line": 1
+    },
+    {
+      "path": "app/hooks/useClickIntent.ts",
+      "contentHash": "179af21b69edd332a839b5160ff1f2600c8ac08b65ba186b6ed0a2bd2a8c0657",
+      "line": 1
+    },
+    {
+      "path": "app/hooks/useCollectionMenuAction.tsx",
+      "contentHash": "1f1440c5f349aa0e73dd615c09e6429d6091dd3a784371034cba5eaf1402a41c",
+      "line": 1
+    },
+    {
+      "path": "app/hooks/useComputed.ts",
+      "contentHash": "6900cd5a522ba3b37ee0c71588e64e1fd63a5d5aaa562539cfb9b106d156cd98",
+      "line": 1
+    },
+    {
+      "path": "app/hooks/useCurrentTeam.ts",
+      "contentHash": "2a9f69ff43ad6074151e7599c52e3bdbaeb819b81dbdc6d49105e63bc80b3435",
+      "line": 1
+    },
+    {
+      "path": "app/hooks/useCurrentUser.ts",
+      "contentHash": "59a748621ff35c98af89d288e727ef527f0615a6031fc6ab0f56084564dc443b",
+      "line": 1
+    },
+    {
+      "path": "app/hooks/useDocumentActiveModels.ts",
+      "contentHash": "fbaa46ed88f614f3ad8d9fb98231dc68a36d172e7ae1690035cff2bdd91f481e",
+      "line": 1
+    },
+    {
+      "path": "app/hooks/useDocumentMenuAction.tsx",
+      "contentHash": "d69d63fb5074e0a1210ed98eddf10fee789c615caed3b242535d3b06d753b923",
+      "line": 1
+    },
+    {
+      "path": "app/hooks/useEditorClickHandlers.ts",
+      "contentHash": "db74c2c8fe5cb390c363ab868a3f8473234d14744893b982587b0a5d0958aa3e",
+      "line": 1
+    },
+    {
+      "path": "app/hooks/useEmbeds.ts",
+      "contentHash": "a23be5017e602f02e564fffdbf573ba70c5f8598383d2583e537236a5326dda2",
+      "line": 1
+    },
+    {
+      "path": "app/hooks/useFocusedComment.ts",
+      "contentHash": "11b9b733c0b8882843e969e165f136adf70d7e899057a2f24bf2ae7381482076",
+      "line": 1
+    },
+    {
+      "path": "app/hooks/useHideElement.ts",
+      "contentHash": "af28f14b09aca4394734c0b6e7ceeb6d092d0b84ec28cee329c80cdecc23eeb9",
+      "line": 1
+    },
+    {
+      "path": "app/hooks/useHover.ts",
+      "contentHash": "fe01b4695e5f8d8199981fc0c1ecccbb2dd76e23037281c511fbecca8eb5b5b0",
+      "line": 1
+    },
+    {
+      "path": "app/hooks/useKeyboardStickyOffset.ts",
+      "contentHash": "3b400ad1c7d3870a104d14231fad832da4d1b5cd8c1b2f8c7a36627d400aa761",
+      "line": 1
+    },
+    {
+      "path": "app/hooks/useLastVisitedPath.tsx",
+      "contentHash": "c026984f05d7e69dcaf6191c7920b82602312f191c8e552677b680231df579c9",
+      "line": 1
+    },
+    {
+      "path": "app/hooks/useLocationSidebarContext.ts",
+      "contentHash": "db3b183edf7298df1019a08fa545211e821b1abbe76ab10632ed3fa9549eeb3e",
+      "line": 1
+    },
+    {
+      "path": "app/hooks/useMenuAction.ts",
+      "contentHash": "9fb450198595a2155d70c890d4077a8db2b80603de1c39e5b5d9d0ff1ab6737a",
+      "line": 1
+    },
+    {
+      "path": "app/hooks/useMobile.ts",
+      "contentHash": "675855adac575adc75dcdbc19f063053e3d0f98d1a8687742726d91eba041754",
+      "line": 1
+    },
+    {
+      "path": "app/hooks/usePaginatedRequest.ts",
+      "contentHash": "27cd9068e68b53c4a477a3fec7ff0551638d8eea402be8e65ad0767e1d372143",
+      "line": 1
+    },
+    {
+      "path": "app/hooks/usePersistedState.ts",
+      "contentHash": "fd9d5186066501f9462fc84e79f3577519de6b8372b5fa300134d4b4c871f7ff",
+      "line": 1
+    },
+    {
+      "path": "app/hooks/usePinnedDocuments.ts",
+      "contentHash": "7d3a6d75553d0bc5956b20879563d8e7e6d49c0cda32e76054ba4401328aff70",
+      "line": 1
+    },
+    {
+      "path": "app/hooks/usePolicy.ts",
+      "contentHash": "237216e068b8877e46b1e4d2ece857a870c0fb59895153c58bb989a2bd4992bd",
+      "line": 1
+    },
+    {
+      "path": "app/hooks/useQuery.ts",
+      "contentHash": "89d7c5420d8bdafe4cf9f0c59004e416ba723ecafc3de1c86e284df7efdf9e2a",
+      "line": 1
+    },
+    {
+      "path": "app/hooks/useRequest.ts",
+      "contentHash": "e762962b38ee3ff59d5f23d8b85fc8c1a6c40df747ecf13879ecdb0f8d1580f2",
+      "line": 1
+    },
+    {
+      "path": "app/hooks/useShareDataLoader.ts",
+      "contentHash": "3de4e49cd1de597a90b6d717ca6b270f376477ccdf2340557f66f6d796c04908",
+      "line": 1
+    },
+    {
+      "path": "app/hooks/useStores.ts",
+      "contentHash": "d1abcdc17bf7806b9aa254d64a8a1125e240ddc324ffb8b7748a77595b6535e7",
+      "line": 1
+    },
+    {
+      "path": "app/hooks/useSwipe.tsx",
+      "contentHash": "347592b59feebf49d0a022b7f0c1fd60f2db0a2ce2006781b4f54b46686185f8",
+      "line": 1
+    },
+    {
+      "path": "app/hooks/useTableRequest.ts",
+      "contentHash": "a84c1cea84fa6efb04d77c4e403c1d0c0e0d2ff1c89677c55fec4a901115b1d0",
+      "line": 1
+    },
+    {
+      "path": "app/hooks/useTemplateMenuActions.tsx",
+      "contentHash": "54ee42ef05b76c80ec3037d6e6ae66f2b406a1e65c908cc45b7514320e61f20a",
+      "line": 1
+    },
+    {
+      "path": "app/hooks/useThrottledCallback.ts",
+      "contentHash": "3948263b1ad0bda5319be29f742acb872233451cbafc9a59426b8f678e6a9871",
+      "line": 1
+    },
+    {
+      "path": "app/hooks/useUnmount.ts",
+      "contentHash": "3e8511100d82473df03390c74576e081b6cc42eb83f7df06da0de54872b6b33e",
+      "line": 1
+    },
+    {
+      "path": "app/menus/AccountMenu.tsx",
+      "contentHash": "94914b2d063f4169ca679f18a8e51a4ce3f27b2e75d0ef49b22b93b315e10b54",
+      "line": 1
+    },
+    {
+      "path": "app/menus/CollectionMenu.tsx",
+      "contentHash": "c149dc3f243edca3ff39fcadb8ff2f86773fe789eb3e7303c8c895f2934a3dd1",
+      "line": 1
+    },
+    {
+      "path": "app/menus/CommentMenu.tsx",
+      "contentHash": "8a456f52234eb517689a428f3727e73625964b9f5cb47a3bc97fc1b70822c08f",
+      "line": 1
+    },
+    {
+      "path": "app/menus/DocumentContextMenu.tsx",
+      "contentHash": "d9f05d53a53ad34cd30c14a7c83f15b4eb4c88c0eb9bfa5c92fc44a5023be6fc",
+      "line": 1
+    },
+    {
+      "path": "app/menus/DocumentMenu.tsx",
+      "contentHash": "b8892b0258ad0375a19c457ada5dbba64d5cbdce7e2779d996f82d40f879d027",
+      "line": 1
+    },
+    {
+      "path": "app/menus/FileOperationMenu.tsx",
+      "contentHash": "db6f1431161b84cb816bb9238619d735e1de05be1bb5aa5ddade1045674df93d",
+      "line": 1
+    },
+    {
+      "path": "app/menus/NewChildDocumentMenu.tsx",
+      "contentHash": "444f91034dfaf3d565f0f7a7c8903e4db0695dba8e8608ccf8d0d23e269e520e",
+      "line": 1
+    },
+    {
+      "path": "app/menus/NewDocumentMenu.tsx",
+      "contentHash": "32c360e9bf0df35df299f6ceea3d07574357ccc3d3908c9087cb44c6edc53586",
+      "line": 1
+    },
+    {
+      "path": "app/menus/NewTemplateMenu.tsx",
+      "contentHash": "c423c896696a4833431104265d9712fec8b3151bc3f98d0d48b052cf7a121e53",
+      "line": 1
+    },
+    {
+      "path": "app/menus/NotificationMenu.tsx",
+      "contentHash": "47bbf99eaca36375e2be924e249ca71c82135e49444d4ca753120a571aea9848",
+      "line": 1
+    },
+    {
+      "path": "app/menus/RevisionMenu.tsx",
+      "contentHash": "0f50969d4d8e6e2ba3f12bb07f9402793f1e7b962d5c457b9447d9c6884d6bfd",
+      "line": 1
+    },
+    {
+      "path": "app/menus/TemplatesMenu.tsx",
+      "contentHash": "5c4316705c13250e79abced77b787470ff3fbb1f0e81b7b303df827e3bfe093f",
+      "line": 1
+    },
+    {
+      "path": "app/models/base/ArchivableModel.ts",
+      "contentHash": "37ef6366594c8dab83691be2134bb4da2ca6f195e4f17d26ef755b6610e8826c",
+      "line": 1
+    },
+    {
+      "path": "app/models/base/Model.ts",
+      "contentHash": "f7cec105f7ff1c6b865074450de40af92eb7eb2420228855abe006cf35ecf4d6",
+      "line": 1
+    },
+    {
+      "path": "app/models/base/NavigableModel.ts",
+      "contentHash": "27da73180932fbeafab3c7ef05d76c14d3215168e6fa6038499e110d933c8869",
+      "line": 1
+    },
+    {
+      "path": "app/models/base/ParanoidModel.ts",
+      "contentHash": "775eda7a379754dc35d73ddf8dac9b222f240e9b7830163a529fd5c26bacbefe",
+      "line": 1
+    },
+    {
+      "path": "app/models/Collection.ts",
+      "contentHash": "6b2e6af207648f324ee43330c8f19d1160d6ee87610a1a00b2d3aa505583586d",
+      "line": 1
+    },
+    {
+      "path": "app/models/Comment.ts",
+      "contentHash": "47e6072fb5825758b2b3202bd0d44e3d0193a8f84c0e3b1fa66b364823dda698",
+      "line": 1
+    },
+    {
+      "path": "app/models/decorators/Field.ts",
+      "contentHash": "210642f7a1d21990246973e96a195aed0848c4488a70e713b7fcf5ba43c862f2",
+      "line": 1
+    },
+    {
+      "path": "app/models/decorators/Relation.ts",
+      "contentHash": "63c87d0e2c08884fcd7fe97fe2198fdf3f2d8523adb1f78c042f944f0623ef6e",
+      "line": 1
+    },
+    {
+      "path": "app/models/Document.ts",
+      "contentHash": "4d7271003d7560fd3744708bf5c61df0528a9f1c13804f870cf072f76938ae07",
+      "line": 1
+    },
+    {
+      "path": "app/models/FileOperation.ts",
+      "contentHash": "f6137cb9429019be9ba2a54dd6e77ac744f717ca916450cab5610a32e59d6cb2",
+      "line": 1
+    },
+    {
+      "path": "app/models/Group.ts",
+      "contentHash": "9af7d3695caf15fcc59403ba41be2e353c11ec0e34714a2967e5e9d1c265db25",
+      "line": 1
+    },
+    {
+      "path": "app/models/GroupMembership.ts",
+      "contentHash": "eea15cb4a558714c862f57b41c58127f76d77c795e5ecc640666c127cdcf41bc",
+      "line": 1
+    },
+    {
+      "path": "app/models/GroupUser.ts",
+      "contentHash": "79b54567b9720fa4cf9d449781337aae56ce0c018667fc9a46e0e51672c0a58a",
+      "line": 1
+    },
+    {
+      "path": "app/models/Integration.ts",
+      "contentHash": "8024402ec38538149785a01c7c61060701df9381034584a90fd0e3dac97a95c7",
+      "line": 1
+    },
+    {
+      "path": "app/models/Membership.ts",
+      "contentHash": "8fdf4db965817e5ee856dcfc36f004f5023c4e53386347496a0d1299d8b3ad42",
+      "line": 1
+    },
+    {
+      "path": "app/models/Notification.ts",
+      "contentHash": "34849d215b11f0856fc3a78dc63eed361bd8e610f1de60ebe781500ff37f186a",
+      "line": 1
+    },
+    {
+      "path": "app/models/Pin.ts",
+      "contentHash": "76b312b9547871ef466ae8581d361dbcda69ddca75d25b1033c0c632909d6efb",
+      "line": 1
+    },
+    {
+      "path": "app/models/Share.ts",
+      "contentHash": "b9b3322008f0eb05ad2267f3de674a4721e9da7af2ad8fd15b4e9ca42f2afdc0",
+      "line": 1
+    },
+    {
+      "path": "app/models/Star.ts",
+      "contentHash": "0d296bfdd733c9bef84f896973d6022d18cab76c9fdfe314d3f46cd09b1d8b97",
+      "line": 1
+    },
+    {
+      "path": "app/models/Unfurl.ts",
+      "contentHash": "abe4bf78aae2e8555a899ae933f7ef5aa985f3f951f344a662d9845c780e302e",
+      "line": 1
+    },
+    {
+      "path": "app/models/User.ts",
+      "contentHash": "6f0437cc6788476582bc3dc01dd318cd506f4bd21e9252486cecaf5f4caeddc7",
+      "line": 1
+    },
+    {
+      "path": "app/models/UserMembership.ts",
+      "contentHash": "9cb0224810e267a96363b72920c3c5bbdfcf4f5430e7cf2a2d45dda8bf2b11bf",
+      "line": 1
+    },
+    {
+      "path": "app/scenes/ApiKeyNew/index.tsx",
+      "contentHash": "6df3a96b002917e63dc08e70d55e4945f0429ec662ee1f4a8ce56d3dfe249af0",
+      "line": 1
+    },
+    {
+      "path": "app/scenes/ApiKeyNew/utils.ts",
+      "contentHash": "17e52fdb0ac1a4264436f307ab31d012a723be19134183ddd3193d81db9180b0",
+      "line": 1
+    },
+    {
+      "path": "app/scenes/Collection/components/Actions.tsx",
+      "contentHash": "27ecedb7c4cd1d106ba70cdfcd39cda569648a72123b8f128efdca619c993d07",
+      "line": 1
+    },
+    {
+      "path": "app/scenes/Collection/components/Empty.tsx",
+      "contentHash": "90c81088fa705c0b321c52e8126bcbeaa1406b42cf07d64819ecf7125f51e3f3",
+      "line": 1
+    },
+    {
+      "path": "app/scenes/Collection/components/Header.tsx",
+      "contentHash": "bb00554ac67338bda57ee6b2ca3e1a8287dc78ad2ca4a5a3b48c28509f15310c",
+      "line": 1
+    },
+    {
+      "path": "app/scenes/Collection/components/ShareButton.tsx",
+      "contentHash": "3c2c07d8e163324543a045f19a27c99a00c714613e25e78682e8711e2f55348d",
+      "line": 1
+    },
+    {
+      "path": "app/scenes/Collection/index.tsx",
+      "contentHash": "75d29f507ea193ebe14b2296e0b40e0609bfd8c84602d4d8147ac932dbdd75f5",
+      "line": 1
+    },
+    {
+      "path": "app/scenes/Developer/Changesets.tsx",
+      "contentHash": "03b0932584a7515e8c6f2462fdbd6b858e0c37619606d3a28bd3d24b476cf06e",
+      "line": 1
+    },
+    {
+      "path": "app/scenes/Developer/components/ExampleData.ts",
+      "contentHash": "9f6d138d5d0336e1691a60ef964848efbc19fd5e24475e88e38104450bd69b58",
+      "line": 1
+    },
+    {
+      "path": "app/scenes/Document/components/Comments/Comments.tsx",
+      "contentHash": "260231e4dcdaf76e2d44af1d174b6689e78eef5e59bb7b2e676402d26f0102a3",
+      "line": 1
+    },
+    {
+      "path": "app/scenes/Document/components/Comments/LightboxComments.tsx",
+      "contentHash": "6f5a099642ed19297ea1ef6da5e48ac498a2a8449119f0efa06763798bb9a35c",
+      "line": 1
+    },
+    {
+      "path": "app/scenes/Document/components/DataLoader.tsx",
+      "contentHash": "46524d54578d91fa7df8ca5203f461a601b9b7e9f4a144fecfafbb39a5a59e16",
+      "line": 1
+    },
+    {
+      "path": "app/scenes/Document/components/DocumentMeta.tsx",
+      "contentHash": "6335c87a755e7c1691b81a3255ac30cb157e3422c75a62089facb592914c846a",
+      "line": 1
+    },
+    {
+      "path": "app/scenes/Document/components/Header.tsx",
+      "contentHash": "2ed0693b9d3a31e3565b7a5891654d135b3bb58d23cca8e0e9d800cbf279d279",
+      "line": 1
+    },
+    {
+      "path": "app/scenes/Document/components/History/History.tsx",
+      "contentHash": "d7ce75cc3f70fc71a697056b6ba8ab570a40738d9c08b9993fd86f24216112ac",
+      "line": 1
+    },
+    {
+      "path": "app/scenes/Document/components/History/RevisionListItem.tsx",
+      "contentHash": "4b1d66f51e97171d432417faa55abb1f4ab3f874b9b211805e3315b7ddbdbff0",
+      "line": 1
+    },
+    {
+      "path": "app/scenes/Document/components/Insights.tsx",
+      "contentHash": "3b634c33e350ab1c83780bebeed60fd1348187cd00a62a7c604f803582b0fa0d",
+      "line": 1
+    },
+    {
+      "path": "app/scenes/Document/components/MarkAsViewed.ts",
+      "contentHash": "86d44bac51333bc3c46e3854f8f97427d3f9d15e85bdbae2d1c3d02ff7c2919e",
+      "line": 1
+    },
+    {
+      "path": "app/scenes/Document/components/ObservingBanner.tsx",
+      "contentHash": "86ef2b85bcbbb6400353b3c9a771b35b233f59cb088f874e4179290f887a93cc",
+      "line": 1
+    },
+    {
+      "path": "app/scenes/Document/components/ReferenceListItem.tsx",
+      "contentHash": "0b24a75e58a31efa4f77a5c9dd3d4ecb08430694dc452fc4a288a56d073db807",
+      "line": 1
+    },
+    {
+      "path": "app/scenes/Document/components/RevisionViewer.tsx",
+      "contentHash": "8d2b6e26a4d7881fb612bec936fa31e5cc39b4501028ca8661841eaf2747ccf8",
+      "line": 1
+    },
+    {
+      "path": "app/scenes/Document/components/SearchHighlightChip.tsx",
+      "contentHash": "1bd483caacc80ab7e6fa6d94d4fa2361b003ee949498345dc445eda0677a37dc",
+      "line": 1
+    },
+    {
+      "path": "app/scenes/Document/components/ShareButton.tsx",
+      "contentHash": "46a33c79094ef8cf806722af91d0c355d4887ce34e19296234f3cd3b08124850",
+      "line": 1
+    },
+    {
+      "path": "app/scenes/Document/components/SharedHeader.tsx",
+      "contentHash": "555615a3aa5e31801f960d2681c16892145b8d09c15c8ca6f5e679893ed2eb8c",
+      "line": 1
+    },
+    {
+      "path": "app/scenes/Document/components/SidebarLayout.tsx",
+      "contentHash": "22166bb0e6de24a6e5d21c446fbf2d235f6718dead68ab120120cf63a5ae7977",
+      "line": 1
+    },
+    {
+      "path": "app/scenes/Document/hooks/useDocumentSave.ts",
+      "contentHash": "43acc278d5d2467892ea6b3f7ec8cb96a8a7e2648b1a26b9dfc8ef68856ac35a",
+      "line": 1
+    },
+    {
+      "path": "app/scenes/Document/index.tsx",
+      "contentHash": "90e5e6ae709aae79e3147eab75c58b49157d12514be794f02ac0498a379a277d",
+      "line": 1
+    },
+    {
+      "path": "app/scenes/DocumentDelete.tsx",
+      "contentHash": "5d4e9e9e5db9eb763f43e48e8e89389c3fdbd02a70e0255eb9a0490b325285aa",
+      "line": 1
+    },
+    {
+      "path": "app/scenes/DocumentNew.tsx",
+      "contentHash": "3c68afa934286d888f2ec161818b05ac5a568a9c60ba8ae4dcbb241874c35000",
+      "line": 1
+    },
+    {
+      "path": "app/scenes/DocumentPermanentDelete.tsx",
+      "contentHash": "80c6d876583ae16056f39dcc38c92ee8a0f23e8233d48303041e98f46a37f5c9",
+      "line": 1
+    },
+    {
+      "path": "app/scenes/DocumentPublish.tsx",
+      "contentHash": "fc041bf09421a3676b7a63d8a444351fddcded0233a878ba909054f753d6bbba",
+      "line": 1
+    },
+    {
+      "path": "app/scenes/Errors/Error402.tsx",
+      "contentHash": "b60cbbdbf8fe87fa373789cdf45639db12a4c92ba3fd4d312c463655ccfe3ef4",
+      "line": 1
+    },
+    {
+      "path": "app/scenes/Errors/Error404.tsx",
+      "contentHash": "01766444497626b02388e0d0f3c93a11f1b73b223cf5c60bca45163b63967e08",
+      "line": 1
+    },
+    {
+      "path": "app/scenes/Home.tsx",
+      "contentHash": "f11061309883b859df019647604659f9b8e3c58771a5e85f33dfff377e876c14",
+      "line": 1
+    },
+    {
+      "path": "app/scenes/Login/Login.tsx",
+      "contentHash": "9b67c7782212952e801364552154f82e8efac6c90784412c493179059f898a90",
+      "line": 1
+    },
+    {
+      "path": "app/scenes/Settings/APIAndAccess.tsx",
+      "contentHash": "e5fe116dff851c486450b1f8c00a5dd6f74ae7a029a2c75ad1085b58f4c8952f",
+      "line": 1
+    },
+    {
+      "path": "app/scenes/Settings/ApiKeys.tsx",
+      "contentHash": "af739fb1c8c3ead098284bdfeb814aa58b2e1d29de25e37f9af125e4aa74329e",
+      "line": 1
+    },
+    {
+      "path": "app/scenes/Settings/Applications.tsx",
+      "contentHash": "f97e023751c60ad339bfc7c3651b69554b6be974ae2a3be25220f8c836bc7cbf",
+      "line": 1
+    },
+    {
+      "path": "app/scenes/Settings/Authentication.tsx",
+      "contentHash": "93dd2de3f426988d9d94836923f0c722aca83c2f443830f0e85657d6b0fba9ac",
+      "line": 1
+    },
+    {
+      "path": "app/scenes/Settings/components/ActionRow.tsx",
+      "contentHash": "d2c07bdb5d466995417d5f4412371fedc47dc2240c89cb72827876b3ae953f9f",
+      "line": 1
+    },
+    {
+      "path": "app/scenes/Settings/components/AutoLaunchSetting.tsx",
+      "contentHash": "0d9c59967e872786131aa662e39c94053a445e29e5c1eb17727726ac9ca55d2c",
+      "line": 1
+    },
+    {
+      "path": "app/scenes/Settings/components/ConnectedButton.tsx",
+      "contentHash": "e7f46abcf767b9c7f5930310b4e3c537d70eb601bcce6df59ff3bfe6fc38f360",
+      "line": 1
+    },
+    {
+      "path": "app/scenes/Settings/components/CopyButton.tsx",
+      "contentHash": "4f06180a2313423f22702a07ba4eef280020e5241a8fdb6e69a153bf15fc41f6",
+      "line": 1
+    },
+    {
+      "path": "app/scenes/Settings/components/DisconnectAnalyticsDialog.tsx",
+      "contentHash": "5142658b11a7b5827f9b09ea5536d444f91c06a1076420e7c6aa12afa0311f93",
+      "line": 1
+    },
+    {
+      "path": "app/scenes/Settings/components/DomainManagement.tsx",
+      "contentHash": "e8edd17cad2306995e1d62729a72e5f18f14aeb113f50843f6739449657a0f67",
+      "line": 1
+    },
+    {
+      "path": "app/scenes/Settings/components/GroupDialogs.tsx",
+      "contentHash": "a6bbde8fff14189831f89be25ca4f97e74cd67946a3261062aa96d39d8eaffc0",
+      "line": 1
+    },
+    {
+      "path": "app/scenes/Settings/components/IntegrationScene.tsx",
+      "contentHash": "1c75ee0745cf15b6db44db545d69e383028bd4da95261ddb6efaa2b7380a71aa",
+      "line": 1
+    },
+    {
+      "path": "app/scenes/Settings/components/SettingRow.tsx",
+      "contentHash": "af42165b3a72e29b8810b26c8e115876d4d5473bc0db3ee431ba28f291be5178",
+      "line": 1
+    },
+    {
+      "path": "app/scenes/Settings/components/StickyFilters.tsx",
+      "contentHash": "2aa60d876c194583a31d738d020c01e55f7d0138f42be03ebff7bb3edabb74cf",
+      "line": 1
+    },
+    {
+      "path": "app/scenes/Settings/components/TemplatesTable.tsx",
+      "contentHash": "aaf211ca592d139d606ab9a0619e36aae55bcdceb66cfd2f284d3e295b88d681",
+      "line": 1
+    },
+    {
+      "path": "app/scenes/Settings/Details.tsx",
+      "contentHash": "46a8c663ed6d588aefa8914d1fb13d0dca090937a9a8ffeba0280712e6091620",
+      "line": 1
+    },
+    {
+      "path": "app/scenes/Settings/Embeds.tsx",
+      "contentHash": "81b58d395614fae87527c6eb6c6aa8208ddbb4ab01088a85012f538879418c08",
+      "line": 1
+    },
+    {
+      "path": "app/scenes/Settings/Export.tsx",
+      "contentHash": "e52cafc128ac6abb6c6238d6f4e407d6636d39e0031011a7dac94eb50b8e884c",
+      "line": 1
+    },
+    {
+      "path": "app/scenes/Settings/Features.tsx",
+      "contentHash": "a1bb0fa4dd9b977666db6f1ffdc17d9be1c528a7fe7f73974a97fff97723787e",
+      "line": 1
+    },
+    {
+      "path": "app/scenes/Settings/Notifications.tsx",
+      "contentHash": "8813e97cbad4894bdd24f4eecb91489c7f96a2ed01245d24eceb6081eae668dd",
+      "line": 1
+    },
+    {
+      "path": "app/scenes/Settings/Preferences.tsx",
+      "contentHash": "e7c1321eba551ad5d208b6600ca14833e72232612bac39e8a4ecd717a38768c4",
+      "line": 1
+    },
+    {
+      "path": "app/scenes/Settings/Profile.tsx",
+      "contentHash": "b76661035ea627cba5728681b75025ae2d5624d73fd5265aac06448204370c48",
+      "line": 1
+    },
+    {
+      "path": "app/scenes/Settings/Security.tsx",
+      "contentHash": "309ac7fd5977788bf72d88a63d9e0f2a7a1530bd4fcce915e9e9b47f0a4040bf",
+      "line": 1
+    },
+    {
+      "path": "app/scenes/Settings/Shares.tsx",
+      "contentHash": "584c83c3c1a43d292c8ab23f526303f352c13089bca6cd59a4c4819908cc5d96",
+      "line": 1
+    },
+    {
+      "path": "app/scenes/Settings/Templates.tsx",
+      "contentHash": "41640e39d3ae1b1e7afc139cc7c948cc01e3922faed026f0b062559f02dd4854",
+      "line": 1
+    },
+    {
+      "path": "app/scenes/Shared/Collection.tsx",
+      "contentHash": "667ac270ffce4423be7e322feeee66f246f804377aadd248cd6f31cd6fe56b79",
+      "line": 1
+    },
+    {
+      "path": "app/scenes/TeamDelete.tsx",
+      "contentHash": "07d230c4968dfb8004e92943da7d3327e703ae96b01465beaa07501ca5e465a3",
+      "line": 1
+    },
+    {
+      "path": "app/scenes/TeamNew.tsx",
+      "contentHash": "d68b4d31fb73ff8a3039e0fc0777c8c5abcb3fa029212d999478e2cf1f485de3",
+      "line": 1
+    },
+    {
+      "path": "app/scenes/Trash/components/DeleteDocumentsInTrash.tsx",
+      "contentHash": "ed34b32065e0064d2f34450b93d749ba5a754c57354fe08f1e25f404f43cc265",
+      "line": 1
+    },
+    {
+      "path": "app/scenes/UserDelete.tsx",
+      "contentHash": "7677bc40b1105f3fdd3802163865646543ecc5f8a79b58289e3018f2de1f55f7",
+      "line": 1
+    },
+    {
+      "path": "app/stores/AuthStore.ts",
+      "contentHash": "9d51583fe69e61924d530fc880bf6b9f2b064537b645757ed8ef3770ccb4287f",
+      "line": 1
+    },
+    {
+      "path": "app/stores/base/IndexedStore.ts",
+      "contentHash": "8f1423dcae6e358d382b7cce1610ef61350b81e72110e3e45fb157968f98fa7a",
+      "line": 1
+    },
+    {
+      "path": "app/stores/CollectionsStore.ts",
+      "contentHash": "b96548e25e73495d89a0bfa297c1c534976cdfad4aec333701f2a559af246a80",
+      "line": 1
+    },
+    {
+      "path": "app/stores/CommentsStore.ts",
+      "contentHash": "a8b1324319f6c48fe048bc0af4aa0c3a8e47756b4f218a2b3b371a820bd1f43a",
+      "line": 1
+    },
+    {
+      "path": "app/stores/DocumentsStore.ts",
+      "contentHash": "32becf1449a4015c85e28da25986be1bc5d8c626499722cd7512555063392b1b",
+      "line": 1
+    },
+    {
+      "path": "app/stores/FileOperationsStore.ts",
+      "contentHash": "cf9c656fdd66fd79861b2bdf68091dcb97b6d06923bc0be449c188e4e81827e5",
+      "line": 1
+    },
+    {
+      "path": "app/stores/GroupMembershipsStore.ts",
+      "contentHash": "a66e9e38124d101a3a63edf078737bd59ed37cfa07da2d673778c4ead789f9e8",
+      "line": 1
+    },
+    {
+      "path": "app/stores/GroupUsersStore.ts",
+      "contentHash": "24e4b57fa37ae8536dcb46b1b286a8a14e40a01b1d16765c0b631b3ab6086c6f",
+      "line": 1
+    },
+    {
+      "path": "app/stores/MembershipsStore.ts",
+      "contentHash": "552540a56cadf43dd6a5a02118b775cf051f1f81bdb748cdb76a7280fb50e98f",
+      "line": 1
+    },
+    {
+      "path": "app/stores/NotificationsStore.ts",
+      "contentHash": "d0dfd3bd2577e5205243b541fd2d260972845ca643320f180a4dcb3666c318ae",
+      "line": 1
+    },
+    {
+      "path": "app/stores/PinsStore.ts",
+      "contentHash": "49197a8ce92ea6059960497f68a8edad6a7df417bf44ccae3a66bd1077e8d558",
+      "line": 1
+    },
+    {
+      "path": "app/stores/SharesStore.ts",
+      "contentHash": "69e80e359d17fe77513294a94a41abec6aaa2f4dd4a50f54ce5ab52f4ae1baf7",
+      "line": 1
+    },
+    {
+      "path": "app/stores/StarsStore.ts",
+      "contentHash": "525b7923e2e13cfbfae2d8afff2e3246666631121865031acf724e66064a2dc8",
+      "line": 1
+    },
+    {
+      "path": "app/stores/UnfurlsStore.ts",
+      "contentHash": "7a1eb94d2dff2ab8000dbc04010e3ebee5b25dba47f5d9b49ac9ebd61b1268c5",
+      "line": 1
+    },
+    {
+      "path": "app/stores/UserMembershipsStore.ts",
+      "contentHash": "fcb4fc59b830074f7070a063c6afa4c96f29426b7590b15794b413aa43f8ab86",
+      "line": 1
+    },
+    {
+      "path": "app/styles/animations.ts",
+      "contentHash": "2d13febf128ae5ee12c1b50407a42eb6f22d2eadf55af9f929d9db99871b03a6",
+      "line": 1
+    },
+    {
+      "path": "app/styles/index.ts",
+      "contentHash": "766724fc032bfe0711e4ec51a1c338baebc36bc74ecbfa6788b47c4292d34a0d",
+      "line": 1
+    },
+    {
+      "path": "app/types.ts",
+      "contentHash": "0b4c7215c6d3492b24471e4bae84e7227b05bc5a1ec2ddb4f991ef2ed7f906d3",
+      "line": 1
+    },
+    {
+      "path": "app/utils/ApiClient.ts",
+      "contentHash": "31aee33673966eed1672e500d3b8a1b64538370f4efeda6c90a76e232874ad6f",
+      "line": 1
+    },
+    {
+      "path": "app/utils/events.ts",
+      "contentHash": "f95558cbe8f3e67f10d8fd1733b762cd7181b0edbc6d63c4efa6d59a7e61c835",
+      "line": 1
+    },
+    {
+      "path": "app/utils/files.ts",
+      "contentHash": "9aaf145d8071758cfa3c46a0dce49528ce96b6b0fcdf4ef894de4c0cb00f6ddb",
+      "line": 1
+    },
+    {
+      "path": "app/utils/history.ts",
+      "contentHash": "dd87aae04e919cad69e6c38b9a7c5184b6d96955a1eea3d611144774deeead1e",
+      "line": 1
+    },
+    {
+      "path": "app/utils/isCloudHosted.ts",
+      "contentHash": "deb129defad505961850243336ab5ab56039d7f36df962d5c15cce43f753e1ce",
+      "line": 1
+    },
+    {
+      "path": "app/utils/mention.ts",
+      "contentHash": "d671d525b0d8807d94102d1ec9489fc8adb4194dca8a4046da1950e794e9e28b",
+      "line": 1
+    },
+    {
+      "path": "app/utils/pageVisibility.ts",
+      "contentHash": "5ca88945144bd375c0de226dcba26ea5d87a88deb3a16a44d88f16a807b62cb5",
+      "line": 1
+    },
+    {
+      "path": "app/utils/routeHelpers.ts",
+      "contentHash": "2a75f47397d4e6f127781160932af56faaed870b0e185eee68b37d539e8c04c9",
+      "line": 1
+    },
+    {
+      "path": "app/utils/urls.ts",
+      "contentHash": "1ef5913adff6c4b338a3b157ac0fdc30f5f35ed1f37a0fc2a314bce5f64c3868",
+      "line": 1
+    },
+    {
+      "path": "plugins/notion/client/components/ImportDialog.tsx",
+      "contentHash": "d64074cdc7c61822d68d246fd6d0aed8f21e1dfc90ce25ce4f30b6124cfc25ab",
+      "line": 1
+    },
+    {
+      "path": "plugins/passkeys/client/components/RenamePasskeyDialog.tsx",
+      "contentHash": "15713357cdce757d92cd3b316ac60661c5e57894eab43a12911934e1fb7fb6d7",
+      "line": 1
+    },
+    {
+      "path": "server/logging/Logger.ts",
+      "contentHash": "009cd5e63208671e937540b2868fee646072816b3d7cad5fca6087829fc1e79f",
+      "line": 1
+    },
+    {
+      "path": "server/middlewares/apexAuthRedirect.ts",
+      "contentHash": "d4460076bd985217c459e479733ca4d28e9ae900ad3aa229ab348ef3d15b04fe",
+      "line": 1
+    },
+    {
+      "path": "server/middlewares/cleanupMultipartFiles.ts",
+      "contentHash": "3336b3edcf6fc82a9a872c4d2be36cd95a92a745394b943c45b2c22ddcdbb354",
+      "line": 1
+    },
+    {
+      "path": "server/presenters/publicTeam.ts",
+      "contentHash": "c08d165754e494db85badde8f368711d32f09caa91a813136dba3ea745fef100",
+      "line": 1
+    },
+    {
+      "path": "server/queues/processors/ApiKeyCleanupProcessor.ts",
+      "contentHash": "46c2b0feeca0670913f40ae00645b73197280f13bf7e2f72ea0799175a1ce177",
+      "line": 1
+    },
+    {
+      "path": "server/queues/tasks/CleanupOAuthAuthorizationCodeTask.ts",
+      "contentHash": "cf0c5830d104b3850e69150d27a1320dbf3301e9be04f17db0caa32484b6d7c9",
+      "line": 1
+    },
+    {
+      "path": "server/queues/tasks/CleanupOldImportsTask.ts",
+      "contentHash": "e07d45bcfc210ad3e5ddbb21d99be59d64ccf16c072f27de6c6e93be29e4da73",
+      "line": 1
+    },
+    {
+      "path": "shared/components/DynamicCalendarIcon.tsx",
+      "contentHash": "d5871588fea5aa730bd5bf05e00b4f4b91c0ad78c4566a81fa332d86b3d3c497",
+      "line": 1
+    },
+    {
+      "path": "shared/components/EmojiIcon.tsx",
+      "contentHash": "f2f2d767367a306bd3b5939d9e73abaee866667b008a0f45bd9b4565dc75936a",
+      "line": 1
+    },
+    {
+      "path": "shared/components/EventBoundary.tsx",
+      "contentHash": "c58b87f3ab9d9d5b470ddcf486cc7702e7584fefe83fa996433e54a75470b8e8",
+      "line": 1
+    },
+    {
+      "path": "shared/components/Flex.tsx",
+      "contentHash": "5d0ef84db0120f3a154ef50efb0043a9b0eaf62ee0c692209fa0677f1d07da35",
+      "line": 1
+    },
+    {
+      "path": "shared/components/Icon.tsx",
+      "contentHash": "5f52606516a4dfacc5b89d4b1a62fd2bebb3318a9236d7c68568f241c73eb4f1",
+      "line": 1
+    },
+    {
+      "path": "shared/components/IssueStatusIcon/GitHubIssueStatusIcon.tsx",
+      "contentHash": "07253da04639674058bf5837153a9a48a445a0c4ffc546b2a9824c9c19e6fa4b",
+      "line": 1
+    },
+    {
+      "path": "shared/components/IssueStatusIcon/GitLabIssueStatusIcon.tsx",
+      "contentHash": "26a8452321267431bd21dede9732e55683306d70910311b806c59fff96086a05",
+      "line": 1
+    },
+    {
+      "path": "shared/components/IssueStatusIcon/index.tsx",
+      "contentHash": "d8489629087628423b010cd7db693a240448b0c430f0c5e5e294ece3d466b495",
+      "line": 1
+    },
+    {
+      "path": "shared/components/IssueStatusIcon/LinearIssueStatusIcon.tsx",
+      "contentHash": "b64380c005050ba12757a1af1116cd76337e3cb558c79bd0a816ff69a8e57d89",
+      "line": 1
+    },
+    {
+      "path": "shared/constants.ts",
+      "contentHash": "75e11d2df897b2fb272b38ecec04cb239302cc6caac538167fd6fcaee09e7ed0",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/components/Frame.tsx",
+      "contentHash": "9812dcb782938bf8bc5dbc10e2fcc741a068054de138ba2c16ee69da477b2d01",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/components/Img.tsx",
+      "contentHash": "516632a2200fe3aa10a48f73f72103759cea1c4d4599e236b36e0b96e6097ea7",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/embeds/Berrycast.tsx",
+      "contentHash": "c49a7e09634d503ea71532710330701043fc49f1437c376dd508f4ba28b52494",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/embeds/Diagrams.tsx",
+      "contentHash": "6ee6531b711632df802c391e78b8b507a5f818627f36193da812194923d9f50b",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/embeds/Dropbox.tsx",
+      "contentHash": "7b6778267379fff8ff48415233a84285abb702f82f6d613d695b12ff383bd088",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/embeds/Gist.tsx",
+      "contentHash": "77f32b88dc4afca6e0ae0cc99594269b7e8bb53e1994245f2246014f581fdcd1",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/embeds/GitLabSnippet.tsx",
+      "contentHash": "ca647509335564beccc26f654e1d80b38b900f7f184ab13e906db2a507646487",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/embeds/index.tsx",
+      "contentHash": "9d2b09c37f079456c062787a02480f0506bf06754c2e57311da6ecfc1a5bb168",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/embeds/InVision.tsx",
+      "contentHash": "0b8d5e8fe044a476f4c0daf28491f982563f92657f91e4ebb679687eddc8d12a",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/embeds/JSFiddle.tsx",
+      "contentHash": "325d4a265b8b7dcc449eb60d354fc79a81483e8f9965f06ba3243e18f9b1d8ed",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/embeds/Linkedin.tsx",
+      "contentHash": "607fa159ac2f8546c0b7088c1d6c0aa1e70f0adae0a6e0123a70245fb2ccd8b4",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/embeds/Pinterest.tsx",
+      "contentHash": "21cf2e7410ada6f415d897c2284481ecbdcce55f55160330b8ec57ea98f5ef2f",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/embeds/PlantUml.tsx",
+      "contentHash": "e602bad145c9cb08f99bf831b2d62b0ab0af902b08091b787c8433e303903d4a",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/embeds/Spotify.tsx",
+      "contentHash": "8274d25a2df04630253161a2a9473434da8f8f5b4c5812eaeb91c9c5c8b69d1b",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/embeds/Trello.tsx",
+      "contentHash": "4c10b594b111cac2e1f5537822964adafd4608eb8b061160afd67445879b9759",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/embeds/Vimeo.tsx",
+      "contentHash": "25146d9d38bc3911525d05f488e6a966ce73aca7fdf1d045bea334b18d5716f1",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/embeds/YouTube.tsx",
+      "contentHash": "804af2027a6c65c2b94fec35536ed9d4b727a1e28bef68976ea7e0ffc3602462",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/extensions/HeadingPrefix.ts",
+      "contentHash": "ecda429a8733d381cc14559fc22b59247a3cd0a53d48deb7adc7bf469bbed3bf",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/lib/filterExcessSeparators.ts",
+      "contentHash": "95b3c9011d80f965afc64c5d591a54b74602d09b4195b3b19f0840e994ab46d5",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/lib/inputRules.ts",
+      "contentHash": "1489727e3644c1c16012fbd72f425ec52f7c0d9de1dc631792e09a1d91ac54db",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/lib/markdown/serializer.ts",
+      "contentHash": "3f0b319130c36b0fab66288daff72970f0b91d6670c62750b1db34c986322f57",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/nodes/HorizontalRule.tsx",
+      "contentHash": "d0cb245f098b3a2d69cdc4e6451d0cc04be54e38e0fbdc044201e12f0b906572",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/nodes/Node.ts",
+      "contentHash": "e23679d03309ebb4d3429341edab43f130854712f415a65dc9418c85bace60af",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/nodes/Text.ts",
+      "contentHash": "d220ead7bafdc07ed12d200011216602e33f4e848e3c085350b5fb3355af194a",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/queries/findNearestPos.ts",
+      "contentHash": "4a9a4bb050ab42bd0fdf0c0816371d4b8e46068be0e8aa6ed04d0b1c76a1ce7c",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/styles/EditorStyleHelper.ts",
+      "contentHash": "3c88fb9bd33ee0390602e57e87a040f24f24b982fd0dffcc29d1769ff35c4d4f",
+      "line": 1
+    },
+    {
+      "path": "shared/hooks/useShare.ts",
+      "contentHash": "706eadf0f6620e1a5442c08b06bb7a7d874f409b925b134ada8099009b553f4a",
+      "line": 1
+    },
+    {
+      "path": "shared/random.ts",
+      "contentHash": "51f6c0d82bfc4df19285b85bc290eaf1645b8ab201c5cd27ca33bd2bcc8a21fa",
+      "line": 1
+    },
+    {
+      "path": "shared/styles/depths.ts",
+      "contentHash": "66d4416809da346ce7686434b277fca5b99f0c742289ea24b1df5a09173fe8d3",
+      "line": 1
+    },
+    {
+      "path": "shared/styles/index.ts",
+      "contentHash": "79b22b708ca9ca3211b36dcf9b36e33a801c78c96ae589f1a2da30cc431291d0",
+      "line": 1
+    },
+    {
+      "path": "shared/types/attachments.ts",
+      "contentHash": "2362b8dcaec2dd9f542f4c9c95f89358b495bd94d7f4b8813615c6dd3562fa8b",
+      "line": 1
+    },
+    {
+      "path": "shared/types/auth.ts",
+      "contentHash": "4340937414a0edc014fa477d8bf739c78b88670b9c3742b105ce69b549af6912",
+      "line": 1
+    },
+    {
+      "path": "shared/types/emoji.ts",
+      "contentHash": "2c6a5cc0f1b994db7cd0fd5e2b4e97b31af0d237ff5782acd47b187a35aa06e4",
+      "line": 1
+    },
+    {
+      "path": "shared/types/fileOperations.ts",
+      "contentHash": "9e67f0d7242c0abf02ba1762be7d9c340a0f6f50f28b1d57cbcefb46c8c2b5e5",
+      "line": 1
+    },
+    {
+      "path": "shared/types/filters.ts",
+      "contentHash": "62a19dd277d0cbc230894112306bc21212f8d192f57f1f3fe135947e244e5e24",
+      "line": 1
+    },
+    {
+      "path": "shared/types/index.ts",
+      "contentHash": "88f19fd795294dd93d225320fca9017a251d5417302c33ced52bb5616967cc24",
+      "line": 1
+    },
+    {
+      "path": "shared/types/integrations.ts",
+      "contentHash": "c18f55736f57a6c54781b41f35f7be6cde5703efdcff9d0c30f46c25885bc76d",
+      "line": 1
+    },
+    {
+      "path": "shared/types/navigation.ts",
+      "contentHash": "a66afc9878fa1138e5c705644ebde806cd4fd67125f5dd2eda0e2f3e8097b112",
+      "line": 1
+    },
+    {
+      "path": "shared/types/notifications.ts",
+      "contentHash": "55d527b125813de86008dce1e82e7666e61633fb80f6bb4ac1ca853193fff710",
+      "line": 1
+    },
+    {
+      "path": "shared/types/permissions.ts",
+      "contentHash": "4727c99e82ca5271cc0b3b9c1d818e6e0673d27255491abea653c6287d9d94ae",
+      "line": 1
+    },
+    {
+      "path": "shared/types/plans.ts",
+      "contentHash": "b608bdbc4ff6788a7061d420ee1dc5a3ef15bc222916a408898e8467b6a33531",
+      "line": 1
+    },
+    {
+      "path": "shared/types/prosemirror.ts",
+      "contentHash": "9fae6da4e276db6b004f61d179ffd0c85ac93172f07146220e89db7e35e7e55f",
+      "line": 1
+    },
+    {
+      "path": "shared/types/team.ts",
+      "contentHash": "fd9540a533195e3646fe62d3b82203a9436974fad1bf3cdb94e648c5befeace4",
+      "line": 1
+    },
+    {
+      "path": "shared/types/unfurl.ts",
+      "contentHash": "a0b5c0d611b5795e18b1c3092f8600e88688670a5eaf88cc7b379723f43c800a",
+      "line": 1
+    },
+    {
+      "path": "shared/types/user.ts",
+      "contentHash": "fa4c93a04b157cb3c3dbce77929008e6fa10ce46654a1826439160d4006e03d8",
+      "line": 1
+    },
+    {
+      "path": "shared/utils/browser.ts",
+      "contentHash": "42933b42847345b7eb3a436e014c2f22ecf6168af149df9c744a0b3f513e64cd",
+      "line": 1
+    },
+    {
+      "path": "shared/utils/counters.ts",
+      "contentHash": "7bed59ec4c626af97824d5f51d89a88905e6b755c988cc9373d09cecc633ba5b",
+      "line": 1
+    },
+    {
+      "path": "shared/utils/error.ts",
+      "contentHash": "1e3e10346b8d3c669ca98be3aebc177c0feb147bd3f28cb15bb6d1b71e008d2d",
+      "line": 1
+    },
+    {
+      "path": "shared/utils/events.ts",
+      "contentHash": "7b1c6671cec7098479062367f402a76b88f8923057ddcb18bae6351090d4bdea",
+      "line": 1
+    },
+    {
+      "path": "shared/utils/keyboard.ts",
+      "contentHash": "d9d4bbb26773163e339e66f2befc2278ebbfc9e42c3bbb6983e0d16afdc42124",
+      "line": 1
+    },
+    {
+      "path": "shared/utils/parseNaturalLanguageDate.ts",
+      "contentHash": "e7adf212043f07815cfcb70873985006c23c4445b6cac2cff0ab3c6f128820fe",
+      "line": 1
+    },
+    {
+      "path": "shared/validations.ts",
+      "contentHash": "707a8b7204d05138f247a89aab7d2940cd5389411636572c479f601cb7cf9206",
+      "line": 1
+    }
+  ],
+  "claims": [
+    {
+      "purpose": "component-name",
+      "text": "Collection actions and dialogs",
+      "citations": [
+        {
+          "path": "app/actions/definitions/collections.tsx",
+          "contentHash": "8ff5742f5c9d2d0ecc1078ebd875e556cf4626e0dff57b68882330b7142ff3d7",
+          "startLine": 82,
+          "endLine": 118,
+          "excerpt": "\nexport const createCollection = dialogActionFactory({\n  analyticsName: \"New collection\",\n  section: CollectionSection,\n  name: (t) => t(\"New collection\"),\n  title: (t) => t(\"Create a collection\"),\n  content: (onSubmit) => <CollectionNew onSubmit={onSubmit} />,\n  icon: <PlusIcon />,\n  keywords: \"create\",\n  stopEvent: true,\n  visible: ({ stores }) =>\n    stores.policies.abilities(stores.auth.team?.id || \"\").createCollection,\n});\n\nexport const editCollection = createAction({\n  name: ({ t, isMenu }) => (isMenu ? `${t(\"Edit\")}\u2026` : t(\"Edit collection\")),\n  analyticsName: \"Edit collection\",\n  section: ActiveCollectionSection,\n  icon: <EditIcon />,\n  visible: ({ getActivePolicies }) =>\n    getActivePolicies(Collection).some((policy) => policy.abilities.update),\n  perform: ({ t, getActiveModel, stores }) => {\n    const collection = getActiveModel(Collection);\n    if (!collection) {\n      return;\n    }\n\n    stores.dialogs.openModal({\n      title: <DialogTitle title={t(\"Edit collection\")} model={collection} />,\n      content: (\n        <CollectionEdit\n          onSubmit={stores.dialogs.closeAllModals}\n          collectionId={collection.id}\n        />\n      ),\n    });\n  },"
+        }
+      ]
+    },
+    {
+      "purpose": "component-role",
+      "text": "Offers collection creation and editing actions with permission-aware dialogs.",
+      "citations": [
+        {
+          "path": "app/actions/definitions/collections.tsx",
+          "contentHash": "8ff5742f5c9d2d0ecc1078ebd875e556cf4626e0dff57b68882330b7142ff3d7",
+          "startLine": 82,
+          "endLine": 118,
+          "excerpt": "\nexport const createCollection = dialogActionFactory({\n  analyticsName: \"New collection\",\n  section: CollectionSection,\n  name: (t) => t(\"New collection\"),\n  title: (t) => t(\"Create a collection\"),\n  content: (onSubmit) => <CollectionNew onSubmit={onSubmit} />,\n  icon: <PlusIcon />,\n  keywords: \"create\",\n  stopEvent: true,\n  visible: ({ stores }) =>\n    stores.policies.abilities(stores.auth.team?.id || \"\").createCollection,\n});\n\nexport const editCollection = createAction({\n  name: ({ t, isMenu }) => (isMenu ? `${t(\"Edit\")}\u2026` : t(\"Edit collection\")),\n  analyticsName: \"Edit collection\",\n  section: ActiveCollectionSection,\n  icon: <EditIcon />,\n  visible: ({ getActivePolicies }) =>\n    getActivePolicies(Collection).some((policy) => policy.abilities.update),\n  perform: ({ t, getActiveModel, stores }) => {\n    const collection = getActiveModel(Collection);\n    if (!collection) {\n      return;\n    }\n\n    stores.dialogs.openModal({\n      title: <DialogTitle title={t(\"Edit collection\")} model={collection} />,\n      content: (\n        <CollectionEdit\n          onSubmit={stores.dialogs.closeAllModals}\n          collectionId={collection.id}\n        />\n      ),\n    });\n  },"
+        }
+      ]
+    }
+  ]
+}

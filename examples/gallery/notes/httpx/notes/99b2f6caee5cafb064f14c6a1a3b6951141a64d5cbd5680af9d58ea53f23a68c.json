@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "targetId": "component:module:httpx/_content.py",
+  "summary": "Encodes content, form data, files and JSON into headers and a byte stream.",
+  "author": "Codex (external agent)",
+  "sources": [
+    {
+      "path": "httpx/_content.py",
+      "contentHash": "2c61b3ac94d1dcebcde0c6f519554d2d7917247fbaa0a97002db4ef69e70ff28",
+      "line": 1
+    }
+  ],
+  "claims": [
+    {
+      "purpose": "component-name",
+      "text": "Request body encoding",
+      "citations": [
+        {
+          "path": "httpx/_content.py",
+          "contentHash": "2c61b3ac94d1dcebcde0c6f519554d2d7917247fbaa0a97002db4ef69e70ff28",
+          "startLine": 186,
+          "endLine": 219,
+          "excerpt": "def encode_request(\n    content: RequestContent | None = None,\n    data: RequestData | None = None,\n    files: RequestFiles | None = None,\n    json: Any | None = None,\n    boundary: bytes | None = None,\n) -> tuple[dict[str, str], SyncByteStream | AsyncByteStream]:\n    \"\"\"\n    Handles encoding the given `content`, `data`, `files`, and `json`,\n    returning a two-tuple of (<headers>, <stream>).\n    \"\"\"\n    if data is not None and not isinstance(data, Mapping):\n        # We prefer to separate `content=<bytes|str|byte iterator|bytes aiterator>`\n        # for raw request content, and `data=<form data>` for url encoded or\n        # multipart form content.\n        #\n        # However for compat with requests, we *do* still support\n        # `data=<bytes...>` usages. We deal with that case here, treating it\n        # as if `content=<...>` had been supplied instead.\n        message = \"Use 'content=<...>' to upload raw bytes/text content.\"\n        warnings.warn(message, DeprecationWarning, stacklevel=2)\n        return encode_content(data)\n\n    if content is not None:\n        return encode_content(content)\n    elif files:\n        return encode_multipart_data(data or {}, files, boundary)\n    elif data:\n        return encode_urlencoded_data(data)\n    elif json is not None:\n        return encode_json(json)\n\n    return {}, ByteStream(b\"\")\n"
+        }
+      ]
+    },
+    {
+      "purpose": "component-role",
+      "text": "Encodes content, form data, files and JSON into headers and a byte stream.",
+      "citations": [
+        {
+          "path": "httpx/_content.py",
+          "contentHash": "2c61b3ac94d1dcebcde0c6f519554d2d7917247fbaa0a97002db4ef69e70ff28",
+          "startLine": 186,
+          "endLine": 219,
+          "excerpt": "def encode_request(\n    content: RequestContent | None = None,\n    data: RequestData | None = None,\n    files: RequestFiles | None = None,\n    json: Any | None = None,\n    boundary: bytes | None = None,\n) -> tuple[dict[str, str], SyncByteStream | AsyncByteStream]:\n    \"\"\"\n    Handles encoding the given `content`, `data`, `files`, and `json`,\n    returning a two-tuple of (<headers>, <stream>).\n    \"\"\"\n    if data is not None and not isinstance(data, Mapping):\n        # We prefer to separate `content=<bytes|str|byte iterator|bytes aiterator>`\n        # for raw request content, and `data=<form data>` for url encoded or\n        # multipart form content.\n        #\n        # However for compat with requests, we *do* still support\n        # `data=<bytes...>` usages. We deal with that case here, treating it\n        # as if `content=<...>` had been supplied instead.\n        message = \"Use 'content=<...>' to upload raw bytes/text content.\"\n        warnings.warn(message, DeprecationWarning, stacklevel=2)\n        return encode_content(data)\n\n    if content is not None:\n        return encode_content(content)\n    elif files:\n        return encode_multipart_data(data or {}, files, boundary)\n    elif data:\n        return encode_urlencoded_data(data)\n    elif json is not None:\n        return encode_json(json)\n\n    return {}, ByteStream(b\"\")\n"
+        }
+      ]
+    }
+  ]
+}

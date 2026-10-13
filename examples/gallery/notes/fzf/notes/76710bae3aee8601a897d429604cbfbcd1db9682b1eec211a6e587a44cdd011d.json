@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "targetId": "component:module:go.mod",
+  "summary": "Declares terminal, filesystem-walking and text-handling dependencies.",
+  "author": "Codex (external agent)",
+  "sources": [
+    {
+      "path": "go.mod",
+      "contentHash": "5b5ca4b57c52be23bf81e1f89b5baac602c28af4e251d849ae69fc2540125180",
+      "line": 1
+    }
+  ],
+  "claims": [
+    {
+      "purpose": "component-name",
+      "text": "Go dependencies",
+      "citations": [
+        {
+          "path": "go.mod",
+          "contentHash": "5b5ca4b57c52be23bf81e1f89b5baac602c28af4e251d849ae69fc2540125180",
+          "startLine": 1,
+          "endLine": 18,
+          "excerpt": "module github.com/junegunn/fzf\n\nrequire (\n\tgithub.com/charlievieth/fastwalk v1.0.14\n\tgithub.com/gdamore/tcell/v2 v2.9.0\n\tgithub.com/junegunn/go-shellwords v0.0.0-20250127100254-2aa3b3277741\n\tgithub.com/mattn/go-isatty v0.0.24\n\tgithub.com/rivo/uniseg v0.4.7\n\tgolang.org/x/sys v0.35.0\n\tgolang.org/x/term v0.34.0\n)\n\nrequire (\n\tgithub.com/gdamore/encoding v1.0.1 // indirect\n\tgithub.com/lucasb-eyer/go-colorful v1.2.0 // indirect\n\tgithub.com/mattn/go-runewidth v0.0.16 // indirect\n\tgolang.org/x/text v0.28.0 // indirect\n)"
+        }
+      ]
+    },
+    {
+      "purpose": "component-role",
+      "text": "Declares terminal, filesystem-walking and text-handling dependencies.",
+      "citations": [
+        {
+          "path": "go.mod",
+          "contentHash": "5b5ca4b57c52be23bf81e1f89b5baac602c28af4e251d849ae69fc2540125180",
+          "startLine": 1,
+          "endLine": 18,
+          "excerpt": "module github.com/junegunn/fzf\n\nrequire (\n\tgithub.com/charlievieth/fastwalk v1.0.14\n\tgithub.com/gdamore/tcell/v2 v2.9.0\n\tgithub.com/junegunn/go-shellwords v0.0.0-20250127100254-2aa3b3277741\n\tgithub.com/mattn/go-isatty v0.0.24\n\tgithub.com/rivo/uniseg v0.4.7\n\tgolang.org/x/sys v0.35.0\n\tgolang.org/x/term v0.34.0\n)\n\nrequire (\n\tgithub.com/gdamore/encoding v1.0.1 // indirect\n\tgithub.com/lucasb-eyer/go-colorful v1.2.0 // indirect\n\tgithub.com/mattn/go-runewidth v0.0.16 // indirect\n\tgolang.org/x/text v0.28.0 // indirect\n)"
+        }
+      ]
+    }
+  ]
+}

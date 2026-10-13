@@ -1,3 +1,4 @@
+import { firstImpressionGroups } from '../query/first-impression-components.js';
 import type { Graph, Source } from '../core/model.js';
 import { overviewDependencyGroups } from '../query/structural-dependency-groups.js';
 import { buildStructuralOverview } from '../query/structural-map-model.js';
@@ -6,7 +7,7 @@ export type InterpretationCitation = {
     readonly path: string; readonly contentHash: string; readonly startLine: number; readonly endLine: number;
     readonly excerpt: string; readonly nodeId?: string; readonly edgeId?: string; readonly url?: string;
 };
-export type InterpretationClaim = { readonly text: string; readonly citations: readonly InterpretationCitation[]; };
+export type InterpretationClaim = { readonly purpose?: 'component-name' | 'component-role'; readonly text: string; readonly citations: readonly InterpretationCitation[]; };
 export type ClaimInterpretation = { readonly targetId: string; readonly sources: Interpretation['sources']; readonly validatedClaims: readonly InterpretationClaim[]; };
 export type Interpretation = {
     readonly schemaVersion: 1;
@@ -38,7 +39,9 @@ function parseClaims(value: unknown): readonly InterpretationClaim[] {
     if (!Array.isArray(value) || value.length > 8) throw new InterpretationError('Invalid claim citations');
     return value.map((claim: unknown) => {
         if (!object(claim) || !Array.isArray(claim['citations']) || !claim['citations'].length || claim['citations'].length > 16) throw new InterpretationError('Each claim requires citations');
-        return { text: string(claim['text'], 'claim text', 1000), citations: claim['citations'].map(parseCitation) };
+        const purpose = claim['purpose'];
+        if (purpose !== undefined && purpose !== 'component-name' && purpose !== 'component-role') throw new InterpretationError('Invalid claim purpose');
+        return { text: string(claim['text'], 'claim text', 1000), citations: claim['citations'].map(parseCitation), ...(purpose ? { purpose } : {}) };
     });
 }
 export function parseClaimInterpretations(value: unknown): readonly ClaimInterpretation[] {
@@ -93,7 +96,10 @@ export function validatedInterpretationClaims(note: Interpretation, graph: Graph
         if (!source || text === undefined) return false;
         const lines = text.split('\n');
         const supplied = interpretationEvidence(source, text);
-        if (!supplied.excerpt || citation.startLine < supplied.startLine || citation.endLine > supplied.endLine) return false;
+        if (note.targetId.startsWith('component:')) {
+            // Component targets bind whole member files; each requested excerpt stays bounded.
+            if (citation.endLine - citation.startLine >= 40) return false;
+        } else if (!supplied.excerpt || citation.startLine < supplied.startLine || citation.endLine > supplied.endLine) return false;
         if (citation.endLine > lines.length || lines.slice(citation.startLine - 1, citation.endLine).join('\n') !== citation.excerpt) return false;
         if (citation.nodeId && !matches(citation, graph.nodes.find(node => node.id === citation.nodeId)?.sources ?? [])) return false;
         if (citation.edgeId && !matches(citation, graph.edges.find(edge => edge.id === citation.edgeId)?.sources ?? [])) return false;
@@ -110,7 +116,13 @@ export function interpretationTargets(graph: Graph, includeOverview = false): re
         sources.set(source.path, source); folders.set(folder, sources);
     }
     for (const [folder, sources] of folders) targets.push({ id: `folder:${folder}`, name: folder, kind: 'cluster', sources: [...sources.values()].sort((a, b) => a.path.localeCompare(b.path)) });
-    if (includeOverview) targets.push(...overviewInterpretationTargets(graph));
+    if (includeOverview) {
+        targets.push(...overviewInterpretationTargets(graph));
+        for (const group of firstImpressionGroups(graph.nodes, graph.edges).groups) {
+            const sources = new Map(group.members.flatMap(node => node.sources.map(source => [source.path, source] as const)));
+            targets.push({ id: group.id, name: group.package?.name ?? group.id, kind: 'cluster', sources: [...sources.values()].sort((a, b) => a.path.localeCompare(b.path)) });
+        }
+    }
     return targets.sort((a, b) => a.id.localeCompare(b.id));
 }
 /** Separate identities keep whole-tree notes distinct from production-only first-screen notes. */
@@ -143,7 +155,7 @@ export function overviewInterpretationTargets(graph: Graph, requestedScope?: 'pr
         }).flat();
     });
 }
-export function interpretationStatus(note: Interpretation, graph: Graph, targets: readonly InterpretationTarget[] = interpretationTargets(graph, note.targetId.startsWith('overview:'))): 'fresh' | 'stale' {
+export function interpretationStatus(note: Interpretation, graph: Graph, targets: readonly InterpretationTarget[] = interpretationTargets(graph, note.targetId.startsWith('overview:') || note.targetId.startsWith('component:'))): 'fresh' | 'stale' {
     const target = targets.find(entry => entry.id === note.targetId);
     const current = new Map(graph.inputs.map(input => [input.path, input.contentHash]));
     if (!target || target.sources.length !== note.sources.length) return 'stale';

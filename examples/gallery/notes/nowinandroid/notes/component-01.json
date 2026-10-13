@@ -1,0 +1,335 @@
+{
+  "schemaVersion": 1,
+  "targetId": "component:module:app-nia-catalog/build.gradle.kts",
+  "summary": "Groups the UI component catalog with shared Android build conventions.",
+  "author": "Codex (external agent)",
+  "sources": [
+    {
+      "path": "app-nia-catalog/build.gradle.kts",
+      "contentHash": "c08dc8ba543d5cdd08353b661eeafaecc10364acf6b76e6aa703369fe46f56d2",
+      "line": 1
+    },
+    {
+      "path": "app-nia-catalog/src/main/kotlin/com/google/samples/apps/niacatalog/NiaCatalogActivity.kt",
+      "contentHash": "70bdc02f121bfcf2afe6d74076c7b9d75e40c10ead31b7180625a2f7d6317fdd",
+      "line": 1
+    },
+    {
+      "path": "app-nia-catalog/src/main/kotlin/com/google/samples/apps/niacatalog/ui/Catalog.kt",
+      "contentHash": "752fd436cdcc9f7777b977c695052f0eda402307b7bdffb2df44a9d05093292b",
+      "line": 1
+    },
+    {
+      "path": "build-logic/convention/src/main/kotlin/AndroidApplicationComposeConventionPlugin.kt",
+      "contentHash": "1caf04c1388135ec47228515bcb7d370caf08b89f14a69c17d12c6327e9939d3",
+      "line": 1
+    },
+    {
+      "path": "build-logic/convention/src/main/kotlin/AndroidApplicationConventionPlugin.kt",
+      "contentHash": "b7a0d891ec21470fbbabdb9a70bec8e36a56c2bc493971d5c95a541f542a162e",
+      "line": 1
+    },
+    {
+      "path": "build-logic/convention/src/main/kotlin/AndroidApplicationFirebaseConventionPlugin.kt",
+      "contentHash": "cdf48608f323d70106ba99c45b8d0d507e9f4c3fd0094f0d97b6d3c75891c3d7",
+      "line": 1
+    },
+    {
+      "path": "build-logic/convention/src/main/kotlin/AndroidApplicationFlavorsConventionPlugin.kt",
+      "contentHash": "5251506560a260770bdb07cdd9e7df3bd0611981e99e0e340c7596775e0e37ca",
+      "line": 1
+    },
+    {
+      "path": "build-logic/convention/src/main/kotlin/AndroidApplicationJacocoConventionPlugin.kt",
+      "contentHash": "1eba1840e781612eb7a73a731a9952f3f2873c0db356cf063fbc92077a88ee48",
+      "line": 1
+    },
+    {
+      "path": "build-logic/convention/src/main/kotlin/AndroidFeatureApiConventionPlugin.kt",
+      "contentHash": "695bfc4cd7eded1639addf65e93b942ba65254b71e9b6a81b2669a2c21e4bdff",
+      "line": 1
+    },
+    {
+      "path": "build-logic/convention/src/main/kotlin/AndroidFeatureImplConventionPlugin.kt",
+      "contentHash": "78f9a46d5588a4515242b19c025aa0b30c157edd218ff5647fd8ea8a4068e509",
+      "line": 1
+    },
+    {
+      "path": "build-logic/convention/src/main/kotlin/AndroidLibraryComposeConventionPlugin.kt",
+      "contentHash": "d19937c34b075d8af2abc128279a319eaf7fc1b98ab4816f49631316cf84ae8d",
+      "line": 1
+    },
+    {
+      "path": "build-logic/convention/src/main/kotlin/AndroidLibraryConventionPlugin.kt",
+      "contentHash": "2f3a89a354f5d13e214524033494d274732e652dec83c0d6af8101e3080a47ad",
+      "line": 1
+    },
+    {
+      "path": "build-logic/convention/src/main/kotlin/AndroidLibraryJacocoConventionPlugin.kt",
+      "contentHash": "e80b6d0d58a97e88760685aaa717f95c30506438538772ec1276027b0e923006",
+      "line": 1
+    },
+    {
+      "path": "build-logic/convention/src/main/kotlin/AndroidLintConventionPlugin.kt",
+      "contentHash": "cd0a58533c25add98fd75549514d55a998ea06fda50d5ec72720e50dba6ad582",
+      "line": 1
+    },
+    {
+      "path": "build-logic/convention/src/main/kotlin/AndroidRoomConventionPlugin.kt",
+      "contentHash": "d6800e54df7c51fea44f940f1797103c0683acee1fc94a5e6793bdfe3597c7e0",
+      "line": 1
+    },
+    {
+      "path": "build-logic/convention/src/main/kotlin/AndroidTestConventionPlugin.kt",
+      "contentHash": "96e473978a881a45004595c38f32a33fe475e8b2dc804467b2d71a2b41f75818",
+      "line": 1
+    },
+    {
+      "path": "build-logic/convention/src/main/kotlin/com/google/samples/apps/nowinandroid/AndroidCompose.kt",
+      "contentHash": "4966389b4fb049bb3aba707a0c8836e61ad1c8d420856954a411d9d72e6fb7ee",
+      "line": 1
+    },
+    {
+      "path": "build-logic/convention/src/main/kotlin/com/google/samples/apps/nowinandroid/AndroidInstrumentedTests.kt",
+      "contentHash": "8dafb78d853ea1328c568d5e4fb48f27eeb6760078d19e6a4fa16977387bb69b",
+      "line": 1
+    },
+    {
+      "path": "build-logic/convention/src/main/kotlin/com/google/samples/apps/nowinandroid/Badging.kt",
+      "contentHash": "f01b741629638cf4bc34bd9878ee231942061818ac601a414b62361f2a99f796",
+      "line": 1
+    },
+    {
+      "path": "build-logic/convention/src/main/kotlin/com/google/samples/apps/nowinandroid/GradleManagedDevices.kt",
+      "contentHash": "d695e204c5d0750683415f8fb801807e10fcf974e7d36bcb45064a4af7d79119",
+      "line": 1
+    },
+    {
+      "path": "build-logic/convention/src/main/kotlin/com/google/samples/apps/nowinandroid/Graph.kt",
+      "contentHash": "e44c697adbefbe3a9e74b1df6c1edb69b7f93ed1da06b28c0d7bcf6b1a4a4566",
+      "line": 1
+    },
+    {
+      "path": "build-logic/convention/src/main/kotlin/com/google/samples/apps/nowinandroid/Jacoco.kt",
+      "contentHash": "0653f07e79b51b58ecbade402e5cd7dae90db4ce0b7dab8701dc9b8bc6167fe5",
+      "line": 1
+    },
+    {
+      "path": "build-logic/convention/src/main/kotlin/com/google/samples/apps/nowinandroid/KotlinAndroid.kt",
+      "contentHash": "3d5641d03395787b0a9db0408e9fa71c0d285ff75c53a96a0cd6ac22cab4d49e",
+      "line": 1
+    },
+    {
+      "path": "build-logic/convention/src/main/kotlin/com/google/samples/apps/nowinandroid/NiaBuildType.kt",
+      "contentHash": "b527d4af5224f269980d634a068196535c9904e271f508e4341606659b1d5d88",
+      "line": 1
+    },
+    {
+      "path": "build-logic/convention/src/main/kotlin/com/google/samples/apps/nowinandroid/NiaFlavor.kt",
+      "contentHash": "0d4e9c1ee97501ec18eecc61f9bc2f7311c28fa680cba049702b8782edee4d15",
+      "line": 1
+    },
+    {
+      "path": "build-logic/convention/src/main/kotlin/com/google/samples/apps/nowinandroid/PrintTestApks.kt",
+      "contentHash": "602d6318b938e34cc4618ce3f284c14c234e42dd8991f2ee1feab5f7f6a4d84e",
+      "line": 1
+    },
+    {
+      "path": "build-logic/convention/src/main/kotlin/com/google/samples/apps/nowinandroid/ProjectExtensions.kt",
+      "contentHash": "e2ab5748c118e15eeb0abb1f60c9d4dd4b79f36d7557b59e31c3c3369e5e9adf",
+      "line": 1
+    },
+    {
+      "path": "build-logic/convention/src/main/kotlin/com/google/samples/apps/nowinandroid/Spotless.kt",
+      "contentHash": "123185c141b501380774e133be927efe93fb569c799d5b1cfb61d8b6f5f57838",
+      "line": 1
+    },
+    {
+      "path": "build-logic/convention/src/main/kotlin/HiltConventionPlugin.kt",
+      "contentHash": "2578be658c2f3306736e13298c6da6fdf2def22c72969c904e087f664c0759f5",
+      "line": 1
+    },
+    {
+      "path": "build-logic/convention/src/main/kotlin/JvmLibraryConventionPlugin.kt",
+      "contentHash": "a893c7033e7d1a2cd5d3e4cc89dddafd3e9b1cd28dd0a1e6565c23bf09500a5d",
+      "line": 1
+    },
+    {
+      "path": "build-logic/convention/src/main/kotlin/RootPlugin.kt",
+      "contentHash": "554f8336e167db572fae0e39b342f2a7da1d9d9c887362df8b9f04eb646d2d84",
+      "line": 1
+    },
+    {
+      "path": "core/designsystem/build.gradle.kts",
+      "contentHash": "8773c511dc02286ffdb6314f9c1cfabf345c8cb36572c9449ac55f36537a96da",
+      "line": 1
+    },
+    {
+      "path": "core/designsystem/src/main/kotlin/com/google/samples/apps/nowinandroid/core/designsystem/component/Background.kt",
+      "contentHash": "549802082d0bb3f50066313508b32598f7e5a25fcb024e27040da1ea4eab0ad1",
+      "line": 1
+    },
+    {
+      "path": "core/designsystem/src/main/kotlin/com/google/samples/apps/nowinandroid/core/designsystem/component/Button.kt",
+      "contentHash": "e09580173feb34eb1c619753e7ba966608d0ccd91d2dd4c69665838e2825a8f1",
+      "line": 1
+    },
+    {
+      "path": "core/designsystem/src/main/kotlin/com/google/samples/apps/nowinandroid/core/designsystem/component/Chip.kt",
+      "contentHash": "09d892105730202ba98382c624f2aed9fd85e0ea386533857bf77d05bd891e87",
+      "line": 1
+    },
+    {
+      "path": "core/designsystem/src/main/kotlin/com/google/samples/apps/nowinandroid/core/designsystem/component/DynamicAsyncImage.kt",
+      "contentHash": "fb4f0106eea19024fe26ce97bbcb3fde73ba24a5643949db815f1f203c19ffad",
+      "line": 1
+    },
+    {
+      "path": "core/designsystem/src/main/kotlin/com/google/samples/apps/nowinandroid/core/designsystem/component/IconButton.kt",
+      "contentHash": "4bf7d84c9ad88066b205e20201020b4cf296aee5c7ba5681d1eaa5d502bf3560",
+      "line": 1
+    },
+    {
+      "path": "core/designsystem/src/main/kotlin/com/google/samples/apps/nowinandroid/core/designsystem/component/LoadingWheel.kt",
+      "contentHash": "96545be1d730574066a01762ee1d534c17bec791428b50f7c007b341e9e4086d",
+      "line": 1
+    },
+    {
+      "path": "core/designsystem/src/main/kotlin/com/google/samples/apps/nowinandroid/core/designsystem/component/Navigation.kt",
+      "contentHash": "a039c0dee376f33509341c0bdc9ed930fafbdea046ebc30937c8a82e6a5bd857",
+      "line": 1
+    },
+    {
+      "path": "core/designsystem/src/main/kotlin/com/google/samples/apps/nowinandroid/core/designsystem/component/scrollbar/AppScrollbars.kt",
+      "contentHash": "86f0c8a9856d8050ec498a6f9393ac4e83421b1143461347eb0502d5479334fd",
+      "line": 1
+    },
+    {
+      "path": "core/designsystem/src/main/kotlin/com/google/samples/apps/nowinandroid/core/designsystem/component/scrollbar/LazyScrollbarUtilities.kt",
+      "contentHash": "3fe6c25c3285a7b6bd8eb3b8018ca784182a4ce72c0a5838fb2426a2e45e8f86",
+      "line": 1
+    },
+    {
+      "path": "core/designsystem/src/main/kotlin/com/google/samples/apps/nowinandroid/core/designsystem/component/scrollbar/Scrollbar.kt",
+      "contentHash": "745f677582f252ed8605f19865907c1994f6c1a74115a82c6a25354129e1a61d",
+      "line": 1
+    },
+    {
+      "path": "core/designsystem/src/main/kotlin/com/google/samples/apps/nowinandroid/core/designsystem/component/scrollbar/ScrollbarExt.kt",
+      "contentHash": "ac8ed849fea7af6b79571a559d68348e9ff6560ee0555c3282a321cb3387499c",
+      "line": 1
+    },
+    {
+      "path": "core/designsystem/src/main/kotlin/com/google/samples/apps/nowinandroid/core/designsystem/component/scrollbar/ThumbExt.kt",
+      "contentHash": "b8a51d17b963dc3dfc4050f914baa775fc8c47d22de66d5c777118b0516a163d",
+      "line": 1
+    },
+    {
+      "path": "core/designsystem/src/main/kotlin/com/google/samples/apps/nowinandroid/core/designsystem/component/Tabs.kt",
+      "contentHash": "255688ba290b366a44c49a94785b8954e30e80b0396327bb92191947f6f0794d",
+      "line": 1
+    },
+    {
+      "path": "core/designsystem/src/main/kotlin/com/google/samples/apps/nowinandroid/core/designsystem/component/Tag.kt",
+      "contentHash": "055b3a55806d3054597232fc0c77e5c854072a4315ac344a8d5471364dfbbce9",
+      "line": 1
+    },
+    {
+      "path": "core/designsystem/src/main/kotlin/com/google/samples/apps/nowinandroid/core/designsystem/component/TopAppBar.kt",
+      "contentHash": "7e4aaa65afa732408bf6982e124a81ff60d9b8c9c25dfd5cf050c49107bbacf4",
+      "line": 1
+    },
+    {
+      "path": "core/designsystem/src/main/kotlin/com/google/samples/apps/nowinandroid/core/designsystem/component/ViewToggle.kt",
+      "contentHash": "b1ad58f76ecee9660080bf393e190905cd71d4fa0452c8447b9f1bab7a7d5f8e",
+      "line": 1
+    },
+    {
+      "path": "core/designsystem/src/main/kotlin/com/google/samples/apps/nowinandroid/core/designsystem/icon/NiaIcons.kt",
+      "contentHash": "513de7ed456491b2cb33edcffc0fb8c8174820f2d57ee01ab5f6a652c84e92dd",
+      "line": 1
+    },
+    {
+      "path": "core/designsystem/src/main/kotlin/com/google/samples/apps/nowinandroid/core/designsystem/theme/Background.kt",
+      "contentHash": "5fdbd62b3c702f40194f31a470c068cc2043502491a0fb1c05c7993da82c2d56",
+      "line": 1
+    },
+    {
+      "path": "core/designsystem/src/main/kotlin/com/google/samples/apps/nowinandroid/core/designsystem/theme/Color.kt",
+      "contentHash": "5076874aa028342fc1d9090f855fbe6b7c4568b01bb0f8fcd0f76e28a83147bb",
+      "line": 1
+    },
+    {
+      "path": "core/designsystem/src/main/kotlin/com/google/samples/apps/nowinandroid/core/designsystem/theme/Gradient.kt",
+      "contentHash": "a32956a8960206b3a52d20d995165de14371e14687b6e4217ce3780389cef432",
+      "line": 1
+    },
+    {
+      "path": "core/designsystem/src/main/kotlin/com/google/samples/apps/nowinandroid/core/designsystem/theme/Theme.kt",
+      "contentHash": "38332b182f3a92d6164fa31d38137f5fdfcd25440a3fbb66ba83ed0ecaeed922",
+      "line": 1
+    },
+    {
+      "path": "core/designsystem/src/main/kotlin/com/google/samples/apps/nowinandroid/core/designsystem/theme/Tint.kt",
+      "contentHash": "78a9e3bce0fbddea57d3ffc43182da46e0fe153761078558db36430fd70df4fd",
+      "line": 1
+    },
+    {
+      "path": "core/designsystem/src/main/kotlin/com/google/samples/apps/nowinandroid/core/designsystem/theme/Type.kt",
+      "contentHash": "8aaf9767e84ee50ae1aca3a56ccfd0ca14b85d9223df31810a20d45a2ce4c8aa",
+      "line": 1
+    },
+    {
+      "path": "core/screenshot-testing/build.gradle.kts",
+      "contentHash": "3f83b1cdf36d81423fcaf590508eea4b3997c7ca28028c67cf0a2d88a5aacade",
+      "line": 1
+    },
+    {
+      "path": "core/screenshot-testing/src/main/kotlin/com/google/samples/apps/nowinandroid/core/testing/util/ScreenshotHelper.kt",
+      "contentHash": "b0bcdb694091bdaafa749a3dc70bb814255269568b20f3d09871851ce9f47a7a",
+      "line": 1
+    }
+  ],
+  "claims": [
+    {
+      "purpose": "component-name",
+      "text": "Design catalog & build conventions",
+      "citations": [
+        {
+          "path": "app-nia-catalog/src/main/kotlin/com/google/samples/apps/niacatalog/ui/Catalog.kt",
+          "contentHash": "752fd436cdcc9f7777b977c695052f0eda402307b7bdffb2df44a9d05093292b",
+          "startLine": 72,
+          "endLine": 89,
+          "excerpt": "                item {\n                    Text(\n                        text = \"NiA Catalog\",\n                        style = MaterialTheme.typography.headlineSmall,\n                    )\n                }\n                item { Text(\"Buttons\", Modifier.padding(top = 16.dp)) }\n                item {\n                    FlowRow(horizontalArrangement = Arrangement.spacedBy(16.dp)) {\n                        NiaButton(onClick = {}) {\n                            Text(text = \"Enabled\")\n                        }\n                        NiaOutlinedButton(onClick = {}) {\n                            Text(text = \"Enabled\")\n                        }\n                        NiaTextButton(onClick = {}) {\n                            Text(text = \"Enabled\")\n                        }"
+        },
+        {
+          "path": "build-logic/convention/src/main/kotlin/AndroidLibraryConventionPlugin.kt",
+          "contentHash": "2f3a89a354f5d13e214524033494d274732e652dec83c0d6af8101e3080a47ad",
+          "startLine": 32,
+          "endLine": 42,
+          "excerpt": "abstract class AndroidLibraryConventionPlugin : Plugin<Project> {\n    override fun apply(target: Project) {\n        with(target) {\n            apply(plugin = \"com.android.library\")\n            apply(plugin = \"nowinandroid.android.lint\")\n\n            extensions.configure<LibraryExtension> {\n                configureKotlinAndroid(this)\n                testOptions.targetSdk = 36\n                lint.targetSdk = 36\n                defaultConfig.testInstrumentationRunner = \"androidx.test.runner.AndroidJUnitRunner\""
+        }
+      ]
+    },
+    {
+      "purpose": "component-role",
+      "text": "Groups the UI component catalog with shared Android build conventions.",
+      "citations": [
+        {
+          "path": "app-nia-catalog/src/main/kotlin/com/google/samples/apps/niacatalog/ui/Catalog.kt",
+          "contentHash": "752fd436cdcc9f7777b977c695052f0eda402307b7bdffb2df44a9d05093292b",
+          "startLine": 72,
+          "endLine": 89,
+          "excerpt": "                item {\n                    Text(\n                        text = \"NiA Catalog\",\n                        style = MaterialTheme.typography.headlineSmall,\n                    )\n                }\n                item { Text(\"Buttons\", Modifier.padding(top = 16.dp)) }\n                item {\n                    FlowRow(horizontalArrangement = Arrangement.spacedBy(16.dp)) {\n                        NiaButton(onClick = {}) {\n                            Text(text = \"Enabled\")\n                        }\n                        NiaOutlinedButton(onClick = {}) {\n                            Text(text = \"Enabled\")\n                        }\n                        NiaTextButton(onClick = {}) {\n                            Text(text = \"Enabled\")\n                        }"
+        },
+        {
+          "path": "build-logic/convention/src/main/kotlin/AndroidLibraryConventionPlugin.kt",
+          "contentHash": "2f3a89a354f5d13e214524033494d274732e652dec83c0d6af8101e3080a47ad",
+          "startLine": 32,
+          "endLine": 42,
+          "excerpt": "abstract class AndroidLibraryConventionPlugin : Plugin<Project> {\n    override fun apply(target: Project) {\n        with(target) {\n            apply(plugin = \"com.android.library\")\n            apply(plugin = \"nowinandroid.android.lint\")\n\n            extensions.configure<LibraryExtension> {\n                configureKotlinAndroid(this)\n                testOptions.targetSdk = 36\n                lint.targetSdk = 36\n                defaultConfig.testInstrumentationRunner = \"androidx.test.runner.AndroidJUnitRunner\""
+        }
+      ]
+    }
+  ]
+}

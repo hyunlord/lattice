@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "targetId": "component:module:src/smolagents/mcp_client.py",
+  "summary": "Connects to MCP servers and makes their tools available to agents.",
+  "author": "Codex (external agent)",
+  "sources": [
+    {
+      "path": "src/smolagents/mcp_client.py",
+      "contentHash": "ec0041193c0ea16100f0d911aab12ff92ccb165eb27aebee76550855836f8603",
+      "line": 1
+    }
+  ],
+  "claims": [
+    {
+      "purpose": "component-name",
+      "text": "External tool connections",
+      "citations": [
+        {
+          "path": "src/smolagents/mcp_client.py",
+          "contentHash": "ec0041193c0ea16100f0d911aab12ff92ccb165eb27aebee76550855836f8603",
+          "startLine": 33,
+          "endLine": 50,
+          "excerpt": "class MCPClient:\n    \"\"\"Manages the connection to an MCP server and make its tools available to SmolAgents.\n\n    Note: tools can only be accessed after the connection has been started with the\n        `connect()` method, done during the init. If you don't use the context manager\n        we strongly encourage to use \"try ... finally\" to ensure the connection is cleaned up.\n\n    Args:\n        server_parameters (StdioServerParameters | dict[str, Any] | list[StdioServerParameters | dict[str, Any]]):\n            Configuration parameters to connect to the MCP server. Can be a list if you want to connect multiple MCPs at once.\n\n            - An instance of `mcp.StdioServerParameters` for connecting a Stdio MCP server via standard input/output using a subprocess.\n\n            - A `dict` with at least:\n              - \"url\": URL of the server.\n              - \"transport\": Transport protocol to use, one of:\n                - \"streamable-http\": Streamable HTTP transport (default).\n                - \"sse\": Legacy HTTP+SSE transport (deprecated)."
+        }
+      ]
+    },
+    {
+      "purpose": "component-role",
+      "text": "Connects to MCP servers and makes their tools available to agents.",
+      "citations": [
+        {
+          "path": "src/smolagents/mcp_client.py",
+          "contentHash": "ec0041193c0ea16100f0d911aab12ff92ccb165eb27aebee76550855836f8603",
+          "startLine": 33,
+          "endLine": 50,
+          "excerpt": "class MCPClient:\n    \"\"\"Manages the connection to an MCP server and make its tools available to SmolAgents.\n\n    Note: tools can only be accessed after the connection has been started with the\n        `connect()` method, done during the init. If you don't use the context manager\n        we strongly encourage to use \"try ... finally\" to ensure the connection is cleaned up.\n\n    Args:\n        server_parameters (StdioServerParameters | dict[str, Any] | list[StdioServerParameters | dict[str, Any]]):\n            Configuration parameters to connect to the MCP server. Can be a list if you want to connect multiple MCPs at once.\n\n            - An instance of `mcp.StdioServerParameters` for connecting a Stdio MCP server via standard input/output using a subprocess.\n\n            - A `dict` with at least:\n              - \"url\": URL of the server.\n              - \"transport\": Transport protocol to use, one of:\n                - \"streamable-http\": Streamable HTTP transport (default).\n                - \"sse\": Legacy HTTP+SSE transport (deprecated)."
+        }
+      ]
+    }
+  ]
+}

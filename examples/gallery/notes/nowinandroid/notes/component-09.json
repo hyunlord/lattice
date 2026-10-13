@@ -1,0 +1,56 @@
+{
+  "schemaVersion": 1,
+  "targetId": "component:module:lint/build.gradle.kts",
+  "summary": "Registers design-system and test-method naming checks.",
+  "author": "Codex (external agent)",
+  "sources": [
+    {
+      "path": "lint/build.gradle.kts",
+      "contentHash": "20315c96a0eaed248fc0fdcb0be171c1b27ba4f00c8cd9654fa8c98ef2fcc5c1",
+      "line": 1
+    },
+    {
+      "path": "lint/src/main/kotlin/com/google/samples/apps/nowinandroid/lint/designsystem/DesignSystemDetector.kt",
+      "contentHash": "3f946cac03af80a4102a7f295548ceb33d00d8c176332dfec68fb1e932e337e9",
+      "line": 1
+    },
+    {
+      "path": "lint/src/main/kotlin/com/google/samples/apps/nowinandroid/lint/NiaIssueRegistry.kt",
+      "contentHash": "734e074dd9e49a6a6420ea499e7f2c81291fc19b697a3148992d6041d8dbb2db",
+      "line": 1
+    },
+    {
+      "path": "lint/src/main/kotlin/com/google/samples/apps/nowinandroid/lint/TestMethodNameDetector.kt",
+      "contentHash": "dd23acf4b8162f00c475335899e30cf888e81e83166807b48f981789e9e40ac7",
+      "line": 1
+    }
+  ],
+  "claims": [
+    {
+      "purpose": "component-name",
+      "text": "Design & test lint checks",
+      "citations": [
+        {
+          "path": "lint/src/main/kotlin/com/google/samples/apps/nowinandroid/lint/NiaIssueRegistry.kt",
+          "contentHash": "734e074dd9e49a6a6420ea499e7f2c81291fc19b697a3148992d6041d8dbb2db",
+          "startLine": 22,
+          "endLine": 30,
+          "excerpt": "import com.google.samples.apps.nowinandroid.lint.designsystem.DesignSystemDetector\n\nclass NiaIssueRegistry : IssueRegistry() {\n\n    override val issues = listOf(\n        DesignSystemDetector.ISSUE,\n        TestMethodNameDetector.FORMAT,\n        TestMethodNameDetector.PREFIX,\n    )"
+        }
+      ]
+    },
+    {
+      "purpose": "component-role",
+      "text": "Registers design-system and test-method naming checks.",
+      "citations": [
+        {
+          "path": "lint/src/main/kotlin/com/google/samples/apps/nowinandroid/lint/NiaIssueRegistry.kt",
+          "contentHash": "734e074dd9e49a6a6420ea499e7f2c81291fc19b697a3148992d6041d8dbb2db",
+          "startLine": 22,
+          "endLine": 30,
+          "excerpt": "import com.google.samples.apps.nowinandroid.lint.designsystem.DesignSystemDetector\n\nclass NiaIssueRegistry : IssueRegistry() {\n\n    override val issues = listOf(\n        DesignSystemDetector.ISSUE,\n        TestMethodNameDetector.FORMAT,\n        TestMethodNameDetector.PREFIX,\n    )"
+        }
+      ]
+    }
+  ]
+}

@@ -7,7 +7,8 @@
       "description": "Command-line fuzzy finder.",
       "stack": "Go",
       "repository": "junegunn/fzf",
-      "commit": "c0a193e031f01fb50bf6f7be4381990a3753f7cf"
+      "commit": "c0a193e031f01fb50bf6f7be4381990a3753f7cf",
+      "notes": "notes/fzf"
     },
     {
       "id": "httpx",
@@ -15,7 +16,8 @@
       "description": "HTTP client for Python.",
       "stack": "Python",
       "repository": "encode/httpx",
-      "commit": "b5addb64f0161ff6bfe94c124ef76f6a1fba5254"
+      "commit": "b5addb64f0161ff6bfe94c124ef76f6a1fba5254",
+      "notes": "notes/httpx"
     },
     {
       "id": "ripgrep",
@@ -23,23 +25,26 @@
       "description": "Line-oriented recursive search tool.",
       "stack": "Rust",
       "repository": "BurntSushi/ripgrep",
-      "commit": "3fce3b5bb0236da2df6d99672afb8a719642eca7"
+      "commit": "3fce3b5bb0236da2df6d99672afb8a719642eca7",
+      "notes": "notes/ripgrep"
     },
     {
       "id": "nowinandroid",
       "name": "Now in Android",
       "description": "Android application with modular architecture.",
-      "stack": "Kotlin · Gradle",
+      "stack": "Kotlin \u00b7 Gradle",
       "repository": "android/nowinandroid",
-      "commit": "a49ed253d75e61a2b6ab80a8da677b57437b08eb"
+      "commit": "a49ed253d75e61a2b6ab80a8da677b57437b08eb",
+      "notes": "notes/nowinandroid"
     },
     {
       "id": "spring-petclinic",
       "name": "Spring Petclinic",
       "description": "Sample application built with Spring.",
-      "stack": "Java · Maven",
+      "stack": "Java \u00b7 Maven",
       "repository": "spring-projects/spring-petclinic",
-      "commit": "500158f732419217507c7656904b8e6aa1bcc0d6"
+      "commit": "500158f732419217507c7656904b8e6aa1bcc0d6",
+      "notes": "notes/spring-petclinic"
     },
     {
       "id": "excalidraw",
@@ -47,12 +52,43 @@
       "description": "Collaborative virtual whiteboard.",
       "stack": "TypeScript",
       "repository": "excalidraw/excalidraw",
-      "commit": "e65eca999e071503efb893d3379a29fb96ff37c4"
+      "commit": "e65eca999e071503efb893d3379a29fb96ff37c4",
+      "notes": "notes/excalidraw"
+    },
+    {
+      "id": "smolagents",
+      "repository": "huggingface/smolagents",
+      "commit": "96f33faaf028479119ec8d34507b47694cf14e34",
+      "name": "smolagents",
+      "description": "Source-pinned user evaluation map.",
+      "stack": "",
+      "testOnly": true,
+      "notes": "notes/smolagents"
+    },
+    {
+      "id": "pocketbase",
+      "repository": "pocketbase/pocketbase",
+      "commit": "6f370ea741f33adf889eef02e3c1b884a47aa522",
+      "name": "pocketbase",
+      "description": "Source-pinned user evaluation map.",
+      "stack": "",
+      "testOnly": true,
+      "notes": "notes/pocketbase"
+    },
+    {
+      "id": "outline",
+      "repository": "outline/outline",
+      "commit": "3789ca60f4ae91f13a35e98ce8415a69d8386c4c",
+      "name": "outline",
+      "description": "Source-pinned user evaluation map.",
+      "stack": "",
+      "testOnly": true,
+      "notes": "notes/outline"
     }
   ],
   "lensExamples": [
     {
-      "name": "Sow & Siege · configured game lens",
+      "name": "Sow & Siege \u00b7 configured game lens",
       "url": "https://hyunlord.github.io/bs-mobile/"
     }
   ]

@@ -1,0 +1,565 @@
+{
+  "schemaVersion": 1,
+  "targetId": "component:module:packages/excalidraw/actions/actionAlign.tsx",
+  "summary": "Renders the scene on a canvas and accepts pointer and navigation input.",
+  "author": "Codex (external agent)",
+  "sources": [
+    {
+      "path": "packages/excalidraw/actions/actionAlign.tsx",
+      "contentHash": "f0249c3296019b72b968453420e78bebbba9f3038088eb42e8fc45afac0ba15e",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/actions/actionCanvas.tsx",
+      "contentHash": "8806f99e6f8258096adced4e7e3d23b80feb5af1704b24128d76079de8e0cdb7",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/actions/actionElementLink.ts",
+      "contentHash": "b08589758ad85b1f077fb284583646e7a113113db02b58f0e2674d1539a19454",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/actions/actionGroup.tsx",
+      "contentHash": "d8c92ba266655802e40b22d4758143a92127b6beb1591fcc39954c9c21395692",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/actions/actionNavigate.tsx",
+      "contentHash": "550b388b3c35dc493b1e73189243509b4fab684633b3a042261b1719c72166bb",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/actions/actionProperties.tsx",
+      "contentHash": "fa0cd5c61d052e1b35279f0b87742957ae3e56a3aa60f1599fa3a6ac48492d9c",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/actions/actionStyles.ts",
+      "contentHash": "89224fb7ce25813b56d88a8a2b4f9798dd166f6377c8943768a90f8f1e98fa97",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/actions/actionTextAutoResize.ts",
+      "contentHash": "e327f9aa6de30973fb6522c03d8260333bc8158e743e81d472afbc102ebd8ada",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/actions/actionToggleViewMode.tsx",
+      "contentHash": "d6c9c7ee5c4822f0abba09771150656476b360ab8ef309a14673745560786d66",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/actions/colorTargets.ts",
+      "contentHash": "8b38fa8105245da99df44e83e38892f834a93542f05010019e74727a83a19c74",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/animatedTrail.ts",
+      "contentHash": "06e455052d475d1b1698fe7693740039c27b0cd7d1bf234819e963a352cb19ab",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/appState.ts",
+      "contentHash": "6cf9b2d3421cad3297362e6661fa4f4972146e04552a75d7757644a069e104bb",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/charts/charts.bar.ts",
+      "contentHash": "0210e475e4967a76b0720e92a642309efaf046091149d5a216e0afa8f50dcf73",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/charts/charts.constants.ts",
+      "contentHash": "b1a260f2e49fd67427e4a71d8448d49cdd45c1b7983c4efd75fe510f463ec608",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/charts/charts.helpers.ts",
+      "contentHash": "7150c8b1fd6f49d068c21321f0d40979d5e1ff9016205dc4f0792d9b3a44bab5",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/charts/charts.line.ts",
+      "contentHash": "c5d33ffaccb9ad45bb56852e7ec5d7f4c6887639576bfc28129e0a2562a142ac",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/charts/charts.parse.ts",
+      "contentHash": "50759f152a90d09a83c215bb9d0082de699c73b3b9cc3b4b614dd1ace3b9113e",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/charts/charts.radar.ts",
+      "contentHash": "c8be84eeb786ffe19b43a7981662c0a56ca3c8165ee7ed1654d68dfa00928aab",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/charts/charts.types.ts",
+      "contentHash": "439663934923a20e91fe26e8e437b64291c5f5dd537fc144e5fc98b306a80a7a",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/charts/index.ts",
+      "contentHash": "22294105f4c5ed1b9e8680ac7c61c336519e2ba669fa3054640bea4353c91dbf",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/clients.ts",
+      "contentHash": "6ef0518207922a844317d4bae8ecd134b7c04268ef215d87b238de75e1e72ef6",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/clipboard.ts",
+      "contentHash": "801629c0583f67d75dbc85b3a92c0edc6885a1e24b5d0506c2633008d5211fe8",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/Actions.tsx",
+      "contentHash": "7a174738df8cde4700f5729d7a6deca49ea17c9990913859d6de541372556f2c",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/App.clipboard.ts",
+      "contentHash": "452e5e856a6a000d0c14aa1b0cb39cc84fd99e65f2cdad78d5bffc9cc24b74cd",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/App.cursor.ts",
+      "contentHash": "58f5821ef9f3aa1cb500bcef4cdfdb5db835a2e635d12cbd4d099c83e1353fa5",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/App.drawshape.ts",
+      "contentHash": "00ffad850a7b27c1e06e60b3faf91f3c287974428d5e442694b26fd6a9aee760",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/App.pan.ts",
+      "contentHash": "07b0d9e10ba4ff210980c43a4203e2f1a327970bb2de656e56d584cb9a444eb3",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/App.text.ts",
+      "contentHash": "76218480f2eec42a6f32c6c30ec5ec1a60f2d87be9246f6d4563f1b3abefee57",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/App.viewport.ts",
+      "contentHash": "3fbe50300262a07551c844c7bfdf3b3ceb4b7a701735036765a140f753de1264",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/App.wheel.ts",
+      "contentHash": "988f43a2e9e836e7e06335ecfc6928fb2c1203324f92a8d98132af175139c60f",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/Avatar.tsx",
+      "contentHash": "02ac9f340e99424ec202e0c155beb321c0dfcbd169ad30a92614856ea554f3e6",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/ButtonSeparator.tsx",
+      "contentHash": "a73d0efd4cf13535b51c57b16613cc20ce0b81f9ff8f7c27f48c631a6d813941",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/canvases/index.tsx",
+      "contentHash": "79b37d155ac1a90987e0baeb535b08b528a593ab814a425ffbe16e03590bf5d5",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/canvases/InteractiveCanvas.tsx",
+      "contentHash": "3aefd3759f0cf236901b74662f30dedda7402d4b7cc3bf93949745cd3cae01eb",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/canvases/NewElementCanvas.tsx",
+      "contentHash": "c2b07f6035a58b80cb03295a4801e13f64b9d317fa4f8ec2b58f268d9165de9e",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/canvases/StaticCanvas.tsx",
+      "contentHash": "b31ae1a666bebb10b338f1541c8687d19210f4b440b680ed04fcb66e56f82477",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/ColorPicker/ColorInput.tsx",
+      "contentHash": "2a6f9cc465bd3d40054624f6f01f20188be57f255bbaf34c107447ed3de2efa1",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/ColorPicker/ColorPicker.tsx",
+      "contentHash": "86ec65fa9771a9551e87c220aad6698591eaa96945f0064601a4722c74919be8",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/ColorPicker/colorPickerUtils.ts",
+      "contentHash": "fb1feada0307c789fe0d61a09d319995228498ecf813c9e23e11104a6a1c0349",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/ColorPicker/colorTopPicksDnD.ts",
+      "contentHash": "3e4384506a26846068425a073664bdb7475bb0d690b22c0a84473dd0ead50755",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/ColorPicker/CustomColorList.tsx",
+      "contentHash": "b8db3cb082f460521dad6f787a90fdb443291bcf8422686316a9b4fc63e19b4b",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/ColorPicker/HotkeyLabel.tsx",
+      "contentHash": "6cdac82730ea1d1e4f045cf14e6428eff10a29e271b0da7ebc966b81de470b59",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/ColorPicker/keyboardNavHandlers.ts",
+      "contentHash": "29ee525be5b54ced228416610940e3c0783ccb799e5bb8c5cd09985225958eb9",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/ColorPicker/Picker.tsx",
+      "contentHash": "3d506d2441007b99d2b64f0d1d9d387d256bb7e5e6f75ca7f19adfc3610c36d4",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/ColorPicker/PickerColorList.tsx",
+      "contentHash": "df60048bf1d976a0299bfcc58ae0645bfd23dfee8229b587e3f992577f282b7b",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/ColorPicker/PickerHeading.tsx",
+      "contentHash": "1ef55ff853c4a6341bcde195ecc643e57372ba3a8e0133471e1d5d941d390d71",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/ColorPicker/ShadeList.tsx",
+      "contentHash": "04981566c63a3f6dc9308da2bec8b557508e6ccb7dce0e7c12052dacd6d8711d",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/ColorPicker/TopPicks.tsx",
+      "contentHash": "daa7b920c523cd3b585c46faf99c04fea9bc6c99e92f0bb8247c2bac3a03ee4d",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/FontPicker/FontPicker.tsx",
+      "contentHash": "79166665d88d1ce370b62d7f1b7095671880ffa75b0996abba5b5f2e6ed81ef7",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/FontPicker/FontPickerTrigger.tsx",
+      "contentHash": "60314afe1f5c16d7b34fb359aab349e694a1543bb3ab2ed9cf491e41f603a992",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/FontPicker/fontTopPicksDnD.ts",
+      "contentHash": "e27fb41919024c91183db43fc2067ead3a89356e00d32e0b948c1d32a99cdc30",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/main-menu/DefaultItems.tsx",
+      "contentHash": "11ffeb744f9cf969e46081580e5d662dc58b8e976155dc4ee2a9e9f68d77f257",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/main-menu/MainMenu.tsx",
+      "contentHash": "66adfcb89a2dfb3cf202ed2af17261f7ec3730121cc7b7c5d41d6c0142fa8443",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/PasteChartDialog.tsx",
+      "contentHash": "cad7a57701c16b8d936708b01097415ab767017d72838ec086755816185c95ed",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/RadioButton.tsx",
+      "contentHash": "831c33feb9ef552f9fd21c48774f4aff4e5f30eecd4b455e716edd24d24966a7",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/RadioSelection.tsx",
+      "contentHash": "c334f705768f0330520525b6b591c2049eff3b6efd3a2422c9fd9d1d5559c66b",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/Range.tsx",
+      "contentHash": "a52362f591664d3437cc9675db0ff9f877e63beb4f99ce318044f829f641ff8f",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/shapeActionPredicates.ts",
+      "contentHash": "23ef2f2b37d2d83e1589e7bdc75656a426978364f695b16ff6ef7ff8c02a5a8e",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/Stats/Angle.tsx",
+      "contentHash": "49018609fdf77797aae50df6b07632d91e4c4b31f3d38d7e183d824277e8bf8e",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/Stats/CanvasGrid.tsx",
+      "contentHash": "84fbce34a9b9799a76c32fd383d01d5953a9cc4c5c773e247d3c7cda333250b6",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/Stats/DragInput.tsx",
+      "contentHash": "e216b8411814d6f6d7376ec14c3c65406bca6ba388208e7bebd8480fcffff88a",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/Stats/FontSize.tsx",
+      "contentHash": "aae2680100e9281cdf74ec1a2190acbd5e5ab24e10918b9edf5faf3fcaa465db",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/Stats/index.tsx",
+      "contentHash": "cb5cf2f23b22064072a1da0acc60ad5b0e84a01d80602a85b6b394361b1b503c",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/Stats/MultiAngle.tsx",
+      "contentHash": "75d6dacc72f30c84de22ac0503137c0f66dfe2e912c6638242599ae22f32c2d8",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/Stats/MultiDimension.tsx",
+      "contentHash": "d80cee3b4d348fd1dbbc7ff0f12b7b8c6fe2b0a6a4cf0873af745103b38153a2",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/Stats/MultiFontSize.tsx",
+      "contentHash": "5ddc4720487d8ee254922ff8684ebe942b1554a0222e7df5b2105eccbb59538d",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/Stats/MultiPosition.tsx",
+      "contentHash": "98467ba43c9b343f82b51505105d0816532aaca19836290cfd6b153399cd04b1",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/Stats/Position.tsx",
+      "contentHash": "87adf0d4ff3f6ea7148abb59db5d47db0e5fc4f3f7cb4e3fb65cb536251ce6aa",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/Stats/utils.ts",
+      "contentHash": "782931b828f24382a2bfbe90923326f0a2b873217620d6d1d2505fbd32ddf1d7",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/SVGLayer.tsx",
+      "contentHash": "05e6e1c450c988f9ed767c143de6abcbd0b0fa173dcea4c338768c005e4747e3",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/TopPicksDnD/TopPicksContextMenu.tsx",
+      "contentHash": "c947385fcbd55df0e5d7594d9a32d89c7f08977b5779a1438c8c4c4304703650",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/TopPicksDnD/topPicksDnD.tsx",
+      "contentHash": "b9af00d5bf5e50b69007bbafe5c64b7d45f56add3a8b6039791ec246d807406d",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/TopPicksDnD/TopPicksTip.tsx",
+      "contentHash": "dbf97275cb4c89caa8f35aac47ce4eb412566a88142f14a0bb5ecd7cd032402b",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/drawShapeTrail.ts",
+      "contentHash": "f2f39a985d09e8806c182ad0def03abcadd97b55735f11402f4b5155503d696d",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/eraser/index.ts",
+      "contentHash": "a7281a4906850df503787812c574384bfbe57b773b41cee021c6a81d53dd3d7f",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/fonts/index.ts",
+      "contentHash": "b8d8306e6db8520053bd90166eed5a1773c94394f1e6d5b68ee39243e3bef0e6",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/hooks/useAppStateValue.ts",
+      "contentHash": "89ffb06e6035564b2e8c0bb5cde4c7db5b64719d549390c40281a0ae419b9f13",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/hooks/useTextEditorFocus.ts",
+      "contentHash": "e0b818f7a47115c10cc2ba43636166e73517694d89ac7dfc279af0715464712d",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/index-node.ts",
+      "contentHash": "833d9ce4abbb0f02d666fcbcddb87e2af02fc407eef802a52b62fce0e26c3533",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/laserTrails.ts",
+      "contentHash": "94c9c207dca0c7e18d65cb252ab0367d18fcd01cff8a4cc849ad48d55a75f27b",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/lasso/index.ts",
+      "contentHash": "1b3b675c2a499cbb701992153ebd122251c592206a4837cda101473bc9b53cc0",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/lasso/utils.ts",
+      "contentHash": "7b9963f910d9b42b670d7a696050656672b9539f79807d124b09f2f6a3a4c730",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/mermaid.ts",
+      "contentHash": "e388a1b7c01b333ab98f24b4f756619328b500f9f9f2abf122db9cf7ef249d3c",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/reactUtils.ts",
+      "contentHash": "fff628782edcde259fc6beef45d60a55ab84ea81d6077cbe7788d446d5405519",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/renderer/animation.ts",
+      "contentHash": "8d193dca0aa5fb698b58bda73b8cf442a9f69a46e115f18d331f5a14bb338c84",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/renderer/helpers.ts",
+      "contentHash": "081ff48697a08b1cd492603da044adf43ff79a4c98ff7de17176ab877f18bf30",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/renderer/interactiveScene.ts",
+      "contentHash": "b2ce708b405ab3d9e8f9061627488d65e36298d15ce97cbe9c02f1d97e1bf75e",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/renderer/renderNewElementScene.ts",
+      "contentHash": "057ff8e3dd3108d34a6868fd1f892b3d51c81d92ae04aba5a055631388b4245f",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/renderer/renderSnaps.ts",
+      "contentHash": "231d21c5e511b94afa100ee891399eb0912fb4135b2339b3f0a97150251a15ac",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/renderer/roundRect.ts",
+      "contentHash": "82d3e4972890525dacb51fe10a3965ab8ebbe1b1913bfc0aebea84a87a652fff",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/scene/export.ts",
+      "contentHash": "b0a1e6200370627478f2f370dd31cab071b7293275c6e12bfd2a0c2d2dd614c0",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/scene/index.ts",
+      "contentHash": "961333c76ec7d1420839dc770da8e890ffa3d74bc022a3afdcf32ecb65e028e6",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/scene/normalize.ts",
+      "contentHash": "c8bb23a964c8df6090f0ca394144ab9db3382d562ca8617b9fa0bfad164e0d61",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/scene/Renderer.ts",
+      "contentHash": "1335284a90313bc74d9f4e6daa994eca13e405f58f0b38a0e4938c62398aeb2b",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/scene/types.ts",
+      "contentHash": "ae0eb07ceb272918e18e3be8ea17d58d85bbd912ead24c35355bc09aa40c0778",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/snapping.ts",
+      "contentHash": "07dc8aeeacb322d99249ec52286d0753f8baf99a1d814dc24d2f1469d7f38362",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/textAutoResizeHandle.ts",
+      "contentHash": "5383b99bc397ea25453e8ed4ac34119c882cdfe83ba9270376d0f42dc31dc831",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/viewport.ts",
+      "contentHash": "7fc95483ae81961873df516cb1e6dc936074b6e193a211e302acbb8743bcad0e",
+      "line": 1
+    },
+    {
+      "path": "packages/laser-pointer/global.d.ts",
+      "contentHash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "line": 1
+    },
+    {
+      "path": "packages/laser-pointer/src/index.ts",
+      "contentHash": "20f6cc8476985397286f9625dadfffa7ad2bff9c6f30c4d8e96e47e7aacd1684",
+      "line": 1
+    },
+    {
+      "path": "packages/laser-pointer/src/math.ts",
+      "contentHash": "64f13fde32ba2efbb55248b55c879328c2c1cfc6aaf0fe8073d22a0d013e599c",
+      "line": 1
+    },
+    {
+      "path": "packages/laser-pointer/src/simplify.ts",
+      "contentHash": "29e024b70039cfa77f9bf977e1763676c7844a46e9c5189f1ffd081c40fa1aef",
+      "line": 1
+    },
+    {
+      "path": "packages/laser-pointer/src/state.ts",
+      "contentHash": "3ddc3ece741312fab695b79f56418766d7754c5867aad7b76673873f71c34aa2",
+      "line": 1
+    }
+  ],
+  "claims": [
+    {
+      "purpose": "component-name",
+      "text": "Canvas rendering & input",
+      "citations": [
+        {
+          "path": "packages/excalidraw/components/canvases/StaticCanvas.tsx",
+          "contentHash": "b31ae1a666bebb10b338f1541c8687d19210f4b440b680ed04fcb66e56f82477",
+          "startLine": 50,
+          "endLine": 68,
+          "excerpt": "    const canvas = props.canvas;\n\n    if (!isComponentMounted.current) {\n      isComponentMounted.current = true;\n\n      wrapper.replaceChildren(canvas);\n      canvas.classList.add(\"excalidraw__canvas\", \"static\");\n    }\n\n    renderStaticScene(\n      {\n        canvas,\n        rc: props.rc,\n        scale: props.scale,\n        elementsMap: props.elementsMap,\n        allElementsMap: props.allElementsMap,\n        visibleElements: props.visibleElements,\n        appState: props.appState,\n        renderConfig: props.renderConfig,"
+        },
+        {
+          "path": "packages/excalidraw/components/canvases/InteractiveCanvas.tsx",
+          "contentHash": "3aefd3759f0cf236901b74662f30dedda7402d4b7cc3bf93949745cd3cae01eb",
+          "startLine": 47,
+          "endLine": 69,
+          "excerpt": "  editorInterface: EditorInterface;\n  app: AppClassProperties;\n  interactionEnabled: boolean;\n  navigationEnabled: boolean;\n  renderInteractiveSceneCallback: (\n    data: RenderInteractiveSceneCallback,\n  ) => void;\n  handleCanvasRef: (canvas: HTMLCanvasElement | null) => void;\n  onContextMenu: Exclude<\n    DOMAttributes<HTMLCanvasElement | HTMLDivElement>[\"onContextMenu\"],\n    undefined\n  >;\n  onClick: Exclude<DOMAttributes<HTMLCanvasElement>[\"onClick\"], undefined>;\n  onPointerMove: Exclude<\n    DOMAttributes<HTMLCanvasElement>[\"onPointerMove\"],\n    undefined\n  >;\n  onPointerUp: Exclude<\n    DOMAttributes<HTMLCanvasElement>[\"onPointerUp\"],\n    undefined\n  >;\n  onPointerCancel: Exclude<\n    DOMAttributes<HTMLCanvasElement>[\"onPointerCancel\"],"
+        }
+      ]
+    },
+    {
+      "purpose": "component-role",
+      "text": "Renders the scene on a canvas and accepts pointer and navigation input.",
+      "citations": [
+        {
+          "path": "packages/excalidraw/components/canvases/StaticCanvas.tsx",
+          "contentHash": "b31ae1a666bebb10b338f1541c8687d19210f4b440b680ed04fcb66e56f82477",
+          "startLine": 50,
+          "endLine": 68,
+          "excerpt": "    const canvas = props.canvas;\n\n    if (!isComponentMounted.current) {\n      isComponentMounted.current = true;\n\n      wrapper.replaceChildren(canvas);\n      canvas.classList.add(\"excalidraw__canvas\", \"static\");\n    }\n\n    renderStaticScene(\n      {\n        canvas,\n        rc: props.rc,\n        scale: props.scale,\n        elementsMap: props.elementsMap,\n        allElementsMap: props.allElementsMap,\n        visibleElements: props.visibleElements,\n        appState: props.appState,\n        renderConfig: props.renderConfig,"
+        },
+        {
+          "path": "packages/excalidraw/components/canvases/InteractiveCanvas.tsx",
+          "contentHash": "3aefd3759f0cf236901b74662f30dedda7402d4b7cc3bf93949745cd3cae01eb",
+          "startLine": 47,
+          "endLine": 69,
+          "excerpt": "  editorInterface: EditorInterface;\n  app: AppClassProperties;\n  interactionEnabled: boolean;\n  navigationEnabled: boolean;\n  renderInteractiveSceneCallback: (\n    data: RenderInteractiveSceneCallback,\n  ) => void;\n  handleCanvasRef: (canvas: HTMLCanvasElement | null) => void;\n  onContextMenu: Exclude<\n    DOMAttributes<HTMLCanvasElement | HTMLDivElement>[\"onContextMenu\"],\n    undefined\n  >;\n  onClick: Exclude<DOMAttributes<HTMLCanvasElement>[\"onClick\"], undefined>;\n  onPointerMove: Exclude<\n    DOMAttributes<HTMLCanvasElement>[\"onPointerMove\"],\n    undefined\n  >;\n  onPointerUp: Exclude<\n    DOMAttributes<HTMLCanvasElement>[\"onPointerUp\"],\n    undefined\n  >;\n  onPointerCancel: Exclude<\n    DOMAttributes<HTMLCanvasElement>[\"onPointerCancel\"],"
+        }
+      ]
+    }
+  ]
+}

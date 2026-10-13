@@ -1,0 +1,56 @@
+{
+  "schemaVersion": 1,
+  "targetId": "component:module:httpx/__init__.py",
+  "summary": "Exports the client APIs and loads the optional command-line client.",
+  "author": "Codex (external agent)",
+  "sources": [
+    {
+      "path": "httpx/__init__.py",
+      "contentHash": "ee97edea66c8b6e7fa76ac30847e4189dfe114069e86827719e23a7c2e110f40",
+      "line": 1
+    },
+    {
+      "path": "httpx/__version__.py",
+      "contentHash": "2e853261e3974e2786cee3ffeb850bd30c5db718eebbf41b3af13b34e83e22a5",
+      "line": 1
+    },
+    {
+      "path": "httpx/_main.py",
+      "contentHash": "0a0f4631a6e24d3fecc1a0df5202118ad4b0c4b44c4b05033a6ecb7521aa940e",
+      "line": 1
+    },
+    {
+      "path": "httpx/_status_codes.py",
+      "contentHash": "0d89fedae7c180c797cb9b3cc77fd307bc2302e00031ec136a43eb9b9ad712c7",
+      "line": 1
+    }
+  ],
+  "claims": [
+    {
+      "purpose": "component-name",
+      "text": "Public API and command",
+      "citations": [
+        {
+          "path": "httpx/__init__.py",
+          "contentHash": "ee97edea66c8b6e7fa76ac30847e4189dfe114069e86827719e23a7c2e110f40",
+          "startLine": 1,
+          "endLine": 26,
+          "excerpt": "from .__version__ import __description__, __title__, __version__\nfrom ._api import *\nfrom ._auth import *\nfrom ._client import *\nfrom ._config import *\nfrom ._content import *\nfrom ._exceptions import *\nfrom ._models import *\nfrom ._status_codes import *\nfrom ._transports import *\nfrom ._types import *\nfrom ._urls import *\n\ntry:\n    from ._main import main\nexcept ImportError:  # pragma: no cover\n\n    def main() -> None:  # type: ignore\n        import sys\n\n        print(\n            \"The httpx command line client could not run because the required \"\n            \"dependencies were not installed.\\nMake sure you've installed \"\n            \"everything with: pip install 'httpx[cli]'\"\n        )\n        sys.exit(1)"
+        }
+      ]
+    },
+    {
+      "purpose": "component-role",
+      "text": "Exports the client APIs and loads the optional command-line client.",
+      "citations": [
+        {
+          "path": "httpx/__init__.py",
+          "contentHash": "ee97edea66c8b6e7fa76ac30847e4189dfe114069e86827719e23a7c2e110f40",
+          "startLine": 1,
+          "endLine": 26,
+          "excerpt": "from .__version__ import __description__, __title__, __version__\nfrom ._api import *\nfrom ._auth import *\nfrom ._client import *\nfrom ._config import *\nfrom ._content import *\nfrom ._exceptions import *\nfrom ._models import *\nfrom ._status_codes import *\nfrom ._transports import *\nfrom ._types import *\nfrom ._urls import *\n\ntry:\n    from ._main import main\nexcept ImportError:  # pragma: no cover\n\n    def main() -> None:  # type: ignore\n        import sys\n\n        print(\n            \"The httpx command line client could not run because the required \"\n            \"dependencies were not installed.\\nMake sure you've installed \"\n            \"everything with: pip install 'httpx[cli]'\"\n        )\n        sys.exit(1)"
+        }
+      ]
+    }
+  ]
+}

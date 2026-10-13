@@ -1,0 +1,495 @@
+{
+  "schemaVersion": 1,
+  "targetId": "component:module:tools/archive/create.go",
+  "summary": "Provides OAuth client providers, file archives and shared infrastructure helpers.",
+  "author": "Codex (external agent)",
+  "sources": [
+    {
+      "path": "tools/archive/create.go",
+      "contentHash": "f2be4ce908af740b171bbdfa53e82469726fedab104616ea16d9fba458b98c75",
+      "line": 1
+    },
+    {
+      "path": "tools/archive/extract.go",
+      "contentHash": "6e111a2a13a54fd9e0f6688e173406317c5d782ffc39e5be5bfd69aea7296dbd",
+      "line": 1
+    },
+    {
+      "path": "tools/auth/apple.go",
+      "contentHash": "2ed3b92007fe4e6e1eb0b1eb649c50ad8122fa90043f9b3f413651ef8c6284c1",
+      "line": 1
+    },
+    {
+      "path": "tools/auth/auth.go",
+      "contentHash": "35600c3fa579a78bf0b903534205904d84bb1c6b6ccac71d4433b0b4ef2e1834",
+      "line": 1
+    },
+    {
+      "path": "tools/auth/base_provider.go",
+      "contentHash": "adf13ac45b6ed276574296a749b3339bee8503b2c45f77c505e01e484ec7a77d",
+      "line": 1
+    },
+    {
+      "path": "tools/auth/bitbucket.go",
+      "contentHash": "7f542ce9b7bbc4e7ae7b3d5d994106fd4ed640079e29764ffe7822eb25ec4543",
+      "line": 1
+    },
+    {
+      "path": "tools/auth/box.go",
+      "contentHash": "946b32c32d04df56e42a4eeed9a399624b18403c4744d43e75b6d3d44a5a915e",
+      "line": 1
+    },
+    {
+      "path": "tools/auth/discord.go",
+      "contentHash": "6ef6f546b47d87e343b3865433e55da7438402165923abe125127736aa9aa0c3",
+      "line": 1
+    },
+    {
+      "path": "tools/auth/facebook.go",
+      "contentHash": "f17db4bbeb06b20178301f2062f7d8dc5ca6fa70c83f49a8df9dd344b045bccb",
+      "line": 1
+    },
+    {
+      "path": "tools/auth/gitea.go",
+      "contentHash": "f3cf04838cbf2b6860153b630566bbe0849d03ce219e3f1f4415143075c693f6",
+      "line": 1
+    },
+    {
+      "path": "tools/auth/gitee.go",
+      "contentHash": "a40d225958e62ae6b8653b5ca87a10dcc5374e51429373423c7e1eed057e814f",
+      "line": 1
+    },
+    {
+      "path": "tools/auth/github.go",
+      "contentHash": "6ce5d90fc17ce4bce3628885724aa80b2c48c4b2b65f80ee8638a9f46730811b",
+      "line": 1
+    },
+    {
+      "path": "tools/auth/gitlab.go",
+      "contentHash": "1bf3d7655d7cc873748962dbf3e08fd465b9ca0e3b6d1a03a050658e50b60f62",
+      "line": 1
+    },
+    {
+      "path": "tools/auth/google.go",
+      "contentHash": "2e6dac2bef85c11fa937da85ba85bfb07a9ad6b754719dca424559d80363fe4c",
+      "line": 1
+    },
+    {
+      "path": "tools/auth/instagram.go",
+      "contentHash": "b92d2e8942c580fb6232d46510057d8db2cf035a05ec5212670e1d842970470e",
+      "line": 1
+    },
+    {
+      "path": "tools/auth/internal/jwk/jwk.go",
+      "contentHash": "f118ec8bea38f810da933d836d2cd4fe8fe5206b1c3073cdbb1ea83617669687",
+      "line": 1
+    },
+    {
+      "path": "tools/auth/kakao.go",
+      "contentHash": "a0b1cd38bf955e00f12053db6b388cc39f89551302d744123e04ba81796baf85",
+      "line": 1
+    },
+    {
+      "path": "tools/auth/lark.go",
+      "contentHash": "22124b8df99de97398bcdd591a96cd7a7fc847bfddc197167c958f544aa7cc78",
+      "line": 1
+    },
+    {
+      "path": "tools/auth/linear.go",
+      "contentHash": "ab4c6dd419a45a86ca7391060db821ed9456930695846d600e03d1752aef2bbb",
+      "line": 1
+    },
+    {
+      "path": "tools/auth/livechat.go",
+      "contentHash": "8d685adcb4a5750262f2221f9e6abb839b03691ccc5da0b5c9278636f540ff9f",
+      "line": 1
+    },
+    {
+      "path": "tools/auth/mailcow.go",
+      "contentHash": "4aaa3e2afdef450157d31b3ae59842105a5a08e352696786591aea2944587a57",
+      "line": 1
+    },
+    {
+      "path": "tools/auth/microsoft.go",
+      "contentHash": "bbb26d653ff8e4079b98c132426dc677610d29eb0d4f1ab9e052ace9b8f1773f",
+      "line": 1
+    },
+    {
+      "path": "tools/auth/monday.go",
+      "contentHash": "e430cb6635d518191a847dcfde78fdd448e79841d5a2fd48f6de490a369bd5b5",
+      "line": 1
+    },
+    {
+      "path": "tools/auth/notion.go",
+      "contentHash": "ff547c5359c0e54a01e98541ded3cc4901862a0fc3b7d0c2513ca8d51ebf84a3",
+      "line": 1
+    },
+    {
+      "path": "tools/auth/oidc.go",
+      "contentHash": "8db076844482a2e0ad0586126d90b158f7fb627092a89aa6d21cd424c8c972c7",
+      "line": 1
+    },
+    {
+      "path": "tools/auth/patreon.go",
+      "contentHash": "5c3cf1f4faafb42855f8b5906ea45cc0c9fb79a1509653f0b278c2ae32e2ed9e",
+      "line": 1
+    },
+    {
+      "path": "tools/auth/planningcenter.go",
+      "contentHash": "b99ec0fa30434574e8407ddff99804862a5fcea15b21ba1ee3df5d79200e1e9a",
+      "line": 1
+    },
+    {
+      "path": "tools/auth/spotify.go",
+      "contentHash": "072df54b60a6cbbdc2190b53da2598bc75d8a39cfe55924d7b79e017e92c268c",
+      "line": 1
+    },
+    {
+      "path": "tools/auth/strava.go",
+      "contentHash": "1016ff6639c6e54c21f5eb41955e9141caed2cb558b5cfad21308790fff53587",
+      "line": 1
+    },
+    {
+      "path": "tools/auth/trakt.go",
+      "contentHash": "a265c22ff2437433a75920c12044b501bf087ef43effa1289a218ea3a6b41ede",
+      "line": 1
+    },
+    {
+      "path": "tools/auth/twitch.go",
+      "contentHash": "c0b70231174c01b4279b024cd91d1f57eabf166e4002af2731d3c54bea5a054b",
+      "line": 1
+    },
+    {
+      "path": "tools/auth/twitter.go",
+      "contentHash": "0665fbed3555e409b5646efb114bfcefb1be08ab2fcce958fcaf876d4c02f36f",
+      "line": 1
+    },
+    {
+      "path": "tools/auth/vk.go",
+      "contentHash": "2be751fb694ab7ba314049b8a4dbd38d009f86259065bb127555235606e0f511",
+      "line": 1
+    },
+    {
+      "path": "tools/auth/wakatime.go",
+      "contentHash": "a6d58a95593af5961b42f3e1c3308b36dcfe7d178ef1f749fb24f063d171b08d",
+      "line": 1
+    },
+    {
+      "path": "tools/auth/yandex.go",
+      "contentHash": "ba4dae4bc2dfe984e033dd82de51b4eef3104a2ffb7f35dfff70a47131540d2c",
+      "line": 1
+    },
+    {
+      "path": "tools/cron/job.go",
+      "contentHash": "1a1d3f3a1f168c9dcf00dfa4aa1f38a20053e3cd36550461be5d84d022efc0ce",
+      "line": 1
+    },
+    {
+      "path": "tools/cron/schedule.go",
+      "contentHash": "eeba3849b5532666953b58a30c634636a6e1e205272d60a39deb007f059f6bd4",
+      "line": 1
+    },
+    {
+      "path": "tools/dbutils/json.go",
+      "contentHash": "671d05db67252ef4a78c5d7f022ba4ed4ea3b82c7ee3bdc76dfb3f8b706df449",
+      "line": 1
+    },
+    {
+      "path": "tools/dbutils/select.go",
+      "contentHash": "757663feb196f7b304bea778a19074f24f38358018f3b8d36ee010abd1a7246d",
+      "line": 1
+    },
+    {
+      "path": "tools/filesystem/blob/bucket.go",
+      "contentHash": "f51d8e6119d7ef0205725c31a3bed00ee3f2f09fdf021460c3490ba2f5044455",
+      "line": 1
+    },
+    {
+      "path": "tools/filesystem/blob/driver.go",
+      "contentHash": "2bad8447238d5f1552823ccb24435696e9477082d67c205202924bd1ed9d53dd",
+      "line": 1
+    },
+    {
+      "path": "tools/filesystem/blob/hex.go",
+      "contentHash": "6a0677631e62c5c0b735ce85eef82af58a328e7b4516a5b3147b74846ede7bda",
+      "line": 1
+    },
+    {
+      "path": "tools/filesystem/blob/reader.go",
+      "contentHash": "029db84f45e1a917d5fc10bdde7a97ea755edc16c55683a2a8ba98ce929254ca",
+      "line": 1
+    },
+    {
+      "path": "tools/filesystem/blob/writer.go",
+      "contentHash": "f39124a866b7eab94723894677c1920cd012c4ffeffc291f578462db6a907e42",
+      "line": 1
+    },
+    {
+      "path": "tools/filesystem/file.go",
+      "contentHash": "172d97a599dc92e9e8a2d3041be127f6a2dde713f5bec368ac805d4920903b7c",
+      "line": 1
+    },
+    {
+      "path": "tools/filesystem/internal/fileblob/attrs.go",
+      "contentHash": "4dce00a09ed0c07091cb957e32e5be65d3f8bff51500d205e82961987357a929",
+      "line": 1
+    },
+    {
+      "path": "tools/filesystem/internal/fileblob/fileblob.go",
+      "contentHash": "f09958b09272b022bb1ace197822f84f4be20d58968bee6db8ddfd00d1cb3da1",
+      "line": 1
+    },
+    {
+      "path": "tools/filesystem/internal/s3blob/s3/copy_object.go",
+      "contentHash": "5b6a30421719ed06bfde948dcb1d2dc739d664d559cd861d10e142d9726fc093",
+      "line": 1
+    },
+    {
+      "path": "tools/filesystem/internal/s3blob/s3/delete_object.go",
+      "contentHash": "500f9ce9b144a7ab4abe448012abda8f3a33db850def1b7f11debe24306a9047",
+      "line": 1
+    },
+    {
+      "path": "tools/filesystem/internal/s3blob/s3/error.go",
+      "contentHash": "131ed150e1e839b4cc1d2dcf92d5fd464f48e8d853a38a6cd93de39dcb3d086c",
+      "line": 1
+    },
+    {
+      "path": "tools/filesystem/internal/s3blob/s3/get_object.go",
+      "contentHash": "05da8b3810f839abea28454f648af1dda32d49b5465d1429d4b72410433ff626",
+      "line": 1
+    },
+    {
+      "path": "tools/filesystem/internal/s3blob/s3/head_object.go",
+      "contentHash": "5dd95dafad42513ac93fce2715292c862492f0a4e3ebcd506225b762dc313405",
+      "line": 1
+    },
+    {
+      "path": "tools/filesystem/internal/s3blob/s3/list_objects.go",
+      "contentHash": "11d0cf0dccac64cf55d4c6167188309c0438dc18c498fab4a6222193e4ecf5c7",
+      "line": 1
+    },
+    {
+      "path": "tools/filesystem/internal/s3blob/s3/s3.go",
+      "contentHash": "45b936ee6d5bd18b4831ee34e35d864d8849b6a1fe371125cfc9e98d3a73a177",
+      "line": 1
+    },
+    {
+      "path": "tools/hook/event.go",
+      "contentHash": "d6967afd6db9ac4f1aeea59b7bd3b7971e4247e4ea7df3f99b7f1a2692fa573a",
+      "line": 1
+    },
+    {
+      "path": "tools/hook/hook.go",
+      "contentHash": "d41e571e5980889f0ad1a779a664a2a39c188c9f6d0abdd56e34edda83c6925a",
+      "line": 1
+    },
+    {
+      "path": "tools/inflector/inflector.go",
+      "contentHash": "aa9aa6efa50e065d97f88f693525c871198ceb6fe1e007af1eec18a0e2572c4f",
+      "line": 1
+    },
+    {
+      "path": "tools/logger/batch_handler.go",
+      "contentHash": "620ce444e4649fe5b8fa0a874d72e79392394ff606dc7762a697cc455f660035",
+      "line": 1
+    },
+    {
+      "path": "tools/logger/log.go",
+      "contentHash": "8d12876dcb971191334625e720bbcba43397f761378d228bcfc55dd3abab24c2",
+      "line": 1
+    },
+    {
+      "path": "tools/mailer/mailer.go",
+      "contentHash": "cfc428b28f78a6792ccaf82ce1bb69e11364d13fa12c7191e6c3c203678a83f3",
+      "line": 1
+    },
+    {
+      "path": "tools/mailer/sendmail.go",
+      "contentHash": "e98d78b48714c02027f12042d506904209da767d23fe08d5475499956f3d77de",
+      "line": 1
+    },
+    {
+      "path": "tools/mailer/smtp.go",
+      "contentHash": "fa9f809ab43345f585a4fc71aee845df8e8bf6501da6279655af7540dc544fde",
+      "line": 1
+    },
+    {
+      "path": "tools/osutils/cmd.go",
+      "contentHash": "c198bee516ad2bd0dbad6a43500044f3abe2a750d1043bb08a000b65731c3e81",
+      "line": 1
+    },
+    {
+      "path": "tools/osutils/run.go",
+      "contentHash": "da52ce025fb41065cca512fa709ef063001e026dff1b166c51f44ef08579f6f7",
+      "line": 1
+    },
+    {
+      "path": "tools/router/buffer_with_file.go",
+      "contentHash": "4ddd6c88231ebc406787970b548d9a0913ef42384c7a60a6e109b2a6b1850320",
+      "line": 1
+    },
+    {
+      "path": "tools/router/error.go",
+      "contentHash": "b67c7c189083d40b1e7864eea4a83843b13d83d895b39b86866ad4172a7becec",
+      "line": 1
+    },
+    {
+      "path": "tools/router/group.go",
+      "contentHash": "c0112dd8241f40b7f29d7cc547d07e0adf535aec76cab2222ac89f7880f2d1ac",
+      "line": 1
+    },
+    {
+      "path": "tools/router/rereadable_read_closer.go",
+      "contentHash": "d9fbc88eface86e0a668f28962327ca2fc686a27473e5576a0000afff9d76fec",
+      "line": 1
+    },
+    {
+      "path": "tools/router/route.go",
+      "contentHash": "d97f8c1e48d3b2c385c39fd6a1994b809833676801004f9922e2cd292686cc28",
+      "line": 1
+    },
+    {
+      "path": "tools/router/router.go",
+      "contentHash": "ccf2b5f6ce9a2f0c8acfb033fb6c5905d14c7be8d608843a9725795fe891be36",
+      "line": 1
+    },
+    {
+      "path": "tools/router/unmarshal_request_data.go",
+      "contentHash": "6cfac27249faf61de845030def55376fe5a6b3ec224d4cd2ecb2f3e3aa2cb95f",
+      "line": 1
+    },
+    {
+      "path": "tools/search/identifier_macros.go",
+      "contentHash": "9f00d26d9307ff3cb87adec7295abfd797a038ab93f3b8960c2c7d67590272df",
+      "line": 1
+    },
+    {
+      "path": "tools/search/multi_match_subquery.go",
+      "contentHash": "c3c192c893189fcc2f3ea765ef381b7b6ce7cf788fedfebee7e7dd5ed0675761",
+      "line": 1
+    },
+    {
+      "path": "tools/search/sort.go",
+      "contentHash": "541fea9b9a105d71cbfd8532fc665d36ee956410aca2329f572a7cb1ac47555c",
+      "line": 1
+    },
+    {
+      "path": "tools/search/token_functions.go",
+      "contentHash": "bd1dd74c1b3e5212dcbb7008d782ef28db148f10e26b97f1748497a1e4a062df",
+      "line": 1
+    },
+    {
+      "path": "tools/security/crypto.go",
+      "contentHash": "cb518bdb332558a0fe2bc40491f9692de5b5142e27e51da9fec5c794307600eb",
+      "line": 1
+    },
+    {
+      "path": "tools/security/encrypt.go",
+      "contentHash": "57e7896fdab5b2ba79dfdc210ea73dda2778c5965d71744fee19c1b3692961e8",
+      "line": 1
+    },
+    {
+      "path": "tools/security/jwt.go",
+      "contentHash": "5bb4fb3a22e0af958d3882b68503c67cfffef7aba8e0a0003b569aeea1d5f0b3",
+      "line": 1
+    },
+    {
+      "path": "tools/security/random_by_regex.go",
+      "contentHash": "4e5d15a0045e91b62a60d84ae332f00921769c0b9693173b31a10cd6dd3e3ddc",
+      "line": 1
+    },
+    {
+      "path": "tools/security/random.go",
+      "contentHash": "1d626cea751d74e8f8b353d930d22d725393500a24026c635628ca7a6d054949",
+      "line": 1
+    },
+    {
+      "path": "tools/subscriptions/client.go",
+      "contentHash": "cb107cbe7e4d518c0a58bd03069be6dbb8ee0c563dc254aec0b6bab02c26990d",
+      "line": 1
+    },
+    {
+      "path": "tools/subscriptions/message.go",
+      "contentHash": "dd7b6c2715d4c2c6053b915553b5659d04be6f6006c5d591500e73b262469256",
+      "line": 1
+    },
+    {
+      "path": "tools/template/renderer.go",
+      "contentHash": "624c8f6ff1917dde1e29bb257824602d7ac67021df842f48920d95625831892b",
+      "line": 1
+    },
+    {
+      "path": "tools/types/datetime.go",
+      "contentHash": "bed864cc7a1bf4980660201edea09e49c67b8754557d10d2d64e4c8bfdabe458",
+      "line": 1
+    },
+    {
+      "path": "tools/types/geo_point.go",
+      "contentHash": "e360d302095a40b6172e72d7a5e2c7911e79519c6c9d02120dbbbc875d1b0d8f",
+      "line": 1
+    },
+    {
+      "path": "tools/types/json_array.go",
+      "contentHash": "a58315bea540f42e7fa36e397e81503c23966bb8fe91c697e8fd04327820b833",
+      "line": 1
+    },
+    {
+      "path": "tools/types/json_map.go",
+      "contentHash": "bc4053c23400939cbd6d78a8640ee317990bb16d60e296aacddfe48288fe5bd3",
+      "line": 1
+    },
+    {
+      "path": "tools/types/json_raw.go",
+      "contentHash": "5c5734f7557979c2d840cd6540b952bf139e6568ef9da56e7bf7cfee9edf9198",
+      "line": 1
+    },
+    {
+      "path": "tools/types/types.go",
+      "contentHash": "05e0d3489540504eb0f5314cb34e9cd2df43791e5b2cae978cb76e99de41a605",
+      "line": 1
+    }
+  ],
+  "claims": [
+    {
+      "purpose": "component-name",
+      "text": "Authentication and storage utilities",
+      "citations": [
+        {
+          "path": "tools/auth/auth.go",
+          "contentHash": "35600c3fa579a78bf0b903534205904d84bb1c6b6ccac71d4433b0b4ef2e1834",
+          "startLine": 13,
+          "endLine": 34,
+          "excerpt": "// ProviderFactoryFunc defines a function for initializing a new OAuth2 provider.\ntype ProviderFactoryFunc func() Provider\n\n// Providers defines a map with all of the available OAuth2 providers.\n//\n// To register a new provider append a new entry in the map.\nvar Providers = map[string]ProviderFactoryFunc{}\n\n// NewProviderByName returns a new preconfigured provider instance by its name identifier.\nfunc NewProviderByName(name string) (Provider, error) {\n\tfactory, ok := Providers[name]\n\tif !ok {\n\t\treturn nil, errors.New(\"missing provider \" + name)\n\t}\n\n\treturn factory(), nil\n}\n\n// @todo refactor and consider replace with a plain struct\n//\n// Provider defines a common interface for an OAuth2 client.\ntype Provider interface {"
+        },
+        {
+          "path": "tools/archive/create.go",
+          "contentHash": "f2be4ce908af740b171bbdfa53e82469726fedab104616ea16d9fba458b98c75",
+          "startLine": 14,
+          "endLine": 19,
+          "excerpt": "// Create creates a new zip archive from src dir content and saves it in dest path.\n//\n// You can specify skipPaths to skip/ignore certain directories and files (relative to src)\n// preventing adding them in the final archive.\nfunc Create(src string, dest string, skipPaths ...string) error {\n\tif err := os.MkdirAll(filepath.Dir(dest), os.ModePerm); err != nil {"
+        }
+      ]
+    },
+    {
+      "purpose": "component-role",
+      "text": "Provides OAuth client providers, file archives and shared infrastructure helpers.",
+      "citations": [
+        {
+          "path": "tools/auth/auth.go",
+          "contentHash": "35600c3fa579a78bf0b903534205904d84bb1c6b6ccac71d4433b0b4ef2e1834",
+          "startLine": 13,
+          "endLine": 34,
+          "excerpt": "// ProviderFactoryFunc defines a function for initializing a new OAuth2 provider.\ntype ProviderFactoryFunc func() Provider\n\n// Providers defines a map with all of the available OAuth2 providers.\n//\n// To register a new provider append a new entry in the map.\nvar Providers = map[string]ProviderFactoryFunc{}\n\n// NewProviderByName returns a new preconfigured provider instance by its name identifier.\nfunc NewProviderByName(name string) (Provider, error) {\n\tfactory, ok := Providers[name]\n\tif !ok {\n\t\treturn nil, errors.New(\"missing provider \" + name)\n\t}\n\n\treturn factory(), nil\n}\n\n// @todo refactor and consider replace with a plain struct\n//\n// Provider defines a common interface for an OAuth2 client.\ntype Provider interface {"
+        },
+        {
+          "path": "tools/archive/create.go",
+          "contentHash": "f2be4ce908af740b171bbdfa53e82469726fedab104616ea16d9fba458b98c75",
+          "startLine": 14,
+          "endLine": 19,
+          "excerpt": "// Create creates a new zip archive from src dir content and saves it in dest path.\n//\n// You can specify skipPaths to skip/ignore certain directories and files (relative to src)\n// preventing adding them in the final archive.\nfunc Create(src string, dest string, skipPaths ...string) error {\n\tif err := os.MkdirAll(filepath.Dir(dest), os.ModePerm); err != nil {"
+        }
+      ]
+    }
+  ]
+}

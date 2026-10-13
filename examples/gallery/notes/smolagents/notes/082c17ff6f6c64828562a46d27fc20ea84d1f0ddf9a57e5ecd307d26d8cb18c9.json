@@ -1,0 +1,56 @@
+{
+  "schemaVersion": 1,
+  "targetId": "component:module:src/smolagents/agents.py",
+  "summary": "Alternates model-directed actions and environment observations to work through a task.",
+  "author": "Codex (external agent)",
+  "sources": [
+    {
+      "path": "src/smolagents/agents.py",
+      "contentHash": "da0da2e258c346e28d97b3584dfe58dcd203fc20fbde6c6533e333f9b1a06352",
+      "line": 1
+    },
+    {
+      "path": "src/smolagents/memory.py",
+      "contentHash": "8089d5162069158bd548673b52fc4c2d15b91146ae29d503903cfde8f913418a",
+      "line": 1
+    },
+    {
+      "path": "src/smolagents/monitoring.py",
+      "contentHash": "bce3de91526054e0f6f0b795ecca4e374dac5166aa66514d3b621ac4394659fa",
+      "line": 1
+    },
+    {
+      "path": "src/smolagents/utils.py",
+      "contentHash": "19263b4d418d5b69e3dfc3d0789aa2dc58ba6902bed2b0f9296b15057a837dc6",
+      "line": 1
+    }
+  ],
+  "claims": [
+    {
+      "purpose": "component-name",
+      "text": "Agent reasoning loop",
+      "citations": [
+        {
+          "path": "src/smolagents/agents.py",
+          "contentHash": "da0da2e258c346e28d97b3584dfe58dcd203fc20fbde6c6533e333f9b1a06352",
+          "startLine": 268,
+          "endLine": 279,
+          "excerpt": "class MultiStepAgent(ABC):\n    \"\"\"\n    Agent class that solves the given task step by step, using the ReAct framework:\n    While the objective is not reached, the agent will perform a cycle of action (given by the LLM) and observation (obtained from the environment).\n\n    Args:\n        tools (`list[Tool]`): [`Tool`]s that the agent can use.\n        model (`Callable[[list[dict[str, str]]], ChatMessage]`): Model that will generate the agent's actions.\n        prompt_templates ([`~agents.PromptTemplates`], *optional*): Prompt templates.\n        instructions (`str`, *optional*): Custom instructions for the agent, will be inserted in the system prompt.\n        max_steps (`int`, default `20`): Maximum number of steps the agent can take to solve the task.\n        add_base_tools (`bool`, default `False`): Whether to add the base tools to the agent's tools."
+        }
+      ]
+    },
+    {
+      "purpose": "component-role",
+      "text": "Alternates model-directed actions and environment observations to work through a task.",
+      "citations": [
+        {
+          "path": "src/smolagents/agents.py",
+          "contentHash": "da0da2e258c346e28d97b3584dfe58dcd203fc20fbde6c6533e333f9b1a06352",
+          "startLine": 268,
+          "endLine": 279,
+          "excerpt": "class MultiStepAgent(ABC):\n    \"\"\"\n    Agent class that solves the given task step by step, using the ReAct framework:\n    While the objective is not reached, the agent will perform a cycle of action (given by the LLM) and observation (obtained from the environment).\n\n    Args:\n        tools (`list[Tool]`): [`Tool`]s that the agent can use.\n        model (`Callable[[list[dict[str, str]]], ChatMessage]`): Model that will generate the agent's actions.\n        prompt_templates ([`~agents.PromptTemplates`], *optional*): Prompt templates.\n        instructions (`str`, *optional*): Custom instructions for the agent, will be inserted in the system prompt.\n        max_steps (`int`, default `20`): Maximum number of steps the agent can take to solve the task.\n        add_base_tools (`bool`, default `False`): Whether to add the base tools to the agent's tools."
+        }
+      ]
+    }
+  ]
+}

@@ -18,6 +18,10 @@ export function logicEntries(facts: readonly LogicFacts[], packages: readonly No
             const source = sourceFor(fact, definition.line, definition.endLine, `/logic/definitions/${definition.start}`);
             if (definition.name === 'main' && ['rust', 'go', 'kotlin', 'python'].includes(fact.language) && !definition.parent && !definition.owner) add(definition, 'executable', `${fact.language}-main-declaration`, source);
             if (['java', 'csharp'].includes(fact.language) && definition.static && ['main', 'Main'].includes(definition.name)) add(definition, 'executable', `${fact.language}-static-main`, source);
+            for (const annotation of definition.annotations.filter(name => name.startsWith('ui-root@'))) {
+                const [line, name] = annotation.slice(8).split(':');
+                if (name) add(definition, 'ui-root', `ui-root:${name}`, sourceFor(fact, Number(line), Number(line), '/logic/ui-root'));
+            }
             const guard = definition.annotations.find(name => name.startsWith('python-main-guard@'));
             if (guard) { const line = Number(guard.split('@')[1]); add(definition, 'module-execution', 'python-main-guard', sourceFor(fact, line, line, '/logic/main-guard')); }
             if (definition.name === '<module>' && fact.language === 'python' && /(?:^|\/)__main__\.py$/u.test(fact.path)) add(definition, 'module-execution', 'python-main-module', source);

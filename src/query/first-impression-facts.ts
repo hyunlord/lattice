@@ -1,12 +1,13 @@
+import { firstImpressionFlow } from './first-impression-flow.js';
 import { descriptiveProse } from '../adapters/description-prose.js';
 import type { Node, Source } from '../core/model.js';
 import type { JsonValue } from '../core/canonical.js';
 import { executionCategory } from '../core/logic-policy.js';
-import { logicEntrypoints, logicFlow, type LogicGraph } from './logic-model.js';
+import { logicEntrypoints, type LogicGraph } from './logic-model.js';
 import { structuralSummary } from './structural-map-model.js';
 import { representativeNames } from './structural-name-facts.js';
 import { manifestPackage } from './structural-manifest-map.js';
-import { pathOf, type ComponentGroup } from './first-impression-components.js';
+import { pathOf, strings, type ComponentGroup } from './first-impression-components.js';
 import type { FirstImpression, FirstImpressionComponent, FirstImpressionEntrypoint, FirstImpressionFlow } from './first-impression-types.js';
 
 const object = (value: JsonValue | undefined): value is { readonly [key: string]: JsonValue; } => value !== null && typeof value === 'object' && !Array.isArray(value);
@@ -40,20 +41,45 @@ export function firstImpressionComponent(group: ComponentGroup, membershipPath: 
     const names = representativeNames(group.members);
     return { id: group.id, title, description: documented?.text ?? names?.text ?? `${group.members.length} source files · ${preview.map(node => node.path).join(' · ')}`, basis: documented ? 'source-description' : names ? 'public-names' : 'inventory', fileCount: group.members.length, memberPreview: preview, sources: documented?.sources ?? group.members.flatMap(node => node.sources.slice(0, 1)).slice(0, 3), membershipPath };
 }
-export function firstImpressionLogic(graph: LogicGraph) {
+export function firstImpressionLogic(graph: LogicGraph, groups: readonly ComponentGroup[] = []) {
+    const componentByNode = new Map(groups.flatMap(group => group.members.map(node => [node.id, group.id] as const)));
+    const componentByPath = new Map(groups.flatMap(group => group.members.map(node => [pathOf(node), group.id] as const)));
+    const component = (node: Node): { readonly componentId?: string; } => {
+        const id = componentByNode.get(String(node.attributes['module'] ?? node.id)) ?? componentByPath.get(pathOf(node));
+        return id ? { componentId: id } : {};
+    };
+    const nodesById = new Map(graph.nodes.map(node => [node.id, node]));
     const page = logicEntrypoints(graph, { limit: 200 });
+    const logicRootByDestination = new Map<string, string>();
     const selected: FirstImpressionEntrypoint[] = page.items.flatMap(item => {
-        const entry = item.entrypoints.find(value => executionCategory(value.category)) ?? item.entrypoints.find(value => value.category === 'public-api');
-        return entry ? [{ id: item.node.id, name: item.node.name, category: executionCategory(entry.category) ? 'executable' as const : 'public-api' as const, source: entry.source }] : [];
+        const entry = item.entrypoints.find(value => executionCategory(value.category)) ?? item.entrypoints.find(value => value.category === 'public-api') ?? item.entrypoints.find(value => value.category === 'ui-root');
+        const owner = entry?.category === 'ui-root' && item.node.name === '<module>' ? nodesById.get(String(item.node.attributes['module'] ?? '')) : undefined;
+        const target = owner && (owner.kind === 'module' || owner.kind === 'file') ? owner : item.node;
+        logicRootByDestination.set(target.id, item.node.id);
+        return entry ? [{ id: target.id, name: entry.rule.startsWith('ui-root:') ? entry.rule.slice(8) : item.node.name, ...component(target), targetKind: target.kind === 'function' ? 'function' as const : 'node' as const, basis: entry.category === 'ui-root' ? 'ui-root' as const : 'static-call-graph' as const, category: executionCategory(entry.category) ? 'executable' as const : 'public-api' as const, source: entry.source }] : [];
     });
     const flows: FirstImpressionFlow[] = [];
     for (const entry of selected.slice(0, 12)) {
         if (flows.length === 3) break;
-        const flow = logicFlow(graph, { id: entry.id, depth: 2, maxNodes: 6, maxEdges: 8 });
+        const rootId = logicRootByDestination.get(entry.id) ?? entry.id;
+        const flow = firstImpressionFlow(graph, rootId, componentByNode);
         if (!flow.edges.length) continue;
-        flows.push({ rootId: entry.id, nodes: flow.nodes.map(item => ({ id: item.node.id, name: item.node.name, ...(item.node.sources[0] ? { source: item.node.sources[0] } : {}) })), edges: flow.edges.map(edge => ({ id: edge.id, source: edge.source, target: edge.target, sources: edge.sources.slice(0, 2) })), truncated: flow.truncated, basis: 'static-call-graph' });
+        flows.push({ rootId, nodes: flow.nodes.map(item => ({ id: item.node.id, name: item.node.name, ...component(item.node), ...(item.node.sources[0] ? { source: item.node.sources[0] } : {}) })), edges: flow.edges.map(edge => ({ id: edge.id, source: edge.source, target: edge.target, sources: edge.sources.slice(0, 2) })), truncated: flow.truncated, basis: 'static-call-graph' });
     }
-    return { entrypoints: selected.slice(0, 8), entrypointCount: page.total, flows };
+    const alternatives: FirstImpressionEntrypoint[] = [];
+    if (!selected.some(entry => entry.category === 'executable') || !flows.length) {
+        for (const pkg of graph.nodes.filter(manifestPackage)) {
+            if (!strings(pkg.attributes['entryTargets']).length || !pkg.sources[0]) continue;
+            const members = strings(pkg.attributes['memberIds']).flatMap(id => componentByNode.get(id) ?? []);
+            const ids = [...new Set(members)];
+            if (!ids.length) continue;
+            const target = graph.nodes.find(node => (node.kind === 'module' || node.kind === 'file') && strings(pkg.attributes['entryTargets']).includes(pathOf(node)) && componentByNode.has(node.id));
+            const componentId = target ? componentByNode.get(target.id) : ids.length === 1 ? ids[0] : undefined;
+            alternatives.push({ id: target?.id ?? pkg.id, name: pkg.name, category: 'public-api', source: pkg.sources[0], targetKind: 'node', basis: 'package-entry', ...(componentId ? { componentId } : {}) });
+        }
+    }
+    const entries = selected.some(entry => entry.category === 'executable') ? [...selected, ...alternatives] : [...selected.filter(entry => entry.basis === 'ui-root'), ...alternatives, ...selected.filter(entry => entry.basis !== 'ui-root')];
+    return { entrypoints: entries.slice(0, 8), entrypointCount: page.total + alternatives.length, flows };
 }
 export function firstImpressionStack(nodes: readonly Node[]): FirstImpression['stack'] {
     const facts = new Map<string, { name: string; basis: 'language' | 'manifest'; files: Set<string>; sources: Source[]; }>();

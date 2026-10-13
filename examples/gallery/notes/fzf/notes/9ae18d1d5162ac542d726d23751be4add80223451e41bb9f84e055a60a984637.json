@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "targetId": "component:module:shell/update.sh",
+  "summary": "Copies shared shell helpers into completion and key-binding scripts.",
+  "author": "Codex (external agent)",
+  "sources": [
+    {
+      "path": "shell/update.sh",
+      "contentHash": "54b9a68b0550b775d83cc129ba1e828e7c05eeac2bb26576d761bb79658e5ad4",
+      "line": 1
+    }
+  ],
+  "claims": [
+    {
+      "purpose": "component-name",
+      "text": "Shell script maintenance",
+      "citations": [
+        {
+          "path": "shell/update.sh",
+          "contentHash": "54b9a68b0550b775d83cc129ba1e828e7c05eeac2bb26576d761bb79658e5ad4",
+          "startLine": 3,
+          "endLine": 28,
+          "excerpt": "# This script applies the contents of \"common.sh\" to the other files.\n\nset -e\n\ndir=${0%\"${0##*/}\"}\n\nupdate() {\n  {\n    sed -n '1,/^#----BEGIN INCLUDE common\\.sh/p' \"$1\"\n    cat << EOF\n# NOTE: Do not directly edit this section, which is copied from \"common.sh\".\n# To modify it, one can edit \"common.sh\" and run \"./update.sh\" to apply\n# the changes. See code comments in \"common.sh\" for the implementation details.\nEOF\n    echo\n    grep -v '^[[:blank:]]*#' \"$dir/common.sh\" # remove code comments in common.sh\n    sed -n '/^#----END INCLUDE/,$p' \"$1\"\n  } > \"$1.part\"\n\n  mv -f \"$1.part\" \"$1\"\n}\n\nupdate \"$dir/completion.bash\"\nupdate \"$dir/completion.zsh\"\nupdate \"$dir/key-bindings.bash\"\nupdate \"$dir/key-bindings.zsh\""
+        }
+      ]
+    },
+    {
+      "purpose": "component-role",
+      "text": "Copies shared shell helpers into completion and key-binding scripts.",
+      "citations": [
+        {
+          "path": "shell/update.sh",
+          "contentHash": "54b9a68b0550b775d83cc129ba1e828e7c05eeac2bb26576d761bb79658e5ad4",
+          "startLine": 3,
+          "endLine": 28,
+          "excerpt": "# This script applies the contents of \"common.sh\" to the other files.\n\nset -e\n\ndir=${0%\"${0##*/}\"}\n\nupdate() {\n  {\n    sed -n '1,/^#----BEGIN INCLUDE common\\.sh/p' \"$1\"\n    cat << EOF\n# NOTE: Do not directly edit this section, which is copied from \"common.sh\".\n# To modify it, one can edit \"common.sh\" and run \"./update.sh\" to apply\n# the changes. See code comments in \"common.sh\" for the implementation details.\nEOF\n    echo\n    grep -v '^[[:blank:]]*#' \"$dir/common.sh\" # remove code comments in common.sh\n    sed -n '/^#----END INCLUDE/,$p' \"$1\"\n  } > \"$1.part\"\n\n  mv -f \"$1.part\" \"$1\"\n}\n\nupdate \"$dir/completion.bash\"\nupdate \"$dir/completion.zsh\"\nupdate \"$dir/key-bindings.bash\"\nupdate \"$dir/key-bindings.zsh\""
+        }
+      ]
+    }
+  ]
+}

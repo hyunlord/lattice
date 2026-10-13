@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "targetId": "component:module:tools/setup.sh",
+  "summary": "Installs commit-message and pre-push Git hooks.",
+  "author": "Codex (external agent)",
+  "sources": [
+    {
+      "path": "tools/setup.sh",
+      "contentHash": "c52f5463d40724d48f947f878dc583726af98ec7d2cec88b817d70c6ef32da85",
+      "line": 1
+    }
+  ],
+  "claims": [
+    {
+      "purpose": "component-name",
+      "text": "Developer Git hooks",
+      "citations": [
+        {
+          "path": "tools/setup.sh",
+          "contentHash": "c52f5463d40724d48f947f878dc583726af98ec7d2cec88b817d70c6ef32da85",
+          "startLine": 23,
+          "endLine": 33,
+          "excerpt": "echo \"Installing git commit-message hook\"\necho\ncurl -sSLo \"${GIT_DIR}/hooks/commit-msg\" \\\n    \"https://gerrit-review.googlesource.com/tools/hooks/commit-msg\" \\\n  && chmod +x \"${GIT_DIR}/hooks/commit-msg\"\n\necho \"Installing git pre-push hook\"\necho\nmkdir -p \"${GIT_DIR}/hooks/\"\ncp \"${GIT_ROOT}/tools/pre-push\" \"${GIT_DIR}/hooks/pre-push\" \\\n  && chmod +x \"${GIT_DIR}/hooks/pre-push\""
+        }
+      ]
+    },
+    {
+      "purpose": "component-role",
+      "text": "Installs commit-message and pre-push Git hooks.",
+      "citations": [
+        {
+          "path": "tools/setup.sh",
+          "contentHash": "c52f5463d40724d48f947f878dc583726af98ec7d2cec88b817d70c6ef32da85",
+          "startLine": 23,
+          "endLine": 33,
+          "excerpt": "echo \"Installing git commit-message hook\"\necho\ncurl -sSLo \"${GIT_DIR}/hooks/commit-msg\" \\\n    \"https://gerrit-review.googlesource.com/tools/hooks/commit-msg\" \\\n  && chmod +x \"${GIT_DIR}/hooks/commit-msg\"\n\necho \"Installing git pre-push hook\"\necho\nmkdir -p \"${GIT_DIR}/hooks/\"\ncp \"${GIT_ROOT}/tools/pre-push\" \"${GIT_DIR}/hooks/pre-push\" \\\n  && chmod +x \"${GIT_DIR}/hooks/pre-push\""
+        }
+      ]
+    }
+  ]
+}

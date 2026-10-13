@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "targetId": "component:module:ci/utils.sh",
+  "summary": "Finds build output and determines target platform details for CI.",
+  "author": "Codex (external agent)",
+  "sources": [
+    {
+      "path": "ci/utils.sh",
+      "contentHash": "0a2632e085b2f2a4bca4024320010fb756d9782e26809efd0c243b4265530e1f",
+      "line": 1
+    }
+  ],
+  "claims": [
+    {
+      "purpose": "component-name",
+      "text": "CI build helpers",
+      "citations": [
+        {
+          "path": "ci/utils.sh",
+          "contentHash": "0a2632e085b2f2a4bca4024320010fb756d9782e26809efd0c243b4265530e1f",
+          "startLine": 1,
+          "endLine": 27,
+          "excerpt": "#!/bin/bash\n\n# Various utility functions used through CI.\n\n# Finds Cargo's `OUT_DIR` directory from the most recent build.\n#\n# This requires one parameter corresponding to the target directory\n# to search for the build output.\ncargo_out_dir() {\n    # This works by finding the most recent stamp file, which is produced by\n    # every ripgrep build.\n    target_dir=\"$1\"\n    find \"$target_dir\" -name ripgrep-stamp -print0 \\\n      | xargs -0 ls -t \\\n      | head -n1 \\\n      | xargs dirname\n}\n\nhost() {\n    case \"$TRAVIS_OS_NAME\" in\n        linux)\n            echo x86_64-unknown-linux-gnu\n            ;;\n        osx)\n            echo x86_64-apple-darwin\n            ;;\n    esac"
+        }
+      ]
+    },
+    {
+      "purpose": "component-role",
+      "text": "Finds build output and determines target platform details for CI.",
+      "citations": [
+        {
+          "path": "ci/utils.sh",
+          "contentHash": "0a2632e085b2f2a4bca4024320010fb756d9782e26809efd0c243b4265530e1f",
+          "startLine": 1,
+          "endLine": 27,
+          "excerpt": "#!/bin/bash\n\n# Various utility functions used through CI.\n\n# Finds Cargo's `OUT_DIR` directory from the most recent build.\n#\n# This requires one parameter corresponding to the target directory\n# to search for the build output.\ncargo_out_dir() {\n    # This works by finding the most recent stamp file, which is produced by\n    # every ripgrep build.\n    target_dir=\"$1\"\n    find \"$target_dir\" -name ripgrep-stamp -print0 \\\n      | xargs -0 ls -t \\\n      | head -n1 \\\n      | xargs dirname\n}\n\nhost() {\n    case \"$TRAVIS_OS_NAME\" in\n        linux)\n            echo x86_64-unknown-linux-gnu\n            ;;\n        osx)\n            echo x86_64-apple-darwin\n            ;;\n    esac"
+        }
+      ]
+    }
+  ]
+}

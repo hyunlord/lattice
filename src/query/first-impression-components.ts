@@ -3,6 +3,10 @@ import { manifestPackage, manifestProductSelection } from './structural-manifest
 import { productLogicPath } from '../core/logic-policy.js';
 import type { FirstImpressionDependency } from './first-impression-types.js';
 
+const productFile = (node: Node): boolean => {
+    const path = pathOf(node);
+    return !/(?:^|\/)(?:docs?|documentation|[^/]+-docs|__mocks__|dist|coverage|node_modules)(?:\/|$)/iu.test(path) && !/(?:^|\/)\.[^/]+(?:\/|$)/u.test(path) && !/(?:^|\/)(?:(?:vite|webpack|rollup|babel|jest|eslint|prettier|tailwind|postcss|tsup|next|nuxt|svelte)\.config\.[cm]?[jt]s)$/u.test(path);
+};
 const mainFile = (node: Node): boolean => productLogicPath(pathOf(node)) && !/(?:^|\/)(?:build\.gradle(?:\.kts)?|settings\.gradle(?:\.kts)?|gradlew(?:\.bat)?)$/u.test(pathOf(node));
 const compare = (a: string, b: string): number => a < b ? -1 : a > b ? 1 : 0;
 export const strings = (value: unknown): readonly string[] => Array.isArray(value) ? value.filter((item): item is string => typeof item === 'string') : [];
@@ -12,7 +16,7 @@ export function firstImpressionGroups(nodes: readonly Node[], edges: readonly Ed
     const selection = manifestProductSelection(nodes);
     const modules = nodes.filter(node => node.kind === 'module');
     const files = (modules.length ? modules : nodes.filter(node => node.kind === 'file')).sort((a, b) => compare(a.id, b.id));
-    const selected = files.filter(node => selection.get(node.id) ?? productLogicPath(pathOf(node)));
+    const selected = files.filter(node => selection.get(node.id) ?? (productLogicPath(pathOf(node)) && productFile(node)));
     const filesById = new Map(selected.map(node => [node.id, node]));
     const packages = nodes.filter(manifestPackage).sort((a, b) => String(b.attributes['root'] ?? '').length - String(a.attributes['root'] ?? '').length || compare(a.id, b.id));
     const ownership = new Map<string, string>();
@@ -41,7 +45,7 @@ export function firstImpressionGroups(nodes: readonly Node[], edges: readonly Ed
     const declaredIds = new Set(packages.map(pkg => pkg.id));
     const declared = [...packageMembers].filter(([id, members]) => declaredIds.has(id) && members.length);
     const hasModuleLinks = edges.some(edge => edge.kind === 'imports' && filesById.has(edge.source) && filesById.has(edge.target));
-    for (const [, members] of declared) if (declared.length > 1 || members.length <= cap || (!hasModuleLinks && !namespaces.some(pkg => packageMembers.get(pkg.id)?.length))) {
+    for (const [, members] of declared) if (members.length <= cap || (!hasModuleLinks && !namespaces.some(pkg => packageMembers.get(pkg.id)?.length))) {
         const first = members[0]; if (first) for (const id of members.slice(1)) join(first, id);
     }
     if (declared.length <= 1) for (const pkg of namespaces) {
@@ -70,6 +74,21 @@ export function firstImpressionGroups(nodes: readonly Node[], edges: readonly Ed
         if (count <= 7) break;
         const a = find(relation.source), b = find(relation.target);
         if (a !== b && (size.get(a) ?? 0) + (size.get(b) ?? 0) <= cap) join(a, b);
+    }
+    // Sparse evidence falls back only to real directory ancestors; never an invented relation.
+    if (count > 9) {
+        const directories = new Map<string, string[]>();
+        for (const node of selected) {
+            let directory = pathOf(node).split('/').slice(0, -1).join('/');
+            while (directory) { const ids = directories.get(directory) ?? []; ids.push(node.id); directories.set(directory, ids); directory = directory.includes('/') ? directory.slice(0, directory.lastIndexOf('/')) : ''; }
+        }
+        for (const [, ids] of [...directories].sort(([a], [b]) => b.split('/').length - a.split('/').length || compare(a, b))) {
+            if (count <= 9) break;
+            const inside = new Map<string, number>();
+            for (const id of ids) inside.set(find(id), (inside.get(find(id)) ?? 0) + 1);
+            const roots = [...inside].filter(([root, members]) => members === size.get(root)).map(([root]) => root), first = roots[0];
+            if (first && count - roots.length + 1 >= 5) for (const id of roots.slice(1)) join(first, id);
+        }
     }
     const members = new Map<string, Node[]>();
     for (const node of selected) { const root = find(node.id), list = members.get(root) ?? []; list.push(node); members.set(root, list); }
@@ -106,5 +125,9 @@ export function firstImpressionGroups(nodes: readonly Node[], edges: readonly Ed
         dependencies.set(key, value);
     }
     const links: FirstImpressionDependency[] = [...dependencies.values()].map(value => ({ source: value.source, target: value.target, importingFileCount: value.files.size, declarationCount: value.declarations.size, sources: [...value.sources].sort(([a], [b]) => compare(a, b)).slice(0, 3).map(([, source]) => source) })).sort((a, b) => compare(a.source, b.source) || compare(a.target, b.target));
+    const executableModules = new Set(nodes.filter(node => node.kind === 'function' && Array.isArray(node.attributes['entrypoints']) && node.attributes['entrypoints'].some(value => value !== null && typeof value === 'object' && !Array.isArray(value) && ['executable', 'module-execution'].includes(String(value['category'])))).map(node => String(node.attributes['module'] ?? '')));
+    const connectivity = new Map<string, number>();
+    for (const link of links) for (const id of [link.source, link.target]) connectivity.set(id, (connectivity.get(id) ?? 0) + link.importingFileCount + link.declarationCount);
+    groups.sort((a, b) => Number(b.members.some(node => executableModules.has(node.id))) - Number(a.members.some(node => executableModules.has(node.id))) || Number(b.members.some(mainFile)) - Number(a.members.some(mainFile)) || (connectivity.get(b.id) ?? 0) - (connectivity.get(a.id) ?? 0) || b.members.length - a.members.length || compare(a.id, b.id));
     return { groups, dependencies: links, unprojectedDependencyCount, fileCount: selected.length, auxiliaryFileCount: files.length - selected.length };
 }

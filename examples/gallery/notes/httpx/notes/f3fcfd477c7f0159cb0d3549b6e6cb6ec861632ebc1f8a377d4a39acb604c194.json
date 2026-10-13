@@ -1,0 +1,75 @@
+{
+  "schemaVersion": 1,
+  "targetId": "component:module:httpx/_transports/__init__.py",
+  "summary": "Exposes transport adapters and a mock handler that maps requests to responses.",
+  "author": "Codex (external agent)",
+  "sources": [
+    {
+      "path": "httpx/_transports/__init__.py",
+      "contentHash": "19b52805200ea7bcfe97ef63e5884c851dc3308727e8554b863d3bd8edcd9e7a",
+      "line": 1
+    },
+    {
+      "path": "httpx/_transports/asgi.py",
+      "contentHash": "1d17e20d830fb78c101f6805807660e1cfa2dec6e5a3a6cbe464ea7044fec73f",
+      "line": 1
+    },
+    {
+      "path": "httpx/_transports/base.py",
+      "contentHash": "9194bf54c6d58987c5e7bd29a205022756ee973fb26df2f9d4faacf7292d79b5",
+      "line": 1
+    },
+    {
+      "path": "httpx/_transports/mock.py",
+      "contentHash": "3d3a34779ebb4484d7c46ae48ba90deffebbc300317f088c0dcb972626428c4a",
+      "line": 1
+    },
+    {
+      "path": "httpx/_transports/wsgi.py",
+      "contentHash": "35c3d7dd76a9fc4c0215958efce692c9036e227098c7540c35b3bc1807a2ea36",
+      "line": 1
+    }
+  ],
+  "claims": [
+    {
+      "purpose": "component-name",
+      "text": "Application and mock transports",
+      "citations": [
+        {
+          "path": "httpx/_transports/__init__.py",
+          "contentHash": "19b52805200ea7bcfe97ef63e5884c851dc3308727e8554b863d3bd8edcd9e7a",
+          "startLine": 1,
+          "endLine": 15,
+          "excerpt": "from .asgi import *\nfrom .base import *\nfrom .default import *\nfrom .mock import *\nfrom .wsgi import *\n\n__all__ = [\n    \"ASGITransport\",\n    \"AsyncBaseTransport\",\n    \"BaseTransport\",\n    \"AsyncHTTPTransport\",\n    \"HTTPTransport\",\n    \"MockTransport\",\n    \"WSGITransport\",\n]"
+        },
+        {
+          "path": "httpx/_transports/mock.py",
+          "contentHash": "3d3a34779ebb4484d7c46ae48ba90deffebbc300317f088c0dcb972626428c4a",
+          "startLine": 15,
+          "endLine": 27,
+          "excerpt": "class MockTransport(AsyncBaseTransport, BaseTransport):\n    def __init__(self, handler: SyncHandler | AsyncHandler) -> None:\n        self.handler = handler\n\n    def handle_request(\n        self,\n        request: Request,\n    ) -> Response:\n        request.read()\n        response = self.handler(request)\n        if not isinstance(response, Response):  # pragma: no cover\n            raise TypeError(\"Cannot use an async handler in a sync Client\")\n        return response"
+        }
+      ]
+    },
+    {
+      "purpose": "component-role",
+      "text": "Exposes transport adapters and a mock handler that maps requests to responses.",
+      "citations": [
+        {
+          "path": "httpx/_transports/__init__.py",
+          "contentHash": "19b52805200ea7bcfe97ef63e5884c851dc3308727e8554b863d3bd8edcd9e7a",
+          "startLine": 1,
+          "endLine": 15,
+          "excerpt": "from .asgi import *\nfrom .base import *\nfrom .default import *\nfrom .mock import *\nfrom .wsgi import *\n\n__all__ = [\n    \"ASGITransport\",\n    \"AsyncBaseTransport\",\n    \"BaseTransport\",\n    \"AsyncHTTPTransport\",\n    \"HTTPTransport\",\n    \"MockTransport\",\n    \"WSGITransport\",\n]"
+        },
+        {
+          "path": "httpx/_transports/mock.py",
+          "contentHash": "3d3a34779ebb4484d7c46ae48ba90deffebbc300317f088c0dcb972626428c4a",
+          "startLine": 15,
+          "endLine": 27,
+          "excerpt": "class MockTransport(AsyncBaseTransport, BaseTransport):\n    def __init__(self, handler: SyncHandler | AsyncHandler) -> None:\n        self.handler = handler\n\n    def handle_request(\n        self,\n        request: Request,\n    ) -> Response:\n        request.read()\n        response = self.handler(request)\n        if not isinstance(response, Response):  # pragma: no cover\n            raise TypeError(\"Cannot use an async handler in a sync Client\")\n        return response"
+        }
+      ]
+    }
+  ]
+}

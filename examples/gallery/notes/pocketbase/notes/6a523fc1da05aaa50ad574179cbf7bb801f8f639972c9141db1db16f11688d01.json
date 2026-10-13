@@ -1,0 +1,56 @@
+{
+  "schemaVersion": 1,
+  "targetId": "component:module:forms/apple_client_secret_create.go",
+  "summary": "Validates record input forms before saving their records.",
+  "author": "Codex (external agent)",
+  "sources": [
+    {
+      "path": "forms/apple_client_secret_create.go",
+      "contentHash": "779d50976cdec10cfba66907aff1a63c516ac659b88c905ba665586b6329479b",
+      "line": 1
+    },
+    {
+      "path": "forms/record_upsert.go",
+      "contentHash": "067896bf319241dfb024768991c30a9ccdd462b476adc8c3dc831d51988efe3f",
+      "line": 1
+    },
+    {
+      "path": "forms/test_email_send.go",
+      "contentHash": "a6294a6ede12c9d60d7d0cdb98239fec2ad4353708da772a26e966eda0d47588",
+      "line": 1
+    },
+    {
+      "path": "forms/test_s3_filesystem.go",
+      "contentHash": "8eded77da6b11143b21740a99cad04564bfbf0bebc698a01a8b4867f298665ae",
+      "line": 1
+    }
+  ],
+  "claims": [
+    {
+      "purpose": "component-name",
+      "text": "Validated input forms",
+      "citations": [
+        {
+          "path": "forms/record_upsert.go",
+          "contentHash": "067896bf319241dfb024768991c30a9ccdd462b476adc8c3dc831d51988efe3f",
+          "startLine": 283,
+          "endLine": 310,
+          "excerpt": "// Submit validates the form specific validations and attempts to save the form record.\nfunc (form *RecordUpsert) Submit() error {\n\terr := form.validateFormFields()\n\tif err != nil {\n\t\treturn err\n\t}\n\n\t// run record validations and persist in db\n\treturn form.app.SaveWithContext(form.ctx, form.record)\n}\n\n// syncPasswordFields syncs the form's auth password fields with their\n// corresponding record field values.\n//\n// This could be useful in case the password fields were programmatically set\n// directly by modifying the related record model.\nfunc (form *RecordUpsert) syncPasswordFields() {\n\tif !form.record.Collection().IsAuth() {\n\t\treturn // not an auth collection\n\t}\n\n\tform.disablePasswordValidations = false\n\n\trawPassword := form.record.GetRaw(core.FieldNamePassword)\n\tif v, ok := rawPassword.(*core.PasswordFieldValue); ok && v != nil {\n\t\tif\n\t\t// programmatically set custom plain password value\n\t\t(v.Plain != \"\" && v.Plain != form.password) ||"
+        }
+      ]
+    },
+    {
+      "purpose": "component-role",
+      "text": "Validates record input forms before saving their records.",
+      "citations": [
+        {
+          "path": "forms/record_upsert.go",
+          "contentHash": "067896bf319241dfb024768991c30a9ccdd462b476adc8c3dc831d51988efe3f",
+          "startLine": 283,
+          "endLine": 310,
+          "excerpt": "// Submit validates the form specific validations and attempts to save the form record.\nfunc (form *RecordUpsert) Submit() error {\n\terr := form.validateFormFields()\n\tif err != nil {\n\t\treturn err\n\t}\n\n\t// run record validations and persist in db\n\treturn form.app.SaveWithContext(form.ctx, form.record)\n}\n\n// syncPasswordFields syncs the form's auth password fields with their\n// corresponding record field values.\n//\n// This could be useful in case the password fields were programmatically set\n// directly by modifying the related record model.\nfunc (form *RecordUpsert) syncPasswordFields() {\n\tif !form.record.Collection().IsAuth() {\n\t\treturn // not an auth collection\n\t}\n\n\tform.disablePasswordValidations = false\n\n\trawPassword := form.record.GetRaw(core.FieldNamePassword)\n\tif v, ok := rawPassword.(*core.PasswordFieldValue); ok && v != nil {\n\t\tif\n\t\t// programmatically set custom plain password value\n\t\t(v.Plain != \"\" && v.Plain != form.password) ||"
+        }
+      ]
+    }
+  ]
+}

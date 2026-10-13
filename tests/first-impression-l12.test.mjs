@@ -1,0 +1,135 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { createHash } from 'node:crypto';
+import { mkdtempSync, realpathSync, mkdirSync, writeFileSync, rmSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
+import { execFileSync } from 'node:child_process';
+import { buildRepository } from '../bin/build.mjs';
+import { interpretationContext, writeInterpretation, readInterpretations } from '../bin/interpretation.mjs';
+import { parseClaimInterpretations } from '../dist/interpretation/model.js';
+import { buildFirstImpression } from '../dist/query/first-impression-model.js';
+import { prepareLogicParser, parseLogicFacts } from '../bin/logic-parser.mjs';
+import { analyzeLogic } from '../dist/adapters/logic-analysis.js';
+import { extractCode } from '../dist/adapters/code.js';
+const hash = text => createHash('sha256').update(text).digest('hex');
+const source = path => ({ path, line: 1, pointer: '', contentHash: 'a'.repeat(64) });
+const node = (id, kind, attributes = {}) => ({ id, kind, name: id, attributes, sources: [source(`${id}.ts`)], contentHash: 'b'.repeat(64) });
+test('first impression projects actual function membership and preserves independent package alternative starts', () => {
+    const modules = [node('left/a', 'module'), node('right/b', 'module')];
+    const pkg = node('p', 'package', { buildSystem: 'npm', manifestPath: 'left/package.json', root: 'left', memberIds: ['left/a'], entryTargets: ['left/a.ts'] });
+    const fn = node('start', 'function', { module: 'left/a', entrypoints: [{ category: 'executable', rule: 'main', source: source('left/a.ts') }] });
+    const callee = node('work', 'function', { module: 'right/b' });
+    const g = { hash: 'h', nodes: [...modules, pkg, fn, callee], edges: [{ id: 'call', kind: 'calls', directed: true, source: fn.id, target: callee.id, attributes: { resolution: 'exact' }, sources: [source('left/a.ts')] }] };
+    const model = buildFirstImpression(g, () => { });
+    assert.equal(model.entrypoints[0].componentId, 'component:left/a');
+    assert.deepEqual(model.flows[0].nodes.map(n => n.componentId).sort(), ['component:left/a', 'component:right/b']);
+    const alternative = buildFirstImpression({ ...g, nodes: [...modules, pkg], edges: [] }, () => { }).entrypoints[0];
+    assert.equal(alternative.basis, 'package-entry');
+    assert.equal(alternative.targetKind, 'node');
+    assert.equal(alternative.category, 'public-api');
+});
+test('component names and role claims bind complete source hashes and bounded exact excerpts beyond line forty', t => {
+    const root = realpathSync(mkdtempSync(join(tmpdir(), 'lattice-components-')));
+    t.after(() => rmSync(root, { recursive: true, force: true }));
+    execFileSync('git', ['init', '-q', root]); mkdirSync(join(root, 'src'));
+    const text = Array.from({ length: 65 }, (_, i) => `export const value${i} = ${i};`).join('\n');
+    writeFileSync(join(root, 'src/a.ts'), text);
+    const graph = buildRepository({ root }).graph;
+    const options = { scope: 'components', compact: true, evidencePath: 'src/a.ts', startLine: 50 };
+    const target = interpretationContext(root, graph, 0, 9, options).items[0];
+    assert.equal(target.evidence[0].startLine, 50);
+    const citation = { path: 'src/a.ts', contentHash: hash(text), startLine: 50, endLine: 50, excerpt: 'export const value49 = 49;' };
+    const record = { schemaVersion: 1, targetId: target.id, sourceSetToken: target.sourceSetToken, author: 'test', summary: 'Numeric values.', claims: [{ purpose: 'component-name', text: 'Numeric values', citations: [citation] }, { purpose: 'component-role', text: 'Exports numeric constants.', citations: [citation] }] };
+    const saved = writeInterpretation(root, graph, record);
+    const model = buildFirstImpression(graph, () => { }, { interpretations: parseClaimInterpretations([saved]) });
+    assert.equal(model.components[0].titleClaim.text, 'Numeric values');
+    assert.equal(model.components[0].claims[0].text, 'Exports numeric constants.');
+    for (const change of [{ path: 'unknown.ts' }, { contentHash: 'b'.repeat(64) }, { startLine: 100, endLine: 100 }, { excerpt: 'invented' }, { startLine: 1, endLine: 41, excerpt: text.split('\n').slice(0, 41).join('\n') }]) {
+        assert.throws(() => writeInterpretation(root, graph, { ...record, claims: [{ text: 'Invalid.', citations: [{ ...citation, ...change }] }] }), /citation/i);
+    }
+    writeFileSync(join(root, 'src/a.ts'), 'export const changed = true;');
+    assert.deepEqual(readInterpretations(root, graph)[0].validatedClaims, []);
+});
+test('React DOM mount evidence supplies a UI alternative, not a fabricated component call', async () => {
+    const text = "import { createRoot } from 'react-dom/client';\nimport { App } from './App';\nconst root = createRoot(document.getElementById('root'));\nroot.render(<App />);";
+    const input = { path: 'entry.tsx', text, contentHash: hash(text) };
+    const module = extractCode(input);
+    await prepareLogicParser(['typescript']);
+    const facts = parseLogicFacts(input, 'typescript');
+    const result = analyzeLogic([facts], [module]);
+    const entry = result.nodes.find(n => n.attributes.entrypoints?.some(e => e.category === 'ui-root'));
+    assert.ok(entry);
+    assert.equal(entry.attributes.entrypoints.find(e => e.category === 'ui-root').source.line, 4);
+    const model = buildFirstImpression({ hash: 'h', nodes: [module.node, ...result.nodes], edges: result.edges }, () => { });
+    assert.equal(model.entrypoints[0].basis, 'ui-root');
+    assert.equal(model.entrypoints[0].name, 'App');
+    assert.equal(model.entrypoints[0].targetKind, 'node');
+    assert.equal(model.entrypoints[0].id, module.node.id);
+    assert.equal(model.entrypoints[0].source.line, 4);
+    assert.equal(model.entrypoints[0].category, 'public-api');
+    assert.equal(model.flows.length, 0);
+    const other = { ...input, text: text.replace("'react-dom/client'", "'unrelated-library'") };
+    assert.equal(parseLogicFacts(other, 'typescript').definitions.flatMap(d => d.annotations).filter(a => a.startsWith('ui-root@')).length, 0);
+});
+test('runtime config stays product while documentation, hidden tooling and generated assets stay auxiliary', () => {
+    const nodes = ['lib/_config.py', 'docs/source/en/_config.py', '.quality/plugin.js', 'ui/dist/bundle.js', 'lib/config.ts', 'app/main.ts'].map(path => ({ ...node(path, 'module'), sources: [source(path)] }));
+    const model = buildFirstImpression({ hash: 'h', nodes, edges: [] }, () => { });
+    assert.equal(model.fileCount, 3);
+    assert.equal(model.auxiliaryFileCount, 3);
+    assert.deepEqual(model.components.flatMap(c => c.memberPreview.map(m => m.path)).sort(), ['app/main.ts', 'lib/_config.py', 'lib/config.ts']);
+});
+test('package alternatives stay visible even when public API entries fill the old cap', () => {
+    const module = node('lib/index', 'module');
+    const pkg = node('pkg', 'package', { buildSystem: 'npm', manifestPath: 'package.json', memberIds: [module.id], entryTargets: ['lib/index.ts'] });
+    const functions = Array.from({ length: 12 }, (_, i) => node(`fn${i}`, 'function', { module: module.id, entrypoints: [{ category: 'public-api', rule: 'export', source: source('lib/index.ts') }] }));
+    const model = buildFirstImpression({ hash: 'h', nodes: [module, pkg, ...functions], edges: [] }, () => { });
+    assert.equal(model.entrypoints[0].basis, 'package-entry');
+    assert.equal(model.entrypoints.length, 8);
+});
+test('transparent imported React wrappers reveal the mounted UI component', async () => {
+    const text = "import React from 'react'; import { createRoot } from 'react-dom/client'; import { App } from './App'; createRoot(document.body).render(<React.StrictMode><App /></React.StrictMode>);";
+    await prepareLogicParser(['typescript']);
+    const facts = parseLogicFacts({ path: 'entry.tsx', text, contentHash: hash(text) }, 'typescript');
+    assert.ok(facts.definitions.flatMap(d => d.annotations).some(value => value.endsWith(':App')));
+    assert.ok(facts.definitions.flatMap(d => d.annotations).every(value => !value.endsWith(':React.StrictMode')));
+});
+test('explicit manifest source roots preserve product packages named docs', () => {
+    const path = 'src/main/java/org/acme/docs/DocumentController.java';
+    const product = { ...node('controller', 'module'), sources: [source(path)] };
+    const pkg = node('pkg', 'package', { buildSystem: 'maven', manifestPath: 'pom.xml', root: '.', sourceRoots: ['src/main/java'], memberIds: [product.id] });
+    const model = buildFirstImpression({ hash: 'h', nodes: [product, pkg], edges: [] }, () => { });
+    assert.equal(model.fileCount, 1);
+    assert.equal(model.auxiliaryFileCount, 0);
+    assert.equal(model.components[0].memberPreview[0].path, path);
+});
+test('MCP component evidence accepts positive numeric line offsets at the real argument boundary', async () => {
+    const { parseArguments, McpArgumentError } = await import('../bin/mcp-schema.mjs');
+    const input = { scope: 'components', evidencePath: 'src/a.ts', startLine: 50, compact: true };
+    assert.deepEqual(parseArguments('lattice_interpretation_context', input), input);
+    for (const startLine of [0, -1, 1.5, '50', null]) assert.throws(() => parseArguments('lattice_interpretation_context', { ...input, startLine }), McpArgumentError);
+});
+test('repeated early callsites cannot crowd out an existing deeper representative path', () => {
+    const start = node('start', 'function', { module: 'entry', entrypoints: [{ category: 'executable', rule: 'main', source: source('entry.ts') }] });
+    const functions = [start, node('early', 'function'), node('run', 'function'), node('work', 'function'), node('finish', 'function')];
+    const call = (id, from, to) => ({ id, source: from, target: to, kind: 'calls', directed: true, attributes: { resolution: 'exact' }, sources: [source('entry.ts')] });
+    const edges = [...Array.from({ length: 20 }, (_, i) => call(`a${i}`, 'start', 'early')), call('z1', 'start', 'run'), call('z2', 'run', 'work'), call('z3', 'work', 'finish')];
+    const model = buildFirstImpression({ hash: 'h', nodes: [node('entry', 'module'), ...functions], edges }, () => { });
+    const flow = model.flows[0];
+    assert.ok(flow.edges.some(edge => edge.source === 'start' && edge.target === 'run'));
+    assert.ok(flow.edges.some(edge => edge.source === 'run' && edge.target === 'work'));
+    assert.ok(flow.edges.some(edge => edge.source === 'work' && edge.target === 'finish'));
+    assert.equal(flow.edges.filter(edge => edge.target === 'early').length, 1);
+    assert.ok(flow.nodes.length <= 6 && flow.edges.length <= 8);
+    assert.equal(edges.length, 23);
+});
+test('named UI root functions retain function destinations and existing call paths', () => {
+    const entry = node('mount', 'function', { module: 'entry', entrypoints: [{ category: 'ui-root', rule: 'ui-root:Screen', source: { ...source('entry.tsx'), line: 12 } }] });
+    const callee = node('renderScreen', 'function', { module: 'entry' });
+    const edge = { id: 'call', source: entry.id, target: callee.id, kind: 'calls', directed: true, attributes: { resolution: 'exact' }, sources: [source('entry.tsx')] };
+    const model = buildFirstImpression({ hash: 'h', nodes: [node('entry', 'module'), entry, callee], edges: [edge] }, () => { });
+    assert.equal(model.entrypoints[0].targetKind, 'function');
+    assert.equal(model.entrypoints[0].id, entry.id);
+    assert.equal(model.entrypoints[0].source.line, 12);
+    assert.equal(model.flows[0].edges[0].target, callee.id);
+});

@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "targetId": "component:module:src/smolagents/models.py",
+  "summary": "Provides a shared model interface for messages, tools and text generation.",
+  "author": "Codex (external agent)",
+  "sources": [
+    {
+      "path": "src/smolagents/models.py",
+      "contentHash": "e3510666f0a36d1d09d25d9d9f2e9cb0e0c09edc47ed599b0e52445bddf146e7",
+      "line": 1
+    }
+  ],
+  "claims": [
+    {
+      "purpose": "component-name",
+      "text": "Language model adapters",
+      "citations": [
+        {
+          "path": "src/smolagents/models.py",
+          "contentHash": "e3510666f0a36d1d09d25d9d9f2e9cb0e0c09edc47ed599b0e52445bddf146e7",
+          "startLine": 452,
+          "endLine": 473,
+          "excerpt": "class Model:\n    \"\"\"Base class for all language model implementations.\n\n    This abstract class defines the core interface that all model implementations must follow\n    to work with agents. It provides common functionality for message handling, tool integration,\n    and model configuration while allowing subclasses to implement their specific generation logic.\n\n    Parameters:\n        flatten_messages_as_text (`bool`, default `False`):\n            Whether to flatten complex message content into plain text format.\n        tool_name_key (`str`, default `\"name\"`):\n            The key used to extract tool names from model responses.\n        tool_arguments_key (`str`, default `\"arguments\"`):\n            The key used to extract tool arguments from model responses.\n        model_id (`str`, *optional*):\n            Identifier for the specific model being used.\n        **kwargs:\n            Additional keyword arguments to forward to the underlying model completion call.\n\n    Note:\n        This is an abstract base class. Subclasses must implement the `generate()` method\n        to provide actual model inference capabilities."
+        }
+      ]
+    },
+    {
+      "purpose": "component-role",
+      "text": "Provides a shared model interface for messages, tools and text generation.",
+      "citations": [
+        {
+          "path": "src/smolagents/models.py",
+          "contentHash": "e3510666f0a36d1d09d25d9d9f2e9cb0e0c09edc47ed599b0e52445bddf146e7",
+          "startLine": 452,
+          "endLine": 473,
+          "excerpt": "class Model:\n    \"\"\"Base class for all language model implementations.\n\n    This abstract class defines the core interface that all model implementations must follow\n    to work with agents. It provides common functionality for message handling, tool integration,\n    and model configuration while allowing subclasses to implement their specific generation logic.\n\n    Parameters:\n        flatten_messages_as_text (`bool`, default `False`):\n            Whether to flatten complex message content into plain text format.\n        tool_name_key (`str`, default `\"name\"`):\n            The key used to extract tool names from model responses.\n        tool_arguments_key (`str`, default `\"arguments\"`):\n            The key used to extract tool arguments from model responses.\n        model_id (`str`, *optional*):\n            Identifier for the specific model being used.\n        **kwargs:\n            Additional keyword arguments to forward to the underlying model completion call.\n\n    Note:\n        This is an abstract base class. Subclasses must implement the `generate()` method\n        to provide actual model inference capabilities."
+        }
+      ]
+    }
+  ]
+}

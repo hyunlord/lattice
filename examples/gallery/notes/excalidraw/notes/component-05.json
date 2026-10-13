@@ -1,0 +1,615 @@
+{
+  "schemaVersion": 1,
+  "targetId": "component:module:packages/excalidraw/components/ActiveConfirmDialog.tsx",
+  "summary": "Provides confirmation dialogs and dockable side panels.",
+  "author": "Codex (external agent)",
+  "sources": [
+    {
+      "path": "packages/excalidraw/components/ActiveConfirmDialog.tsx",
+      "contentHash": "8e639176b657d583bd2403bd9c5afeeb32e1f51ac7c7661d7f954b65afb0a66d",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/App.modifiers.ts",
+      "contentHash": "17f6cc5b1afc59d8759434cc6c8d36b5ffdb2ae99d0b9021a1a1c138ad2c9370",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/Button.tsx",
+      "contentHash": "9a3941579cdcdb6f1ec42ff00a62787418a544b471a372392831c798d28a2920",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/ButtonIconCycle.tsx",
+      "contentHash": "0d7ee1db979caaf76542206a0dcec3bc4b82bd5f26e8aa8c4935199f699312db",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/ConfirmDialog.tsx",
+      "contentHash": "dcca7936efe5d2a94f627044f2f1b1914237be7b811caea49c03357863792542",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/CursorHint.tsx",
+      "contentHash": "4dd1b753618aeee305b5dc880cafcade30fd624d4cd19d154a207552cbcd2a41",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/Dialog.tsx",
+      "contentHash": "ef4b3eea3d298e701d019e462cc52bb399faf37dd986bf556654a898300de3d4",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/DialogActionButton.tsx",
+      "contentHash": "358db12b0cf033b19beb283cefa9642c83791ce52fe8f45371e1ee3bfbc353a5",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/dropdownMenu/common.ts",
+      "contentHash": "e2310d70a572a6154fed2621107aa30c9b4d21d64ce60adff16f4d9fbe95c4a8",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/dropdownMenu/DropdownMenu.tsx",
+      "contentHash": "ea1256b7226d77692d352661a28ef2788a57f829727ccf0a85fac7ba3049c9a5",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/dropdownMenu/DropdownMenuContent.tsx",
+      "contentHash": "24113cfb29edbfb0867ad4550e8d8ab3d201ea7434fe6b1ba4743752c4d0eb7d",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/dropdownMenu/DropdownMenuGroup.tsx",
+      "contentHash": "63bc148b541301004c4a7ae6f7f76290c7c57bf06e48f4618b70680e4bdcc18c",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/dropdownMenu/DropdownMenuItem.tsx",
+      "contentHash": "d0f9be9a278658961479133e7e2cdc75dac0313e91964399dfb9fd4639c32aa1",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/dropdownMenu/DropdownMenuItemCheckbox.tsx",
+      "contentHash": "91bbd968e938578509a5f5080a6101f8a5f79867988bbbdc096c9c468c6367a6",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/dropdownMenu/DropdownMenuItemContent.tsx",
+      "contentHash": "78dd1cbed86b8b217f2088fef154d388ed5f200e21c3228d935f6d581d17c74a",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/dropdownMenu/DropdownMenuItemContentRadio.tsx",
+      "contentHash": "0565a91a9ed553834295a4c27a33ad6f597ca3e20c5646c298a70add83b13d03",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/dropdownMenu/DropdownMenuItemCustom.tsx",
+      "contentHash": "973715699bf64c2549799b352bc9290e91030bece11d44b41c80ab0700ad7805",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/dropdownMenu/DropdownMenuItemLink.tsx",
+      "contentHash": "1ed58227e93c644e2ff9da32e91ce9fc82a4c8d459b7039c34e999439d41b415",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/dropdownMenu/DropdownMenuSeparator.tsx",
+      "contentHash": "e04b15777e628b61a268cd2ab3142111edf14b27d3d395fd3fc1b172d8fc0f3c",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/dropdownMenu/DropdownMenuSub.tsx",
+      "contentHash": "3a61888cbb9fc00f34ca8f6d20b85bddb09a55174a21df63e081d19a6f93ba9e",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/dropdownMenu/DropdownMenuSubContent.tsx",
+      "contentHash": "22dd0aa8b48ffffedb78256be785213ca47d687e855bea9f66b0f7c6b5622a16",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/dropdownMenu/DropdownMenuSubTrigger.tsx",
+      "contentHash": "99c76c475d4f3977c80b5e4c6ff2e9cbdb35ad7ab5d4c008131ee6bd4e4c3fc4",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/dropdownMenu/DropdownMenuTrigger.tsx",
+      "contentHash": "2f362d31c31cdd95ab2a1cf83a8ff4676367d65682fd3bfb9ff355e9fda35470",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/dropdownMenu/dropdownMenuUtils.ts",
+      "contentHash": "842afc5757355475a74c7900ace28c1ce355e3d5076700ca8ba72fea1771f2e0",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/ElementLinkDialog.tsx",
+      "contentHash": "373b8b4e0866000e3172f0454fd1179470887131b6b8bf678eaebf45eb94c2b0",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/Ellipsify.tsx",
+      "contentHash": "734abdacbc30331c18768831dc8321be8388cec23cb004398774e2cdf76f6c07",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/ExcalidrawLogo.tsx",
+      "contentHash": "5a659c3f3bd718a4035ea239c57cd417d891afe618cd6a7d17ff6425fe826b49",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/EyeDropper.tsx",
+      "contentHash": "d026d9c58ed4627665b562addffea7f5c68d8917399417a9338de609eb9c3658",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/FilledButton.tsx",
+      "contentHash": "ab8fef8c317ee610dfdcb5060d746b96a39f3d5ea60ab85e1e4e90f52636ee85",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/FontPicker/FontPickerList.tsx",
+      "contentHash": "78b34fdaa78fabcbb0e604466baed6caed72d5ce1c8ce6a85fffad9c25776f35",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/FontPicker/keyboardNavHandlers.ts",
+      "contentHash": "711fb20a512a4ccfdba8c225625c55bb755565436ad2bf32f756e1f984098a1e",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/footer/Footer.tsx",
+      "contentHash": "b3c47cfc68a42807c2805363ff2a8fb413b5cd51d9039dfe3684c96e1b41d475",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/footer/FooterCenter.tsx",
+      "contentHash": "2853e42e1f3380f536247d3785beba5d5fea1df49375d1a4f7734988c9a6f185",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/HelpButton.tsx",
+      "contentHash": "df53e3785905aca2901aeb2960ef4087bb0195085b70cdf8ad842aa04eb63cea",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/hoc/withInternalFallback.tsx",
+      "contentHash": "23031b076c2ced6ef8c6556d3b7005674bfb2ce1ffcee9841d6b711282481de6",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/IconPicker.tsx",
+      "contentHash": "49b29e1db12bdd49e35efa00236266bd601e5de80c43d252d6eab8530f1420ab",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/ImageExportDialog.tsx",
+      "contentHash": "75e8bd58bf6637a5102b469bd2da47cdb889506dcbde896391c3addbe36d2909",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/InlineIcon.tsx",
+      "contentHash": "637ebb11f13b7ee369279edf3257222592351bf2077446463a921e27d1ab5979",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/Island.tsx",
+      "contentHash": "36df66e016bfb0a352adc1730e3aefa6b970ace818bbfbb278b303c380245a13",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/LinkButton.tsx",
+      "contentHash": "acae5d0a5c2bd5f75e63d4b163ccf10544bdeead578d27eaac88b1a015c0865e",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/live-collaboration/LiveCollaborationTrigger.tsx",
+      "contentHash": "88b35e65c8a23481b233bb4b78ed6585963ce7152fcf5db23ddc0522c4e847b2",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/OverwriteConfirm/OverwriteConfirm.tsx",
+      "contentHash": "6ab61746f5a72c0278e1031103aae57743833e80527ed8b74dfd1860fed14c7e",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/OverwriteConfirm/OverwriteConfirmActions.tsx",
+      "contentHash": "08d603dbce022311296e873f496d7167943358dd051264f8fc7ca0c5bfa4cdb7",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/OverwriteConfirm/OverwriteConfirmState.ts",
+      "contentHash": "d943bd9597097f632fef54ac92cf23896fbcd2c3828909e7b092c440c0c16149",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/Paragraph.tsx",
+      "contentHash": "7b9f6ccc13276e54be0560aea40ce42e889baed74d96ba8d9d58ced1a26beaba",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/positionElementBesideCursor.ts",
+      "contentHash": "1dea4e4773e0505d0fc98b349de5d4b11e56784264d8641c535b8833db6dfc6a",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/PropertiesPopover.tsx",
+      "contentHash": "e593fbf0b9adfe21108579475024c9c34431b0fde9bda558e8331fb693cd4fc2",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/PublishLibrary.tsx",
+      "contentHash": "e0d596cf20c4576870612eaad16ff77fac76e61db6a205dd39f00280b5260525",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/QuickSearch.tsx",
+      "contentHash": "766553f140ccd63718a4ee9edc993fffdc622b82615a0e41d159b694aa0af1ef",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/RadioGroup.tsx",
+      "contentHash": "e204ba3ccda340f24a58b2f54071cedd72d7c6c28f9ffe334fcee8bed441fa06",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/ScrollableList.tsx",
+      "contentHash": "0b04e2c1a0a243a0fb6e93fae01e5190428b437d9ea3766eb64535d03b847a6e",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/Section.tsx",
+      "contentHash": "870fd8707f917b5644812a77efe5491447aaf630a8efda482ef0d7191642f4bb",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/ShareableLinkDialog.tsx",
+      "contentHash": "b2122146b6933a3ed2360493806b68cac862b7349aa829d6abdf5eb2c0848c23",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/Sidebar/common.ts",
+      "contentHash": "6c000f18d3c508d222c2b68a7d568d15929752414851f2dd682f4c059cdc6e39",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/Sidebar/Sidebar.tsx",
+      "contentHash": "6dd6da5e524bbe07d68d939443386c08bfd1ae35b97cf09cd5cb99ed18be7193",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/Sidebar/SidebarHeader.tsx",
+      "contentHash": "e5f8f66ec32d2542bfdefda4bd5bc49584f3b4193404813b02e62881ccf61e2a",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/Sidebar/SidebarTab.tsx",
+      "contentHash": "d9afe4cc0196143dfd4623ea32445adbafbaa5a499cce798d58084bedf2e9213",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/Sidebar/SidebarTabs.tsx",
+      "contentHash": "29d7097dc0c0619fceb3e17b12b46e18cd831ec065afde9ba7a0e58819f2834e",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/Sidebar/SidebarTabTrigger.tsx",
+      "contentHash": "54cfccf06687d5b319841e52f7e53e482a0b13dac575061aa3e19ed8b531ea56",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/Sidebar/SidebarTabTriggers.tsx",
+      "contentHash": "97095ae86e36ba6c17316e248b0a41132b7e7df4b67dda507ae87a706703bb61",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/Sidebar/SidebarTrigger.tsx",
+      "contentHash": "06e367e11ef05fdded59f49b7651512a347a3d2e171665bf6717ebacbd87d14c",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/Spinner.tsx",
+      "contentHash": "11e05b8f82eb13faae6dd6835e0063e33c5c5804f05e5375fc24c124322d9596",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/Stack.tsx",
+      "contentHash": "60a9c84b6aee5071d2ab50b471b3406465907bddeffb78498f4a9ad3f8badc1c",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/Stats/Collapsible.tsx",
+      "contentHash": "af0f21aec021eca107160bb6f07da6fae344c5b976e5f2d382fb3e1c1e833b2e",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/Switch.tsx",
+      "contentHash": "557384314bb9fd9da2c415f00433053abb9c6a07a5b28a3269d21fdfc2d65b0c",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/TextField.tsx",
+      "contentHash": "d081fba68a5749cbb54518e969f22d98559ddb4144e015a6f7b2f1ff17c38c00",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/Tooltip.tsx",
+      "contentHash": "d0763aca46f41adb123dccbcf209943221ca13ed459b29cb5e00b56626677c8b",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/TTDDialog/Chat/ChatHistoryMenu.tsx",
+      "contentHash": "a283582402c3dfabd65826ef65520ffbe032971e6b304e86e932bd5d7c2dc279",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/TTDDialog/Chat/ChatInterface.tsx",
+      "contentHash": "669d34b9fdab41ba36a4c1666f41730028b6167256febe6a880a6775ecb34214",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/TTDDialog/Chat/ChatMessage.tsx",
+      "contentHash": "ba7b775e33d49f6795ebf39c0cbd6fe75a95c04d05fd5d219629c4f2e172e54f",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/TTDDialog/Chat/index.ts",
+      "contentHash": "f5c1b5e95f72fab1108a133e6f534db299cc2509c573e9b8bccfe42499824071",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/TTDDialog/Chat/TTDChatPanel.tsx",
+      "contentHash": "980b48b756b969e0b225d0e8cb345a8e9db49afc3a3a54f09b13c5a6a1ea35c9",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/TTDDialog/Chat/useChatAgent.ts",
+      "contentHash": "313bb24b939f41e36f56600896872745f084fa2c19069a6a55de1ebef7ebfae3",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/TTDDialog/CodeMirrorEditor.tsx",
+      "contentHash": "8f55b368a15decf62d169455c362531b063a00c09d25990dae1617d3575e5e19",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/TTDDialog/hooks/useChatManagement.ts",
+      "contentHash": "b09d17e10e86157397e39da2d3885dbff7b26278f76bbd3ac1ecc1a476408224",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/TTDDialog/hooks/useTextGeneration.ts",
+      "contentHash": "041305d6c557e15672b5743de92ddedf4e071df84c6de8987ac6c585a8493608",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/TTDDialog/mermaid-lang-lite.ts",
+      "contentHash": "c088b142d23bb1430fd7c5dd04612103a3c1118251eb123a3c72dfed193f749c",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/TTDDialog/MermaidToExcalidraw.tsx",
+      "contentHash": "184f196b9670b3ac97f872d81a11f4f00050f25deb21749a849e0e9d1047043f",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/TTDDialog/TTDContext.tsx",
+      "contentHash": "b025df0868e481cd97a6dd16539fd15855aed1a4a52453eea1a4fe65932147b2",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/TTDDialog/TTDDialog.tsx",
+      "contentHash": "ba447051c15d7f7bb95d020d2c051224671db47924ed293893be1d42dd0ab76e",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/TTDDialog/TTDDialogInput.tsx",
+      "contentHash": "9a44f3bbd2830d69e3a71cf8e40f056761564186977148d06657e3d91ed89c9c",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/TTDDialog/TTDDialogOutput.tsx",
+      "contentHash": "2f8248c4edba67132669fa7eee0a58ff8ea873e7f713bc61771531eeeefff8e2",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/TTDDialog/TTDDialogPanel.tsx",
+      "contentHash": "60f25a8e797ff16b14ea1f84dd40ee354ad513754966eda87644ffcb0721169c",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/TTDDialog/TTDDialogPanels.tsx",
+      "contentHash": "ec80b122165047fb3fb2e79a1e5640d2ee7055b01d300c8ab7656c1f6589eac7",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/TTDDialog/TTDDialogSubmitShortcut.tsx",
+      "contentHash": "bc56ffe1768548731aa97e1d9d375c1f528543fe1fb093522f12bf8baafb67a6",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/TTDDialog/TTDDialogTab.tsx",
+      "contentHash": "d87cae5169ec4f50406431c028bef1ce6ae9cf60115a5ea249b4f32fa0fb91bb",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/TTDDialog/TTDDialogTabs.tsx",
+      "contentHash": "0a1b8d298bd08568e2c0a6fd4ad65db68262db8d16da18cda527b8881c6c6666",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/TTDDialog/TTDDialogTabTrigger.tsx",
+      "contentHash": "57e8149ade5f4fc246f7ecccd33526414cbf28ad64675fcead5bd4a12644eaf6",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/TTDDialog/TTDDialogTabTriggers.tsx",
+      "contentHash": "f9a252f5adfaab2e5ad2c75b731cb15014f1048067437b0b8877830868776845",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/TTDDialog/TTDPreviewPanel.tsx",
+      "contentHash": "b6ed2e7a8ac86ab227dad8a0723d0d167f59a5d3f74b34f9383e4f763e25df39",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/TTDDialog/TTDWelcomeMessage.tsx",
+      "contentHash": "69edd01710eb1fd23d0803a5b59c26c9f9201238f1b415578c2fb0f5d0a8a7d6",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/TTDDialog/useTTDChatStorage.ts",
+      "contentHash": "1d900166432aa67ed809153c93340718c607c79093360bbf3e138cd319cc8ede",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/TTDDialog/utils/chat.ts",
+      "contentHash": "e334f3ab5d49f238370a25a4e14e5c6451b011a01f9b886a0082a0edfef94d32",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/TTDDialog/utils/mermaidAutoFix.ts",
+      "contentHash": "5ed63f4490426723fbc033729890a632805520a7d5573f988afb64f40d69f0c3",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/TTDDialog/utils/mermaidError.ts",
+      "contentHash": "3b56959b3e96d5edca9d46b9156e3a7b0e51cb06df297638d45b7adcec37cf03",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/UserList.tsx",
+      "contentHash": "6f307f92478e308a58cacefbbf8c692c0ff37feef28290e3540266d130d24123",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/welcome-screen/WelcomeScreen.Center.tsx",
+      "contentHash": "9fa1264bdd8ea2ba677f98c74aebb598be298662b53c1bfc5196e8c148c72518",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/welcome-screen/WelcomeScreen.Hints.tsx",
+      "contentHash": "117fb3971a3e02df8a9c927a31f0906e716add63f73acd69d3ba6c0456ca1622",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/welcome-screen/WelcomeScreen.tsx",
+      "contentHash": "c1d0cc2e769ba83a8d99d27be0f2f58723abdbfa83009f8aaec43ef7b9b7631f",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/context/tunnels.ts",
+      "contentHash": "6e77a6f6d39afc1904b8aca175e6994d8e44f4bd9b21033aa5f23ae3d5b38cde",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/context/ui-appState.ts",
+      "contentHash": "90e846534e2a6bf24e9ca8e7e31b5e5dfef4b8ee80910141c1831f0f3dcdf1f5",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/css.d.ts",
+      "contentHash": "25639fb7a82fed12a3cb9498444e78bb2e407c450dad484d76d44457896ccd5a",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/data/ai/types.ts",
+      "contentHash": "1e29941e343553c3fd94603db5b4de0f474cb3e1c640cc49605d9f72e31cbdf3",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/env.cjs",
+      "contentHash": "d0f7db5ad70de7cea60b09880f815b4d0eb0af927eabb4c38f4fb76252affac8",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/global.d.ts",
+      "contentHash": "d7679fa3bf5d6b64bc2a526070ad97f0d653e22579c6d9056b3ce94e53750814",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/hooks/useCallbackRefState.ts",
+      "contentHash": "e792287b2eba5f8892bf7ddb39ba1bc2fa9faf1d6fa50de306cb5573fe56dfb3",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/hooks/useCopiedIndicator.ts",
+      "contentHash": "e36a5eb305ed362d8ade46f22d03b8f68f6fc0e5e6136c81d85e9d6b9c25142f",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/hooks/useOutsideClick.ts",
+      "contentHash": "3dc8197a864a61338c7b75aeeb8863a65db213152c4e9637c74d7f94341f885c",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/hooks/useStable.ts",
+      "contentHash": "618d97ba6196d8cb0ca0ce43ba959f0dfbc8afb632875793269ffb8f4e7ac518",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/pwacompat.d.ts",
+      "contentHash": "f8a7ec5b298ce49bd0e4fd5dd47880768ecb156a790c5d5c37a2baca65060e82",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/react-app-env.d.ts",
+      "contentHash": "57eda4c4c04a1dca45c62857326882ce9cc948c4b52973c0e3c3b7e4c3fa3990",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/shortcut.ts",
+      "contentHash": "f389a4966180316aec9f716951659de01a2338f15d6b54401b6a4f4c6286f282",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/vite-env.d.ts",
+      "contentHash": "72ebb8cb009923c4f378f04123ce878a46520b9da7c6a82e3779687c2d13fbfd",
+      "line": 1
+    }
+  ],
+  "claims": [
+    {
+      "purpose": "component-name",
+      "text": "Dialogs & side panels",
+      "citations": [
+        {
+          "path": "packages/excalidraw/components/ConfirmDialog.tsx",
+          "contentHash": "dcca7936efe5d2a94f627044f2f1b1914237be7b811caea49c03357863792542",
+          "startLine": 15,
+          "endLine": 39,
+          "excerpt": "interface Props extends Omit<DialogProps, \"onCloseRequest\"> {\n  onConfirm: () => void;\n  onCancel: () => void;\n  confirmText?: string;\n  cancelText?: string;\n}\nconst ConfirmDialog = (props: Props) => {\n  const {\n    onConfirm,\n    onCancel,\n    children,\n    confirmText = t(\"buttons.confirm\"),\n    cancelText = t(\"buttons.cancel\"),\n    className = \"\",\n    ...rest\n  } = props;\n  const setAppState = useExcalidrawSetAppState();\n  const setIsLibraryMenuOpen = useSetAtom(isLibraryMenuOpenAtom);\n  const { container } = useExcalidrawContainer();\n\n  return (\n    <Dialog\n      onCloseRequest={onCancel}\n      size=\"small\"\n      {...rest}"
+        },
+        {
+          "path": "packages/excalidraw/components/Sidebar/Sidebar.tsx",
+          "contentHash": "6dd6da5e524bbe07d68d939443386c08bfd1ae35b97cf09cd5cb99ed18be7193",
+          "startLine": 38,
+          "endLine": 60,
+          "excerpt": "/**\n * Flags whether the currently rendered Sidebar is docked or not, for use\n * in upstream components that need to act on this (e.g. LayerUI to shift the\n * UI). We use an atom because of potential host app sidebars (for the default\n * sidebar we could just read from appState.defaultSidebarDockedPreference).\n *\n * Since we can only render one Sidebar at a time, we can use a simple flag.\n */\nexport const isSidebarDockedAtom = atom(false);\n\nexport const SidebarInner = forwardRef(\n  (\n    {\n      name,\n      children,\n      onDock,\n      docked,\n      className,\n      ...rest\n    }: SidebarProps & Omit<React.RefAttributes<HTMLDivElement>, \"onSelect\">,\n    ref: React.ForwardedRef<HTMLDivElement>,\n  ) => {\n    if (isDevEnv() && onDock && docked == null) {"
+        }
+      ]
+    },
+    {
+      "purpose": "component-role",
+      "text": "Provides confirmation dialogs and dockable side panels.",
+      "citations": [
+        {
+          "path": "packages/excalidraw/components/ConfirmDialog.tsx",
+          "contentHash": "dcca7936efe5d2a94f627044f2f1b1914237be7b811caea49c03357863792542",
+          "startLine": 15,
+          "endLine": 39,
+          "excerpt": "interface Props extends Omit<DialogProps, \"onCloseRequest\"> {\n  onConfirm: () => void;\n  onCancel: () => void;\n  confirmText?: string;\n  cancelText?: string;\n}\nconst ConfirmDialog = (props: Props) => {\n  const {\n    onConfirm,\n    onCancel,\n    children,\n    confirmText = t(\"buttons.confirm\"),\n    cancelText = t(\"buttons.cancel\"),\n    className = \"\",\n    ...rest\n  } = props;\n  const setAppState = useExcalidrawSetAppState();\n  const setIsLibraryMenuOpen = useSetAtom(isLibraryMenuOpenAtom);\n  const { container } = useExcalidrawContainer();\n\n  return (\n    <Dialog\n      onCloseRequest={onCancel}\n      size=\"small\"\n      {...rest}"
+        },
+        {
+          "path": "packages/excalidraw/components/Sidebar/Sidebar.tsx",
+          "contentHash": "6dd6da5e524bbe07d68d939443386c08bfd1ae35b97cf09cd5cb99ed18be7193",
+          "startLine": 38,
+          "endLine": 60,
+          "excerpt": "/**\n * Flags whether the currently rendered Sidebar is docked or not, for use\n * in upstream components that need to act on this (e.g. LayerUI to shift the\n * UI). We use an atom because of potential host app sidebars (for the default\n * sidebar we could just read from appState.defaultSidebarDockedPreference).\n *\n * Since we can only render one Sidebar at a time, we can use a simple flag.\n */\nexport const isSidebarDockedAtom = atom(false);\n\nexport const SidebarInner = forwardRef(\n  (\n    {\n      name,\n      children,\n      onDock,\n      docked,\n      className,\n      ...rest\n    }: SidebarProps & Omit<React.RefAttributes<HTMLDivElement>, \"onSelect\">,\n    ref: React.ForwardedRef<HTMLDivElement>,\n  ) => {\n    if (isDevEnv() && onDock && docked == null) {"
+        }
+      ]
+    }
+  ]
+}

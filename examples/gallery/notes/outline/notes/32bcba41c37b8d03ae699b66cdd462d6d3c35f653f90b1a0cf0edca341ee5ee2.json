@@ -1,0 +1,2275 @@
+{
+  "schemaVersion": 1,
+  "targetId": "component:module:app/actions/definitions/developer.tsx",
+  "summary": "Mounts application routes, dialogs and notifications alongside rich-text editing commands.",
+  "author": "Codex (external agent)",
+  "sources": [
+    {
+      "path": "app/actions/definitions/developer.tsx",
+      "contentHash": "f237fe5a87818b7a19a5d222d5efc6a7ccf9576eff06fef2b8d18a5cf393e03d",
+      "line": 1
+    },
+    {
+      "path": "app/components/ArrowKeyNavigation.tsx",
+      "contentHash": "99b62836d357ce1129e6bc6178a3888dd89458148a0132492063e88b8684e4df",
+      "line": 1
+    },
+    {
+      "path": "app/components/AuthenticatedLayout.tsx",
+      "contentHash": "b596c4d6380fbe030ba093b622e3cab8297c42920813489ec4e1b7163bc61cef",
+      "line": 1
+    },
+    {
+      "path": "app/components/CircularProgressBar.tsx",
+      "contentHash": "f18cac20415d6b3345d646e66cc883397fec9b4e8f73b768e2a83cb23d8d8680",
+      "line": 1
+    },
+    {
+      "path": "app/components/ColorButton.tsx",
+      "contentHash": "1552d07524797638ad252d3127f41aba413abc4faee6a3abd29669f62151a2f5",
+      "line": 1
+    },
+    {
+      "path": "app/components/CommandBar/CommandBar.tsx",
+      "contentHash": "c03c5098bb70901fbfadc88cbee37a2360146c410b195aa8c121399af1e01c5f",
+      "line": 1
+    },
+    {
+      "path": "app/components/CommandBar/CommandBarItem.tsx",
+      "contentHash": "8c196257c5c100d52447ea039f173f55434922a214d76c42d8d8a2fb3cbe9d21",
+      "line": 1
+    },
+    {
+      "path": "app/components/CommandBar/CommandBarResults.tsx",
+      "contentHash": "61376dcd26c88aa370a2a64ab98d2965df4399eaee20e6cba19f02afa3e6c44e",
+      "line": 1
+    },
+    {
+      "path": "app/components/CommandBar/index.ts",
+      "contentHash": "6a976b81e57cd907be11597681866e3729c75e9a25d3be94bdcd2e364cf97a28",
+      "line": 1
+    },
+    {
+      "path": "app/components/CommandBar/SearchIndex.ts",
+      "contentHash": "b7f614c67ce7e2744a364adb60c85952e6352cd2f818440825c7004edcda7bd4",
+      "line": 1
+    },
+    {
+      "path": "app/components/CommandBar/SearchResultIcon.tsx",
+      "contentHash": "d4de965b17c7325b8ea4bb3a883fa946bfa2b1909c16478dada30cdfe92bb762",
+      "line": 1
+    },
+    {
+      "path": "app/components/CommandBar/SharedCommandBar.tsx",
+      "contentHash": "baa2223726cbf4faf4ce97da3d5930a229c1ca35008dd9fc9ba5fe02ebc1fcb8",
+      "line": 1
+    },
+    {
+      "path": "app/components/CommandBar/SharedSearchActions.tsx",
+      "contentHash": "8042edf11fbaf32b844ccec03c0a17c5e73b57c58c76f3bfc1ed628b6a7b9b15",
+      "line": 1
+    },
+    {
+      "path": "app/components/CommandBar/useSearchIndex.ts",
+      "contentHash": "82cee6aa82d9be52349e8a026e706c0b1f2595a330901e8174fcf8c22da86d66",
+      "line": 1
+    },
+    {
+      "path": "app/components/CommandBar/useSettingsAction.tsx",
+      "contentHash": "84e8e54ebe95403409bb9d7b58f6cddf7c93b6d0c3ac80771b5f84f6f0d41a05",
+      "line": 1
+    },
+    {
+      "path": "app/components/CommandBar/useTemplatesAction.tsx",
+      "contentHash": "dfe7abdbd2edfe7b70c3b6c0e7aedf56309714e65c57f9b650603aaf13170ec9",
+      "line": 1
+    },
+    {
+      "path": "app/components/ContentEditable.tsx",
+      "contentHash": "fd58a4a9ac6f6622c8e6723e6e83b1f764e67fffd9b5635f2782347122aaa6d1",
+      "line": 1
+    },
+    {
+      "path": "app/components/DeprecatedReason.tsx",
+      "contentHash": "ef3f5a7bee63a6fd86aba18517fe7657d1abd93152fe439a19951a0c5611c85b",
+      "line": 1
+    },
+    {
+      "path": "app/components/DeprecationNotice.tsx",
+      "contentHash": "5fe049909057753e7a3e2cb7a9df99e9b3cbdea363e9dedded97d0f52756aeb8",
+      "line": 1
+    },
+    {
+      "path": "app/components/DesktopEventHandler.tsx",
+      "contentHash": "8cb2fb02a27778e200e46e3cbe64efbbe3a22d2da41af6cf099ad173872f4bff",
+      "line": 1
+    },
+    {
+      "path": "app/components/DocumentContext.tsx",
+      "contentHash": "429431ed28fe36597faae924b6bfaee6457c0f6df40849e2c224e72e740a6826",
+      "line": 1
+    },
+    {
+      "path": "app/components/DocumentMeta.tsx",
+      "contentHash": "b830144a0f5f9c1f3b0dd0109ba5ab611aa0c421de6b2eb63b6d6138959aee4b",
+      "line": 1
+    },
+    {
+      "path": "app/components/DocumentTasks.tsx",
+      "contentHash": "82b6ff2c15c4bf78ebe6fd882ec0b60c05cd16b1eb51b784da078b5b715286e5",
+      "line": 1
+    },
+    {
+      "path": "app/components/DownloadToast.tsx",
+      "contentHash": "925dfca56ec288309ebc23a483a00d9bf5d2416e6869c3ec576364e9b0f709f9",
+      "line": 1
+    },
+    {
+      "path": "app/components/EditorAwareHTML5Backend.ts",
+      "contentHash": "8408e2bcd43169ea5ea3b57d9047175d4e8836b9558857c969172ededc8c6862",
+      "line": 1
+    },
+    {
+      "path": "app/components/Emoji.tsx",
+      "contentHash": "93a0c83bd09fbe85cee7a62b17feec9198538a4275486f29fdae11125b2c2e0b",
+      "line": 1
+    },
+    {
+      "path": "app/components/Header.tsx",
+      "contentHash": "e10388ce8da42437cf1a1d764b44814aa4008770126d1ca59ebac0bcecca533f",
+      "line": 1
+    },
+    {
+      "path": "app/components/HeaderMeta.tsx",
+      "contentHash": "18388e875221fde16034b78ac8c7426b2aa677db75b94e81330abba429b52b30",
+      "line": 1
+    },
+    {
+      "path": "app/components/Highlight.tsx",
+      "contentHash": "dfb58095cf92268df2628fbdd6f12ff3b003da2148474c986a1fcde0a5c34d97",
+      "line": 1
+    },
+    {
+      "path": "app/components/IconPicker/components/Components.tsx",
+      "contentHash": "0e1ce98e79dfdbee58424c879f18cef0c5e6aac033b052cda10ca5a5ea851c82",
+      "line": 1
+    },
+    {
+      "path": "app/components/IconPicker/components/EmojiPanel.tsx",
+      "contentHash": "793492b1c785242def8520fca382edb2c3f7c2222b2654b27314915a80843472",
+      "line": 1
+    },
+    {
+      "path": "app/components/IconPicker/components/Grid.tsx",
+      "contentHash": "a3aa6d44610b98842bc47390a4b6f46c4f93e1355da8f0424dd6737f077f613c",
+      "line": 1
+    },
+    {
+      "path": "app/components/IconPicker/components/GridTemplate.tsx",
+      "contentHash": "2cd99f8269d688a09fe851aaa6240b3752cc4ffa64f3a5138008860b1938910a",
+      "line": 1
+    },
+    {
+      "path": "app/components/IconPicker/components/IconButton.tsx",
+      "contentHash": "ecb1259b0be98496cf67b562cf9c297bab69986c533a8af62f9b1a1e0610b08c",
+      "line": 1
+    },
+    {
+      "path": "app/components/IconPicker/components/IconColorPicker.tsx",
+      "contentHash": "a667ff9c2c5bb5b4df82ac49e3849b113cf0a7c672eadf36bc998996000d4e86",
+      "line": 1
+    },
+    {
+      "path": "app/components/IconPicker/components/IconPanel.tsx",
+      "contentHash": "6402954372736f2cd2940826f0c4fd471830cab6a415fdc0254dbbcbd1560476",
+      "line": 1
+    },
+    {
+      "path": "app/components/IconPicker/components/IconPreview.tsx",
+      "contentHash": "cde6c83e0389babfbff52f2441a36f32bcea6c428508839fea03d2db032be3f9",
+      "line": 1
+    },
+    {
+      "path": "app/components/IconPicker/components/MenuButton.tsx",
+      "contentHash": "25ddc55ff3794a92d1230eb0aec3fd67a06f3e75d00f34569ba234ae78363cea",
+      "line": 1
+    },
+    {
+      "path": "app/components/IconPicker/components/SkinTonePicker.tsx",
+      "contentHash": "baedb20e29d75acf3c96fa1c3615b3ef958e081f9c13628b5e11a36e6f16ab7e",
+      "line": 1
+    },
+    {
+      "path": "app/components/IconPicker/useIconState.tsx",
+      "contentHash": "630bf255aa4234766bea57ce6d7db64c9d570f6306fa14dcfc7d2a57a1b5eabb",
+      "line": 1
+    },
+    {
+      "path": "app/components/IconPicker/utils.ts",
+      "contentHash": "61cb54ae90b9286130dbf12624915eee4c7b4cd42931a5e34da51a0222fcb8b9",
+      "line": 1
+    },
+    {
+      "path": "app/components/Icons/ArrowIcon.tsx",
+      "contentHash": "ba3e778c4d82b3305ce303c8a56b86ece91447fecbfde399950d9553bfd69472",
+      "line": 1
+    },
+    {
+      "path": "app/components/Icons/CircleIcon.tsx",
+      "contentHash": "1d435924589fe574d056df305cd4bf27d6af9839dad092a86d018ece016fa2a5",
+      "line": 1
+    },
+    {
+      "path": "app/components/Icons/DottedCircleIcon.tsx",
+      "contentHash": "8aaccc4417acadb39b2e0884b83df969c0d814e2be1f0375636453391c24f3d0",
+      "line": 1
+    },
+    {
+      "path": "app/components/Input.tsx",
+      "contentHash": "373b881063afa708e612174ca49605dd506d940a28ee2b9f889e3368b6885b89",
+      "line": 1
+    },
+    {
+      "path": "app/components/InputColor.tsx",
+      "contentHash": "23d793336b79250d1bf3d22cba63018e185cc714a137009ed61bc3b6997cf2a3",
+      "line": 1
+    },
+    {
+      "path": "app/components/InputSearch.tsx",
+      "contentHash": "f877dda918e4b646c1a223e741e9ab54a4e712121aa15af806753c487cd1c8dd",
+      "line": 1
+    },
+    {
+      "path": "app/components/Key.ts",
+      "contentHash": "fdac0c9b649b83141fa8f0245e12839c1b8a7b98aad3fb29f88e51412dae032b",
+      "line": 1
+    },
+    {
+      "path": "app/components/KeyboardShortcut.tsx",
+      "contentHash": "c3537e58e7a4f9c8cbef4dfe17eb53246b6d1744a593aee25375bdffb4d59b4c",
+      "line": 1
+    },
+    {
+      "path": "app/components/KeyboardShortcuts.tsx",
+      "contentHash": "c7cabe7e0d4cf7228d53d30c1397948a3f05391a71e002e1f884c5b9ff41fab4",
+      "line": 1
+    },
+    {
+      "path": "app/components/Layout.tsx",
+      "contentHash": "bf9e0c37d91c5ef49067de0d406326a2cecaa7e9f1cbc1baf1fafb60ed425a7a",
+      "line": 1
+    },
+    {
+      "path": "app/components/LazyPolyfills.tsx",
+      "contentHash": "f474800240bad40fe3a9a25e6ee939cd9efa22cfe94e713b10ce44a2a7c7d3ff",
+      "line": 1
+    },
+    {
+      "path": "app/components/List/Item.tsx",
+      "contentHash": "692dc39c790634a31b4e134c50ce09a6a1adb79bddd90c9fddb102028e1a5e14",
+      "line": 1
+    },
+    {
+      "path": "app/components/LocaleTime.tsx",
+      "contentHash": "60742c7050563a17a660ca62b5d47a79b8a3fa9cf37d0fe86a5d0ab6af78a63e",
+      "line": 1
+    },
+    {
+      "path": "app/components/Menu/transformer.tsx",
+      "contentHash": "e49d05eaa85a5479711e9a934d7f0f2844464c2f9f36d749a3f615250ddc1377",
+      "line": 1
+    },
+    {
+      "path": "app/components/MouseSafeArea.tsx",
+      "contentHash": "72ad73c3ea1438d5c0b006333f2e5b3890264d3298d1b7a608baac9df8538013",
+      "line": 1
+    },
+    {
+      "path": "app/components/NavLink.tsx",
+      "contentHash": "09b0ef82c65011c98a881c3038948fa6d481895516883a621e45f2199379044e",
+      "line": 1
+    },
+    {
+      "path": "app/components/Notice.tsx",
+      "contentHash": "b8f436e8c2b4be98931ee6ada439e1a5be6b1542698119b1774d655dc6a6b6b8",
+      "line": 1
+    },
+    {
+      "path": "app/components/Notifications/NotificationIcon.tsx",
+      "contentHash": "7c3b49bcf69c0c24046322e1aece6793f28d6e812f2092ce414ef60e132b93e8",
+      "line": 1
+    },
+    {
+      "path": "app/components/PageScroll.tsx",
+      "contentHash": "ae5e0f58615a97f83c420cc97781891c04f1a234ae6bb2b26461ae9652076202",
+      "line": 1
+    },
+    {
+      "path": "app/components/PageTheme.ts",
+      "contentHash": "52585d00d2f677ab94fc4669060851808fc86153ad9c884a018adf3050df0cf8",
+      "line": 1
+    },
+    {
+      "path": "app/components/Portal.tsx",
+      "contentHash": "b942b735ad07525de316574128e280259d1f4d90b58b863dc41df68c0ae7b48e",
+      "line": 1
+    },
+    {
+      "path": "app/components/primitives/Menu/index.tsx",
+      "contentHash": "e80006f1b334fa08b7389835a1d014d9b808cd1dac6d46ca620f25f7c4d8201f",
+      "line": 1
+    },
+    {
+      "path": "app/components/Reactions/ReactionPicker.tsx",
+      "contentHash": "9701ea81c296cd0aa2b91891a8b5e48035b18e9da4b654126eb41d2f7b268bc2",
+      "line": 1
+    },
+    {
+      "path": "app/components/ReadingTime.tsx",
+      "contentHash": "65357eed4e895c16f243e61680571d9e69a8fad9d087dee7fda8942a6ca39f52",
+      "line": 1
+    },
+    {
+      "path": "app/components/RegisterKeyDown.ts",
+      "contentHash": "aa83b0b178858c70f70773a841c09f07c2cdbddc37ec6b01c1011f01ffc334ce",
+      "line": 1
+    },
+    {
+      "path": "app/components/RightSidebarContext.tsx",
+      "contentHash": "81c8ab25edd5a543c80d7234ca55004b12cedc1668e94a1a72a03d7b3296b2e6",
+      "line": 1
+    },
+    {
+      "path": "app/components/ScrollContext.ts",
+      "contentHash": "e40974f8f1b61ad1f204db805eeeb9f56f0506c528ebf1dfefebb1018d6a93b3",
+      "line": 1
+    },
+    {
+      "path": "app/components/ScrollToTop.ts",
+      "contentHash": "f14b58001f9d1746b2c6babd30bf91b01cd6760fcd1de4caacc5c3f9b60cf94c",
+      "line": 1
+    },
+    {
+      "path": "app/components/SearchActions.tsx",
+      "contentHash": "6aaddbf9a129b1ce89b6704e3f22a2d51cc6311def1bc98e690e21f132d71a0b",
+      "line": 1
+    },
+    {
+      "path": "app/components/Sidebar/App.tsx",
+      "contentHash": "55d3bb540fba015bb8591207e6068213bf4c1f42bc0efa8adaeb3b8040816697",
+      "line": 1
+    },
+    {
+      "path": "app/components/Sidebar/Aside.tsx",
+      "contentHash": "24a11ecd0aad923e760d4a883e811923f8d70b6c863a118a5a48529138ce3cbe",
+      "line": 1
+    },
+    {
+      "path": "app/components/Sidebar/components/DocumentTree.tsx",
+      "contentHash": "630b3f782160cc212de4c3276b835c9468fcb12bea83d933b4e01587c250d4f8",
+      "line": 1
+    },
+    {
+      "path": "app/components/Sidebar/components/DragActiveContext.tsx",
+      "contentHash": "f3575c9c6527e0313032d48a6069a38dbfa6bcedec0a557259b36d500ed8af09",
+      "line": 1
+    },
+    {
+      "path": "app/components/Sidebar/components/DraggableSection.tsx",
+      "contentHash": "7c1ce7f9c687a90b80c102ef34c411a81f98143fdafb9c1c1303787582e3ecd8",
+      "line": 1
+    },
+    {
+      "path": "app/components/Sidebar/components/NavLink.tsx",
+      "contentHash": "921a2ded85b98c5fcf18faa1943bac7d0cf6fce25601369acf59a81302c2a9f2",
+      "line": 1
+    },
+    {
+      "path": "app/components/Sidebar/components/Relative.tsx",
+      "contentHash": "8ae0949b0d60b5148dc03dcfbec52fd17e7df8fb023ffc818d5ad4ed79908eb1",
+      "line": 1
+    },
+    {
+      "path": "app/components/Sidebar/components/ResizeBorder.ts",
+      "contentHash": "bf07e4374204be64173e71c6ba837276b7f5dc8e35eaaf5f275acece5d2a69e5",
+      "line": 1
+    },
+    {
+      "path": "app/components/Sidebar/components/Section.ts",
+      "contentHash": "16cf64cd2259c166e5e005de33c04c17b4b0c1a9c2af730395e375b2a03ba1f1",
+      "line": 1
+    },
+    {
+      "path": "app/components/Sidebar/components/SidebarLink.tsx",
+      "contentHash": "e0bd76af50aa8c00ead4ce06dd15fd63bc3b32706457184f9797dbb661e16888",
+      "line": 1
+    },
+    {
+      "path": "app/components/Sidebar/hooks/useScrollMargin.ts",
+      "contentHash": "bb3588f07853dc74699ed0b425ce8b25256c33c9fe8f47de1bf783b1eafa6328",
+      "line": 1
+    },
+    {
+      "path": "app/components/Sidebar/index.ts",
+      "contentHash": "4333e7909c1f7686f4c65683fa661a9daeb9c307a2bc22b888f3ea4801af0b4b",
+      "line": 1
+    },
+    {
+      "path": "app/components/SidebarCollapsedContext.ts",
+      "contentHash": "d3bda2af85286c67dc61d449d9cf91d94c6c69684140a2a267e25eb752d806bb",
+      "line": 1
+    },
+    {
+      "path": "app/components/SkipNavContent.tsx",
+      "contentHash": "1da93a6fbc7a58512cfe6efee9ea6393ace478d0c3c0a9eac9fc22f9c966c1aa",
+      "line": 1
+    },
+    {
+      "path": "app/components/SkipNavLink.tsx",
+      "contentHash": "1c4a0cb217e35296f8eae6e5d1a50a267e676ded115d6ae66fa5f56d2ed3e78b",
+      "line": 1
+    },
+    {
+      "path": "app/components/SplitView/context.ts",
+      "contentHash": "af4018181ea3fa9cb5a25a53ec454584d580274bfc92042d01605db2b061ccb8",
+      "line": 1
+    },
+    {
+      "path": "app/components/SplitView/index.tsx",
+      "contentHash": "ddf5b077c080c926c56b4ee901368aed317968c2531044bb5ff6cf0c838d8c87",
+      "line": 1
+    },
+    {
+      "path": "app/components/SwatchButton.tsx",
+      "contentHash": "29d91020c054e1e190846294363ec979fb8250fafa048580a4a2d9ec40cf1947",
+      "line": 1
+    },
+    {
+      "path": "app/components/Tabs/index.ts",
+      "contentHash": "42cc16b7ff43b4b0c6e703e42e931a6ea85b084c06e260b8f4a215ea988eeab7",
+      "line": 1
+    },
+    {
+      "path": "app/components/Tabs/Tab.tsx",
+      "contentHash": "22553345e451e814f419618600d807a842ee5058a56862be9b29a441253d4941",
+      "line": 1
+    },
+    {
+      "path": "app/components/Tabs/Tabs.tsx",
+      "contentHash": "6d749bcdadc809dc5bf71882caab25817fc2033290ba288a787f65c537b6871b",
+      "line": 1
+    },
+    {
+      "path": "app/components/Theme.tsx",
+      "contentHash": "4506aa109779c0ebd3d4305d864bd2813ff71f622062df67768189536df87da1",
+      "line": 1
+    },
+    {
+      "path": "app/components/Time.tsx",
+      "contentHash": "e222db600b7d2dd04b59fc7c81c7ca21083fd10099cc7b12575d1c12b2b1b5e7",
+      "line": 1
+    },
+    {
+      "path": "app/components/Toasts.tsx",
+      "contentHash": "194bce6d0f9d738f06725e7890a36a54d1adc4e818bdca246636149b257e8b2d",
+      "line": 1
+    },
+    {
+      "path": "app/editor/components/BlockMenu.tsx",
+      "contentHash": "2589b315c4baeee7554c3b4ec243a2bfc77ff87b94cc6ee449706d4924c16221",
+      "line": 1
+    },
+    {
+      "path": "app/editor/components/CellBackgroundColorPicker.tsx",
+      "contentHash": "4c36e6bfe9a4215fdc2ef77e1756f1cf2c670c78307600a5f0a2356b8c0ee6a8",
+      "line": 1
+    },
+    {
+      "path": "app/editor/components/CommentGutter.tsx",
+      "contentHash": "b0659f06b2a391d48efe598cb98c8ab6dedc4d8e17da0548afe34006abe09457",
+      "line": 1
+    },
+    {
+      "path": "app/editor/components/DocumentMenu.tsx",
+      "contentHash": "485d05d40b0a1788e85f5c040ab8805b524095d2dc49df96a133aa84e364fefe",
+      "line": 1
+    },
+    {
+      "path": "app/editor/components/EditorContext.tsx",
+      "contentHash": "67e4409d64f72fa54f47a1ed8518280eac07396f7f95bcd2efed0d270cef31e8",
+      "line": 1
+    },
+    {
+      "path": "app/editor/components/EmojiMenu.tsx",
+      "contentHash": "f6c32ab180f31fa99fb5bf79ef5cb8988d0d0a4f230ac70af9abe4a9a8d6c196",
+      "line": 1
+    },
+    {
+      "path": "app/editor/components/EmojiMenuItem.tsx",
+      "contentHash": "e93737944fceb692d63750d821c2a1cc943b9f189e2987ef94c23ca42958d419",
+      "line": 1
+    },
+    {
+      "path": "app/editor/components/HighlightColorPicker.tsx",
+      "contentHash": "e050f0160dcb8fb642a3b6c2446a57a203c63faeca366c1732df7bf72c027bc9",
+      "line": 1
+    },
+    {
+      "path": "app/editor/components/InlineMenu.tsx",
+      "contentHash": "a1597ad45f309972431c945349ca43a1fabc08a3b5264dd19a35f02664c60697",
+      "line": 1
+    },
+    {
+      "path": "app/editor/components/MediaDimension.tsx",
+      "contentHash": "b110cf15140478dec39e4bdabd142a0123b6436297e2f1635fcfe5f6ea90d0e8",
+      "line": 1
+    },
+    {
+      "path": "app/editor/components/SelectionToolbar.tsx",
+      "contentHash": "642df9b4b12d83bcfc6a15de6cfd446fba94be8aef4a5f6a9392071144b16c23",
+      "line": 1
+    },
+    {
+      "path": "app/editor/components/StickyBlockToolbar.tsx",
+      "contentHash": "a58c19ce18ff39deeb50859279652bcaef2560b9f01fd4e1cc22737ff809c5ff",
+      "line": 1
+    },
+    {
+      "path": "app/editor/components/SuggestionsMenu.tsx",
+      "contentHash": "63961d5b4c84981cffb1baf7e8df78994139b135c81b786311916dded13e0f6b",
+      "line": 1
+    },
+    {
+      "path": "app/editor/components/SuggestionsMenuItem.tsx",
+      "contentHash": "47331a100c34960700a75ce604ca5905e7a724f0a872daae43f8a021d42a7ba2",
+      "line": 1
+    },
+    {
+      "path": "app/editor/components/ToolbarMenu.tsx",
+      "contentHash": "0bed794dce062ae0b8c0ffa3d27b001e048d21656f5b4f8ca4ebb7f916cfa7a2",
+      "line": 1
+    },
+    {
+      "path": "app/editor/components/ToolbarSeparator.tsx",
+      "contentHash": "842c90c6d6c61265be5e1aac0194774046171742ca5f5d8207042e6eb858083d",
+      "line": 1
+    },
+    {
+      "path": "app/editor/components/useInlineMenuAnchor.ts",
+      "contentHash": "56d400d582ff51f8761bad197e9d88ba98d8703af99d66d0189dd9be202fe4df",
+      "line": 1
+    },
+    {
+      "path": "app/editor/extensions/BlockMenu.tsx",
+      "contentHash": "b7dbfedbc701672d95e5a15fa26d70664d17eaa756c60f0c55def6afe8bba745",
+      "line": 1
+    },
+    {
+      "path": "app/editor/extensions/ClipboardTextSerializer.ts",
+      "contentHash": "fb7e5b135adadee8ab8af066eebe6d53d556e27180d6cf0eafcb0000d2de3cc4",
+      "line": 1
+    },
+    {
+      "path": "app/editor/extensions/CommentGutter.tsx",
+      "contentHash": "bec243a8ab6dd6dd6f7fd5e0d6f262bfe235d7e4d89676f12a3f054412b6cdfa",
+      "line": 1
+    },
+    {
+      "path": "app/editor/extensions/deburrWithMap.ts",
+      "contentHash": "d1f951d56f0733b2bc1be6210654007b362147a2bf8a4d7dd71d5b4343ce7d56",
+      "line": 1
+    },
+    {
+      "path": "app/editor/extensions/DocumentMenu.tsx",
+      "contentHash": "ef325e8cecdf37044e86e4666fae521673e19b03937cf73e29cf9fc226b88ff9",
+      "line": 1
+    },
+    {
+      "path": "app/editor/extensions/EmojiMenu.tsx",
+      "contentHash": "79e051059ad17976dd72718bd2b17b8cbb8e8ce688a7482fff2739624ae41d5b",
+      "line": 1
+    },
+    {
+      "path": "app/editor/extensions/FindAndReplace.tsx",
+      "contentHash": "d4a1d68d55cc96af02eb9dac92f4de03c672b39e4b433bafb45aea1ea356dd11",
+      "line": 1
+    },
+    {
+      "path": "app/editor/extensions/MentionMenu.tsx",
+      "contentHash": "97819d6ac26dd75de0d73d8f9fbfeefd4c6231cb7618dd9e5db211a21bb2d14e",
+      "line": 1
+    },
+    {
+      "path": "app/editor/extensions/Multiplayer.ts",
+      "contentHash": "744667e38ef9b4fb373ace865ad034b69130054b5e8a2f3b507a2f29147249d6",
+      "line": 1
+    },
+    {
+      "path": "app/editor/extensions/PasteHandler.tsx",
+      "contentHash": "7a1d68c2779171da8ac8db246860672f0e633ae9ceae04dccc8eade4b77baf63",
+      "line": 1
+    },
+    {
+      "path": "app/editor/extensions/SelectionToolbar.tsx",
+      "contentHash": "58eab1c6e84d00e43df921bf1fc4964112416f704356ec3d92f8fd3015a6cc44",
+      "line": 1
+    },
+    {
+      "path": "app/editor/extensions/Suggestion.ts",
+      "contentHash": "d00a40809afebc40309f5d03e3685d9120071e272fa4d1eb891551d1e8d653f3",
+      "line": 1
+    },
+    {
+      "path": "app/editor/menus/attachment.tsx",
+      "contentHash": "8bec7612195c33788987aafb3d9f5215ea39e6fdd253de548b737d1559d43f19",
+      "line": 1
+    },
+    {
+      "path": "app/editor/menus/code.tsx",
+      "contentHash": "5e86a64f1d41be160845dec4390f0c1f56aedd5e54fea3cd0cf8f0f79266a39d",
+      "line": 1
+    },
+    {
+      "path": "app/editor/menus/formatting.tsx",
+      "contentHash": "dc0666dcf2815b3916ae6b86bc875e257596bd4cd93acdfd8b3f8f7f05f31091",
+      "line": 1
+    },
+    {
+      "path": "app/editor/menus/image.tsx",
+      "contentHash": "61f46b81b04f34401da1c2401c3a89c0b1eee2f1b3080125ea7ae8b033a59fea",
+      "line": 1
+    },
+    {
+      "path": "app/editor/menus/mapMenuItems.ts",
+      "contentHash": "a975b1dca01e665f56535a815923b28cc090579b312e7372bbd7428bbb67a727",
+      "line": 1
+    },
+    {
+      "path": "app/editor/menus/mention.tsx",
+      "contentHash": "52a0bc9cd61486965f97caaaf3a5826dece3ab06a16a9f9586cb7c40e2774586",
+      "line": 1
+    },
+    {
+      "path": "app/editor/menus/notice.tsx",
+      "contentHash": "905c81e12fa7d552b75cc445122e41c3e1b6a7332305a41f8445b65183dba926",
+      "line": 1
+    },
+    {
+      "path": "app/editor/menus/readOnly.tsx",
+      "contentHash": "2631c3bfd8f730c24c52cdb07b6e5dea3e776f60aa6ff35c5270e41ad6009690",
+      "line": 1
+    },
+    {
+      "path": "app/editor/menus/table.tsx",
+      "contentHash": "0b4e41d38b6d0220dd19d8bab1868f6495b84e5db804a82af7edda61de9f0af5",
+      "line": 1
+    },
+    {
+      "path": "app/editor/menus/tableCol.tsx",
+      "contentHash": "124c7f5bcaa515d7fa8b0fb2a23283f9062aba6f58a75d362befd3d1bc9dc920",
+      "line": 1
+    },
+    {
+      "path": "app/editor/menus/tableRow.tsx",
+      "contentHash": "aba75eaba6f09b24017ab1f539933d3e7bc2789af54c8eddafc9a14e2a9a6654",
+      "line": 1
+    },
+    {
+      "path": "app/hooks/useAutoRefresh.ts",
+      "contentHash": "fb57f9cb5a5be9e69cabaab480c5d38312808e2d7b6702da4167ca03d5701bb1",
+      "line": 1
+    },
+    {
+      "path": "app/hooks/useBuildTheme.ts",
+      "contentHash": "3a174d46a0abba7b2d739e7b0f7f75c189fc796c2b8bba7746eb0d50652b4361",
+      "line": 1
+    },
+    {
+      "path": "app/hooks/useDesktopTitlebar.ts",
+      "contentHash": "6fd244f38a5ff90382cdc0f6a53a7c2d4ca911bd9b9be09c2186cd2e082be83b",
+      "line": 1
+    },
+    {
+      "path": "app/hooks/useEditingFocus.ts",
+      "contentHash": "95c799a00d664aa47ec6f69e26ee1b6065bd95f83499a301040255c0538ef526",
+      "line": 1
+    },
+    {
+      "path": "app/hooks/useEventListener.ts",
+      "contentHash": "9d4e3fa3162757dbf3f816af901ac9a0ffdd68dbb00440262077e5dd1bc40a47",
+      "line": 1
+    },
+    {
+      "path": "app/hooks/useFocusedSplitLocation.ts",
+      "contentHash": "59e5db78eee5ec68ec0457103a58d4bd8329d96c2f3b0c5dc39e8e272302e1e4",
+      "line": 1
+    },
+    {
+      "path": "app/hooks/useFormatNumber.ts",
+      "contentHash": "1011f8f750148dd377d868a08b10dfd09db1ec8203884713ddc8cd0a70bb4c37",
+      "line": 1
+    },
+    {
+      "path": "app/hooks/useFrequencyTracker.ts",
+      "contentHash": "3f7be3160c2732f75343c5df1ac37ca300a468a74471c54c7565ed98cedca68a",
+      "line": 1
+    },
+    {
+      "path": "app/hooks/useIdle.ts",
+      "contentHash": "ae32d57bc25c747d98aaf589b4b2e7088b4d1ae144069ef4315a0cf4de2e03da",
+      "line": 1
+    },
+    {
+      "path": "app/hooks/useInterval.ts",
+      "contentHash": "46c4d3e11ab4ff7750205965ccc8aa393fb3610ac619ef3cf39ae284c0714761",
+      "line": 1
+    },
+    {
+      "path": "app/hooks/useKeyboardShortcutsQuery.tsx",
+      "contentHash": "200319ac8e77f7e65c13c660a1dbd0b310dd2c0aafbae90ffc1b1d291d7f7b64",
+      "line": 1
+    },
+    {
+      "path": "app/hooks/useKeyDown.ts",
+      "contentHash": "3e8464e28861e537c42c83435673d6e65cd6feddd5af76b13622f434605712cd",
+      "line": 1
+    },
+    {
+      "path": "app/hooks/useLocaleTime.ts",
+      "contentHash": "593e56096bd21de44e7b56618969dfff296222f1b4e7201dae02346d28a17152",
+      "line": 1
+    },
+    {
+      "path": "app/hooks/useLocationSelector.ts",
+      "contentHash": "ed555cc866cd56c85b4a85d45315c95193ba0254b0c8ca2f385874b61c1e885c",
+      "line": 1
+    },
+    {
+      "path": "app/hooks/useMaxHeight.ts",
+      "contentHash": "4d3471c5cd854298af37ede787d53af75df6421233ffe7f57a4efca10dab68aa",
+      "line": 1
+    },
+    {
+      "path": "app/hooks/useMediaQuery.ts",
+      "contentHash": "e519babdc03c8fc21bc5c099bf30a32b0e06205d26f3917dc743de780c0f9729",
+      "line": 1
+    },
+    {
+      "path": "app/hooks/useMousePosition.ts",
+      "contentHash": "bd95c5f919afe93457afc7cc46765a85a96aaa12b318d9be516e2a22d3706cde",
+      "line": 1
+    },
+    {
+      "path": "app/hooks/useOnScreen.ts",
+      "contentHash": "b0bf6d4c94bdf96e8a9781c3c1a1ebe2e4a9adfc521ac5352cdcbeb821f1b773",
+      "line": 1
+    },
+    {
+      "path": "app/hooks/usePrevious.ts",
+      "contentHash": "e820d0dd367f3f70d183b3b6a117706a3ec3c50ca9835d15e5907aa18c8f6a6a",
+      "line": 1
+    },
+    {
+      "path": "app/hooks/useResizeHandle.ts",
+      "contentHash": "e93e3f5a3f6c4b380173b1091e9be03807ff7528ad7f8a01065b2c58d193c9b1",
+      "line": 1
+    },
+    {
+      "path": "app/hooks/useRovingTabIndex.ts",
+      "contentHash": "a2d37c9384ed0615db3087ab8ebfc63a820e9731aaac86ece6dc99d37af3cffd",
+      "line": 1
+    },
+    {
+      "path": "app/hooks/useTextSelection.ts",
+      "contentHash": "29ff1f9733727214dea762f766c6fef442efa9d6fdbebb830aad7f0d191e51cb",
+      "line": 1
+    },
+    {
+      "path": "app/hooks/useTextStats.ts",
+      "contentHash": "e62a5d3bfc031557467e3c1c91747182edaf73caddebda34ba639edf2967c38b",
+      "line": 1
+    },
+    {
+      "path": "app/hooks/useUserLocale.ts",
+      "contentHash": "f66f0e55b051d4711c59abe2e0d86b7aa9a9598c8535deaf197e2b2d361afc6e",
+      "line": 1
+    },
+    {
+      "path": "app/hooks/useWindowScrollbarWidth.ts",
+      "contentHash": "08477f6b99fe84c3f57c2306bf0fd34dda0f8efd187222441b3d03f3cac973c3",
+      "line": 1
+    },
+    {
+      "path": "app/hooks/useWindowScrollPosition.ts",
+      "contentHash": "3751daa1dc311f603af487a4b3a27bc6e08e91dc1263cc3fc25b8d202cf4fb2e",
+      "line": 1
+    },
+    {
+      "path": "app/hooks/useWindowSize.ts",
+      "contentHash": "aa4f66e30491ef1710fe363cfb5e79dc7a5ffe0eda1a1b6dd825452598d49db9",
+      "line": 1
+    },
+    {
+      "path": "app/index.tsx",
+      "contentHash": "67e3bc9a671c2a8cee4816863a7f8e6ef8e941e0c52bf305dd0e20bc5b2b72cb",
+      "line": 1
+    },
+    {
+      "path": "app/menus/TableOfContentsMenu.tsx",
+      "contentHash": "a0a2bb776311786216d7eb95cfb454ff0b0069bce83a37ce56a8385fd6d31d1e",
+      "line": 1
+    },
+    {
+      "path": "app/models/helpers/ProsemirrorHelper.ts",
+      "contentHash": "1d132c828d70a3b9b5781cc42068d09c27edb221738b62b157b4bfb8ce4a8bb5",
+      "line": 1
+    },
+    {
+      "path": "app/models/SearchQuery.ts",
+      "contentHash": "3a5298d41a163c0f56c1af0fdd5b560ae125b0a077874947d54ed7c74e180d9f",
+      "line": 1
+    },
+    {
+      "path": "app/scenes/ApiKeyNew/components/ExpiryDatePicker.tsx",
+      "contentHash": "0c708741008a15ff8e4d6a9b336d120893ec257caa33161cd397b54d85645b1b",
+      "line": 1
+    },
+    {
+      "path": "app/scenes/Collection/components/CollectionMeta.tsx",
+      "contentHash": "f6d6f22fcdbe5915c9f1b34abcee0ff15ea1f72738ac0ec4c101ecaaba2d57a9",
+      "line": 1
+    },
+    {
+      "path": "app/scenes/Collection/components/Navigation.tsx",
+      "contentHash": "478ffcd0db055b4281a835a2b1733f729f1d98d148d0abcb1f24667ae1d7e207",
+      "line": 1
+    },
+    {
+      "path": "app/scenes/Collection/components/Notices.tsx",
+      "contentHash": "300e3b25472d57187d24f7446d998602c4d011323da634cd82f8789a456d2894",
+      "line": 1
+    },
+    {
+      "path": "app/scenes/Document/components/ChangesNavigation.tsx",
+      "contentHash": "d8c742bebde97849c6e8628bd0b78088708e12de259fe33a7c0e5f22e41c03cd",
+      "line": 1
+    },
+    {
+      "path": "app/scenes/Document/components/Contents.tsx",
+      "contentHash": "c421207a2fc915448d717b34f0194bfa8da7b80bead2fff9818e1ae7aacfda6e",
+      "line": 1
+    },
+    {
+      "path": "app/scenes/Document/components/DocumentStats.tsx",
+      "contentHash": "e78127ce0a64664574d6f9a2dd407902d36602f8293b95fc1ef29d9de16d359a",
+      "line": 1
+    },
+    {
+      "path": "app/scenes/Document/components/DocumentTitle.tsx",
+      "contentHash": "9d019a18992f18aa21b30d638b10a1f09899ff6f70e57ffdd56aa40f7bf11b58",
+      "line": 1
+    },
+    {
+      "path": "app/scenes/Document/components/Footer.tsx",
+      "contentHash": "879e53482209cce37c8a7327f7c65a30eeeb32d90ad2a73a21a8fd54cf7d196a",
+      "line": 1
+    },
+    {
+      "path": "app/scenes/Document/components/Notices.tsx",
+      "contentHash": "2d95b1cd4111d4cdbcd186ded5263c487d3abdc1ba057f68613015258d63fb4d",
+      "line": 1
+    },
+    {
+      "path": "app/scenes/Document/components/SizeWarning.tsx",
+      "contentHash": "5e6a1d580570d7fef22a6717dc632374105ea006c32da505b15db6df7d87f2a0",
+      "line": 1
+    },
+    {
+      "path": "app/scenes/Document/hooks/useDocumentSidebar.tsx",
+      "contentHash": "a2939c6ed423ce2ccba866a1541055706585b5ec9a505305095a9f6dc769e4af",
+      "line": 1
+    },
+    {
+      "path": "app/scenes/Login/components/Notices.tsx",
+      "contentHash": "a2fdb0cbf51f08ce93a5708aefdcab76ca9af1adb8eb7b26ff5216debc4efb93",
+      "line": 1
+    },
+    {
+      "path": "app/scenes/Search/components/RecentSearches.tsx",
+      "contentHash": "95c332972d366dad79ac9c2bf54ddd5656fb14db675c4233d4b776cac1eb35fb",
+      "line": 1
+    },
+    {
+      "path": "app/scenes/Search/components/RecentSearchListItem.tsx",
+      "contentHash": "cacf1875fa8958db281eab4c46d1b46452fe327381ed84286be165d05100ee41",
+      "line": 1
+    },
+    {
+      "path": "app/scenes/Settings/components/ExportCSV.tsx",
+      "contentHash": "b8e46e35ea3b882163847fca33a36f26b6546ee7d08018f8e928176008d1f88a",
+      "line": 1
+    },
+    {
+      "path": "app/stores/base/Store.ts",
+      "contentHash": "69c8e7423ce70fce51c9e1cde19c2b4f73fa5afcdfc65820479190ba6a10d3b9",
+      "line": 1
+    },
+    {
+      "path": "app/stores/base/StorePersistence.ts",
+      "contentHash": "879e28a1e9b7d268c7823232116d7801b36df9852097a9f7bb38a359b625c0c6",
+      "line": 1
+    },
+    {
+      "path": "app/stores/index.ts",
+      "contentHash": "d589dd4a3e0e68b11eb3c8253c167522befe834ffa9525e643782fe8baeb55a8",
+      "line": 1
+    },
+    {
+      "path": "app/stores/SearchesStore.ts",
+      "contentHash": "0807981bf97c11feb1a9fac626360daa95b8e102630448b86fd447d06e276d2f",
+      "line": 1
+    },
+    {
+      "path": "app/stores/UiStore.ts",
+      "contentHash": "38c70978548050fe11d0be08a63ae79e2ed65fc21fd2c7fa9749df749e5d7b2f",
+      "line": 1
+    },
+    {
+      "path": "app/utils/autotrack.js",
+      "contentHash": "073324464ae6695b9d585cac8498a3942a88de5bea8b6f5b91df9577221279a7",
+      "line": 1
+    },
+    {
+      "path": "app/utils/date.ts",
+      "contentHash": "70cf2867556295041e1d1a1650fabb207735a63eec09a8c71e409802b7007841",
+      "line": 1
+    },
+    {
+      "path": "app/utils/Desktop.ts",
+      "contentHash": "c867d5ec327fb22e44a0c1cc1535aec1b65741f33622404b44f5713ae46adc1a",
+      "line": 1
+    },
+    {
+      "path": "app/utils/developer.ts",
+      "contentHash": "27b23cdd8db603a820198823686953a93560d1f7e9f14e93f43c3f01c5517d44",
+      "line": 1
+    },
+    {
+      "path": "app/utils/download.ts",
+      "contentHash": "45231c52ee36081bafe49599618ffb7b478ca8250b5fbc73a8e1a08466470c94",
+      "line": 1
+    },
+    {
+      "path": "app/utils/FeatureFlags.ts",
+      "contentHash": "e3cf0a6a3dd6340105f339eff268300c44479d23e832fa7c19a5753682ad63be",
+      "line": 1
+    },
+    {
+      "path": "app/utils/i18n.ts",
+      "contentHash": "fdb973faaf6b74d6fea309111776f0039fb3edbbde837ce12937421f555a7103",
+      "line": 1
+    },
+    {
+      "path": "app/utils/isKeyboardWidget.ts",
+      "contentHash": "0885ba9bca13353457e0b8e30631f5ffe1adb56ba79864677b043e400d219c0e",
+      "line": 1
+    },
+    {
+      "path": "app/utils/isTextInput.ts",
+      "contentHash": "2145224479ee2189b556f8ec06a813a664c32350f2d98c3faa8ca321e40e4be9",
+      "line": 1
+    },
+    {
+      "path": "app/utils/oauth.ts",
+      "contentHash": "6e7f5cd6add4ec68ef57b0d49ee1e0a12a9aa4ee6822a7632ac8bc268f4b89d6",
+      "line": 1
+    },
+    {
+      "path": "app/utils/polyfills.ts",
+      "contentHash": "15356ba39234c32cf2f561f1ae14e832978a49a85f58d6c1bb71a0c2f4492356",
+      "line": 1
+    },
+    {
+      "path": "app/utils/splitView.ts",
+      "contentHash": "ab9619d8025933db186e7feaf38378cd1a701231a1c11cac8e576069f6964d13",
+      "line": 1
+    },
+    {
+      "path": "app/utils/viewTransition.ts",
+      "contentHash": "04535d968e7e045be2ade26d95e3e9ecee3f1b9e528a7caf8906f8e446b62f44",
+      "line": 1
+    },
+    {
+      "path": "plugins/figma/client/components/FigmaButton.tsx",
+      "contentHash": "c0bc9634d5633540ed7b83831f416952997833aa12f64cec37f18d663be1abf5",
+      "line": 1
+    },
+    {
+      "path": "plugins/figma/server/env.ts",
+      "contentHash": "d6ceb332f3ee6afa166c1b60d7d2c97fb4c62872b05944b164705d163da692a1",
+      "line": 1
+    },
+    {
+      "path": "plugins/figma/server/figma.ts",
+      "contentHash": "14bc9b628d7d8023d0d8b9095ad7e1df1e4592327c321f6313e360e6b4287497",
+      "line": 1
+    },
+    {
+      "path": "plugins/figma/server/index.ts",
+      "contentHash": "586b21360db6ce065cfa1a2e3a985e3817bbfa7f8dd40bd746b01cb0d15a8a3b",
+      "line": 1
+    },
+    {
+      "path": "plugins/figma/shared/FigmaUtils.ts",
+      "contentHash": "971177750d8ec20427968f1738cea458e91fb411e711f52dec5be6c7426b1a0a",
+      "line": 1
+    },
+    {
+      "path": "plugins/github/client/components/GitHubButton.tsx",
+      "contentHash": "3d524ef27310a09b67aff340a6d0066d3693860e885d6121642ca622eb93e939",
+      "line": 1
+    },
+    {
+      "path": "plugins/github/server/env.ts",
+      "contentHash": "8636793d4484cb515fe1be66e0f21edcfe3a29dcd6c5a9e82faeb6e8788d0924",
+      "line": 1
+    },
+    {
+      "path": "plugins/github/server/github.ts",
+      "contentHash": "2ccf520f87aa1d21a7203ae5cc6afff6862de3fa89557e47926483a3f4e7385a",
+      "line": 1
+    },
+    {
+      "path": "plugins/github/server/GitHubIssueProvider.ts",
+      "contentHash": "f46de7735cff73c9633394d4d805a6eaf692f9d1c629a25acedb1422e380be0d",
+      "line": 1
+    },
+    {
+      "path": "plugins/github/server/index.ts",
+      "contentHash": "c428fd1fd9cabdefbac99acab56baf9a37a11ec5a4da36d8b96e10c27986089b",
+      "line": 1
+    },
+    {
+      "path": "plugins/github/server/tasks/GitHubWebhookTask.ts",
+      "contentHash": "99dcdd5a3d34f7956539337235a20a205a430133d9c59301932003aadedef76d",
+      "line": 1
+    },
+    {
+      "path": "plugins/github/server/uninstall.ts",
+      "contentHash": "e22460df73e375cc9764a5fc72ca5f64886a9dcc78df7cf3e1779904657bf85f",
+      "line": 1
+    },
+    {
+      "path": "plugins/github/shared/GitHubUtils.ts",
+      "contentHash": "792774b566b33561e93dfa10d6707ff26108dbcfe82e1ded5a5fba9c65fca7e4",
+      "line": 1
+    },
+    {
+      "path": "plugins/gitlab/server/env.ts",
+      "contentHash": "b1d241f882b88e434a957857cebbf649ddb237c95d4623724c6559c2528a50bb",
+      "line": 1
+    },
+    {
+      "path": "plugins/gitlab/server/GitLabIssueProvider.ts",
+      "contentHash": "34359a506cd8426073f62e04270a32ca993dfd5cf7ed119aedb38a14ab64ab18",
+      "line": 1
+    },
+    {
+      "path": "plugins/gitlab/server/index.ts",
+      "contentHash": "5c820a3b510c93e25abec98c17ea914b91eccea46d9084ee06554ca2fd70b1af",
+      "line": 1
+    },
+    {
+      "path": "plugins/gitlab/server/tasks/GitLabWebhookTask.ts",
+      "contentHash": "beebcc33af924159a22e1851732e4a493c9225212206a9801878d1c8f6b2b640",
+      "line": 1
+    },
+    {
+      "path": "plugins/gitlab/shared/GitLabUtils.ts",
+      "contentHash": "d0d3940a9f7b5946450650371e9564f81eb80c5985a0d1fb275237db4feadf6c",
+      "line": 1
+    },
+    {
+      "path": "plugins/linear/client/components/LinearButton.tsx",
+      "contentHash": "4403723273a8ef90cafcdd4d55b994f270070343e3ed1aebf08215dd2f787f22",
+      "line": 1
+    },
+    {
+      "path": "plugins/linear/server/env.ts",
+      "contentHash": "4bfe3e725762ce7687fc4ebcd80d8007b9b44a6d8325842a10a3a96e04fa8f32",
+      "line": 1
+    },
+    {
+      "path": "plugins/linear/server/index.ts",
+      "contentHash": "37c533cd3361edcd012b39af1cffa01e19303a89fd3f63da5f12d21e8cc2ac59",
+      "line": 1
+    },
+    {
+      "path": "plugins/linear/server/uninstall.ts",
+      "contentHash": "018651440f68deed9981c6bca4cab68cdde9ddb41568cb2657fff24aefcc6860",
+      "line": 1
+    },
+    {
+      "path": "plugins/linear/shared/LinearUtils.ts",
+      "contentHash": "fc086c68cb33d980322fc1c9e7195e7476d64bdff6422524939171902c9d062d",
+      "line": 1
+    },
+    {
+      "path": "plugins/notion/client/Imports.tsx",
+      "contentHash": "dd7ec14f8c676f79caa38ef33430d321be94d9017e06bb62de0d92da27c24da9",
+      "line": 1
+    },
+    {
+      "path": "plugins/notion/client/index.tsx",
+      "contentHash": "fdd62af747300bdbf9086b32c04838f2156c702ea5abf9daf1ef5a9db8e292cc",
+      "line": 1
+    },
+    {
+      "path": "plugins/notion/server/api/notion.ts",
+      "contentHash": "f60ec8d0c430d5fec1bbae4296ebc39b00377831bc2ad9a7e61a6bb02c92f479",
+      "line": 1
+    },
+    {
+      "path": "plugins/notion/server/api/schema.ts",
+      "contentHash": "b9f8823f459be650e2ff9c565624dbf5e1751780d8f88f0cd4c6a95e598b93ae",
+      "line": 1
+    },
+    {
+      "path": "plugins/notion/server/env.ts",
+      "contentHash": "da76d9d3554fed19e78b4ffb47398380014c18acc561a5943b2883de53fbd9c3",
+      "line": 1
+    },
+    {
+      "path": "plugins/notion/server/index.ts",
+      "contentHash": "3646dec09616457f21d32836ae4669e37a20a2afe796a69a7bcb2e555b186783",
+      "line": 1
+    },
+    {
+      "path": "plugins/notion/server/notion.ts",
+      "contentHash": "58cbf8eabff1b529febdc972256136b39c3183d0648b18526cd096fca8983bf4",
+      "line": 1
+    },
+    {
+      "path": "plugins/notion/server/processors/NotionImportsProcessor.ts",
+      "contentHash": "ff96d29ce2e28dd5d727fea59dcdf9c71af97d9cbe3a1050245a838655edd90f",
+      "line": 1
+    },
+    {
+      "path": "plugins/notion/server/tasks/NotionAPIImportTask.ts",
+      "contentHash": "f50b8a8fd58ee060dde57b4fc90bf7b3e98746c1c17c7175f59525e6dbfa857a",
+      "line": 1
+    },
+    {
+      "path": "plugins/notion/server/utils/NotionConverter.ts",
+      "contentHash": "9e9cfc4101f168005c618241f22917b15cee29eb319e3b54ffa7f994310ee374",
+      "line": 1
+    },
+    {
+      "path": "plugins/notion/shared/NotionUtils.ts",
+      "contentHash": "8660c0a1b2a5b484d3ac7e22e65e172f713fef7de73b7a16c7bd5e6a241a74cb",
+      "line": 1
+    },
+    {
+      "path": "plugins/notion/shared/types.ts",
+      "contentHash": "36e8eb6c3fc6e07ff709bd18024f29e0debc354c52d161051670852596948847",
+      "line": 1
+    },
+    {
+      "path": "plugins/search-postgres/server/index.ts",
+      "contentHash": "eb1c61e3e3b85b20c36c8e9df6f0bc3a295ea02be83bb3c2fb5643ef2ad3d96d",
+      "line": 1
+    },
+    {
+      "path": "plugins/search-postgres/server/PostgresSearchProvider.ts",
+      "contentHash": "4beb55f212f5ef8799b1e4936d4c23b6b13f6234c1be86aa51a9a8dc847e26d7",
+      "line": 1
+    },
+    {
+      "path": "plugins/slack/client/components/SlackButton.tsx",
+      "contentHash": "15296710d366d2928a94cc36b50a58ed59306b72f4db38c5507ee1cc21614ef7",
+      "line": 1
+    },
+    {
+      "path": "plugins/slack/server/slack.ts",
+      "contentHash": "69b75530bf4500fc4315573336376ae592d027193d7b5c29c0401408d25ac65b",
+      "line": 1
+    },
+    {
+      "path": "plugins/slack/shared/SlackUtils.ts",
+      "contentHash": "738459d89198aecc014c9db9b3b2ac1b6b8592992157831f091265febbf6e142",
+      "line": 1
+    },
+    {
+      "path": "server/editor/ComponentView.tsx",
+      "contentHash": "58790ae8ae8b59dc29f75ae3d06df9e4f9a76f1451be8f08461cdfb2ae8fcc8d",
+      "line": 1
+    },
+    {
+      "path": "server/editor/nodeViews.tsx",
+      "contentHash": "9a9530f2ea2e7bfcb25982d68bffe3d2188c9e635929a2e55d652373be5389eb",
+      "line": 1
+    },
+    {
+      "path": "server/presenters/providerConfig.ts",
+      "contentHash": "c25e8d34f4dabf846da32eb636d2086490e41d6ed6b1a720dc666ecdb0e68f00",
+      "line": 1
+    },
+    {
+      "path": "server/queues/processors/RevisionsProcessor.ts",
+      "contentHash": "08fbee2887e8da90e85e2b51989a8e7e2482acc501cc7a0ed7e352b92152ba8a",
+      "line": 1
+    },
+    {
+      "path": "server/queues/tasks/DocumentUpdateTextTask.ts",
+      "contentHash": "048ef6363441e201d6972a0cd368292b3c899d1aecd37846c1621b8f3c1c5d4a",
+      "line": 1
+    },
+    {
+      "path": "server/queues/tasks/UploadIntegrationLogoTask.ts",
+      "contentHash": "78c121ac6bd63090c16138e7ba6d98cb3249fd37474754b0c3e1f68cfd3bbb5a",
+      "line": 1
+    },
+    {
+      "path": "server/routes/api/teams/schema.ts",
+      "contentHash": "e4e4ed810d963af0ff8927d46483a5e9f67b1adfe48a5d095b673c9877ed4039",
+      "line": 1
+    },
+    {
+      "path": "server/utils/BaseIssueProvider.ts",
+      "contentHash": "237709609c87bac03bdc4142303942df326bc59ffe8eb0e799d9aecb65ab9796",
+      "line": 1
+    },
+    {
+      "path": "server/utils/BaseSearchProvider.ts",
+      "contentHash": "e1075ec22bf3373eb1f4fd9e2bf88b990661f56701d93b06810533d7570533f7",
+      "line": 1
+    },
+    {
+      "path": "server/utils/decorators/Public.ts",
+      "contentHash": "5d2f8cba77d66862d32cc21ccfa229b81e2c9ef5fd000ebd40f90632b2bd927b",
+      "line": 1
+    },
+    {
+      "path": "server/utils/embeds.ts",
+      "contentHash": "cd2df776a18926d3c883f99dd9c6f43543cb12c322b6d79a02f055c21069219d",
+      "line": 1
+    },
+    {
+      "path": "shared/components/Calendar.tsx",
+      "contentHash": "da627435ec9af5f54ebfbedf8db9118faa7a162afe0fe72c5df5cc120b6bb825",
+      "line": 1
+    },
+    {
+      "path": "shared/components/ColorPicker.tsx",
+      "contentHash": "6b93ac541839acd77e75f2d63abde9bf49e52642edca8fa331e757e05dd47f6b",
+      "line": 1
+    },
+    {
+      "path": "shared/components/CustomEmoji.tsx",
+      "contentHash": "1834e4f07e8b6aef57845fbf67e8727a8cdeb7de769d87f60ad449849a960263",
+      "line": 1
+    },
+    {
+      "path": "shared/components/EmojiText.tsx",
+      "contentHash": "144c4c9203c9cfbc88349782c3cd96cedad51b69c6909deede71a9ad6ebbf4ed",
+      "line": 1
+    },
+    {
+      "path": "shared/components/LetterIcon.tsx",
+      "contentHash": "12172a9ccf91b4f270bd3e306841ecc75a9ff834a3fc334cb5dc4985f979bfc0",
+      "line": 1
+    },
+    {
+      "path": "shared/components/Squircle.tsx",
+      "contentHash": "53a980618c9faa4061ac640e8872fe471c808edfe06019efa1d8bd385284bc8e",
+      "line": 1
+    },
+    {
+      "path": "shared/components/StyleSheetProvider.tsx",
+      "contentHash": "d155a58f1a55cb5974aca7c5a153d19c141fe4bcfe850d92f5f38cc7ec4d9dfb",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/commands/addMark.ts",
+      "contentHash": "7d58d480521035bc37afa298feac1c13158dd0ef51fdecdad623d99fcf70637e",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/commands/backspaceToParagraph.ts",
+      "contentHash": "838d490111399b1b0902122bd545748d479acac70e3bcc3b599376f667aa513b",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/commands/clearNodes.ts",
+      "contentHash": "4a3edce00b4215c8a34162a1f45f774f84c9453c81b972f1815eaf0f02b697ad",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/commands/codeFence.ts",
+      "contentHash": "ba4d75fbc6050c32c8518882f5f8e5764234d79ad8af35b3edccb8dc8582f973",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/commands/collapseSelection.ts",
+      "contentHash": "5df142f7adcbec5740cf504a6997867e7e13d2b46b4b1d5e1bfe202ff1c979fc",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/commands/comment.ts",
+      "contentHash": "c8ca0ae3895261f32e47145df9787447bc21b05f9fc8b627f76b4278448c586e",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/commands/deleteEmptyFirstParagraph.ts",
+      "contentHash": "285e5731ee341846bc2b1eef63c0844558f5037528940df9c9bd09ff27483765",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/commands/insertFiles.ts",
+      "contentHash": "bdc87e400e34c7b47a3f4beec82d501796d96789ac7d801d53b2da0f9c90b34b",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/commands/link.ts",
+      "contentHash": "3281c98b71d91bfa8d0855e9019b10949b67d575d8237086b5da5bbb78f80226",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/commands/selectAll.ts",
+      "contentHash": "fb0300d96e0ed2e16705ea7159b2642c5c9a368b5ace1c591c459d572da86152",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/commands/table.ts",
+      "contentHash": "477d37dcbf0769031505d96cd513161bc6bb4e79a0abbc5523707daaa558b6cb",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/commands/toggleBlock.ts",
+      "contentHash": "acc1c17bbf4c3ca7340b9de157aae0ca49b03e689906aac1650be888c707553b",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/commands/toggleBlockType.ts",
+      "contentHash": "8982b5afe5b22cc24a22977feb080bbdcea833f75ef6f20ce3999ed6ed7ada43",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/commands/toggleCheckboxItems.ts",
+      "contentHash": "1c183176cb50d757d05b1e103389b2d57940b888e39b43bc55d147006705497d",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/commands/toggleList.ts",
+      "contentHash": "76dfd226bac2bd2e37ff0771ca45b75136518cfc16bf0aa3489e32700de91e69",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/commands/toggleMark.ts",
+      "contentHash": "44f472b4ab812cd8471570432611a586bac0f4f6dc6964f1700c1419d34624b8",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/commands/toggleWrap.ts",
+      "contentHash": "39d8dbe7f8244f705f3abb3cebbc9a91c05331979c57a4c842dab568fb0ea61c",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/components/Caption.tsx",
+      "contentHash": "71e543e35b264f9c4d1f8ca0f6f0369173e1a1ee68b680d4cff1fc2c4e3df019",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/components/ColorHoverCard.tsx",
+      "contentHash": "49ed4b861eaa1a580a58104998bc3928aab41f28a14774d39daab0f91a7a88a9",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/components/ColorPreview.tsx",
+      "contentHash": "7ac15e3ac0706df2ac2ccc49573e2c190e2e3dc721965c89c1017d4eeae1da75",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/components/ColorSwatch.tsx",
+      "contentHash": "72d7478bfffde5c2e4226596ac96bdde2b01979a32fc7dc2493faf19ac20bc81",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/components/DateMentionPicker.tsx",
+      "contentHash": "8697ae725eedd245826ac7d234cf2c0a78c34e43ec0069843741e69c7b344c9a",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/components/DisabledEmbed.tsx",
+      "contentHash": "f58ecd4c7d4c622bbe29253d8d5e6bb9bbd52af1dbe066da8a0dd9b0705e9d02",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/components/Embed.tsx",
+      "contentHash": "05e20a011bb5ec27806370d9cc8e20ddf7bb734a1fbb410835ea19b66b170375",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/components/FileExtension.tsx",
+      "contentHash": "6eea5c62053258a30c59ba0bfbf2ff094552eb1c20581158544ec0b4193d0c35",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/components/hooks/useDragResize.ts",
+      "contentHash": "8a8240c635ee5f5023d285f0f96be9da81e80e49b0e8c56a69a9c1ce041a9f7a",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/components/Image.tsx",
+      "contentHash": "c7d37acebde964ae93ac94a3e487b75da1a433f2e5825dba7d2688952295eacd",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/components/PDF.tsx",
+      "contentHash": "a6992b189eb65e41a3f02698f84e791af893a8170d2f6519d17592661649f34a",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/components/ResizeHandle.tsx",
+      "contentHash": "5ec6eae743b487fe43837b7486cb964f738f369bb5649e443f99f9ef709a8434",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/components/Styles.ts",
+      "contentHash": "2172c88151eef8b46672a6903e59e9024824e8dd0131511a67704dfb397af543",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/components/Video.tsx",
+      "contentHash": "887f35afaad74e75e6323413816bf4036a884956a34b7591fe2e45d2c9152553",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/components/Widget.tsx",
+      "contentHash": "28745f81d897d1b92a32e605c8d045cb772866f0b3c51db7aab84ec139eaa6d9",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/extensions/CodeWordBreak.ts",
+      "contentHash": "a85cfa44fb3a45dde130c2f610d54b02fcaef93abfc385d17ecb089ffc91c4c1",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/extensions/ColorSwatchPreview.ts",
+      "contentHash": "60ec7990fd1a1e556287ec303741ae98276418734bde2af2115d325c72837e3d",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/extensions/Diagrams.ts",
+      "contentHash": "a392f6fc7152e06f285b5999c7ab5d2049a976c761b1894daac48e6f82523eaf",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/extensions/Diff.ts",
+      "contentHash": "9e565d0c88450883c5da4572c4a34167243f5efa792383cb2bf7c52f80e6ce9a",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/extensions/Math.ts",
+      "contentHash": "2263838769fd9c51aecfc097f2ee39697640e69b7d8c3ae2392727f3c18213eb",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/extensions/Mermaid.ts",
+      "contentHash": "c91fa57c0a3c983fc37a424fee20c83c8d409c56159735f8b96c9693d8a002f9",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/lib/buildSelectionContext.ts",
+      "contentHash": "97beb679ab239c9a909c96190592fb9efa1dbb3872c7df6ab36282071d228762",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/lib/chainTransactions.ts",
+      "contentHash": "da6bcf6ec7df91ff0fb61537d2863357b7da822612a2e517311ca1ac4c10bf8a",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/lib/changedDescendants.ts",
+      "contentHash": "b350e58959d209ceef38f77ca83eb29caeabf51f611c49154a5fd517c1223430",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/lib/ChangesetHelper.ts",
+      "contentHash": "66a19307e42292af57b0de9e3722828ece9fac2d46ec64a6c27dcfcca234145b",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/lib/closeHistory.ts",
+      "contentHash": "0ec71a2d3eb61c6de78b3e55b823d41bd9a9cff8518d7f82361969334488d3f0",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/lib/code.ts",
+      "contentHash": "ce577dd3c98cd1b24ab7ca7ef810b94c4d73a12758d0bdb8ae700f8496478a16",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/lib/DiagramsNetClient.ts",
+      "contentHash": "246eb1aaf3d43bf58ca1c2f9de802e13b64bed7be4ba73c3f767780f70add621",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/lib/embeds.ts",
+      "contentHash": "c6ca8cb144eb906b72e7a88a9e49b4526121735cd1d03a6875b8fb230dc5d99d",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/lib/emoji.ts",
+      "contentHash": "733fc07bf03245476eb0df8883d263944fa676b2e1dc0d20f1cecb721d5f2f44",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/lib/FileHelper.ts",
+      "contentHash": "f26507f4fea799436b81967da3f7093ecaef9b3252ad32fc6d13972fe032629a",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/lib/headingToSlug.ts",
+      "contentHash": "81be2e4c5a9a31204ba95ab3c70c682ec630636e7aea7c9bd892410148869155",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/lib/isCode.ts",
+      "contentHash": "4797b7b0c93b499f90d1c997687beff1269daf3a1c397fcb3a1e79e0cdcc9fea",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/lib/isMarkdown.ts",
+      "contentHash": "ff934301e73302ab6de87ef132aea8224d9ded90706e50d0965e28b7d4203574",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/lib/Lightbox.ts",
+      "contentHash": "5a14ac63629380237006676ac5d0e68f4212a6db07af098f81a0d5f528efa4c0",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/lib/listInputRule.ts",
+      "contentHash": "7f728c80a2e95c8d8a01fbfbc22cf8a5c5c1ac977ee612a4344fd30f38eef6e4",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/lib/markdown/normalize.ts",
+      "contentHash": "4bee6fe5aa9c3ab631b1b66d8c7289bc2f8ecdb1e52bb99b249e068adf9ca756",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/lib/markdown/tableCell.ts",
+      "contentHash": "013ba3c444babbea04426556b22abc0c9a36a607e7d92cecf89637dc6f870e58",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/lib/markInputRule.ts",
+      "contentHash": "7a167e9f3341db78cf2bc0461a5e0799ead5eb004d2631a00d90cfd86ccc3bdb",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/lib/mention.ts",
+      "contentHash": "115a98dd4eb562b7ddd3b22d64fa104b2798cc66ca8211365e35fc73c9cc41a4",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/lib/multiplayer.ts",
+      "contentHash": "43c7e789cfbd90ec676ca10108d84ad19911c6634d40ac34289c300ba08d40e6",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/lib/pdf.ts",
+      "contentHash": "20bfb04e257236d95488299278dcb75cce09c7c39679c54bd8e29997851fdacc",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/lib/prosemirror-recreate-transform/copy.ts",
+      "contentHash": "997b89e8fab7da1f9de442b4e44c4c1bc1a5dba7daf591834e63a565401f86fd",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/lib/prosemirror-recreate-transform/getFromPath.ts",
+      "contentHash": "6e628fdb03fd9ff2060f1bbd2c283ab0b499b69f2cc4eae9e2f0973eea09d79f",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/lib/prosemirror-recreate-transform/getReplaceStep.ts",
+      "contentHash": "011b2ea97c2d0e226ffe154c53bbc77cab561e0a807a95d972b563240a20b8b6",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/lib/prosemirror-recreate-transform/index.ts",
+      "contentHash": "6bba3691c2f219c247644612762c1d6d70413bd582c4cc1122798d46362c7cec",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/lib/prosemirror-recreate-transform/recreateTransform.ts",
+      "contentHash": "11967fc1c1c4f476aef50af0e192e3a455e0c6182700dfb52b750d56a5e81646",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/lib/prosemirror-recreate-transform/removeMarks.ts",
+      "contentHash": "42c8f27299de31d966c1d8caad5fd5a41f1d8e4b0f0cfec9f69280639e7a9be8",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/lib/prosemirror-recreate-transform/simplifyTransform.ts",
+      "contentHash": "21e3c33b61582ee01db8799d2b4a2db46bb4bfad286ba23f2b9f50d0b3020a9f",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/lib/prosemirror-recreate-transform/types.ts",
+      "contentHash": "9705f5d54a445447ea9d06f66f19d0bc639a119f82dd799da37092cd0d332e03",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/lib/sliceWithoutFirstNode.ts",
+      "contentHash": "8457adb3288923c2a9ffb2dc7c047db16372d0919f932f1be3cfc88e38e8bf42",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/lib/table.ts",
+      "contentHash": "92e2d9462ca64443c17e52b1a151d4e3dc9f39e1fbb70db848c48b69694057de",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/lib/textBetween.ts",
+      "contentHash": "55631b6c7418219b04555d401746a3f18dbe2fec3e8d4f5e647bfff7cd6f8c36",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/lib/uploadPlaceholder.tsx",
+      "contentHash": "f451ea87406e05d35bf01c4fc38025036d5fddc65023ec93d42143ac63dfe5a1",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/marks/Bold.ts",
+      "contentHash": "e2a621e0a850e7ac5e4fe5b84d0bc5b3505e2b54182bb8a4dbff7e8a0663c1fb",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/marks/Code.ts",
+      "contentHash": "42cb5f5b750c95a30a5fd2a1ffde8d5cdf9cc7c3fb17755aa6c45df6047b39b3",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/marks/Comment.ts",
+      "contentHash": "6ae1e234a7d851ab9de066e4087cab68e67b5443612282abb421321f41d5a952",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/marks/Highlight.ts",
+      "contentHash": "19184fb0b19118140171eb72341d1ea48ce64ad326e91bcfb22293212a85e4cf",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/marks/Italic.ts",
+      "contentHash": "c101c06fef4effc2d7d351b6f1741bfd8ce6fee30b53ca7ec5e777d0770506c5",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/marks/Link.tsx",
+      "contentHash": "8a790ec16047a014451a6decb584eac9722183098288356485bc1f57faf59efb",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/marks/Mark.ts",
+      "contentHash": "e1a388de213b0fac1a0c86bd69b3c4dfa0782f897dfc6bf608c41a45e6e8001c",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/marks/Placeholder.ts",
+      "contentHash": "b45a0220d2732ad0ce871ff7c00d49dddac483d8ba2e6e9d18b5c851c4532c44",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/marks/Strikethrough.ts",
+      "contentHash": "3482b084457acc4c4ce9a8b3498edb1c5431e151651cf508f02cdda7bdd88024",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/marks/Underline.ts",
+      "contentHash": "f9109041ffff3d4d904c455ea1395a2af601e3ddeb507ddcc8e6ff6b888815e2",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/nodes/Attachment.tsx",
+      "contentHash": "0da3ca7c9788f81e91c662a8a1dbb35b3c2b6a10a0ab52728fe91e57a4439d2c",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/nodes/Blockquote.ts",
+      "contentHash": "b958d37327a3408dcd5d26f1666abfbb1f9eb8d48024052d735422958632887d",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/nodes/BulletList.ts",
+      "contentHash": "fe3dac60eb4c0e4fb714f75c4602b0b15efc48c58ceeef7a74a2fe22193e1ba9",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/nodes/CheckboxItem.ts",
+      "contentHash": "e94983b6367c3483b6e01cb86886e3ca9423396eb41cccea9cdba148f2993d31",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/nodes/CheckboxItemView.ts",
+      "contentHash": "6cd928522814cf198cd9c259fab735684bd6a1bec08a0e345a2bc527c55e04d5",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/nodes/CheckboxList.ts",
+      "contentHash": "2f0d335e1e87cff98d74a82f9222e2e05e3e9277e5af2eaab8d6432477c852b5",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/nodes/CheckboxListView.ts",
+      "contentHash": "c013bf7e727f0e6ea8559165e39236d130572fdd26f3237fcaa1a0ac05510e51",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/nodes/CodeBlock.ts",
+      "contentHash": "1b633d141357a82429a6c4c4b3cdd5fe9aaf10310accc743fc20f75bbeb644ca",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/nodes/CodeFence.ts",
+      "contentHash": "9a88c66cc3001ee284ce8489a448778c9ceeca13ab63f7cc6fea881e743ef386",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/nodes/Doc.ts",
+      "contentHash": "1cce9b4bcdfe7ba7efc2f2492d854b5667abead65a1e1af7170529eb8ef6b2be",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/nodes/Embed.tsx",
+      "contentHash": "2e091e02ee717d704f7fac635a58c78ee21768bb8be0625c0bc3ef85fad21e4c",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/nodes/Emoji.tsx",
+      "contentHash": "a35c143e46a8a722711ad16f5695001e9d2852c6c17cafe09aee3d3d1862ba33",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/nodes/Heading.ts",
+      "contentHash": "b8e2864ed93336b5e58b25b123bacdab1429d0ebc6e2d852948295346d960d9e",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/nodes/Image.tsx",
+      "contentHash": "16bd299278314fc4f1efcbb5bc60da239238bf3be99c3057cc565381217aa624",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/nodes/ListItem.ts",
+      "contentHash": "4fb03bb1e49d7c597c8ec5d1895d0bd19e4687a3e5fe739dd1e5aa9b964c69db",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/nodes/Math.ts",
+      "contentHash": "73bdf5ae9ce08d0c588b7761f2bb14e19d2f987abd551c060c61268cd06eab3c",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/nodes/MathBlock.ts",
+      "contentHash": "70b2353db2c7f5a62deb6c0124a27038cb12d7ca1dd16ccc09423c55eeaca944",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/nodes/Mention.tsx",
+      "contentHash": "cde7f9e21a101bb1f467e1dc06dd482f3c6ca668f32741b0855915df52c7782a",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/nodes/Notice.tsx",
+      "contentHash": "48e8dfcf9a4b64fe16630785f2b11f23d82bb895930f080b30ad3afacf2304df",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/nodes/OrderedList.ts",
+      "contentHash": "0a6e407411edab4cd1e6486787adc1e559a93a7aba2ce68236bc504797e61e60",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/nodes/Paragraph.ts",
+      "contentHash": "a1d779fde5b8fc4e5cf440697e9af2b90c902d48ab11d7bff92f56e6a42f213c",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/nodes/ReactNode.ts",
+      "contentHash": "9540c4e1bdcaf743de296cf818cc4a26714f14e0a22881ef3bcdf34e8d5c66b5",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/nodes/SimpleImage.tsx",
+      "contentHash": "1c076d04f1263b33027014ec7ea9d1aa399b8f7833617f48cc2d14133decdc60",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/nodes/Table.ts",
+      "contentHash": "032bec86456b60bad73a4a9c083c62c9f8cd9a722c0dc67ac6ce62ace039e494",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/nodes/TableCell.ts",
+      "contentHash": "80dbc854c41adcb4e8f2786d2d66c86884b0ddd893b7f7f5ee4fbeae81a92d3a",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/nodes/TableHeader.ts",
+      "contentHash": "d656da6b4b686e4aee7676c34d1d790ec2e8d9ad604d6deafb81b1acb3378972",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/nodes/TableRow.ts",
+      "contentHash": "d9f7dbe6822eb036a9cf834976fea7439e5062485c76fad6b1a744e4239ff7a0",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/nodes/TableView.ts",
+      "contentHash": "4e63b2763cd2f56fe61894d51084b18d3f61b18d346fe0d1d9cf562ac4b6f2d5",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/nodes/ToggleBlock.ts",
+      "contentHash": "09270cf4142515914905cca22d45e7cc9416e4d88c8eadea7d97cdeb7defe3f0",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/nodes/ToggleBlockView.ts",
+      "contentHash": "e7b563698eccd9fc381f634dbc7b81f8432805dc8e0208cfdda7810a7005cf58",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/nodes/Video.tsx",
+      "contentHash": "fd1ab298117348ff200c8d4304a942de4edbd85d2c7d8d9ae7b4c29778a76d94",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/plugins/AnchorPlugin.ts",
+      "contentHash": "17ee5d4c355f07d5e147555f84b1e4d100e2e94573cec334600f7ca94488b88c",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/plugins/CodeHighlightingPlugin.ts",
+      "contentHash": "9e5c30089bd62f0e6877f5e450d8a5da5125b622879154b928e0beab0d31aba1",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/plugins/CodeWordDecorationsPlugin.ts",
+      "contentHash": "91963bdc7effa3868e63a99ec1e1493c0e5b6799a5a5f5c08650e6f8e2366ffb",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/plugins/CommentedImagePlugin.ts",
+      "contentHash": "2d35330a4d9994ffd866f5878667b8df4bd4b58fad2d9ba1e0a59bf59599d9b2",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/plugins/DraftCommentAnchorPlugin.ts",
+      "contentHash": "09dafd0bf53aab247c70ba9c8d6e452cd52d9c8b215e051600f766ca5aa18146",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/plugins/FixTablesPlugin.ts",
+      "contentHash": "aa0e620f91877f3f98e1ba48fab17baa0c48544ed249d51f11d66bc1c1b1e5ae",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/plugins/PlaceholderPlugin.ts",
+      "contentHash": "643767bb22e89f688d437b1c62a52ac052487eb0c65b9f9249ef49f4248e3c71",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/plugins/SuggestionsMenuPlugin.ts",
+      "contentHash": "3bd149b8dab9119093ecfcee7f012438cf1e862f80655efeabc0a0d7b8d6f4cc",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/plugins/TableColumnResizePlugin.ts",
+      "contentHash": "a63992f5e1d889970f0e503a57c8d6e034d77e995d71a80e344057ecc9a42b73",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/plugins/TableDragState.ts",
+      "contentHash": "e6eb894f21260be6cba275ce24db966b77d3f040f580796c9845b4ed01528f3a",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/plugins/TableLayoutPlugin.ts",
+      "contentHash": "375e64d5384dcd0b98bad8ac8fdfeab26dc3fad6ce8f30a930dc460c23e72337",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/plugins/UploadPlugin.ts",
+      "contentHash": "48df2f5d2f4fddea4d26b25b66e9f0f9f43ab78961830b2fac7c4276492497e2",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/queries/findChildren.ts",
+      "contentHash": "1e5af2dd5716f8c06d9bb6662f59f736719445d3c4dd7702cbb5c18de2dc73ed",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/queries/findCutAfterHeading.ts",
+      "contentHash": "07f75e2cc8425f583599f8e63938e06bff4afb5c44e0051fe89396bc8b80823b",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/queries/findNewlines.ts",
+      "contentHash": "cb8f66712783d625e281330fb2276de5be9e4ef413a214ba79d3f83bd8c94d69",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/queries/findParentNode.ts",
+      "contentHash": "e3acfdde6973d25f278f7c75a8a9e0d171522c7212cea2826237f042fbd3c655",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/queries/getDocumentHighlightColors.ts",
+      "contentHash": "1198855fecb1e04c7eba2a17968b3ec1085dcb1643745ab368553ff8b16b9fa1",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/queries/getMarkRange.ts",
+      "contentHash": "59653009b18d3741e07b0ad69746d37b98746b90a7328370387acc52d0c59aee",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/queries/getMarksBetween.ts",
+      "contentHash": "db1f9e152e099eaf83ffde269a1432f51d73ffdbb86bbe1352b9221d2c7cc7de",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/queries/getParentListItem.ts",
+      "contentHash": "fbb73fc1c9afac1e6315ba29e7163b2bf304b7c248de8bc1ffa80bf216f213e1",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/queries/isInHeading.ts",
+      "contentHash": "a43e3e1bb21f469cbc427850f54b98a55913557dc82a635e48e182286102ffe3",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/queries/isInlineTransaction.ts",
+      "contentHash": "108e8bc4fc7d2c7d3e2992ec1f7343c0dd3411d8084a8c5ad58dc18225f4d1d0",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/queries/isInList.ts",
+      "contentHash": "5277cdbf81ea5433ecbe6db15e12e39062269affa847f42e17b21c803daf9a75",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/queries/isInNotice.ts",
+      "contentHash": "af08f3835ee6279fb2e78841479423e830b84058e985052e2b5aea46695e656a",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/queries/isList.ts",
+      "contentHash": "1f6a2675d0f4becc35f356c3696eef03721a5351234710c928341d73dc865b65",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/queries/isListActive.ts",
+      "contentHash": "3524e13a0ad58340c1604c4ae31ea9756fc8224bd34b398a18e7b78fe3af721f",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/queries/isMarkActive.ts",
+      "contentHash": "42b10992390164a40ed1806ea83a45c765fc238c0c47a33ebb948e990dc49d2b",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/queries/isNodeActive.ts",
+      "contentHash": "c046b4f8eef0d55d548f745396e5fd328f8342405d49bed80e2ffe84e832fecb",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/queries/isPDFAttachment.ts",
+      "contentHash": "6078d63739a72f5994aaba8dec3fcaa2bf5ee04a81f5c5361dd758c6e846fd64",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/queries/table.ts",
+      "contentHash": "0b9629113b4c21c262c10c1c76f43cc76e8857335f9e01bac8851544e1c02436",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/queries/toggleBlock.ts",
+      "contentHash": "c8b2671324f790321b812283471c64b60207977f6921752730326f5aee8b9af3",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/rules/alphaLists.ts",
+      "contentHash": "cfc66685a4adaf60bc9b1904468de7fd3ddc52485654498faca4cb5a0a553645",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/rules/checkboxes.ts",
+      "contentHash": "0472323f5a05e27c2243483e9be960faa5999d951531571a563a7a0be9d0497c",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/rules/emoji.ts",
+      "contentHash": "a21f19a07d0347b6248a8b0625ed92c10f8f8f02c6075561f7ecc644e7f310b4",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/rules/links.ts",
+      "contentHash": "639a2155288de60057a11aeb0f412202ec74e488434ede70a582b8f0501dadb8",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/rules/mark.ts",
+      "contentHash": "89ec9eb896a1bdf165020093caf986f5e8f1bb4ca47fe4cc93eba69bdea98bd0",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/rules/math.ts",
+      "contentHash": "8f2c0aed295048eb2fa3784e4f00e96a2c0dbbfec6cc77ed5a5abaf6e6065679",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/rules/mention.ts",
+      "contentHash": "097871b8f8df370d55ef8f8f3b95389e7c4fefedffc1853e28e105962bea7ed0",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/rules/notices.ts",
+      "contentHash": "1015504a7c706c4f46eb16e60e73931796741dfcc64ede229dff8b880daa1c96",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/rules/tables.ts",
+      "contentHash": "d244298afafc853146cde58bcba6b4ef65d024f7c90bae24407533451fc151f0",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/rules/toggleBlocks.ts",
+      "contentHash": "6fc7577680028df63142dfb8cea6224ccc2274d50c4dbe3f5bef7bb94e4ef609",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/rules/underlines.ts",
+      "contentHash": "aec719d58d4ef18f5f04a868970ed2afbda9437cf7d859e5b3b1f3e57cf576f3",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/selection/ColumnSelection.ts",
+      "contentHash": "6e2a67f4d50a7d1f89ea1d7095cec95923c2b3fd787bd42121ff2bd4c6f5b221",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/selection/RowSelection.ts",
+      "contentHash": "8dc73e355afa1dead7b0f928ba3be88b1cf982f357d8e3324c5d5c878e29cfcc",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/styles/utils.ts",
+      "contentHash": "f2b27aab5f2647f06d54ea6fa85d62dae9890c2cdf49bacc585d5d0350df6b8c",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/types/index.ts",
+      "contentHash": "8b5118da2e09366a1f50e57a7cea624bc368ae888a85052e719ec948c0fca141",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/utils.ts",
+      "contentHash": "11db989a02b4d970b4132ba496d70b382eb9497d813fd68fc8e88507cf675de1",
+      "line": 1
+    },
+    {
+      "path": "shared/env.ts",
+      "contentHash": "8596519e18f6ec862ecb0d1e837f157548705064cea4d9522ea5560769339c5f",
+      "line": 1
+    },
+    {
+      "path": "shared/i18n/index.ts",
+      "contentHash": "ad701da691191c30ab9390c59c316956206159948d0233b8ef2d0075c876c588",
+      "line": 1
+    },
+    {
+      "path": "shared/styles/breakpoints.ts",
+      "contentHash": "4e3e3671883d5f8e84a326f9110924be1ced3708e4a546bba27b8eae0d1691d3",
+      "line": 1
+    },
+    {
+      "path": "shared/styles/globals.ts",
+      "contentHash": "99d64b00a920af36d869eee3a3932fb0de369107b12b30f1543fc70818f15fd3",
+      "line": 1
+    },
+    {
+      "path": "shared/styles/theme.ts",
+      "contentHash": "67069aaf951c184d189998b3924edecfd9ca7c80432998405df36fef22b15602",
+      "line": 1
+    },
+    {
+      "path": "shared/utils/color.ts",
+      "contentHash": "cfaf599e22ee6fb3324256198c2c4eeac5bb4cf70098ab1065614a4afe886719",
+      "line": 1
+    },
+    {
+      "path": "shared/utils/csv.ts",
+      "contentHash": "086ab865879b6d184a8596e5559b9b03d01d6514fbd215a8ed39629971566132",
+      "line": 1
+    },
+    {
+      "path": "shared/utils/currency.ts",
+      "contentHash": "94d0f107058ce849a779c4606d34c0793f68c2f67c372e51b96f10c833e04456",
+      "line": 1
+    },
+    {
+      "path": "shared/utils/date.ts",
+      "contentHash": "f1d0770611b258c46812df1c7a6140fef18fbe02ed527add1655cc4f5fd4bf31",
+      "line": 1
+    },
+    {
+      "path": "shared/utils/emoji.ts",
+      "contentHash": "6a3f2ffa25bf610325540dbd153a0ba5fe851d61a394b4b6d877133ed7a096bc",
+      "line": 1
+    },
+    {
+      "path": "shared/utils/FrequencyTracker.ts",
+      "contentHash": "cdb919370a9b5c7541538649d58c906b8ad5fcbcbdcbf718a17eabe3b22b982f",
+      "line": 1
+    },
+    {
+      "path": "shared/utils/IconLibrary.tsx",
+      "contentHash": "68d269c1220a6a4dbc5aea4615f3669e996119b24436e03cbc4947f83c88c5bb",
+      "line": 1
+    },
+    {
+      "path": "shared/utils/ip.ts",
+      "contentHash": "bb08b17b5796f2360834b6d734ce0bcceb386676f14a7fa5c2542b39adfcaf07",
+      "line": 1
+    },
+    {
+      "path": "shared/utils/language.ts",
+      "contentHash": "5e2877ec45f728cd7e12cfd2f50f9b6c9ce7e695fbc30cd2d5baeab9ae4addb7",
+      "line": 1
+    },
+    {
+      "path": "shared/utils/LRUCache.ts",
+      "contentHash": "87622c993a2c2a0df3368077329ea55e8272dab1758bed86c815ef331cdbdcc8",
+      "line": 1
+    },
+    {
+      "path": "shared/utils/parseCollectionSlug.ts",
+      "contentHash": "dd44bcef7a4e531ff7056a9598574c2d14872072991c21510bd1bc004e185818",
+      "line": 1
+    },
+    {
+      "path": "shared/utils/parseMentionUrl.ts",
+      "contentHash": "8d17b8931ed7a6cf14daaf75c35f8130be1d4427e0a8657b2a07d08dcf9c9639",
+      "line": 1
+    },
+    {
+      "path": "shared/utils/ProsemirrorHelper.ts",
+      "contentHash": "f6f00cec93e578645111762e763b571b1abc67ba26cfb04e7e48704ccb102209",
+      "line": 1
+    },
+    {
+      "path": "shared/utils/rfc6902/diff.ts",
+      "contentHash": "3f991e233030603dbab9818ed78f8a3b057fa84c8f428dfd393627744922c686",
+      "line": 1
+    },
+    {
+      "path": "shared/utils/rfc6902/index.ts",
+      "contentHash": "ed150b72fb907c3920da08bab89cf62007db1389547faf5992f09243e94dda55",
+      "line": 1
+    },
+    {
+      "path": "shared/utils/rfc6902/patch.ts",
+      "contentHash": "e1a931564fe4a1ddf2753992068a599d636d7b451ca4a763bcbc44c175f9f3c0",
+      "line": 1
+    },
+    {
+      "path": "shared/utils/rfc6902/pointer.ts",
+      "contentHash": "efc72ae1ca3e8231bcea072cf55474e6b1514ffc574ce04efb1874e9d3dfc643",
+      "line": 1
+    },
+    {
+      "path": "shared/utils/rfc6902/util.ts",
+      "contentHash": "719afe66c477de5e2a907b7085dcace9a48663b65d75830de4d4c620a904d0d0",
+      "line": 1
+    },
+    {
+      "path": "shared/utils/routeHelpers.ts",
+      "contentHash": "51c0529b227e6fd1279a0b9f60a6a419e1eea2efc3140f884c609f5f8bb4fe98",
+      "line": 1
+    },
+    {
+      "path": "shared/utils/rtl.ts",
+      "contentHash": "f4193b19df026b25b47692c0939e66b0349df96e5a41e7a35a143f5e11f9d6f0",
+      "line": 1
+    },
+    {
+      "path": "shared/utils/Storage.ts",
+      "contentHash": "a34a248086a3e831b36b9bfb817b68d0471396ad5542d292e691b61b5b9dbddb",
+      "line": 1
+    },
+    {
+      "path": "shared/utils/string.ts",
+      "contentHash": "8fb54f3d0bb3ab70ebff75e205d113a44326c485a1cfed9127a421385dee4d88",
+      "line": 1
+    },
+    {
+      "path": "shared/utils/TextHelper.ts",
+      "contentHash": "b8a7ec1fd0c5d1160a57b4ca621afd3957a3245675380bb7b6cd5cc85e8ec519",
+      "line": 1
+    },
+    {
+      "path": "shared/utils/tree.ts",
+      "contentHash": "25940456d8d0e16a4ec791ed932418a6fb70d2d5dade56a1375d78c95f68fa72",
+      "line": 1
+    }
+  ],
+  "claims": [
+    {
+      "purpose": "component-name",
+      "text": "Browser application and editing tools",
+      "citations": [
+        {
+          "path": "app/index.tsx",
+          "contentHash": "67e3bc9a671c2a8cee4816863a7f8e6ef8e941e0c52bf305dd0e20bc5b2b72cb",
+          "startLine": 78,
+          "endLine": 105,
+          "excerpt": "                <ErrorBoundary showTitle>\n                  <KBarProvider actions={[]} options={commandBarOptions}>\n                    <LazyPolyfill>\n                      <LazyMotion features={domMax}>\n                        <PageScroll>\n                          <PageTheme />\n                          <ScrollToTop>\n                            <Routes />\n                          </ScrollToTop>\n                          <Toasts />\n                          <Dialogs />\n                          <Presentation />\n                          <Desktop />\n                        </PageScroll>\n                      </LazyMotion>\n                    </LazyPolyfill>\n                  </KBarProvider>\n                </ErrorBoundary>\n              </ActionContextProvider>\n            </Theme>\n          </Router>\n        </Analytics>\n      </Provider>\n    </StrictMode>\n  );\n\n  element.__reactRoot ??= createRoot(element);\n  element.__reactRoot.render(<App />);"
+        },
+        {
+          "path": "shared/editor/commands/table.ts",
+          "contentHash": "477d37dcbf0769031505d96cd513161bc6bb4e79a0abbc5523707daaa558b6cb",
+          "startLine": 1,
+          "endLine": 22,
+          "excerpt": "import { GapCursor } from \"prosemirror-gapcursor\";\nimport type { Node, NodeType } from \"prosemirror-model\";\nimport { Slice } from \"prosemirror-model\";\nimport type { Command, EditorState, Transaction } from \"prosemirror-state\";\nimport { TextSelection } from \"prosemirror-state\";\nimport {\n  CellSelection,\n  addRow,\n  isInTable,\n  selectedRect,\n  tableNodeTypes,\n  toggleHeader,\n  addColumn,\n  deleteTable,\n  mergeCells,\n  removeColumn,\n  removeRow,\n  splitCell,\n  TableMap,\n  type TableRect,\n} from \"prosemirror-tables\";\nimport { ProsemirrorHelper } from \"../../utils/ProsemirrorHelper\";"
+        }
+      ]
+    },
+    {
+      "purpose": "component-role",
+      "text": "Mounts application routes, dialogs and notifications alongside rich-text editing commands.",
+      "citations": [
+        {
+          "path": "app/index.tsx",
+          "contentHash": "67e3bc9a671c2a8cee4816863a7f8e6ef8e941e0c52bf305dd0e20bc5b2b72cb",
+          "startLine": 78,
+          "endLine": 105,
+          "excerpt": "                <ErrorBoundary showTitle>\n                  <KBarProvider actions={[]} options={commandBarOptions}>\n                    <LazyPolyfill>\n                      <LazyMotion features={domMax}>\n                        <PageScroll>\n                          <PageTheme />\n                          <ScrollToTop>\n                            <Routes />\n                          </ScrollToTop>\n                          <Toasts />\n                          <Dialogs />\n                          <Presentation />\n                          <Desktop />\n                        </PageScroll>\n                      </LazyMotion>\n                    </LazyPolyfill>\n                  </KBarProvider>\n                </ErrorBoundary>\n              </ActionContextProvider>\n            </Theme>\n          </Router>\n        </Analytics>\n      </Provider>\n    </StrictMode>\n  );\n\n  element.__reactRoot ??= createRoot(element);\n  element.__reactRoot.render(<App />);"
+        },
+        {
+          "path": "shared/editor/commands/table.ts",
+          "contentHash": "477d37dcbf0769031505d96cd513161bc6bb4e79a0abbc5523707daaa558b6cb",
+          "startLine": 1,
+          "endLine": 22,
+          "excerpt": "import { GapCursor } from \"prosemirror-gapcursor\";\nimport type { Node, NodeType } from \"prosemirror-model\";\nimport { Slice } from \"prosemirror-model\";\nimport type { Command, EditorState, Transaction } from \"prosemirror-state\";\nimport { TextSelection } from \"prosemirror-state\";\nimport {\n  CellSelection,\n  addRow,\n  isInTable,\n  selectedRect,\n  tableNodeTypes,\n  toggleHeader,\n  addColumn,\n  deleteTable,\n  mergeCells,\n  removeColumn,\n  removeRow,\n  splitCell,\n  TableMap,\n  type TableRect,\n} from \"prosemirror-tables\";\nimport { ProsemirrorHelper } from \"../../utils/ProsemirrorHelper\";"
+        }
+      ]
+    }
+  ]
+}

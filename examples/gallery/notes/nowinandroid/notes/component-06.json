@@ -1,0 +1,306 @@
+{
+  "schemaVersion": 1,
+  "targetId": "component:module:core/data-test/src/main/kotlin/com/google/samples/apps/nowinandroid/core/data/test/AlwaysOnlineNetworkMonitor.kt",
+  "summary": "Reads news from local storage through repositories backed by database access objects.",
+  "author": "Codex (external agent)",
+  "sources": [
+    {
+      "path": "core/data-test/src/main/kotlin/com/google/samples/apps/nowinandroid/core/data/test/AlwaysOnlineNetworkMonitor.kt",
+      "contentHash": "8c184bc41c333084b57abd8e3e7227c5ee1948ac752004642bd236e9f501b81a",
+      "line": 1
+    },
+    {
+      "path": "core/data-test/src/main/kotlin/com/google/samples/apps/nowinandroid/core/data/test/DefaultZoneIdTimeZoneMonitor.kt",
+      "contentHash": "43c690d9d5bca1d151409725833bb092021d0c4fc2b54982d2f68c69bdc50b07",
+      "line": 1
+    },
+    {
+      "path": "core/data-test/src/main/kotlin/com/google/samples/apps/nowinandroid/core/data/test/repository/FakeNewsRepository.kt",
+      "contentHash": "08d43d205aa705ba3fab883655b50ed44d1fdb06dc9eae7d9939a5892e2e78b3",
+      "line": 1
+    },
+    {
+      "path": "core/data-test/src/main/kotlin/com/google/samples/apps/nowinandroid/core/data/test/repository/FakeRecentSearchRepository.kt",
+      "contentHash": "52b28e14abe517fc5f391fb752be170919b3721baa0f8232d8da6eb78e3f156d",
+      "line": 1
+    },
+    {
+      "path": "core/data-test/src/main/kotlin/com/google/samples/apps/nowinandroid/core/data/test/repository/FakeSearchContentsRepository.kt",
+      "contentHash": "22a464c4bcdd1a6fd443487fa94e3b37a70e683bf348597a58456e1f3884034f",
+      "line": 1
+    },
+    {
+      "path": "core/data-test/src/main/kotlin/com/google/samples/apps/nowinandroid/core/data/test/repository/FakeTopicsRepository.kt",
+      "contentHash": "000ed645ff3affe6529bc2977fcb1af046a0ce49ab9c578eae20d6da5c8163cb",
+      "line": 1
+    },
+    {
+      "path": "core/data-test/src/main/kotlin/com/google/samples/apps/nowinandroid/core/data/test/repository/FakeUserDataRepository.kt",
+      "contentHash": "6bc37bd5febbd34f0343f85956070e132b71729148c400db1496d52977dd202b",
+      "line": 1
+    },
+    {
+      "path": "core/data-test/src/main/kotlin/com/google/samples/apps/nowinandroid/core/data/test/TestDataModule.kt",
+      "contentHash": "3ebdb4704ed125c206440734a5af137d557651c104a1ec246a489c3e4a1b3b22",
+      "line": 1
+    },
+    {
+      "path": "core/data/build.gradle.kts",
+      "contentHash": "e5853cc485e4358dcd396c221a8c7dd7a12c9dcb724b59f0516ca8b6fbb0c76f",
+      "line": 1
+    },
+    {
+      "path": "core/data/src/main/kotlin/com/google/samples/apps/nowinandroid/core/data/di/DataModule.kt",
+      "contentHash": "f42f0875d1a864cca1eaf9419a57af63e002b76841c6d317df607d152d26f9dc",
+      "line": 1
+    },
+    {
+      "path": "core/data/src/main/kotlin/com/google/samples/apps/nowinandroid/core/data/di/UserNewsResourceRepositoryModule.kt",
+      "contentHash": "f3dfc5d2bec789ac501c5b5f6ef2ae487247cf8a7618c3af18bbd15448205e3d",
+      "line": 1
+    },
+    {
+      "path": "core/data/src/main/kotlin/com/google/samples/apps/nowinandroid/core/data/model/NewsResource.kt",
+      "contentHash": "43149b2cc5e1cec6cedee7b486a2ea1d8d31db8d1ebb8c7141472301a923361b",
+      "line": 1
+    },
+    {
+      "path": "core/data/src/main/kotlin/com/google/samples/apps/nowinandroid/core/data/model/RecentSearchQuery.kt",
+      "contentHash": "74b52f94f43d2eef5071a068d7d79e832c02ee20378f0fa98026a1a0ed3234cc",
+      "line": 1
+    },
+    {
+      "path": "core/data/src/main/kotlin/com/google/samples/apps/nowinandroid/core/data/model/Topic.kt",
+      "contentHash": "6d49148e827c9c40c26b9bbb0a0592684bddd1677856992a668f515f77e65b4e",
+      "line": 1
+    },
+    {
+      "path": "core/data/src/main/kotlin/com/google/samples/apps/nowinandroid/core/data/repository/AnalyticsExtensions.kt",
+      "contentHash": "abd720dbb16afbcfcd4b8086270773073aacfa29eacf55d3a99b56dc5b6ce2b5",
+      "line": 1
+    },
+    {
+      "path": "core/data/src/main/kotlin/com/google/samples/apps/nowinandroid/core/data/repository/CompositeUserNewsResourceRepository.kt",
+      "contentHash": "2025bf3bb973be05f1c662642aca8a928af8573b660eca71305572e0e1cd74c0",
+      "line": 1
+    },
+    {
+      "path": "core/data/src/main/kotlin/com/google/samples/apps/nowinandroid/core/data/repository/DefaultRecentSearchRepository.kt",
+      "contentHash": "2f9c91bac48b83453c3376ab322413bfcf52a1638afde9768684bea7af1fafe3",
+      "line": 1
+    },
+    {
+      "path": "core/data/src/main/kotlin/com/google/samples/apps/nowinandroid/core/data/repository/DefaultSearchContentsRepository.kt",
+      "contentHash": "04753c926f3fffab0bdd477247dd9fdf6dfc11e9c6eb2c09c6e26be63dc29a1b",
+      "line": 1
+    },
+    {
+      "path": "core/data/src/main/kotlin/com/google/samples/apps/nowinandroid/core/data/repository/NewsRepository.kt",
+      "contentHash": "4de42a73fc0e34370ec92ea70231ea030b7edd755e62596fccfcfa181539aeed",
+      "line": 1
+    },
+    {
+      "path": "core/data/src/main/kotlin/com/google/samples/apps/nowinandroid/core/data/repository/OfflineFirstNewsRepository.kt",
+      "contentHash": "1c847b24047f205ef6498ee866799d6ac3a408fd9323bfac7863dd6dd8b991a3",
+      "line": 1
+    },
+    {
+      "path": "core/data/src/main/kotlin/com/google/samples/apps/nowinandroid/core/data/repository/OfflineFirstTopicsRepository.kt",
+      "contentHash": "c50e82fc8b9f14937cc11ce8a5bbfb5ffb3ff4fb6b946b66f7ebd874365dac89",
+      "line": 1
+    },
+    {
+      "path": "core/data/src/main/kotlin/com/google/samples/apps/nowinandroid/core/data/repository/OfflineFirstUserDataRepository.kt",
+      "contentHash": "422c693720041c440e541405d0c2116d885e009b1a63e705bdd8acc7439c7e6e",
+      "line": 1
+    },
+    {
+      "path": "core/data/src/main/kotlin/com/google/samples/apps/nowinandroid/core/data/repository/RecentSearchRepository.kt",
+      "contentHash": "c757f51ed1f545cf4d07811d41097a99a086883ab3bb6cabb34ee64d10658e78",
+      "line": 1
+    },
+    {
+      "path": "core/data/src/main/kotlin/com/google/samples/apps/nowinandroid/core/data/repository/SearchContentsRepository.kt",
+      "contentHash": "ba1ef7b4f11f68e196195e16ad4ead986a3800d2051032911943c133c32df595",
+      "line": 1
+    },
+    {
+      "path": "core/data/src/main/kotlin/com/google/samples/apps/nowinandroid/core/data/repository/TopicsRepository.kt",
+      "contentHash": "d91a4180ef9b5498be34c8517df4dbb558791b5107bc9e70bf83f364ab13fa89",
+      "line": 1
+    },
+    {
+      "path": "core/data/src/main/kotlin/com/google/samples/apps/nowinandroid/core/data/repository/UserDataRepository.kt",
+      "contentHash": "1e8cb599b4927e86fbc6e53209051bdfcc26eeb8a7a5aa9f68117bdd5a532c03",
+      "line": 1
+    },
+    {
+      "path": "core/data/src/main/kotlin/com/google/samples/apps/nowinandroid/core/data/repository/UserNewsResourceRepository.kt",
+      "contentHash": "8c29562b203a4f58094751e08d0f654b731f4f511ab0000a474e1930ae018b77",
+      "line": 1
+    },
+    {
+      "path": "core/data/src/main/kotlin/com/google/samples/apps/nowinandroid/core/data/SyncUtilities.kt",
+      "contentHash": "536b56d2f647315a66c33550bc4faccc319e15529e5931aeeb0f63e3de7ecd04",
+      "line": 1
+    },
+    {
+      "path": "core/data/src/main/kotlin/com/google/samples/apps/nowinandroid/core/data/util/ConnectivityManagerNetworkMonitor.kt",
+      "contentHash": "0a61ad0d86ad0b1c9241305e2ea2f32a51ce6c2e5474d27d0402e8b195c2d236",
+      "line": 1
+    },
+    {
+      "path": "core/data/src/main/kotlin/com/google/samples/apps/nowinandroid/core/data/util/NetworkMonitor.kt",
+      "contentHash": "391ae8a72869c5a95650b546bb81969bb44b0061a65721af998a75093eec750c",
+      "line": 1
+    },
+    {
+      "path": "core/data/src/main/kotlin/com/google/samples/apps/nowinandroid/core/data/util/SyncManager.kt",
+      "contentHash": "641c91e636a75284eb6cb93e657c5249b217ca5095210252eca0a3c1ed5dfc60",
+      "line": 1
+    },
+    {
+      "path": "core/data/src/main/kotlin/com/google/samples/apps/nowinandroid/core/data/util/TimeZoneMonitor.kt",
+      "contentHash": "87d9300f4ed3ff855a2be570a2a2483c2357a292af695feaf2c4248ee513a51e",
+      "line": 1
+    },
+    {
+      "path": "core/database/build.gradle.kts",
+      "contentHash": "3d6f35a91709cf7769c8cb7513543cd9e023d3115dfcda31dc5256a0fa789e05",
+      "line": 1
+    },
+    {
+      "path": "core/database/src/main/kotlin/com/google/samples/apps/nowinandroid/core/database/dao/NewsResourceDao.kt",
+      "contentHash": "28ea027cb83a1a0e9307c2ebd450915afbb74ce2a77eae69d32c68f5c403dac9",
+      "line": 1
+    },
+    {
+      "path": "core/database/src/main/kotlin/com/google/samples/apps/nowinandroid/core/database/dao/NewsResourceFtsDao.kt",
+      "contentHash": "d768a25bfa56dd2e4b41cfe9dfb99bbd7ca2dcf643f4679f801828b4f3e60252",
+      "line": 1
+    },
+    {
+      "path": "core/database/src/main/kotlin/com/google/samples/apps/nowinandroid/core/database/dao/RecentSearchQueryDao.kt",
+      "contentHash": "9dcf3a9ad2616fba54b5f31297649ebe0e933f83d32112b8cee4d4d6b835cac1",
+      "line": 1
+    },
+    {
+      "path": "core/database/src/main/kotlin/com/google/samples/apps/nowinandroid/core/database/dao/TopicDao.kt",
+      "contentHash": "8af04cb0121a38f6f8a98b0ffb4751761ebbabae8dee6c7c6ec8858fd2a16e39",
+      "line": 1
+    },
+    {
+      "path": "core/database/src/main/kotlin/com/google/samples/apps/nowinandroid/core/database/dao/TopicFtsDao.kt",
+      "contentHash": "b455368a37c79d725c102757f8161c9c146f168003e776952610201b83fdc4a6",
+      "line": 1
+    },
+    {
+      "path": "core/database/src/main/kotlin/com/google/samples/apps/nowinandroid/core/database/DatabaseMigrations.kt",
+      "contentHash": "ea8349c3831bd1b7d3a5a1023095ba25a0ff353f796973d7f4cedd8b37b1b6e9",
+      "line": 1
+    },
+    {
+      "path": "core/database/src/main/kotlin/com/google/samples/apps/nowinandroid/core/database/di/DaosModule.kt",
+      "contentHash": "c134cf74148775a9edd75795211e4fa160f32b7d672c558cb4a81b4e793820f5",
+      "line": 1
+    },
+    {
+      "path": "core/database/src/main/kotlin/com/google/samples/apps/nowinandroid/core/database/di/DatabaseModule.kt",
+      "contentHash": "56748853a4298862e908cba53975a7e18dfcd076def172cd6d7973f867f2cd6a",
+      "line": 1
+    },
+    {
+      "path": "core/database/src/main/kotlin/com/google/samples/apps/nowinandroid/core/database/model/NewsResourceEntity.kt",
+      "contentHash": "56ca850de77ba2033c7cd7a6cc8eb895070c8c706b959d5dd887bbc704d49155",
+      "line": 1
+    },
+    {
+      "path": "core/database/src/main/kotlin/com/google/samples/apps/nowinandroid/core/database/model/NewsResourceFtsEntity.kt",
+      "contentHash": "aa5151ba92a90fd72d940f2d030f2e850439eca3e57c0a8fe9665c6157775d4a",
+      "line": 1
+    },
+    {
+      "path": "core/database/src/main/kotlin/com/google/samples/apps/nowinandroid/core/database/model/NewsResourceTopicCrossRef.kt",
+      "contentHash": "00a092d9054508002d9a04a23cfc2b5bea8c3401e2abff6e0cd78b3d95924293",
+      "line": 1
+    },
+    {
+      "path": "core/database/src/main/kotlin/com/google/samples/apps/nowinandroid/core/database/model/PopulatedNewsResource.kt",
+      "contentHash": "0e0dccc95ee518190f61afb06a73403ce6ea3f34f0d0ea187053f60973600dec",
+      "line": 1
+    },
+    {
+      "path": "core/database/src/main/kotlin/com/google/samples/apps/nowinandroid/core/database/model/RecentSearchQueryEntity.kt",
+      "contentHash": "e531a423e66f643866d1b463f2436e3c6d76401200e95302f9a46efc995f0d01",
+      "line": 1
+    },
+    {
+      "path": "core/database/src/main/kotlin/com/google/samples/apps/nowinandroid/core/database/model/TopicEntity.kt",
+      "contentHash": "9a36e178da4f0a540a3f86716a7027cc719760973d9777ebaeb50b81b2652f93",
+      "line": 1
+    },
+    {
+      "path": "core/database/src/main/kotlin/com/google/samples/apps/nowinandroid/core/database/model/TopicFtsEntity.kt",
+      "contentHash": "02a63a070aba75795636c9cbe9795b7912e49958a3077c526a07632093b61979",
+      "line": 1
+    },
+    {
+      "path": "core/database/src/main/kotlin/com/google/samples/apps/nowinandroid/core/database/NiaDatabase.kt",
+      "contentHash": "87d09649917eb37244e1bda18b2e18e58bc002cdd8598b49c2b9b2ac85c653d9",
+      "line": 1
+    },
+    {
+      "path": "core/database/src/main/kotlin/com/google/samples/apps/nowinandroid/core/database/util/InstantConverter.kt",
+      "contentHash": "af29b3b85bcaf666d1c70aeb1b81c92746364784dd86e8c0182aef80c61df6ae",
+      "line": 1
+    },
+    {
+      "path": "core/domain/build.gradle.kts",
+      "contentHash": "f7e66582957ee7c210e11b95139d1e011b9a6799584cee9eb68b4005f6621e42",
+      "line": 1
+    },
+    {
+      "path": "core/domain/src/main/kotlin/com/google/samples/apps/nowinandroid/core/domain/GetFollowableTopicsUseCase.kt",
+      "contentHash": "557f3629fe328e18622b9f3fa5f5925c3008e9088a0594510df72f81f8f222e6",
+      "line": 1
+    },
+    {
+      "path": "core/domain/src/main/kotlin/com/google/samples/apps/nowinandroid/core/domain/GetRecentSearchQueriesUseCase.kt",
+      "contentHash": "5ea1005c7717be3223b5fc8b485f663e3f9a082c7037b0eaa22e5dbed7aed8e4",
+      "line": 1
+    },
+    {
+      "path": "core/domain/src/main/kotlin/com/google/samples/apps/nowinandroid/core/domain/GetSearchContentsUseCase.kt",
+      "contentHash": "bcbdab47894705e63d6648ffd372169cdee58b8c9be5c279483414ba2ef133cf",
+      "line": 1
+    }
+  ],
+  "claims": [
+    {
+      "purpose": "component-name",
+      "text": "Offline news storage",
+      "citations": [
+        {
+          "path": "core/data/src/main/kotlin/com/google/samples/apps/nowinandroid/core/data/repository/OfflineFirstNewsRepository.kt",
+          "contentHash": "1c847b24047f205ef6498ee866799d6ac3a408fd9323bfac7863dd6dd8b991a3",
+          "startLine": 44,
+          "endLine": 64,
+          "excerpt": "/**\n * Disk storage backed implementation of the [NewsRepository].\n * Reads are exclusively from local storage to support offline access.\n */\ninternal class OfflineFirstNewsRepository @Inject constructor(\n    private val niaPreferencesDataSource: NiaPreferencesDataSource,\n    private val newsResourceDao: NewsResourceDao,\n    private val topicDao: TopicDao,\n    private val network: NiaNetworkDataSource,\n    private val notifier: Notifier,\n) : NewsRepository {\n\n    override fun getNewsResources(\n        query: NewsResourceQuery,\n    ): Flow<List<NewsResource>> = newsResourceDao.getNewsResources(\n        useFilterTopicIds = query.filterTopicIds != null,\n        filterTopicIds = query.filterTopicIds ?: emptySet(),\n        useFilterNewsIds = query.filterNewsIds != null,\n        filterNewsIds = query.filterNewsIds ?: emptySet(),\n    )\n        .map { it.map(PopulatedNewsResource::asExternalModel) }"
+        }
+      ]
+    },
+    {
+      "purpose": "component-role",
+      "text": "Reads news from local storage through repositories backed by database access objects.",
+      "citations": [
+        {
+          "path": "core/data/src/main/kotlin/com/google/samples/apps/nowinandroid/core/data/repository/OfflineFirstNewsRepository.kt",
+          "contentHash": "1c847b24047f205ef6498ee866799d6ac3a408fd9323bfac7863dd6dd8b991a3",
+          "startLine": 44,
+          "endLine": 64,
+          "excerpt": "/**\n * Disk storage backed implementation of the [NewsRepository].\n * Reads are exclusively from local storage to support offline access.\n */\ninternal class OfflineFirstNewsRepository @Inject constructor(\n    private val niaPreferencesDataSource: NiaPreferencesDataSource,\n    private val newsResourceDao: NewsResourceDao,\n    private val topicDao: TopicDao,\n    private val network: NiaNetworkDataSource,\n    private val notifier: Notifier,\n) : NewsRepository {\n\n    override fun getNewsResources(\n        query: NewsResourceQuery,\n    ): Flow<List<NewsResource>> = newsResourceDao.getNewsResources(\n        useFilterTopicIds = query.filterTopicIds != null,\n        filterTopicIds = query.filterTopicIds ?: emptySet(),\n        useFilterNewsIds = query.filterNewsIds != null,\n        filterNewsIds = query.filterNewsIds ?: emptySet(),\n    )\n        .map { it.map(PopulatedNewsResource::asExternalModel) }"
+        }
+      ]
+    }
+  ]
+}

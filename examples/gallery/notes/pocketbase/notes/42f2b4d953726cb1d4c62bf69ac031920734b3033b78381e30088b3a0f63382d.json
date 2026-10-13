@@ -1,0 +1,166 @@
+{
+  "schemaVersion": 1,
+  "targetId": "component:module:apis/api_error_aliases.go",
+  "summary": "Registers record, authentication, collection, file and realtime API routes with request middleware.",
+  "author": "Codex (external agent)",
+  "sources": [
+    {
+      "path": "apis/api_error_aliases.go",
+      "contentHash": "f5e0843f77b359854805038d29fbc34e4d0d641b2a43af84f0cefcb96e56cb0e",
+      "line": 1
+    },
+    {
+      "path": "apis/backup_create.go",
+      "contentHash": "7e768c48bc899867f6255bce47059b809761636a48ff2023a65eef0c230c3b16",
+      "line": 1
+    },
+    {
+      "path": "apis/backup_upload.go",
+      "contentHash": "b93f9de53e489ec6264c21fd0b9210e6927cfc0646412aae290c40a26382d434",
+      "line": 1
+    },
+    {
+      "path": "apis/base.go",
+      "contentHash": "8cdd96a3c4f7981637c6ff3c88475825dd5bea045f56463dfb5899a3a83af905",
+      "line": 1
+    },
+    {
+      "path": "apis/collection_import.go",
+      "contentHash": "01de901318f7a11ccbd23505541c8753e162cb115d422c26d069d320df94384b",
+      "line": 1
+    },
+    {
+      "path": "apis/collection.go",
+      "contentHash": "4750913f92a4b2f85c761f812ff4fb97f621080cf8cb4d80b1e6fe70665f5b84",
+      "line": 1
+    },
+    {
+      "path": "apis/extensions.go",
+      "contentHash": "e0f9a0255d3d7ac08a9fa30c5053b6d49f7ae39996dfa5f3522cbc0a6277154c",
+      "line": 1
+    },
+    {
+      "path": "apis/health.go",
+      "contentHash": "0a0421cd340cfdcd81c7b7e95b46c987a65c5ac736ce977cbe6487032d17e757",
+      "line": 1
+    },
+    {
+      "path": "apis/installer.go",
+      "contentHash": "fbe0c0b64c21975fcaf2c287602edab9a0c200e4df79bd4486fcaba749341b39",
+      "line": 1
+    },
+    {
+      "path": "apis/logs.go",
+      "contentHash": "892927a8a5c688874414f088934968ef4d2a433b7ade4bf8a9e8e1e336c7af39",
+      "line": 1
+    },
+    {
+      "path": "apis/middlewares_body_limit.go",
+      "contentHash": "2d8c8c1e2a198ee7d608baf5cb88c5ed64a0e49418414977e283cf630b4ba8bd",
+      "line": 1
+    },
+    {
+      "path": "apis/middlewares_cors.go",
+      "contentHash": "3fde87d99fef620db0ea553d14b8508f0f39c8f1f10991fcc5ff2c77e8bf4ec4",
+      "line": 1
+    },
+    {
+      "path": "apis/middlewares_gzip.go",
+      "contentHash": "fe83b2b654c19a13ec99bd4c3d7215453191964457c5cf4f44fa697cf9395c8c",
+      "line": 1
+    },
+    {
+      "path": "apis/record_auth_email_change_confirm.go",
+      "contentHash": "7a79046177cb12b70bc789db984bea051847786323f637ebf3d1a0d431acb9d5",
+      "line": 1
+    },
+    {
+      "path": "apis/record_auth_email_change_request.go",
+      "contentHash": "2c0067bb7deedee7367b6b007316e68a40ea50f8db54c64f7dd041463cfcca59",
+      "line": 1
+    },
+    {
+      "path": "apis/record_auth_impersonate.go",
+      "contentHash": "99df1ee2cc03d490bd0790d6b9b9917f5a338f8152d79ad643c2ecb5a1bc97f5",
+      "line": 1
+    },
+    {
+      "path": "apis/record_auth_methods.go",
+      "contentHash": "9b853e911d631c4ca60cb089d1c9bd176df11ac98f5d5446ab4d9db5bb6584ef",
+      "line": 1
+    },
+    {
+      "path": "apis/record_auth_password_reset_confirm.go",
+      "contentHash": "28a2d4da78e1cc686d40523b103c410af8a58fbd7454972dc8b45f6481a7f38f",
+      "line": 1
+    },
+    {
+      "path": "apis/record_auth_refresh.go",
+      "contentHash": "a9c07769984ee2c19210640be33cb6543d21a6a0665ae8cfdb30b2536640dfa2",
+      "line": 1
+    },
+    {
+      "path": "apis/record_auth_verification_confirm.go",
+      "contentHash": "e79bb7fa33545f04fbe0d6cc22383f36d395028aa60835f698e3e65c5008abc4",
+      "line": 1
+    },
+    {
+      "path": "apis/record_auth_with_oauth2_redirect.go",
+      "contentHash": "ebb8a45caff3d2ad9387be835059e3efdf8031899063a0043ede3c5774b21cb2",
+      "line": 1
+    },
+    {
+      "path": "apis/record_auth_with_oauth2.go",
+      "contentHash": "d22ae464a3b930ab14507351ed786b21bf798d625a12afff114826e40a3721da",
+      "line": 1
+    },
+    {
+      "path": "apis/record_auth_with_otp.go",
+      "contentHash": "18a0a8fbd60a20c30686f92c3471acb5f719775caedd360af867fbde4078fd14",
+      "line": 1
+    },
+    {
+      "path": "apis/record_auth.go",
+      "contentHash": "261bdd4f32a43b1e5d98f9639d10512529c93222257f368cff1b718f5a24dc41",
+      "line": 1
+    },
+    {
+      "path": "apis/settings.go",
+      "contentHash": "3ca601497e29df8d670dd115cb81793f46338f93dc5114adac8e3a873c79d2e2",
+      "line": 1
+    },
+    {
+      "path": "apis/sql.go",
+      "contentHash": "3ae9eff5198e66139c1f75e749279e719ad69796f1a03bf11ca6f695b2311734",
+      "line": 1
+    }
+  ],
+  "claims": [
+    {
+      "purpose": "component-name",
+      "text": "API routing and authentication",
+      "citations": [
+        {
+          "path": "apis/base.go",
+          "contentHash": "8cdd96a3c4f7981637c6ff3c88475825dd5bea045f56463dfb5899a3a83af905",
+          "startLine": 18,
+          "endLine": 50,
+          "excerpt": "// NewRouter returns a new router instance loaded with the default app middlewares and routes.\nfunc NewRouter(app core.App) (*router.Router[*core.RequestEvent], error) {\n\tpbRouter := router.NewRouter(func(w http.ResponseWriter, r *http.Request) (*core.RequestEvent, router.EventCleanupFunc) {\n\t\tevent := new(core.RequestEvent)\n\t\tevent.Response = w\n\t\tevent.Request = r\n\t\tevent.App = app\n\n\t\treturn event, nil\n\t})\n\n\t// register default middlewares\n\tpbRouter.Bind(activityLogger())\n\tpbRouter.Bind(panicRecover())\n\tpbRouter.Bind(rateLimit())\n\tpbRouter.Bind(loadAuthToken())\n\tpbRouter.Bind(superuserIPsWhitelist())\n\tpbRouter.Bind(securityHeaders())\n\tpbRouter.Bind(BodyLimit(DefaultMaxBodySize))\n\n\t// API routes\n\tapiGroup := pbRouter.Group(\"/api\")\n\tbindSettingsApi(app, apiGroup)\n\tbindCollectionApi(app, apiGroup)\n\tbindRecordCrudApi(app, apiGroup)\n\tbindRecordAuthApi(app, apiGroup)\n\tbindLogsApi(app, apiGroup)\n\tbindBackupApi(app, apiGroup)\n\tbindCronApi(app, apiGroup)\n\tbindFileApi(app, apiGroup)\n\tbindBatchApi(app, apiGroup)\n\tbindRealtimeApi(app, apiGroup)\n\tbindHealthApi(app, apiGroup)"
+        }
+      ]
+    },
+    {
+      "purpose": "component-role",
+      "text": "Registers record, authentication, collection, file and realtime API routes with request middleware.",
+      "citations": [
+        {
+          "path": "apis/base.go",
+          "contentHash": "8cdd96a3c4f7981637c6ff3c88475825dd5bea045f56463dfb5899a3a83af905",
+          "startLine": 18,
+          "endLine": 50,
+          "excerpt": "// NewRouter returns a new router instance loaded with the default app middlewares and routes.\nfunc NewRouter(app core.App) (*router.Router[*core.RequestEvent], error) {\n\tpbRouter := router.NewRouter(func(w http.ResponseWriter, r *http.Request) (*core.RequestEvent, router.EventCleanupFunc) {\n\t\tevent := new(core.RequestEvent)\n\t\tevent.Response = w\n\t\tevent.Request = r\n\t\tevent.App = app\n\n\t\treturn event, nil\n\t})\n\n\t// register default middlewares\n\tpbRouter.Bind(activityLogger())\n\tpbRouter.Bind(panicRecover())\n\tpbRouter.Bind(rateLimit())\n\tpbRouter.Bind(loadAuthToken())\n\tpbRouter.Bind(superuserIPsWhitelist())\n\tpbRouter.Bind(securityHeaders())\n\tpbRouter.Bind(BodyLimit(DefaultMaxBodySize))\n\n\t// API routes\n\tapiGroup := pbRouter.Group(\"/api\")\n\tbindSettingsApi(app, apiGroup)\n\tbindCollectionApi(app, apiGroup)\n\tbindRecordCrudApi(app, apiGroup)\n\tbindRecordAuthApi(app, apiGroup)\n\tbindLogsApi(app, apiGroup)\n\tbindBackupApi(app, apiGroup)\n\tbindCronApi(app, apiGroup)\n\tbindFileApi(app, apiGroup)\n\tbindBatchApi(app, apiGroup)\n\tbindRealtimeApi(app, apiGroup)\n\tbindHealthApi(app, apiGroup)"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,1085 @@
+{
+  "schemaVersion": 1,
+  "targetId": "component:module:ui/embed.go",
+  "summary": "Embeds the administration frontend and connects collection, log, backup and settings pages.",
+  "author": "Codex (external agent)",
+  "sources": [
+    {
+      "path": "ui/embed_no_ui.go",
+      "contentHash": "97095c50eae319c8493f62c6fb5a031e8d3ad98fdbbee9d7c82bc2371b138ea6",
+      "line": 1
+    },
+    {
+      "path": "ui/embed.go",
+      "contentHash": "069674d2839f2e61aa39eee77aa272f78cd9cff5961b9651bd971aa0b30937a6",
+      "line": 1
+    },
+    {
+      "path": "ui/public/libs/prism/prism.js",
+      "contentHash": "fc01ee30cbc208c1203afd1c070958a16c8e653ea62f7e5212b61e8ce1cdceb5",
+      "line": 1
+    },
+    {
+      "path": "ui/public/libs/shablon/shablon.iife.js",
+      "contentHash": "f28f488e5076581a80db25bd09434941bda5f13f8265caf0c426d78a8032b483",
+      "line": 1
+    },
+    {
+      "path": "ui/public/libs/tinymce/icons/default/icons.min.js",
+      "contentHash": "df42e91e6e15da0ab50513280cba33c8fb6d4e0fbdb4d8edaf3d39209d8d6d18",
+      "line": 1
+    },
+    {
+      "path": "ui/public/libs/tinymce/models/dom/model.min.js",
+      "contentHash": "72d8ed7b618ef23c86e958ed45e6ad21068df9fb81fa4f5b6fc3a635df6a5deb",
+      "line": 1
+    },
+    {
+      "path": "ui/public/libs/tinymce/plugins/autolink/plugin.min.js",
+      "contentHash": "4780b8ccacb67460b74e6ad8be8d9f36fbd98c083359c7baee7d6bf4f8d3eebb",
+      "line": 1
+    },
+    {
+      "path": "ui/public/libs/tinymce/plugins/autoresize/plugin.min.js",
+      "contentHash": "f767d8ad26f59d3ab5c804dc306db89a04f7a95d7ded91436d500a6e100448e8",
+      "line": 1
+    },
+    {
+      "path": "ui/public/libs/tinymce/plugins/code/plugin.min.js",
+      "contentHash": "db417463133617b081ab891aa4ace720f244bbbec9e1dbc6783fdf87ca228547",
+      "line": 1
+    },
+    {
+      "path": "ui/public/libs/tinymce/plugins/codesample/plugin.min.js",
+      "contentHash": "351733951f9fa3feaf5b19b1570d6c4f2666e8c7ca9c4d99be34bb433a25d563",
+      "line": 1
+    },
+    {
+      "path": "ui/public/libs/tinymce/plugins/directionality/plugin.min.js",
+      "contentHash": "a37c9252c2df9dab50061e9ee190eb613428d0a850b992b0197260e0748b0e5e",
+      "line": 1
+    },
+    {
+      "path": "ui/public/libs/tinymce/plugins/fullscreen/plugin.min.js",
+      "contentHash": "0afdd1b41e8555ee738e4d288d63cfbf8bc54a19311f1029a9ed03d95bd8941d",
+      "line": 1
+    },
+    {
+      "path": "ui/public/libs/tinymce/plugins/image/plugin.min.js",
+      "contentHash": "37839a5c17d537f1c9a4b3f59d453c2e30688415e4aa0b8f01e2926139553a0e",
+      "line": 1
+    },
+    {
+      "path": "ui/public/libs/tinymce/plugins/link/plugin.min.js",
+      "contentHash": "698e129c7cee6b09d0fe294b6b42f77c16aa5edef6a35006bfa05e12121f526a",
+      "line": 1
+    },
+    {
+      "path": "ui/public/libs/tinymce/plugins/lists/plugin.min.js",
+      "contentHash": "4bd8d28534e188c67fdf7fb58c5aa796a9dac5b9d1bbf9b55e22ada843bbc2b2",
+      "line": 1
+    },
+    {
+      "path": "ui/public/libs/tinymce/plugins/media/plugin.min.js",
+      "contentHash": "005dd270e0cd38bd0b16c0118cd198f6ca71497ca456c9264ae3522f9bf695a5",
+      "line": 1
+    },
+    {
+      "path": "ui/public/libs/tinymce/plugins/table/plugin.min.js",
+      "contentHash": "6545dbfeb5d5916d2a8c12258321acab17b798adbe5d1bd8a98d32d14c49a2f5",
+      "line": 1
+    },
+    {
+      "path": "ui/public/libs/tinymce/plugins/wordcount/plugin.min.js",
+      "contentHash": "216531718829f91eccf07f62642767b006de6f87c28c56ccce3fb9db2e7786a4",
+      "line": 1
+    },
+    {
+      "path": "ui/public/libs/tinymce/skins/content/default/content.js",
+      "contentHash": "42867a764496d231ca696cbd7b2b040cd42a68480ba1660709c41ddf54859560",
+      "line": 1
+    },
+    {
+      "path": "ui/public/libs/tinymce/themes/silver/theme.min.js",
+      "contentHash": "105d2de22dccd38801138814dc3579824198abfaaa95d3c597fac14c7aa4aa4a",
+      "line": 1
+    },
+    {
+      "path": "ui/public/libs/tinymce/tinymce.min.js",
+      "contentHash": "02be8685aab6e27fa4fa3dd417eda7cb5d212f8ad79dc08da1ad56afc0db411a",
+      "line": 1
+    },
+    {
+      "path": "ui/public/libs/uplot/uplot.iife.js",
+      "contentHash": "755bb34fa4a12e31994f58e4efe0ef84c36c46adf597391ee53f3f23cb749616",
+      "line": 1
+    },
+    {
+      "path": "ui/src/apiPreview/apiPreviewModal.js",
+      "contentHash": "4e903207e3ad01922a293e1cae48db436a2fdcc8ea477fe1f1977ada1147e47f",
+      "line": 1
+    },
+    {
+      "path": "ui/src/apiPreview/docsAuthRefresh.js",
+      "contentHash": "4dbb791df17fb15c459f58bf811f933c18d218879d1d3da885018d13541e1841",
+      "line": 1
+    },
+    {
+      "path": "ui/src/apiPreview/docsAuthWithOAuth2.js",
+      "contentHash": "a71a8eb65c37b908a4ada1b1d3a302fb8af52635f4fc17f7a7dce0a362ab1b39",
+      "line": 1
+    },
+    {
+      "path": "ui/src/apiPreview/docsAuthWithOTP.js",
+      "contentHash": "958013815ad9e9d662999e4d24e8f9a77bc6a5db7b03df1640de7178920de652",
+      "line": 1
+    },
+    {
+      "path": "ui/src/apiPreview/docsAuthWithPassword.js",
+      "contentHash": "e6546e7495c96be0fcd9a595933a501e2966b55b7978c2597872a6247132b145",
+      "line": 1
+    },
+    {
+      "path": "ui/src/apiPreview/docsBatch.js",
+      "contentHash": "8a8ffce39c6c8f5a277ebd299c74d02908a9b6f551f6db1f92b4fb73204f5a5f",
+      "line": 1
+    },
+    {
+      "path": "ui/src/apiPreview/docsCreate.js",
+      "contentHash": "01408c43c7bfdb87f1c1137d1eb00f781e1ff6ee6618a94de6ec587760e412c9",
+      "line": 1
+    },
+    {
+      "path": "ui/src/apiPreview/docsDelete.js",
+      "contentHash": "128413a6104891c57f9e17d79fd2c9f2e0bd423b56c1bea45073b9a990e52f03",
+      "line": 1
+    },
+    {
+      "path": "ui/src/apiPreview/docsEmailChange.js",
+      "contentHash": "174f22e087932799fc8ad06c9f89b4024bd28d34673a4845f26a3725c8d234a8",
+      "line": 1
+    },
+    {
+      "path": "ui/src/apiPreview/docsList.js",
+      "contentHash": "e2db1b81a00863c676383e5ee61e359e35eee262b0c4a47d424bc76291b894ad",
+      "line": 1
+    },
+    {
+      "path": "ui/src/apiPreview/docsListAuthMethods.js",
+      "contentHash": "5deaca1aec5fa76ab13fe0e34458c21d9630ce11d6b8000029d884692504ba11",
+      "line": 1
+    },
+    {
+      "path": "ui/src/apiPreview/docsPasswordReset.js",
+      "contentHash": "7332a5d06fe08fda75832c60e6fd33b7d70cff699052507429c3f2f9f843a807",
+      "line": 1
+    },
+    {
+      "path": "ui/src/apiPreview/docsRealtime.js",
+      "contentHash": "59be05020eef16d46967308e0d21231926a540f63c75e0af4650154a516cdea6",
+      "line": 1
+    },
+    {
+      "path": "ui/src/apiPreview/docsUpdate.js",
+      "contentHash": "f7530346773a59b1b1f87b50781e7ec14553077c13e5cbbc270eb059afdff2cf",
+      "line": 1
+    },
+    {
+      "path": "ui/src/apiPreview/docsVerification.js",
+      "contentHash": "58c601f46a859a50843430e5a60196d99fc103ff1b48867f625ba3c4dec4e6bb",
+      "line": 1
+    },
+    {
+      "path": "ui/src/apiPreview/docsView.js",
+      "contentHash": "49b0f5cbb7e460165e8b3f0bb335863098520dfbae82db5c39f3e5f95befa9fd",
+      "line": 1
+    },
+    {
+      "path": "ui/src/apiPreview/expandInfo.js",
+      "contentHash": "79f604bdaf0d131695d6d325d978235036585511d2701689a17fc8d1029aeb01",
+      "line": 1
+    },
+    {
+      "path": "ui/src/apiPreview/fieldsInfo.js",
+      "contentHash": "0c614e74fbaa9255c6299573dca7f2fc2842bbb29a983f23354312b4a786e25c",
+      "line": 1
+    },
+    {
+      "path": "ui/src/apiPreview/filterSyntax.js",
+      "contentHash": "e327bb4ede019c3c95c470ba83d81d8b9ae926702979c6e35e5a6f6a53d4eb60",
+      "line": 1
+    },
+    {
+      "path": "ui/src/auth/pageConfirmEmailChange.js",
+      "contentHash": "222addfb83b969a834dc78bded2e6e76d8f2dbaa31da6f762734459521a47d22",
+      "line": 1
+    },
+    {
+      "path": "ui/src/auth/pageConfirmPasswordReset.js",
+      "contentHash": "889b35f3641023372efe256888dc3e696642b0c3df4fc1ef6f0b10a23b0dbe61",
+      "line": 1
+    },
+    {
+      "path": "ui/src/auth/pageConfirmVerification.js",
+      "contentHash": "2112341635fadb7533d63eedd02238e797e89fa49e77e7be916657db3146e3c8",
+      "line": 1
+    },
+    {
+      "path": "ui/src/auth/pageInstaller.js",
+      "contentHash": "beeb55bd57199887d80678188d25aa5dc29101c0ed4bbcfb63e479eeacd8607b",
+      "line": 1
+    },
+    {
+      "path": "ui/src/auth/pageOAuth2RedirectFailure.js",
+      "contentHash": "aaafe77c56e0ac78fd6846a184b2ac2bdb331f76a9d7f24cda735c5517c718b5",
+      "line": 1
+    },
+    {
+      "path": "ui/src/auth/pageOAuth2RedirectSuccess.js",
+      "contentHash": "a7b094ced4ad35cb3f83dd2ff2bda3d4a6894a097a5fd9b039cf6b330134c43d",
+      "line": 1
+    },
+    {
+      "path": "ui/src/auth/pageRequestSuperuserPasswordReset.js",
+      "contentHash": "2ee6155b0443e9b00213d508ca6b2ab0bc9e0439eea8507f0b85cd864d852b9b",
+      "line": 1
+    },
+    {
+      "path": "ui/src/auth/pageSuperuserLogin.js",
+      "contentHash": "4027560d70c2bb4d45aee153e29006ca0ff4c28cccbc2c40326a55205820c382",
+      "line": 1
+    },
+    {
+      "path": "ui/src/base/appHeader.js",
+      "contentHash": "bfb3e7ed92d8c4abe3a29748c5572a8769e72af35e9e680510ceb9340cebb271",
+      "line": 1
+    },
+    {
+      "path": "ui/src/base/autoAccordionOpenOnError.js",
+      "contentHash": "fa3c489cb36fd4b6e6bf15b8b24818b99a1d3b49413653d8ca80efb9304fc1d2",
+      "line": 1
+    },
+    {
+      "path": "ui/src/base/codeBlock.js",
+      "contentHash": "437d744f6491ca8c1aebb6547329816aaac0bf67d35b54b993268714b91f183d",
+      "line": 1
+    },
+    {
+      "path": "ui/src/base/codeBlockTabs.js",
+      "contentHash": "e8068ee4cc04cc877eb93e1b3fd8ef942b9f500353b74df4ea3d7a593d691ba9",
+      "line": 1
+    },
+    {
+      "path": "ui/src/base/codeEditor.js",
+      "contentHash": "02b1692274b5d9856171bdfc39b58c58b3dba78c195d740172de378eecbd45ce",
+      "line": 1
+    },
+    {
+      "path": "ui/src/base/colorPicker.js",
+      "contentHash": "d195053b08189fc2e78272ac5a979a9c385b5768bd9d4a4fdd025af74850d047",
+      "line": 1
+    },
+    {
+      "path": "ui/src/base/confirm.js",
+      "contentHash": "fce98e9d5387344820fc985c403c887ae4f67c35b054ddc75fe6b1446d8eb6ef",
+      "line": 1
+    },
+    {
+      "path": "ui/src/base/copyButton.js",
+      "contentHash": "70209643f02e08ed10232613cb00640a36c4d249be220135a772250885282921",
+      "line": 1
+    },
+    {
+      "path": "ui/src/base/credits.js",
+      "contentHash": "6e82a63bd2208d11c33e5de86cabfbc729f90110313ac74e33b145b42fe7d1b4",
+      "line": 1
+    },
+    {
+      "path": "ui/src/base/dragline.js",
+      "contentHash": "eb4d58af645511c1d3b2eebab4d35021e331de688d17087a893ff2e3d497b724",
+      "line": 1
+    },
+    {
+      "path": "ui/src/base/dropdownKeyboardNav.js",
+      "contentHash": "d11306434b529c946f27bac3ea2cfdc1729ecca676dc9252ef752b1d56201473",
+      "line": 1
+    },
+    {
+      "path": "ui/src/base/erd.js",
+      "contentHash": "11faff7eeef028d3cfd3eb93aae5b97071ad35770f7e9a524865c1306ee2b7fb",
+      "line": 1
+    },
+    {
+      "path": "ui/src/base/fieldSettings.js",
+      "contentHash": "ff218524d8b905292dff294b06089b216aa53725b1f04c692665782463eb9765",
+      "line": 1
+    },
+    {
+      "path": "ui/src/base/filePreviewModal.js",
+      "contentHash": "2f10bfacf5cd3e9880ddca2041c48ede4925e3aef3ebf2869ad4e26c2f96823d",
+      "line": 1
+    },
+    {
+      "path": "ui/src/base/formattedDate.js",
+      "contentHash": "9e80188c51f35619f547452c24f50691080f1c80afcc9c81dcd4bbe0a54029a3",
+      "line": 1
+    },
+    {
+      "path": "ui/src/base/leaflet.js",
+      "contentHash": "07d3ce992e58ef08fd088dbf1d4045dfd2f35e0f0a05b453074e94dd6785fdb9",
+      "line": 1
+    },
+    {
+      "path": "ui/src/base/modal.js",
+      "contentHash": "23887582f69b1623f6a0ae7a3806ac72359659e1f53d45b621b7b12ea20000bc",
+      "line": 1
+    },
+    {
+      "path": "ui/src/base/pageSidebar.js",
+      "contentHash": "667b0da763c4987216b59aae3362ec05db01036baccd52fe67b5a50ef9abe4e7",
+      "line": 1
+    },
+    {
+      "path": "ui/src/base/refreshButton.js",
+      "contentHash": "3c89eb8b6dc00c04d99ed903ec691c3b9094cfd80cd870753349d5eae3cf60ba",
+      "line": 1
+    },
+    {
+      "path": "ui/src/base/ruleField.js",
+      "contentHash": "29fe0b9e3e048f09fb8b39ab1785da1fd8a32db78470e02e10b00d4a95e00d3a",
+      "line": 1
+    },
+    {
+      "path": "ui/src/base/s3ConfigFields.js",
+      "contentHash": "2269374ce9a0ac6116e4b004c37638270a588393616f3ccfeb6e56fd5b6cf727",
+      "line": 1
+    },
+    {
+      "path": "ui/src/base/s3Test.js",
+      "contentHash": "59de72fd52caed9c8c607407962c4849f31f363cd6b954f8b75a5afdb67f5fad",
+      "line": 1
+    },
+    {
+      "path": "ui/src/base/searchbar.js",
+      "contentHash": "4e62eb03b76989d6304d833cc32afc0f301bc16df2cba8c1955b9658453d7775",
+      "line": 1
+    },
+    {
+      "path": "ui/src/base/searchHistoryButton.js",
+      "contentHash": "15139ce0872d01d66a5a77c1f8954a68432314cb3cb59866eb970386d117d4ae",
+      "line": 1
+    },
+    {
+      "path": "ui/src/base/select.js",
+      "contentHash": "ceb0d96810d755e6548ed3bb188a7244fb6d166880425bc51e6675dd656a90f6",
+      "line": 1
+    },
+    {
+      "path": "ui/src/base/slide.js",
+      "contentHash": "87b1a788b7746d5afdf9fb3015c685b2216118fdb09fe76a4e60dad0ccd6caa7",
+      "line": 1
+    },
+    {
+      "path": "ui/src/base/sortable.js",
+      "contentHash": "b82cf364efa5a56eca0d9a05f3af121152f52e5b6e73c81ab73398239c802fbc",
+      "line": 1
+    },
+    {
+      "path": "ui/src/base/tinymce.js",
+      "contentHash": "25cf72cbe01776d7ef98e1a1177e035dc2557ab1f3751068627a3fe6a2400677",
+      "line": 1
+    },
+    {
+      "path": "ui/src/base/toast.js",
+      "contentHash": "9685f6f4293c4291d3dc1ab7050bd1475c1755434250bbada5228b451e8f740c",
+      "line": 1
+    },
+    {
+      "path": "ui/src/base/tooltip.js",
+      "contentHash": "22ad15f07ad3cf79286c2d4cba4a1222de65ffe3cfe7b16fb140c919f3902cb4",
+      "line": 1
+    },
+    {
+      "path": "ui/src/base/uploadedFileThumb.js",
+      "contentHash": "e5ad5d69c70c20513fe40573c0efe68fefe909568ead375ac1a04dde10e2b65a",
+      "line": 1
+    },
+    {
+      "path": "ui/src/collections/addCollectionFieldButton.js",
+      "contentHash": "9f28c9aca2d6eba56bbbf221241011b101b71a7889e916bad57a2abc7a1893b3",
+      "line": 1
+    },
+    {
+      "path": "ui/src/collections/autocomplete.utils.js",
+      "contentHash": "ba5120eee7cdce2e57b1d365596fcc90e795ca68b5a6125e5666544ca29548cd",
+      "line": 1
+    },
+    {
+      "path": "ui/src/collections/collectionAuthOptionsTab.js",
+      "contentHash": "47686a2846804572718dee5c9f9ff1be13ed8a43be67eae4cefbd5cb74cee909",
+      "line": 1
+    },
+    {
+      "path": "ui/src/collections/collectionChangesConfirmationModal.js",
+      "contentHash": "c0f513ec01299022351ec73f1e53faa2b05e5bb536ff63989e22b4f89f928bb6",
+      "line": 1
+    },
+    {
+      "path": "ui/src/collections/collectionFieldsTab.js",
+      "contentHash": "747d1bf97a4affcb24732b63dbcf0db58a4ea759e34f67813eb6b8e1c5206e77",
+      "line": 1
+    },
+    {
+      "path": "ui/src/collections/collectionRulesTab.js",
+      "contentHash": "edf33d7cbdc5c47691f0ede70bc94c7cfccbd6d1783f5d3d3fad1cbd4022d3e4",
+      "line": 1
+    },
+    {
+      "path": "ui/src/collections/collectionsOverviewModal.js",
+      "contentHash": "b5a42f9d26a1abf594ceffb7e8479d9d5239649fd251595f1a6f37a478b3fb07",
+      "line": 1
+    },
+    {
+      "path": "ui/src/collections/collectionsSidebar.js",
+      "contentHash": "d58174e5c05c9eea552c39688c3089b40a23f9339d66c4254b928622ef6dc575",
+      "line": 1
+    },
+    {
+      "path": "ui/src/collections/collectionUpsertModal.js",
+      "contentHash": "a07f415e7012944c8d968ece8cf9d3f2d34dafad44c3826187937ca2435ab0da",
+      "line": 1
+    },
+    {
+      "path": "ui/src/collections/collectionViewQueryTab.js",
+      "contentHash": "657e08907f189497977a32dac6e8f33b37ca6582eece5ac9ef1cff40ebac000c",
+      "line": 1
+    },
+    {
+      "path": "ui/src/collections/emailTemplateAccordion.js",
+      "contentHash": "240d831913e9cb3bf9c557d2e163a0b1a0a8e08f257af434fbfaf80cea04bece",
+      "line": 1
+    },
+    {
+      "path": "ui/src/collections/indexUpsertModal.js",
+      "contentHash": "a8724df9455d99303b879fa493680cf98a468fbe8957362d62309e30ba23408c",
+      "line": 1
+    },
+    {
+      "path": "ui/src/collections/mfaAccordion.js",
+      "contentHash": "6217e2f2e6ddc83c1f1ace4f18cff8ff6e0d3cc101488c4b5721841c702911e7",
+      "line": 1
+    },
+    {
+      "path": "ui/src/collections/oauth2/appleOptions.js",
+      "contentHash": "a36a6ab24e3fa06d362aebf5c22aba7805613420d1ea4aaae4343ca3643cd5e7",
+      "line": 1
+    },
+    {
+      "path": "ui/src/collections/oauth2/larkOptions.js",
+      "contentHash": "6a999daff504c1cc8ff9bc36a6af0970db7278f4df176c2c3596c43ffc321a6e",
+      "line": 1
+    },
+    {
+      "path": "ui/src/collections/oauth2/microsoftOptions.js",
+      "contentHash": "5e53ef6cadd657da1d051e4a46625d65202d1dc8660fb4e2589ede915debc9f7",
+      "line": 1
+    },
+    {
+      "path": "ui/src/collections/oauth2/oidcOptions.js",
+      "contentHash": "4164a7ec81462e4dcf05a079d6e83ab8e61189225ecd3a19388fbcab88e9e3d1",
+      "line": 1
+    },
+    {
+      "path": "ui/src/collections/oauth2/selfhostOptions.js",
+      "contentHash": "b46951e4fefae8a702085ce80faa5b1bcaac0a6dd1ea5e40f8ce0872b6d239f7",
+      "line": 1
+    },
+    {
+      "path": "ui/src/collections/oauth2Accordion.js",
+      "contentHash": "bf5c17863b900a5a201ec47f4d9823359066dbaf1127bdbe694fccff1a767b6b",
+      "line": 1
+    },
+    {
+      "path": "ui/src/collections/otpAccordion.js",
+      "contentHash": "8658808bb272debe6e390be73421a4464a7e2fded770200d06c9fc98c9c1e341",
+      "line": 1
+    },
+    {
+      "path": "ui/src/collections/pageCollections.js",
+      "contentHash": "a1d57a26ff80267e49860aba1bf969f192236e74d31263a1dbc3b4a515e3ae67",
+      "line": 1
+    },
+    {
+      "path": "ui/src/collections/passwordAuthAccordion.js",
+      "contentHash": "521980155a4788785fd47136dd6b26d9381d39a81242ada085b6140ca235831e",
+      "line": 1
+    },
+    {
+      "path": "ui/src/collections/providerPickerModal.js",
+      "contentHash": "f0a407ab18742e84d71991df8ebda39dd7b5c07a04c914a45e554201fd2e73c3",
+      "line": 1
+    },
+    {
+      "path": "ui/src/collections/providerSettingsModal.js",
+      "contentHash": "6c456fec96df632c5a1f3c0112a59cbb1169277af26b625a2d6a9524ffb02eff",
+      "line": 1
+    },
+    {
+      "path": "ui/src/collections/tokenOptionsAccordion.js",
+      "contentHash": "b020b32a212bf842f542b2ffcd62f179e2da70a3da8f7f58db809fbb9c0b23c7",
+      "line": 1
+    },
+    {
+      "path": "ui/src/fields/autodate/init.js",
+      "contentHash": "b9b3cf9f06cc8cbd9e49e4ca68ef00fd0ab6b6eb3e10cb8d6a13784dd60397ea",
+      "line": 1
+    },
+    {
+      "path": "ui/src/fields/autodate/onrecordduplicate.js",
+      "contentHash": "bc243e17f18980008fe9e9406a1807b85ca629d348611bb8676db266ced353b1",
+      "line": 1
+    },
+    {
+      "path": "ui/src/fields/autodate/settings.js",
+      "contentHash": "d100068896445c9b65a716e030d7432e1493094881d649b046920bb5da1ed77b",
+      "line": 1
+    },
+    {
+      "path": "ui/src/fields/autodate/view.js",
+      "contentHash": "6e563370e66459dbe1edfd857cc6a246074689999e97a3555a0ed9624cd7d758",
+      "line": 1
+    },
+    {
+      "path": "ui/src/fields/bool/init.js",
+      "contentHash": "ae974d316d5fcaa9848a407d5a7765cf4df8fa39022f162ca693236f3cebd5d4",
+      "line": 1
+    },
+    {
+      "path": "ui/src/fields/bool/input.js",
+      "contentHash": "868dfb270ecca6ab4955d2bf46d144b52fb07c686cac5b2afc4eee067fb80156",
+      "line": 1
+    },
+    {
+      "path": "ui/src/fields/bool/settings.js",
+      "contentHash": "bda27e297a5a9d89fa4204afb573d61b3a681fbf8672351652285c4dac400288",
+      "line": 1
+    },
+    {
+      "path": "ui/src/fields/bool/view.js",
+      "contentHash": "de08ed9c9e59d53c90e61fd5ae3524d143be379c2d555cb7db57ba9f8b4ecacd",
+      "line": 1
+    },
+    {
+      "path": "ui/src/fields/date/init.js",
+      "contentHash": "67093121e93ebb3355217f645797e210bbfacc1b212b650e9e7578d498bd0ef3",
+      "line": 1
+    },
+    {
+      "path": "ui/src/fields/date/input.js",
+      "contentHash": "0a5700c511bc071ac53c93c83db6563511113842e29d353721a0e1fe86ec831d",
+      "line": 1
+    },
+    {
+      "path": "ui/src/fields/date/settings.js",
+      "contentHash": "63c31eeaec0dc8f689d80a973839582156a3fe993ab87dfcd3daf3db6ce98306",
+      "line": 1
+    },
+    {
+      "path": "ui/src/fields/date/view.js",
+      "contentHash": "d579c57c6b9657a49d8300e1fc0323c220da40c992d77a2dc533dc13aa15dfae",
+      "line": 1
+    },
+    {
+      "path": "ui/src/fields/editor/init.js",
+      "contentHash": "9df91fd6ebe10e5a7df6d536b1d62f0c8fcdb16e668505d43b9a8f20f65696d5",
+      "line": 1
+    },
+    {
+      "path": "ui/src/fields/editor/input.js",
+      "contentHash": "0e22894c3c5cf202b820e60a750d96dfb3b5030e92baaeabec36147a7e474edb",
+      "line": 1
+    },
+    {
+      "path": "ui/src/fields/editor/settings.js",
+      "contentHash": "d74120d4eef13a86cf47bbef406e657b4f3d625845021a30f35f01b7cf3341c2",
+      "line": 1
+    },
+    {
+      "path": "ui/src/fields/editor/view.js",
+      "contentHash": "0ac1e779fc1ac0259db8db5645e8b7fece5adfa66a8600a7f4c7000fb8dae9b5",
+      "line": 1
+    },
+    {
+      "path": "ui/src/fields/email/init.js",
+      "contentHash": "cc80e2bc538d8f5cdc3350a3b41473bb4c5a187baadaa4361c61e52ee712eece",
+      "line": 1
+    },
+    {
+      "path": "ui/src/fields/email/input.js",
+      "contentHash": "9b9ad8a44033cf5fdbc6f634b38ac6bfbe130931222fda7071b6d00f57501091",
+      "line": 1
+    },
+    {
+      "path": "ui/src/fields/email/settings.js",
+      "contentHash": "e65c2080c543d84f74c7b3e3aa04fcfb74f27685eb254491a83f86e66463a49d",
+      "line": 1
+    },
+    {
+      "path": "ui/src/fields/email/view.js",
+      "contentHash": "d8774f39eb2b0940e15d8f9794203596b2e4c9c574862ba70e2edb493a42a095",
+      "line": 1
+    },
+    {
+      "path": "ui/src/fields/file/init.js",
+      "contentHash": "cc9ea357aeac5b705e12bc94a7db45be5170340526618795d27e4b3ab0e66720",
+      "line": 1
+    },
+    {
+      "path": "ui/src/fields/file/input.js",
+      "contentHash": "d247bcb6eced0c2a7edf4abc4473dce21a2e9ac1fc675361bfaffdf50d9bf684",
+      "line": 1
+    },
+    {
+      "path": "ui/src/fields/file/onrecordduplicate.js",
+      "contentHash": "2440b88307a7d7ec846e9982c34598811f7b7a85922a6fc6ba7996f409769c96",
+      "line": 1
+    },
+    {
+      "path": "ui/src/fields/file/onrecordsave.js",
+      "contentHash": "02f7c8c7fd7446737f0680da94da05656539afe3cbd71122d4d4d2723c98fbf6",
+      "line": 1
+    },
+    {
+      "path": "ui/src/fields/file/settings.js",
+      "contentHash": "6457a07c554256f8c7a86478c81625305c5e3a743fb12ff8d78b3cafc59557d0",
+      "line": 1
+    },
+    {
+      "path": "ui/src/fields/file/view.js",
+      "contentHash": "84d212730b0971f52831faf20e7e4c632821c7c93f35753e65a87042f78eca53",
+      "line": 1
+    },
+    {
+      "path": "ui/src/fields/geoPoint/init.js",
+      "contentHash": "62ee296c1ffa82007b507fb385da498f9e44a700dca93607fec5fd1f294d8023",
+      "line": 1
+    },
+    {
+      "path": "ui/src/fields/geoPoint/input.js",
+      "contentHash": "5da216dade1ea5ce437ce5df712972289b22a7b099b2dcf9aba1094dfe75eedb",
+      "line": 1
+    },
+    {
+      "path": "ui/src/fields/geoPoint/settings.js",
+      "contentHash": "bda27e297a5a9d89fa4204afb573d61b3a681fbf8672351652285c4dac400288",
+      "line": 1
+    },
+    {
+      "path": "ui/src/fields/geoPoint/view.js",
+      "contentHash": "09682ec6a0be1d7068c9d15c992e6be1fb67d137610487e6ff9eb7e724053062",
+      "line": 1
+    },
+    {
+      "path": "ui/src/fields/json/init.js",
+      "contentHash": "8184c28120a0a7770db13cc8258b6d9374e5bef2fc1baae3920458003d07776c",
+      "line": 1
+    },
+    {
+      "path": "ui/src/fields/json/input.js",
+      "contentHash": "1111fb9dd9a87ea8dbed59610d9e77fda4619173107442626e468f9d549bd391",
+      "line": 1
+    },
+    {
+      "path": "ui/src/fields/json/onrecordsave.js",
+      "contentHash": "4ca317dc498c3f47d68660d235a7034e7db719f8afb5514a2621f222f85806c4",
+      "line": 1
+    },
+    {
+      "path": "ui/src/fields/json/settings.js",
+      "contentHash": "abf75e1192e1308e84962f919b1bcc5494c79f3a49997899b8c757dc56b6844f",
+      "line": 1
+    },
+    {
+      "path": "ui/src/fields/json/view.js",
+      "contentHash": "5ba556496589993fa11b9c6987423a7d222c76190f47cdbde0a63c40bcb4833a",
+      "line": 1
+    },
+    {
+      "path": "ui/src/fields/number/init.js",
+      "contentHash": "612b2ba607758256cba84b94de189970c391035dab623d605074b9d95b485d41",
+      "line": 1
+    },
+    {
+      "path": "ui/src/fields/number/input.js",
+      "contentHash": "c84b43d9e311eca1bdf90127ada39ba47adb54ee28993296b6b7adf8f1f479d6",
+      "line": 1
+    },
+    {
+      "path": "ui/src/fields/number/settings.js",
+      "contentHash": "2b64cd2bad81869ca2e0b7756d16d88e2a7e05154c8271e057ebbb356e53fba0",
+      "line": 1
+    },
+    {
+      "path": "ui/src/fields/number/view.js",
+      "contentHash": "ebc0128c0aa049046bc56b8a631c386cf0c34778391fd6afa0c9959507e7b52b",
+      "line": 1
+    },
+    {
+      "path": "ui/src/fields/password/init.js",
+      "contentHash": "71d9277b685aac8ca808d6ce00f3790662935bb9eb183b43845a08a0d78e6694",
+      "line": 1
+    },
+    {
+      "path": "ui/src/fields/password/settings.js",
+      "contentHash": "1f13c83794e397d94a447fc81eb9021864aa3041f61233c8fd96444ee4eee1fd",
+      "line": 1
+    },
+    {
+      "path": "ui/src/fields/relation/init.js",
+      "contentHash": "7165710f7f4e90d28b5c43b18ad4c61db6df815dab9a05753006c91de24bbb7f",
+      "line": 1
+    },
+    {
+      "path": "ui/src/fields/relation/input.js",
+      "contentHash": "8375608b60bf57108a4346cc607943235b4a8ce9145f3a0fa0c0a8b8c4044338",
+      "line": 1
+    },
+    {
+      "path": "ui/src/fields/relation/settings.js",
+      "contentHash": "69c16d9f0554fda227dfd54e103260c836b8b090cd15c5860adfa953cf7ef9e5",
+      "line": 1
+    },
+    {
+      "path": "ui/src/fields/relation/view.js",
+      "contentHash": "74f2092f8f9cda87ecf5cbb8af94aa0af7ec745d34b6b5329630f0a35e864aa8",
+      "line": 1
+    },
+    {
+      "path": "ui/src/fields/select/init.js",
+      "contentHash": "b6a950be03642b79ec5a60699484b31fefb6ef43a2778f1672c3a8d19fcb97ca",
+      "line": 1
+    },
+    {
+      "path": "ui/src/fields/select/input.js",
+      "contentHash": "64873ae892f2a1049a9010567f69cae6533771bd02c24bd3a0d66b038eb1c484",
+      "line": 1
+    },
+    {
+      "path": "ui/src/fields/select/settings.js",
+      "contentHash": "0693080c9bbcb0956224afada8679bb7917e35829a2c19c3fb294fe21e69df7d",
+      "line": 1
+    },
+    {
+      "path": "ui/src/fields/select/view.js",
+      "contentHash": "79fd08f0e11208c4c22eaef624851422dbf86e6b720db0ed9ab44c7d81f41cca",
+      "line": 1
+    },
+    {
+      "path": "ui/src/fields/text/init.js",
+      "contentHash": "6f41e10f60b01b715b9af1d9f932ce7890b2b1ae831553b7c9dd00aff0869755",
+      "line": 1
+    },
+    {
+      "path": "ui/src/fields/text/input.js",
+      "contentHash": "68f34b3b7779a0dab9e3ad1a0baf36f6598728c2f41c739f3b6fe3f5f5bb2c8a",
+      "line": 1
+    },
+    {
+      "path": "ui/src/fields/text/settings.js",
+      "contentHash": "b2817ed6a3e3630aa8ff6340006887d2d4a6b91c540e24be23dbea20dd8e381c",
+      "line": 1
+    },
+    {
+      "path": "ui/src/fields/text/view.js",
+      "contentHash": "605b5bef131b90a01875dc3edc339a94115dc07254f34687519c1cee46040e37",
+      "line": 1
+    },
+    {
+      "path": "ui/src/fields/url/init.js",
+      "contentHash": "4a8b5e79f4dfb75169cbc33875f603ac99703156a994e5bdc1217d91beca5c59",
+      "line": 1
+    },
+    {
+      "path": "ui/src/fields/url/input.js",
+      "contentHash": "bbf903a68488a73d5e4bd1b40aa614e878d4255b0c13ac1de13a03ecbe6c6b00",
+      "line": 1
+    },
+    {
+      "path": "ui/src/fields/url/settings.js",
+      "contentHash": "e65c2080c543d84f74c7b3e3aa04fcfb74f27685eb254491a83f86e66463a49d",
+      "line": 1
+    },
+    {
+      "path": "ui/src/fields/url/view.js",
+      "contentHash": "91174c6495c96edabbb50f81d9eb4d49ad4332e7297823c66c9fcb4ee8e95720",
+      "line": 1
+    },
+    {
+      "path": "ui/src/logs/defaultLogLevels.js",
+      "contentHash": "875431ecbc0b0657801ca4e96b235164ad5854e05b3b0283c76d2af8870eb05c",
+      "line": 1
+    },
+    {
+      "path": "ui/src/logs/logLevel.js",
+      "contentHash": "b3dfafcea4ea5aa7715a499aca10aa6441b8a88598c5d90e743c0f692f57adc0",
+      "line": 1
+    },
+    {
+      "path": "ui/src/logs/logPreviewModal.js",
+      "contentHash": "22a608cac4d532ea8eb1391b3e36502ea31da04cc9aa0c3881db871a9324d016",
+      "line": 1
+    },
+    {
+      "path": "ui/src/logs/logsChart.js",
+      "contentHash": "d0daa4c50eaca2dc13521e43c7a31d6c057a78ccff43fa08166989d818699de8",
+      "line": 1
+    },
+    {
+      "path": "ui/src/logs/logsList.js",
+      "contentHash": "f061aed3330f589f439cf53af5e2048b7f9d331c8daf4a0e27fd5154deacfb18",
+      "line": 1
+    },
+    {
+      "path": "ui/src/logs/logsSettingsModal.js",
+      "contentHash": "1a73a527a04e25f0cb772604dc2a6ebbfd3cfee1f0cbb31beb51cdc05db59b9c",
+      "line": 1
+    },
+    {
+      "path": "ui/src/logs/pageLogs.js",
+      "contentHash": "adbe938be8a6ddee078a583af210a89cc86b68dc8a4b5c87bd4709976ef562bc",
+      "line": 1
+    },
+    {
+      "path": "ui/src/main.js",
+      "contentHash": "d810ff044014d7cfde09bcc238d52231fdf49b5ab73bfef5008240c40e591212",
+      "line": 1
+    },
+    {
+      "path": "ui/src/mimeTypes.js",
+      "contentHash": "f6eeecdfd9bfa67017c3ea1ec5d923bb2ee670be9f62b247116cd4630b80d276",
+      "line": 1
+    },
+    {
+      "path": "ui/src/pb.js",
+      "contentHash": "78b91384c75e56dcc89be213d7ebe59d2030d93711a41f7185fb33ffc9804503",
+      "line": 1
+    },
+    {
+      "path": "ui/src/records/recordFilePickerModal.js",
+      "contentHash": "b3fdf0d3ad8f9f99a64fdf6ea2b9a50b7cbbf18f8ce02e4f917177baebe2201b",
+      "line": 1
+    },
+    {
+      "path": "ui/src/records/recordFileThumb.js",
+      "contentHash": "ba809a123bcc1106f64b902ad2e4322046f7e9fe0efebd294226a95cd29c31ef",
+      "line": 1
+    },
+    {
+      "path": "ui/src/records/recordImpersonateModal.js",
+      "contentHash": "3a9712a32ed7e91be8ec9041ec4cf644db1a1ba01210a8b4bb144cbb2519241c",
+      "line": 1
+    },
+    {
+      "path": "ui/src/records/recordPreviewModal.js",
+      "contentHash": "740c2c0a0b50a2c8a812bc2e39fd382f336d15d6f1be6a0720d6fecdc0060fa5",
+      "line": 1
+    },
+    {
+      "path": "ui/src/records/recordsList.js",
+      "contentHash": "a8ba8f13c3024a0eb6d74a67929ba34f0bdf2d82bf502b027f8390c505f7e3f4",
+      "line": 1
+    },
+    {
+      "path": "ui/src/records/recordsPickerModal.js",
+      "contentHash": "9a3abd54fba813c1dd85bbc828ab2d8815852f0e7bfbf988643bd307872853ae",
+      "line": 1
+    },
+    {
+      "path": "ui/src/records/recordsSearchbar.js",
+      "contentHash": "aa1fbf7a895f46f71cda179dc280216ff7817fd8ad5d1e6e5633d1f18775831c",
+      "line": 1
+    },
+    {
+      "path": "ui/src/records/recordSummary.js",
+      "contentHash": "fe3451a164e2366d7741aa9ba74b3e26f5ee2b6d1ca1ad488de7163aede6918a",
+      "line": 1
+    },
+    {
+      "path": "ui/src/records/recordUpsertModal.js",
+      "contentHash": "486d3cc0bc9a0f81d849224cafc1bb5c667fd1fd83e143ea56961438d1eb8226",
+      "line": 1
+    },
+    {
+      "path": "ui/src/router.js",
+      "contentHash": "e8f31606d2e91a4d37029c479f6dd067e44693a38ac084f0d5f5e4840af8eaf8",
+      "line": 1
+    },
+    {
+      "path": "ui/src/settings/application/batchAccordion.js",
+      "contentHash": "4b8612fb3835a9af6cd7146e05237bb5b09eb7844eeb7c346dde8b262be5d920",
+      "line": 1
+    },
+    {
+      "path": "ui/src/settings/application/pageApplicationSettings.js",
+      "contentHash": "a7b4fa2ad6121f7604350e57bf0d9186b74f90569a342b2645089fa47c0432f6",
+      "line": 1
+    },
+    {
+      "path": "ui/src/settings/application/rateLimitAccordion.js",
+      "contentHash": "d36a21918a31d3826aa1900a3c545f403f4f14b095ca80cdc689e7b50dd8a287",
+      "line": 1
+    },
+    {
+      "path": "ui/src/settings/application/rateLimitInfoModal.js",
+      "contentHash": "beef402c364875c1be2e0cce920de765b2e03fe2cb6d3c677f2af17cc621d1ca",
+      "line": 1
+    },
+    {
+      "path": "ui/src/settings/application/superuserAccordion.js",
+      "contentHash": "7ba55d43bc94ef568d441a3c7be1715750d9f48529c9dba0a396a990e2fa42d0",
+      "line": 1
+    },
+    {
+      "path": "ui/src/settings/application/trustedProxyAccordion.js",
+      "contentHash": "6563c6d1e745143477342d4c2c20dd75b822159ec6afd959feb22c84186321ec",
+      "line": 1
+    },
+    {
+      "path": "ui/src/settings/backups/backupCreateModal.js",
+      "contentHash": "64b1006f8c1fca5defa56e55b8ee68e3d0a76d95da339c9899089ff7f8b95499",
+      "line": 1
+    },
+    {
+      "path": "ui/src/settings/backups/backupRestoreModal.js",
+      "contentHash": "9cbba4fa7aa0875a7179372c0e729c5708ba5205e589d83300913895d041fd6d",
+      "line": 1
+    },
+    {
+      "path": "ui/src/settings/backups/backupsForm.js",
+      "contentHash": "9e51ac2577b796dd29094db5d08a6a55a7c11af233b9506e2ff88f642bc40c98",
+      "line": 1
+    },
+    {
+      "path": "ui/src/settings/backups/backupsList.js",
+      "contentHash": "26424868b79f6004c7c64e9c8d9ac3c3ef1cddabb3712c8413529d409086a5b6",
+      "line": 1
+    },
+    {
+      "path": "ui/src/settings/backups/backupUploadButton.js",
+      "contentHash": "d2f22d5bf919de448d2515a29dcc53e7e71e73234bef474e3607713c6526bf50",
+      "line": 1
+    },
+    {
+      "path": "ui/src/settings/backups/pageBackupsSettings.js",
+      "contentHash": "c3c801408f45659d89550bd5220f3b114204834cafc542e99f37e24c2c863231",
+      "line": 1
+    },
+    {
+      "path": "ui/src/settings/crons/cronsList.js",
+      "contentHash": "22e4737b7005ca0342cb70dfc2133f33fd0a9387d5e89523e0ac40368e193253",
+      "line": 1
+    },
+    {
+      "path": "ui/src/settings/crons/pageCronsSettings.js",
+      "contentHash": "08d0e5ce5695e5d44b90e7068522d7273077373c2c3852f16e7aee65fd28bbf6",
+      "line": 1
+    },
+    {
+      "path": "ui/src/settings/mail/mailTestModal.js",
+      "contentHash": "9a641b58955fcfc637985afc32a1909a738af700d57720322bcb90d9d1a1de38",
+      "line": 1
+    },
+    {
+      "path": "ui/src/settings/mail/pageMailSettings.js",
+      "contentHash": "46af08f29ec65621c47d1aa946d1710a375474ca5d201a3a60c4eb1fc86be394",
+      "line": 1
+    },
+    {
+      "path": "ui/src/settings/settingsSidebar.js",
+      "contentHash": "328ce768de461c7a0c8ca9159450d39dc210211449a47c1efbfdd87deaf3f709",
+      "line": 1
+    },
+    {
+      "path": "ui/src/settings/sql/pageSQLConsole.js",
+      "contentHash": "720664f6bd7b4968691d100ebb64b935163cf87cabb859627e05861e28ff1bff",
+      "line": 1
+    },
+    {
+      "path": "ui/src/settings/storage/pageStorageSettings.js",
+      "contentHash": "59889b041358461a4c058023715a9f20c7653ac996d4f37770b72c02a988ac20",
+      "line": 1
+    },
+    {
+      "path": "ui/src/settings/sync/collectionsDiffTable.js",
+      "contentHash": "32d6895ab72ce516462edeacd6a6dcd4ac0b5d3d385f70084c431dfc28a2933e",
+      "line": 1
+    },
+    {
+      "path": "ui/src/settings/sync/importCollectionsReviewModal.js",
+      "contentHash": "db2d6ec6540a5c6d2a2953870aad7b8fad1dcbdf10b196392c85d21e62bd960f",
+      "line": 1
+    },
+    {
+      "path": "ui/src/settings/sync/pageExportCollections.js",
+      "contentHash": "3cd656c0102d4259d8ae07cafe10857ad07100c18c475ea68604049194ba15f0",
+      "line": 1
+    },
+    {
+      "path": "ui/src/settings/sync/pageImportCollections.js",
+      "contentHash": "37556f4b8f71f8eb68cc81560bd9f0d16dc3a30f6ba102633c815cd9cccf0aa3",
+      "line": 1
+    },
+    {
+      "path": "ui/src/store.js",
+      "contentHash": "489a350a5c6a02718cb2234ea7ff379ab47f82d068267b1cb692b5363dccb455",
+      "line": 1
+    },
+    {
+      "path": "ui/src/utils.js",
+      "contentHash": "f41752181a1e616bc0399aa11c5cedf2eba2461fcc0eaa540529b591713b15d6",
+      "line": 1
+    }
+  ],
+  "claims": [
+    {
+      "purpose": "component-name",
+      "text": "Superuser administration",
+      "citations": [
+        {
+          "path": "ui/embed.go",
+          "contentHash": "069674d2839f2e61aa39eee77aa272f78cd9cff5961b9651bd971aa0b30937a6",
+          "startLine": 1,
+          "endLine": 15,
+          "excerpt": "//go:build !no_ui\n\n// Package ui handles the PocketBase Superuser frontend embedding.\npackage ui\n\nimport (\n\t\"embed\"\n\t\"io/fs\"\n)\n\n//go:embed all:dist\nvar distDir embed.FS\n\n// DistDirFS contains the embedded dist directory files (without the \"dist\" prefix)\nvar DistDirFS, _ = fs.Sub(distDir, \"dist\")"
+        },
+        {
+          "path": "ui/src/router.js",
+          "contentHash": "e8f31606d2e91a4d37029c479f6dd067e44693a38ac084f0d5f5e4840af8eaf8",
+          "startLine": 1,
+          "endLine": 16,
+          "excerpt": "import { pageSuperuserLogin } from \"@/auth/pageSuperuserLogin\";\nimport { pageCollections } from \"@/collections/pageCollections\";\nimport { pageLogs } from \"@/logs/pageLogs\";\nimport { pageApplicationSettings } from \"@/settings/application/pageApplicationSettings\";\nimport { pageBackupsSettings } from \"@/settings/backups/pageBackupsSettings\";\nimport { pageCronsSettings } from \"@/settings/crons/pageCronsSettings\";\nimport { pageMailSettings } from \"@/settings/mail/pageMailSettings\";\nimport { pageSQLConsole } from \"@/settings/sql/pageSQLConsole\";\nimport { pageStorageSettings } from \"@/settings/storage/pageStorageSettings\";\nimport { pageExportCollections } from \"@/settings/sync/pageExportCollections\";\nimport { pageImportCollections } from \"@/settings/sync/pageImportCollections\";\n\nwindow.app = window.app || {};\nwindow.app.routes = window.app.routes || {};\n\nwindow.app.routes.fallbackPath = \"#/collections\";"
+        }
+      ]
+    },
+    {
+      "purpose": "component-role",
+      "text": "Embeds the administration frontend and connects collection, log, backup and settings pages.",
+      "citations": [
+        {
+          "path": "ui/embed.go",
+          "contentHash": "069674d2839f2e61aa39eee77aa272f78cd9cff5961b9651bd971aa0b30937a6",
+          "startLine": 1,
+          "endLine": 15,
+          "excerpt": "//go:build !no_ui\n\n// Package ui handles the PocketBase Superuser frontend embedding.\npackage ui\n\nimport (\n\t\"embed\"\n\t\"io/fs\"\n)\n\n//go:embed all:dist\nvar distDir embed.FS\n\n// DistDirFS contains the embedded dist directory files (without the \"dist\" prefix)\nvar DistDirFS, _ = fs.Sub(distDir, \"dist\")"
+        },
+        {
+          "path": "ui/src/router.js",
+          "contentHash": "e8f31606d2e91a4d37029c479f6dd067e44693a38ac084f0d5f5e4840af8eaf8",
+          "startLine": 1,
+          "endLine": 16,
+          "excerpt": "import { pageSuperuserLogin } from \"@/auth/pageSuperuserLogin\";\nimport { pageCollections } from \"@/collections/pageCollections\";\nimport { pageLogs } from \"@/logs/pageLogs\";\nimport { pageApplicationSettings } from \"@/settings/application/pageApplicationSettings\";\nimport { pageBackupsSettings } from \"@/settings/backups/pageBackupsSettings\";\nimport { pageCronsSettings } from \"@/settings/crons/pageCronsSettings\";\nimport { pageMailSettings } from \"@/settings/mail/pageMailSettings\";\nimport { pageSQLConsole } from \"@/settings/sql/pageSQLConsole\";\nimport { pageStorageSettings } from \"@/settings/storage/pageStorageSettings\";\nimport { pageExportCollections } from \"@/settings/sync/pageExportCollections\";\nimport { pageImportCollections } from \"@/settings/sync/pageImportCollections\";\n\nwindow.app = window.app || {};\nwindow.app.routes = window.app.routes || {};\n\nwindow.app.routes.fallbackPath = \"#/collections\";"
+        }
+      ]
+    }
+  ]
+}

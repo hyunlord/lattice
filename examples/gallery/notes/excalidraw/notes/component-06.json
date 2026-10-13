@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "targetId": "component:module:packages/fractional-indexing/global.d.ts",
+  "summary": "Generates a string key between two ordered keys.",
+  "author": "Codex (external agent)",
+  "sources": [
+    {
+      "path": "packages/fractional-indexing/global.d.ts",
+      "contentHash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "line": 1
+    },
+    {
+      "path": "packages/fractional-indexing/src/index.ts",
+      "contentHash": "d739d048a84ae1d5f6a3021b84496ebd029aec647809ae8b52e6ec66b5df715a",
+      "line": 1
+    }
+  ],
+  "claims": [
+    {
+      "purpose": "component-name",
+      "text": "Sortable position keys",
+      "citations": [
+        {
+          "path": "packages/fractional-indexing/src/index.ts",
+          "contentHash": "d739d048a84ae1d5f6a3021b84496ebd029aec647809ae8b52e6ec66b5df715a",
+          "startLine": 201,
+          "endLine": 225,
+          "excerpt": "// `a` is an order key or null (START).\n// `b` is an order key or null (END).\n// `a < b` lexicographically if both are non-null.\n// digits is a string such as '0123456789' for base 10.  Digits must be in\n// ascending character code order!\n/**\n * @param {string | null | undefined} a\n * @param {string | null | undefined} b\n * @param {string=} digits\n * @return {string}\n */\nexport function generateKeyBetween(\n  a: string | null | undefined,\n  b: string | null | undefined,\n  digits = BASE_62_DIGITS,\n): string {\n  if (a != null) {\n    validateOrderKey(a, digits);\n  }\n  if (b != null) {\n    validateOrderKey(b, digits);\n  }\n  if (a != null && b != null && a >= b) {\n    throw new Error(`${a} >= ${b}`);\n  }"
+        }
+      ]
+    },
+    {
+      "purpose": "component-role",
+      "text": "Generates a string key between two ordered keys.",
+      "citations": [
+        {
+          "path": "packages/fractional-indexing/src/index.ts",
+          "contentHash": "d739d048a84ae1d5f6a3021b84496ebd029aec647809ae8b52e6ec66b5df715a",
+          "startLine": 201,
+          "endLine": 225,
+          "excerpt": "// `a` is an order key or null (START).\n// `b` is an order key or null (END).\n// `a < b` lexicographically if both are non-null.\n// digits is a string such as '0123456789' for base 10.  Digits must be in\n// ascending character code order!\n/**\n * @param {string | null | undefined} a\n * @param {string | null | undefined} b\n * @param {string=} digits\n * @return {string}\n */\nexport function generateKeyBetween(\n  a: string | null | undefined,\n  b: string | null | undefined,\n  digits = BASE_62_DIGITS,\n): string {\n  if (a != null) {\n    validateOrderKey(a, digits);\n  }\n  if (b != null) {\n    validateOrderKey(b, digits);\n  }\n  if (a != null && b != null && a >= b) {\n    throw new Error(`${a} >= ${b}`);\n  }"
+        }
+      ]
+    }
+  ]
+}

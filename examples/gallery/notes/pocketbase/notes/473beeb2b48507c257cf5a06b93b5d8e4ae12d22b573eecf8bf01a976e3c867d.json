@@ -1,0 +1,90 @@
+{
+  "schemaVersion": 1,
+  "targetId": "component:module:migrations/1640988000_aux_init.go",
+  "summary": "Registers schema migrations that initialize collection metadata and application logs.",
+  "author": "Codex (external agent)",
+  "sources": [
+    {
+      "path": "migrations/1640988000_aux_init.go",
+      "contentHash": "1c810507e65e767e899f7ec76a5a848589cf2c6a57192e6f9d10efa4f2c256b0",
+      "line": 1
+    },
+    {
+      "path": "migrations/1640988000_init.go",
+      "contentHash": "a261a5f375ceb926814a4c5c9e5d083b1d7e5293201a0fe83a95eb89f853e8b1",
+      "line": 1
+    },
+    {
+      "path": "migrations/1717233556_v0.23_migrate.go",
+      "contentHash": "796083421d5d140e5cbd28307b4a72d88c5942ed9e660603d09329b08aa1f25b",
+      "line": 1
+    },
+    {
+      "path": "migrations/1717233557_v0.23_migrate2.go",
+      "contentHash": "e128f150a4822a495fb4b67425c1da6ce70e49244501bf7230ef9d8230973b0f",
+      "line": 1
+    },
+    {
+      "path": "migrations/1717233558_v0.23_migrate3.go",
+      "contentHash": "811e6268b286d86ed50188911d28a3ecb47f1fea59af6fcadfdab2f9ec29feab",
+      "line": 1
+    },
+    {
+      "path": "migrations/1717233559_v0.23_migrate4.go",
+      "contentHash": "2268a71f84006d9f5c354b0daac1515319f8794ff1550e7d80a95c6695921da9",
+      "line": 1
+    },
+    {
+      "path": "migrations/1763020353_update_default_auth_alert_templates.go",
+      "contentHash": "9d87eade64a6dfd61166467fc78410184309399f71aac3870477665dacf54b8c",
+      "line": 1
+    },
+    {
+      "path": "migrations/1778828400_normalize_indexes.go",
+      "contentHash": "268ca3b9321a7b18d17b14b48ba7ced7453c77e436944bdac224bcad7cd24fa5",
+      "line": 1
+    }
+  ],
+  "claims": [
+    {
+      "purpose": "component-name",
+      "text": "Database schema migrations",
+      "citations": [
+        {
+          "path": "migrations/1640988000_init.go",
+          "contentHash": "a261a5f375ceb926814a4c5c9e5d083b1d7e5293201a0fe83a95eb89f853e8b1",
+          "startLine": 29,
+          "endLine": 45,
+          "excerpt": "func init() {\n\tcore.SystemMigrations.Register(func(txApp core.App) error {\n\t\tif err := createParamsTable(txApp); err != nil {\n\t\t\treturn fmt.Errorf(\"_params exec error: %w\", err)\n\t\t}\n\n\t\t// -----------------------------------------------------------\n\n\t\t_, execerr := txApp.DB().NewQuery(`\n\t\t\tCREATE TABLE {{_collections}} (\n\t\t\t\t[[id]]         TEXT PRIMARY KEY DEFAULT ('r'||lower(hex(randomblob(7)))) NOT NULL,\n\t\t\t\t[[system]]     BOOLEAN DEFAULT FALSE NOT NULL,\n\t\t\t\t[[type]]       TEXT DEFAULT \"base\" NOT NULL,\n\t\t\t\t[[name]]       TEXT UNIQUE NOT NULL,\n\t\t\t\t[[fields]]     JSON DEFAULT \"[]\" NOT NULL,\n\t\t\t\t[[indexes]]    JSON DEFAULT \"[]\" NOT NULL,\n\t\t\t\t[[listRule]]   TEXT DEFAULT NULL,"
+        },
+        {
+          "path": "migrations/1640988000_aux_init.go",
+          "contentHash": "1c810507e65e767e899f7ec76a5a848589cf2c6a57192e6f9d10efa4f2c256b0",
+          "startLine": 7,
+          "endLine": 22,
+          "excerpt": "func init() {\n\tcore.SystemMigrations.Add(&core.Migration{\n\t\tUp: func(txApp core.App) error {\n\t\t\t_, execErr := txApp.AuxDB().NewQuery(`\n\t\t\t\tCREATE TABLE IF NOT EXISTS {{_logs}} (\n\t\t\t\t\t[[id]]      TEXT PRIMARY KEY DEFAULT ('r'||lower(hex(randomblob(7)))) NOT NULL,\n\t\t\t\t\t[[level]]   INTEGER DEFAULT 0 NOT NULL,\n\t\t\t\t\t[[message]] TEXT DEFAULT \"\" NOT NULL,\n\t\t\t\t\t[[data]]    JSON DEFAULT \"{}\" NOT NULL,\n\t\t\t\t\t[[created]] TEXT DEFAULT (strftime('%Y-%m-%d %H:%M:%fZ')) NOT NULL\n\t\t\t\t);\n\n\t\t\t\tCREATE INDEX IF NOT EXISTS idx_logs_level on {{_logs}} ([[level]]);\n\t\t\t\tCREATE INDEX IF NOT EXISTS idx_logs_message on {{_logs}} ([[message]]);\n\t\t\t\tCREATE INDEX IF NOT EXISTS idx_logs_created_hour on {{_logs}} (strftime('%Y-%m-%d %H:00:00', [[created]]));\n\t\t\t`).Execute()"
+        }
+      ]
+    },
+    {
+      "purpose": "component-role",
+      "text": "Registers schema migrations that initialize collection metadata and application logs.",
+      "citations": [
+        {
+          "path": "migrations/1640988000_init.go",
+          "contentHash": "a261a5f375ceb926814a4c5c9e5d083b1d7e5293201a0fe83a95eb89f853e8b1",
+          "startLine": 29,
+          "endLine": 45,
+          "excerpt": "func init() {\n\tcore.SystemMigrations.Register(func(txApp core.App) error {\n\t\tif err := createParamsTable(txApp); err != nil {\n\t\t\treturn fmt.Errorf(\"_params exec error: %w\", err)\n\t\t}\n\n\t\t// -----------------------------------------------------------\n\n\t\t_, execerr := txApp.DB().NewQuery(`\n\t\t\tCREATE TABLE {{_collections}} (\n\t\t\t\t[[id]]         TEXT PRIMARY KEY DEFAULT ('r'||lower(hex(randomblob(7)))) NOT NULL,\n\t\t\t\t[[system]]     BOOLEAN DEFAULT FALSE NOT NULL,\n\t\t\t\t[[type]]       TEXT DEFAULT \"base\" NOT NULL,\n\t\t\t\t[[name]]       TEXT UNIQUE NOT NULL,\n\t\t\t\t[[fields]]     JSON DEFAULT \"[]\" NOT NULL,\n\t\t\t\t[[indexes]]    JSON DEFAULT \"[]\" NOT NULL,\n\t\t\t\t[[listRule]]   TEXT DEFAULT NULL,"
+        },
+        {
+          "path": "migrations/1640988000_aux_init.go",
+          "contentHash": "1c810507e65e767e899f7ec76a5a848589cf2c6a57192e6f9d10efa4f2c256b0",
+          "startLine": 7,
+          "endLine": 22,
+          "excerpt": "func init() {\n\tcore.SystemMigrations.Add(&core.Migration{\n\t\tUp: func(txApp core.App) error {\n\t\t\t_, execErr := txApp.AuxDB().NewQuery(`\n\t\t\t\tCREATE TABLE IF NOT EXISTS {{_logs}} (\n\t\t\t\t\t[[id]]      TEXT PRIMARY KEY DEFAULT ('r'||lower(hex(randomblob(7)))) NOT NULL,\n\t\t\t\t\t[[level]]   INTEGER DEFAULT 0 NOT NULL,\n\t\t\t\t\t[[message]] TEXT DEFAULT \"\" NOT NULL,\n\t\t\t\t\t[[data]]    JSON DEFAULT \"{}\" NOT NULL,\n\t\t\t\t\t[[created]] TEXT DEFAULT (strftime('%Y-%m-%d %H:%M:%fZ')) NOT NULL\n\t\t\t\t);\n\n\t\t\t\tCREATE INDEX IF NOT EXISTS idx_logs_level on {{_logs}} ([[level]]);\n\t\t\t\tCREATE INDEX IF NOT EXISTS idx_logs_message on {{_logs}} ([[message]]);\n\t\t\t\tCREATE INDEX IF NOT EXISTS idx_logs_created_hour on {{_logs}} (strftime('%Y-%m-%d %H:00:00', [[created]]));\n\t\t\t`).Execute()"
+        }
+      ]
+    }
+  ]
+}

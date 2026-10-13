@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "targetId": "component:module:spotless/copyright.kt",
+  "summary": "Provides a copyright-year placeholder and Apache license header.",
+  "author": "Codex (external agent)",
+  "sources": [
+    {
+      "path": "spotless/copyright.kt",
+      "contentHash": "3df85e36ee06ba0df7b532973d9e30eb26f50a3938341a7aa546640fcca0e74e",
+      "line": 1
+    },
+    {
+      "path": "spotless/copyright.kts",
+      "contentHash": "032a6c7c46ddfa182a1fc3d5f391f237af47ede2de44ceb725d6a134bfb1ce10",
+      "line": 1
+    }
+  ],
+  "claims": [
+    {
+      "purpose": "component-name",
+      "text": "License header templates",
+      "citations": [
+        {
+          "path": "spotless/copyright.kt",
+          "contentHash": "3df85e36ee06ba0df7b532973d9e30eb26f50a3938341a7aa546640fcca0e74e",
+          "startLine": 1,
+          "endLine": 15,
+          "excerpt": "/*\n * Copyright $YEAR The Android Open Source Project\n *\n * Licensed under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License.\n * You may obtain a copy of the License at\n *\n *     https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software\n * distributed under the License is distributed on an \"AS IS\" BASIS,\n * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n * See the License for the specific language governing permissions and\n * limitations under the License.\n */"
+        }
+      ]
+    },
+    {
+      "purpose": "component-role",
+      "text": "Provides a copyright-year placeholder and Apache license header.",
+      "citations": [
+        {
+          "path": "spotless/copyright.kt",
+          "contentHash": "3df85e36ee06ba0df7b532973d9e30eb26f50a3938341a7aa546640fcca0e74e",
+          "startLine": 1,
+          "endLine": 15,
+          "excerpt": "/*\n * Copyright $YEAR The Android Open Source Project\n *\n * Licensed under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License.\n * You may obtain a copy of the License at\n *\n *     https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software\n * distributed under the License is distributed on an \"AS IS\" BASIS,\n * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n * See the License for the specific language governing permissions and\n * limitations under the License.\n */"
+        }
+      ]
+    }
+  ]
+}

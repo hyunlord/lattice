@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "targetId": "component:module:build.js",
+  "summary": "Compiles server, shared code and plugin directories into build output.",
+  "author": "Codex (external agent)",
+  "sources": [
+    {
+      "path": "build.js",
+      "contentHash": "0f1d44a1ad9bd30e14ad957901a862fea19740ffd46578507bd0bbc79ecef0c8",
+      "line": 1
+    }
+  ],
+  "claims": [
+    {
+      "purpose": "component-name",
+      "text": "Server build pipeline",
+      "citations": [
+        {
+          "path": "build.js",
+          "contentHash": "0f1d44a1ad9bd30e14ad957901a862fea19740ffd46578507bd0bbc79ecef0c8",
+          "startLine": 43,
+          "endLine": 72,
+          "excerpt": "  const swc = (src, out) =>\n    execAsync(\n      `yarn swc \"${src}\" -d \"${out}\" --strip-leading-paths --extensions .ts,.tsx --ignore \"**/*.test.ts,**/*.test.tsx,**/__mocks__/**\" --quiet`\n    );\n\n  await Promise.all([\n    swc(\"./server\", \"./build/server\"),\n    swc(\"./shared\", \"./build/shared\"),\n  ]);\n\n  // SWC's --strip-leading-paths removes only the topmost path segment, so a\n  // `plugins/<name>/server` input keeps `<name>/server/\u2026` and lands correctly\n  // under a `./build/plugins` output directory.\n  for (const plugin of d) {\n    const hasServer = existsSync(`./plugins/${plugin}/server`);\n\n    if (hasServer) {\n      await swc(`./plugins/${plugin}/server`, \"./build/plugins\");\n    }\n\n    const hasShared = existsSync(`./plugins/${plugin}/shared`);\n\n    if (hasShared) {\n      await swc(`./plugins/${plugin}/shared`, \"./build/plugins\");\n    }\n  }\n\n  // Copy static files\n  console.log(\"Copying static files\u2026\");\n  await Promise.all(["
+        }
+      ]
+    },
+    {
+      "purpose": "component-role",
+      "text": "Compiles server, shared code and plugin directories into build output.",
+      "citations": [
+        {
+          "path": "build.js",
+          "contentHash": "0f1d44a1ad9bd30e14ad957901a862fea19740ffd46578507bd0bbc79ecef0c8",
+          "startLine": 43,
+          "endLine": 72,
+          "excerpt": "  const swc = (src, out) =>\n    execAsync(\n      `yarn swc \"${src}\" -d \"${out}\" --strip-leading-paths --extensions .ts,.tsx --ignore \"**/*.test.ts,**/*.test.tsx,**/__mocks__/**\" --quiet`\n    );\n\n  await Promise.all([\n    swc(\"./server\", \"./build/server\"),\n    swc(\"./shared\", \"./build/shared\"),\n  ]);\n\n  // SWC's --strip-leading-paths removes only the topmost path segment, so a\n  // `plugins/<name>/server` input keeps `<name>/server/\u2026` and lands correctly\n  // under a `./build/plugins` output directory.\n  for (const plugin of d) {\n    const hasServer = existsSync(`./plugins/${plugin}/server`);\n\n    if (hasServer) {\n      await swc(`./plugins/${plugin}/server`, \"./build/plugins\");\n    }\n\n    const hasShared = existsSync(`./plugins/${plugin}/shared`);\n\n    if (hasShared) {\n      await swc(`./plugins/${plugin}/shared`, \"./build/plugins\");\n    }\n  }\n\n  // Copy static files\n  console.log(\"Copying static files\u2026\");\n  await Promise.all(["
+        }
+      ]
+    }
+  ]
+}

@@ -1,10 +1,10 @@
 import assert from 'node:assert/strict';
 import { execFileSync } from 'node:child_process';
-import { mkdtempSync, mkdirSync, readFileSync, rmSync, writeFileSync, existsSync } from 'node:fs';
+import { mkdtempSync, mkdirSync, readFileSync, rmSync, writeFileSync, existsSync, symlinkSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import test from 'node:test';
-import { buildGallery, galleryHtml, sourceEnvironment, validateManifest } from '../tools/build-gallery.mjs';
+import { buildGallery, galleryHtml, sourceEnvironment, validateManifest, notesDirectory, verifyNotes } from '../tools/build-gallery.mjs';
 
 const entry = { id: 'sample', name: 'Sample <&>', description: 'Source-backed sample', stack: 'JavaScript', repository: 'example/sample', commit: 'a'.repeat(40) };
 test('gallery validates remote identifiers and escapes display metadata', () => {
@@ -56,5 +56,25 @@ test('gallery builds real exports from exact existing checkouts without target w
         assert.throws(() => buildGallery({ manifest: { ...manifest, repositories: [entry] }, output, sources, cache }), /pinned commit/u);
         writeFileSync(join(checkout, 'untracked.txt'), 'unexpected');
         assert.throws(() => buildGallery({ manifest, output, sources, cache }), /dirty/u);
+    } finally { rmSync(root, { recursive: true, force: true }); }
+});
+
+test('gallery hides test maps and checks source-bound external notes paths', () => {
+    const root = mkdtempSync(join(tmpdir(), 'lattice-gallery-notes-'));
+    try {
+        const manifest = { version: 1, repositories: [entry, { ...entry, id: 'blind', testOnly: true }] };
+        assert.doesNotMatch(galleryHtml(validateManifest(manifest)), /href=".\/blind/u);
+        for (const notes of ['../notes', '/notes', 'notes/a/b', 'notes/../escape']) assert.throws(() => validateManifest({ version: 1, repositories: [{ ...entry, notes }] }));
+        const directory = join(root, 'notes', 'sample'); mkdirSync(join(directory, 'notes'), { recursive: true });
+        writeFileSync(join(directory, 'provenance.json'), JSON.stringify({ repository: entry.repository, commit: entry.commit }));
+        const withNotes = { ...entry, notes: 'notes/sample' };
+        assert.equal(notesDirectory(withNotes, root), directory);
+        assert.throws(() => notesDirectory({ ...withNotes, commit: 'b'.repeat(40) }, root), /pinned repository/u);
+        writeFileSync(join(directory, 'notes', 'valid.json'), JSON.stringify({ targetId: 'component:entry', claims: [{ text: 'role' }] }));
+        assert.throws(() => verifyNotes(directory, { interpretations: [] }), /stale or has invalid citations/u);
+        assert.throws(() => verifyNotes(directory, { interpretations: [{ targetId: 'component:entry', status: 'fresh', validatedClaims: [] }] }), /invalid citations/u);
+        verifyNotes(directory, { interpretations: [{ targetId: 'component:entry', status: 'fresh', validatedClaims: [{}] }] });
+        symlinkSync(join(directory, 'provenance.json'), join(directory, 'notes', 'linked.json'));
+        assert.throws(() => notesDirectory(withNotes, root), /regular JSON/u);
     } finally { rmSync(root, { recursive: true, force: true }); }
 });

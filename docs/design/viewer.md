@@ -114,3 +114,13 @@ A lens may select viewIds, findings, inventory and distributions for the detaile
 ## Approved L7 three-view home
 
 The user-approved [loop reference](l7-prototype.html) and [generic contract](loop-views.md) supersede the initial island home. Loop, focused relationships, and catalog are the first surface; existing engineering views remain under disclosures. The preserved reference is not an embedded production screenshot or dataset.
+
+## L12 first-impression structure diagram
+
+Unconfigured repository home begins with a real structure diagram of the first-impression components, not an inventory of text cards. Component boxes use the same derived memberships as the accessible list below. Directed dependency arrows encode distinct importing-file count by stroke width and expose readable file/declaration counts. Start badges identify their actual evidence category. One representative confirmed call path is highlighted only on matching component dependencies; never invent calls or bridge an unresolved hop to obtain a prettier flow.
+
+Fresh external-agent component-name and component-role claims may supply human labels. Every claim retains its validated file, line range, content hash and pinned source link, with an AI label. Source-bound validation checks identity and excerpt, not semantic truth; authors and reviewers must verify entailment. Without notes, invalid claims, or stale sources, preserve deterministic names/descriptions. Do not require an API key, embed a model/provider, or turn filenames into invented responsibilities.
+
+Package manifest entries and source-proven UI roots are fallback reading starts and must be labelled separately from executable/call evidence. Preserve overview membership, detailed folder/package/logic routes and source evidence. Mobile reflows the structure at readable native text size; it does not shrink a desktop canvas. No deferred click-selection redesign is included.
+
+Automated and visual checks establish drawing, links and transport behavior only. The frozen human test in `../benchmarks/l12/questions.md` owns usefulness acceptance. Reference answers are withheld until the user completes the three Lattice-first tests; do not publish them as part of evidence or map guidance.

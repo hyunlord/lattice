@@ -1,0 +1,95 @@
+{
+  "schemaVersion": 1,
+  "targetId": "component:module:src/util/atexit.go",
+  "summary": "Coordinates shared events and runs registered cleanup callbacks on exit.",
+  "author": "Codex (external agent)",
+  "sources": [
+    {
+      "path": "src/util/atexit.go",
+      "contentHash": "cc991bc937eadc74c643bd53f20dd1fc84473d215bc9b09f8dfa4d620bdf2794",
+      "line": 1
+    },
+    {
+      "path": "src/util/atomicbool.go",
+      "contentHash": "6a3cb13eda99760e04a6030c252c02a7b5807afd03726c6a8dae14b1946b0ed6",
+      "line": 1
+    },
+    {
+      "path": "src/util/chars.go",
+      "contentHash": "330c04c6d1878bac9e2af5452c70411f46bb20a8afc4437558068a44398b07c6",
+      "line": 1
+    },
+    {
+      "path": "src/util/concurrent_set.go",
+      "contentHash": "7a2047af0e39d5fbf3d8e64e4ab4eeb5e0f540b1bc2011684f080f72e7a85416",
+      "line": 1
+    },
+    {
+      "path": "src/util/eventbox.go",
+      "contentHash": "40a286302eab90a68cc444110e8f03282ef4317fb782a3d9a42fe20c1a83423c",
+      "line": 1
+    },
+    {
+      "path": "src/util/slab.go",
+      "contentHash": "62a04236d865c9544ee68f81373c1f0b80a95ab813d743267cbb8e6bd31df7e4",
+      "line": 1
+    },
+    {
+      "path": "src/util/util_unix.go",
+      "contentHash": "dd1784cd6fe62dae50973e79ba0b87e2e7b712d0a109342e2d12cd4080788f76",
+      "line": 1
+    },
+    {
+      "path": "src/util/util_windows.go",
+      "contentHash": "aea0707a61a0aa9fc0bf7b2148c4143eddce273bdcffa318fd1ecda5cd28fbc5",
+      "line": 1
+    },
+    {
+      "path": "src/util/util.go",
+      "contentHash": "a05ad4d1e5ba6a9e7c423f2f36c628eac1a41eeba0d22d8db2fd505072a057fe",
+      "line": 1
+    }
+  ],
+  "claims": [
+    {
+      "purpose": "component-name",
+      "text": "Events and cleanup",
+      "citations": [
+        {
+          "path": "src/util/eventbox.go",
+          "contentHash": "40a286302eab90a68cc444110e8f03282ef4317fb782a3d9a42fe20c1a83423c",
+          "startLine": 5,
+          "endLine": 23,
+          "excerpt": "// EventType is the type for fzf events\ntype EventType int\n\n// Events is a type that associates EventType to any data\ntype Events map[EventType]any\n\n// EventBox is used for coordinating events\ntype EventBox struct {\n\tevents Events\n\tcond   *sync.Cond\n\tignore map[EventType]bool\n}\n\n// NewEventBox returns a new EventBox\nfunc NewEventBox() *EventBox {\n\treturn &EventBox{\n\t\tevents: make(Events),\n\t\tcond:   sync.NewCond(&sync.Mutex{}),\n\t\tignore: make(map[EventType]bool)}"
+        },
+        {
+          "path": "src/util/atexit.go",
+          "contentHash": "cc991bc937eadc74c643bd53f20dd1fc84473d215bc9b09f8dfa4d620bdf2794",
+          "startLine": 9,
+          "endLine": 27,
+          "excerpt": "// AtExit registers the function fn to be called on program termination.\n// The functions will be called in reverse order they were registered.\nfunc AtExit(fn func()) {\n\tif fn == nil {\n\t\tpanic(\"AtExit called with nil func\")\n\t}\n\tonce := &sync.Once{}\n\tatExitFuncs = append(atExitFuncs, func() {\n\t\tonce.Do(fn)\n\t})\n}\n\n// RunAtExitFuncs runs any functions registered with AtExit().\nfunc RunAtExitFuncs() {\n\tfns := atExitFuncs\n\tfor i := len(fns) - 1; i >= 0; i-- {\n\t\tfns[i]()\n\t}\n\tatExitFuncs = nil"
+        }
+      ]
+    },
+    {
+      "purpose": "component-role",
+      "text": "Coordinates shared events and runs registered cleanup callbacks on exit.",
+      "citations": [
+        {
+          "path": "src/util/eventbox.go",
+          "contentHash": "40a286302eab90a68cc444110e8f03282ef4317fb782a3d9a42fe20c1a83423c",
+          "startLine": 5,
+          "endLine": 23,
+          "excerpt": "// EventType is the type for fzf events\ntype EventType int\n\n// Events is a type that associates EventType to any data\ntype Events map[EventType]any\n\n// EventBox is used for coordinating events\ntype EventBox struct {\n\tevents Events\n\tcond   *sync.Cond\n\tignore map[EventType]bool\n}\n\n// NewEventBox returns a new EventBox\nfunc NewEventBox() *EventBox {\n\treturn &EventBox{\n\t\tevents: make(Events),\n\t\tcond:   sync.NewCond(&sync.Mutex{}),\n\t\tignore: make(map[EventType]bool)}"
+        },
+        {
+          "path": "src/util/atexit.go",
+          "contentHash": "cc991bc937eadc74c643bd53f20dd1fc84473d215bc9b09f8dfa4d620bdf2794",
+          "startLine": 9,
+          "endLine": 27,
+          "excerpt": "// AtExit registers the function fn to be called on program termination.\n// The functions will be called in reverse order they were registered.\nfunc AtExit(fn func()) {\n\tif fn == nil {\n\t\tpanic(\"AtExit called with nil func\")\n\t}\n\tonce := &sync.Once{}\n\tatExitFuncs = append(atExitFuncs, func() {\n\t\tonce.Do(fn)\n\t})\n}\n\n// RunAtExitFuncs runs any functions registered with AtExit().\nfunc RunAtExitFuncs() {\n\tfns := atExitFuncs\n\tfor i := len(fns) - 1; i >= 0; i-- {\n\t\tfns[i]()\n\t}\n\tatExitFuncs = nil"
+        }
+      ]
+    }
+  ]
+}
