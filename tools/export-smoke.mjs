@@ -35,7 +35,7 @@ export function verifyExport(cli, repository) {
     const bundle = Buffer.concat(decodedPacks).toString('utf8');
     for (const name of ['structural-dependency-groups', 'evidence', 'source-groups', 'loop-map-model']) assert.ok(bundle.includes(`define("${name}",`), `Missing compiled module ${name}`);
     assert.doesNotMatch(bundle, /\.\.\/dist\//u);
-    assert.match(bundle, /\.\/structural-dependency-groups\.js/u);
+    assert.match(bundle, /^define\("loop-map-model", \[[^\]\n]*"structural-dependency-groups"[^\]\n]*\],/mu);
     assert.match(bundle, /lattice-assets-ready/u);
   }
   assert.match(first['index.html'], /asset-bootstrap\.js/u);
