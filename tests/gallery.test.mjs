@@ -4,18 +4,24 @@ import { mkdtempSync, mkdirSync, readFileSync, rmSync, writeFileSync, existsSync
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import test from 'node:test';
-import { buildGallery, galleryHtml, validateManifest } from '../tools/build-gallery.mjs';
+import { buildGallery, galleryHtml, sourceEnvironment, validateManifest } from '../tools/build-gallery.mjs';
 
 const entry = { id: 'sample', name: 'Sample <&>', description: 'Source-backed sample', stack: 'JavaScript', repository: 'example/sample', commit: 'a'.repeat(40) };
 test('gallery validates remote identifiers and escapes display metadata', () => {
     const manifest = { version: 1, repositories: [entry] };
     assert.match(galleryHtml(validateManifest(manifest)), /Sample &lt;&amp;&gt;/u);
-    assert.match(galleryHtml(manifest), /\.\/sample\/\?lang=en/u);
+    assert.match(galleryHtml(manifest), /\.\/sample\/#\/home\?lang=en/u);
     for (const change of [{ id: '../escape' }, { repository: 'https://user:secret@example.com/x' }, { commit: 'main' }]) {
         assert.throws(() => validateManifest({ ...manifest, repositories: [{ ...entry, ...change }] }));
     }
     assert.throws(() => validateManifest({ ...manifest, repositories: [entry, entry] }));
     assert.throws(() => validateManifest({ ...manifest, lensExamples: [{ name: 'Unsafe', url: 'javascript:alert(1)' }] }));
+});
+test('gallery source identity appends to inherited Git config without changing its environment', () => {
+    const inherited = { GIT_CONFIG_COUNT: '1', GIT_CONFIG_KEY_0: 'core.abbrev', GIT_CONFIG_VALUE_0: '12', PATH: '/example/path' };
+    assert.deepEqual(sourceEnvironment(entry.repository, inherited), { ...inherited, GIT_CONFIG_COUNT: '2', GIT_CONFIG_KEY_1: 'remote.origin.url', GIT_CONFIG_VALUE_1: 'https://github.com/example/sample' });
+    assert.equal(inherited.GIT_CONFIG_COUNT, '1');
+    assert.throws(() => sourceEnvironment(entry.repository, { GIT_CONFIG_COUNT: 'invalid' }), /GIT_CONFIG_COUNT/u);
 });
 test('gallery builds real exports from exact existing checkouts without target writes or scripts', () => {
     const root = mkdtempSync(join(tmpdir(), 'lattice-gallery-test-'));
@@ -24,6 +30,7 @@ test('gallery builds real exports from exact existing checkouts without target w
         mkdirSync(checkout, { recursive: true });
         const git = args => execFileSync('git', ['-C', checkout, ...args], { encoding: 'utf8' }).trim();
         git(['init', '--quiet']);
+        git(['remote', 'add', 'origin', '/local/source-checkout']);
         writeFileSync(join(checkout, 'package.json'), JSON.stringify({ name: 'sample', description: 'Fixture repository', scripts: { build: 'touch must-not-run', prepare: 'touch must-not-run' } }));
         writeFileSync(join(checkout, 'index.js'), 'export function hello() { return "hello"; }\n');
         git(['add', '.']);
@@ -34,6 +41,11 @@ test('gallery builds real exports from exact existing checkouts without target w
         assert.match(readFileSync(join(output, 'index.html'), 'utf8'), /Source snapshot/u);
         assert.equal(JSON.parse(readFileSync(join(output, entry.id, '.lattice-export.json'), 'utf8')).generator, 'lattice');
         assert.ok(existsSync(join(output, entry.id, 'index.html')));
+        const overview = JSON.parse(readFileSync(join(output, entry.id, 'overview.json'), 'utf8'));
+        assert.equal(overview.repository.remoteUrl, 'https://github.com/example/sample');
+        assert.equal(overview.repository.commit, commit);
+        assert.ok(JSON.stringify(overview).includes(`https://github.com/example/sample/blob/${commit}/package.json`));
+        assert.equal(git(['config', '--get', 'remote.origin.url']), '/local/source-checkout');
         assert.equal(git(['status', '--porcelain', '--untracked-files=all']), '');
         assert.equal(existsSync(join(checkout, '.lattice')), false);
         assert.equal(existsSync(join(checkout, 'must-not-run')), false);

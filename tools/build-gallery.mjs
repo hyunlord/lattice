@@ -14,6 +14,11 @@ function run(command, args, options = {}) {
   return result.stdout.trim();
 }
 function git(args) { return run('git', ['-c', 'core.hooksPath=/dev/null', '-c', 'core.fsmonitor=false', ...args], { env: gitEnv }); }
+export function sourceEnvironment(repository, inherited = process.env) {
+  const count = inherited.GIT_CONFIG_COUNT ?? '0';
+  if (!/^(0|[1-9][0-9]*)$/u.test(count) || !Number.isSafeInteger(Number(count))) throw new Error('Invalid inherited GIT_CONFIG_COUNT');
+  return { ...inherited, GIT_CONFIG_COUNT: String(Number(count) + 1), [`GIT_CONFIG_KEY_${count}`]: 'remote.origin.url', [`GIT_CONFIG_VALUE_${count}`]: `https://github.com/${repository}` };
+}
 export function validateManifest(value) {
   if (value?.version !== 1 || !Array.isArray(value.repositories) || !value.repositories.length) throw new Error('Expected version 1 and nonempty repositories');
   const ids = new Set();
@@ -30,7 +35,7 @@ export function validateManifest(value) {
   return value;
 }
 export function galleryHtml(manifest) {
-  const cards = manifest.repositories.map(entry => `<li><article><h2><a href="./${escape(entry.id)}/?lang=en">${escape(entry.name)}</a></h2><p>${escape(entry.description)}</p><p class="stack">${escape(entry.stack)}</p><details><summary>Source snapshot</summary><a href="https://github.com/${escape(entry.repository)}/tree/${entry.commit}">${escape(entry.repository)}<br><code>${entry.commit}</code></a></details></article></li>`).join('\n');
+  const cards = manifest.repositories.map(entry => `<li><article><h2><a href="./${escape(entry.id)}/#/home?lang=en">${escape(entry.name)}</a></h2><p>${escape(entry.description)}</p><p class="stack">${escape(entry.stack)}</p><details><summary>Source snapshot</summary><a href="https://github.com/${escape(entry.repository)}/tree/${entry.commit}">${escape(entry.repository)}<br><code>${entry.commit}</code></a></details></article></li>`).join('\n');
   const lenses = (manifest.lensExamples ?? []).map(link => `<li><a href="${escape(link.url)}">${escape(link.name)}</a></li>`).join('');
   return `<!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Lattice · Repository maps</title><meta name="description" content="Explore source-grounded maps of public repositories with Lattice. No lens or model required."><link rel="stylesheet" href="./gallery.css"></head>
@@ -61,8 +66,9 @@ export function buildGallery({ manifest, output, sources, cache }) {
     if (git(['-C', checkout, 'status', '--porcelain', '--untracked-files=all'])) throw new Error(`Checkout is dirty: ${entry.id}`);
     console.log(`Building ${entry.id}`);
     const common = ['--root', checkout, '--cache-dir', join(cache, entry.id), '--no-lens'];
-    run(process.execPath, [join(project, 'bin/lattice.mjs'), 'build', ...common]);
-    run(process.execPath, [join(project, 'bin/lattice.mjs'), 'export', join(output, entry.id), ...common]);
+    const env = sourceEnvironment(entry.repository);
+    run(process.execPath, [join(project, 'bin/lattice.mjs'), 'build', ...common], { env });
+    run(process.execPath, [join(project, 'bin/lattice.mjs'), 'export', join(output, entry.id), ...common], { env });
   }
   copyFileSync(join(project, 'examples/gallery/gallery.css'), join(output, 'gallery.css'));
   writeFileSync(join(output, 'index.html'), galleryHtml(manifest));
