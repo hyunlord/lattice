@@ -129,3 +129,7 @@ The reviewed changes were integrated into `0ca65107fdb52bc0862875e2154b655cf3c3b
 Integrated viewer measurements failed strict L9 first-display comparison in 15/24 viewport comparisons. Merge remains blocked. The sampled cold-memory limitation and later 6.400 GB peak remain unchanged.
 
 Integrated browser evidence: `/tmp/l10-closure-final-browser/`. Check/package logs: `.omo/evidence/l10-closure-check-2.log` and `.omo/evidence/l10-closure-package-2.log`; the original package failure is retained in `.omo/evidence/l10-closure-package.log`.
+
+## User acceptance — 2026-10-13
+
+The user explicitly accepted the eleven first-display regressions as [residual issue97](https://github.com/hyunlord/lattice/issues/97) and authorized PR95 merge followed by consumer Pages publication and maintenance. The measured failures above remain failures; this decision supersedes their merge-blocking status. The maximum444ms observation is nowinandroid390 (a passing comparison), not one of those eleven regressions. Cold MCP349.8s/5.30GB and steady-warm p95898ms are recorded in [issue98](https://github.com/hyunlord/lattice/issues/98) and README, preserving sampling and later warm-memory limits. No further click UX changes are included in this release.

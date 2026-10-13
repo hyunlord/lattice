@@ -61,3 +61,7 @@ Raw native initial code is not a valid rollback under the existing physical cap:
 Local raw artifacts are retained outside git: `/tmp/l10-paired-final-12bc48f/` (comparison, all samples, bindings, postflight, screenshots and cleanup), `/tmp/l10-l9-12bc-startup/` (native trace), `/tmp/l10-initial-barrel-pair/`, `/tmp/l10-loading-chrome-12bc/`, `/tmp/l10-direct-inflate-pair/`, and `/tmp/l10-async-bootstrap-evidence/`. These are local evidence paths, not public durable artifacts. All owned measurement browser/server processes were closed.
 
 The original six equal-width before/after sheets are `sheets/contact-1440.png` and `sheets/contact-390.png` under the paired evidence directory. A future actual fix requires its own validation; repeated timing without a causal change is not authorized by this report.
+
+## User acceptance — 2026-10-13
+
+The user explicitly accepted the eleven first-display regressions as [residual issue97](https://github.com/hyunlord/lattice/issues/97) and authorized PR95 merge followed by consumer Pages publication and maintenance. The measured failures above remain failures; this decision supersedes their merge-blocking status. The maximum444ms observation is nowinandroid390 (a passing comparison), not one of those eleven regressions. Cold MCP349.8s/5.30GB and steady-warm p95898ms are recorded in [issue98](https://github.com/hyunlord/lattice/issues/98) and README, preserving sampling and later warm-memory limits. No further click UX changes are included in this release.

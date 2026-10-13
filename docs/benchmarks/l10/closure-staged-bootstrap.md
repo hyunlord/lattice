@@ -45,3 +45,7 @@ A supplemental cancellation check observed both deferred chunks complete with HT
 ## Completed paired gate — 2026-10-13
 
 The subsequent96-navigation paired unchanged-main campaign at12bc48f completed:13/24 comparisons passed and11 regressed. This supersedes the pending campaign status above, not historical failures. See [closure first-display results](closure-display.md) for the full table, provenance and unadopted follow-up diagnostics. Merge and consumer publication remain blocked.
+
+## User acceptance — 2026-10-13
+
+The user explicitly accepted the eleven first-display regressions as [residual issue97](https://github.com/hyunlord/lattice/issues/97) and authorized PR95 merge followed by consumer Pages publication and maintenance. The measured failures above remain failures; this decision supersedes their merge-blocking status. The maximum444ms observation is nowinandroid390 (a passing comparison), not one of those eleven regressions. Cold MCP349.8s/5.30GB and steady-warm p95898ms are recorded in [issue98](https://github.com/hyunlord/lattice/issues/98) and README, preserving sampling and later warm-memory limits. No further click UX changes are included in this release.
