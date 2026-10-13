@@ -1,4 +1,5 @@
 import ts from 'typescript';
+import { bundleModules } from './viewer-bundle.mjs';
 import { createHash } from 'node:crypto';
 import { gzipSync } from 'node:zlib';
 import { mkdirSync, readdirSync, readFileSync, writeFileSync, rmSync } from 'node:fs';
@@ -52,6 +53,18 @@ export function archiveModules(modules, entry = 'app.js') {
     return { bytes, entry: { path: `${hash}.gz`, hash, encoded: bytes.length, decoded: decoded.length, modules: records.map(([name]) => name) } };
   });
 }
+export function viewerArchivePlan(modules, entry = 'app.js') {
+  const source = bundleModules(modules, entry);
+  if (source === null) return { version: 1, packs: archiveModules(modules, entry) };
+  const script = Buffer.from(source), packs = [];
+  for (let offset = 0; offset < script.length; offset += limit) {
+    const decoded = script.subarray(offset, offset + limit), bytes = gzipSync(decoded, { level: 9 });
+    if (bytes.length > limit) throw new Error('Compressed viewer bundle exceeds 256KiB');
+    const hash = createHash('sha256').update(bytes).digest('hex');
+    packs.push({ bytes, entry: { path: `${hash}.gz`, hash, encoded: bytes.length, decoded: decoded.length } });
+  }
+  return { version: 2, packs };
+}
 export function bootstrapScript(hashSource, bootstrapSource) {
   const strip = (source, allowImport) => {
     const file = ts.createSourceFile('bootstrap.js', source, ts.ScriptTarget.Latest, true, ts.ScriptKind.JS); const edits = [];
@@ -69,10 +82,10 @@ export function bootstrapScript(hashSource, bootstrapSource) {
 }
 export function buildViewerArchives(viewer) {
   const modules = readdirSync(viewer).filter(name => name.endsWith('.js') && name !== 'asset-bootstrap.js').sort().map(name => [name, readFileSync(join(viewer, name), 'utf8')]);
-  const packs = archiveModules(modules);
+  const { version, packs } = viewerArchivePlan(modules);
   writeFileSync(join(viewer, 'asset-bootstrap.js'), bootstrapScript(readFileSync(join(viewer, 'packed-hash.js'), 'utf8'), readFileSync(join(viewer, 'asset-bootstrap.js'), 'utf8')));
   const output = join(viewer, 'asset-archives');
   rmSync(output, { recursive: true, force: true }); mkdirSync(output, { recursive: true });
   for (const pack of packs) writeFileSync(join(output, pack.entry.path), pack.bytes);
-  writeFileSync(join(output, 'manifest.json'), JSON.stringify({ version: 1, entry: 'app.js', packs: packs.map(pack => pack.entry) }));
+  writeFileSync(join(output, 'manifest.json'), JSON.stringify({ version, entry: 'app.js', packs: packs.map(pack => pack.entry) }));
 }

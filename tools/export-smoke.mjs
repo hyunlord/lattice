@@ -18,17 +18,26 @@ export function verifyExport(cli, repository) {
   run(['export']);
   const first = contents();
   const manifest = JSON.parse(first['asset-archives/manifest.json']);
-  const modules = Object.fromEntries(manifest.packs.flatMap(pack => {
+  const decodedPacks = manifest.packs.map(pack => {
     const bytes = readFileSync(join(output, 'asset-archives', pack.path));
     assert.equal(createHash('sha256').update(bytes).digest('hex'), pack.hash);
     assert.equal(bytes.length, pack.encoded); assert.ok(bytes.length <= 262144);
     const decoded = gunzipSync(bytes); assert.equal(decoded.length, pack.decoded); assert.ok(decoded.length <= 262144);
-    return JSON.parse(decoded);
-  }));
-  assert.ok(modules['structural-dependency-groups.js']);
-  assert.ok(modules['evidence.js']);
-  assert.ok(modules['source-groups.js']);
-  assert.doesNotMatch(modules['source-groups.js'], /\.\.\/dist\//u);
+    return decoded;
+  });
+  assert.ok(manifest.version === 1 || manifest.version === 2);
+  if (manifest.version === 1) {
+    const modules = Object.fromEntries(decodedPacks.flatMap(decoded => JSON.parse(decoded)));
+    for (const name of ['structural-dependency-groups.js', 'evidence.js', 'source-groups.js']) assert.ok(modules[name]);
+    assert.doesNotMatch(modules['source-groups.js'], /\.\.\/dist\//u);
+    assert.match(modules['loop-map-model.js'], /lattice-viewer\/structural-dependency-groups\.js/u);
+  } else {
+    const bundle = Buffer.concat(decodedPacks).toString('utf8');
+    for (const name of ['structural-dependency-groups', 'evidence', 'source-groups', 'loop-map-model']) assert.ok(bundle.includes(`define("${name}",`), `Missing compiled module ${name}`);
+    assert.doesNotMatch(bundle, /\.\.\/dist\//u);
+    assert.match(bundle, /\.\/structural-dependency-groups\.js/u);
+    assert.match(bundle, /lattice-assets-ready/u);
+  }
   assert.match(first['index.html'], /asset-bootstrap\.js/u);
   assert.equal(first['app.js'], undefined);
   const thin = readPackedArtifact(output, 'graph.json');
@@ -39,7 +48,6 @@ export function verifyExport(cli, repository) {
   }
   delete thin.evidence;
   assert.deepEqual(thin, full);
-  assert.match(modules['loop-map-model.js'], /lattice-viewer\/structural-dependency-groups\.js/u);
   assert.equal(JSON.parse(first['.lattice-export.json']).generator, 'lattice');
   run(['export']);
   assert.deepEqual(contents(), first);
