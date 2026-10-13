@@ -121,3 +121,11 @@ rss-samples.jsonl,*.request.json,*.response.json}`. Original harness SHA-256 is
 the external sampling adaptation is
 `3cdf583e7f7fac0385dadc38af55c6846fb16e61bd242efa49b5d93db89f97d4`.
 These local paths identify retained evidence; they are not portable public links.
+
+## Integration addendum — 2026-10-13
+
+The reviewed changes were integrated into `0ca65107fdb52bc0862875e2154b655cf3c3b6dc`; integrated repository checks passed 1,193 tests and installed-package verification passed. First-request memory and warm-latency results above remain measurements of the explicitly bound isolated candidate; integration does not relabel them as a new MCP run.
+
+Integrated viewer measurements failed strict L9 first-display comparison in 15/24 viewport comparisons. Merge remains blocked. The sampled cold-memory limitation and later 6.400 GB peak remain unchanged.
+
+Integrated browser evidence: `/tmp/l10-closure-final-browser/`. Check/package logs: `.omo/evidence/l10-closure-check-2.log` and `.omo/evidence/l10-closure-package-2.log`; the original package failure is retained in `.omo/evidence/l10-closure-package.log`.

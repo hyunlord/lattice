@@ -60,3 +60,13 @@ These hashes bind the isolated source used for the final bounded check. The inte
 | `viewer/loop-map.css` | `1c8e89e2af1ab6c797afb87fb741a0e869ef8578b828df20c147280b496df9a7` |
 | `tests/dependency-highlight.test.mjs` | `66b217974058dc3b5424dfbaef8c39fa3e639fc0eae03867b9864644f54562f2` |
 | `tests/dependency-geometry-reuse.test.mjs` | `578abbd1053f4bc19d9283e6bd3a776de7a6030d71537101af48683edc1363de` |
+
+## Integration addendum — 2026-10-13
+
+The UI changes, including the documented whitespace-only adjustment, were integrated into `0ca65107fdb52bc0862875e2154b655cf3c3b6dc`. Integrated checks passed 1,193 tests and installed-package verification passed.
+
+The subsequent 48-sample browser campaign recorded zero page errors, HTTP failures, horizontal overflow and initial full-graph/transport requests. Supplemental marker/card geometry passed on 12 package-map screens; the other 12 screens lacked that surface and remain UNVERIFIED. Eight pointer/touch scenarios passed. Selected-state geometry remained UNVERIFIED under the inspector opacity restriction.
+
+This campaign used integrated assets over frozen exported data, not fresh extraction. Strict L9 startup comparison failed 15/24 viewport comparisons and still blocks merge.
+
+Integrated browser evidence: `/tmp/l10-closure-final-browser/`. Check/package logs: `.omo/evidence/l10-closure-check-2.log` and `.omo/evidence/l10-closure-package-2.log`; the original package failure is retained in `.omo/evidence/l10-closure-package.log`.

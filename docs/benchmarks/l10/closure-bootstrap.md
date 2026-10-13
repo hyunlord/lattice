@@ -44,3 +44,11 @@ Local ignored evidence is under `.omo/evidence/bundled-publication/`: `PLAN.md`,
 ## Pending adoption gates
 
 Independent final source review, formatting/full checks, installed-package verification, fresh complete-site size caps, and unchanged-protocol paired first-display measurements remain pending. Only measured improvement with preserved functional/visual behavior can justify adoption; these correctness results do not restore any historical latency failure.
+
+## Integration addendum — 2026-10-13
+
+The candidate above was subsequently integrated into `0ca65107fdb52bc0862875e2154b655cf3c3b6dc`. Independent source review, 1,193 repository tests and installed-package verification passed. The original package assertion failure remains recorded; the corrected assertion verifies the emitted AMD dependency list.
+
+The 48-sample browser campaign completed, but strict L9 first-display comparison failed: **15/24 viewport comparisons regressed**. Maximum individual first display was 400.6 ms. All 12 physical overlay exports passed size and encoded/decoded chunk caps. Measurements used integrated viewer assets over frozen `accca83` exported data, not fresh extraction. Integration does not mean acceptance: startup failure still blocks merge.
+
+Integrated browser evidence: `/tmp/l10-closure-final-browser/`. Check/package logs: `.omo/evidence/l10-closure-check-2.log` and `.omo/evidence/l10-closure-package-2.log`; the original package failure is retained in `.omo/evidence/l10-closure-package.log`.

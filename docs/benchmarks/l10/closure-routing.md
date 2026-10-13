@@ -38,3 +38,11 @@ The preserved oracle is `tests/fixtures/dependency-owned-original.txt`; existing
 The earlier owned-reservation-only microbenchmark failed its then-frozen internal unreachable-case criterion: 0.157083 ms became 0.170792 ms, **+8.73%** (+0.013709 ms). That failed result is retained; this follow-up does not reclassify it or use another case to erase it.
 
 The new forward-search candidate is **untimed**. No new microbenchmark or browser performance result is claimed here. Code parity and build success do not establish first-display improvement. The user acceptance target is actual first display against the unchanged L9 baseline across the required 24 repository/viewport pairs, using the unchanged protocol and preserving failures without retries or exclusions. Combined UI and routing validation remains a separate gate.
+
+## Integration addendum — 2026-10-13
+
+The routing changes were integrated with UI, bootstrap and MCP changes into `0ca65107fdb52bc0862875e2154b655cf3c3b6dc`. Integrated checks passed 1,193 tests and installed-package verification passed.
+
+The combined viewer subsequently completed the original 48-sample browser protocol. Strict L9 first-display comparison failed 15/24 viewport comparisons; no samples were retried, excluded or replaced. These combined measurements do not isolate the routing change performance contribution or replace the preserved failed microbenchmark. Startup failure still blocks merge.
+
+Integrated browser evidence: `/tmp/l10-closure-final-browser/`. Check/package logs: `.omo/evidence/l10-closure-check-2.log` and `.omo/evidence/l10-closure-package-2.log`; the original package failure is retained in `.omo/evidence/l10-closure-package.log`.
