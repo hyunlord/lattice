@@ -1,0 +1,132 @@
+{
+  "repository": "excalidraw/excalidraw",
+  "commit": "e65eca999e071503efb893d3379a29fb96ff37c4",
+  "arm": "map",
+  "gradedBy": "independent fresh grader map-second",
+  "answerSha256": "2591ecb66a390afad52be02c7d577291d4d1519159915efde13aa7d8d9d5099f",
+  "questions": [
+    {
+      "id": "excalidraw-q1",
+      "score": 2,
+      "reason": "Correct whiteboard/editor purpose, browser hosted application and React embedding; distinguishes hosted-only features and attributes integration claims to the pinned README.",
+      "sourceReferences": [
+        "README.md:15-19@e65eca999e071503efb893d3379a29fb96ff37c4",
+        "README.md:54-82@e65eca999e071503efb893d3379a29fb96ff37c4",
+        "README.md:84-95@e65eca999e071503efb893d3379a29fb96ff37c4"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "excalidraw-q2",
+      "score": 2,
+      "reason": "Correct hosted app, reusable editor, element logic and math boundaries; supporting package manifests and README substantiate component responsibilities.",
+      "sourceReferences": [
+        "README.md:54-82@e65eca999e071503efb893d3379a29fb96ff37c4",
+        "packages/excalidraw/index.tsx:401-420@e65eca999e071503efb893d3379a29fb96ff37c4",
+        "packages/element/package.json:28-34@e65eca999e071503efb893d3379a29fb96ff37c4",
+        "packages/math/package.json:22-27@e65eca999e071503efb893d3379a29fb96ff37c4"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "excalidraw-q3",
+      "score": 2,
+      "reason": "Correct TypeScript/React, Yarn workspaces, app Vite, Vitest/check tooling and separate ESM/types package builds.",
+      "sourceReferences": [
+        "package.json:1-9@e65eca999e071503efb893d3379a29fb96ff37c4",
+        "package.json:36-44@e65eca999e071503efb893d3379a29fb96ff37c4",
+        "package.json:51-73@e65eca999e071503efb893d3379a29fb96ff37c4",
+        "packages/excalidraw/index.tsx:401-402@e65eca999e071503efb893d3379a29fb96ff37c4",
+        "packages/excalidraw/package.json:76-79@e65eca999e071503efb893d3379a29fb96ff37c4"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "excalidraw-q4",
+      "score": 1,
+      "reason": "Correct public package import, index reexport, implementation location and built export boundary. Missing frozen required-fact coverage of targetElements, existingElements context and options as the API inputs; a citation alone does not supply these unstated facts.",
+      "sourceReferences": [
+        "packages/excalidraw/index.tsx:415-420@e65eca999e071503efb893d3379a29fb96ff37c4",
+        "packages/excalidraw/data/restore.ts:946-957@e65eca999e071503efb893d3379a29fb96ff37c4"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "excalidraw-q5",
+      "score": 2,
+      "reason": "Correct predicate location and all branches, including fewer than two points, two-point arrows with strict per-coordinate 0.1 tolerance, and both-zero dimensions for other elements.",
+      "sourceReferences": [
+        "packages/element/src/sizeHelpers.ts:56-78@e65eca999e071503efb893d3379a29fb96ff37c4"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "excalidraw-q6",
+      "score": 2,
+      "reason": "Correct three internal package dependencies and manifest-proven direction; avoids treating type/import relations as universal execution.",
+      "sourceReferences": [
+        "packages/element/package.json:65-70@e65eca999e071503efb893d3379a29fb96ff37c4"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "excalidraw-q7",
+      "score": 2,
+      "reason": "Correct restoration-before-predicate ordering, original rectangle check, version bump/tombstone retention, index normalization, and optional repair/failed restoration boundaries.",
+      "sourceReferences": [
+        "packages/excalidraw/data/restore.ts:965-1017@e65eca999e071503efb893d3379a29fb96ff37c4",
+        "packages/element/src/sizeHelpers.ts:61-78@e65eca999e071503efb893d3379a29fb96ff37c4"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "excalidraw-q8",
+      "score": 2,
+      "reason": "Correct two requested direct consumers and their conditional effects. Identifies element barrel reexport separately from calls and labels wider impact as inferred; pinned element/src/index.ts:95 supports that reexport.",
+      "sourceReferences": [
+        "packages/excalidraw/data/restore.ts:986-998@e65eca999e071503efb893d3379a29fb96ff37c4",
+        "packages/element/src/index.ts:43-53@e65eca999e071503efb893d3379a29fb96ff37c4",
+        "packages/excalidraw/index.tsx:411-412@e65eca999e071503efb893d3379a29fb96ff37c4",
+        "packages/element/src/index.ts:85-100@e65eca999e071503efb893d3379a29fb96ff37c4"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": true
+    },
+    {
+      "id": "excalidraw-q9",
+      "score": 2,
+      "reason": "Correct test location, mocked-true predicate, option-enabled restoration and retained isDeleted object. Correctly identifies misleading test title and lack of geometry verification.",
+      "sourceReferences": [
+        "packages/excalidraw/tests/data/restore.test.ts:33-49@e65eca999e071503efb893d3379a29fb96ff37c4",
+        "packages/excalidraw/tests/data/restore.test.ts:143-152@e65eca999e071503efb893d3379a29fb96ff37c4"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "excalidraw-q10",
+      "score": 2,
+      "reason": "Correct optional API field, forwarding, original-element predicate gating, bumped migrated tombstone and absent/false behavior; separate empty-text branch is supported.",
+      "sourceReferences": [
+        "packages/excalidraw/data/restore.ts:946-957@e65eca999e071503efb893d3379a29fb96ff37c4",
+        "packages/excalidraw/data/restore.ts:974-998@e65eca999e071503efb893d3379a29fb96ff37c4"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    }
+  ],
+  "total": 19,
+  "referenceIssues": [],
+  "limitations": [
+    "Read-only pinned-source grading; target builds, tests and browser execution were not run.",
+    "All frozen oracle file SHA256 values and LF-normalized excerpts for this repository matched pinned Git blobs. All answer citation paths resolved at the stated pin.",
+    "Analyzer behavior claims were treated as evaluator-reported limitations, not independently reproduced or as replacement factual credit."
+  ]
+}

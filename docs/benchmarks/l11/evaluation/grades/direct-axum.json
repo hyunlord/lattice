@@ -1,0 +1,145 @@
+{
+  "repository": "tokio-rs/axum",
+  "commit": "e57b547eb95de74b73b34719dd5926254a085634",
+  "arm": "direct",
+  "gradedBy": "independent fresh grader direct-axum",
+  "answerSha256": "a8a4c0e338c59a534dc52544577f4dcd7ed9ce7477b631daef4eb46072ee7c6d",
+  "questions": [
+    {
+      "id": "q1",
+      "score": 2,
+      "reason": "Complete purpose, application caller, Tokio listener/serve and Tower service integration; pinned definitions verify the assertions.",
+      "sourceReferences": [
+        "axum/src/lib.rs:1-40",
+        "axum/src/serve/mod.rs:814-828"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "q2",
+      "score": 1,
+      "reason": "Partial: correctly identifies the four principal crates, routing layers and optional extras, but does not explain FromRequest/FromRequestParts and IntoResponse roles or Tower Service middleware integration in this exact answer. General extraction/response labels do not fully cover those required component responsibilities.",
+      "sourceReferences": [
+        "axum/src/lib.rs:1-16",
+        "axum-core/src/lib.rs:1-7",
+        "axum-extra/src/lib.rs:3-34",
+        "axum-macros/src/lib.rs:17-27",
+        "axum/src/routing/path_router.rs:297-325"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "q3",
+      "score": 2,
+      "reason": "Complete Rust/Cargo workspace, edition/MSRV, internal crates, optional macros and framework dependencies; source citations support package organization and feature gating.",
+      "sourceReferences": [
+        "Cargo.toml:1-6",
+        "axum/Cargo.toml:40-75",
+        "axum/Cargo.toml:107-133",
+        "axum-macros/Cargo.toml:17-29",
+        "examples/Cargo.toml:1-8"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": true
+    },
+    {
+      "id": "q4",
+      "score": 2,
+      "reason": "Correctly identifies the request Service implementation, readiness, Body mapping and call_with_state delegation, distinguishing the connection factory. This directly answers the selected per-request entry question.",
+      "sourceReferences": [
+        "axum/src/routing/mod.rs:445-455",
+        "axum/src/routing/mod.rs:580-610"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "q5",
+      "score": 2,
+      "reason": "Correct HEAD-first then GET dispatch and top-level body suppression after content-length calculation; method preservation is verified.",
+      "sourceReferences": [
+        "axum/src/routing/method_routing.rs:1200-1240",
+        "axum/src/routing/route.rs:55-58",
+        "axum/src/routing/route.rs:165-177"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "q6",
+      "score": 2,
+      "reason": "Correct outgoing calls and endpoint branches, backed by source expressions; separates extractor consumers from direct calls and identifies the external matchit boundary.",
+      "sourceReferences": [
+        "axum/src/routing/path_router.rs:280-325",
+        "axum/src/routing/path_router.rs:357-386"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "q7",
+      "score": 2,
+      "reason": "Complete supported dispatch chain from Router through path/method selection, boxed handler/Route, user handler and RouteFuture body suppression, with service/type-erasure/external boundaries. Body mapping is explained in its explicitly referenced q4 context; no runtime claim is made.",
+      "sourceReferences": [
+        "axum/src/routing/mod.rs:445-455",
+        "axum/src/routing/mod.rs:592-610",
+        "axum/src/routing/path_router.rs:297-325",
+        "axum/src/routing/method_routing.rs:1200-1240",
+        "axum/src/boxed.rs:12-45",
+        "axum/src/handler/service.rs:165-174",
+        "axum/src/handler/mod.rs:208-217",
+        "axum/src/routing/route.rs:148-177"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": true
+    },
+    {
+      "id": "q8",
+      "score": 2,
+      "reason": "Complete direct Router consumer, successful-future/fallback behavior and indirect Service entry; distinguishes potential impact from unproved application outcomes.",
+      "sourceReferences": [
+        "axum/src/routing/mod.rs:445-455",
+        "axum/src/routing/mod.rs:607-610"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": true
+    },
+    {
+      "id": "q9",
+      "score": 2,
+      "reason": "Correct handler and service HEAD tests, Router.oneshot entry, status/header/empty-body assertions and unexecuted status; additional method-routing and header tests are accurately distinguished.",
+      "sourceReferences": [
+        "axum/src/routing/tests/get_to_head.rs:4-69",
+        "axum/src/routing/method_routing.rs:1467-1481",
+        "axum/src/routing/route.rs:253-293"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": true
+    },
+    {
+      "id": "q10",
+      "score": 2,
+      "reason": "Complete capture matching, internal-key filtering, UTF-8 percent decoding, extension accumulation/error storage and typed deserialization. Naming PathDeserializer/T::deserialize describes the implementation of the oracle-named serialize_path_params helper accurately.",
+      "sourceReferences": [
+        "axum/src/routing/path_router.rs:295-308",
+        "axum/src/routing/url_params.rs:17-59",
+        "axum/src/util.rs:30-38",
+        "axum/src/extract/path/mod.rs:167-175",
+        "axum/src/extract/path/mod.rs:594-623",
+        "axum/src/extract/path/inner_path.rs:180-205"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    }
+  ],
+  "total": 19,
+  "referenceIssues": [],
+  "limitations": [
+    "Pinned local HEAD and clean working tree verified. All oracle excerpt and full-file SHA256 references match pinned local sources. No target scripts, builds or tests executed.",
+    "Answer citation line spans frequently do not reach the named definitions: Router::call_with_state is 445-455 rather than 412-421; Router request call is 607-610 rather than 552-568; MethodRouter dispatch is 1200-1240 rather than 1139-1177; RouteFuture HEAD removal is 175-176 beyond cited 133-168; Node::at is 382-386 rather than 353-357; PathDeserializer conversion is 615-623 rather than 564-589. These are answer citation defects, not frozen-reference contradictions.",
+    "Following the grading instruction, verified commit-pinned file URLs plus explicit definition names count as source citations despite inaccurate numeric spans. sourceReferences records independently verified locations, without treating them as new answer facts.",
+    "Analyzer limitations are annotations only and receive no substitute factual credit."
+  ]
+}

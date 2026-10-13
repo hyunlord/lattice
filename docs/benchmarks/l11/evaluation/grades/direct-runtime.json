@@ -1,0 +1,279 @@
+{
+  "repository": "dotnet/runtime",
+  "commit": "8630d8988107478d249e2fdb8162f8c7dcbd3dbb",
+  "arm": "direct",
+  "gradedBy": "independent fresh grader direct-runtime",
+  "answerSha256": "f0948737c22c11d900015dc3e11e97ae438d404b49f29a132339dbab9fffb8a3",
+  "questions": [
+    {
+      "id": "runtime-q1",
+      "score": 2,
+      "reason": "Correct repository-wide runtime, libraries, host/installers and managed-application consumers; pinned README and hosting documentation support the entry-point examples.",
+      "sourceReferences": [
+        {
+          "path": "README.md",
+          "startLine": 16,
+          "endLine": 26,
+          "commit": "8630d8988107478d249e2fdb8162f8c7dcbd3dbb"
+        },
+        {
+          "path": "docs/workflow/README.md",
+          "startLine": 62,
+          "endLine": 74,
+          "commit": "8630d8988107478d249e2fdb8162f8c7dcbd3dbb"
+        },
+        {
+          "path": "docs/workflow/README.md",
+          "startLine": 86,
+          "endLine": 92,
+          "commit": "8630d8988107478d249e2fdb8162f8c7dcbd3dbb"
+        }
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "runtime-q2",
+      "score": 2,
+      "reason": "Correct CoreCLR, Mono, runtime-coupled CoreLib, remaining libraries and hosts/packs responsibilities beyond HTTP, supported by pinned workflow documentation.",
+      "sourceReferences": [
+        {
+          "path": "docs/workflow/README.md",
+          "startLine": 62,
+          "endLine": 74,
+          "commit": "8630d8988107478d249e2fdb8162f8c7dcbd3dbb"
+        },
+        {
+          "path": "docs/workflow/README.md",
+          "startLine": 86,
+          "endLine": 92,
+          "commit": "8630d8988107478d249e2fdb8162f8c7dcbd3dbb"
+        },
+        {
+          "path": "src/libraries/System.Net.Http/src/System.Net.Http.csproj",
+          "startLine": 1,
+          "endLine": 8,
+          "commit": "8630d8988107478d249e2fdb8162f8c7dcbd3dbb"
+        }
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "runtime-q3",
+      "score": 1,
+      "reason": "Correct principal languages, MSBuild, root subset scripts, platform boundaries and native-library CMake. Partial against the frozen required facts: it does not identify the CoreCLR CMake build boundary; native-library CMake is a different component. The principal-language limitation does not supply that missing fact.",
+      "sourceReferences": [
+        {
+          "path": "docs/workflow/README.md",
+          "startLine": 62,
+          "endLine": 92,
+          "commit": "8630d8988107478d249e2fdb8162f8c7dcbd3dbb"
+        },
+        {
+          "path": "src/coreclr/CMakeLists.txt",
+          "startLine": 1,
+          "endLine": 12,
+          "commit": "8630d8988107478d249e2fdb8162f8c7dcbd3dbb"
+        },
+        {
+          "path": "src/libraries/System.Net.Http/src/System.Net.Http.csproj",
+          "startLine": 1,
+          "endLine": 20,
+          "commit": "8630d8988107478d249e2fdb8162f8c7dcbd3dbb"
+        },
+        {
+          "path": "src/libraries/System.Net.Http/src/System/Net/Http/HttpClient.cs",
+          "startLine": 143,
+          "endLine": 157,
+          "commit": "8630d8988107478d249e2fdb8162f8c7dcbd3dbb"
+        }
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": true
+    },
+    {
+      "id": "runtime-q4",
+      "score": 2,
+      "reason": "Complete GET creation and HttpClient/HttpMessageInvoker/HttpClientHandler/SocketsHttpHandler dispatch, including injected-handler and platform boundaries.",
+      "sourceReferences": [
+        {
+          "path": "src/libraries/System.Net.Http/src/System/Net/Http/HttpClient.cs",
+          "startLine": 143,
+          "endLine": 157,
+          "commit": "8630d8988107478d249e2fdb8162f8c7dcbd3dbb"
+        },
+        {
+          "path": "src/libraries/System.Net.Http/src/System/Net/Http/HttpClient.cs",
+          "startLine": 365,
+          "endLine": 387,
+          "commit": "8630d8988107478d249e2fdb8162f8c7dcbd3dbb"
+        },
+        {
+          "path": "src/libraries/System.Net.Http/src/System/Net/Http/HttpClientHandler.cs",
+          "startLine": 10,
+          "endLine": 29,
+          "commit": "8630d8988107478d249e2fdb8162f8c7dcbd3dbb"
+        }
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "runtime-q5",
+      "score": 2,
+      "reason": "Complete RedirectHandler.SendAsync and RequestRequiresForceGet location, status/method matrix, body clearing and chunked-transfer reset.",
+      "sourceReferences": [
+        {
+          "path": "src/libraries/System.Net.Http/src/System/Net/Http/SocketsHttpHandler/RedirectHandler.cs",
+          "startLine": 62,
+          "endLine": 88,
+          "commit": "8630d8988107478d249e2fdb8162f8c7dcbd3dbb"
+        },
+        {
+          "path": "src/libraries/System.Net.Http/src/System/Net/Http/SocketsHttpHandler/RedirectHandler.cs",
+          "startLine": 158,
+          "endLine": 171,
+          "commit": "8630d8988107478d249e2fdb8162f8c7dcbd3dbb"
+        }
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "runtime-q6",
+      "score": 2,
+      "reason": "Complete settings clone, pool/connection handler, conditional metrics/diagnostics/redirect/decompression stages and atomic single-chain publication. The described outer-to-inner order matches construction.",
+      "sourceReferences": [
+        {
+          "path": "src/libraries/System.Net.Http/src/System/Net/Http/SocketsHttpHandler/SocketsHttpHandler.cs",
+          "startLine": 589,
+          "endLine": 633,
+          "commit": "8630d8988107478d249e2fdb8162f8c7dcbd3dbb"
+        }
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "runtime-q7",
+      "score": 2,
+      "reason": "Complete supported POST path by explicit reference to its q4 dispatch, conditional inner stages and transport boundary, followed by allowed-302 URI/method/body/auth changes and resend. Correctly avoids promising a final 200.",
+      "sourceReferences": [
+        {
+          "path": "src/libraries/System.Net.Http/src/System/Net/Http/HttpClient.cs",
+          "startLine": 526,
+          "endLine": 561,
+          "commit": "8630d8988107478d249e2fdb8162f8c7dcbd3dbb"
+        },
+        {
+          "path": "src/libraries/System.Net.Http/src/System/Net/Http/HttpMessageInvoker.cs",
+          "startLine": 67,
+          "endLine": 90,
+          "commit": "8630d8988107478d249e2fdb8162f8c7dcbd3dbb"
+        },
+        {
+          "path": "src/libraries/System.Net.Http/src/System/Net/Http/HttpClientHandler.cs",
+          "startLine": 10,
+          "endLine": 29,
+          "commit": "8630d8988107478d249e2fdb8162f8c7dcbd3dbb"
+        },
+        {
+          "path": "src/libraries/System.Net.Http/src/System/Net/Http/HttpClientHandler.cs",
+          "startLine": 358,
+          "endLine": 368,
+          "commit": "8630d8988107478d249e2fdb8162f8c7dcbd3dbb"
+        },
+        {
+          "path": "src/libraries/System.Net.Http/src/System/Net/Http/SocketsHttpHandler/SocketsHttpHandler.cs",
+          "startLine": 676,
+          "endLine": 705,
+          "commit": "8630d8988107478d249e2fdb8162f8c7dcbd3dbb"
+        },
+        {
+          "path": "src/libraries/System.Net.Http/src/System/Net/Http/SocketsHttpHandler/SocketsHttpHandler.cs",
+          "startLine": 609,
+          "endLine": 624,
+          "commit": "8630d8988107478d249e2fdb8162f8c7dcbd3dbb"
+        },
+        {
+          "path": "src/libraries/System.Net.Http/src/System/Net/Http/SocketsHttpHandler/RedirectHandler.cs",
+          "startLine": 26,
+          "endLine": 90,
+          "commit": "8630d8988107478d249e2fdb8162f8c7dcbd3dbb"
+        },
+        {
+          "path": "src/libraries/System.Net.Http/src/System/Net/Http/SocketsHttpHandler/RedirectHandler.cs",
+          "startLine": 158,
+          "endLine": 171,
+          "commit": "8630d8988107478d249e2fdb8162f8c7dcbd3dbb"
+        },
+        {
+          "path": "src/libraries/System.Net.Http/src/System/Net/Http/HttpClientHandler.cs",
+          "startLine": 66,
+          "endLine": 78,
+          "commit": "8630d8988107478d249e2fdb8162f8c7dcbd3dbb"
+        }
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "runtime-q8",
+      "score": 2,
+      "reason": "Complete directly evidenced construction consumer, auto-redirect gate, maximum and credential-dependent authentication argument, with conditional effects. Exhaustive search is not required by this question.",
+      "sourceReferences": [
+        {
+          "path": "src/libraries/System.Net.Http/src/System/Net/Http/SocketsHttpHandler/SocketsHttpHandler.cs",
+          "startLine": 609,
+          "endLine": 624,
+          "commit": "8630d8988107478d249e2fdb8162f8c7dcbd3dbb"
+        }
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": true
+    },
+    {
+      "id": "runtime-q9",
+      "score": 2,
+      "reason": "Identifies the method matrix and named theory, loopback redirect/final-200 assertions, factories and sockets-specific inherited fixture. Sufficient implementation entry and configuration boundary are established; missing inspection of the TestAsync helper is honestly recorded and no test execution is claimed.",
+      "sourceReferences": [
+        {
+          "path": "src/libraries/Common/tests/System/Net/Http/HttpClientHandlerTest.AutoRedirect.cs",
+          "startLine": 22,
+          "endLine": 82,
+          "commit": "8630d8988107478d249e2fdb8162f8c7dcbd3dbb"
+        }
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": true
+    },
+    {
+      "id": "runtime-q10",
+      "score": 2,
+      "reason": "Complete status-gated Location read, relative resolution, fragment inheritance, downgrade/unsupported-scheme checks and accepted URI assignment. Additional HTTP/1 header parsing description is supported by the named definitions.",
+      "sourceReferences": [
+        {
+          "path": "src/libraries/System.Net.Http/src/System/Net/Http/SocketsHttpHandler/RedirectHandler.cs",
+          "startLine": 93,
+          "endLine": 156,
+          "commit": "8630d8988107478d249e2fdb8162f8c7dcbd3dbb"
+        },
+        {
+          "path": "src/libraries/System.Net.Http/src/System/Net/Http/SocketsHttpHandler/RedirectHandler.cs",
+          "startLine": 62,
+          "endLine": 88,
+          "commit": "8630d8988107478d249e2fdb8162f8c7dcbd3dbb"
+        }
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": true
+    }
+  ],
+  "total": 19,
+  "referenceIssues": [],
+  "limitations": [
+    "Answer citations explicitly use web-rendered line numbers, which do not correspond to physical source lines. Their pinned file URLs and named definitions were verified locally; web-rendered spans themselves were not independently reproduced. Grader sourceReferences record physical pinned-source ranges.",
+    "Read-only static grading; no target builds or tests executed. The answer explicitly leaves the TestAsync helper adapter unverified; this is not replaced by grader-supplied answer facts."
+  ]
+}

@@ -1,0 +1,898 @@
+{
+  "version": 1,
+  "trials": {
+    "direct-click": {
+      "repository": "click",
+      "arm": "direct",
+      "status": "complete-timing-limited",
+      "agentId": "/root/l11_eval_direct_click",
+      "answerPath": "/tmp/l11-evaluation/direct-click.json",
+      "answerSha256": "4e59500886f9210141eb50617fd51c47509a9d447ee7a2c089bc644cea92ddf0",
+      "selfReportedInitialUtc": "2026-10-13T06:20:28Z",
+      "selfReportedElapsedSeconds": 300,
+      "elapsedSecondsUpper": null,
+      "elapsedSecondsLower": null,
+      "model": "inherited session default; exact authoritative model identifier unavailable",
+      "reasoning": "inherited session default; exact setting unavailable",
+      "limitations": [
+        "Trial began before coordinator initialization; external monotonic stamp failed. Agent elapsed time is self-reported, not coordinator time.",
+        "Root reports pinned source-only conditions verified. No replacement trial permitted."
+      ]
+    },
+    "direct-fzf": {
+      "repository": "fzf",
+      "arm": "direct",
+      "startBeforeDelivery": {
+        "utc": "2026-10-13T06:44:41.425Z",
+        "monotonicNs": "423071281957166"
+      },
+      "status": "complete",
+      "model": "inherited-session-default",
+      "reasoning": "inherited",
+      "limitations": [],
+      "deliveryObserved": {
+        "utc": "2026-10-13T06:45:21.099Z",
+        "monotonicNs": "423110956658250"
+      },
+      "agentId": "/root/l11_evaluation_coordinator/direct_fzf",
+      "finalPersistObserved": {
+        "utc": "2026-10-13T06:48:39.466Z",
+        "monotonicNs": "423309322591541"
+      },
+      "elapsedSecondsUpper": 238.040634375,
+      "elapsedSecondsLower": 198.365933291,
+      "answerSha256": "711f3f91c2f7d49199dca753b26eb871c5b8215262526a29ddb57d3d0d4d3b81",
+      "answerPath": "/tmp/l11-evaluation/direct-fzf.json"
+    },
+    "direct-ripgrep": {
+      "repository": "ripgrep",
+      "arm": "direct",
+      "startBeforeDelivery": {
+        "utc": "2026-10-13T06:44:41.531Z",
+        "monotonicNs": "423071387804291"
+      },
+      "status": "complete",
+      "model": "inherited-session-default",
+      "reasoning": "inherited",
+      "limitations": [],
+      "deliveryObserved": {
+        "utc": "2026-10-13T06:45:21.239Z",
+        "monotonicNs": "423111100561291"
+      },
+      "agentId": "/root/l11_evaluation_coordinator/direct_ripgrep",
+      "finalPersistObserved": {
+        "utc": "2026-10-13T06:49:51.186Z",
+        "monotonicNs": "423381042999875"
+      },
+      "elapsedSecondsUpper": 309.655195584,
+      "elapsedSecondsLower": 269.942438584,
+      "answerSha256": "fbcaa52fc6113a9590b873fadfb96cd812c5959829c24a17ccee73886a9c14b4",
+      "answerPath": "/tmp/l11-evaluation/direct-ripgrep.json"
+    },
+    "direct-fastify": {
+      "repository": "fastify",
+      "arm": "direct",
+      "startBeforeDelivery": {
+        "utc": "2026-10-13T06:46:05.154Z",
+        "monotonicNs": "423155011281583"
+      },
+      "status": "complete",
+      "model": "inherited-session-default",
+      "reasoning": "inherited",
+      "limitations": [],
+      "deliveryObserved": {
+        "utc": "2026-10-13T06:46:28.808Z",
+        "monotonicNs": "423178665413750"
+      },
+      "agentId": "/root/l11_evaluation_coordinator/direct_fastify",
+      "finalPersistObserved": {
+        "utc": "2026-10-13T06:49:22.338Z",
+        "monotonicNs": "423352195325958"
+      },
+      "elapsedSecondsUpper": 197.184044375,
+      "elapsedSecondsLower": 173.529912208,
+      "answerSha256": "8c8457704f5f15efb01179d265a2b3e3a819653803a136996ef28b0491ed7dba",
+      "answerPath": "/tmp/l11-evaluation/direct-fastify.json"
+    },
+    "direct-unity-boatattack": {
+      "repository": "unity-boatattack",
+      "arm": "direct",
+      "startBeforeDelivery": {
+        "utc": "2026-10-13T06:46:28.930Z",
+        "monotonicNs": "423178786578583"
+      },
+      "status": "complete",
+      "model": "inherited-session-default",
+      "reasoning": "inherited",
+      "limitations": [],
+      "deliveryObserved": {
+        "utc": "2026-10-13T06:46:50.983Z",
+        "monotonicNs": "423200839780250"
+      },
+      "agentId": "/root/l11_evaluation_coordinator/direct_boatattack",
+      "finalPersistObserved": {
+        "utc": "2026-10-13T06:50:55.182Z",
+        "monotonicNs": "423445038230583"
+      },
+      "elapsedSecondsUpper": 266.251652,
+      "elapsedSecondsLower": 244.198450333,
+      "answerSha256": "05468bc912b68df531f0c09a72db320d6b2385314f6a39df30452f0a38ca7c8f",
+      "answerPath": "/tmp/l11-evaluation/direct-unity-boatattack.json"
+    },
+    "direct-sqlite": {
+      "repository": "sqlite",
+      "arm": "direct",
+      "startBeforeDelivery": {
+        "utc": "2026-10-13T06:49:07.057Z",
+        "monotonicNs": "423336913096041"
+      },
+      "status": "complete",
+      "model": "inherited-session-default",
+      "reasoning": "inherited",
+      "limitations": [],
+      "deliveryObserved": {
+        "utc": "2026-10-13T06:49:22.153Z",
+        "monotonicNs": "423352009301125"
+      },
+      "agentId": "/root/l11_evaluation_coordinator/direct_sqlite",
+      "finalPersistObserved": {
+        "utc": "2026-10-13T06:53:07.149Z",
+        "monotonicNs": "423577005100583"
+      },
+      "elapsedSecondsUpper": 240.092004542,
+      "elapsedSecondsLower": 224.995799458,
+      "answerSha256": "f0dd1641801018eedb95c722fd7f7c01fd794bd5f6142824450d74738f8c711b",
+      "answerPath": "/tmp/l11-evaluation/direct-sqlite.json"
+    },
+    "direct-starlette": {
+      "repository": "starlette",
+      "arm": "direct",
+      "startBeforeDelivery": {
+        "utc": "2026-10-13T06:49:39.327Z",
+        "monotonicNs": "423369184135541"
+      },
+      "status": "complete",
+      "model": "inherited-session-default",
+      "reasoning": "inherited",
+      "limitations": [],
+      "deliveryObserved": {
+        "utc": "2026-10-13T06:49:51.394Z",
+        "monotonicNs": "423381249865583"
+      },
+      "agentId": "/root/l11_evaluation_coordinator/direct_starlette",
+      "finalPersistObserved": {
+        "utc": "2026-10-13T06:53:51.840Z",
+        "monotonicNs": "423621695990333"
+      },
+      "elapsedSecondsUpper": 252.511854792,
+      "elapsedSecondsLower": 240.44612475,
+      "answerSha256": "f8176434958d1704749bfcfec10aded15d941920393e74fed36bd11a18330c27",
+      "answerPath": "/tmp/l11-evaluation/direct-starlette.json"
+    },
+    "direct-chi": {
+      "repository": "chi",
+      "arm": "direct",
+      "startBeforeDelivery": {
+        "utc": "2026-10-13T06:50:00.100Z",
+        "monotonicNs": "423389956126083"
+      },
+      "status": "complete",
+      "model": "inherited-session-default",
+      "reasoning": "inherited",
+      "limitations": [],
+      "deliveryObserved": {
+        "utc": "2026-10-13T06:50:11.958Z",
+        "monotonicNs": "423401814277250"
+      },
+      "agentId": "/root/l11_evaluation_coordinator/direct_chi",
+      "finalPersistObserved": {
+        "utc": "2026-10-13T06:53:28.470Z",
+        "monotonicNs": "423598325673875"
+      },
+      "elapsedSecondsUpper": 208.369547792,
+      "elapsedSecondsLower": 196.511396625,
+      "answerSha256": "ee7d65e2e294bf4f42ea4b6be538adf5c4f15dc1b401217d4e8147b8c0580294",
+      "answerPath": "/tmp/l11-evaluation/direct-chi.json"
+    },
+    "direct-dapper": {
+      "repository": "dapper",
+      "arm": "direct",
+      "startBeforeDelivery": {
+        "utc": "2026-10-13T06:51:03.992Z",
+        "monotonicNs": "423453847827791"
+      },
+      "status": "complete",
+      "model": "inherited-session-default",
+      "reasoning": "inherited",
+      "limitations": [],
+      "deliveryObserved": {
+        "utc": "2026-10-13T06:51:14.368Z",
+        "monotonicNs": "423464224513291"
+      },
+      "agentId": "/root/l11_evaluation_coordinator/direct_dapper",
+      "finalPersistObserved": {
+        "utc": "2026-10-13T06:54:26.171Z",
+        "monotonicNs": "423656027197833"
+      },
+      "elapsedSecondsUpper": 202.179370042,
+      "elapsedSecondsLower": 191.802684542,
+      "answerSha256": "52f8b5d49074bed2216e1615c9b983b4670a6043ad69cb95796561312980ad38",
+      "answerPath": "/tmp/l11-evaluation/direct-dapper.json"
+    },
+    "map-nowinandroid": {
+      "repository": "nowinandroid",
+      "arm": "map",
+      "startBeforeDelivery": {
+        "utc": "2026-10-13T07:12:35.072Z",
+        "monotonicNs": "424744923466458"
+      },
+      "status": "complete",
+      "model": "inherited-session-default",
+      "reasoning": "inherited",
+      "limitations": [],
+      "deliveryObserved": {
+        "utc": "2026-10-13T07:12:52.580Z",
+        "monotonicNs": "424762431606958"
+      },
+      "agentId": "/root/l11_evaluation_coordinator/map_nowinandroid",
+      "finalPersistObserved": {
+        "utc": "2026-10-13T07:18:18.636Z",
+        "monotonicNs": "425088486179875"
+      },
+      "elapsedSecondsUpper": 343.562713417,
+      "elapsedSecondsLower": 326.054572917,
+      "answerSha256": "7ea7c26c520dc080973f2c2823360ff4fad9179a891de2eefa80123bf65d8240",
+      "answerPath": "/tmp/l11-evaluation/map-nowinandroid.json"
+    },
+    "map-httpx": {
+      "repository": "httpx",
+      "arm": "map",
+      "startBeforeDelivery": {
+        "utc": "2026-10-13T07:12:52.665Z",
+        "monotonicNs": "424762516175958"
+      },
+      "status": "complete",
+      "model": "inherited-session-default",
+      "reasoning": "inherited",
+      "limitations": [],
+      "deliveryObserved": {
+        "utc": "2026-10-13T07:13:07.510Z",
+        "monotonicNs": "424777361547625"
+      },
+      "agentId": "/root/l11_evaluation_coordinator/map_httpx",
+      "finalPersistObserved": {
+        "utc": "2026-10-13T07:16:54.302Z",
+        "monotonicNs": "425004152529041"
+      },
+      "elapsedSecondsUpper": 241.636353083,
+      "elapsedSecondsLower": 226.790981416,
+      "answerSha256": "0f04c0feccd606170ff2fabcba3d957bd9ac0b995d21f1d0d5d8001a7d7f69cb",
+      "answerPath": "/tmp/l11-evaluation/map-httpx.json"
+    },
+    "map-click": {
+      "repository": "click",
+      "arm": "map",
+      "startBeforeDelivery": {
+        "utc": "2026-10-13T07:30:04.832Z",
+        "monotonicNs": "425794680611291"
+      },
+      "status": "complete",
+      "model": "inherited-session-default",
+      "reasoning": "inherited",
+      "limitations": [],
+      "deliveryObserved": {
+        "utc": "2026-10-13T07:30:23.594Z",
+        "monotonicNs": "425813443082375"
+      },
+      "agentId": "/root/l11_evaluation_coordinator/map_click",
+      "finalPersistObserved": {
+        "utc": "2026-10-13T07:35:14.807Z",
+        "monotonicNs": "426104654223416"
+      },
+      "elapsedSecondsUpper": 309.973612125,
+      "elapsedSecondsLower": 291.211141041,
+      "answerSha256": "4958cf70e765b59bf4f0dc6516d09a799b284655ca919856d69d275058d360bb",
+      "answerPath": "/tmp/l11-evaluation/map-click.json"
+    },
+    "map-excalidraw": {
+      "repository": "excalidraw",
+      "arm": "map",
+      "startBeforeDelivery": {
+        "utc": "2026-10-13T07:30:23.884Z",
+        "monotonicNs": "425813731577291"
+      },
+      "status": "complete",
+      "model": "inherited-session-default",
+      "reasoning": "inherited",
+      "limitations": [],
+      "deliveryObserved": {
+        "utc": "2026-10-13T07:30:38.889Z",
+        "monotonicNs": "425828736987083"
+      },
+      "agentId": "/root/l11_evaluation_coordinator/map_excalidraw",
+      "finalPersistObserved": {
+        "utc": "2026-10-13T07:35:17.821Z",
+        "monotonicNs": "426107668242625"
+      },
+      "elapsedSecondsUpper": 293.936665334,
+      "elapsedSecondsLower": 278.931255542,
+      "answerSha256": "2591ecb66a390afad52be02c7d577291d4d1519159915efde13aa7d8d9d5099f",
+      "answerPath": "/tmp/l11-evaluation/map-excalidraw.json"
+    },
+    "direct-nowinandroid": {
+      "repository": "nowinandroid",
+      "arm": "direct",
+      "startBeforeDelivery": {
+        "utc": "2026-10-13T07:30:38.963Z",
+        "monotonicNs": "425828811362750"
+      },
+      "status": "complete",
+      "model": "inherited-session-default",
+      "reasoning": "inherited",
+      "limitations": [],
+      "deliveryObserved": {
+        "utc": "2026-10-13T07:30:50.410Z",
+        "monotonicNs": "425840257667916"
+      },
+      "agentId": "/root/l11_evaluation_coordinator/direct_nowinandroid",
+      "finalPersistObserved": {
+        "utc": "2026-10-13T07:35:07.257Z",
+        "monotonicNs": "426097103724750"
+      },
+      "elapsedSecondsUpper": 268.292362,
+      "elapsedSecondsLower": 256.846056834,
+      "answerSha256": "6b87607b14fd982a55b15a242ccac5e591e26f375de5f44dc7702a3d185c9870",
+      "answerPath": "/tmp/l11-evaluation/direct-nowinandroid.json"
+    },
+    "direct-httpx": {
+      "repository": "httpx",
+      "arm": "direct",
+      "startBeforeDelivery": {
+        "utc": "2026-10-13T07:30:50.478Z",
+        "monotonicNs": "425840325717333"
+      },
+      "status": "complete",
+      "model": "inherited-session-default",
+      "reasoning": "inherited",
+      "limitations": [],
+      "deliveryObserved": {
+        "utc": "2026-10-13T07:31:00.539Z",
+        "monotonicNs": "425850387063000"
+      },
+      "agentId": "/root/l11_evaluation_coordinator/direct_httpx",
+      "finalPersistObserved": {
+        "utc": "2026-10-13T07:34:48.137Z",
+        "monotonicNs": "426077983849000"
+      },
+      "elapsedSecondsUpper": 237.658131667,
+      "elapsedSecondsLower": 227.596786,
+      "answerSha256": "3b819121ccfc3be38f9c2530fb005ecfd7b2dadd16ca95c2dc441bd568cb63d7",
+      "answerPath": "/tmp/l11-evaluation/direct-httpx.json"
+    },
+    "direct-excalidraw": {
+      "repository": "excalidraw",
+      "arm": "direct",
+      "startBeforeDelivery": {
+        "utc": "2026-10-13T07:36:10.844Z",
+        "monotonicNs": "426160690298916"
+      },
+      "status": "complete",
+      "model": "inherited-session-default",
+      "reasoning": "inherited",
+      "limitations": [],
+      "deliveryObserved": {
+        "utc": "2026-10-13T07:36:34.227Z",
+        "monotonicNs": "426184078176000"
+      },
+      "agentId": "/root/l11_evaluation_coordinator/direct_excalidraw",
+      "finalPersistObserved": {
+        "utc": "2026-10-13T07:40:57.326Z",
+        "monotonicNs": "426447177371333"
+      },
+      "elapsedSecondsUpper": 286.487072417,
+      "elapsedSecondsLower": 263.099195333,
+      "answerSha256": "c4825daf48a4ff60fbb6edb8f1635100907674bc41a4b1c4429b1d26f3b8b88e",
+      "answerPath": "/tmp/l11-evaluation/direct-excalidraw.json"
+    },
+    "map-fzf": {
+      "repository": "fzf",
+      "arm": "map",
+      "startBeforeDelivery": {
+        "utc": "2026-10-13T07:36:41.072Z",
+        "monotonicNs": "426190919026666"
+      },
+      "status": "complete",
+      "model": "inherited-session-default",
+      "reasoning": "inherited",
+      "limitations": [],
+      "deliveryObserved": {
+        "utc": "2026-10-13T07:36:54.820Z",
+        "monotonicNs": "426204666634458"
+      },
+      "agentId": "/root/l11_evaluation_coordinator/map_fzf",
+      "finalPersistObserved": {
+        "utc": "2026-10-13T07:42:26.241Z",
+        "monotonicNs": "426536090221291"
+      },
+      "elapsedSecondsUpper": 345.171194625,
+      "elapsedSecondsLower": 331.423586833,
+      "answerSha256": "2480cfd0a15a19d5a6b01236d1df423cc8b2ecc3dbddfbb2ee6e7bc88237b2c6",
+      "answerPath": "/tmp/l11-evaluation/map-fzf.json"
+    },
+    "map-runtime": {
+      "repository": "runtime",
+      "arm": "map",
+      "startBeforeDelivery": {
+        "utc": "2026-10-13T07:38:57.501Z",
+        "monotonicNs": "426327347100833"
+      },
+      "status": "complete",
+      "model": "inherited-session-default",
+      "reasoning": "inherited",
+      "limitations": [],
+      "deliveryObserved": {
+        "utc": "2026-10-13T07:39:09.955Z",
+        "monotonicNs": "426339801476458"
+      },
+      "agentId": "/root/l11_evaluation_coordinator/map_runtime",
+      "finalPersistObserved": {
+        "utc": "2026-10-13T07:44:51.146Z",
+        "monotonicNs": "426680992501125"
+      },
+      "elapsedSecondsUpper": 353.645400292,
+      "elapsedSecondsLower": 341.191024667,
+      "answerSha256": "aab1fbc8e375a90d7cbed713c4366be8d451d38f3c32f7d8f30cccbc35082c6a",
+      "answerPath": "/tmp/l11-evaluation/map-runtime.json"
+    },
+    "map-spring-petclinic": {
+      "repository": "spring-petclinic",
+      "arm": "map",
+      "startBeforeDelivery": {
+        "utc": "2026-10-13T07:42:36.655Z",
+        "monotonicNs": "426546500820166"
+      },
+      "status": "complete",
+      "model": "inherited-session-default",
+      "reasoning": "inherited",
+      "limitations": [],
+      "deliveryObserved": {
+        "utc": "2026-10-13T07:42:51.653Z",
+        "monotonicNs": "426561498683583"
+      },
+      "agentId": "/root/l11_evaluation_coordinator/map_spring_petclinic",
+      "finalPersistObserved": {
+        "utc": "2026-10-13T07:46:20.708Z",
+        "monotonicNs": "426770553701458"
+      },
+      "elapsedSecondsUpper": 224.052881292,
+      "elapsedSecondsLower": 209.055017875,
+      "answerSha256": "e85d2cc8f97d98d9b36dde779d172ec4c78b95011988330432176a702df82806",
+      "answerPath": "/tmp/l11-evaluation/map-spring-petclinic.json"
+    },
+    "map-godot-demos": {
+      "repository": "godot-demos",
+      "arm": "map",
+      "startBeforeDelivery": {
+        "utc": "2026-10-13T07:45:22.893Z",
+        "monotonicNs": "426712738039500"
+      },
+      "status": "complete",
+      "model": "inherited-session-default",
+      "reasoning": "inherited",
+      "limitations": [],
+      "deliveryObserved": {
+        "utc": "2026-10-13T07:45:36.530Z",
+        "monotonicNs": "426726374608500"
+      },
+      "agentId": "/root/l11_evaluation_coordinator/map_godot",
+      "finalPersistObserved": {
+        "utc": "2026-10-13T07:48:28.723Z",
+        "monotonicNs": "426898567730750"
+      },
+      "elapsedSecondsUpper": 185.82969125,
+      "elapsedSecondsLower": 172.19312225,
+      "answerSha256": "11f9007fc39c11febab4e119480e5cb6a0142d5409d26ec3947240403588b90f",
+      "answerPath": "/tmp/l11-evaluation/map-godot-demos.json"
+    },
+    "direct-runtime": {
+      "repository": "runtime",
+      "arm": "direct",
+      "startBeforeDelivery": {
+        "utc": "2026-10-13T07:45:36.594Z",
+        "monotonicNs": "426726438952958"
+      },
+      "status": "complete",
+      "model": "inherited-session-default",
+      "reasoning": "inherited",
+      "limitations": [],
+      "deliveryObserved": {
+        "utc": "2026-10-13T07:45:54.729Z",
+        "monotonicNs": "426744580342291"
+      },
+      "agentId": "/root/l11_evaluation_coordinator/direct_runtime",
+      "finalPersistObserved": {
+        "utc": "2026-10-13T07:50:40.033Z",
+        "monotonicNs": "427029876644541"
+      },
+      "elapsedSecondsUpper": 303.437691583,
+      "elapsedSecondsLower": 285.29630225,
+      "answerSha256": "f0948737c22c11d900015dc3e11e97ae438d404b49f29a132339dbab9fffb8a3",
+      "answerPath": "/tmp/l11-evaluation/direct-runtime.json"
+    },
+    "map-axum": {
+      "repository": "axum",
+      "arm": "map",
+      "startBeforeDelivery": {
+        "utc": "2026-10-13T07:49:09.492Z",
+        "monotonicNs": "426939347446791"
+      },
+      "status": "complete",
+      "model": "inherited-session-default",
+      "reasoning": "inherited",
+      "limitations": [],
+      "deliveryObserved": {
+        "utc": "2026-10-13T07:49:22.380Z",
+        "monotonicNs": "426952223996166"
+      },
+      "agentId": "/root/l11_evaluation_coordinator/map_axum",
+      "finalPersistObserved": {
+        "utc": "2026-10-13T07:53:33.603Z",
+        "monotonicNs": "427203446369000"
+      },
+      "elapsedSecondsUpper": 264.098922209,
+      "elapsedSecondsLower": 251.222372834,
+      "answerSha256": "c508027e560f6f9056996b201cbaddf2d8c1e3f6386c72cd0650a60f6d85330f",
+      "answerPath": "/tmp/l11-evaluation/map-axum.json"
+    },
+    "direct-spring-petclinic": {
+      "repository": "spring-petclinic",
+      "arm": "direct",
+      "startBeforeDelivery": {
+        "utc": "2026-10-13T07:49:22.597Z",
+        "monotonicNs": "426952441319291"
+      },
+      "status": "complete",
+      "model": "inherited-session-default",
+      "reasoning": "inherited",
+      "limitations": [],
+      "deliveryObserved": {
+        "utc": "2026-10-13T07:49:36.709Z",
+        "monotonicNs": "426966553522208"
+      },
+      "agentId": "/root/l11_evaluation_coordinator/direct_spring",
+      "finalPersistObserved": {
+        "utc": "2026-10-13T07:52:29.460Z",
+        "monotonicNs": "427139303540583"
+      },
+      "elapsedSecondsUpper": 186.862221292,
+      "elapsedSecondsLower": 172.750018375,
+      "answerSha256": "2bbf944ae75b26f879eac77af4738d7425ee8c55b76ed2d156c3533e98f1eff2",
+      "answerPath": "/tmp/l11-evaluation/direct-spring-petclinic.json"
+    },
+    "direct-godot-demos": {
+      "repository": "godot-demos",
+      "arm": "direct",
+      "startBeforeDelivery": {
+        "utc": "2026-10-13T07:49:37.816Z",
+        "monotonicNs": "426967659877708"
+      },
+      "status": "complete",
+      "model": "inherited-session-default",
+      "reasoning": "inherited",
+      "limitations": [],
+      "deliveryObserved": {
+        "utc": "2026-10-13T07:49:51.686Z",
+        "monotonicNs": "426981530338416"
+      },
+      "agentId": "/root/l11_evaluation_coordinator/direct_godot",
+      "finalPersistObserved": {
+        "utc": "2026-10-13T07:52:14.350Z",
+        "monotonicNs": "427124193752291"
+      },
+      "elapsedSecondsUpper": 156.533874583,
+      "elapsedSecondsLower": 142.663413875,
+      "answerSha256": "0366901807049de6f183f79c4af869837f7e65fb2301fa87a1b74b169a2d5b3f",
+      "answerPath": "/tmp/l11-evaluation/direct-godot-demos.json"
+    },
+    "map-swift-argument-parser": {
+      "repository": "swift-argument-parser",
+      "arm": "map",
+      "startBeforeDelivery": {
+        "utc": "2026-10-13T07:49:51.894Z",
+        "monotonicNs": "426981738285250"
+      },
+      "status": "complete",
+      "model": "inherited-session-default",
+      "reasoning": "inherited",
+      "limitations": [],
+      "deliveryObserved": {
+        "utc": "2026-10-13T07:50:04.850Z",
+        "monotonicNs": "426994694599041"
+      },
+      "agentId": "/root/l11_evaluation_coordinator/map_swift",
+      "finalPersistObserved": {
+        "utc": "2026-10-13T07:53:11.213Z",
+        "monotonicNs": "427181056542625"
+      },
+      "elapsedSecondsUpper": 199.318257375,
+      "elapsedSecondsLower": 186.361943584,
+      "answerSha256": "42afc6a4cf48edf45b2e7cd5d1b8ad6e7d96de311331f6d9fb9cba0dccb579ea",
+      "answerPath": "/tmp/l11-evaluation/map-swift-argument-parser.json"
+    },
+    "direct-swift-argument-parser": {
+      "repository": "swift-argument-parser",
+      "arm": "direct",
+      "startBeforeDelivery": {
+        "utc": "2026-10-13T07:53:21.970Z",
+        "monotonicNs": "427191813691791"
+      },
+      "status": "complete",
+      "model": "inherited-session-default",
+      "reasoning": "inherited",
+      "limitations": [],
+      "deliveryObserved": {
+        "utc": "2026-10-13T07:53:36.954Z",
+        "monotonicNs": "427206797451625"
+      },
+      "agentId": "/root/l11_evaluation_coordinator/direct_swift",
+      "finalPersistObserved": {
+        "utc": "2026-10-13T07:56:03.543Z",
+        "monotonicNs": "427353386442166"
+      },
+      "elapsedSecondsUpper": 161.572750375,
+      "elapsedSecondsLower": 146.588990541,
+      "answerSha256": "f4620298420feeabd36d0937e3b0dcd7f3553aa96a1ea03d32a8b18b6a17f524",
+      "answerPath": "/tmp/l11-evaluation/direct-swift-argument-parser.json"
+    },
+    "map-vitest": {
+      "repository": "vitest",
+      "arm": "map",
+      "startBeforeDelivery": {
+        "utc": "2026-10-13T07:53:37.182Z",
+        "monotonicNs": "427207025168833"
+      },
+      "status": "complete",
+      "model": "inherited-session-default",
+      "reasoning": "inherited",
+      "limitations": [],
+      "deliveryObserved": {
+        "utc": "2026-10-13T07:53:50.742Z",
+        "monotonicNs": "427220585102041"
+      },
+      "agentId": "/root/l11_evaluation_coordinator/map_vitest",
+      "finalPersistObserved": {
+        "utc": "2026-10-13T07:58:27.838Z",
+        "monotonicNs": "427497680343875"
+      },
+      "elapsedSecondsUpper": 290.655175042,
+      "elapsedSecondsLower": 277.095241834,
+      "answerSha256": "93842a3ab40b76799b3d7f8f8e5b3cac71726e10a27a38f880d09cffae3d1592",
+      "answerPath": "/tmp/l11-evaluation/map-vitest.json"
+    },
+    "map-ripgrep": {
+      "repository": "ripgrep",
+      "arm": "map",
+      "startBeforeDelivery": {
+        "utc": "2026-10-13T07:54:05.985Z",
+        "monotonicNs": "427235828606583"
+      },
+      "status": "complete",
+      "model": "inherited-session-default",
+      "reasoning": "inherited",
+      "limitations": [],
+      "deliveryObserved": {
+        "utc": "2026-10-13T07:54:19.044Z",
+        "monotonicNs": "427248886895041"
+      },
+      "agentId": "/root/l11_evaluation_coordinator/map_ripgrep",
+      "finalPersistObserved": {
+        "utc": "2026-10-13T07:58:29.346Z",
+        "monotonicNs": "427499188907125"
+      },
+      "elapsedSecondsUpper": 263.360300542,
+      "elapsedSecondsLower": 250.302012084,
+      "answerSha256": "b7d480ed843620ecf47993ff53c783f97a6093ab3549b4d01ea88e21e55ac347",
+      "answerPath": "/tmp/l11-evaluation/map-ripgrep.json"
+    },
+    "direct-axum": {
+      "repository": "axum",
+      "arm": "direct",
+      "startBeforeDelivery": {
+        "utc": "2026-10-13T07:54:19.247Z",
+        "monotonicNs": "427249090426541"
+      },
+      "status": "complete",
+      "model": "inherited-session-default",
+      "reasoning": "inherited",
+      "limitations": [],
+      "deliveryObserved": {
+        "utc": "2026-10-13T07:54:32.770Z",
+        "monotonicNs": "427262612855333"
+      },
+      "agentId": "/root/l11_evaluation_coordinator/direct_axum",
+      "finalPersistObserved": {
+        "utc": "2026-10-13T07:58:21.067Z",
+        "monotonicNs": "427490909857166"
+      },
+      "elapsedSecondsUpper": 241.819430625,
+      "elapsedSecondsLower": 228.297001833,
+      "answerSha256": "a8a4c0e338c59a534dc52544577f4dcd7ed9ce7477b631daef4eb46072ee7c6d",
+      "answerPath": "/tmp/l11-evaluation/direct-axum.json"
+    },
+    "direct-vitest": {
+      "repository": "vitest",
+      "arm": "direct",
+      "startBeforeDelivery": {
+        "utc": "2026-10-13T07:58:44.621Z",
+        "monotonicNs": "427514463268416"
+      },
+      "status": "complete",
+      "model": "inherited-session-default",
+      "reasoning": "inherited",
+      "limitations": [],
+      "deliveryObserved": {
+        "utc": "2026-10-13T07:58:57.062Z",
+        "monotonicNs": "427526904881000"
+      },
+      "agentId": "/root/l11_evaluation_coordinator/direct_vitest",
+      "finalPersistObserved": {
+        "utc": "2026-10-13T08:04:55.384Z",
+        "monotonicNs": "427885225594541"
+      },
+      "elapsedSecondsUpper": 370.762326125,
+      "elapsedSecondsLower": 358.320713541,
+      "answerSha256": "60c5f26eb5e15d77a302140bf08c51742e3444ca522566fb8111cef2d8f1877d",
+      "answerPath": "/tmp/l11-evaluation/direct-vitest.json"
+    },
+    "map-fastify": {
+      "repository": "fastify",
+      "arm": "map",
+      "startBeforeDelivery": {
+        "utc": "2026-10-13T07:58:57.320Z",
+        "monotonicNs": "427527162221333"
+      },
+      "status": "complete",
+      "model": "inherited-session-default",
+      "reasoning": "inherited",
+      "limitations": [],
+      "deliveryObserved": {
+        "utc": "2026-10-13T07:59:09.857Z",
+        "monotonicNs": "427539699346625"
+      },
+      "agentId": "/root/l11_evaluation_coordinator/map_fastify",
+      "finalPersistObserved": {
+        "utc": "2026-10-13T08:03:36.139Z",
+        "monotonicNs": "427805980436333"
+      },
+      "elapsedSecondsUpper": 278.818215,
+      "elapsedSecondsLower": 266.281089708,
+      "answerSha256": "f659fec803a7fb10025566b1e125073e8459064fac8f8cb8507eef33f3e39d0f",
+      "answerPath": "/tmp/l11-evaluation/map-fastify.json"
+    },
+    "map-unity-boatattack": {
+      "repository": "unity-boatattack",
+      "arm": "map",
+      "startBeforeDelivery": {
+        "utc": "2026-10-13T07:59:17.377Z",
+        "monotonicNs": "427547218862375"
+      },
+      "status": "complete",
+      "model": "inherited-session-default",
+      "reasoning": "inherited",
+      "limitations": [],
+      "deliveryObserved": {
+        "utc": "2026-10-13T07:59:33.794Z",
+        "monotonicNs": "427563636647125"
+      },
+      "agentId": "/root/l11_evaluation_coordinator/map_boatattack",
+      "finalPersistObserved": {
+        "utc": "2026-10-13T08:03:16.570Z",
+        "monotonicNs": "427786411099500"
+      },
+      "elapsedSecondsUpper": 239.192237125,
+      "elapsedSecondsLower": 222.774452375,
+      "answerSha256": "f4eabf27be9d73cad3d7005280b19d7dc0057acdfcdf1249238177abb1622270",
+      "answerPath": "/tmp/l11-evaluation/map-unity-boatattack.json"
+    },
+    "map-sqlite": {
+      "repository": "sqlite",
+      "arm": "map",
+      "startBeforeDelivery": {
+        "utc": "2026-10-13T08:03:45.755Z",
+        "monotonicNs": "427815597098500"
+      },
+      "status": "complete",
+      "model": "inherited-session-default",
+      "reasoning": "inherited",
+      "limitations": [],
+      "deliveryObserved": {
+        "utc": "2026-10-13T08:04:02.887Z",
+        "monotonicNs": "427832728220916"
+      },
+      "agentId": "/root/l11_evaluation_coordinator/map_sqlite",
+      "finalPersistObserved": {
+        "utc": "2026-10-13T08:07:40.165Z",
+        "monotonicNs": "428050005531125"
+      },
+      "elapsedSecondsUpper": 234.408432625,
+      "elapsedSecondsLower": 217.277310209,
+      "answerSha256": "1e4c87a1590a375700b36b5b5fa2f9c302e1d35caa7bedefa0a5bee3c5f345d0",
+      "answerPath": "/tmp/l11-evaluation/map-sqlite.json"
+    },
+    "map-starlette": {
+      "repository": "starlette",
+      "arm": "map",
+      "startBeforeDelivery": {
+        "utc": "2026-10-13T08:04:08.192Z",
+        "monotonicNs": "427838033942166"
+      },
+      "status": "complete",
+      "model": "inherited-session-default",
+      "reasoning": "inherited",
+      "limitations": [],
+      "deliveryObserved": {
+        "utc": "2026-10-13T08:04:26.987Z",
+        "monotonicNs": "427856828658291"
+      },
+      "agentId": "/root/l11_evaluation_coordinator/map_starlette",
+      "finalPersistObserved": {
+        "utc": "2026-10-13T08:08:49.127Z",
+        "monotonicNs": "428118967184875"
+      },
+      "elapsedSecondsUpper": 280.933242709,
+      "elapsedSecondsLower": 262.138526584,
+      "answerSha256": "83a304c8378366467e84175f91a684da6b1f12a38366afe30001c633509be9fb",
+      "answerPath": "/tmp/l11-evaluation/map-starlette.json"
+    },
+    "map-chi": {
+      "repository": "chi",
+      "arm": "map",
+      "startBeforeDelivery": {
+        "utc": "2026-10-13T08:07:58.930Z",
+        "monotonicNs": "428068770658458"
+      },
+      "status": "complete",
+      "model": "inherited-session-default",
+      "reasoning": "inherited",
+      "limitations": [],
+      "deliveryObserved": {
+        "utc": "2026-10-13T08:08:11.277Z",
+        "monotonicNs": "428081117412000"
+      },
+      "agentId": "/root/l11_evaluation_coordinator/map_chi",
+      "finalPersistObserved": {
+        "utc": "2026-10-13T08:10:57.539Z",
+        "monotonicNs": "428247379486500"
+      },
+      "elapsedSecondsUpper": 178.608828042,
+      "elapsedSecondsLower": 166.2620745,
+      "answerSha256": "9e70557cf5fee705ece7bc60039bb199a6bfe44586e91fb8a9d28ee1c07c82bb",
+      "answerPath": "/tmp/l11-evaluation/map-chi.json"
+    },
+    "map-dapper": {
+      "repository": "dapper",
+      "arm": "map",
+      "startBeforeDelivery": {
+        "utc": "2026-10-13T08:09:03.438Z",
+        "monotonicNs": "428133278842125"
+      },
+      "status": "complete",
+      "model": "inherited-session-default",
+      "reasoning": "inherited",
+      "limitations": [],
+      "deliveryObserved": {
+        "utc": "2026-10-13T08:09:18.485Z",
+        "monotonicNs": "428148325580000"
+      },
+      "agentId": "/root/l11_evaluation_coordinator/map_dapper",
+      "finalPersistObserved": {
+        "utc": "2026-10-13T08:12:58.171Z",
+        "monotonicNs": "428368010899291"
+      },
+      "elapsedSecondsUpper": 234.732057166,
+      "elapsedSecondsLower": 219.685319291,
+      "answerSha256": "a9a8db85c8702b489188f75fe4a9e2aaaa048fcce74d7d72502c539de743d8f8",
+      "answerPath": "/tmp/l11-evaluation/map-dapper.json"
+    }
+  }
+}

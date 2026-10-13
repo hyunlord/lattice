@@ -1,0 +1,214 @@
+{
+  "repository": "godotengine/godot-demo-projects",
+  "arm": "map",
+  "commit": "b761b4cd5718a7118f2c95eb55f181d0a5f004f1",
+  "answers": [
+    {
+      "id": "godot-demos-q1",
+      "answer": "A collection of runnable examples for Godot, the open-source 2D/3D engine, rather than the engine implementation. It belongs to the godotengine project and credits Godot Engine contributors; its README links distribution under the Godot Foundation publisher. Developers run individual projects through Godot's project manager; many also have browser exports. A specific individual maintainer is not established by these sources.",
+      "citations": [
+        {
+          "url": "https://github.com/godotengine/godot-demo-projects/blob/b761b4cd5718a7118f2c95eb55f181d0a5f004f1/README.md#L1",
+          "lines": "1-51"
+        },
+        {
+          "url": "https://github.com/godotengine/godot-demo-projects/blob/b761b4cd5718a7118f2c95eb55f181d0a5f004f1/LICENSE.md#L1",
+          "lines": "1-2"
+        }
+      ]
+    },
+    {
+      "id": "godot-demos-q2",
+      "answer": "The repository is a suite of independent demos, each rooted at project.godot, with documentation and supporting assets/tooling. The map groups 2d, 3d, audio, compute, gui, loading, misc, mobile, mono, networking, plugins, viewport and xr. These are example families, not modules of one Pong application. Selected 2d/pong contains configuration, a scene, textures, and four scripts: ball motion/reset, paddle input/bounce, side-wall reset, and ceiling/floor bounce.",
+      "citations": [
+        {
+          "url": "https://github.com/godotengine/godot-demo-projects/blob/b761b4cd5718a7118f2c95eb55f181d0a5f004f1/README.md#L1",
+          "lines": "1-28"
+        },
+        {
+          "url": "https://github.com/godotengine/godot-demo-projects/blob/b761b4cd5718a7118f2c95eb55f181d0a5f004f1/2d/pong/pong.tscn#L1",
+          "lines": "1-103"
+        },
+        {
+          "url": "https://github.com/godotengine/godot-demo-projects/blob/b761b4cd5718a7118f2c95eb55f181d0a5f004f1/2d/pong/logic/ball.gd#L1",
+          "lines": "1-18"
+        },
+        {
+          "url": "https://github.com/godotengine/godot-demo-projects/blob/b761b4cd5718a7118f2c95eb55f181d0a5f004f1/2d/pong/logic/paddle.gd#L1",
+          "lines": "1-30"
+        },
+        {
+          "url": "https://github.com/godotengine/godot-demo-projects/blob/b761b4cd5718a7118f2c95eb55f181d0a5f004f1/2d/pong/logic/wall.gd#L1",
+          "lines": "1-6"
+        },
+        {
+          "url": "https://github.com/godotengine/godot-demo-projects/blob/b761b4cd5718a7118f2c95eb55f181d0a5f004f1/2d/pong/logic/ceiling_floor.gd#L1",
+          "lines": "1-7"
+        }
+      ]
+    },
+    {
+      "id": "godot-demos-q3",
+      "answer": "Godot project.godot manifests establish demo boundaries. Main scripting examples use GDScript and C#; mono/pong is a separate C# project using Godot.NET.Sdk/4.7.0 and net8.0. Supporting code includes a JavaScript/npm WebRTC signaling server and Bash formatting script; compute examples use compute/material shaders. Selected 2d/pong uses GDScript, Godot 4.7 configuration, Compatibility rendering, text scenes/resources, Area2D nodes, lifecycle callbacks and signals. It is not the C# or multiplayer Pong project.",
+      "citations": [
+        {
+          "url": "https://github.com/godotengine/godot-demo-projects/blob/b761b4cd5718a7118f2c95eb55f181d0a5f004f1/README.md#L1",
+          "lines": "1-13"
+        },
+        {
+          "url": "https://github.com/godotengine/godot-demo-projects/blob/b761b4cd5718a7118f2c95eb55f181d0a5f004f1/2d/pong/README.md#L1",
+          "lines": "1-27"
+        },
+        {
+          "url": "https://github.com/godotengine/godot-demo-projects/blob/b761b4cd5718a7118f2c95eb55f181d0a5f004f1/2d/pong/project.godot#L11",
+          "lines": "11-71"
+        },
+        {
+          "url": "https://github.com/godotengine/godot-demo-projects/blob/b761b4cd5718a7118f2c95eb55f181d0a5f004f1/mono/pong/Pong%20with%20C%23.csproj#L1",
+          "lines": "1-7"
+        },
+        {
+          "url": "https://github.com/godotengine/godot-demo-projects/blob/b761b4cd5718a7118f2c95eb55f181d0a5f004f1/networking/webrtc_signaling/server_node/package.json#L1",
+          "lines": "1-20"
+        },
+        {
+          "url": "https://github.com/godotengine/godot-demo-projects/blob/b761b4cd5718a7118f2c95eb55f181d0a5f004f1/file_format.sh#L1",
+          "lines": "1-8"
+        },
+        {
+          "url": "https://github.com/godotengine/godot-demo-projects/blob/b761b4cd5718a7118f2c95eb55f181d0a5f004f1/compute/texture/README.md#L1",
+          "lines": "1-25"
+        }
+      ]
+    },
+    {
+      "id": "godot-demos-q4",
+      "answer": "Godot opens 2d/pong/project.godot, whose run/main_scene selects res://pong.tscn. The engine instantiates that scene and its attached scripts; paddle._ready initializes action names, and engine-driven _process callbacks move paddles and ball. There is no evidenced repository-wide main function.",
+      "citations": [
+        {
+          "url": "https://github.com/godotengine/godot-demo-projects/blob/b761b4cd5718a7118f2c95eb55f181d0a5f004f1/2d/pong/project.godot#L11",
+          "lines": "11-20"
+        },
+        {
+          "url": "https://github.com/godotengine/godot-demo-projects/blob/b761b4cd5718a7118f2c95eb55f181d0a5f004f1/2d/pong/pong.tscn#L1",
+          "lines": "1-103"
+        },
+        {
+          "url": "https://github.com/godotengine/godot-demo-projects/blob/b761b4cd5718a7118f2c95eb55f181d0a5f004f1/2d/pong/logic/paddle.gd#L11",
+          "lines": "11-24"
+        },
+        {
+          "url": "https://github.com/godotengine/godot-demo-projects/blob/b761b4cd5718a7118f2c95eb55f181d0a5f004f1/2d/pong/logic/ball.gd#L8",
+          "lines": "8-12"
+        }
+      ]
+    },
+    {
+      "id": "godot-demos-q5",
+      "answer": "logic/wall.gd:3-6 handles the side-wall area entry, checks area.name == Ball and calls area.reset(). logic/ball.gd:15-18 implements reset: leftward direction, saved initial position, and DEFAULT_SPEED (100).",
+      "citations": [
+        {
+          "url": "https://github.com/godotengine/godot-demo-projects/blob/b761b4cd5718a7118f2c95eb55f181d0a5f004f1/2d/pong/logic/wall.gd#L3",
+          "lines": "3-6"
+        },
+        {
+          "url": "https://github.com/godotengine/godot-demo-projects/blob/b761b4cd5718a7118f2c95eb55f181d0a5f004f1/2d/pong/logic/ball.gd#L3",
+          "lines": "3-18"
+        }
+      ]
+    },
+    {
+      "id": "godot-demos-q6",
+      "answer": "pong.tscn binds paddle.gd to Left/Right, ball.gd to Ball, wall.gd to LeftWall/RightWall, and ceiling_floor.gd to Ceiling/Floor. It uses paddle.png, ball.png, separator.png, four rectangle collision shapes, sprites, background and camera. Six area_entered connections route each paddle/wall/boundary to its own handler; Floor overrides bounce direction to -1.",
+      "citations": [
+        {
+          "url": "https://github.com/godotengine/godot-demo-projects/blob/b761b4cd5718a7118f2c95eb55f181d0a5f004f1/2d/pong/pong.tscn#L1",
+          "lines": "1-103"
+        }
+      ]
+    },
+    {
+      "id": "godot-demos-q7",
+      "answer": "Supported path: ball overlaps a side-wall Area2D → its scene-connected area_entered signal → wall._on_wall_area_entered(area) → Ball-name check → area.reset() → ball.reset restores direction, position and speed. Engine overlap/signal delivery and runtime receiver dispatch are dynamic boundaries. The name check is not a static Ball type guarantee; this is source-supported behavior, not an observed runtime trace.",
+      "citations": [
+        {
+          "url": "https://github.com/godotengine/godot-demo-projects/blob/b761b4cd5718a7118f2c95eb55f181d0a5f004f1/2d/pong/pong.tscn#L65",
+          "lines": "65-103"
+        },
+        {
+          "url": "https://github.com/godotengine/godot-demo-projects/blob/b761b4cd5718a7118f2c95eb55f181d0a5f004f1/2d/pong/logic/wall.gd#L3",
+          "lines": "3-6"
+        },
+        {
+          "url": "https://github.com/godotengine/godot-demo-projects/blob/b761b4cd5718a7118f2c95eb55f181d0a5f004f1/2d/pong/logic/ball.gd#L15",
+          "lines": "15-18"
+        }
+      ]
+    },
+    {
+      "id": "godot-demos-q8",
+      "answer": "The evidenced direct consumer is wall.gd::_on_wall_area_entered, through area.reset(); both side-wall instances use it. Changing reset semantics therefore affects their out-of-bounds handling. Lattice returned zero resolved incoming static calls, so that graph result must not be interpreted as no consumer or exhaustive impact coverage.",
+      "citations": [
+        {
+          "url": "https://github.com/godotengine/godot-demo-projects/blob/b761b4cd5718a7118f2c95eb55f181d0a5f004f1/2d/pong/logic/wall.gd#L3",
+          "lines": "3-6"
+        },
+        {
+          "url": "https://github.com/godotengine/godot-demo-projects/blob/b761b4cd5718a7118f2c95eb55f181d0a5f004f1/2d/pong/pong.tscn#L65",
+          "lines": "65-103"
+        }
+      ]
+    },
+    {
+      "id": "godot-demos-q9",
+      "answer": "The documented example is 2d/pong, 'Pong with GDScript'. Its README describes Area2D contacts and signals modifying the ball. Import/run its project, enter pong.tscn, and let the ball pass a paddle into a side wall; the connected wall handler reaches reset. The README documents the demo generally, not a dedicated automated reset test.",
+      "citations": [
+        {
+          "url": "https://github.com/godotengine/godot-demo-projects/blob/b761b4cd5718a7118f2c95eb55f181d0a5f004f1/2d/pong/README.md#L1",
+          "lines": "1-27"
+        },
+        {
+          "url": "https://github.com/godotengine/godot-demo-projects/blob/b761b4cd5718a7118f2c95eb55f181d0a5f004f1/2d/pong/project.godot#L11",
+          "lines": "11-20"
+        },
+        {
+          "url": "https://github.com/godotengine/godot-demo-projects/blob/b761b4cd5718a7118f2c95eb55f181d0a5f004f1/2d/pong/pong.tscn#L98",
+          "lines": "98-103"
+        },
+        {
+          "url": "https://github.com/godotengine/godot-demo-projects/blob/b761b4cd5718a7118f2c95eb55f181d0a5f004f1/2d/pong/logic/wall.gd#L3",
+          "lines": "3-6"
+        }
+      ]
+    },
+    {
+      "id": "godot-demos-q10",
+      "answer": "project.godot maps left/right move_up/move_down actions to keyboard and joypad events. paddle._ready lowercases its node name (Left/Right) to construct those action names. Each _process reads down strength minus up strength, multiplies by MOVE_SPEED=100 and delta, adds this to position.y, then clamps it to [16, viewport height minus 16]. Engine input sampling and lifecycle dispatch are external runtime boundaries.",
+      "citations": [
+        {
+          "url": "https://github.com/godotengine/godot-demo-projects/blob/b761b4cd5718a7118f2c95eb55f181d0a5f004f1/2d/pong/project.godot#L31",
+          "lines": "31-63"
+        },
+        {
+          "url": "https://github.com/godotengine/godot-demo-projects/blob/b761b4cd5718a7118f2c95eb55f181d0a5f004f1/2d/pong/logic/paddle.gd#L3",
+          "lines": "3-24"
+        }
+      ]
+    }
+  ],
+  "toolErrors": [
+    "web.open pinned repository tree URL returned Internal Error.",
+    "Retry of pinned repository tree URL with trailing slash returned: Failed to fetch restricted URL."
+  ],
+  "limitations": [
+    "Static inspection only; no target build or runtime execution.",
+    "Lattice indexed GDScript declarations, but lattice_calls for ball.reset returned no resolved incoming calls; scene signal wiring and receiver dispatch were checked against pinned source instead.",
+    "Map overview reports shell as a language limitation. Language inventory here is representative, not an exhaustive file census.",
+    "Repository category names came from pinned map overview; GitHub root tree access failed.",
+    "Initial combined map overview output was truncated by output budgeting; bounded MCP queries supplied the selected Pong identifiers.",
+    "Web text views normalize blank lines; citations use original source ranges, broad ranges where exact web line alignment was unavailable.",
+    "selfReportedStartedAt is the first clock observation after reading the assigned prompt, not authoritative delivery telemetry. Authoritative token telemetry unavailable."
+  ],
+  "selfReportedStartedAt": "2026-10-13T07:45:47Z",
+  "selfReportedFinishedAt": "2026-10-13T07:47:27Z"
+}

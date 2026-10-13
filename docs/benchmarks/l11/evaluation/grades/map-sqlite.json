@@ -1,0 +1,142 @@
+{
+  "repository": "sqlite/sqlite",
+  "commit": "6e35c19f170958b1e846e01c55318988f2d192e0",
+  "arm": "map",
+  "gradedBy": "independent fresh grader map-sqlite",
+  "answerSha256": "1e4c87a1590a375700b36b5b5fa2f9c302e1d35caa7bedefa0a5bee3c5f345d0",
+  "questions": [
+    {
+      "id": "sqlite-q1",
+      "score": 2,
+      "reason": "Correctly identifies embedded database library, application C API, and separate shell/Tcl clients. Pinned README and public header support the claims.",
+      "sourceReferences": [
+        "README.md:1-12",
+        "README.md:324-380",
+        "src/sqlite.h.in:11-30"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "sqlite-q2",
+      "score": 2,
+      "reason": "Covers API/parser, optimizer/VDBE, B-tree/pager, VFS and separate shell/Tcl boundaries with the pinned README citation.",
+      "sourceReferences": [
+        "README.md:324-380"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "sqlite-q3",
+      "score": 2,
+      "reason": "Covers C/Lemon generation, generated public header/amalgamation, configure/make and MSVC, Tcl generation/testing, and public/internal plus shell/Tcl boundaries. File-only C extraction is a separately stated analyzer limitation.",
+      "sourceReferences": [
+        "README.md:94-175",
+        "README.md:229-264",
+        "README.md:324-380"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": true
+    },
+    {
+      "id": "sqlite-q4",
+      "score": 2,
+      "reason": "Names the public sqlite3_exec entry, caller-provided open connection and SQL, interface header and legacy.c definition.",
+      "sourceReferences": [
+        "src/sqlite.h.in:370-435",
+        "src/legacy.c:30-53"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "sqlite-q5",
+      "score": 2,
+      "reason": "Correct definition and prepare/step/result arrays/callback/finalize/tail loop; callback abort and lifetime claims also match source.",
+      "sourceReferences": [
+        "src/legacy.c:30-140",
+        "src/sqlite.h.in:398-428"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "sqlite-q6",
+      "score": 2,
+      "reason": "Direct prepare, step, column, finalize, memory/error/mutex calls verified; explicitly distinguishes the dynamic callback and downstream components from direct calls.",
+      "sourceReferences": [
+        "src/legacy.c:30-140"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "sqlite-q7",
+      "score": 1,
+      "reason": "Preparation/parser and step/VDBE paths and dynamic callback boundary are supported. This exact answer omits column-name/value arrays feeding the callback, finalization after rows, and nonzero-callback abort behavior required by the frozen question reference; facts in q5 are not imported into q7.",
+      "sourceReferences": [
+        "src/legacy.c:48-118",
+        "src/prepare.c:788-839",
+        "src/prepare.c:857-894",
+        "src/prepare.c:958-974",
+        "src/tokenize.c:600-744",
+        "src/parse.y:520-528",
+        "src/vdbeapi.c:930-938",
+        "src/vdbeapi.c:978-1026",
+        "src/vdbe.c:1798-1837"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "sqlite-q8",
+      "score": 2,
+      "reason": "Verified alternative direct consumer sqlite3_get_table calls sqlite3_exec with sqlite3_get_table_cb and TabResult. Callback copies names/values and returns nonzero on errors; conditional compilation and bounded possible impact are correct. The exact question does not restrict the consumer to test_exec.",
+      "sourceReferences": [
+        "src/table.c:21-103",
+        "src/table.c:116-165"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "sqlite-q9",
+      "score": 2,
+      "reason": "Identifies exec-1.2 and exec-1.3, expected success plus names/values, and registration -> test_exec -> sqlite3_exec with exec_printf_cb. Explicitly source inspection only.",
+      "sourceReferences": [
+        "test/exec.test:20-35",
+        "src/test1.c:244-258",
+        "src/test1.c:494-536",
+        "src/test1.c:9304-9308"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "sqlite-q10",
+      "score": 1,
+      "reason": "Correct SQL input, statement/tail outputs, parser tokenization/tail rebasing, and repeated whitespace-skipping loop. Omits the required null-SQL-to-empty normalization; citation alone does not supply the missing answer fact.",
+      "sourceReferences": [
+        "src/legacy.c:30-61",
+        "src/legacy.c:110-117",
+        "src/prepare.c:788-839",
+        "src/prepare.c:857-894",
+        "src/prepare.c:958-974",
+        "src/tokenize.c:600-646",
+        "src/tokenize.c:711-744"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    }
+  ],
+  "total": 18,
+  "referenceIssues": [
+    "No pinned oracle excerpt/hash contradictions found: all oracle references matched pinned Git blobs. q8 oracle requiredFacts enumerate test_exec/Tcl/exec.test, but the exact frozen question asks for a direct consumer without naming one. The independently verified sqlite3_get_table alternative answers that question; oracle evidence is preserved unchanged."
+  ],
+  "limitations": [
+    "Answer citation ranges use normalized web-extraction numbering, not literal pinned-file line anchors. Examples: README shell description is 367-380, not cited 320-332; test1.c sqlite3_exec registration is 9306, not cited 8794-8829; vdbe.c ResultRow is 1798-1837, not cited 1718-1730. Exact submitted line spans cannot be validated as source anchors. Credit uses the explicitly named definitions in verified pinned-file URLs, as permitted; sourceReferences record actual local pinned spans.",
+    "Read-only pinned source verification only; no target build or test executed.",
+    "Reported map file-only C extraction and absent C edges are analyzer limitations, not evidence of missing native behavior."
+  ]
+}

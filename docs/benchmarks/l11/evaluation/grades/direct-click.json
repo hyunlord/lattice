@@ -1,0 +1,141 @@
+{
+  "repository": "pallets/click",
+  "commit": "2247b35ea1c47c727d7a06e51fa280e12a863ff6",
+  "arm": "direct",
+  "gradedBy": "independent fresh grader batch1",
+  "answerSha256": "4e59500886f9210141eb50617fd51c47509a9d447ee7a2c089bc644cea92ddf0",
+  "questions": [
+    {
+      "id": "q01",
+      "score": 1,
+      "reason": "Correct Python CLI purpose and developer audience, but does not explain client callback/decorator use or that end users run the resulting client CLIs.",
+      "sourceReferences": [
+        "README.md:5-18",
+        "README.md:21-43"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "q02",
+      "score": 1,
+      "reason": "Identifies decorators, low-level parser, testing and public reexports, but leaves core invocation coordination and type-conversion responsibility largely implicit.",
+      "sourceReferences": [
+        "src/click/decorators.py:168-175",
+        "src/click/core.py:1396-1404",
+        "src/click/core.py:1432-1446",
+        "src/click/core.py:2802-2811",
+        "src/click/testing.py:681-690"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "q03",
+      "score": 2,
+      "reason": "Correct single Python distribution, Python constraint, src boundary, Flit backend and pytest tooling.",
+      "sourceReferences": [
+        "pyproject.toml:1-16",
+        "pyproject.toml:62-69",
+        "pyproject.toml:84-89",
+        "src/click/decorators.py:8-14"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "q04",
+      "score": 2,
+      "reason": "Directly answers the instance-invocation entry question: reexported core.Command.__call__ delegates to main. Decorator construction is supporting context rather than necessary to identify this entry.",
+      "sourceReferences": [
+        "src/click/__init__.py:10-17",
+        "src/click/decorators.py:168-175",
+        "src/click/decorators.py:248-250",
+        "src/click/core.py:1683-1685",
+        "src/click/core.py:1566-1572"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "q05",
+      "score": 2,
+      "reason": "Correctly names Command.invoke and Context.invoke and parsed-kwargs callback dispatch; definitions verified in the pinned source.",
+      "sourceReferences": [
+        "src/click/core.py:1432-1446",
+        "src/click/core.py:937-940"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "q06",
+      "score": 2,
+      "reason": "Correct direct import directions, including verified local imports, with a sound distinction between dependency and execution order.",
+      "sourceReferences": [
+        "src/click/core.py:24-49",
+        "src/click/core.py:1256-1261"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "q07",
+      "score": 1,
+      "reason": "Correct parsing and callback path and dynamic/early-exit boundaries, but stops at callback without describing its result returning when standalone_mode=False or standalone exit outcome.",
+      "sourceReferences": [
+        "src/click/core.py:1386-1404",
+        "src/click/core.py:1432-1446",
+        "src/click/core.py:937-940",
+        "src/click/core.py:1577-1594"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "q08",
+      "score": 1,
+      "reason": "Correct core parser consumers and conditional impact; omits the direct deprecated OptionParser lazy reexport in click.__init__.__getattr__. Honest non-exhaustiveness does not replace that missing fact.",
+      "sourceReferences": [
+        "src/click/core.py:39-40",
+        "src/click/core.py:1256-1261",
+        "src/click/__init__.py:101-110"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": true
+    },
+    {
+      "id": "q09",
+      "score": 2,
+      "reason": "Valid alternative to the oracle test: test_param_named_help actually invokes a kwargs callback with Argument/Option inputs and asserts output/exit; CliRunner.main and README entry are correctly explained.",
+      "sourceReferences": [
+        "tests/test_basic.py:12-28",
+        "src/click/testing.py:681-690",
+        "README.md:23-35",
+        "tests/test_basic.py:31-70"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "q10",
+      "score": 2,
+      "reason": "Identifies argv entry in Command.main, explicit list conversion, Windows branch, option/positional parsing and population of ctx.params. This answers the input-handling question even without repeating callback dispatch.",
+      "sourceReferences": [
+        "src/click/core.py:1566-1572",
+        "src/click/core.py:1591-1594",
+        "src/click/core.py:1390-1407",
+        "src/click/core.py:1445-1446"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    }
+  ],
+  "total": 16,
+  "referenceIssues": [],
+  "limitations": [
+    "Read-only source grading; no target builds, scripts or tests executed. All oracle excerpt ranges matched local source and referenced files matched pinned git blobs and oracle hashes. Named-definition pinned file citations were accepted despite shifted numeric spans.",
+    "Several core.py citation/evidenceSpans numbers are browser-rendering offsets rather than actual source lines; verified named definitions through the pinned file URL.",
+    "Direct answer explicitly lacks exhaustive parser-consumer coverage; this is separately reflected in q08."
+  ]
+}

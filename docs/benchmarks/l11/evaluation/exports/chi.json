@@ -1,0 +1,69 @@
+{
+  "repository": "chi",
+  "commit": "7f9b7448f51d28804fac98c0a17bc2a7cec1079f",
+  "candidate": "2b7c00f",
+  "startedAt": "2026-10-13T07:13:11.792Z",
+  "reused": false,
+  "priorSetupFailure": {
+    "repository": "chi",
+    "commit": "7f9b7448f51d28804fac98c0a17bc2a7cec1079f",
+    "candidate": "2b7c00f",
+    "startedAt": "2026-10-13T07:11:30.224Z",
+    "reused": false,
+    "command": [
+      "node",
+      "/tmp/lattice-l11-first-impression/bin/lattice.mjs",
+      "export",
+      "/tmp/l11-visual/chi",
+      "--root",
+      "/tmp/l11-sources/chi",
+      "--no-lens",
+      "--cache-dir",
+      "/tmp/l11-visual-cache/chi",
+      "--force",
+      "--json"
+    ],
+    "exitCode": 2,
+    "timedOut": false,
+    "seconds": 0.210704125,
+    "status": "failed",
+    "finishedAt": "2026-10-13T07:11:30.435Z"
+  },
+  "buildCommand": [
+    "node",
+    "/tmp/lattice-l11-first-impression/bin/lattice.mjs",
+    "build",
+    "--root",
+    "/tmp/l11-sources/chi",
+    "--no-lens",
+    "--cache-dir",
+    "/tmp/l11-visual-cache/chi",
+    "--json"
+  ],
+  "buildExitCode": 0,
+  "command": [
+    "node",
+    "/tmp/lattice-l11-first-impression/bin/lattice.mjs",
+    "export",
+    "/tmp/l11-visual/chi",
+    "--root",
+    "/tmp/l11-sources/chi",
+    "--no-lens",
+    "--cache-dir",
+    "/tmp/l11-visual-cache/chi",
+    "--force",
+    "--json"
+  ],
+  "exitCode": 0,
+  "timedOut": false,
+  "seconds": 2.048981666,
+  "graphHash": "6c6b8597d9092b6c3f31eea7e03fcd1026f3d2c581dcc8e86bfb5ee8ae818ed8",
+  "source": {
+    "name": "chi",
+    "dirty": false,
+    "sourceFingerprint": "364265cc3ef5b2083c989743954112d92b9e0bdb6b248b1230fde14eaf8f2480",
+    "commit": "7f9b7448f51d28804fac98c0a17bc2a7cec1079f"
+  },
+  "status": "ready",
+  "finishedAt": "2026-10-13T07:13:13.842Z"
+}

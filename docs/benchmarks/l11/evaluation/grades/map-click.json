@@ -1,0 +1,142 @@
+{
+  "repository": "pallets/click",
+  "commit": "2247b35ea1c47c727d7a06e51fa280e12a863ff6",
+  "arm": "map",
+  "gradedBy": "independent fresh grader map-second",
+  "answerSha256": "4958cf70e765b59bf4f0dc6516d09a799b284655ca919856d69d275058d360bb",
+  "questions": [
+    {
+      "id": "q01",
+      "score": 2,
+      "reason": "Correct Python CLI purpose, developer/decorator usage and client execution with README and packaged console-script evidence.",
+      "sourceReferences": [
+        "README.md:5-18@2247b35ea1c47c727d7a06e51fa280e12a863ff6",
+        "README.md:21-43@2247b35ea1c47c727d7a06e51fa280e12a863ff6"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "q02",
+      "score": 2,
+      "reason": "Correct principal ownership of command/context dispatch, decorators, parser, types and testing, with pinned implementation citations.",
+      "sourceReferences": [
+        "src/click/decorators.py:168-175@2247b35ea1c47c727d7a06e51fa280e12a863ff6",
+        "src/click/core.py:1396-1404@2247b35ea1c47c727d7a06e51fa280e12a863ff6",
+        "src/click/core.py:1432-1446@2247b35ea1c47c727d7a06e51fa280e12a863ff6",
+        "src/click/core.py:2802-2811@2247b35ea1c47c727d7a06e51fa280e12a863ff6",
+        "src/click/testing.py:681-690@2247b35ea1c47c727d7a06e51fa280e12a863ff6"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "q03",
+      "score": 2,
+      "reason": "Correct Python floor, click distribution, Flit backend and pytest/tooling/package boundaries.",
+      "sourceReferences": [
+        "pyproject.toml:1-16@2247b35ea1c47c727d7a06e51fa280e12a863ff6",
+        "pyproject.toml:62-69@2247b35ea1c47c727d7a06e51fa280e12a863ff6",
+        "pyproject.toml:84-89@2247b35ea1c47c727d7a06e51fa280e12a863ff6",
+        "src/click/decorators.py:8-14@2247b35ea1c47c727d7a06e51fa280e12a863ff6"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "q04",
+      "score": 1,
+      "reason": "Correct core reexport and __call__ -> main boundary with citations. The frozen required-fact coverage is partial: this answer does not explain the decorator constructing a Command around the client-supplied callback.",
+      "sourceReferences": [
+        "src/click/__init__.py:10-17@2247b35ea1c47c727d7a06e51fa280e12a863ff6",
+        "src/click/decorators.py:168-175@2247b35ea1c47c727d7a06e51fa280e12a863ff6",
+        "src/click/decorators.py:248-250@2247b35ea1c47c727d7a06e51fa280e12a863ff6",
+        "src/click/core.py:1683-1685@2247b35ea1c47c727d7a06e51fa280e12a863ff6",
+        "src/click/core.py:1566-1572@2247b35ea1c47c727d7a06e51fa280e12a863ff6"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "q05",
+      "score": 2,
+      "reason": "Correctly distinguishes Command.invoke forwarding callback plus ctx.params from Context.invoke executing the callable.",
+      "sourceReferences": [
+        "src/click/core.py:1432-1446@2247b35ea1c47c727d7a06e51fa280e12a863ff6",
+        "src/click/core.py:937-940@2247b35ea1c47c727d7a06e51fa280e12a863ff6"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "q06",
+      "score": 2,
+      "reason": "Enumerates required outgoing internal imports and distinguishes dependency direction from unconditional runtime execution.",
+      "sourceReferences": [
+        "src/click/core.py:24-49@2247b35ea1c47c727d7a06e51fa280e12a863ff6",
+        "src/click/core.py:1256-1261@2247b35ea1c47c727d7a06e51fa280e12a863ff6"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "q07",
+      "score": 2,
+      "reason": "Provides context creation/parsing, Command/Context invocation, client callback, return versus standalone exit, and dynamic/early-exit boundaries. Source confirms standalone success ignores callback return for exit status.",
+      "sourceReferences": [
+        "src/click/core.py:1386-1404@2247b35ea1c47c727d7a06e51fa280e12a863ff6",
+        "src/click/core.py:1432-1446@2247b35ea1c47c727d7a06e51fa280e12a863ff6",
+        "src/click/core.py:937-940@2247b35ea1c47c727d7a06e51fa280e12a863ff6",
+        "src/click/core.py:1577-1594@2247b35ea1c47c727d7a06e51fa280e12a863ff6"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "q08",
+      "score": 2,
+      "reason": "Correct direct class consumers in core and lazy deprecated public export; correctly excludes formatting module import of a different symbol from class-change evidence.",
+      "sourceReferences": [
+        "src/click/core.py:39-40@2247b35ea1c47c727d7a06e51fa280e12a863ff6",
+        "src/click/core.py:1256-1261@2247b35ea1c47c727d7a06e51fa280e12a863ff6",
+        "src/click/__init__.py:101-110@2247b35ea1c47c727d7a06e51fa280e12a863ff6"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "q09",
+      "score": 2,
+      "reason": "The supplied alternative string/int option tests are valid source-backed exercises: decorated callbacks receive parsed values through runner.invoke -> cli.main. README callback example and explicit nonexecution statement are also correct; no requirement to choose only the oracle example test.",
+      "sourceReferences": [
+        "tests/test_basic.py:12-28@2247b35ea1c47c727d7a06e51fa280e12a863ff6",
+        "src/click/testing.py:681-690@2247b35ea1c47c727d7a06e51fa280e12a863ff6",
+        "README.md:23-35@2247b35ea1c47c727d7a06e51fa280e12a863ff6",
+        "tests/test_basic.py:190-236@2247b35ea1c47c727d7a06e51fa280e12a863ff6"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "q10",
+      "score": 1,
+      "reason": "Correct argv entry, Windows expansion, context/parser conversion, leftovers and ctx.params storage. Partial frozen required-fact coverage: this answer stops at stored parameters and does not state the final callback receives ctx.params as keyword arguments.",
+      "sourceReferences": [
+        "src/click/core.py:1566-1572@2247b35ea1c47c727d7a06e51fa280e12a863ff6",
+        "src/click/core.py:1591-1594@2247b35ea1c47c727d7a06e51fa280e12a863ff6",
+        "src/click/core.py:1390-1407@2247b35ea1c47c727d7a06e51fa280e12a863ff6",
+        "src/click/core.py:1445-1446@2247b35ea1c47c727d7a06e51fa280e12a863ff6"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    }
+  ],
+  "total": 18,
+  "referenceIssues": [],
+  "limitations": [
+    "Read-only pinned-source grading; target builds, tests and browser execution were not run.",
+    "All frozen oracle file SHA256 values and LF-normalized excerpts for this repository matched pinned Git blobs. All answer citation paths resolved at the stated pin.",
+    "Analyzer behavior claims were treated as evaluator-reported limitations, not independently reproduced or as replacement factual credit.",
+    "q08 parser.py citation ends at 534 while the pinned file has 533 lines; its deprecated alias definition is present within the cited range, so the one-line overshoot does not invalidate the source fact."
+  ]
+}

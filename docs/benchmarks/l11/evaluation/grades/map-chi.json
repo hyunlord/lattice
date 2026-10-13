@@ -1,0 +1,156 @@
+{
+  "repository": "go-chi/chi",
+  "commit": "7f9b7448f51d28804fac98c0a17bc2a7cec1079f",
+  "arm": "map",
+  "gradedBy": "independent fresh grader map-chi",
+  "answerSha256": "9e70557cf5fee705ece7bc60039bb199a6bfe44586e91fb8a9d28ee1c07c82bb",
+  "questions": [
+    {
+      "id": "q1",
+      "score": 2,
+      "reason": "Correctly identifies a composable Go HTTP routing library, application registration and net/http handler invocation, with pinned source citations.",
+      "sourceReferences": [
+        "README.md:6-16",
+        "chi.go:1-28",
+        "mux_test.go:245-264"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "q2",
+      "score": 1,
+      "reason": "Correct principal file/package map and external companion-module distinction, but only generic middleware wrappers are described: Logger/Recoverer responsibilities, pooled Mux routing state and chain termination are not explained in this answer.",
+      "sourceReferences": [
+        "chi.go:62-141",
+        "mux.go:13-58",
+        "tree.go:97-148",
+        "context.go:11-77",
+        "chain.go:1-49",
+        "README.md:6-16",
+        "middleware/clean_path.go:1-28",
+        "mux_test.go:245-264"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "q3",
+      "score": 2,
+      "reason": "Correctly gives Go, module identity and Go 1.24, standard-library dependencies, chi/middleware package boundary and separately versioned example modules. CI uncertainty does not remove the supplied factual coverage.",
+      "sourceReferences": [
+        "go.mod:1-5",
+        "chi.go:56-71",
+        "middleware/clean_path.go:1-9",
+        "_examples/rest/go.mod:1-9",
+        "_examples/versions/go.mod:1-10",
+        "mux_test.go:245-264"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "q4",
+      "score": 2,
+      "reason": "Correctly identifies NewRouter -> NewMux, route registration and ListenAndServe, and ServeHTTP routing-context setup before the composed handler.",
+      "sourceReferences": [
+        "chi.go:6-28",
+        "chi.go:62-71",
+        "mux.go:52-92"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "q5",
+      "score": 1,
+      "reason": "Correctly locates routeHTTP and FindRoute/findRoute with exact spans, but does not explain route-path selection, methodMap resolution, invocation via ServeHTTP or not-found/method-not-allowed dispatch required by the frozen reference.",
+      "sourceReferences": [
+        "mux.go:455-499",
+        "tree.go:383-557"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "q6",
+      "score": 2,
+      "reason": "Identifies the direct Context/RouteCtxKey, methodMap, tree.FindRoute, RoutePattern and fallback-handler dependencies and source-expression direction. SetPathValue and dynamic handler dispatch are correctly distinguished; the empty analyzer graph is an explicit limitation, not a no-call claim.",
+      "sourceReferences": [
+        "mux.go:455-499",
+        "context.go:33-77",
+        "context.go:147-158",
+        "tree.go:18-97",
+        "tree.go:383-406"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": true
+    },
+    {
+      "id": "q7",
+      "score": 2,
+      "reason": "Provides the registered GET callback, storage and tree dispatch path, composed handler and no-middleware behavior, HTTP test entry and response-body assertion. Dynamic transport/interface/callback boundaries are identified and no recorded execution is claimed.",
+      "sourceReferences": [
+        "mux_test.go:245-264",
+        "mux_test.go:2075-2096",
+        "mux.go:63-92",
+        "mux.go:155-157",
+        "mux.go:430-499",
+        "mux.go:525-527",
+        "tree.go:148-227",
+        "tree.go:353-557",
+        "chain.go:34-49"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "q8",
+      "score": 2,
+      "reason": "Correctly names both direct Mux consumers, Find and routeHTTP, and distinguishes Match as indirect. It asserts no speculative behavioral effect.",
+      "sourceReferences": [
+        "mux.go:373-408",
+        "mux.go:455-499"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "q9",
+      "score": 2,
+      "reason": "Correct TestMuxPlain entry through httptest.NewServer/testRequest, bye assertion and configured not-found case; source-only status is explicit.",
+      "sourceReferences": [
+        "mux_test.go:245-264",
+        "mux_test.go:2075-2096",
+        "mux.go:63-92",
+        "mux.go:455-499"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "q10",
+      "score": 2,
+      "reason": "Correct path precedence/default, capture reset/traversal/append, request path values and Context URL parameter lookup; additional mount and optional CleanPath details agree with the cited source.",
+      "sourceReferences": [
+        "mux.go:455-508",
+        "mux.go:288-355",
+        "tree.go:353-557",
+        "tree.go:803-819",
+        "context.go:11-27",
+        "context.go:45-77",
+        "context.go:124-158",
+        "middleware/clean_path.go:10-28"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    }
+  ],
+  "total": 18,
+  "referenceIssues": [],
+  "limitations": [
+    "Read-only source verification; no target builds, tests or runtime executions performed.",
+    "All chi oracle evidence file hashes and logical-line excerpts match the pinned local checkout. Answer citations have explicit source spans; no missing or unverifiable spans identified.",
+    "Analyzer-empty-edge statement is treated as a reported limitation, not independently rerun."
+  ]
+}

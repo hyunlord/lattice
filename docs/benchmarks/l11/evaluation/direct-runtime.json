@@ -1,0 +1,263 @@
+{
+  "repository": "dotnet/runtime",
+  "arm": "direct",
+  "commit": "8630d8988107478d249e2fdb8162f8c7dcbd3dbb",
+  "answers": [
+    {
+      "id": "runtime-q1",
+      "answer": "dotnet/runtime supplies .NET execution engines, class libraries, and shared-host/installers for supported platforms. Managed applications call its libraries and run on its runtimes. Users start applications via dotnet or apphost; native programs can load .NET through nethost, and COM activation uses comhost. Hosting resolves frameworks via hostfxr, then hostpolicy loads/configures CoreCLR and starts the application. These are architectural entry points, not an exhaustive inventory of external callers.",
+      "citations": [
+        {
+          "url": "https://github.com/dotnet/runtime/blob/8630d8988107478d249e2fdb8162f8c7dcbd3dbb/README.md",
+          "lines": "web-rendered L200-L225"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/dotnet/runtime/8630d8988107478d249e2fdb8162f8c7dcbd3dbb/docs/design/features/host-components.md",
+          "lines": "web-rendered L3-L27"
+        }
+      ]
+    },
+    {
+      "id": "runtime-q2",
+      "answer": "Principal components: CoreCLR (execution engine used by most workloads), Mono (mobile, browser WebAssembly and WASI execution), System.Private.CoreLib (lowest managed layer coupled to the runtime), libraries (other assemblies, sources and tests), and hosts/installers/packs (startup, hosting libraries, framework distributions). Beyond HTTP, runtime responsibilities include garbage collection, type/memory safety, interoperation and debugging/profiling; libraries provide primitives, collections and operating-system services such as files. Native library shims connect managed libraries to OS dependencies.",
+      "citations": [
+        {
+          "url": "https://raw.githubusercontent.com/dotnet/runtime/8630d8988107478d249e2fdb8162f8c7dcbd3dbb/docs/workflow/README.md",
+          "lines": "web-rendered L31-L34; L49-L55; L68-L73"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/dotnet/runtime/8630d8988107478d249e2fdb8162f8c7dcbd3dbb/src/coreclr/README.md",
+          "lines": "web-rendered L2-L4"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/dotnet/runtime/8630d8988107478d249e2fdb8162f8c7dcbd3dbb/src/mono/README.md",
+          "lines": "web-rendered L2-L3"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/dotnet/runtime/8630d8988107478d249e2fdb8162f8c7dcbd3dbb/docs/design/coreclr/botr/intro-to-clr.md",
+          "lines": "web-rendered L17-L22; L46-L59"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/dotnet/runtime/8630d8988107478d249e2fdb8162f8c7dcbd3dbb/docs/workflow/building/libraries/README.md",
+          "lines": "web-rendered L64-L66; L102-L104"
+        }
+      ]
+    },
+    {
+      "id": "runtime-q3",
+      "answer": "The execution engines are C/C++; the inspected HTTP implementation/tests are C#. Root build.sh/build.cmd orchestrate component subsets, configurations and target OS/architecture. Managed projects use Microsoft.NET.Sdk/MSBuild and dotnet build; native library builds use CMake with clang. Boundaries include managed libraries versus native OS shims, runtime-specific CoreLib versus runtime-agnostic library code, and build platform versus target platform. HTTP has explicit compile-time platform branches: browser/WASI handlers differ from sockets; mobile selects separate HttpClientHandler sources. This is a verified principal-language/build outline, not an exhaustive language census or compiler-support audit.",
+      "citations": [
+        {
+          "url": "https://raw.githubusercontent.com/dotnet/runtime/8630d8988107478d249e2fdb8162f8c7dcbd3dbb/docs/workflow/README.md",
+          "lines": "web-rendered L15-L28; L49-L74"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/dotnet/runtime/8630d8988107478d249e2fdb8162f8c7dcbd3dbb/docs/workflow/building/libraries/README.md",
+          "lines": "web-rendered L64-L71; L102-L114; L143-L152"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/dotnet/runtime/8630d8988107478d249e2fdb8162f8c7dcbd3dbb/src/libraries/System.Net.Http/src/System.Net.Http.csproj",
+          "lines": "web-rendered L0-L18; L40-L46; L167-L178"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/dotnet/runtime/8630d8988107478d249e2fdb8162f8c7dcbd3dbb/src/libraries/System.Net.Http/src/System/Net/Http/HttpClientHandler.cs",
+          "lines": "web-rendered L11-L21"
+        }
+      ]
+    },
+    {
+      "id": "runtime-q4",
+      "answer": "Selecting HttpClient.GetAsync on the desktop sockets-backed handler: its overloads create a GET HttpRequestMessage and enter HttpClient.SendAsync; that calls base.SendAsync (HttpMessageInvoker), which dispatches to its configured handler. Default HttpClient constructs HttpClientHandler, whose non-browser/non-WASI implementation wraps SocketsHttpHandler and forwards SendAsync. SocketsHttpHandler validates the request, lazily schedules SetupHandlerChain when needed, then sends through the resulting stage. Alternatively new HttpClient(new SocketsHttpHandler()) bypasses HttpClientHandler. Arbitrary user-supplied handlers and mobile/native builds are separate boundaries.",
+      "citations": [
+        {
+          "url": "https://raw.githubusercontent.com/dotnet/runtime/8630d8988107478d249e2fdb8162f8c7dcbd3dbb/src/libraries/System.Net.Http/src/System/Net/Http/HttpClient.cs",
+          "lines": "web-rendered L129-L143; L330-L348; L459-L494"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/dotnet/runtime/8630d8988107478d249e2fdb8162f8c7dcbd3dbb/src/libraries/System.Net.Http/src/System/Net/Http/HttpMessageInvoker.cs",
+          "lines": "web-rendered L19-L27; L61-L91"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/dotnet/runtime/8630d8988107478d249e2fdb8162f8c7dcbd3dbb/src/libraries/System.Net.Http/src/System/Net/Http/HttpClientHandler.cs",
+          "lines": "web-rendered L11-L21; L61-L71; L335-L339"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/dotnet/runtime/8630d8988107478d249e2fdb8162f8c7dcbd3dbb/src/libraries/System.Net.Http/src/System/Net/Http/SocketsHttpHandler/SocketsHttpHandler.cs",
+          "lines": "web-rendered L621-L648"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/dotnet/runtime/8630d8988107478d249e2fdb8162f8c7dcbd3dbb/src/libraries/System.Net.Http/src/System.Net.Http.csproj",
+          "lines": "web-rendered L40-L46"
+        }
+      ]
+    },
+    {
+      "id": "runtime-q5",
+      "answer": "X is RedirectHandler.SendAsync, gated by private RequestRequiresForceGet. For 300/301/302 only POST becomes GET; 303 rewrites methods other than GET/HEAD; 307/308 retain methods. Rewriting also clears Content and disables chunked transfer.",
+      "citations": [
+        {
+          "url": "https://raw.githubusercontent.com/dotnet/runtime/8630d8988107478d249e2fdb8162f8c7dcbd3dbb/src/libraries/System.Net.Http/src/System/Net/Http/SocketsHttpHandler/RedirectHandler.cs",
+          "lines": "web-rendered L55-L69; L140-L153"
+        }
+      ]
+    },
+    {
+      "id": "runtime-q6",
+      "answer": "SetupHandlerChain clones/normalizes HttpConnectionSettings; constructs HttpConnectionPoolManager and HttpConnectionHandler (credential-dependent request auth); conditionally wraps MetricsHandler and creates SocketsHttpHandlerMetrics, then DiagnosticsHandler, then RedirectHandler, then invokes the decompression factory. The factory constructs DecompressionHandler. Thus enabled send order is decompression → redirect → diagnostics → metrics → connection handler. It directly consults GlobalHttpSettings, DistributedContextPropagator, CredentialCache and supported decompression flags, then atomically publishes _handler with Interlocked.CompareExchange and disposes a losing chain. Optional stages depend on settings.",
+      "citations": [
+        {
+          "url": "https://raw.githubusercontent.com/dotnet/runtime/8630d8988107478d249e2fdb8162f8c7dcbd3dbb/src/libraries/System.Net.Http/src/System/Net/Http/SocketsHttpHandler/SocketsHttpHandler.cs",
+          "lines": "web-rendered L545-L592"
+        }
+      ]
+    },
+    {
+      "id": "runtime-q7",
+      "answer": "For an allowed sockets POST→302: PostAsync creates the POST/content and enters the q4 dispatch path. RedirectHandler sends inward through optional telemetry stages → HttpConnectionHandler → pool manager → selected pool. Protocol/authentication/proxy selection is dynamic; HTTP/1.x reaches HttpConnection.SendAsync. On the 302, RedirectHandler disposes the old response, clears Authorization, updates RequestUri, changes POST to GET, clears Content/chunking, conditionally disables authentication, and resends inward. It returns the eventual response, not necessarily 200. Missing/blocked Location or an exceeded redirect limit instead stops following.",
+      "citations": [
+        {
+          "url": "https://raw.githubusercontent.com/dotnet/runtime/8630d8988107478d249e2fdb8162f8c7dcbd3dbb/src/libraries/System.Net.Http/src/System/Net/Http/HttpClient.cs",
+          "lines": "web-rendered L350-L362"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/dotnet/runtime/8630d8988107478d249e2fdb8162f8c7dcbd3dbb/src/libraries/System.Net.Http/src/System/Net/Http/SocketsHttpHandler/SocketsHttpHandler.cs",
+          "lines": "web-rendered L545-L575; L621-L648"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/dotnet/runtime/8630d8988107478d249e2fdb8162f8c7dcbd3dbb/src/libraries/System.Net.Http/src/System/Net/Http/SocketsHttpHandler/HttpConnectionHandler.cs",
+          "lines": "web-rendered L17-L21"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/dotnet/runtime/8630d8988107478d249e2fdb8162f8c7dcbd3dbb/src/libraries/System.Net.Http/src/System/Net/Http/SocketsHttpHandler/HttpConnectionPoolManager.cs",
+          "lines": "web-rendered L325-L410"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/dotnet/runtime/8630d8988107478d249e2fdb8162f8c7dcbd3dbb/src/libraries/System.Net.Http/src/System/Net/Http/SocketsHttpHandler/ConnectionPool/HttpConnectionPool.cs",
+          "lines": "web-rendered L316-L456"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/dotnet/runtime/8630d8988107478d249e2fdb8162f8c7dcbd3dbb/src/libraries/System.Net.Http/src/System/Net/Http/SocketsHttpHandler/RedirectHandler.cs",
+          "lines": "web-rendered L23-L79; L81-L138"
+        }
+      ]
+    },
+    {
+      "id": "runtime-q8",
+      "answer": "The evidenced direct construction consumer is SocketsHttpHandler.SetupHandlerChain: when automatic redirects are enabled it passes the maximum, current inner chain, and disableAuthOnRedirect = credentials is not CredentialCache. Constructor-contract changes directly affect this site; semantic changes affect its redirect-enabled requests. No exhaustive consumer search was completed.",
+      "citations": [
+        {
+          "url": "https://raw.githubusercontent.com/dotnet/runtime/8630d8988107478d249e2fdb8162f8c7dcbd3dbb/src/libraries/System.Net.Http/src/System/Net/Http/SocketsHttpHandler/SocketsHttpHandler.cs",
+          "lines": "web-rendered L564-L570"
+        }
+      ]
+    },
+    {
+      "id": "runtime-q9",
+      "answer": "HttpClientHandlerTest_AutoRedirect.AllowAutoRedirect_True_ValidateNewMethodUsedOnRedirection uses RedirectStatusCodesOldMethodsNewMethods: 300/301/302/303/307/308 crossed with GET, HEAD, POST, DELETE, OPTIONS, PATCH, PUT and a custom method. Two loopback servers verify the redirected method and final 200. AllowAutoRedirect_True_PostToGetDoesNotSendTE covers 300–303 and asserts GET without Transfer-Encoding or Content-Length. SocketsHttpHandlerTest_AutoRedirect inherits these tests and excludes browser/WASI. The test project includes the shared test source; factories create HttpClientHandler and HttpClient(handler), entering the public send pipeline described in q4. Tests call client.SendAsync(TestAsync, request); that helper's body was not located, so its exact sync/async adapter edge remains unverified. These tests were inspected, not executed.",
+      "citations": [
+        {
+          "url": "https://raw.githubusercontent.com/dotnet/runtime/8630d8988107478d249e2fdb8162f8c7dcbd3dbb/src/libraries/Common/tests/System/Net/Http/HttpClientHandlerTest.AutoRedirect.cs",
+          "lines": "web-rendered L19-L129"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/dotnet/runtime/8630d8988107478d249e2fdb8162f8c7dcbd3dbb/src/libraries/System.Net.Http/tests/FunctionalTests/SocketsHttpHandlerTest.cs",
+          "lines": "web-rendered L1378-L1383"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/dotnet/runtime/8630d8988107478d249e2fdb8162f8c7dcbd3dbb/src/libraries/System.Net.Http/tests/FunctionalTests/System.Net.Http.Functional.Tests.csproj",
+          "lines": "web-rendered L155-L162; L198"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/dotnet/runtime/8630d8988107478d249e2fdb8162f8c7dcbd3dbb/src/libraries/System.Net.Http/tests/FunctionalTests/HttpClientHandlerTestBase.SocketsHttpHandler.cs",
+          "lines": "web-rendered L44-L62; L71-L73"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/dotnet/runtime/8630d8988107478d249e2fdb8162f8c7dcbd3dbb/src/libraries/Common/tests/System/Net/Http/HttpClientHandlerTestBase.cs",
+          "lines": "web-rendered L24-L26; L46-L52"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/dotnet/runtime/8630d8988107478d249e2fdb8162f8c7dcbd3dbb/src/libraries/System.Net.Http/src/System/Net/Http/HttpClientHandler.cs",
+          "lines": "web-rendered L335-L339"
+        }
+      ]
+    },
+    {
+      "id": "runtime-q10",
+      "answer": "On the inspected HTTP/1 path, received header bytes enter HttpConnection.AddResponseHeader: whitespace is trimmed, the descriptor/value decoded, and response.Headers receives TryAddWithoutValidation. KnownHeaders.Location selects UriHeaderParser.RelativeOrAbsoluteUriParser; HttpResponseHeaders.Location calls GetSingleParsedValue, which parses raw stored values. UriHeaderParser uses Uri.TryCreate, with a UTF-8 decoding fallback. RedirectHandler.GetUriForRedirect accepts redirect statuses, reads Location, resolves relative URIs against RequestUri, inherits an absent fragment, and rejects insecure downgrades/unsupported schemes. SendAsync assigns the result to request.RequestUri before resending. HTTP/2/3 wire-header entry points were not traced.",
+      "citations": [
+        {
+          "url": "https://raw.githubusercontent.com/dotnet/runtime/8630d8988107478d249e2fdb8162f8c7dcbd3dbb/src/libraries/System.Net.Http/src/System/Net/Http/SocketsHttpHandler/HttpConnection.cs",
+          "lines": "web-rendered L1084-L1088; L1105-L1191"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/dotnet/runtime/8630d8988107478d249e2fdb8162f8c7dcbd3dbb/src/libraries/System.Net.Http/src/System/Net/Http/Headers/KnownHeaders.cs",
+          "lines": "web-rendered L64"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/dotnet/runtime/8630d8988107478d249e2fdb8162f8c7dcbd3dbb/src/libraries/System.Net.Http/src/System/Net/Http/Headers/HttpResponseHeaders.cs",
+          "lines": "web-rendered L41-L45"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/dotnet/runtime/8630d8988107478d249e2fdb8162f8c7dcbd3dbb/src/libraries/System.Net.Http/src/System/Net/Http/Headers/HttpHeaders.cs",
+          "lines": "web-rendered L732-L748; L772-L821; L963-L971"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/dotnet/runtime/8630d8988107478d249e2fdb8162f8c7dcbd3dbb/src/libraries/System.Net.Http/src/System/Net/Http/Headers/UriHeaderParser.cs",
+          "lines": "web-rendered L15-L50"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/dotnet/runtime/8630d8988107478d249e2fdb8162f8c7dcbd3dbb/src/libraries/System.Net.Http/src/System/Net/Http/SocketsHttpHandler/RedirectHandler.cs",
+          "lines": "web-rendered L55-L56; L81-L138"
+        }
+      ]
+    }
+  ],
+  "toolErrors": [
+    {
+      "url": "https://github.com/dotnet/runtime/tree/8630d8988107478d249e2fdb8162f8c7dcbd3dbb/src",
+      "error": "Internal Error"
+    },
+    {
+      "url": "https://github.com/dotnet/runtime/tree/8630d8988107478d249e2fdb8162f8c7dcbd3dbb/src/libraries/System.Net.Http/tests/FunctionalTests",
+      "error": "Internal Error: Failed to fetch restricted URL"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/dotnet/runtime/8630d8988107478d249e2fdb8162f8c7dcbd3dbb/docs/project-docs/repo-guide.md",
+      "error": "Internal Error"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/dotnet/runtime/8630d8988107478d249e2fdb8162f8c7dcbd3dbb/src/libraries/System.Net.Http/tests/FunctionalTests/HttpClientHandlerTest.Redirection.cs",
+      "error": "Internal Error"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/dotnet/runtime/8630d8988107478d249e2fdb8162f8c7dcbd3dbb/src/installer/README.md",
+      "error": "Internal Error"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/dotnet/runtime/8630d8988107478d249e2fdb8162f8c7dcbd3dbb/src/libraries/System.Net.Http/src/System/Net/Http/SocketsHttpHandler/ConnectionPool/HttpConnectionPool.Send.cs",
+      "error": "Internal Error"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/dotnet/runtime/8630d8988107478d249e2fdb8162f8c7dcbd3dbb/src/coreclr/nativeaot/README.md",
+      "error": "404 Not Found"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/dotnet/runtime/8630d8988107478d249e2fdb8162f8c7dcbd3dbb/src/libraries/System.Net.Http/src/System/Net/Http/SocketsHttpHandler/HttpConnectionPool.cs",
+      "error": "Internal Error"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/dotnet/runtime/8630d8988107478d249e2fdb8162f8c7dcbd3dbb/src/libraries/Common/tests/System/Net/Http/HttpClientExtensions.cs",
+      "error": "404 Not Found"
+    }
+  ],
+  "limitations": [
+    "Static, pinned-source inspection only; no builds or test executions. No local source checkout, Lattice, MCP, oracle, prior-answer access, or delegation.",
+    "Citation ranges use the web tool's numbered raw-source rendering (or explicitly web-rendered GitHub page), not asserted physical GitHub file line numbers. The browser normalizes blank lines: RedirectHandler's raw rendering has 170 lines while its GitHub page reports 189 source lines. Symbols are included to disambiguate.",
+    "Transport choice, optional stages, credentials, proxies, custom handlers and server responses are dynamic boundaries. No exhaustive whole-repository caller or language census was performed.",
+    "The TestAsync extension/helper implementation was not located; its call sites and factories were verified.",
+    "Authoritative token telemetry is unavailable and is not estimated.",
+    "Exact delivery/start timestamp was not recorded. selfReportedStartedAt is the first clock observation after research had begun; it is not used to claim measured elapsed duration."
+  ],
+  "selfReportedStartedAt": "2026-10-13T07:46:41.634Z",
+  "selfReportedFinishedAt": "2026-10-13T07:50:39.713Z"
+}

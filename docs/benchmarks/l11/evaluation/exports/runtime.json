@@ -1,0 +1,18 @@
+{
+  "repository": "runtime",
+  "commit": "8630d8988107478d249e2fdb8162f8c7dcbd3dbb",
+  "candidate": "2b7c00f",
+  "status": "full-export-unavailable",
+  "reason": "Root cold open reached20minute deadline without complete export; meaningful partial at1.266seconds. No unlimited full-export rerun.",
+  "actualMcpPreparation": "failed-single-bounded-attempt",
+  "mcpPreparationEvents": [
+    {
+      "at": "2026-10-13T07:36:06.356Z",
+      "monotonicNs": "426156201723208",
+      "repository": "runtime",
+      "type": "prewarm-failed",
+      "seconds": 10.750702167,
+      "error": "Error: {\"content\":[{\"type\":\"text\",\"text\":\"{\\\"error\\\":\\\"Tool execution failed; verify the repository, graph and request, then retry.\\\",\\\"freshness\\\":{\\\"status\\\":\\\"unknown\\\"}}\"}],\"structuredContent\":{\"error\":\"Tool execution failed; verify the repository, graph and request, then retry.\",\"freshness\":{\"status\":\"unknown\"}},\"isError\":true}"
+    }
+  ]
+}

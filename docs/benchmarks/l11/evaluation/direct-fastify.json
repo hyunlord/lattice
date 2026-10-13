@@ -1,0 +1,321 @@
+{
+  "repository": "fastify",
+  "arm": "direct",
+  "commit": "86368086171305df4e235f6d6bec892c67ec2ae2",
+  "answers": [
+    {
+      "id": "fastify-q1",
+      "answer": "Fastify is a low-overhead Node.js web framework for HTTP applications and APIs, with routing, schema validation/serialization, logging, and extensibility through plugins/hooks. Application developers import the library, construct an instance, register routes, and call listen; Node's HTTP/HTTPS/HTTP2 server invokes its request handler for network clients. The repository also runs it through public-API tests.",
+      "citations": [
+        {
+          "url": "https://github.com/fastify/fastify/blob/86368086171305df4e235f6d6bec892c67ec2ae2/README.md#L34-L41",
+          "lines": "34-41"
+        },
+        {
+          "url": "https://github.com/fastify/fastify/blob/86368086171305df4e235f6d6bec892c67ec2ae2/README.md#L101-L149",
+          "lines": "101-149"
+        },
+        {
+          "url": "https://github.com/fastify/fastify/blob/86368086171305df4e235f6d6bec892c67ec2ae2/README.md#L165-L178",
+          "lines": "165-178"
+        },
+        {
+          "url": "https://github.com/fastify/fastify/blob/86368086171305df4e235f6d6bec892c67ec2ae2/lib/server.js#L286-L319",
+          "lines": "286-319"
+        },
+        {
+          "url": "https://github.com/fastify/fastify/blob/86368086171305df4e235f6d6bec892c67ec2ae2/test/async-await.test.js#L44-L90",
+          "lines": "44-90"
+        }
+      ]
+    },
+    {
+      "id": "fastify-q2",
+      "answer": "fastify.js assembles the public instance; lib/server.js creates/listens on transport servers; lib/route.js registers routes and dispatches matched requests using find-my-way; lib/context.js carries per-route configuration. Request/Reply wrap incoming/outgoing HTTP state, with Reply handling serialization and send hooks. ContentTypeParser selects body parsers (JSON/text defaults). Hooks run lifecycle callbacks; validation.js executes compiled validators. Avvio manages plugin boot/readiness/close with encapsulation override; four-oh-four.js manages scoped not-found routing; Pino provides logging.",
+      "citations": [
+        {
+          "url": "https://github.com/fastify/fastify/blob/86368086171305df4e235f6d6bec892c67ec2ae2/fastify.js#L84-L110",
+          "lines": "84-110"
+        },
+        {
+          "url": "https://github.com/fastify/fastify/blob/86368086171305df4e235f6d6bec892c67ec2ae2/fastify.js#L349-L368",
+          "lines": "349-368"
+        },
+        {
+          "url": "https://github.com/fastify/fastify/blob/86368086171305df4e235f6d6bec892c67ec2ae2/lib/server.js#L24-L30",
+          "lines": "24-30"
+        },
+        {
+          "url": "https://github.com/fastify/fastify/blob/86368086171305df4e235f6d6bec892c67ec2ae2/lib/route.js#L72-L117",
+          "lines": "72-117"
+        },
+        {
+          "url": "https://github.com/fastify/fastify/blob/86368086171305df4e235f6d6bec892c67ec2ae2/lib/route.js#L312-L335",
+          "lines": "312-335"
+        },
+        {
+          "url": "https://github.com/fastify/fastify/blob/86368086171305df4e235f6d6bec892c67ec2ae2/lib/route.js#L486-L487",
+          "lines": "486-487"
+        },
+        {
+          "url": "https://github.com/fastify/fastify/blob/86368086171305df4e235f6d6bec892c67ec2ae2/lib/reply.js#L147-L225",
+          "lines": "147-225"
+        },
+        {
+          "url": "https://github.com/fastify/fastify/blob/86368086171305df4e235f6d6bec892c67ec2ae2/lib/content-type-parser.js#L31-L39",
+          "lines": "31-39"
+        },
+        {
+          "url": "https://github.com/fastify/fastify/blob/86368086171305df4e235f6d6bec892c67ec2ae2/lib/hooks.js#L219-L260",
+          "lines": "219-260"
+        },
+        {
+          "url": "https://github.com/fastify/fastify/blob/86368086171305df4e235f6d6bec892c67ec2ae2/lib/validation.js#L272-L321",
+          "lines": "272-321"
+        },
+        {
+          "url": "https://github.com/fastify/fastify/blob/86368086171305df4e235f6d6bec892c67ec2ae2/lib/four-oh-four.js#L30-L54",
+          "lines": "30-54"
+        },
+        {
+          "url": "https://github.com/fastify/fastify/blob/86368086171305df4e235f6d6bec892c67ec2ae2/README.md#L175-L176",
+          "lines": "175-176"
+        }
+      ]
+    },
+    {
+      "id": "fastify-q3",
+      "answer": "The root npm package is fastify 6.0.0-alpha.4, CommonJS JavaScript with main fastify.js and TypeScript declaration entry fastify.d.ts. Runtime is Node.js; internal modules live under lib, while tests use node:test and the public package entry. npm scripts run borp unit tests, tstyche type checks, ESLint, c8 coverage, Node build scripts for generated validation/error serialization and version synchronization, plus autocannon benchmarks. Avvio, find-my-way, Pino, light-my-request, AJV/compiler and stringify/compiler are separately declared dependencies; create-fastify/fastify-cli are separate scaffolding tools, not this package's entry.",
+      "citations": [
+        {
+          "url": "https://github.com/fastify/fastify/blob/86368086171305df4e235f6d6bec892c67ec2ae2/package.json#L1-L29",
+          "lines": "1-29"
+        },
+        {
+          "url": "https://github.com/fastify/fastify/blob/86368086171305df4e235f6d6bec892c67ec2ae2/package.json#L168-L220",
+          "lines": "168-220"
+        },
+        {
+          "url": "https://github.com/fastify/fastify/blob/86368086171305df4e235f6d6bec892c67ec2ae2/test/async-await.test.js#L1-L7",
+          "lines": "1-7"
+        },
+        {
+          "url": "https://github.com/fastify/fastify/blob/86368086171305df4e235f6d6bec892c67ec2ae2/README.md#L90-L99",
+          "lines": "90-99"
+        }
+      ]
+    },
+    {
+      "id": "fastify-q4",
+      "answer": "Public construction begins at require('fastify')(options) or import Fastify followed by Fastify(options). package.json main resolves to fastify.js; its fastify(serverOptions) factory starts at line 84 and is exported as module.exports, .fastify and .default at 943-947. It processes options, builds routing/404, wraps the HTTP handler, and calls createServer before exposing the instance. Register a route and call listen to accept traffic.",
+      "citations": [
+        {
+          "url": "https://github.com/fastify/fastify/blob/86368086171305df4e235f6d6bec892c67ec2ae2/package.json#L4-L7",
+          "lines": "4-7"
+        },
+        {
+          "url": "https://github.com/fastify/fastify/blob/86368086171305df4e235f6d6bec892c67ec2ae2/fastify.js#L84-L111",
+          "lines": "84-111"
+        },
+        {
+          "url": "https://github.com/fastify/fastify/blob/86368086171305df4e235f6d6bec892c67ec2ae2/fastify.js#L943-L947",
+          "lines": "943-947"
+        },
+        {
+          "url": "https://github.com/fastify/fastify/blob/86368086171305df4e235f6d6bec892c67ec2ae2/README.md#L101-L125",
+          "lines": "101-125"
+        }
+      ]
+    },
+    {
+      "id": "fastify-q5",
+      "answer": "lib/wrap-thenable.js: wrapThenable attaches a fulfillment callback with thenable.then; the actual resolved-value send is reply.send(payload), line 41. A hijacked reply is skipped. Undefined fulfillment sends only if reply is unsent, raw headers unsent, request unaborted, and socket exists/not destroyed. Non-undefined fulfillment attempts send; Reply.send independently prevents duplicate sending. A send exception is marked as an error and sent. handle-request.js selects wrapThenable when the handler's non-null result has a callable then.",
+      "citations": [
+        {
+          "url": "https://github.com/fastify/fastify/blob/86368086171305df4e235f6d6bec892c67ec2ae2/lib/wrap-thenable.js#L12-L50",
+          "lines": "12-50"
+        },
+        {
+          "url": "https://github.com/fastify/fastify/blob/86368086171305df4e235f6d6bec892c67ec2ae2/lib/handle-request.js#L175-L195",
+          "lines": "175-195"
+        },
+        {
+          "url": "https://github.com/fastify/fastify/blob/86368086171305df4e235f6d6bec892c67ec2ae2/lib/reply.js#L147-L164",
+          "lines": "147-164"
+        }
+      ]
+    },
+    {
+      "id": "fastify-q6",
+      "answer": "A's seven static internal outgoing require edges are wrap-thenable (call 192), validation (validate alias,107), hooks (runners,85/128), errors (constructors,46/72), error-status (167/181), symbols (computed context/state keys), content-type (from,68). Imports at 3-19 prove direction A→dependency. node:diagnostics_channel is external built-in. reply.send, context.handler and context.contentTypeParser.run are object-dispatched calls, not additional static imports.",
+      "citations": [
+        {
+          "url": "https://github.com/fastify/fastify/blob/86368086171305df4e235f6d6bec892c67ec2ae2/lib/handle-request.js#L2-L19",
+          "lines": "2-19"
+        },
+        {
+          "url": "https://github.com/fastify/fastify/blob/86368086171305df4e235f6d6bec892c67ec2ae2/lib/handle-request.js#L22-L79",
+          "lines": "22-79"
+        },
+        {
+          "url": "https://github.com/fastify/fastify/blob/86368086171305df4e235f6d6bec892c67ec2ae2/lib/handle-request.js#L82-L135",
+          "lines": "82-135"
+        },
+        {
+          "url": "https://github.com/fastify/fastify/blob/86368086171305df4e235f6d6bec892c67ec2ae2/lib/handle-request.js#L139-L195",
+          "lines": "139-195"
+        }
+      ]
+    },
+    {
+      "id": "fastify-q7",
+      "answer": "Assuming no early reply/error: handleRequest bodyless branch→handler→optional preValidation runner→preValidationCallback→validateSchema→validationCompleted→optional preHandler runner→preHandlerCallback→preHandlerCallbackInner→context.handler→wrapThenable→fulfilled callback→reply.send(payload). Validation may resolve asynchronously; rejected validation can stop or attach an error. Diagnostics may run the inner callback through runStores. Dynamic boundaries: configured hook arrays, compiled validators, bound application handler, thenable scheduling, and reply dispatch. Route registration binds opts.handler to the instance. Fulfillment alone does not ensure sending: hijacking, undefined-payload guards, earlier replies, and disconnects matter; Reply.send is implemented in reply.js.",
+      "citations": [
+        {
+          "url": "https://github.com/fastify/fastify/blob/86368086171305df4e235f6d6bec892c67ec2ae2/lib/handle-request.js#L22-L34",
+          "lines": "22-34"
+        },
+        {
+          "url": "https://github.com/fastify/fastify/blob/86368086171305df4e235f6d6bec892c67ec2ae2/lib/handle-request.js#L82-L198",
+          "lines": "82-198"
+        },
+        {
+          "url": "https://github.com/fastify/fastify/blob/86368086171305df4e235f6d6bec892c67ec2ae2/lib/hooks.js#L219-L260",
+          "lines": "219-260"
+        },
+        {
+          "url": "https://github.com/fastify/fastify/blob/86368086171305df4e235f6d6bec892c67ec2ae2/lib/hooks.js#L389-L391",
+          "lines": "389-391"
+        },
+        {
+          "url": "https://github.com/fastify/fastify/blob/86368086171305df4e235f6d6bec892c67ec2ae2/lib/validation.js#L272-L321",
+          "lines": "272-321"
+        },
+        {
+          "url": "https://github.com/fastify/fastify/blob/86368086171305df4e235f6d6bec892c67ec2ae2/lib/route.js#L312-L315",
+          "lines": "312-315"
+        },
+        {
+          "url": "https://github.com/fastify/fastify/blob/86368086171305df4e235f6d6bec892c67ec2ae2/lib/wrap-thenable.js#L12-L50",
+          "lines": "12-50"
+        },
+        {
+          "url": "https://github.com/fastify/fastify/blob/86368086171305df4e235f6d6bec892c67ec2ae2/lib/reply.js#L147-L164",
+          "lines": "147-164"
+        }
+      ]
+    },
+    {
+      "id": "fastify-q8",
+      "answer": "Confirmed direct production consumers: lib/route.js requires the default handleRequest export (line 5), passing its bound function to preParsingHookRunner or calling it directly (612-614). lib/reply.js requires the Symbol.for('internals') property (34), using internals.preHandlerCallback for callNotFound handling (994/997). Changing the callable default threatens route dispatch; changing that symbol property/preHandlerCallback threatens not-found reply flow. I did not establish repository-wide exhaustiveness because pinned directory browsing failed; no additional consumers are claimed.",
+      "citations": [
+        {
+          "url": "https://github.com/fastify/fastify/blob/86368086171305df4e235f6d6bec892c67ec2ae2/lib/route.js#L3-L5",
+          "lines": "3-5"
+        },
+        {
+          "url": "https://github.com/fastify/fastify/blob/86368086171305df4e235f6d6bec892c67ec2ae2/lib/route.js#L602-L615",
+          "lines": "602-615"
+        },
+        {
+          "url": "https://github.com/fastify/fastify/blob/86368086171305df4e235f6d6bec892c67ec2ae2/lib/reply.js#L28-L34",
+          "lines": "28-34"
+        },
+        {
+          "url": "https://github.com/fastify/fastify/blob/86368086171305df4e235f6d6bec892c67ec2ae2/lib/reply.js#L980-L998",
+          "lines": "980-998"
+        }
+      ]
+    },
+    {
+      "id": "fastify-q9",
+      "answer": "test/async-await.test.js, test 'async await' (44-99), imports Fastify via require('..') (4), calls Fastify(), and registers GET '/' with an async handler returning {hello:'world'} after sleep. It calls listen({port:0}), then fetch(server address), and asserts HTTP 200, content length and JSON result. The '/no-await' async route also returns the object immediately and is fetched/asserted. Thus the test enters through public package construction, route registration, and actual HTTP, exercising handler-promise fulfillment sending rather than calling wrapThenable directly. Inspected, not executed.",
+      "citations": [
+        {
+          "url": "https://github.com/fastify/fastify/blob/86368086171305df4e235f6d6bec892c67ec2ae2/test/async-await.test.js#L1-L7",
+          "lines": "1-7"
+        },
+        {
+          "url": "https://github.com/fastify/fastify/blob/86368086171305df4e235f6d6bec892c67ec2ae2/test/async-await.test.js#L44-L99",
+          "lines": "44-99"
+        }
+      ]
+    },
+    {
+      "id": "fastify-q10",
+      "answer": "Default QUERY is bodywith; public fastify.query registers it. HTTP server→preRouting→router lookup→routeHandler→onRequest/runPreParsing→handleRequest. There, missing content-type for QUERY sets the error flag, sends status 400 with FST_ERR_ROUTE_MISSING_CONTENT_TYPE, and returns before parsing/route handler, even for an empty body. errors.js defines the 400 error. Reply.send routes the flagged payload through error handling. This presumes traffic reaches this path with default method classification and no preceding hook short-circuit; custom server/router/hooks/error handlers remain dynamic boundaries.",
+      "citations": [
+        {
+          "url": "https://github.com/fastify/fastify/blob/86368086171305df4e235f6d6bec892c67ec2ae2/fastify.js#L124-L140",
+          "lines": "124-140"
+        },
+        {
+          "url": "https://github.com/fastify/fastify/blob/86368086171305df4e235f6d6bec892c67ec2ae2/fastify.js#L196-L198",
+          "lines": "196-198"
+        },
+        {
+          "url": "https://github.com/fastify/fastify/blob/86368086171305df4e235f6d6bec892c67ec2ae2/lib/server.js#L286-L312",
+          "lines": "286-312"
+        },
+        {
+          "url": "https://github.com/fastify/fastify/blob/86368086171305df4e235f6d6bec892c67ec2ae2/fastify.js#L753-L768",
+          "lines": "753-768"
+        },
+        {
+          "url": "https://github.com/fastify/fastify/blob/86368086171305df4e235f6d6bec892c67ec2ae2/lib/route.js#L103-L107",
+          "lines": "103-107"
+        },
+        {
+          "url": "https://github.com/fastify/fastify/blob/86368086171305df4e235f6d6bec892c67ec2ae2/lib/route.js#L335",
+          "lines": "335"
+        },
+        {
+          "url": "https://github.com/fastify/fastify/blob/86368086171305df4e235f6d6bec892c67ec2ae2/lib/route.js#L425-L426",
+          "lines": "425-426"
+        },
+        {
+          "url": "https://github.com/fastify/fastify/blob/86368086171305df4e235f6d6bec892c67ec2ae2/lib/route.js#L523-L531",
+          "lines": "523-531"
+        },
+        {
+          "url": "https://github.com/fastify/fastify/blob/86368086171305df4e235f6d6bec892c67ec2ae2/lib/route.js#L602-L615",
+          "lines": "602-615"
+        },
+        {
+          "url": "https://github.com/fastify/fastify/blob/86368086171305df4e235f6d6bec892c67ec2ae2/lib/handle-request.js#L36-L48",
+          "lines": "36-48"
+        },
+        {
+          "url": "https://github.com/fastify/fastify/blob/86368086171305df4e235f6d6bec892c67ec2ae2/lib/errors.js#L452-L456",
+          "lines": "452-456"
+        },
+        {
+          "url": "https://github.com/fastify/fastify/blob/86368086171305df4e235f6d6bec892c67ec2ae2/lib/reply.js#L157-L160",
+          "lines": "157-160"
+        }
+      ]
+    }
+  ],
+  "toolErrors": [
+    {
+      "url": "https://github.com/fastify/fastify/tree/86368086171305df4e235f6d6bec892c67ec2ae2/lib",
+      "error": "web.open returned Internal Error"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/fastify/fastify/86368086171305df4e235f6d6bec892c67ec2ae2/test/query.test.js",
+      "error": "web.open returned Internal Error; guessed path not established"
+    },
+    {
+      "url": "https://github.com/fastify/fastify/tree/86368086171305df4e235f6d6bec892c67ec2ae2/test",
+      "error": "web.open returned Internal Error"
+    }
+  ],
+  "limitations": [
+    "Static pinned-source inspection only; no tests/builds executed.",
+    "Production consumer list is confirmed but not proven exhaustive because pinned directory browsing failed.",
+    "All citation line ranges are 1-based source lines (raw tool displays began at L0).",
+    "Dynamic application handlers, hooks, validators, transport configuration and error handlers depend on runtime configuration."
+  ],
+  "selfReportedStartedAt": "2026-10-13 06:46:31 UTC",
+  "selfReportedFinishedAt": "2026-10-13 06:49:21 UTC"
+}

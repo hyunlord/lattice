@@ -1,0 +1,70 @@
+{
+  "repository": "fzf",
+  "commit": "c0a193e031f01fb50bf6f7be4381990a3753f7cf",
+  "candidate": "2b7c00f",
+  "startedAt": "2026-10-13T07:12:32.363Z",
+  "reused": false,
+  "priorSetupFailure": {
+    "repository": "fzf",
+    "commit": "c0a193e031f01fb50bf6f7be4381990a3753f7cf",
+    "candidate": "2b7c00f",
+    "startedAt": "2026-10-13T07:11:28.265Z",
+    "reused": false,
+    "command": [
+      "node",
+      "/tmp/lattice-l11-first-impression/bin/lattice.mjs",
+      "export",
+      "/tmp/l11-visual/fzf",
+      "--root",
+      "/tmp/l9-benchmark-core/repos/fzf",
+      "--no-lens",
+      "--cache-dir",
+      "/tmp/l11-visual-cache/fzf",
+      "--force",
+      "--json"
+    ],
+    "exitCode": 2,
+    "timedOut": false,
+    "seconds": 0.21015925,
+    "status": "failed",
+    "finishedAt": "2026-10-13T07:11:28.476Z"
+  },
+  "buildCommand": [
+    "node",
+    "/tmp/lattice-l11-first-impression/bin/lattice.mjs",
+    "build",
+    "--root",
+    "/tmp/l9-benchmark-core/repos/fzf",
+    "--no-lens",
+    "--cache-dir",
+    "/tmp/l11-visual-cache/fzf",
+    "--json"
+  ],
+  "buildExitCode": 0,
+  "command": [
+    "node",
+    "/tmp/lattice-l11-first-impression/bin/lattice.mjs",
+    "export",
+    "/tmp/l11-visual/fzf",
+    "--root",
+    "/tmp/l9-benchmark-core/repos/fzf",
+    "--no-lens",
+    "--cache-dir",
+    "/tmp/l11-visual-cache/fzf",
+    "--force",
+    "--json"
+  ],
+  "exitCode": 0,
+  "timedOut": false,
+  "seconds": 4.229682833,
+  "graphHash": "41bfe1ac2c598b82db9b4777fa1889178ac1e33d65667421c6ad09952ef9678d",
+  "source": {
+    "name": "fzf",
+    "dirty": false,
+    "sourceFingerprint": "0afd3b734e9c55633ff86767b8d4815651be1ca580e53fd1debf3fdf1051fc5c",
+    "commit": "c0a193e031f01fb50bf6f7be4381990a3753f7cf",
+    "remoteUrl": "https://github.com/junegunn/fzf"
+  },
+  "status": "ready",
+  "finishedAt": "2026-10-13T07:12:36.593Z"
+}

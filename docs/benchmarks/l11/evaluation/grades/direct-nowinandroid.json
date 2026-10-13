@@ -1,0 +1,133 @@
+{
+  "repository": "android/nowinandroid",
+  "commit": "a49ed253d75e61a2b6ab80a8da677b57437b08eb",
+  "arm": "direct",
+  "gradedBy": "independent fresh grader direct-second",
+  "answerSha256": "6b87607b14fd982a55b15a242ccac5e591e26f375de5f44dc7702a3d185c9870",
+  "questions": [
+    {
+      "id": "nowinandroid-q1",
+      "score": 2,
+      "reason": "Correct news/reference app, developer audience, browse/follow behavior and demo/prod availability distinction with README citations.",
+      "sourceReferences": [
+        "a49ed253d75e61a2b6ab80a8da677b57437b08eb:README.md:10-25",
+        "a49ed253d75e61a2b6ab80a8da677b57437b08eb:README.md:71-81"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "nowinandroid-q2",
+      "score": 1,
+      "reason": "Correct application, feature implementation, repositories/data sources and shared modules, but this exact answer omits the frozen feature api navigation-key versus impl split (covered separately in q3).",
+      "sourceReferences": [
+        "a49ed253d75e61a2b6ab80a8da677b57437b08eb:docs/ModularizationLearningJourney.md:68-85",
+        "a49ed253d75e61a2b6ab80a8da677b57437b08eb:docs/ModularizationLearningJourney.md:124-143",
+        "a49ed253d75e61a2b6ab80a8da677b57437b08eb:docs/ModularizationLearningJourney.md:173-207"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "nowinandroid-q3",
+      "score": 2,
+      "reason": "Correct Kotlin/Compose/Hilt, Gradle Kotlin DSL, included build-logic, explicit module boundaries and JDK17+ requirement.",
+      "sourceReferences": [
+        "a49ed253d75e61a2b6ab80a8da677b57437b08eb:README.md:13-16",
+        "a49ed253d75e61a2b6ab80a8da677b57437b08eb:README.md:31-35",
+        "a49ed253d75e61a2b6ab80a8da677b57437b08eb:README.md:85-90",
+        "a49ed253d75e61a2b6ab80a8da677b57437b08eb:settings.gradle.kts:17-18",
+        "a49ed253d75e61a2b6ab80a8da677b57437b08eb:settings.gradle.kts:45-90"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "nowinandroid-q4",
+      "score": 2,
+      "reason": "Correct manifest Application/MAIN-LAUNCHER activity and onCreate/setContent/NiaApp path, explicitly distinguishing framework lifecycle dispatch.",
+      "sourceReferences": [
+        "a49ed253d75e61a2b6ab80a8da677b57437b08eb:app/src/main/AndroidManifest.xml:31-50",
+        "a49ed253d75e61a2b6ab80a8da677b57437b08eb:app/src/main/kotlin/com/google/samples/apps/nowinandroid/MainActivity.kt:78-80",
+        "a49ed253d75e61a2b6ab80a8da677b57437b08eb:app/src/main/kotlin/com/google/samples/apps/nowinandroid/MainActivity.kt:135-157"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": true
+    },
+    {
+      "id": "nowinandroid-q5",
+      "score": 2,
+      "reason": "Correct removal coroutine, undo flag/remembered ID, false repository write, true undo write and clear state; additional snackbar callback behavior is source-supported.",
+      "sourceReferences": [
+        "a49ed253d75e61a2b6ab80a8da677b57437b08eb:feature/bookmarks/impl/src/main/kotlin/com/google/samples/apps/nowinandroid/feature/bookmarks/impl/BookmarksViewModel.kt:57-83"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": true
+    },
+    {
+      "id": "nowinandroid-q6",
+      "score": 2,
+      "reason": "Exactly distinguishes four api and two implementation production dependencies from test-only project dependencies; does not invent core:model as a direct declaration.",
+      "sourceReferences": [
+        "a49ed253d75e61a2b6ab80a8da677b57437b08eb:core/data/build.gradle.kts:28-41"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "nowinandroid-q7",
+      "score": 2,
+      "reason": "Complete screen/ViewModel/interface/Hilt/repository/preferences path, analytics and IOException handling, with coroutine and DataStore boundaries explicit; IO scope and serializer details verified.",
+      "sourceReferences": [
+        "a49ed253d75e61a2b6ab80a8da677b57437b08eb:feature/bookmarks/impl/src/main/kotlin/com/google/samples/apps/nowinandroid/feature/bookmarks/impl/BookmarksScreen.kt:79-97",
+        "a49ed253d75e61a2b6ab80a8da677b57437b08eb:feature/bookmarks/impl/src/main/kotlin/com/google/samples/apps/nowinandroid/feature/bookmarks/impl/BookmarksViewModel.kt:57-63",
+        "a49ed253d75e61a2b6ab80a8da677b57437b08eb:core/data/src/main/kotlin/com/google/samples/apps/nowinandroid/core/data/di/DataModule.kt:52-55",
+        "a49ed253d75e61a2b6ab80a8da677b57437b08eb:core/data/src/main/kotlin/com/google/samples/apps/nowinandroid/core/data/repository/OfflineFirstUserDataRepository.kt:45-51",
+        "a49ed253d75e61a2b6ab80a8da677b57437b08eb:core/datastore/src/main/kotlin/com/google/samples/apps/nowinandroid/core/datastore/NiaPreferencesDataSource.kt:123-137"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": true
+    },
+    {
+      "id": "nowinandroid-q8",
+      "score": 2,
+      "reason": "Correct direct screen method reference and two direct ViewModel test callers, distinguishing the stateless screen callback test from a ViewModel caller.",
+      "sourceReferences": [
+        "a49ed253d75e61a2b6ab80a8da677b57437b08eb:feature/bookmarks/impl/src/main/kotlin/com/google/samples/apps/nowinandroid/feature/bookmarks/impl/BookmarksScreen.kt:86-97",
+        "a49ed253d75e61a2b6ab80a8da677b57437b08eb:feature/bookmarks/impl/src/test/kotlin/com/google/samples/apps/nowinandroid/feature/bookmarks/impl/BookmarksViewModelTest.kt:79-93",
+        "a49ed253d75e61a2b6ab80a8da677b57437b08eb:feature/bookmarks/impl/src/test/kotlin/com/google/samples/apps/nowinandroid/feature/bookmarks/impl/BookmarksViewModelTest.kt:115-135"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": true
+    },
+    {
+      "id": "nowinandroid-q9",
+      "score": 2,
+      "reason": "Correct removal/undo test setup, entry calls, state assertions and fake persistence limits; adjacent screen and repository test descriptions are supported.",
+      "sourceReferences": [
+        "a49ed253d75e61a2b6ab80a8da677b57437b08eb:feature/bookmarks/impl/src/test/kotlin/com/google/samples/apps/nowinandroid/feature/bookmarks/impl/BookmarksViewModelTest.kt:79-93",
+        "a49ed253d75e61a2b6ab80a8da677b57437b08eb:feature/bookmarks/impl/src/test/kotlin/com/google/samples/apps/nowinandroid/feature/bookmarks/impl/BookmarksViewModelTest.kt:115-135"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": true
+    },
+    {
+      "id": "nowinandroid-q10",
+      "score": 1,
+      "reason": "Correct ID/boolean origin, unchanged repository forwarding, updateData preference copy, true insertion/false removal and key-set readback. This exact answer omits the frozen IOException catch/log requirement, although q7 separately states it.",
+      "sourceReferences": [
+        "a49ed253d75e61a2b6ab80a8da677b57437b08eb:core/datastore/src/main/kotlin/com/google/samples/apps/nowinandroid/core/datastore/NiaPreferencesDataSource.kt:29-37",
+        "a49ed253d75e61a2b6ab80a8da677b57437b08eb:core/datastore/src/main/kotlin/com/google/samples/apps/nowinandroid/core/datastore/NiaPreferencesDataSource.kt:123-137"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": true
+    }
+  ],
+  "total": 18,
+  "referenceIssues": [],
+  "limitations": [
+    "Read-only pinned git-blob verification; no target builds or tests run. All frozen oracle evidence hashes and logical-line excerpts verified against the specified commit.",
+    "Each exact question is graded independently; facts only stated in another answer are not inserted into an incomplete answer. Verified pinned definition URLs count as citations.",
+    "Submitted citation ranges claim one-based source lines but multiple ranges differ from canonical pinned source lines. Example: removal is BookmarksViewModel.kt:57-63, not submitted 41-57/52-56; serializer writeTo is 40-43, not 36-38. Pinned URLs and explicit symbols verified; canonical spans recorded in sourceReferences, submitted spans not silently treated as exact."
+  ]
+}

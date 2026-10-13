@@ -1,0 +1,241 @@
+{
+  "repository": "encode/httpx",
+  "arm": "map",
+  "commit": "b5addb64f0161ff6bfe94c124ef76f6a1fba5254",
+  "answers": [
+    {
+      "id": "httpx-q1",
+      "answer": "HTTPX is a Python HTTP client library with synchronous/asynchronous APIs, HTTP/1.1 and HTTP/2, plus an optional command-line client. Python applications call its exported functions/classes; shell users run the httpx console script (httpx:main). Repository tests also call it. These are evidenced entry surfaces, not an inventory of downstream users or proof of runtime execution.",
+      "citations": [
+        {
+          "url": "https://github.com/encode/httpx/blob/b5addb64f0161ff6bfe94c124ef76f6a1fba5254/README.md#L14",
+          "lines": "14-65"
+        },
+        {
+          "url": "https://github.com/encode/httpx/blob/b5addb64f0161ff6bfe94c124ef76f6a1fba5254/pyproject.toml#L1",
+          "lines": "1-85"
+        },
+        {
+          "url": "https://github.com/encode/httpx/blob/b5addb64f0161ff6bfe94c124ef76f6a1fba5254/tests/client/test_redirects.py#L116",
+          "lines": "116-121"
+        }
+      ]
+    },
+    {
+      "id": "httpx-q2",
+      "answer": "__init__.py exposes the public facade; _api.py supplies convenience request functions; _client.py owns reusable sync/async clients and request orchestration. _models.py represents requests/responses, headers and cookies; _urls.py handles URLs/query parameters. _auth.py supplies authentication flows. _transports provides transport interfaces, httpcore-backed network adapters, in-process ASGI/WSGI adapters and mocks. _main.py implements the CLI. These are source modules/responsibilities, not separately distributed packages.",
+      "citations": [
+        {
+          "url": "https://github.com/encode/httpx/blob/b5addb64f0161ff6bfe94c124ef76f6a1fba5254/httpx/__init__.py#L1",
+          "lines": "1-107"
+        },
+        {
+          "url": "https://github.com/encode/httpx/blob/b5addb64f0161ff6bfe94c124ef76f6a1fba5254/httpx/_api.py#L39",
+          "lines": "39-120"
+        },
+        {
+          "url": "https://github.com/encode/httpx/blob/b5addb64f0161ff6bfe94c124ef76f6a1fba5254/httpx/_client.py#L594",
+          "lines": "594-646"
+        },
+        {
+          "url": "https://github.com/encode/httpx/blob/b5addb64f0161ff6bfe94c124ef76f6a1fba5254/httpx/_models.py#L1",
+          "lines": "1-1278"
+        },
+        {
+          "url": "https://github.com/encode/httpx/blob/b5addb64f0161ff6bfe94c124ef76f6a1fba5254/httpx/_urls.py#L1",
+          "lines": "1-642"
+        },
+        {
+          "url": "https://github.com/encode/httpx/blob/b5addb64f0161ff6bfe94c124ef76f6a1fba5254/httpx/_auth.py#L1",
+          "lines": "1-100"
+        },
+        {
+          "url": "https://github.com/encode/httpx/blob/b5addb64f0161ff6bfe94c124ef76f6a1fba5254/httpx/_transports/default.py#L135",
+          "lines": "135-259"
+        },
+        {
+          "url": "https://github.com/encode/httpx/blob/b5addb64f0161ff6bfe94c124ef76f6a1fba5254/httpx/_transports/__init__.py#L1",
+          "lines": "1-16"
+        },
+        {
+          "url": "https://github.com/encode/httpx/blob/b5addb64f0161ff6bfe94c124ef76f6a1fba5254/httpx/_main.py#L452",
+          "lines": "452-506"
+        }
+      ]
+    },
+    {
+      "id": "httpx-q3",
+      "answer": "The implementation and tests are Python; Python >=3.9 is required. pyproject.toml uses Hatchling (hatchling.build) with hatch-fancy-pypi-readme; version comes from httpx/__version__.py and README/CHANGELOG supply package metadata. One distribution/import package, httpx, contains internal modules and _transports; tests are auxiliary code, included in the source distribution rather than a second product package. Required dependencies include httpcore==1.*, anyio, certifi and idna; CLI/HTTP2/SOCKS/compression integrations are optional extras.",
+      "citations": [
+        {
+          "url": "https://github.com/encode/httpx/blob/b5addb64f0161ff6bfe94c124ef76f6a1fba5254/pyproject.toml#L1",
+          "lines": "1-95"
+        },
+        {
+          "url": "https://github.com/encode/httpx/blob/b5addb64f0161ff6bfe94c124ef76f6a1fba5254/httpx/__init__.py#L1",
+          "lines": "1-12"
+        },
+        {
+          "url": "https://github.com/encode/httpx/blob/b5addb64f0161ff6bfe94c124ef76f6a1fba5254/httpx/_transports/__init__.py#L1",
+          "lines": "1-16"
+        }
+      ]
+    },
+    {
+      "id": "httpx-q4",
+      "answer": "The selected library entry begins at httpx.get, re-exported by httpx/__init__.py from _api.py. _api.get (174-207) calls request('GET', url, ...). _api.request (39-120) creates a context-managed Client and calls client.request. This is a library call, not the CLI main; follow_redirects defaults to False.",
+      "citations": [
+        {
+          "url": "https://github.com/encode/httpx/blob/b5addb64f0161ff6bfe94c124ef76f6a1fba5254/httpx/__init__.py#L1",
+          "lines": "1-57"
+        },
+        {
+          "url": "https://github.com/encode/httpx/blob/b5addb64f0161ff6bfe94c124ef76f6a1fba5254/httpx/_api.py#L174",
+          "lines": "174-207"
+        },
+        {
+          "url": "https://github.com/encode/httpx/blob/b5addb64f0161ff6bfe94c124ef76f6a1fba5254/httpx/_api.py#L39",
+          "lines": "39-120"
+        }
+      ]
+    },
+    {
+      "id": "httpx-q5",
+      "answer": "BaseClient._redirect_method in _client.py:494-515: 303 and 302 change every non-HEAD method to GET; 301 changes POST to GET. Otherwise preserve the method, including HEAD and 307/308.",
+      "citations": [
+        {
+          "url": "https://github.com/encode/httpx/blob/b5addb64f0161ff6bfe94c124ef76f6a1fba5254/httpx/_client.py#L494",
+          "lines": "494-515"
+        }
+      ]
+    },
+    {
+      "id": "httpx-q6",
+      "answer": "Direct imports: _auth (Auth, BasicAuth, FunctionAuth); _models (Cookies, Headers, Request, Response); _transports.base (BaseTransport/AsyncBaseTransport); _transports.default (HTTPTransport/AsyncHTTPTransport). _urls and _utils support URL-based dispatch.",
+      "citations": [
+        {
+          "url": "https://github.com/encode/httpx/blob/b5addb64f0161ff6bfe94c124ef76f6a1fba5254/httpx/_client.py#L1",
+          "lines": "1-55"
+        }
+      ]
+    },
+    {
+      "id": "httpx-q7",
+      "answer": "Client.request → build_request → send → _build_request_auth → _send_handling_auth (auth.sync_auth_flow/next) → _send_handling_redirects → request hooks → _send_single_request → _transport_for_url → transport.handle_request. After response hooks: has_redirect_location → _build_redirect_request → method/URL/headers/stream helpers → Request. Append history; follow_redirects=True reads the response and repeats with that request, subject to max_redirects. Dynamic boundaries: auth generators, hooks, overridden methods, mount/proxy/custom transport selection and streaming I/O. Default HTTPTransport calls external httpcore; the map is not runtime execution evidence.",
+      "citations": [
+        {
+          "url": "https://github.com/encode/httpx/blob/b5addb64f0161ff6bfe94c124ef76f6a1fba5254/httpx/_client.py#L771",
+          "lines": "771-825"
+        },
+        {
+          "url": "https://github.com/encode/httpx/blob/b5addb64f0161ff6bfe94c124ef76f6a1fba5254/httpx/_client.py#L879",
+          "lines": "879-1034"
+        },
+        {
+          "url": "https://github.com/encode/httpx/blob/b5addb64f0161ff6bfe94c124ef76f6a1fba5254/httpx/_client.py#L475",
+          "lines": "475-492"
+        },
+        {
+          "url": "https://github.com/encode/httpx/blob/b5addb64f0161ff6bfe94c124ef76f6a1fba5254/httpx/_client.py#L760",
+          "lines": "760-769"
+        },
+        {
+          "url": "https://github.com/encode/httpx/blob/b5addb64f0161ff6bfe94c124ef76f6a1fba5254/httpx/_auth.py#L22",
+          "lines": "22-99"
+        },
+        {
+          "url": "https://github.com/encode/httpx/blob/b5addb64f0161ff6bfe94c124ef76f6a1fba5254/httpx/_models.py#L772",
+          "lines": "772-792"
+        },
+        {
+          "url": "https://github.com/encode/httpx/blob/b5addb64f0161ff6bfe94c124ef76f6a1fba5254/httpx/_transports/default.py#L230",
+          "lines": "230-259"
+        }
+      ]
+    },
+    {
+      "id": "httpx-q8",
+      "answer": "Direct consumer: BaseClient._build_redirect_request, calling self._redirect_method at line 480. Indirect effects reach sync/async redirect loops, outgoing methods, body/header handling, convenience APIs and redirect tests. Runtime subclasses can override dispatch.",
+      "citations": [
+        {
+          "url": "https://github.com/encode/httpx/blob/b5addb64f0161ff6bfe94c124ef76f6a1fba5254/httpx/_client.py#L475",
+          "lines": "475-492"
+        },
+        {
+          "url": "https://github.com/encode/httpx/blob/b5addb64f0161ff6bfe94c124ef76f6a1fba5254/httpx/_client.py#L546",
+          "lines": "546-582"
+        },
+        {
+          "url": "https://github.com/encode/httpx/blob/b5addb64f0161ff6bfe94c124ef76f6a1fba5254/httpx/_client.py#L964",
+          "lines": "964-999"
+        },
+        {
+          "url": "https://github.com/encode/httpx/blob/b5addb64f0161ff6bfe94c124ef76f6a1fba5254/httpx/_client.py#L1679",
+          "lines": "1679-1715"
+        },
+        {
+          "url": "https://github.com/encode/httpx/blob/b5addb64f0161ff6bfe94c124ef76f6a1fba5254/tests/client/test_redirects.py#L116",
+          "lines": "116-121"
+        }
+      ]
+    },
+    {
+      "id": "httpx-q9",
+      "answer": "tests/client/test_redirects.py::test_redirect_301 (116-121) builds Client(transport=MockTransport(redirects)), then client.post('https://example.org/redirect_301', follow_redirects=True). The local redirects handler returns 301 with Location=https://example.org/; the next request receives its ordinary 200 response. MockTransport.handle_request reads the request and calls its supplied handler, so no network is needed. The test asserts 200, destination URL and one history entry; it exercises the POST→GET branch but does not explicitly assert the rewritten method.",
+      "citations": [
+        {
+          "url": "https://github.com/encode/httpx/blob/b5addb64f0161ff6bfe94c124ef76f6a1fba5254/tests/client/test_redirects.py#L8",
+          "lines": "8-16"
+        },
+        {
+          "url": "https://github.com/encode/httpx/blob/b5addb64f0161ff6bfe94c124ef76f6a1fba5254/tests/client/test_redirects.py#L109",
+          "lines": "109-121"
+        },
+        {
+          "url": "https://github.com/encode/httpx/blob/b5addb64f0161ff6bfe94c124ef76f6a1fba5254/httpx/_transports/mock.py#L15",
+          "lines": "15-27"
+        }
+      ]
+    },
+    {
+      "id": "httpx-q10",
+      "answer": "Response.has_redirect_location requires 301/302/303/307/308 plus Location. _build_redirect_request calls _redirect_url: read response.headers['Location'], parse URL, translate InvalidURL to RemoteProtocolError, repair a scheme-without-host, resolve relative URLs, inherit a missing fragment, then pass the result to Request. URL.join uses urllib.parse.urljoin. With default networking, transport response headers enter through Response(headers=resp.headers).",
+      "citations": [
+        {
+          "url": "https://github.com/encode/httpx/blob/b5addb64f0161ff6bfe94c124ef76f6a1fba5254/httpx/_models.py#L772",
+          "lines": "772-792"
+        },
+        {
+          "url": "https://github.com/encode/httpx/blob/b5addb64f0161ff6bfe94c124ef76f6a1fba5254/httpx/_client.py#L475",
+          "lines": "475-492"
+        },
+        {
+          "url": "https://github.com/encode/httpx/blob/b5addb64f0161ff6bfe94c124ef76f6a1fba5254/httpx/_client.py#L517",
+          "lines": "517-544"
+        },
+        {
+          "url": "https://github.com/encode/httpx/blob/b5addb64f0161ff6bfe94c124ef76f6a1fba5254/httpx/_urls.py#L354",
+          "lines": "354-366"
+        },
+        {
+          "url": "https://github.com/encode/httpx/blob/b5addb64f0161ff6bfe94c124ef76f6a1fba5254/httpx/_transports/default.py#L230",
+          "lines": "230-259"
+        }
+      ]
+    }
+  ],
+  "toolErrors": [
+    "Initial overview and broad redirect-find output were display-truncated; narrower/parsed responses were subsequently used.",
+    "lattice_node(module:httpx/_client.py, compact=false, limit=100) output exceeded exec output budget; JSON.parse failed with SyntaxError: Unexpected token 'W', 'Warning: t'... is not valid JSON. Recovered with compact=true, limit=5.",
+    "lattice_trace(module:httpx/_client.py, edgeKind=imports, limit=100) output was truncated and caused the same JSON.parse SyntaxError; direct imports were verified from pinned web source instead."
+  ],
+  "limitations": [
+    "Read-only map/MCP and pinned web sources only; no target execution, builds, tests, network traffic or downstream-consumer census was performed.",
+    "Map marks Python self-call resolutions as estimated. includeEstimated=true was needed; inherited calls and dynamically selected hooks/auth/transports are not comprehensively resolved. Pinned source supplied missing links.",
+    "Map flow requests explicitly reported depth truncation; they were used as bounded orientation, not exhaustive reachability.",
+    "Raw web rendering compresses blank lines and its display offsets differ from repository lines; citations use source-bound map ranges where available.",
+    "Authoritative token telemetry unavailable; no token estimate is reported as measured."
+  ],
+  "selfReportedStartedAt": "2026-10-13 07:13:06 UTC",
+  "selfReportedFinishedAt": "2026-10-13 07:16:54 UTC"
+}

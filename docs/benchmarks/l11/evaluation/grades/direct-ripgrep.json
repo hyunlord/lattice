@@ -1,0 +1,143 @@
+{
+  "repository": "ripgrep",
+  "commit": "3fce3b5bb0236da2df6d99672afb8a719642eca7",
+  "arm": "direct",
+  "gradedBy": "independent fresh grader batch1",
+  "answerSha256": "fbcaa52fc6113a9590b873fadfb96cd812c5959829c24a17ccee73886a9c14b4",
+  "questions": [
+    {
+      "id": "q01",
+      "score": 2,
+      "reason": "Correct rg purpose, user/script consumers, default ignore/hidden/binary behavior and reusable grep facade.",
+      "sourceReferences": [
+        "README.md:1-9",
+        "Cargo.toml:29-33",
+        "crates/grep/src/lib.rs:1-21"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "q02",
+      "score": 2,
+      "reason": "Correct application coordination, haystack/worker, matcher/searcher/printer, ignore traversal and optional index boundaries.",
+      "sourceReferences": [
+        "crates/core/main.rs:9-18",
+        "crates/ignore/src/lib.rs:1-8",
+        "crates/grep/src/lib.rs:1-21",
+        "crates/core/search.rs:1-8"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "q03",
+      "score": 2,
+      "reason": "Correct Cargo workspace, rg target, members, declared edition/rust-version and optional path-dependency features; no local build validation is claimed.",
+      "sourceReferences": [
+        "Cargo.toml:29-63",
+        "Cargo.toml:77-81",
+        "crates/grep/Cargo.toml:18-23"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "q04",
+      "score": 2,
+      "reason": "Correct Cargo executable target and main -> flags::parse -> run entry. The exact entry question is answered without needing to repeat the ordinary-search branch condition.",
+      "sourceReferences": [
+        "Cargo.toml:29-33",
+        "crates/core/main.rs:44-46",
+        "crates/core/main.rs:78-99"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "q05",
+      "score": 2,
+      "reason": "Correctly names sequential search, SearchWorker.search, worker/generic search_path and library Searcher.search_path definitions for ordinary files.",
+      "sourceReferences": [
+        "crates/core/main.rs:113-141",
+        "crates/core/search.rs:245-266",
+        "crates/core/search.rs:342-350",
+        "crates/core/search.rs:380-393"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "q06",
+      "score": 2,
+      "reason": "All six direct facade dependencies and corresponding reexports are correct, including optional/feature-gated PCRE2.",
+      "sourceReferences": [
+        "crates/grep/Cargo.toml:18-23",
+        "crates/grep/src/lib.rs:15-21"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "q07",
+      "score": 2,
+      "reason": "Correct sequential execution through argument construction, walk/haystack, worker, matcher/sink/searcher and output/result aggregation; 0/1/2 outcomes and runtime boundaries are distinguished.",
+      "sourceReferences": [
+        "crates/core/main.rs:44-46",
+        "crates/core/main.rs:78-106",
+        "crates/core/main.rs:113-145",
+        "crates/core/search.rs:245-266",
+        "crates/core/search.rs:342-350",
+        "crates/core/search.rs:380-393"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "q08",
+      "score": 2,
+      "reason": "Correct sequential and parallel direct call sites plus worker construction; index wrapper is accurately classified indirect and impact conditional.",
+      "sourceReferences": [
+        "crates/core/main.rs:125-141",
+        "crates/core/main.rs:178-202",
+        "crates/core/flags/hiargs.rs:701-718"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": true
+    },
+    {
+      "id": "q09",
+      "score": 2,
+      "reason": "Correct single_file and forced -j1 heading tests, subprocess harness, executable entry and source-only evidence.",
+      "sourceReferences": [
+        "tests/misc.rs:82-98",
+        "tests/misc.rs:11-19",
+        "tests/util.rs:162-192",
+        "crates/core/main.rs:86-90"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "q10",
+      "score": 2,
+      "reason": "Correct config environment entry, line trimming/comment filtering, OsString conversion, config-before-CLI reparsing, early no-config/special modes and HiArgs conversion.",
+      "sourceReferences": [
+        "crates/core/flags/config.rs:15-40",
+        "crates/core/flags/config.rs:63-69",
+        "crates/core/flags/config.rs:84-107",
+        "crates/core/flags/parse.rs:48-53",
+        "crates/core/flags/parse.rs:81-113"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    }
+  ],
+  "total": 20,
+  "referenceIssues": [],
+  "limitations": [
+    "Read-only source grading; no target builds, scripts or tests executed. All oracle excerpt ranges matched local source and referenced files matched pinned git blobs and oracle hashes. Named-definition pinned file citations were accepted despite shifted numeric spans.",
+    "Several supplied line spans are shifted (for example HiArgs.search_worker is 705 rather than cited 677-690); explicit named definitions in pinned files were verified.",
+    "Direct answer caller enumeration is bounded; no runtime results established."
+  ]
+}

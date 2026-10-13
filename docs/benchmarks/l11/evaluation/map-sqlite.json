@@ -1,0 +1,170 @@
+{
+  "repository": "sqlite/sqlite",
+  "arm": "map",
+  "commit": "6e35c19f170958b1e846e01c55318988f2d192e0",
+  "answers": [
+    {
+      "id": "sqlite-q1",
+      "answer": "SQLite is a database engine embedded in client applications through its public C library interface. The repository also builds the sqlite3 command-line shell and Tcl bindings/testfixture, which call the library. External application callers are not enumerated by this repository.",
+      "citations": [
+        {
+          "url": "https://raw.githubusercontent.com/sqlite/sqlite/6e35c19f170958b1e846e01c55318988f2d192e0/README.md",
+          "lines": "2-10, 244-257, 320-332"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/sqlite/sqlite/6e35c19f170958b1e846e01c55318988f2d192e0/src/sqlite.h.in",
+          "lines": "11-30"
+        }
+      ]
+    },
+    {
+      "id": "sqlite-q2",
+      "answer": "Principal components: public API (sqlite.h.in); SQL parser (parse.y/Lemon); query planning/code generation (where*.c); prepared-statement virtual machine (vdbe.c); B-tree storage (btree.c); transaction pager (pager.c); OS access through pluggable VFS (os_unix.c/os_win.c). Shell and Tcl bindings are separate clients; ext/ contains optional extensions.",
+      "citations": [
+        {
+          "url": "https://raw.githubusercontent.com/sqlite/sqlite/6e35c19f170958b1e846e01c55318988f2d192e0/README.md",
+          "lines": "190-201, 281-332"
+        }
+      ]
+    },
+    {
+      "id": "sqlite-q3",
+      "answer": "Core implementation is C, with a generated Lemon parser and generated sqlite3.h/amalgamation. Unix builds use Autosetup configure plus make; Windows supports MSVC/nmake Makefile.msc. Tcl drives generation/testing. Public sqlite3.h separates application API from unstable internal headers; shell/Tcl are outside core. The map also inventories Java/JNI and JavaScript/WASM, but its C extraction is file-only.",
+      "citations": [
+        {
+          "url": "https://raw.githubusercontent.com/sqlite/sqlite/6e35c19f170958b1e846e01c55318988f2d192e0/README.md",
+          "lines": "82-162, 168-224, 244-266, 283-292"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/sqlite/sqlite/6e35c19f170958b1e846e01c55318988f2d192e0/src/sqlite.h.in",
+          "lines": "11-30"
+        }
+      ]
+    },
+    {
+      "id": "sqlite-q4",
+      "answer": "The selected library entry is sqlite3_exec(db, SQL, callback, callbackArgument, errorOutput), declared in sqlite.h.in and implemented in src/legacy.c. It requires an already-open connection; this is not a CLI main entry.",
+      "citations": [
+        {
+          "url": "https://raw.githubusercontent.com/sqlite/sqlite/6e35c19f170958b1e846e01c55318988f2d192e0/src/sqlite.h.in",
+          "lines": "351-421"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/sqlite/sqlite/6e35c19f170958b1e846e01c55318988f2d192e0/src/legacy.c",
+          "lines": "27-48"
+        }
+      ]
+    },
+    {
+      "id": "sqlite-q5",
+      "answer": "src/legacy.c implements sqlite3_exec: prepare each statement, step it, collect column names/text, invoke xCallback, finalize, and continue at the leftover SQL. The API specifies one callback per result row, NULL pointers for SQL NULL, and SQLITE_ABORT on a nonzero callback return; callback arrays are valid only during the callback.",
+      "citations": [
+        {
+          "url": "https://raw.githubusercontent.com/sqlite/sqlite/6e35c19f170958b1e846e01c55318988f2d192e0/src/legacy.c",
+          "lines": "44-114"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/sqlite/sqlite/6e35c19f170958b1e846e01c55318988f2d192e0/src/sqlite.h.in",
+          "lines": "351-412"
+        }
+      ]
+    },
+    {
+      "id": "sqlite-q6",
+      "answer": "Direct dependencies visible in sqlite3_exec: sqlite3_prepare_v2; sqlite3_step; sqlite3_column_count/name/text/type; sqlite3VdbeFinalize; connection mutex enter/leave; sqlite3SafetyCheckOk; sqlite3Error; allocation/free/string duplication; sqlite3OomFault; sqlite3ApiExit; sqlite3_errmsg; whitespace classification. xCallback is a supplied function pointer, not a statically resolved internal callee. Parser, planner, B-tree and pager are downstream, not direct calls from this function.",
+      "citations": [
+        {
+          "url": "https://raw.githubusercontent.com/sqlite/sqlite/6e35c19f170958b1e846e01c55318988f2d192e0/src/legacy.c",
+          "lines": "27-133"
+        }
+      ]
+    },
+    {
+      "id": "sqlite-q7",
+      "answer": "Supported source path: sqlite3_exec -> sqlite3_prepare_v2 -> sqlite3LockAndPrepare -> sqlite3Prepare -> sqlite3RunParser -> generated sqlite3Parser. SELECT grammar dispatches sqlite3Select with SRT_Output. Execution proceeds sqlite3_step -> sqlite3Step -> sqlite3VdbeExec; OP_ResultRow exposes values and returns SQLITE_ROW; exec then invokes xCallback. The callback target is supplied at runtime. SQL/schema/compiled options determine the generated program and storage path; this is source-supported control flow, not an observed runtime trace.",
+      "citations": [
+        {
+          "url": "https://raw.githubusercontent.com/sqlite/sqlite/6e35c19f170958b1e846e01c55318988f2d192e0/src/legacy.c",
+          "lines": "48-104"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/sqlite/sqlite/6e35c19f170958b1e846e01c55318988f2d192e0/src/prepare.c",
+          "lines": "749-799, 814-851, 911-927"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/sqlite/sqlite/6e35c19f170958b1e846e01c55318988f2d192e0/src/tokenize.c",
+          "lines": "589-705"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/sqlite/sqlite/6e35c19f170958b1e846e01c55318988f2d192e0/src/parse.y",
+          "lines": "486-496"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/sqlite/sqlite/6e35c19f170958b1e846e01c55318988f2d192e0/src/vdbeapi.c",
+          "lines": "897-911, 946-996"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/sqlite/sqlite/6e35c19f170958b1e846e01c55318988f2d192e0/src/vdbe.c",
+          "lines": "1718-1730"
+        }
+      ]
+    },
+    {
+      "id": "sqlite-q8",
+      "answer": "sqlite3_get_table in src/table.c directly calls sqlite3_exec with sqlite3_get_table_cb and a TabResult accumulator. Its callback copies column names and row strings/NULLs, counts rows, and returns nonzero on incompatible column counts or allocation failure. Therefore changing row delivery, value representation, column-name delivery, or abort handling can affect this consumer (when SQLITE_OMIT_GET_TABLE is not enabled).",
+      "citations": [
+        {
+          "url": "https://raw.githubusercontent.com/sqlite/sqlite/6e35c19f170958b1e846e01c55318988f2d192e0/src/table.c",
+          "lines": "19-96, 108-170"
+        }
+      ]
+    },
+    {
+      "id": "sqlite-q9",
+      "answer": "test/exec.test contains exec-1.2 (comments/empty statements around SELECT) and exec-1.3 (SELECT after a second connection changes schema), both expecting status 0 plus column names and row values. Tcl command sqlite3_exec is registered to test_exec in src/test1.c; test_exec calls the C sqlite3_exec with exec_printf_cb, which appends names and values to a Tcl_DString. These are inspected tests, not executed tests; coverage enumeration is not exhaustive.",
+      "citations": [
+        {
+          "url": "https://raw.githubusercontent.com/sqlite/sqlite/6e35c19f170958b1e846e01c55318988f2d192e0/test/exec.test",
+          "lines": "15-35"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/sqlite/sqlite/6e35c19f170958b1e846e01c55318988f2d192e0/src/test1.c",
+          "lines": "228-244, 472-515, 8794-8829"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/sqlite/sqlite/6e35c19f170958b1e846e01c55318988f2d192e0/src/legacy.c",
+          "lines": "27-104"
+        }
+      ]
+    },
+    {
+      "id": "sqlite-q10",
+      "answer": "SQL enters sqlite3_exec as zSql. It passes zSql and &zLeftover to prepare_v2. Through LockAndPrepare/Prepare, RunParser tokenizes with sqlite3GetToken, passes tokens to sqlite3Parser, advances the input pointer, and records Parse.zTail. Prepare publishes that tail through pzTail and returns pVdbe as sqlite3_stmt; v2 also saves consumed SQL. For bounded nonterminated input, Prepare copies SQL and rebases the tail to the original buffer. Exec advances to zLeftover, skips whitespace, and repeats.",
+      "citations": [
+        {
+          "url": "https://raw.githubusercontent.com/sqlite/sqlite/6e35c19f170958b1e846e01c55318988f2d192e0/src/legacy.c",
+          "lines": "27-55, 103-108"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/sqlite/sqlite/6e35c19f170958b1e846e01c55318988f2d192e0/src/prepare.c",
+          "lines": "749-799, 814-851, 911-927"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/sqlite/sqlite/6e35c19f170958b1e846e01c55318988f2d192e0/src/tokenize.c",
+          "lines": "589-608, 633-705, 727-732"
+        }
+      ]
+    }
+  ],
+  "toolErrors": [],
+  "limitations": [
+    "Map transports succeeded. Initial overview output was truncated by the tool output budget; focused MCP queries were used afterward.",
+    "Map overview reports C (360 files) and shell (14 files) limitations. module:src/legacy.c explicitly has extraction=file-only, zero definitions, zero entrypoints and no incoming/outgoing edges. A sqlite3_exec search found only Java/JavaScript nodes, so it cannot prove native C absence or call relationships.",
+    "C call-path answers were verified through pinned public source, not inferred from missing map edges.",
+    "Citation line ranges refer to the web tool's extracted raw-source line numbering, which normalizes blank lines and may differ from GitHub source-line anchors.",
+    "No builds or tests were run. Callback targets and SQL-specific opcode/storage paths remain dynamic. Test and caller lists are concrete examples, not exhaustive.",
+    "Authoritative token telemetry unavailable. selfReportedStartedAt records the first observed tool timestamp; task delivery/prompt reading preceded it."
+  ],
+  "selfReportedStartedAt": "2026-10-13T08:04:13.984Z",
+  "selfReportedFinishedAt": "2026-10-13T08:07:39.803Z"
+}

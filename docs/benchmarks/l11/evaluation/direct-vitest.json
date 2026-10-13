@@ -1,0 +1,268 @@
+{
+  "repository": "vitest-dev/vitest",
+  "arm": "direct",
+  "commit": "f15bdac4f05d2838855d4bd4f47e4076036ea18b",
+  "answers": [
+    {
+      "id": "q1",
+      "answer": "Vitest is a Vite-powered testing framework: test suites, assertions, snapshots, mocks/spies, watch mode, coverage, browser/component tests and benchmarks. Developers import test APIs from vitest and run npx vitest; repository CI scripts run its suites. Programmatic Node consumers can import createVitest/startVitest and parseCLI from vitest/node.",
+      "citations": [
+        {
+          "url": "https://github.com/vitest-dev/vitest/blob/f15bdac4f05d2838855d4bd4f47e4076036ea18b/README.md",
+          "lines": "18-19,39-80"
+        },
+        {
+          "url": "https://github.com/vitest-dev/vitest/blob/f15bdac4f05d2838855d4bd4f47e4076036ea18b/package.json",
+          "lines": "11-33"
+        },
+        {
+          "url": "https://github.com/vitest-dev/vitest/blob/f15bdac4f05d2838855d4bd4f47e4076036ea18b/packages/vitest/src/public/node.ts",
+          "lines": "9-23"
+        }
+      ]
+    },
+    {
+      "id": "q2",
+      "answer": "Principal evidenced packages: vitest provides the framework, public APIs and executable; @vitest/expect supplies Jest-compatible Chai matchers; snapshot manages snapshots; spy implements spies; mocker implements module mocking; browser runs browser tests; ui provides the interface/HTML reporter; coverage-v8 and coverage-istanbul provide their respective coverage engines. These are separate workspace packages, not merely folders inside one library.",
+      "citations": [
+        {
+          "url": "https://github.com/vitest-dev/vitest/blob/f15bdac4f05d2838855d4bd4f47e4076036ea18b/packages/vitest/package.json",
+          "lines": "1-5,33-103"
+        },
+        {
+          "url": "https://github.com/vitest-dev/vitest/blob/f15bdac4f05d2838855d4bd4f47e4076036ea18b/packages/expect/package.json",
+          "lines": "1-12"
+        },
+        {
+          "url": "https://github.com/vitest-dev/vitest/blob/f15bdac4f05d2838855d4bd4f47e4076036ea18b/packages/snapshot/package.json",
+          "lines": "1-12"
+        },
+        {
+          "url": "https://github.com/vitest-dev/vitest/blob/f15bdac4f05d2838855d4bd4f47e4076036ea18b/packages/spy/package.json",
+          "lines": "1-12"
+        },
+        {
+          "url": "https://github.com/vitest-dev/vitest/blob/f15bdac4f05d2838855d4bd4f47e4076036ea18b/packages/mocker/package.json",
+          "lines": "1-12"
+        },
+        {
+          "url": "https://github.com/vitest-dev/vitest/blob/f15bdac4f05d2838855d4bd4f47e4076036ea18b/packages/browser/package.json",
+          "lines": "1-12"
+        },
+        {
+          "url": "https://github.com/vitest-dev/vitest/blob/f15bdac4f05d2838855d4bd4f47e4076036ea18b/packages/ui/package.json",
+          "lines": "1-12"
+        },
+        {
+          "url": "https://github.com/vitest-dev/vitest/blob/f15bdac4f05d2838855d4bd4f47e4076036ea18b/packages/coverage-v8/package.json",
+          "lines": "1-12"
+        },
+        {
+          "url": "https://github.com/vitest-dev/vitest/blob/f15bdac4f05d2838855d4bd4f47e4076036ea18b/packages/coverage-istanbul/package.json",
+          "lines": "1-12"
+        },
+        {
+          "url": "https://github.com/vitest-dev/vitest/blob/f15bdac4f05d2838855d4bd4f47e4076036ea18b/pnpm-workspace.yaml",
+          "lines": "24-30"
+        }
+      ]
+    },
+    {
+      "id": "q3",
+      "answer": "A pnpm workspace monorepo spans packages/*, docs, examples/* and test/*. Evidenced implementation/build languages are TypeScript and JavaScript, with JSON manifests and YAML workspace configuration; the UI uses Vue tooling. Packages have ESM/export-map boundaries and declaration outputs. Root scripts orchestrate builds/tests, tsc checks types, and oxlint/oxfmt check style. Vitest's Rollup config bundles TS entry points using Oxc, emits ESM and declarations plus a CJS config entry. Browser/UI clients use Vite builds. This is not an exhaustive language census.",
+      "citations": [
+        {
+          "url": "https://github.com/vitest-dev/vitest/blob/f15bdac4f05d2838855d4bd4f47e4076036ea18b/pnpm-workspace.yaml",
+          "lines": "24-30"
+        },
+        {
+          "url": "https://github.com/vitest-dev/vitest/blob/f15bdac4f05d2838855d4bd4f47e4076036ea18b/package.json",
+          "lines": "1-16,23-36"
+        },
+        {
+          "url": "https://github.com/vitest-dev/vitest/blob/f15bdac4f05d2838855d4bd4f47e4076036ea18b/packages/vitest/rollup.config.js",
+          "lines": "1-48,77-105,129-161"
+        },
+        {
+          "url": "https://github.com/vitest-dev/vitest/blob/f15bdac4f05d2838855d4bd4f47e4076036ea18b/packages/vitest/package.json",
+          "lines": "33-97"
+        },
+        {
+          "url": "https://github.com/vitest-dev/vitest/blob/f15bdac4f05d2838855d4bd4f47e4076036ea18b/packages/ui/package.json",
+          "lines": "43-51,71-93"
+        },
+        {
+          "url": "https://github.com/vitest-dev/vitest/blob/f15bdac4f05d2838855d4bd4f47e4076036ea18b/packages/browser/package.json",
+          "lines": "65-72"
+        }
+      ]
+    },
+    {
+      "id": "q4",
+      "answer": "The public import is import { parseCLI } from 'vitest/node'. The vitest package's ./node export maps normally to dist/node.js (types dist/node.d.ts), or src/public/node.ts under __vitest_source__. That source barrel re-exports parseCLI from ../node/cli/cac; Rollup's node entry is this barrel. Published build contents were not fetched or executed.",
+      "citations": [
+        {
+          "url": "https://github.com/vitest-dev/vitest/blob/f15bdac4f05d2838855d4bd4f47e4076036ea18b/packages/vitest/package.json",
+          "lines": "68-72"
+        },
+        {
+          "url": "https://github.com/vitest-dev/vitest/blob/f15bdac4f05d2838855d4bd4f47e4076036ea18b/packages/vitest/src/public/node.ts",
+          "lines": "9-11"
+        },
+        {
+          "url": "https://github.com/vitest-dev/vitest/blob/f15bdac4f05d2838855d4bd4f47e4076036ea18b/packages/vitest/rollup.config.js",
+          "lines": "16-21"
+        }
+      ]
+    },
+    {
+      "id": "q5",
+      "answer": "cac.ts parseCLI calls createCLI(config).parse(arrayArgs,{run:false}), then explicitly sets options.run=true when arrayArgs[2] is 'run' and options.watch is falsy. It returns filter/options.",
+      "citations": [
+        {
+          "url": "https://github.com/vitest-dev/vitest/blob/f15bdac4f05d2838855d4bd4f47e4076036ea18b/packages/vitest/src/node/cli/cac.ts",
+          "lines": "207-237"
+        }
+      ]
+    },
+    {
+      "id": "q6",
+      "answer": "Static internal runtime imports: @vitest/utils/helpers, package.json, ../../utils/env, ./cli-config, ./completions. Dynamic runtime imports: ./cli-api, ../reporters/renderers/utils, ./doctor, ../../create/browser/creator. External static runtime imports: cac, pathe, tinyrainbow. import type declarations are excluded.",
+      "citations": [
+        {
+          "url": "https://github.com/vitest-dev/vitest/blob/f15bdac4f05d2838855d4bd4f47e4076036ea18b/packages/vitest/src/node/cli/cac.ts",
+          "lines": "1-11,281-332,365-367"
+        }
+      ]
+    },
+    {
+      "id": "q7",
+      "answer": "Path: public re-export → parseCLI → splitArgv → ['node','/index.js','run'] → createCLI → CAC parse with execution disabled → options.run=true → return. Expected filter is []; CAC internals/full returned defaults remain unverified. No test execution was performed.",
+      "citations": [
+        {
+          "url": "https://github.com/vitest-dev/vitest/blob/f15bdac4f05d2838855d4bd4f47e4076036ea18b/packages/vitest/src/public/node.ts",
+          "lines": "9"
+        },
+        {
+          "url": "https://github.com/vitest-dev/vitest/blob/f15bdac4f05d2838855d4bd4f47e4076036ea18b/packages/vitest/src/node/cli/cac.ts",
+          "lines": "157,199-237"
+        }
+      ]
+    },
+    {
+      "id": "q8",
+      "answer": "Evidenced direct callers: parseCLI in cac.ts and top-level createCLI().parse() in node/cli.ts. public/node.ts directly re-exports createCLI. Additional consumers remain unknown; this is not exhaustive.",
+      "citations": [
+        {
+          "url": "https://github.com/vitest-dev/vitest/blob/f15bdac4f05d2838855d4bd4f47e4076036ea18b/packages/vitest/src/node/cli/cac.ts",
+          "lines": "220-222"
+        },
+        {
+          "url": "https://github.com/vitest-dev/vitest/blob/f15bdac4f05d2838855d4bd4f47e4076036ea18b/packages/vitest/src/node/cli.ts",
+          "lines": "1-3"
+        },
+        {
+          "url": "https://github.com/vitest-dev/vitest/blob/f15bdac4f05d2838855d4bd4f47e4076036ea18b/packages/vitest/src/public/node.ts",
+          "lines": "9"
+        }
+      ]
+    },
+    {
+      "id": "q9",
+      "answer": "Unknown. I did not locate a pinned test exercising parseCLI's run-option handling. GitHub tree/search navigation was blocked and attempted raw test paths returned 404/internal errors. The unit package's test scripts invoke Vitest, but that does not establish which tests cover this behavior or their import/call entry.",
+      "citations": [
+        {
+          "url": "https://github.com/vitest-dev/vitest/blob/f15bdac4f05d2838855d4bd4f47e4076036ea18b/test/unit/package.json",
+          "lines": "1-14"
+        }
+      ]
+    },
+    {
+      "id": "q10",
+      "answer": "String argv enters parseCLI's argv parameter, then splitArgv protects quoted whitespace with NUL, splits on literal spaces, restores whitespace and removes enclosing quotes. parseCLI validates 'vitest', replaces it with '/index.js', prepends 'node', and passes the array to CAC.",
+      "citations": [
+        {
+          "url": "https://github.com/vitest-dev/vitest/blob/f15bdac4f05d2838855d4bd4f47e4076036ea18b/packages/vitest/src/node/cli/cac.ts",
+          "lines": "184-222"
+        }
+      ]
+    }
+  ],
+  "toolErrors": [
+    {
+      "error": "Failed to fetch restricted URL",
+      "urls": [
+        "https://github.com/vitest-dev/vitest/tree/f15bdac4f05d2838855d4bd4f47e4076036ea18b",
+        "https://github.com/vitest-dev/vitest/tree/f15bdac4f05d2838855d4bd4f47e4076036ea18b/test",
+        "https://github.com/vitest-dev/vitest/tree/f15bdac4f05d2838855d4bd4f47e4076036ea18b/test?plain=1",
+        "https://github.com/vitest-dev/vitest/tree/f15bdac4f05d2838855d4bd4f47e4076036ea18b/test/unit/test",
+        "https://github.com/search?q=repo%3Avitest-dev%2Fvitest+parseCLI&type=code"
+      ]
+    },
+    {
+      "error": "404 Not Found on guessed pinned raw files",
+      "pathPrefix": "https://raw.githubusercontent.com/vitest-dev/vitest/f15bdac4f05d2838855d4bd4f47e4076036ea18b/",
+      "paths": [
+        "test/cli/test/cli.test.ts",
+        "test/cli/test/parse-cli.test.ts",
+        "test/core/test/cli.test.ts",
+        "test/core/test/cli-options.test.ts",
+        "test/cli/test/cac.test.ts",
+        "test/core/test/cac.test.ts",
+        "test/config/test/cli.test.ts",
+        "test/cli/package.json",
+        "test/config/package.json",
+        "test/core/package.json",
+        "test/unit/cli.test.ts",
+        "test/unit/cli-options.test.ts",
+        "test/unit/test/cli.test.ts",
+        "test/unit/test/cli-options.test.ts",
+        "test/unit/test/parse-cli.test.ts",
+        "test/unit/vitest.config.ts",
+        "test/node/cli.test.ts",
+        "test/cli.test.ts",
+        "test/unit/parse-cli.test.ts",
+        "test/unit/test/cli-parse.test.ts",
+        "test/unit/test/cac.test.ts",
+        "test/unit/test/config.test.ts",
+        "test/unit/test/cli.test.ts?raw=true",
+        "test/unit/test/cli.test.ts?x=1",
+        "test/unit/test/cli/parse-cli.test.ts",
+        "test/unit/test/cli/parse.test.ts",
+        "test/unit/test/cli/cli.test.ts",
+        "test/unit/test/cli.test.js",
+        "test/unit/test/cli.test.mts",
+        "test/unit/test/node/cli.test.ts",
+        "test/unit/test/node/cli-parse.test.ts",
+        "test/unit/test/node/parse-cli.test.ts",
+        "test/unit/test/cli-config.test.ts",
+        "test/unit/test/cli.spec.ts",
+        "test/unit/test/cli.test.tsx",
+        "test/unit/test/cli.test-d.ts",
+        "test/e2e/cli.test.ts",
+        "test/e2e/test/cli.test.ts",
+        "test/e2e/parse-cli.test.ts",
+        "test/e2e/test/parse-cli.test.ts"
+      ]
+    },
+    {
+      "error": "Internal Error without further text",
+      "pathPrefix": "https://raw.githubusercontent.com/vitest-dev/vitest/f15bdac4f05d2838855d4bd4f47e4076036ea18b/",
+      "paths": [
+        "test/config/cli.test.ts",
+        "test/config/parse-cli.test.ts",
+        "test/node/test/cli.test.ts",
+        "docs/advanced/api.md"
+      ]
+    }
+  ],
+  "limitations": [
+    "Read-only pinned web-source analysis; no builds, installs or execution.",
+    "CAC dependency internals and @bomb.sh/tab internals were not followed outside the allowed repository; completion setup has an external async boundary.",
+    "No exhaustive caller or test inventory was available through blocked GitHub navigation.",
+    "Citation ranges use one-based source-file lines; web tool displayed zero-based lines.",
+    "Start timestamp was not captured; task delivery is recorded by the parent platform. No measured token telemetry is available."
+  ],
+  "selfReportedStartedAt": null,
+  "selfReportedFinishedAt": "2026-10-13T08:04:55.008Z"
+}

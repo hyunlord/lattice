@@ -1,0 +1,144 @@
+{
+  "repository": "junegunn/fzf",
+  "commit": "c0a193e031f01fb50bf6f7be4381990a3753f7cf",
+  "arm": "map",
+  "gradedBy": "independent fresh grader map-fzf",
+  "answerSha256": "2480cfd0a15a19d5a6b01236d1df423cc8b2ecc3dbddfbb2ee6e7bc88237b2c6",
+  "questions": [
+    {
+      "id": "q01",
+      "score": 2,
+      "reason": "Covers fuzzy CLI/interactive purpose and shell, script, and editor clients with pinned README citations.",
+      "sourceReferences": [
+        "README.md:28-43",
+        "README.md:180-310"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "q02",
+      "score": 1,
+      "reason": "Identifies principal components and responsibilities, but does not state the required Reader/Matcher/Terminal event coordination; naming EventBox separately does not explain that relationship.",
+      "sourceReferences": [
+        "src/core.go:16-22",
+        "src/reader.go:125-150",
+        "src/matcher.go:160-205"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "q03",
+      "score": 2,
+      "reason": "Covers Go module/version, main/src/subpackage boundaries, build tooling, and Ruby executable integration tests with pinned citations.",
+      "sourceReferences": [
+        "go.mod:1-20",
+        "Makefile:88-132",
+        "test/lib/common.rb:1-28",
+        "test/runner.rb:1-5"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": true
+    },
+    {
+      "id": "q04",
+      "score": 2,
+      "reason": "Correct executable entry, argv parsing and normal Run dispatch. The claimed main definition at line 58 is one line late (definition is 57), but the cited range identifies the actual function and does not obscure the entry.",
+      "sourceReferences": [
+        "main.go:57-64",
+        "main.go:113-115",
+        "src/core.go:54-55"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "q05",
+      "score": 1,
+      "reason": "Correctly locates Run, Filter branch and streaming/buffered matching, but this answer omits the required Printer output and success/no-match outcome; its citations alone do not supply the missing explanation.",
+      "sourceReferences": [
+        "src/core.go:260-291",
+        "src/core.go:340-351"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "q06",
+      "score": 2,
+      "reason": "Correct direct main-to-fzf and main-to-protector dependencies with import and call evidence; resource dependencies and transitive packages are distinguished.",
+      "sourceReferences": [
+        "main.go:10-12",
+        "main.go:57-64",
+        "main.go:113-115",
+        "src/protector/protector.go:1-6",
+        "src/protector/protector_openbsd.go:1-10"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "q07",
+      "score": 1,
+      "reason": "Correct streaming predicate, stdin/feed route, matching/output and dynamic boundaries. Partial against the frozen facts: says pusher callback but does not establish NewReader storing Reader.pusher, and covers newline records without the trailing-fragment dispatch. The cited reader range omits the constructor binding.",
+      "sourceReferences": [
+        "src/core.go:199-211",
+        "src/core.go:266-291",
+        "src/reader.go:20-48",
+        "src/reader.go:197-214",
+        "src/reader.go:236-244",
+        "src/pattern.go:388-464",
+        "src/pattern.go:487-501"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": true
+    },
+    {
+      "id": "q08",
+      "score": 2,
+      "reason": "Correctly identifies both Run call sites, asynchronous versus synchronous ingestion, and separates dependency evidence from conditional behavioral effects.",
+      "sourceReferences": [
+        "src/core.go:203-211",
+        "src/core.go:275-291"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": true
+    },
+    {
+      "id": "q09",
+      "score": 2,
+      "reason": "Names the actual filter exit-status test, both variants and outcomes, explains executable entry through the subprocess command, and clearly labels tests inspected rather than executed.",
+      "sourceReferences": [
+        "test/test_filter.rb:28-37",
+        "test/lib/common.rb:25-28",
+        "test/runner.rb:1-5",
+        "main.go:57-64",
+        "main.go:113-115"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": true
+    },
+    {
+      "id": "q10",
+      "score": 2,
+      "reason": "Covers argv parsing, Filter pointer assignment and conversion into patternBuilder runes, with additional source-supported default/extended-query handling.",
+      "sourceReferences": [
+        "main.go:57-64",
+        "src/options.go:2728-2733",
+        "src/options.go:3905-3943",
+        "src/core.go:260-267",
+        "src/pattern.go:79-166"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    }
+  ],
+  "total": 17,
+  "referenceIssues": [],
+  "limitations": [
+    "Read-only source grading; no target builds or tests executed. All 18 cited files match pinned Git blobs; all frozen fzf oracle hashes and logical excerpts match local source.",
+    "Citation precision: q04 main definition is line 57, not 58; q02 src/util/eventbox.go:1-100 extends past EOF 96, and q07 src/constants.go:68-80 extends past EOF 77. Existing cited portions remain verifiable.",
+    "Analyzer extraction and missing-edge limitations are answer annotations, not independently reproduced product claims and not substitutes for factual credit."
+  ]
+}

@@ -1,0 +1,293 @@
+{
+  "repository": "Unity-Technologies/BoatAttack",
+  "commit": "6acf5f773a440030489cb5e2b3c009fb5fe1e8ce",
+  "arm": "map",
+  "gradedBy": "independent fresh grader map-fastify-boat",
+  "answerSha256": "f4eabf27be9d73cad3d7005280b19d7dc0057acdfcdf1249238177abb1622270",
+  "questions": [
+    {
+      "id": "unity-boatattack-q1",
+      "score": 2,
+      "reason": "Correctly describes the Unity URP boat-racing learning/testing demo and Editor/player users, with pinned README evidence.",
+      "sourceReferences": [
+        {
+          "path": "README.md",
+          "startLine": 3,
+          "endLine": 23,
+          "commit": "6acf5f773a440030489cb5e2b3c009fb5fe1e8ce"
+        },
+        {
+          "path": "README.md",
+          "startLine": 38,
+          "endLine": 52,
+          "commit": "6acf5f773a440030489cb5e2b3c009fb5fe1e8ce"
+        }
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "unity-boatattack-q2",
+      "score": 1,
+      "reason": "Covers boat/controllers/Engine, water, menu helper and Cinemachine camera responsibilities, but does not explain the required menu/island scene organization or Addressables asset-support responsibility.",
+      "sourceReferences": [
+        {
+          "path": "README.md",
+          "startLine": 12,
+          "endLine": 23,
+          "commit": "6acf5f773a440030489cb5e2b3c009fb5fe1e8ce"
+        },
+        {
+          "path": "README.md",
+          "startLine": 42,
+          "endLine": 50,
+          "commit": "6acf5f773a440030489cb5e2b3c009fb5fe1e8ce"
+        },
+        {
+          "path": "Assets/Scripts/Boat/Boat.cs",
+          "startLine": 57,
+          "endLine": 78,
+          "commit": "6acf5f773a440030489cb5e2b3c009fb5fe1e8ce"
+        },
+        {
+          "path": "Packages/com.verasl.water-system/package.json",
+          "startLine": 1,
+          "endLine": 12,
+          "commit": "6acf5f773a440030489cb5e2b3c009fb5fe1e8ce"
+        }
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "unity-boatattack-q3",
+      "score": 2,
+      "reason": "Covers C#/MonoBehaviour, Unity URP/Input System, embedded WaterSystem package/assembly boundaries and Shader Graph. Distinguishes a Unity package manifest from Node runtime evidence.",
+      "sourceReferences": [
+        {
+          "path": "Assets/Scripts/Boat/Engine.cs",
+          "startLine": 1,
+          "endLine": 10,
+          "commit": "6acf5f773a440030489cb5e2b3c009fb5fe1e8ce"
+        },
+        {
+          "path": "Packages/manifest.json",
+          "startLine": 1,
+          "endLine": 17,
+          "commit": "6acf5f773a440030489cb5e2b3c009fb5fe1e8ce"
+        },
+        {
+          "path": "Packages/com.verasl.water-system/package.json",
+          "startLine": 1,
+          "endLine": 12,
+          "commit": "6acf5f773a440030489cb5e2b3c009fb5fe1e8ce"
+        },
+        {
+          "path": "Packages/com.verasl.water-system/Scripts/WaterSystem.Runtime.asmdef",
+          "startLine": 1,
+          "endLine": 19,
+          "commit": "6acf5f773a440030489cb5e2b3c009fb5fe1e8ce"
+        },
+        {
+          "path": "README.md",
+          "startLine": 12,
+          "endLine": 23,
+          "commit": "6acf5f773a440030489cb5e2b3c009fb5fe1e8ce"
+        }
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": true
+    },
+    {
+      "id": "unity-boatattack-q4",
+      "score": 2,
+      "reason": "Identifies the documented main-menu entry, Setup/SetupController human selection and dynamic component/lifecycle boundary with source citations.",
+      "sourceReferences": [
+        {
+          "path": "README.md",
+          "startLine": 38,
+          "endLine": 46,
+          "commit": "6acf5f773a440030489cb5e2b3c009fb5fe1e8ce"
+        },
+        {
+          "path": "Assets/Scripts/Boat/Boat.cs",
+          "startLine": 57,
+          "endLine": 78,
+          "commit": "6acf5f773a440030489cb5e2b3c009fb5fe1e8ce"
+        },
+        {
+          "path": "Assets/Scripts/Boat/HumanController.cs",
+          "startLine": 18,
+          "endLine": 38,
+          "commit": "6acf5f773a440030489cb5e2b3c009fb5fe1e8ce"
+        },
+        {
+          "path": "Assets/Scripts/Boat/HumanController.cs",
+          "startLine": 70,
+          "endLine": 74,
+          "commit": "6acf5f773a440030489cb5e2b3c009fb5fe1e8ce"
+        }
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "unity-boatattack-q5",
+      "score": 2,
+      "reason": "Precisely identifies Engine.Accelerate, strict water-depth gate, 0..1 clamp, horizontal normalized force and relative torque.",
+      "sourceReferences": [
+        {
+          "path": "Assets/Scripts/Boat/Engine.cs",
+          "startLine": 60,
+          "endLine": 75,
+          "commit": "6acf5f773a440030489cb5e2b3c009fb5fe1e8ce"
+        }
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "unity-boatattack-q6",
+      "score": 2,
+      "reason": "Identifies InputControls construction, Engine calls, Boat.ResetPosition, DayNightController and inherited Boat.engine resolution with directional source evidence.",
+      "sourceReferences": [
+        {
+          "path": "Assets/Scripts/Boat/HumanController.cs",
+          "startLine": 18,
+          "endLine": 38,
+          "commit": "6acf5f773a440030489cb5e2b3c009fb5fe1e8ce"
+        },
+        {
+          "path": "Assets/Scripts/Boat/HumanController.cs",
+          "startLine": 45,
+          "endLine": 74,
+          "commit": "6acf5f773a440030489cb5e2b3c009fb5fe1e8ce"
+        },
+        {
+          "path": "Assets/Scripts/Boat/BaseController.cs",
+          "startLine": 5,
+          "endLine": 14,
+          "commit": "6acf5f773a440030489cb5e2b3c009fb5fe1e8ce"
+        }
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": true
+    },
+    {
+      "id": "unity-boatattack-q7",
+      "score": 1,
+      "reason": "Describes stored throttle, cancellation, FixedUpdate, water gating and framework boundaries, but omits the required BaseController-to-Boat.engine resolution and clamp before force in this answer. Citations alone do not fill those omissions.",
+      "sourceReferences": [
+        {
+          "path": "Assets/Scripts/Boat/HumanController.cs",
+          "startLine": 18,
+          "endLine": 29,
+          "commit": "6acf5f773a440030489cb5e2b3c009fb5fe1e8ce"
+        },
+        {
+          "path": "Assets/Scripts/Boat/HumanController.cs",
+          "startLine": 70,
+          "endLine": 74,
+          "commit": "6acf5f773a440030489cb5e2b3c009fb5fe1e8ce"
+        },
+        {
+          "path": "Assets/Scripts/Boat/BaseController.cs",
+          "startLine": 10,
+          "endLine": 14,
+          "commit": "6acf5f773a440030489cb5e2b3c009fb5fe1e8ce"
+        },
+        {
+          "path": "Assets/Scripts/Boat/Engine.cs",
+          "startLine": 63,
+          "endLine": 75,
+          "commit": "6acf5f773a440030489cb5e2b3c009fb5fe1e8ce"
+        }
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "unity-boatattack-q8",
+      "score": 2,
+      "reason": "Identifies both explicit controller callers and AI 1f/0.25f arguments. Limits the impact to consumption of propulsion semantics, without asserting observed race outcomes; empty map edges are correctly separated from source evidence.",
+      "sourceReferences": [
+        {
+          "path": "Assets/Scripts/Boat/HumanController.cs",
+          "startLine": 70,
+          "endLine": 74,
+          "commit": "6acf5f773a440030489cb5e2b3c009fb5fe1e8ce"
+        },
+        {
+          "path": "Assets/Scripts/Boat/AiController.cs",
+          "startLine": 78,
+          "endLine": 87,
+          "commit": "6acf5f773a440030489cb5e2b3c009fb5fe1e8ce"
+        }
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": true
+    },
+    {
+      "id": "unity-boatattack-q9",
+      "score": 1,
+      "reason": "Correctly names demo_island as the documented AI race and AiController-to-Accelerate connection without claiming execution, but omits the required non-human SetupController selection linking that example to AI implementation. Its expanded entry chain instead follows the human example.",
+      "sourceReferences": [
+        {
+          "path": "README.md",
+          "startLine": 42,
+          "endLine": 46,
+          "commit": "6acf5f773a440030489cb5e2b3c009fb5fe1e8ce"
+        },
+        {
+          "path": "Assets/Scripts/Boat/Boat.cs",
+          "startLine": 57,
+          "endLine": 78,
+          "commit": "6acf5f773a440030489cb5e2b3c009fb5fe1e8ce"
+        },
+        {
+          "path": "Assets/Scripts/Boat/AiController.cs",
+          "startLine": 78,
+          "endLine": 87,
+          "commit": "6acf5f773a440030489cb5e2b3c009fb5fe1e8ce"
+        }
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "unity-boatattack-q10",
+      "score": 2,
+      "reason": "Explains the Trottle float callback, cancellation, FixedUpdate forwarding and Engine gate/clamp/scaling. Additional action bindings/processors match pinned source.",
+      "sourceReferences": [
+        {
+          "path": "Assets/Scripts/Boat/HumanController.cs",
+          "startLine": 18,
+          "endLine": 25,
+          "commit": "6acf5f773a440030489cb5e2b3c009fb5fe1e8ce"
+        },
+        {
+          "path": "Assets/Scripts/Boat/HumanController.cs",
+          "startLine": 70,
+          "endLine": 74,
+          "commit": "6acf5f773a440030489cb5e2b3c009fb5fe1e8ce"
+        },
+        {
+          "path": "Assets/Scripts/Boat/Engine.cs",
+          "startLine": 63,
+          "endLine": 75,
+          "commit": "6acf5f773a440030489cb5e2b3c009fb5fe1e8ce"
+        }
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    }
+  ],
+  "total": 17,
+  "referenceIssues": [],
+  "limitations": [
+    "Read-only pinned Git source inspection; no target builds or scripts executed. All oracle evidence hashes and logical line excerpts verified against pinned Git objects.",
+    "Answer citations were checked for file and range existence; citations do not substitute for absent factual statements.",
+    "q2 CameraManager.cs citation 1-153 exceeds EOF at 152; existing file content remains verifiable.",
+    "Reported analyzer empty edges/entrypoints and npm labeling are limitations, not evidence of absent runtime calls or a Node application."
+  ]
+}

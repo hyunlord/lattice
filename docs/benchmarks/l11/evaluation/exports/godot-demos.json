@@ -1,0 +1,70 @@
+{
+  "repository": "godot-demos",
+  "commit": "b761b4cd5718a7118f2c95eb55f181d0a5f004f1",
+  "candidate": "2b7c00f",
+  "startedAt": "2026-10-13T07:12:51.963Z",
+  "reused": false,
+  "priorSetupFailure": {
+    "repository": "godot-demos",
+    "commit": "b761b4cd5718a7118f2c95eb55f181d0a5f004f1",
+    "candidate": "2b7c00f",
+    "startedAt": "2026-10-13T07:11:29.280Z",
+    "reused": false,
+    "command": [
+      "node",
+      "/tmp/lattice-l11-first-impression/bin/lattice.mjs",
+      "export",
+      "/tmp/l11-visual/godot-demos",
+      "--root",
+      "/tmp/l9-benchmark-extra/godot-demos",
+      "--no-lens",
+      "--cache-dir",
+      "/tmp/l11-visual-cache/godot-demos",
+      "--force",
+      "--json"
+    ],
+    "exitCode": 2,
+    "timedOut": false,
+    "seconds": 0.202196125,
+    "status": "failed",
+    "finishedAt": "2026-10-13T07:11:29.482Z"
+  },
+  "buildCommand": [
+    "node",
+    "/tmp/lattice-l11-first-impression/bin/lattice.mjs",
+    "build",
+    "--root",
+    "/tmp/l9-benchmark-extra/godot-demos",
+    "--no-lens",
+    "--cache-dir",
+    "/tmp/l11-visual-cache/godot-demos",
+    "--json"
+  ],
+  "buildExitCode": 0,
+  "command": [
+    "node",
+    "/tmp/lattice-l11-first-impression/bin/lattice.mjs",
+    "export",
+    "/tmp/l11-visual/godot-demos",
+    "--root",
+    "/tmp/l9-benchmark-extra/godot-demos",
+    "--no-lens",
+    "--cache-dir",
+    "/tmp/l11-visual-cache/godot-demos",
+    "--force",
+    "--json"
+  ],
+  "exitCode": 0,
+  "timedOut": false,
+  "seconds": 4.364854333,
+  "graphHash": "ddb70ac43caf6b4672ebcbe2b6bc6da3597a7eff2d404ad327d850213760a47a",
+  "source": {
+    "name": "godot-demo-projects",
+    "dirty": false,
+    "sourceFingerprint": "f1db4aa16865e35cd224b2a5738466713887f1026071b3207d695cb9362e7353",
+    "commit": "b761b4cd5718a7118f2c95eb55f181d0a5f004f1",
+    "remoteUrl": "https://github.com/godotengine/godot-demo-projects"
+  },
+  "status": "ready",
+  "finishedAt": "2026-10-13T07:12:56.328Z"
+}

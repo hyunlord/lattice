@@ -1,0 +1,153 @@
+{
+  "repository": "encode/starlette",
+  "commit": "96d5023c55b29224edb8d684868c49f681d079a9",
+  "arm": "map",
+  "gradedBy": "independent fresh grader map-starlette",
+  "answerSha256": "83a304c8378366467e84175f91a684da6b1f12a38366afe30001c633509be9fb",
+  "questions": [
+    {
+      "id": "q1",
+      "score": 2,
+      "reason": "Correctly identifies the Python ASGI framework/toolkit, developer composition, external Uvicorn execution, and in-process tests; pinned README and transport citations support these claims.",
+      "sourceReferences": [
+        "README.md:25-100",
+        "starlette/testclient.py:217-376"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "q2",
+      "score": 1,
+      "reason": "Identifies the main applications, routing, requests/responses, middleware, WebSocket and testing components with valid source references. However, the frozen required coverage of TestClient using httpx2 and middleware host validation/HTTPS redirection is absent; the WebSocket role is only described as protocol-state management. These missing facts are not supplied by the grader.",
+      "sourceReferences": [
+        "starlette/applications.py:17-96",
+        "starlette/routing.py:200-282",
+        "starlette/requests.py:77-148",
+        "starlette/responses.py:166-204",
+        "starlette/middleware/exceptions.py:16-65",
+        "starlette/endpoints.py:16-90",
+        "starlette/websockets.py:30-100",
+        "tests/test_routing.py:230-262",
+        "benchmarks/README.md:1-35",
+        "pyproject.toml:1-90"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "q3",
+      "score": 2,
+      "reason": "Correct Python distribution/package organization, Python >=3.11, Hatchling, AnyIO and conditional typing_extensions, with accurate development/tooling configuration and pinned citations. Package separation is described at the package/middleware boundary rather than an exhaustive module inventory.",
+      "sourceReferences": [
+        "pyproject.toml:1-140",
+        "starlette/middleware/errors.py:1-124",
+        "benchmarks/README.md:1-35"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "q4",
+      "score": 2,
+      "reason": "Correct per-request ASGI entry point, scope app assignment, lazy middleware construction and awaiting the stack; correctly separates construction and external server internals. The cited README supports the application/server setup.",
+      "sourceReferences": [
+        "starlette/applications.py:17-96",
+        "README.md:55-85"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "q5",
+      "score": 2,
+      "reason": "Correct compile_path converter registry and named regex construction, Route.matches conversion, and IntegerConvertor regex/int implementation; citations cover each definition.",
+      "sourceReferences": [
+        "starlette/routing.py:111-166",
+        "starlette/routing.py:200-260",
+        "starlette/convertors.py:43-90"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "q6",
+      "score": 2,
+      "reason": "Correctly identifies all wrapper descriptors, optional body limit, reverse wrapping around the existing router, and dynamic user factories. Gives source-level direction proof without interpreting missing analyzer edges as absence.",
+      "sourceReferences": [
+        "starlette/applications.py:6-83",
+        "starlette/middleware/__init__.py:20-38"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": true
+    },
+    {
+      "id": "q7",
+      "score": 1,
+      "reason": "Provides the correct broad default-app dispatch chain, Request/endpoint/Response outcome, synchronous threadpool boundary, and explicit static-versus-observed distinction. But this answer does not state the integer conversion inside Route.matches or explain Router.__call__ invoking middleware_stack whose default is Router.app; the compressed __call__/app notation leaves a required dispatch boundary implicit. Source citations are valid, but do not replace missing answer facts.",
+      "sourceReferences": [
+        "starlette/applications.py:63-96",
+        "starlette/middleware/errors.py:128-190",
+        "starlette/middleware/exceptions.py:46-65",
+        "starlette/routing.py:47-67",
+        "starlette/routing.py:244-282",
+        "starlette/routing.py:672-728",
+        "starlette/concurrency.py:32-34",
+        "tests/test_routing.py:86-88",
+        "starlette/responses.py:166-204"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "q8",
+      "score": 2,
+      "reason": "Correct normal dispatch and redirect-probe consumers in Router.app plus standalone BaseRoute.__call__, conditioned on the receiver being Route. Separates potential effects from untested concrete failures and distinguishes other route implementations.",
+      "sourceReferences": [
+        "starlette/routing.py:179-196",
+        "starlette/routing.py:244-260",
+        "starlette/routing.py:678-728"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "q9",
+      "score": 2,
+      "reason": "Correct test, GET input, assertions, configured route and in-process fixture/transport entry. Clearly states the test was identified rather than executed; pinned test and transport spans substantiate the path.",
+      "sourceReferences": [
+        "tests/test_routing.py:86-88",
+        "tests/test_routing.py:123-176",
+        "tests/test_routing.py:230-262",
+        "starlette/testclient.py:217-376",
+        "starlette/routing.py:678-728"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "q10",
+      "score": 2,
+      "reason": "Correct raw scope path, root_path handling, regex capture, conversion to int, child-scope merge, Request.path_params access and endpoint consumption; explicitly rejects nonexistent integer-argument injection.",
+      "sourceReferences": [
+        "starlette/testclient.py:217-282",
+        "starlette/_utils.py:137-152",
+        "starlette/routing.py:244-260",
+        "starlette/routing.py:678-702",
+        "starlette/convertors.py:43-47",
+        "starlette/requests.py:146-148",
+        "tests/test_routing.py:86-88"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    }
+  ],
+  "total": 18,
+  "referenceIssues": [],
+  "limitations": [
+    "Pinned local Git blobs were inspected read-only; no target scripts, builds, or tests were executed.",
+    "All frozen oracle excerpts and full-file SHA256 values matched the pinned Git blobs.",
+    "Analyzer missing-edge claims are recorded as reported limitations, not independently reproduced or used as factual-credit substitutes.",
+    "Some citation range endpoints exceed the short files by one or several lines (middleware/__init__.py ends at 37, convertors.py at 89, pyproject.toml at 133); all relevant cited definitions are present and verifiable."
+  ]
+}

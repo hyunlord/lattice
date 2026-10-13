@@ -1,0 +1,305 @@
+{
+  "repository": "fastify/fastify",
+  "commit": "86368086171305df4e235f6d6bec892c67ec2ae2",
+  "arm": "map",
+  "gradedBy": "independent fresh grader map-fastify-boat",
+  "answerSha256": "f659fec803a7fb10025566b1e125073e8459064fac8f8cb8507eef33f3e39d0f",
+  "questions": [
+    {
+      "id": "fastify-q1",
+      "score": 2,
+      "reason": "Identifies the Node web framework, application factory/route/listen use and HTTP-client invocation, with pinned package and README citations.",
+      "sourceReferences": [
+        {
+          "path": "package.json",
+          "startLine": 1,
+          "endLine": 7,
+          "commit": "86368086171305df4e235f6d6bec892c67ec2ae2"
+        },
+        {
+          "path": "README.md",
+          "startLine": 105,
+          "endLine": 138,
+          "commit": "86368086171305df4e235f6d6bec892c67ec2ae2"
+        }
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "fastify-q2",
+      "score": 2,
+      "reason": "Covers public-instance wiring, server/listen, routes, request lifecycle and async settlement with the relevant module citations.",
+      "sourceReferences": [
+        {
+          "path": "fastify.js",
+          "startLine": 40,
+          "endLine": 54,
+          "commit": "86368086171305df4e235f6d6bec892c67ec2ae2"
+        },
+        {
+          "path": "lib/server.js",
+          "startLine": 20,
+          "endLine": 32,
+          "commit": "86368086171305df4e235f6d6bec892c67ec2ae2"
+        },
+        {
+          "path": "lib/route.js",
+          "startLine": 140,
+          "endLine": 147,
+          "commit": "86368086171305df4e235f6d6bec892c67ec2ae2"
+        },
+        {
+          "path": "lib/route.js",
+          "startLine": 460,
+          "endLine": 461,
+          "commit": "86368086171305df4e235f6d6bec892c67ec2ae2"
+        },
+        {
+          "path": "lib/handle-request.js",
+          "startLine": 89,
+          "endLine": 122,
+          "commit": "86368086171305df4e235f6d6bec892c67ec2ae2"
+        },
+        {
+          "path": "lib/handle-request.js",
+          "startLine": 187,
+          "endLine": 209,
+          "commit": "86368086171305df4e235f6d6bec892c67ec2ae2"
+        },
+        {
+          "path": "lib/wrap-thenable.js",
+          "startLine": 12,
+          "endLine": 45,
+          "commit": "86368086171305df4e235f6d6bec892c67ec2ae2"
+        }
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "fastify-q3",
+      "score": 2,
+      "reason": "Correctly identifies the CommonJS root package, Node runtime, declaration entry and borp/tstyche/ESLint/generated builds. Fixture citation endpoints exceed EOF but the files and claimed boundaries are verifiable.",
+      "sourceReferences": [
+        {
+          "path": "package.json",
+          "startLine": 1,
+          "endLine": 30,
+          "commit": "86368086171305df4e235f6d6bec892c67ec2ae2"
+        },
+        {
+          "path": "fastify.js",
+          "startLine": 1,
+          "endLine": 7,
+          "commit": "86368086171305df4e235f6d6bec892c67ec2ae2"
+        }
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "fastify-q4",
+      "score": 2,
+      "reason": "Locates the package main, factory and direct/default/named exports and correctly assigns startup control to consumers.",
+      "sourceReferences": [
+        {
+          "path": "package.json",
+          "startLine": 1,
+          "endLine": 7,
+          "commit": "86368086171305df4e235f6d6bec892c67ec2ae2"
+        },
+        {
+          "path": "fastify.js",
+          "startLine": 86,
+          "endLine": 95,
+          "commit": "86368086171305df4e235f6d6bec892c67ec2ae2"
+        },
+        {
+          "path": "fastify.js",
+          "startLine": 1005,
+          "endLine": 1009,
+          "commit": "86368086171305df4e235f6d6bec892c67ec2ae2"
+        },
+        {
+          "path": "README.md",
+          "startLine": 119,
+          "endLine": 138,
+          "commit": "86368086171305df4e235f6d6bec892c67ec2ae2"
+        }
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "fastify-q5",
+      "score": 1,
+      "reason": "Correctly locates thenable detection and guarded fulfillment sending, but omits the frozen required rejection/error-reply handling. The fulfillment-only citation cannot supply that missing answer fact.",
+      "sourceReferences": [
+        {
+          "path": "lib/handle-request.js",
+          "startLine": 187,
+          "endLine": 209,
+          "commit": "86368086171305df4e235f6d6bec892c67ec2ae2"
+        },
+        {
+          "path": "lib/wrap-thenable.js",
+          "startLine": 12,
+          "endLine": 45,
+          "commit": "86368086171305df4e235f6d6bec892c67ec2ae2"
+        },
+        {
+          "path": "lib/wrap-thenable.js",
+          "startLine": 53,
+          "endLine": 70,
+          "commit": "86368086171305df4e235f6d6bec892c67ec2ae2"
+        }
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "fastify-q6",
+      "score": 2,
+      "reason": "Lists all seven relative dependencies, proves outgoing direction by require declarations and separates the Node diagnostics built-in.",
+      "sourceReferences": [
+        {
+          "path": "lib/handle-request.js",
+          "startLine": 1,
+          "endLine": 22,
+          "commit": "86368086171305df4e235f6d6bec892c67ec2ae2"
+        }
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "fastify-q7",
+      "score": 2,
+      "reason": "Provides the supported bodyless handler/validation/preHandler/thenable/fulfillment path with dynamic dispatch and early-exit qualifications.",
+      "sourceReferences": [
+        {
+          "path": "lib/handle-request.js",
+          "startLine": 24,
+          "endLine": 37,
+          "commit": "86368086171305df4e235f6d6bec892c67ec2ae2"
+        },
+        {
+          "path": "lib/handle-request.js",
+          "startLine": 89,
+          "endLine": 155,
+          "commit": "86368086171305df4e235f6d6bec892c67ec2ae2"
+        },
+        {
+          "path": "lib/handle-request.js",
+          "startLine": 171,
+          "endLine": 209,
+          "commit": "86368086171305df4e235f6d6bec892c67ec2ae2"
+        },
+        {
+          "path": "lib/wrap-thenable.js",
+          "startLine": 12,
+          "endLine": 45,
+          "commit": "86368086171305df4e235f6d6bec892c67ec2ae2"
+        }
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "fastify-q8",
+      "score": 2,
+      "reason": "Correctly identifies route.js default and reply.js internals consumers, runPreParsing and not-found use. Static-import completeness is appropriately qualified. The notFound use is source-verified but its precise lines are not cited in the answer.",
+      "sourceReferences": [
+        {
+          "path": "lib/route.js",
+          "startLine": 3,
+          "endLine": 6,
+          "commit": "86368086171305df4e235f6d6bec892c67ec2ae2"
+        },
+        {
+          "path": "lib/route.js",
+          "startLine": 651,
+          "endLine": 665,
+          "commit": "86368086171305df4e235f6d6bec892c67ec2ae2"
+        },
+        {
+          "path": "lib/reply.js",
+          "startLine": 29,
+          "endLine": 36,
+          "commit": "86368086171305df4e235f6d6bec892c67ec2ae2"
+        },
+        {
+          "path": "lib/reply.js",
+          "startLine": 1052,
+          "endLine": 1071,
+          "commit": "86368086171305df4e235f6d6bec892c67ec2ae2"
+        },
+        {
+          "path": "lib/handle-request.js",
+          "startLine": 216,
+          "endLine": 217,
+          "commit": "86368086171305df4e235f6d6bec892c67ec2ae2"
+        }
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "fastify-q9",
+      "score": 2,
+      "reason": "Names the async-await public HTTP test, factory/get/listen/fetch entry, returned object and response assertions, explicitly distinguishing inspection from execution.",
+      "sourceReferences": [
+        {
+          "path": "test/async-await.test.js",
+          "startLine": 3,
+          "endLine": 7,
+          "commit": "86368086171305df4e235f6d6bec892c67ec2ae2"
+        },
+        {
+          "path": "test/async-await.test.js",
+          "startLine": 45,
+          "endLine": 61,
+          "commit": "86368086171305df4e235f6d6bec892c67ec2ae2"
+        },
+        {
+          "path": "test/async-await.test.js",
+          "startLine": 77,
+          "endLine": 87,
+          "commit": "86368086171305df4e235f6d6bec892c67ec2ae2"
+        }
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "fastify-q10",
+      "score": 1,
+      "reason": "Correctly explains the explicit QUERY missing-content-type 400 error and early return. Omits the frozen required distinction from the later invalid-media-type 415 branch.",
+      "sourceReferences": [
+        {
+          "path": "lib/handle-request.js",
+          "startLine": 32,
+          "endLine": 52,
+          "commit": "86368086171305df4e235f6d6bec892c67ec2ae2"
+        },
+        {
+          "path": "lib/handle-request.js",
+          "startLine": 71,
+          "endLine": 82,
+          "commit": "86368086171305df4e235f6d6bec892c67ec2ae2"
+        }
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    }
+  ],
+  "total": 18,
+  "referenceIssues": [],
+  "limitations": [
+    "Read-only pinned Git source inspection; no target builds or scripts executed. All oracle evidence hashes and logical line excerpts verified against pinned Git objects.",
+    "Answer citations were checked for file and range existence; citations do not substitute for absent factual statements.",
+    "Citation range defects: q3 esbuild package.json 1-20 ends at line 10; webpack package.json 1-20 ends at line 11; integration/test.sh 1-24 ends at line 23. The existing content is verifiable.",
+    "q8 reply.js citation 28-40 proves the import; claimed notFound use is at 1052-1071 and lacks an answer-provided span."
+  ]
+}

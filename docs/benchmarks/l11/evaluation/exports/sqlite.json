@@ -1,0 +1,70 @@
+{
+  "repository": "sqlite",
+  "commit": "6e35c19f170958b1e846e01c55318988f2d192e0",
+  "candidate": "2b7c00f",
+  "startedAt": "2026-10-13T07:12:56.356Z",
+  "reused": false,
+  "priorSetupFailure": {
+    "repository": "sqlite",
+    "commit": "6e35c19f170958b1e846e01c55318988f2d192e0",
+    "candidate": "2b7c00f",
+    "startedAt": "2026-10-13T07:11:29.508Z",
+    "reused": false,
+    "command": [
+      "node",
+      "/tmp/lattice-l11-first-impression/bin/lattice.mjs",
+      "export",
+      "/tmp/l11-visual/sqlite",
+      "--root",
+      "/tmp/l9-benchmark-extra/sqlite",
+      "--no-lens",
+      "--cache-dir",
+      "/tmp/l11-visual-cache/sqlite",
+      "--force",
+      "--json"
+    ],
+    "exitCode": 2,
+    "timedOut": false,
+    "seconds": 0.213958959,
+    "status": "failed",
+    "finishedAt": "2026-10-13T07:11:29.722Z"
+  },
+  "buildCommand": [
+    "node",
+    "/tmp/lattice-l11-first-impression/bin/lattice.mjs",
+    "build",
+    "--root",
+    "/tmp/l9-benchmark-extra/sqlite",
+    "--no-lens",
+    "--cache-dir",
+    "/tmp/l11-visual-cache/sqlite",
+    "--json"
+  ],
+  "buildExitCode": 0,
+  "command": [
+    "node",
+    "/tmp/lattice-l11-first-impression/bin/lattice.mjs",
+    "export",
+    "/tmp/l11-visual/sqlite",
+    "--root",
+    "/tmp/l9-benchmark-extra/sqlite",
+    "--no-lens",
+    "--cache-dir",
+    "/tmp/l11-visual-cache/sqlite",
+    "--force",
+    "--json"
+  ],
+  "exitCode": 0,
+  "timedOut": false,
+  "seconds": 5.905291,
+  "graphHash": "3afd525da0c31425bdd5ffb164236b103d79c9b2b47c287a2fc90df76a09db78",
+  "source": {
+    "name": "sqlite",
+    "dirty": false,
+    "sourceFingerprint": "004a849d3530c6821084781dc55ec0f11ad38f0136f5b2236e55952db9f697fc",
+    "commit": "6e35c19f170958b1e846e01c55318988f2d192e0",
+    "remoteUrl": "https://github.com/sqlite/sqlite"
+  },
+  "status": "ready",
+  "finishedAt": "2026-10-13T07:13:02.262Z"
+}

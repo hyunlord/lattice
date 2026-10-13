@@ -1,0 +1,74 @@
+{
+  "candidate": "2b7c00f",
+  "totals": {
+    "direct": {
+      "completed": 18,
+      "graded": 18,
+      "score": 324,
+      "measuredLower": 3821.251218373,
+      "measuredUpper": 4127.710164169,
+      "measuredCount": 17,
+      "selfReportedOnlySeconds": 300
+    },
+    "map": {
+      "completed": 18,
+      "graded": 18,
+      "score": 318,
+      "measuredLower": 4496.251045544001,
+      "measuredUpper": 4761.934179253,
+      "measuredCount": 18,
+      "selfReportedOnlySeconds": 0
+    }
+  },
+  "maximumPerArm": 360,
+  "accuracyGate": "fail",
+  "primaryTimeGate": "unavailable-incomplete-coordinator-timing",
+  "timingLimitations": [
+    "Retained direct-Click trial lacks coordinator monotonic timing;300s is self-reported only.",
+    "Delivery is bracketed; elapsed intervals include dispatch uncertainty.",
+    "One trial per cell; agent proxy, not human study."
+  ],
+  "authoritativeTokens": null,
+  "competitor": {
+    "status": "N/A",
+    "reason": "Same pinned revision has not been verified; no enrollment or paid calls."
+  },
+  "coordinatorPairedSubset": {
+    "count": 17,
+    "repositories": [
+      "excalidraw",
+      "fzf",
+      "nowinandroid",
+      "ripgrep",
+      "spring-petclinic",
+      "fastify",
+      "httpx",
+      "unity-boatattack",
+      "godot-demos",
+      "sqlite",
+      "runtime",
+      "starlette",
+      "axum",
+      "chi",
+      "swift-argument-parser",
+      "dapper",
+      "vitest"
+    ],
+    "directLower": 3821.251218373,
+    "directUpper": 4127.710164169,
+    "mapLower": 4205.039904502999,
+    "mapUpper": 4451.960567128,
+    "ratioLower": 1.0187342951075558,
+    "ratioUpper": 1.16505309719562,
+    "limitation": "Supplemental subset; does not replace preregistered18-repository aggregate."
+  },
+  "supplementalSelfReportSubstitution": {
+    "directLower": 4121.251218373,
+    "directUpper": 4427.710164169,
+    "mapLower": 4496.251045544001,
+    "mapUpper": 4761.934179253,
+    "ratioLower": 1.0154799837463762,
+    "ratioUpper": 1.1554583612917757,
+    "limitation": "Includes unverified direct-Click self-reported300s; not primary coordinator measurement."
+  }
+}

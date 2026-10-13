@@ -1,0 +1,8 @@
+{
+  "candidate": "2b7c00f9b36ad52539e6b06a5b1fef969699f3f0",
+  "packageRoot": "/tmp/l11-startup-measurement/installed/node_modules/@hyunlord/lattice",
+  "checked": 365,
+  "failures": [],
+  "verifiedAt": "2026-10-13T07:34:18.528Z",
+  "manifest": "/tmp/l11-startup-measurement/vitest-1440/installed-package.json"
+}

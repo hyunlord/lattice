@@ -1,0 +1,287 @@
+{
+  "repository": "pallets/click",
+  "arm": "map",
+  "commit": "2247b35ea1c47c727d7a06e51fa280e12a863ff6",
+  "answers": [
+    {
+      "id": "q01",
+      "answer": "Click is a Python library for composing command-line interfaces, with nested commands, generated help, and lazy subcommands. Application developers import it and define commands; users run those applications. The README's hello() command is run as python hello.py --count=3. Packaged examples also expose console scripts, such as colors = colors:cli. Tests invoke commands through CliRunner; this is not evidence of particular external production adopters.",
+      "citations": [
+        {
+          "url": "https://github.com/pallets/click/blob/2247b35ea1c47c727d7a06e51fa280e12a863ff6/README.md",
+          "lines": "3-46"
+        },
+        {
+          "url": "https://github.com/pallets/click/blob/2247b35ea1c47c727d7a06e51fa280e12a863ff6/examples/colors/pyproject.toml",
+          "lines": "1-18"
+        },
+        {
+          "url": "https://github.com/pallets/click/blob/2247b35ea1c47c727d7a06e51fa280e12a863ff6/tests/conftest.py",
+          "lines": "1-8"
+        }
+      ]
+    },
+    {
+      "id": "q02",
+      "answer": "Principal components: __init__.py exports the public API; decorators.py constructs commands and attaches parameters; core.py owns Command/Group dispatch, Context execution state, and Option/Argument/Parameter processing; parser.py tokenizes options and positionals; types.py validates/converts parameter values; formatting.py builds help text; termui.py and utils.py expose prompting, styling and output helpers; exceptions.py supplies CLI errors; globals.py manages current contexts; shell_completion.py handles completion requests; testing.py provides isolated invocation and captured Results.",
+      "citations": [
+        {
+          "url": "https://github.com/pallets/click/blob/2247b35ea1c47c727d7a06e51fa280e12a863ff6/src/click/__init__.py",
+          "lines": "1-73"
+        },
+        {
+          "url": "https://github.com/pallets/click/blob/2247b35ea1c47c727d7a06e51fa280e12a863ff6/src/click/decorators.py",
+          "lines": "170-256"
+        },
+        {
+          "url": "https://github.com/pallets/click/blob/2247b35ea1c47c727d7a06e51fa280e12a863ff6/src/click/core.py",
+          "lines": "238-275"
+        },
+        {
+          "url": "https://github.com/pallets/click/blob/2247b35ea1c47c727d7a06e51fa280e12a863ff6/src/click/core.py",
+          "lines": "989-1042"
+        },
+        {
+          "url": "https://github.com/pallets/click/blob/2247b35ea1c47c727d7a06e51fa280e12a863ff6/src/click/parser.py",
+          "lines": "224-325"
+        },
+        {
+          "url": "https://github.com/pallets/click/blob/2247b35ea1c47c727d7a06e51fa280e12a863ff6/src/click/types.py",
+          "lines": "60-120"
+        },
+        {
+          "url": "https://github.com/pallets/click/blob/2247b35ea1c47c727d7a06e51fa280e12a863ff6/src/click/formatting.py",
+          "lines": "1-110"
+        },
+        {
+          "url": "https://github.com/pallets/click/blob/2247b35ea1c47c727d7a06e51fa280e12a863ff6/src/click/shell_completion.py",
+          "lines": "1-60"
+        },
+        {
+          "url": "https://github.com/pallets/click/blob/2247b35ea1c47c727d7a06e51fa280e12a863ff6/src/click/testing.py",
+          "lines": "596-739"
+        }
+      ]
+    },
+    {
+      "id": "q03",
+      "answer": "Python >=3.10, distributed as the click package from src/click; root pyproject.toml declares version 8.6.0.dev and Flit (flit_core.buildapi) as its build backend. Development groups use pytest, tox/tox-uv, Ruff, mypy and pyright; uv selects default groups. Documentation is Markdown/MyST with Sphinx and Pallets themes. Examples have separate pyproject package boundaries and console entry points; the colors package depends on click>=8.1. The map also reports one shell file with limited language analysis; it is not a second application framework.",
+      "citations": [
+        {
+          "url": "https://github.com/pallets/click/blob/2247b35ea1c47c727d7a06e51fa280e12a863ff6/pyproject.toml",
+          "lines": "1-105"
+        },
+        {
+          "url": "https://github.com/pallets/click/blob/2247b35ea1c47c727d7a06e51fa280e12a863ff6/docs/conf.py",
+          "lines": "1-36"
+        },
+        {
+          "url": "https://github.com/pallets/click/blob/2247b35ea1c47c727d7a06e51fa280e12a863ff6/examples/colors/pyproject.toml",
+          "lines": "1-18"
+        }
+      ]
+    },
+    {
+      "id": "q04",
+      "answer": "click.Command is re-exported from core. Calling an instance enters Command.__call__ (core.py:1683-1685), which forwards *args/**kwargs to self.main. Command.main is the public invocation boundary, not the application callback itself.",
+      "citations": [
+        {
+          "url": "https://github.com/pallets/click/blob/2247b35ea1c47c727d7a06e51fa280e12a863ff6/src/click/__init__.py",
+          "lines": "11-11"
+        },
+        {
+          "url": "https://github.com/pallets/click/blob/2247b35ea1c47c727d7a06e51fa280e12a863ff6/src/click/core.py",
+          "lines": "1683-1685"
+        },
+        {
+          "url": "https://github.com/pallets/click/blob/2247b35ea1c47c727d7a06e51fa280e12a863ff6/src/click/core.py",
+          "lines": "1515-1649"
+        }
+      ]
+    },
+    {
+      "id": "q05",
+      "answer": "In click.core, Command.invoke (1432-1446) passes self.callback and **ctx.params to ctx.invoke. Context.invoke (887-940) supplies the context/error wrapper and performs callback(*args, **kwargs). These are distinct command dispatch and actual callable invocation definitions.",
+      "citations": [
+        {
+          "url": "https://github.com/pallets/click/blob/2247b35ea1c47c727d7a06e51fa280e12a863ff6/src/click/core.py",
+          "lines": "1432-1446"
+        },
+        {
+          "url": "https://github.com/pallets/click/blob/2247b35ea1c47c727d7a06e51fa280e12a863ff6/src/click/core.py",
+          "lines": "887-940"
+        }
+      ]
+    },
+    {
+      "id": "q06",
+      "answer": "Outgoing direct dependencies of core are types (parameter types), _utils (sentinels), exceptions (CLI errors/control exits), formatting (HelpFormatter/join_options), globals (push_context/pop_context), parser (_OptionParser/_split_opt), termui (confirm/prompt/style), and utils (argument/program/output helpers): core's imports prove each direction. Additional local imports point core -> decorators in get_help_option and Group.command/group; core -> shell_completion appears both as a TYPE_CHECKING import and real local runtime imports. These are directed imports, not proof that every branch runs on every invocation.",
+      "citations": [
+        {
+          "url": "https://github.com/pallets/click/blob/2247b35ea1c47c727d7a06e51fa280e12a863ff6/src/click/core.py",
+          "lines": "24-57"
+        },
+        {
+          "url": "https://github.com/pallets/click/blob/2247b35ea1c47c727d7a06e51fa280e12a863ff6/src/click/core.py",
+          "lines": "1222-1254"
+        },
+        {
+          "url": "https://github.com/pallets/click/blob/2247b35ea1c47c727d7a06e51fa280e12a863ff6/src/click/core.py",
+          "lines": "1853-1944"
+        },
+        {
+          "url": "https://github.com/pallets/click/blob/2247b35ea1c47c727d7a06e51fa280e12a863ff6/src/click/core.py",
+          "lines": "1448-1493"
+        },
+        {
+          "url": "https://github.com/pallets/click/blob/2247b35ea1c47c727d7a06e51fa280e12a863ff6/src/click/core.py",
+          "lines": "1651-1681"
+        }
+      ]
+    },
+    {
+      "id": "q07",
+      "answer": "Normal base-command route: main -> make_context -> parse_args -> make_parser/_OptionParser.parse_args -> each parameter's handle_parse_result -> populated ctx.params -> Command.invoke -> Context.invoke -> client callback. main returns the callback result when standalone_mode=False; otherwise ctx.exit() closes resources and raises Exit, and main terminates via sys.exit with the exit code (normally 0), not the callback return value. Completion can exit before this path. Callback identity, overridden methods/context classes, parameter callbacks/types, and Group subcommand dispatch are dynamic boundaries; this is source-derived dispatch, not an observed runtime trace.",
+      "citations": [
+        {
+          "url": "https://github.com/pallets/click/blob/2247b35ea1c47c727d7a06e51fa280e12a863ff6/src/click/core.py",
+          "lines": "1515-1681"
+        },
+        {
+          "url": "https://github.com/pallets/click/blob/2247b35ea1c47c727d7a06e51fa280e12a863ff6/src/click/core.py",
+          "lines": "1359-1446"
+        },
+        {
+          "url": "https://github.com/pallets/click/blob/2247b35ea1c47c727d7a06e51fa280e12a863ff6/src/click/core.py",
+          "lines": "1256-1261"
+        },
+        {
+          "url": "https://github.com/pallets/click/blob/2247b35ea1c47c727d7a06e51fa280e12a863ff6/src/click/core.py",
+          "lines": "887-940"
+        },
+        {
+          "url": "https://github.com/pallets/click/blob/2247b35ea1c47c727d7a06e51fa280e12a863ff6/src/click/core.py",
+          "lines": "849-857"
+        },
+        {
+          "url": "https://github.com/pallets/click/blob/2247b35ea1c47c727d7a06e51fa280e12a863ff6/src/click/core.py",
+          "lines": "2929-3015"
+        },
+        {
+          "url": "https://github.com/pallets/click/blob/2247b35ea1c47c727d7a06e51fa280e12a863ff6/src/click/parser.py",
+          "lines": "298-325"
+        }
+      ]
+    },
+    {
+      "id": "q08",
+      "answer": "Direct production consumers of the _OptionParser class are core.py (imports and constructs it in Command.make_parser; parsing and Option/Argument registration consume its interface) and __init__.py's deprecated dynamic OptionParser export. parser.py itself also supplies a deprecated alias through __getattr__. The map's other production importer, formatting.py, imports _split_opt, not _OptionParser: module dependency does not prove class-change impact. Parsing changes could affect normal commands and dependent clients, but the actual behavioral impact depends on the change and cannot be established from these static edges alone. Tests are not production consumers.",
+      "citations": [
+        {
+          "url": "https://github.com/pallets/click/blob/2247b35ea1c47c727d7a06e51fa280e12a863ff6/src/click/core.py",
+          "lines": "39-40"
+        },
+        {
+          "url": "https://github.com/pallets/click/blob/2247b35ea1c47c727d7a06e51fa280e12a863ff6/src/click/core.py",
+          "lines": "1256-1261"
+        },
+        {
+          "url": "https://github.com/pallets/click/blob/2247b35ea1c47c727d7a06e51fa280e12a863ff6/src/click/core.py",
+          "lines": "1396-1430"
+        },
+        {
+          "url": "https://github.com/pallets/click/blob/2247b35ea1c47c727d7a06e51fa280e12a863ff6/src/click/core.py",
+          "lines": "3516-3556"
+        },
+        {
+          "url": "https://github.com/pallets/click/blob/2247b35ea1c47c727d7a06e51fa280e12a863ff6/src/click/core.py",
+          "lines": "4013-4014"
+        },
+        {
+          "url": "https://github.com/pallets/click/blob/2247b35ea1c47c727d7a06e51fa280e12a863ff6/src/click/__init__.py",
+          "lines": "100-110"
+        },
+        {
+          "url": "https://github.com/pallets/click/blob/2247b35ea1c47c727d7a06e51fa280e12a863ff6/src/click/parser.py",
+          "lines": "503-534"
+        },
+        {
+          "url": "https://github.com/pallets/click/blob/2247b35ea1c47c727d7a06e51fa280e12a863ff6/src/click/formatting.py",
+          "lines": "7-8"
+        }
+      ]
+    },
+    {
+      "id": "q09",
+      "answer": "tests/test_basic.py::test_string_option and ::test_int_option invoke decorated callbacks with option values through runner.invoke; integer input 23 is converted and the callback emits 46. The runner fixture constructs CliRunner. CliRunner.invoke ultimately calls cli.main(args=..., prog_name=..., **extra), entering the q07 route; it captures exit/output in Result. README hello(count,name) is a documented alternative: decorators create a Command, hello() enters __call__/main, and count/name become callback arguments. No tests were executed in this trial.",
+      "citations": [
+        {
+          "url": "https://github.com/pallets/click/blob/2247b35ea1c47c727d7a06e51fa280e12a863ff6/tests/test_basic.py",
+          "lines": "190-236"
+        },
+        {
+          "url": "https://github.com/pallets/click/blob/2247b35ea1c47c727d7a06e51fa280e12a863ff6/tests/conftest.py",
+          "lines": "1-8"
+        },
+        {
+          "url": "https://github.com/pallets/click/blob/2247b35ea1c47c727d7a06e51fa280e12a863ff6/src/click/testing.py",
+          "lines": "596-739"
+        },
+        {
+          "url": "https://github.com/pallets/click/blob/2247b35ea1c47c727d7a06e51fa280e12a863ff6/README.md",
+          "lines": "21-46"
+        },
+        {
+          "url": "https://github.com/pallets/click/blob/2247b35ea1c47c727d7a06e51fa280e12a863ff6/src/click/decorators.py",
+          "lines": "170-256"
+        }
+      ]
+    },
+    {
+      "id": "q10",
+      "answer": "Client argv enters Command.main(args). Explicit sequences are copied to a list; absent args come from sys.argv[1:], with optional Windows expansion of glob/user/environment syntax. make_context passes the list into Command.parse_args. _OptionParser processes options then positionals and returns values, leftovers, and parameter order; Parameter.handle_parse_result handles conversion/defaults and exposes values in ctx.params. Remaining tokens are stored in ctx.args or rejected; Group parsing partitions subcommand arguments. In tests, CliRunner.invoke also accepts a string and applies shlex.split before main.",
+      "citations": [
+        {
+          "url": "https://github.com/pallets/click/blob/2247b35ea1c47c727d7a06e51fa280e12a863ff6/src/click/core.py",
+          "lines": "1515-1591"
+        },
+        {
+          "url": "https://github.com/pallets/click/blob/2247b35ea1c47c727d7a06e51fa280e12a863ff6/src/click/core.py",
+          "lines": "1359-1430"
+        },
+        {
+          "url": "https://github.com/pallets/click/blob/2247b35ea1c47c727d7a06e51fa280e12a863ff6/src/click/parser.py",
+          "lines": "298-361"
+        },
+        {
+          "url": "https://github.com/pallets/click/blob/2247b35ea1c47c727d7a06e51fa280e12a863ff6/src/click/core.py",
+          "lines": "2929-3015"
+        },
+        {
+          "url": "https://github.com/pallets/click/blob/2247b35ea1c47c727d7a06e51fa280e12a863ff6/src/click/core.py",
+          "lines": "2038-2050"
+        },
+        {
+          "url": "https://github.com/pallets/click/blob/2247b35ea1c47c727d7a06e51fa280e12a863ff6/src/click/testing.py",
+          "lines": "596-739"
+        }
+      ]
+    }
+  ],
+  "toolErrors": [
+    "Initial overview.json and broad MCP reads were output-truncated by exec_command; narrower queries recovered relevant evidence.",
+    "Two lattice_trace core-import queries (limits 100 and 10) exceeded the requested shell output budgets; JSON.parse failed with SyntaxError: Unexpected token 'W', \"Warning: t\"... is not valid JSON. No graph reset or preparation was attempted.",
+    "lattice_find kind=callable returned no items; the catalog's callable entities were accessible using kind=function.",
+    "Web find for 'def test_basic' returned no match even though a later bounded open showed test_basic_functionality."
+  ],
+  "limitations": [
+    "Read-only static evaluation; no builds or target tests run.",
+    "Map exact-call output for Command.main contained only an echo edge and omitted receiver-based dispatch visible in source. Absence of a static edge is not absence of a call.",
+    "Map reports a shell language limitation for one file.",
+    "Web-rendered raw line numbering elides some blank lines; citation spans use source-bound map positions where retrieved.",
+    "Dynamic callbacks, subclass overrides and external consumers cannot be exhaustively resolved from this evidence.",
+    "Authoritative token telemetry was unavailable; no token count is reported."
+  ],
+  "selfReportedStartedAt": "2026-10-13T07:30:21Z",
+  "selfReportedFinishedAt": "2026-10-13T07:34:30Z"
+}

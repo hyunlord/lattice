@@ -1,0 +1,549 @@
+{
+  "auditor": "independent read-only integrity auditor; no regrading",
+  "generatedAt": "2026-10-13T08:16:56.564Z",
+  "status": "complete-with-disclosed-evidence-limitations",
+  "issues": [],
+  "pending": [],
+  "checks": {
+    "frozen": [
+      {
+        "name": "protocol.md",
+        "expected": "3a801efb063749226f30981a40fea76f177928b57f5a3c7e6cdab863de8227de",
+        "actual": "3a801efb063749226f30981a40fea76f177928b57f5a3c7e6cdab863de8227de"
+      },
+      {
+        "name": "questions.json",
+        "expected": "05ac854ea6c22a4de2b18ee007d5085346e6afd7e5a2af95907a37164ab83acc",
+        "actual": "05ac854ea6c22a4de2b18ee007d5085346e6afd7e5a2af95907a37164ab83acc"
+      },
+      {
+        "name": "repositories.json",
+        "expected": "c621674810282ff3e11253da48e31fd2a91077f44b929ddcb44501a8c1b89959",
+        "actual": "c621674810282ff3e11253da48e31fd2a91077f44b929ddcb44501a8c1b89959"
+      },
+      {
+        "name": "errata.md",
+        "expected": "8bb0517ade20fcbab0739caa282e39d21f821eabee68a0f16f478103d55e5453",
+        "actual": "8bb0517ade20fcbab0739caa282e39d21f821eabee68a0f16f478103d55e5453"
+      }
+    ],
+    "trials": {
+      "count": 36,
+      "measured": 35,
+      "gradeCount": 36,
+      "orderChecked": 17,
+      "clickOrder": "Only retained self-reported initial UTC available; no coordinator persistence stamp",
+      "maximumConcurrentMapTrials": 2,
+      "restartsDuring": [],
+      "exportReady": 17
+    },
+    "totals": {
+      "direct": {
+        "completed": 18,
+        "graded": 18,
+        "score": 324,
+        "measuredLower": 3821.251218373,
+        "measuredUpper": 4127.710164169,
+        "measuredCount": 17,
+        "selfReportedOnlySeconds": 300
+      },
+      "map": {
+        "completed": 18,
+        "graded": 18,
+        "score": 318,
+        "measuredLower": 4496.251045544001,
+        "measuredUpper": 4761.934179253,
+        "measuredCount": 18,
+        "selfReportedOnlySeconds": 0
+      }
+    },
+    "ratios": {
+      "paired": {
+        "count": 17,
+        "repositories": [
+          "excalidraw",
+          "fzf",
+          "nowinandroid",
+          "ripgrep",
+          "spring-petclinic",
+          "fastify",
+          "httpx",
+          "unity-boatattack",
+          "godot-demos",
+          "sqlite",
+          "runtime",
+          "starlette",
+          "axum",
+          "chi",
+          "swift-argument-parser",
+          "dapper",
+          "vitest"
+        ],
+        "directLower": 3821.251218373,
+        "directUpper": 4127.710164169,
+        "mapLower": 4205.039904502999,
+        "mapUpper": 4451.960567128,
+        "ratioLower": 1.0187342951075558,
+        "ratioUpper": 1.16505309719562,
+        "limitation": "Supplemental subset; does not replace preregistered18-repository aggregate."
+      },
+      "substitution": {
+        "directLower": 4121.251218373,
+        "directUpper": 4427.710164169,
+        "mapLower": 4496.251045544001,
+        "mapUpper": 4761.934179253,
+        "ratioLower": 1.0154799837463762,
+        "ratioUpper": 1.1554583612917757,
+        "limitation": "Includes unverified direct-Click self-reported300s; not primary coordinator measurement."
+      }
+    },
+    "failuresRetained": {
+      "runtimeExport": {
+        "repository": "runtime",
+        "commit": "8630d8988107478d249e2fdb8162f8c7dcbd3dbb",
+        "candidate": "2b7c00f",
+        "status": "full-export-unavailable",
+        "reason": "Root cold open reached20minute deadline without complete export; meaningful partial at1.266seconds. No unlimited full-export rerun.",
+        "actualMcpPreparation": "failed-single-bounded-attempt",
+        "mcpPreparationEvents": [
+          {
+            "at": "2026-10-13T07:36:06.356Z",
+            "monotonicNs": "426156201723208",
+            "repository": "runtime",
+            "type": "prewarm-failed",
+            "seconds": 10.750702167,
+            "error": "Error: {\"content\":[{\"type\":\"text\",\"text\":\"{\\\"error\\\":\\\"Tool execution failed; verify the repository, graph and request, then retry.\\\",\\\"freshness\\\":{\\\"status\\\":\\\"unknown\\\"}}\"}],\"structuredContent\":{\"error\":\"Tool execution failed; verify the repository, graph and request, then retry.\",\"freshness\":{\"status\":\"unknown\"}},\"isError\":true}"
+          }
+        ]
+      },
+      "queryErrorCount": 1,
+      "priorSetupFailures": [
+        "click",
+        "excalidraw",
+        "fzf",
+        "spring-petclinic",
+        "fastify",
+        "unity-boatattack",
+        "godot-demos",
+        "sqlite",
+        "starlette",
+        "axum",
+        "chi",
+        "swift-argument-parser",
+        "dapper",
+        "vitest"
+      ]
+    },
+    "installedPackage": {
+      "checked": 365,
+      "failures": [],
+      "candidate": "2b7c00f9b36ad52539e6b06a5b1fef969699f3f0"
+    },
+    "exportGraphIdentities": [
+      {
+        "repository": "click",
+        "recordedGraph": "2500d50c938d9870f34d1fa6e50d6795b2eeb96c5f0bee2b1d52de829a5099e6",
+        "exportedGraph": "2500d50c938d9870f34d1fa6e50d6795b2eeb96c5f0bee2b1d52de829a5099e6",
+        "match": true
+      },
+      {
+        "repository": "excalidraw",
+        "recordedGraph": "070aede0089fc78546568137bc30249b0cce04a4164730486c9ecb0f42feaac2",
+        "exportedGraph": "070aede0089fc78546568137bc30249b0cce04a4164730486c9ecb0f42feaac2",
+        "match": true
+      },
+      {
+        "repository": "fzf",
+        "recordedGraph": "41bfe1ac2c598b82db9b4777fa1889178ac1e33d65667421c6ad09952ef9678d",
+        "exportedGraph": "41bfe1ac2c598b82db9b4777fa1889178ac1e33d65667421c6ad09952ef9678d",
+        "match": true
+      },
+      {
+        "repository": "nowinandroid",
+        "recordedGraph": "e47aaedc2e17513d763de46077f489e635e329df6fdd0adcb89d9f0d68a956fd",
+        "exportedGraph": "e47aaedc2e17513d763de46077f489e635e329df6fdd0adcb89d9f0d68a956fd",
+        "match": true
+      },
+      {
+        "repository": "ripgrep",
+        "recordedGraph": "6b8d82c807c2a179c37dfed4e6e1c67637f1add0e00cdd3e64e88a2e87511bdd",
+        "exportedGraph": "6b8d82c807c2a179c37dfed4e6e1c67637f1add0e00cdd3e64e88a2e87511bdd",
+        "match": true
+      },
+      {
+        "repository": "spring-petclinic",
+        "recordedGraph": "829d9cd7b8c06fdf6c9680f2f823cfecee0a4b055e8b7096d3db0f60049becf2",
+        "exportedGraph": "829d9cd7b8c06fdf6c9680f2f823cfecee0a4b055e8b7096d3db0f60049becf2",
+        "match": true
+      },
+      {
+        "repository": "fastify",
+        "recordedGraph": "3d249115cd2b2b9d68fc9d4076bc2275ba2a4aefd993de4207118825a355f52c",
+        "exportedGraph": "3d249115cd2b2b9d68fc9d4076bc2275ba2a4aefd993de4207118825a355f52c",
+        "match": true
+      },
+      {
+        "repository": "httpx",
+        "recordedGraph": "97c226ca7c266012367bd495dc319601000232fce98d18169f780ae1279bc2ed",
+        "exportedGraph": "97c226ca7c266012367bd495dc319601000232fce98d18169f780ae1279bc2ed",
+        "match": true
+      },
+      {
+        "repository": "unity-boatattack",
+        "recordedGraph": "c4a157a55f0f6e954a40aa341aa65e5b2f6b59d6e1e6f9d6efdad7b1b7c05949",
+        "exportedGraph": "c4a157a55f0f6e954a40aa341aa65e5b2f6b59d6e1e6f9d6efdad7b1b7c05949",
+        "match": true
+      },
+      {
+        "repository": "godot-demos",
+        "recordedGraph": "ddb70ac43caf6b4672ebcbe2b6bc6da3597a7eff2d404ad327d850213760a47a",
+        "exportedGraph": "ddb70ac43caf6b4672ebcbe2b6bc6da3597a7eff2d404ad327d850213760a47a",
+        "match": true
+      },
+      {
+        "repository": "sqlite",
+        "recordedGraph": "3afd525da0c31425bdd5ffb164236b103d79c9b2b47c287a2fc90df76a09db78",
+        "exportedGraph": "3afd525da0c31425bdd5ffb164236b103d79c9b2b47c287a2fc90df76a09db78",
+        "match": true
+      },
+      {
+        "repository": "starlette",
+        "recordedGraph": "e6954aa76f3bcad2a332b21ae1d2032a0523a2401cc1261ded95df2d75a9dcc5",
+        "exportedGraph": "e6954aa76f3bcad2a332b21ae1d2032a0523a2401cc1261ded95df2d75a9dcc5",
+        "match": true
+      },
+      {
+        "repository": "axum",
+        "recordedGraph": "a0767e3e64058dd559c2edda19319e2f1bd159cb1d48e446d3549ad5af6b16d2",
+        "exportedGraph": "a0767e3e64058dd559c2edda19319e2f1bd159cb1d48e446d3549ad5af6b16d2",
+        "match": true
+      },
+      {
+        "repository": "chi",
+        "recordedGraph": "6c6b8597d9092b6c3f31eea7e03fcd1026f3d2c581dcc8e86bfb5ee8ae818ed8",
+        "exportedGraph": "6c6b8597d9092b6c3f31eea7e03fcd1026f3d2c581dcc8e86bfb5ee8ae818ed8",
+        "match": true
+      },
+      {
+        "repository": "swift-argument-parser",
+        "recordedGraph": "a261f22d4cf99a826cbb3626246340ec30723d72141f68fc1aa36a2cd75af939",
+        "exportedGraph": "a261f22d4cf99a826cbb3626246340ec30723d72141f68fc1aa36a2cd75af939",
+        "match": true
+      },
+      {
+        "repository": "dapper",
+        "recordedGraph": "9d41438f37101a0e98017f7b3b5276c00e89cbeaaaab7d2fb2556f972027ce56",
+        "exportedGraph": "9d41438f37101a0e98017f7b3b5276c00e89cbeaaaab7d2fb2556f972027ce56",
+        "match": true
+      },
+      {
+        "repository": "vitest",
+        "recordedGraph": "a559d43a4d2fe27e9746b732bb3ea088b1e3e6a7f9b81c6be19d68ec9aaa68a1",
+        "exportedGraph": "a559d43a4d2fe27e9746b732bb3ea088b1e3e6a7f9b81c6be19d68ec9aaa68a1",
+        "match": true
+      }
+    ],
+    "queriesOutsideTimedMapIntervals": [],
+    "transportCode": {
+      "file": "/tmp/l11-evaluation/transport-server.mjs",
+      "sha256": "8889ac96cb8a628fb48693672684687b24562254f6fbad20e97327362cd8def6",
+      "enforcesMaximumPreparedSessions": 2,
+      "evidence": "prepare rejects sessions.size >= 2, registers session synchronously before awaits; no automatic eviction branch. Admin close/child exit remove sessions without lifecycle event.",
+      "limitation": "Current source enforcement is not a historical session-close event trace."
+    },
+    "aggregationCodeReview": {
+      "files": [
+        {
+          "file": "summarize.mjs",
+          "sha256": "bf38735577311d866cfd48c8a7f1ca0844a7ffe4533dc13610c03a3882687c6a"
+        },
+        {
+          "file": "verify-results.mjs",
+          "sha256": "8f2797aa212a93069cc1b55ff8befc2376a9876caae22e51f40d6a9da4113814"
+        },
+        {
+          "file": "report.mjs",
+          "sha256": "de10d8c237abe76ec3f8fedc20aef3e7330c14f2bcbbc0708a509d1d67d9ec1c"
+        }
+      ],
+      "result": "Current dataset formulas correct; verifier covers answer and grade hashes, pins and grade score sums. It does not itself verify timing arithmetic, session lifetime, or CSV parity; independent audit covers available timing and CSV evidence.",
+      "futureRisk": "report.mjs interpretation unconditionally says combined goal not achieved even if both future gates pass; current frozen failed result is correctly described."
+    },
+    "csvJsonParity": {
+      "jsonRows": 36,
+      "csvRows": 36,
+      "mismatches": []
+    }
+  },
+  "cells": [
+    {
+      "key": "direct-click",
+      "status": "complete-timing-limited",
+      "sha256": "4e59500886f9210141eb50617fd51c47509a9d447ee7a2c089bc644cea92ddf0",
+      "lower": null,
+      "upper": null
+    },
+    {
+      "key": "map-click",
+      "status": "complete",
+      "sha256": "4958cf70e765b59bf4f0dc6516d09a799b284655ca919856d69d275058d360bb",
+      "lower": 291.211141041,
+      "upper": 309.973612125
+    },
+    {
+      "key": "direct-excalidraw",
+      "status": "complete",
+      "sha256": "c4825daf48a4ff60fbb6edb8f1635100907674bc41a4b1c4429b1d26f3b8b88e",
+      "lower": 263.099195333,
+      "upper": 286.487072417
+    },
+    {
+      "key": "map-excalidraw",
+      "status": "complete",
+      "sha256": "2591ecb66a390afad52be02c7d577291d4d1519159915efde13aa7d8d9d5099f",
+      "lower": 278.931255542,
+      "upper": 293.936665334
+    },
+    {
+      "key": "direct-fzf",
+      "status": "complete",
+      "sha256": "711f3f91c2f7d49199dca753b26eb871c5b8215262526a29ddb57d3d0d4d3b81",
+      "lower": 198.365933291,
+      "upper": 238.040634375
+    },
+    {
+      "key": "map-fzf",
+      "status": "complete",
+      "sha256": "2480cfd0a15a19d5a6b01236d1df423cc8b2ecc3dbddfbb2ee6e7bc88237b2c6",
+      "lower": 331.423586833,
+      "upper": 345.171194625
+    },
+    {
+      "key": "direct-nowinandroid",
+      "status": "complete",
+      "sha256": "6b87607b14fd982a55b15a242ccac5e591e26f375de5f44dc7702a3d185c9870",
+      "lower": 256.846056834,
+      "upper": 268.292362
+    },
+    {
+      "key": "map-nowinandroid",
+      "status": "complete",
+      "sha256": "7ea7c26c520dc080973f2c2823360ff4fad9179a891de2eefa80123bf65d8240",
+      "lower": 326.054572917,
+      "upper": 343.562713417
+    },
+    {
+      "key": "direct-ripgrep",
+      "status": "complete",
+      "sha256": "fbcaa52fc6113a9590b873fadfb96cd812c5959829c24a17ccee73886a9c14b4",
+      "lower": 269.942438584,
+      "upper": 309.655195584
+    },
+    {
+      "key": "map-ripgrep",
+      "status": "complete",
+      "sha256": "b7d480ed843620ecf47993ff53c783f97a6093ab3549b4d01ea88e21e55ac347",
+      "lower": 250.302012084,
+      "upper": 263.360300542
+    },
+    {
+      "key": "direct-spring-petclinic",
+      "status": "complete",
+      "sha256": "2bbf944ae75b26f879eac77af4738d7425ee8c55b76ed2d156c3533e98f1eff2",
+      "lower": 172.750018375,
+      "upper": 186.862221292
+    },
+    {
+      "key": "map-spring-petclinic",
+      "status": "complete",
+      "sha256": "e85d2cc8f97d98d9b36dde779d172ec4c78b95011988330432176a702df82806",
+      "lower": 209.055017875,
+      "upper": 224.052881292
+    },
+    {
+      "key": "direct-fastify",
+      "status": "complete",
+      "sha256": "8c8457704f5f15efb01179d265a2b3e3a819653803a136996ef28b0491ed7dba",
+      "lower": 173.529912208,
+      "upper": 197.184044375
+    },
+    {
+      "key": "map-fastify",
+      "status": "complete",
+      "sha256": "f659fec803a7fb10025566b1e125073e8459064fac8f8cb8507eef33f3e39d0f",
+      "lower": 266.281089708,
+      "upper": 278.818215
+    },
+    {
+      "key": "direct-httpx",
+      "status": "complete",
+      "sha256": "3b819121ccfc3be38f9c2530fb005ecfd7b2dadd16ca95c2dc441bd568cb63d7",
+      "lower": 227.596786,
+      "upper": 237.658131667
+    },
+    {
+      "key": "map-httpx",
+      "status": "complete",
+      "sha256": "0f04c0feccd606170ff2fabcba3d957bd9ac0b995d21f1d0d5d8001a7d7f69cb",
+      "lower": 226.790981416,
+      "upper": 241.636353083
+    },
+    {
+      "key": "direct-unity-boatattack",
+      "status": "complete",
+      "sha256": "05468bc912b68df531f0c09a72db320d6b2385314f6a39df30452f0a38ca7c8f",
+      "lower": 244.198450333,
+      "upper": 266.251652
+    },
+    {
+      "key": "map-unity-boatattack",
+      "status": "complete",
+      "sha256": "f4eabf27be9d73cad3d7005280b19d7dc0057acdfcdf1249238177abb1622270",
+      "lower": 222.774452375,
+      "upper": 239.192237125
+    },
+    {
+      "key": "direct-godot-demos",
+      "status": "complete",
+      "sha256": "0366901807049de6f183f79c4af869837f7e65fb2301fa87a1b74b169a2d5b3f",
+      "lower": 142.663413875,
+      "upper": 156.533874583
+    },
+    {
+      "key": "map-godot-demos",
+      "status": "complete",
+      "sha256": "11f9007fc39c11febab4e119480e5cb6a0142d5409d26ec3947240403588b90f",
+      "lower": 172.19312225,
+      "upper": 185.82969125
+    },
+    {
+      "key": "direct-sqlite",
+      "status": "complete",
+      "sha256": "f0dd1641801018eedb95c722fd7f7c01fd794bd5f6142824450d74738f8c711b",
+      "lower": 224.995799458,
+      "upper": 240.092004542
+    },
+    {
+      "key": "map-sqlite",
+      "status": "complete",
+      "sha256": "1e4c87a1590a375700b36b5b5fa2f9c302e1d35caa7bedefa0a5bee3c5f345d0",
+      "lower": 217.277310209,
+      "upper": 234.408432625
+    },
+    {
+      "key": "direct-runtime",
+      "status": "complete",
+      "sha256": "f0948737c22c11d900015dc3e11e97ae438d404b49f29a132339dbab9fffb8a3",
+      "lower": 285.29630225,
+      "upper": 303.437691583
+    },
+    {
+      "key": "map-runtime",
+      "status": "complete",
+      "sha256": "aab1fbc8e375a90d7cbed713c4366be8d451d38f3c32f7d8f30cccbc35082c6a",
+      "lower": 341.191024667,
+      "upper": 353.645400292
+    },
+    {
+      "key": "direct-starlette",
+      "status": "complete",
+      "sha256": "f8176434958d1704749bfcfec10aded15d941920393e74fed36bd11a18330c27",
+      "lower": 240.44612475,
+      "upper": 252.511854792
+    },
+    {
+      "key": "map-starlette",
+      "status": "complete",
+      "sha256": "83a304c8378366467e84175f91a684da6b1f12a38366afe30001c633509be9fb",
+      "lower": 262.138526584,
+      "upper": 280.933242709
+    },
+    {
+      "key": "direct-axum",
+      "status": "complete",
+      "sha256": "a8a4c0e338c59a534dc52544577f4dcd7ed9ce7477b631daef4eb46072ee7c6d",
+      "lower": 228.297001833,
+      "upper": 241.819430625
+    },
+    {
+      "key": "map-axum",
+      "status": "complete",
+      "sha256": "c508027e560f6f9056996b201cbaddf2d8c1e3f6386c72cd0650a60f6d85330f",
+      "lower": 251.222372834,
+      "upper": 264.098922209
+    },
+    {
+      "key": "direct-chi",
+      "status": "complete",
+      "sha256": "ee7d65e2e294bf4f42ea4b6be538adf5c4f15dc1b401217d4e8147b8c0580294",
+      "lower": 196.511396625,
+      "upper": 208.369547792
+    },
+    {
+      "key": "map-chi",
+      "status": "complete",
+      "sha256": "9e70557cf5fee705ece7bc60039bb199a6bfe44586e91fb8a9d28ee1c07c82bb",
+      "lower": 166.2620745,
+      "upper": 178.608828042
+    },
+    {
+      "key": "direct-swift-argument-parser",
+      "status": "complete",
+      "sha256": "f4620298420feeabd36d0937e3b0dcd7f3553aa96a1ea03d32a8b18b6a17f524",
+      "lower": 146.588990541,
+      "upper": 161.572750375
+    },
+    {
+      "key": "map-swift-argument-parser",
+      "status": "complete",
+      "sha256": "42afc6a4cf48edf45b2e7cd5d1b8ad6e7d96de311331f6d9fb9cba0dccb579ea",
+      "lower": 186.361943584,
+      "upper": 199.318257375
+    },
+    {
+      "key": "direct-dapper",
+      "status": "complete",
+      "sha256": "52f8b5d49074bed2216e1615c9b983b4670a6043ad69cb95796561312980ad38",
+      "lower": 191.802684542,
+      "upper": 202.179370042
+    },
+    {
+      "key": "map-dapper",
+      "status": "complete",
+      "sha256": "a9a8db85c8702b489188f75fe4a9e2aaaa048fcce74d7d72502c539de743d8f8",
+      "lower": 219.685319291,
+      "upper": 234.732057166
+    },
+    {
+      "key": "direct-vitest",
+      "status": "complete",
+      "sha256": "60c5f26eb5e15d77a302140bf08c51742e3444ca522566fb8111cef2d8f1877d",
+      "lower": 358.320713541,
+      "upper": 370.762326125
+    },
+    {
+      "key": "map-vitest",
+      "status": "complete",
+      "sha256": "93842a3ab40b76799b3d7f8f8e5b3cac71726e10a27a38f880d09cffae3d1592",
+      "lower": 277.095241834,
+      "upper": 290.655175042
+    }
+  ],
+  "limitations": [
+    "Answer artifacts were hashed only; grade artifacts inspected only for identity, numeric sum and answer SHA fields. No oracle or answer content read.",
+    "No session-close/eviction events exist in transport-events.jsonl; active trial concurrency and restart overlap are verifiable, prepared-session peak/no eviction are not directly evidenced by this log.",
+    "Exact model/reasoning identifiers unavailable, inherited settings are disclosed.",
+    "Historical prepared-session peak and no eviction remain independently unproven: coordinator reports closes after final answers, but no close lifecycle events were preserved. Current source cap and zero mid-trial restarts support only their respective narrower claims.",
+    "Click within-repository order lacks a coordinator final-persistence stamp; its self-report and original retained artifact precede map dispatch, but equivalent monotonic order proof is unavailable."
+  ],
+  "snapshotHashes": {
+    "manifest.json": "ba64fbf3c192953bc1d68bb032a234eb9ef4acc800e16fa970c15c9d95aa5160",
+    "ledger.json": "68514eaa3da307cd6cc21f1061c2cde339baac080a37803cf180784b129ec847",
+    "results.csv": "e365051575ba5c8f83db7783819b0f66a2e385ef49661c29c89040d34aead9bd",
+    "results.json": "d7ebeeafee9813a15b5a3b7ff6d7162415fa4f39628d12ed3d4dbc66cf5e697e",
+    "summary.json": "2f830e77b7ec8d2d74834c15f3d95c689fe9c1600aac7491c7e1c96afbfd0099",
+    "OPERATIONS.md": "618910a4d36d2978ee0e2897199a90e0f7518dbb9b846b47065af3e346e7c708",
+    "frozen-package-verification.json": "ae74e2530d21f4189c6239d5dd450bb6b7723ae94dfb2ec204d9a6d0f9667151",
+    "transport-events.jsonl": "ce4ab631e512ab8133c8846a920c1a9307e97b51a355e7f0c9dae765f3401c64"
+  }
+}

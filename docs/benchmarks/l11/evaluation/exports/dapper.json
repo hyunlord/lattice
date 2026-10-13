@@ -1,0 +1,70 @@
+{
+  "repository": "dapper",
+  "commit": "eb47546a408bbf6c178bda4f04dc205bc51ffbfe",
+  "candidate": "2b7c00f",
+  "startedAt": "2026-10-13T07:13:16.569Z",
+  "reused": false,
+  "priorSetupFailure": {
+    "repository": "dapper",
+    "commit": "eb47546a408bbf6c178bda4f04dc205bc51ffbfe",
+    "candidate": "2b7c00f",
+    "startedAt": "2026-10-13T07:11:30.705Z",
+    "reused": false,
+    "command": [
+      "node",
+      "/tmp/lattice-l11-first-impression/bin/lattice.mjs",
+      "export",
+      "/tmp/l11-visual/dapper",
+      "--root",
+      "/tmp/l11-sources/dapper",
+      "--no-lens",
+      "--cache-dir",
+      "/tmp/l11-visual-cache/dapper",
+      "--force",
+      "--json"
+    ],
+    "exitCode": 2,
+    "timedOut": false,
+    "seconds": 0.204090667,
+    "status": "failed",
+    "finishedAt": "2026-10-13T07:11:30.909Z"
+  },
+  "buildCommand": [
+    "node",
+    "/tmp/lattice-l11-first-impression/bin/lattice.mjs",
+    "build",
+    "--root",
+    "/tmp/l11-sources/dapper",
+    "--no-lens",
+    "--cache-dir",
+    "/tmp/l11-visual-cache/dapper",
+    "--json"
+  ],
+  "buildExitCode": 0,
+  "command": [
+    "node",
+    "/tmp/lattice-l11-first-impression/bin/lattice.mjs",
+    "export",
+    "/tmp/l11-visual/dapper",
+    "--root",
+    "/tmp/l11-sources/dapper",
+    "--no-lens",
+    "--cache-dir",
+    "/tmp/l11-visual-cache/dapper",
+    "--force",
+    "--json"
+  ],
+  "exitCode": 0,
+  "timedOut": false,
+  "seconds": 3.489195334,
+  "graphHash": "9d41438f37101a0e98017f7b3b5276c00e89cbeaaaab7d2fb2556f972027ce56",
+  "source": {
+    "name": "Dapper",
+    "dirty": false,
+    "sourceFingerprint": "800f20423ec5217f859ba552d78d7c57306694c19127bd1af22bd129127eec9c",
+    "commit": "eb47546a408bbf6c178bda4f04dc205bc51ffbfe",
+    "remoteUrl": "https://github.com/DapperLib/Dapper"
+  },
+  "status": "ready",
+  "finishedAt": "2026-10-13T07:13:20.059Z"
+}

@@ -1,0 +1,350 @@
+{
+  "repository": "dotnet/runtime",
+  "arm": "map",
+  "commit": "8630d8988107478d249e2fdb8162f8c7dcbd3dbb",
+  "answers": [
+    {
+      "id": "runtime-q1",
+      "answer": "The repository builds .NET execution runtimes, class libraries, shared dotnet host and installers across supported platforms. Managed applications call its library APIs and execute on the runtime. Users launch applications through dotnet or apphost; native applications can load .NET through nethost. Entry hosts locate hostfxr, which resolves frameworks; hostpolicy loads and initializes CoreCLR and invokes the application. These are documented consumers, not a measured inventory of downstream users.",
+      "citations": [
+        {
+          "url": "https://github.com/dotnet/runtime/blob/8630d8988107478d249e2fdb8162f8c7dcbd3dbb/README.md#L14",
+          "lines": "14-22"
+        },
+        {
+          "url": "https://github.com/dotnet/runtime/blob/8630d8988107478d249e2fdb8162f8c7dcbd3dbb/docs/design/features/host-components.md#L4",
+          "lines": "4-27"
+        }
+      ]
+    },
+    {
+      "id": "runtime-q2",
+      "answer": "Principal components: src/coreclr supplies the main execution engine, with GC, type loading, threading and RyuJIT; NativeAOT is also part of CoreCLR. src/mono supplies the runtime for mobile, browser/WebAssembly and WASI workloads. System.Private.CoreLib is the runtime-coupled lowest managed library; src/libraries provides the remaining APIs, including collections, files, reflection and concurrency, not just networking. Native library shims bridge managed code and OS facilities. Hosts resolve/load runtimes and application dependencies; packs/installers package the shared framework. Runtime and library test suites are separate development surfaces.",
+      "citations": [
+        {
+          "url": "https://github.com/dotnet/runtime/blob/8630d8988107478d249e2fdb8162f8c7dcbd3dbb/docs/workflow/README.md#L31",
+          "lines": "31-34"
+        },
+        {
+          "url": "https://github.com/dotnet/runtime/blob/8630d8988107478d249e2fdb8162f8c7dcbd3dbb/docs/workflow/README.md#L50",
+          "lines": "50-55"
+        },
+        {
+          "url": "https://github.com/dotnet/runtime/blob/8630d8988107478d249e2fdb8162f8c7dcbd3dbb/docs/workflow/README.md#L68",
+          "lines": "68-73"
+        },
+        {
+          "url": "https://github.com/dotnet/runtime/blob/8630d8988107478d249e2fdb8162f8c7dcbd3dbb/docs/workflow/README.md#L99",
+          "lines": "99-113"
+        },
+        {
+          "url": "https://github.com/dotnet/runtime/blob/8630d8988107478d249e2fdb8162f8c7dcbd3dbb/docs/design/coreclr/botr/README.md#L10",
+          "lines": "10-25"
+        },
+        {
+          "url": "https://github.com/dotnet/runtime/blob/8630d8988107478d249e2fdb8162f8c7dcbd3dbb/src/mono/README.md#L3",
+          "lines": "3-9"
+        },
+        {
+          "url": "https://github.com/dotnet/runtime/blob/8630d8988107478d249e2fdb8162f8c7dcbd3dbb/docs/design/coreclr/botr/intro-to-clr.md#L20",
+          "lines": "20-22"
+        },
+        {
+          "url": "https://github.com/dotnet/runtime/blob/8630d8988107478d249e2fdb8162f8c7dcbd3dbb/docs/design/coreclr/botr/intro-to-clr.md#L171",
+          "lines": "171-189"
+        },
+        {
+          "url": "https://github.com/dotnet/runtime/blob/8630d8988107478d249e2fdb8162f8c7dcbd3dbb/docs/workflow/building/libraries/README.md#L66",
+          "lines": "66-71"
+        },
+        {
+          "url": "https://github.com/dotnet/runtime/blob/8630d8988107478d249e2fdb8162f8c7dcbd3dbb/docs/design/features/host-components.md#L17",
+          "lines": "17-27"
+        }
+      ]
+    },
+    {
+      "id": "runtime-q3",
+      "answer": "Principal observed language/build boundaries: C# managed libraries/tests (the HTTP implementation is C#); C/C++ execution engines; native library shims; Bash/Windows command entry scripts. build.sh/build.cmd orchestrate subsets clr, mono, libs, host and packs. Managed projects use MSBuild/dotnet build and produce MSIL assemblies/NuGet packages; native shims use CMake/clang-generated Makefiles. OS/architecture/framework/configuration are build pivots, with cross-compilation distinguishing build and target platforms. CoreLib must match its runtime configuration; other libraries can use another configuration. Conditional compilation selects BrowserHttpHandler, WasiHttpHandler or SocketsHttpHandler. This is not an exhaustive language census or proof of map language support.",
+      "citations": [
+        {
+          "url": "https://github.com/dotnet/runtime/blob/8630d8988107478d249e2fdb8162f8c7dcbd3dbb/src/libraries/System.Net.Http/src/System/Net/Http/HttpClient.cs#L4",
+          "lines": "4-14"
+        },
+        {
+          "url": "https://github.com/dotnet/runtime/blob/8630d8988107478d249e2fdb8162f8c7dcbd3dbb/docs/workflow/README.md#L15",
+          "lines": "15-27"
+        },
+        {
+          "url": "https://github.com/dotnet/runtime/blob/8630d8988107478d249e2fdb8162f8c7dcbd3dbb/docs/workflow/README.md#L50",
+          "lines": "50-74"
+        },
+        {
+          "url": "https://github.com/dotnet/runtime/blob/8630d8988107478d249e2fdb8162f8c7dcbd3dbb/docs/workflow/building/libraries/README.md#L66",
+          "lines": "66-75"
+        },
+        {
+          "url": "https://github.com/dotnet/runtime/blob/8630d8988107478d249e2fdb8162f8c7dcbd3dbb/docs/workflow/building/libraries/README.md#L102",
+          "lines": "102-122"
+        },
+        {
+          "url": "https://github.com/dotnet/runtime/blob/8630d8988107478d249e2fdb8162f8c7dcbd3dbb/docs/workflow/building/libraries/README.md#L143",
+          "lines": "143-152"
+        },
+        {
+          "url": "https://github.com/dotnet/runtime/blob/8630d8988107478d249e2fdb8162f8c7dcbd3dbb/src/libraries/System.Net.Http/src/System/Net/Http/HttpClientHandler.cs#L12",
+          "lines": "12-21"
+        }
+      ]
+    },
+    {
+      "id": "runtime-q4",
+      "answer": "Selected entry: public HttpClient.GetAsync(Uri, HttpCompletionOption, CancellationToken) creates a GET HttpRequestMessage and calls HttpClient.SendAsync. That validates/prepares the request and calls base.SendAsync (HttpMessageInvoker), which invokes its supplied HttpMessageHandler. With default HttpClient construction on the evidenced non-browser/non-WASI implementation, HttpClientHandler forwards to SocketsHttpHandler.SendAsync; alternatively the caller can supply a SocketsHttpHandler directly. SocketsHttpHandler validates/normalizes, reuses its chain or schedules SetupHandlerChain, then invokes the first stage. Custom handlers and platform-specific handlers are dispatch boundaries, not unconditional sockets edges.",
+      "citations": [
+        {
+          "url": "https://github.com/dotnet/runtime/blob/8630d8988107478d249e2fdb8162f8c7dcbd3dbb/src/libraries/System.Net.Http/src/System/Net/Http/HttpClient.cs#L132",
+          "lines": "132-143"
+        },
+        {
+          "url": "https://github.com/dotnet/runtime/blob/8630d8988107478d249e2fdb8162f8c7dcbd3dbb/src/libraries/System.Net.Http/src/System/Net/Http/HttpClient.cs#L331",
+          "lines": "331-349"
+        },
+        {
+          "url": "https://github.com/dotnet/runtime/blob/8630d8988107478d249e2fdb8162f8c7dcbd3dbb/src/libraries/System.Net.Http/src/System/Net/Http/HttpClient.cs#L467",
+          "lines": "467-495"
+        },
+        {
+          "url": "https://github.com/dotnet/runtime/blob/8630d8988107478d249e2fdb8162f8c7dcbd3dbb/src/libraries/System.Net.Http/src/System/Net/Http/HttpMessageInvoker.cs#L62",
+          "lines": "62-80"
+        },
+        {
+          "url": "https://github.com/dotnet/runtime/blob/8630d8988107478d249e2fdb8162f8c7dcbd3dbb/src/libraries/System.Net.Http/src/System/Net/Http/HttpClientHandler.cs#L12",
+          "lines": "12-21"
+        },
+        {
+          "url": "https://github.com/dotnet/runtime/blob/8630d8988107478d249e2fdb8162f8c7dcbd3dbb/src/libraries/System.Net.Http/src/System/Net/Http/HttpClientHandler.cs#L62",
+          "lines": "62-71"
+        },
+        {
+          "url": "https://github.com/dotnet/runtime/blob/8630d8988107478d249e2fdb8162f8c7dcbd3dbb/src/libraries/System.Net.Http/src/System/Net/Http/HttpClientHandler.cs#L336",
+          "lines": "336-339"
+        },
+        {
+          "url": "https://github.com/dotnet/runtime/blob/8630d8988107478d249e2fdb8162f8c7dcbd3dbb/src/libraries/System.Net.Http/src/System/Net/Http/SocketsHttpHandler/SocketsHttpHandler.cs#L622",
+          "lines": "622-649"
+        }
+      ]
+    },
+    {
+      "id": "runtime-q5",
+      "answer": "RedirectHandler.RequestRequiresForceGet implements the decision: 300/301/302 rewrite POST only; 303 rewrites methods other than GET/HEAD; other statuses do not force GET. RedirectHandler.SendAsync applies it by assigning GET, clearing Content and disabling TransferEncodingChunked when set.",
+      "citations": [
+        {
+          "url": "https://github.com/dotnet/runtime/blob/8630d8988107478d249e2fdb8162f8c7dcbd3dbb/src/libraries/System.Net.Http/src/System/Net/Http/SocketsHttpHandler/RedirectHandler.cs#L56",
+          "lines": "56-69"
+        },
+        {
+          "url": "https://github.com/dotnet/runtime/blob/8630d8988107478d249e2fdb8162f8c7dcbd3dbb/src/libraries/System.Net.Http/src/System/Net/Http/SocketsHttpHandler/RedirectHandler.cs#L141",
+          "lines": "141-153"
+        }
+      ]
+    },
+    {
+      "id": "runtime-q6",
+      "answer": "SetupHandlerChain directly clones/normalizes HttpConnectionSettings, constructs HttpConnectionPoolManager and HttpConnectionHandler, conditionally wraps MetricsHandler (also SocketsHttpHandlerMetrics), DiagnosticsHandler and RedirectHandler, and invokes the decompression factory when configured. The separate EnsureDecompressionHandlerFactory creates DecompressionHandler through that delegate: a factory edge, not a direct constructor call inside SetupHandlerChain. Outward-to-inward order is decompression → redirect → diagnostics → metrics → connection handler, omitting disabled stages. It atomically installs _handler with Interlocked.CompareExchange and disposes a losing chain.",
+      "citations": [
+        {
+          "url": "https://github.com/dotnet/runtime/blob/8630d8988107478d249e2fdb8162f8c7dcbd3dbb/src/libraries/System.Net.Http/src/System/Net/Http/SocketsHttpHandler/SocketsHttpHandler.cs#L546",
+          "lines": "546-590"
+        }
+      ]
+    },
+    {
+      "id": "runtime-q7",
+      "answer": "For an allowed 302 within the redirect limit: HttpClient.PostAsync creates the POST/content request, then the q4 send path reaches RedirectHandler and its inner stages. HttpConnectionHandler delegates to HttpConnectionPoolManager; it chooses an endpoint/proxy pool, whose authentication/version/retry path sends through the selected connection. On return, RedirectHandler disposes the 302, clears Authorization, replaces RequestUri, rewrites POST to GET, removes content/chunking, optionally disables authentication, and resends through its inner chain. The final response is returned; 200 is not guaranteed. Negotiated protocol, proxies, credentials, pooling and network responses remain dynamic.",
+      "citations": [
+        {
+          "url": "https://github.com/dotnet/runtime/blob/8630d8988107478d249e2fdb8162f8c7dcbd3dbb/src/libraries/System.Net.Http/src/System/Net/Http/HttpClient.cs#L351",
+          "lines": "351-362"
+        },
+        {
+          "url": "https://github.com/dotnet/runtime/blob/8630d8988107478d249e2fdb8162f8c7dcbd3dbb/src/libraries/System.Net.Http/src/System/Net/Http/SocketsHttpHandler/HttpConnectionHandler.cs#L13",
+          "lines": "13-21"
+        },
+        {
+          "url": "https://github.com/dotnet/runtime/blob/8630d8988107478d249e2fdb8162f8c7dcbd3dbb/src/libraries/System.Net.Http/src/System/Net/Http/SocketsHttpHandler/HttpConnectionPoolManager.cs#L326",
+          "lines": "326-411"
+        },
+        {
+          "url": "https://github.com/dotnet/runtime/blob/8630d8988107478d249e2fdb8162f8c7dcbd3dbb/src/libraries/System.Net.Http/src/System/Net/Http/SocketsHttpHandler/ConnectionPool/HttpConnectionPool.cs#L317",
+          "lines": "317-456"
+        },
+        {
+          "url": "https://github.com/dotnet/runtime/blob/8630d8988107478d249e2fdb8162f8c7dcbd3dbb/src/libraries/System.Net.Http/src/System/Net/Http/SocketsHttpHandler/RedirectHandler.cs#L24",
+          "lines": "24-80"
+        }
+      ]
+    },
+    {
+      "id": "runtime-q8",
+      "answer": "The evidenced direct construction consumer is SocketsHttpHandler.SetupHandlerChain. When automatic redirects are enabled, it passes the maximum redirect count, current inner stage and disableAuthOnRedirect = credentials is not CredentialCache. A constructor change therefore directly affects this call site; semantics affect requests traversing the installed stage. This is one proven consumer, not an exhaustive caller claim.",
+      "citations": [
+        {
+          "url": "https://github.com/dotnet/runtime/blob/8630d8988107478d249e2fdb8162f8c7dcbd3dbb/src/libraries/System.Net.Http/src/System/Net/Http/SocketsHttpHandler/SocketsHttpHandler.cs#L565",
+          "lines": "565-570"
+        },
+        {
+          "url": "https://github.com/dotnet/runtime/blob/8630d8988107478d249e2fdb8162f8c7dcbd3dbb/src/libraries/System.Net.Http/src/System/Net/Http/SocketsHttpHandler/RedirectHandler.cs#L15",
+          "lines": "15-22"
+        }
+      ]
+    },
+    {
+      "id": "runtime-q9",
+      "answer": "HttpClientHandlerTest_AutoRedirect.AllowAutoRedirect_True_ValidateNewMethodUsedOnRedirection uses RedirectStatusCodesOldMethodsNewMethods for GET/HEAD/POST/DELETE/OPTIONS/PATCH/PUT/custom methods across 300/301/302/303/307/308. AllowAutoRedirect_True_PostToGetDoesNotSendTE verifies rewritten GET lacks Transfer-Encoding and Content-Length for 300–303. Both use real loopback exchanges and client.SendAsync(TestAsync, request), not direct calls to the private predicate. SocketsHttpHandlerTest_AutoRedirect inherits these tests; SyncHttpHandlerTest_AutoRedirect runs them with TestAsync=false. Factories build HttpClientHandler and HttpClient; the extension selects public SendAsync or Send, then the q4 chain enters RedirectHandler via HttpMessageHandlerStage. Tests were read, not executed.",
+      "citations": [
+        {
+          "url": "https://github.com/dotnet/runtime/blob/8630d8988107478d249e2fdb8162f8c7dcbd3dbb/src/libraries/Common/tests/System/Net/Http/HttpClientHandlerTest.AutoRedirect.cs#L20",
+          "lines": "20-129"
+        },
+        {
+          "url": "https://github.com/dotnet/runtime/blob/8630d8988107478d249e2fdb8162f8c7dcbd3dbb/src/libraries/System.Net.Http/tests/FunctionalTests/SocketsHttpHandlerTest.cs#L1379",
+          "lines": "1379-1384"
+        },
+        {
+          "url": "https://github.com/dotnet/runtime/blob/8630d8988107478d249e2fdb8162f8c7dcbd3dbb/src/libraries/System.Net.Http/tests/FunctionalTests/SyncHttpHandlerTest.cs#L47",
+          "lines": "47-54"
+        },
+        {
+          "url": "https://github.com/dotnet/runtime/blob/8630d8988107478d249e2fdb8162f8c7dcbd3dbb/src/libraries/System.Net.Http/tests/FunctionalTests/HttpClientHandlerTestBase.SocketsHttpHandler.cs#L45",
+          "lines": "45-62"
+        },
+        {
+          "url": "https://github.com/dotnet/runtime/blob/8630d8988107478d249e2fdb8162f8c7dcbd3dbb/src/libraries/Common/tests/System/Net/Http/HttpClientHandlerTestBase.cs#L47",
+          "lines": "47-52"
+        },
+        {
+          "url": "https://github.com/dotnet/runtime/blob/8630d8988107478d249e2fdb8162f8c7dcbd3dbb/src/libraries/Common/tests/System/Net/Http/HttpClientHandlerTestBase.cs#L134",
+          "lines": "134-152"
+        },
+        {
+          "url": "https://github.com/dotnet/runtime/blob/8630d8988107478d249e2fdb8162f8c7dcbd3dbb/src/libraries/System.Net.Http/src/System/Net/Http/SocketsHttpHandler/HttpMessageHandlerStage.cs#L8",
+          "lines": "8-21"
+        },
+        {
+          "url": "https://github.com/dotnet/runtime/blob/8630d8988107478d249e2fdb8162f8c7dcbd3dbb/src/libraries/System.Net.Http/src/System/Net/Http/SocketsHttpHandler/RedirectHandler.cs#L24",
+          "lines": "24-30"
+        }
+      ]
+    },
+    {
+      "id": "runtime-q10",
+      "answer": "For evidenced HTTP/1.x ingress, HttpConnection parses response bytes with ParseHeaders/Core, splits name/value, calls AddResponseHeader, trims whitespace and stores decoded values in response.Headers via TryAddWithoutValidation. KnownHeaders.Location selects UriHeaderParser.RelativeOrAbsoluteUriParser; HttpResponseHeaders.Location calls GetSingleParsedValue, which triggers lazy parsing. UriHeaderParser uses Uri.TryCreate, with a UTF-8 recovery attempt. RedirectHandler then resolves relative Location against the request URI, inherits a missing fragment, rejects secure-to-insecure/unsupported schemes, and assigns the accepted URI to request.RequestUri for resend. Missing Location prevents following. HTTP/2 and HTTP/3 wire ingress was not traced.",
+      "citations": [
+        {
+          "url": "https://github.com/dotnet/runtime/blob/8630d8988107478d249e2fdb8162f8c7dcbd3dbb/src/libraries/System.Net.Http/src/System/Net/Http/SocketsHttpHandler/HttpConnection.cs#L643",
+          "lines": "643-646"
+        },
+        {
+          "url": "https://github.com/dotnet/runtime/blob/8630d8988107478d249e2fdb8162f8c7dcbd3dbb/src/libraries/System.Net.Http/src/System/Net/Http/SocketsHttpHandler/HttpConnection.cs#L1020",
+          "lines": "1020-1191"
+        },
+        {
+          "url": "https://github.com/dotnet/runtime/blob/8630d8988107478d249e2fdb8162f8c7dcbd3dbb/src/libraries/System.Net.Http/src/System/Net/Http/Headers/KnownHeaders.cs#L65",
+          "lines": "65-65"
+        },
+        {
+          "url": "https://github.com/dotnet/runtime/blob/8630d8988107478d249e2fdb8162f8c7dcbd3dbb/src/libraries/System.Net.Http/src/System/Net/Http/Headers/HttpResponseHeaders.cs#L42",
+          "lines": "42-45"
+        },
+        {
+          "url": "https://github.com/dotnet/runtime/blob/8630d8988107478d249e2fdb8162f8c7dcbd3dbb/src/libraries/System.Net.Http/src/System/Net/Http/Headers/HttpHeaders.cs#L733",
+          "lines": "733-748"
+        },
+        {
+          "url": "https://github.com/dotnet/runtime/blob/8630d8988107478d249e2fdb8162f8c7dcbd3dbb/src/libraries/System.Net.Http/src/System/Net/Http/Headers/HttpHeaders.cs#L964",
+          "lines": "964-971"
+        },
+        {
+          "url": "https://github.com/dotnet/runtime/blob/8630d8988107478d249e2fdb8162f8c7dcbd3dbb/src/libraries/System.Net.Http/src/System/Net/Http/Headers/UriHeaderParser.cs#L16",
+          "lines": "16-51"
+        },
+        {
+          "url": "https://github.com/dotnet/runtime/blob/8630d8988107478d249e2fdb8162f8c7dcbd3dbb/src/libraries/System.Net.Http/src/System/Net/Http/SocketsHttpHandler/RedirectHandler.cs#L82",
+          "lines": "82-139"
+        },
+        {
+          "url": "https://github.com/dotnet/runtime/blob/8630d8988107478d249e2fdb8162f8c7dcbd3dbb/src/libraries/System.Net.Http/src/System/Net/Http/SocketsHttpHandler/RedirectHandler.cs#L56",
+          "lines": "56-57"
+        }
+      ]
+    }
+  ],
+  "toolErrors": [
+    {
+      "tool": "allowlisted MCP catalog wrapper",
+      "command": "node /tmp/l11-evaluation/mcp-query.mjs runtime list",
+      "exitCode": 1,
+      "error": "MCP session not prepared by coordinator; no automatic analysis is started in a trial."
+    },
+    {
+      "tool": "coordinator availability report",
+      "error": "Prompt reports frozen candidate failed to complete exported map within prior 20-minute startup limit, and one MCP preparation failed with Tool execution failed/freshness unknown. Not independently rerun."
+    },
+    {
+      "tool": "web.open",
+      "url": "https://raw.githubusercontent.com/dotnet/runtime/8630d8988107478d249e2fdb8162f8c7dcbd3dbb/docs/project/guide.md",
+      "error": "Internal Error"
+    },
+    {
+      "tool": "web.open",
+      "url": "https://raw.githubusercontent.com/dotnet/runtime/8630d8988107478d249e2fdb8162f8c7dcbd3dbb/src/libraries/System.Net.Http/tests/FunctionalTests/HttpClientHandlerTest.AutoRedirect.cs",
+      "error": "Internal Error; correct shared test source subsequently found under Common/tests."
+    },
+    {
+      "tool": "web.open",
+      "url": "https://github.com/dotnet/runtime/tree/8630d8988107478d249e2fdb8162f8c7dcbd3dbb/src/libraries/System.Net.Http/tests/FunctionalTests",
+      "error": "Failed to fetch restricted URL"
+    },
+    {
+      "tool": "web.open",
+      "url": "https://raw.githubusercontent.com/dotnet/runtime/8630d8988107478d249e2fdb8162f8c7dcbd3dbb/src/libraries/System.Net.Http/tests/FunctionalTests/HttpClientHandlerTest.cs",
+      "error": "404 Not Found"
+    },
+    {
+      "tool": "web.open",
+      "url": "https://raw.githubusercontent.com/dotnet/runtime/8630d8988107478d249e2fdb8162f8c7dcbd3dbb/src/native/corehost/README.md",
+      "error": "404 Not Found"
+    },
+    {
+      "tool": "web.open",
+      "url": "https://raw.githubusercontent.com/dotnet/runtime/8630d8988107478d249e2fdb8162f8c7dcbd3dbb/src/libraries/System.Net.Http/tests/FunctionalTests/HttpClientHandlerTestBase.cs",
+      "error": "404 Not Found"
+    },
+    {
+      "tool": "web.open",
+      "url": "https://raw.githubusercontent.com/dotnet/runtime/8630d8988107478d249e2fdb8162f8c7dcbd3dbb/src/coreclr/jit/README.md",
+      "error": "404 Not Found"
+    },
+    {
+      "tool": "web.open",
+      "url": "https://raw.githubusercontent.com/dotnet/runtime/8630d8988107478d249e2fdb8162f8c7dcbd3dbb/src/coreclr/gc/README.md",
+      "error": "404 Not Found"
+    },
+    {
+      "tool": "web.open",
+      "url": "https://raw.githubusercontent.com/dotnet/runtime/8630d8988107478d249e2fdb8162f8c7dcbd3dbb/src/coreclr/tools/aot/README.md",
+      "error": "Internal Error"
+    }
+  ],
+  "limitations": [
+    "Partial map screenshot inspected at the specifically allowed /tmp/l11-visual/runtime/partial.png. It shows startup inventory (58,427 files) and a README excerpt, explicitly says dependency/entrypoint/flow analysis is pending. It is not a complete map and supplied no verified call graph.",
+    "No prepared MCP runtime session; availability failure retained. No preparation/admin routes or target builds executed.",
+    "All substantive repository conclusions come from pinned raw.githubusercontent.com sources; citations use corresponding pinned GitHub blob URLs and one-based source lines.",
+    "Static source-supported paths only. No tests/builds/network scenarios executed; no proof of runtime coverage, exhaustive reverse callers, all languages, or map parser support.",
+    "HTTP protocol negotiation, callback behavior, proxies, credentials and supplied handler chains are dynamic boundaries. The wire-level Location trace is limited to HTTP/1.x.",
+    "Authoritative token telemetry unavailable; no estimated token count reported as measured."
+  ],
+  "selfReportedStartedAt": "2026-10-13T07:39:12Z",
+  "selfReportedFinishedAt": "2026-10-13T07:44:50Z"
+}

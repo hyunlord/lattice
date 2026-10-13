@@ -1,0 +1,240 @@
+{
+  "repository": "excalidraw/excalidraw",
+  "arm": "map",
+  "commit": "e65eca999e071503efb893d3379a29fb96ff37c4",
+  "answers": [
+    {
+      "id": "excalidraw-q1",
+      "answer": "An open-source, hand-drawn-style infinite whiteboard for diagrams and wireframes, with drawing tools, images, shape libraries, undo/redo and PNG/SVG/JSON export. Excalidraw.com is the repository's hosted showcase, adding offline PWA, real-time encrypted collaboration, browser autosave and sharing. Developers embed the React npm package; the pinned README lists Google Cloud, Meta, CodeSandbox, Obsidian Excalidraw, Replit, Slite, Notion and HackerRank as integrators. These are repository claims at the pin, not independently verified current deployments.",
+      "citations": [
+        {
+          "url": "https://github.com/excalidraw/excalidraw/blob/e65eca999e071503efb893d3379a29fb96ff37c4/README.md#L15",
+          "lines": "15-110"
+        }
+      ]
+    },
+    {
+      "id": "excalidraw-q2",
+      "answer": "Principal boundaries: excalidraw-app is the hosted application's integration layer, including collaboration and local persistence; packages/excalidraw is the reusable React editor and public API; packages/element owns element-related logic; common supplies shared functions/constants; math supplies geometry/math; utils supplies utilities, including export; fractional-indexing generates ordering strings; laser-pointer generates pointer outlines. dev-docs is the documentation app and examples contains integration demonstrations. These are logical/source/package responsibilities, not separate server processes.",
+      "citations": [
+        {
+          "url": "https://github.com/excalidraw/excalidraw/blob/e65eca999e071503efb893d3379a29fb96ff37c4/README.md#L64",
+          "lines": "64-85"
+        },
+        {
+          "url": "https://github.com/excalidraw/excalidraw/blob/e65eca999e071503efb893d3379a29fb96ff37c4/packages/excalidraw/package.json#L1",
+          "lines": "1-41"
+        },
+        {
+          "url": "https://github.com/excalidraw/excalidraw/blob/e65eca999e071503efb893d3379a29fb96ff37c4/packages/element/package.json#L1",
+          "lines": "1-31"
+        },
+        {
+          "url": "https://github.com/excalidraw/excalidraw/blob/e65eca999e071503efb893d3379a29fb96ff37c4/packages/common/package.json#L1",
+          "lines": "1-25"
+        },
+        {
+          "url": "https://github.com/excalidraw/excalidraw/blob/e65eca999e071503efb893d3379a29fb96ff37c4/packages/math/package.json#L1",
+          "lines": "1-25"
+        },
+        {
+          "url": "https://github.com/excalidraw/excalidraw/blob/e65eca999e071503efb893d3379a29fb96ff37c4/packages/utils/package.json#L1",
+          "lines": "1-22"
+        },
+        {
+          "url": "https://github.com/excalidraw/excalidraw/blob/e65eca999e071503efb893d3379a29fb96ff37c4/packages/fractional-indexing/package.json#L1",
+          "lines": "1-45"
+        },
+        {
+          "url": "https://github.com/excalidraw/excalidraw/blob/e65eca999e071503efb893d3379a29fb96ff37c4/packages/laser-pointer/package.json#L1",
+          "lines": "1-34"
+        },
+        {
+          "url": "https://github.com/excalidraw/excalidraw/blob/e65eca999e071503efb893d3379a29fb96ff37c4/dev-docs/package.json#L1",
+          "lines": "1-28"
+        },
+        {
+          "url": "https://github.com/excalidraw/excalidraw/blob/e65eca999e071503efb893d3379a29fb96ff37c4/package.json#L1",
+          "lines": "1-9"
+        }
+      ]
+    },
+    {
+      "id": "excalidraw-q3",
+      "answer": "A TypeScript/TSX React monorepo, with JavaScript build/configuration scripts and Sass/CSS styling. Yarn 1.22.22 workspaces cover excalidraw-app, packages/* and examples/*. The app uses React 19 and Vite; the reusable editor supports React 17/18/19 peers, builds ESM dev/prod bundles through esbuild plus Sass, and generates declaration files with tsc. Vitest, ESLint and Prettier provide test/check tooling. dev-docs is a separate Docusaurus package. Package exports distinguish runtime bundles, types and stylesheet entrypoints.",
+      "citations": [
+        {
+          "url": "https://github.com/excalidraw/excalidraw/blob/e65eca999e071503efb893d3379a29fb96ff37c4/package.json#L1",
+          "lines": "1-91"
+        },
+        {
+          "url": "https://github.com/excalidraw/excalidraw/blob/e65eca999e071503efb893d3379a29fb96ff37c4/excalidraw-app/package.json#L28",
+          "lines": "28-52"
+        },
+        {
+          "url": "https://github.com/excalidraw/excalidraw/blob/e65eca999e071503efb893d3379a29fb96ff37c4/packages/excalidraw/package.json#L1",
+          "lines": "1-33"
+        },
+        {
+          "url": "https://github.com/excalidraw/excalidraw/blob/e65eca999e071503efb893d3379a29fb96ff37c4/packages/excalidraw/package.json#L72",
+          "lines": "72-78"
+        },
+        {
+          "url": "https://github.com/excalidraw/excalidraw/blob/e65eca999e071503efb893d3379a29fb96ff37c4/scripts/buildPackage.js#L1",
+          "lines": "1-122"
+        },
+        {
+          "url": "https://github.com/excalidraw/excalidraw/blob/e65eca999e071503efb893d3379a29fb96ff37c4/dev-docs/package.json#L1",
+          "lines": "1-34"
+        }
+      ]
+    },
+    {
+      "id": "excalidraw-q4",
+      "answer": "Consumers import { restoreElements } from '@excalidraw/excalidraw'. The public index.tsx re-exports it from ./data/restore; implementation begins at restoreElements in packages/excalidraw/data/restore.ts. The package's root export resolves to built dist/dev or dist/prod/index.js, with declaration types. The documentation demonstrates that import, but its options table is not authoritative for the current implementation.",
+      "citations": [
+        {
+          "url": "https://github.com/excalidraw/excalidraw/blob/e65eca999e071503efb893d3379a29fb96ff37c4/dev-docs/docs/@excalidraw/excalidraw/api/utils/restore.mdx#L21",
+          "lines": "21-60"
+        },
+        {
+          "url": "https://github.com/excalidraw/excalidraw/blob/e65eca999e071503efb893d3379a29fb96ff37c4/packages/excalidraw/index.tsx#L411",
+          "lines": "411-423"
+        },
+        {
+          "url": "https://github.com/excalidraw/excalidraw/blob/e65eca999e071503efb893d3379a29fb96ff37c4/packages/excalidraw/package.json#L27",
+          "lines": "27-33"
+        },
+        {
+          "url": "https://github.com/excalidraw/excalidraw/blob/e65eca999e071503efb893d3379a29fb96ff37c4/packages/excalidraw/data/restore.ts#L946",
+          "lines": "946-960"
+        }
+      ]
+    },
+    {
+      "id": "excalidraw-q5",
+      "answer": "packages/element/src/sizeHelpers.ts implements isInvisiblySmallElement. Linear or freedraw elements qualify with fewer than two points. A two-point arrow also qualifies when both coordinate differences are strictly less than 0.1, through pointsEqual. Other elements qualify only when width === 0 AND height === 0. Thus a rectangle with just one zero dimension does not qualify; tiny nonzero rectangles do not qualify, and the close-endpoint exception does not apply to lines/freedraw or arrows with more than two points.",
+      "citations": [
+        {
+          "url": "https://github.com/excalidraw/excalidraw/blob/e65eca999e071503efb893d3379a29fb96ff37c4/packages/element/src/sizeHelpers.ts#L57",
+          "lines": "57-78"
+        },
+        {
+          "url": "https://github.com/excalidraw/excalidraw/blob/e65eca999e071503efb893d3379a29fb96ff37c4/packages/math/src/point.ts#L108",
+          "lines": "108-115"
+        }
+      ]
+    },
+    {
+      "id": "excalidraw-q6",
+      "answer": "@excalidraw/element directly declares @excalidraw/common 0.18.0, @excalidraw/math 0.18.0 and @excalidraw/fractional-indexing 3.3.0. Its own package.json dependencies object proves element → those packages, not the reverse. Imports/type references and broader graph cycles are different evidence from direct manifest dependencies.",
+      "citations": [
+        {
+          "url": "https://github.com/excalidraw/excalidraw/blob/e65eca999e071503efb893d3379a29fb96ff37c4/packages/element/package.json#L65",
+          "lines": "65-69"
+        }
+      ]
+    },
+    {
+      "id": "excalidraw-q7",
+      "answer": "Public re-export → restoreElements → reduction callback → restoreElement → rectangle branch → restoreElementWithProperties. After migration, the predicate checks the ORIGINAL rectangle; zero width and height plus the true option causes bumpVersion, then isDeleted=true. The object remains in the array; indices are synchronized. Without repairBindings, that array returns directly. Selection/unsupported/failed restoration have separate exclusion paths. This crosses editor → element helpers, not a network boundary. bumpVersion changes version, nonce and timestamp; it does not render. This is a source-derived path, not an executed UI/collaboration trace.",
+      "citations": [
+        {
+          "url": "https://github.com/excalidraw/excalidraw/blob/e65eca999e071503efb893d3379a29fb96ff37c4/packages/excalidraw/index.tsx#L415",
+          "lines": "415-423"
+        },
+        {
+          "url": "https://github.com/excalidraw/excalidraw/blob/e65eca999e071503efb893d3379a29fb96ff37c4/packages/excalidraw/data/restore.ts#L430",
+          "lines": "430-515"
+        },
+        {
+          "url": "https://github.com/excalidraw/excalidraw/blob/e65eca999e071503efb893d3379a29fb96ff37c4/packages/excalidraw/data/restore.ts#L725",
+          "lines": "725-752"
+        },
+        {
+          "url": "https://github.com/excalidraw/excalidraw/blob/e65eca999e071503efb893d3379a29fb96ff37c4/packages/excalidraw/data/restore.ts#L946",
+          "lines": "946-1019"
+        },
+        {
+          "url": "https://github.com/excalidraw/excalidraw/blob/e65eca999e071503efb893d3379a29fb96ff37c4/packages/element/src/sizeHelpers.ts#L61",
+          "lines": "61-78"
+        },
+        {
+          "url": "https://github.com/excalidraw/excalidraw/blob/e65eca999e071503efb893d3379a29fb96ff37c4/packages/element/src/mutateElement.ts#L182",
+          "lines": "182-196"
+        }
+      ]
+    },
+    {
+      "id": "excalidraw-q8",
+      "answer": "restore.ts directly imports/calls Y in the option-gated deletion condition. element/src/index.ts directly imports Y, calls it in getVisibleElements after the nondeleted check, and re-exports sizeHelpers. Changing Y can alter restoration deletion and visible-element filtering; downstream rendering, export, persistence or collaboration effects require additional caller/runtime evidence and are only inferred here. The map's empty caller result is not evidence of no consumers.",
+      "citations": [
+        {
+          "url": "https://github.com/excalidraw/excalidraw/blob/e65eca999e071503efb893d3379a29fb96ff37c4/packages/excalidraw/data/restore.ts#L80",
+          "lines": "80-91"
+        },
+        {
+          "url": "https://github.com/excalidraw/excalidraw/blob/e65eca999e071503efb893d3379a29fb96ff37c4/packages/excalidraw/data/restore.ts#L966",
+          "lines": "966-1009"
+        },
+        {
+          "url": "https://github.com/excalidraw/excalidraw/blob/e65eca999e071503efb893d3379a29fb96ff37c4/packages/element/src/index.ts#L1",
+          "lines": "1-57"
+        },
+        {
+          "url": "https://github.com/excalidraw/excalidraw/blob/e65eca999e071503efb893d3379a29fb96ff37c4/packages/element/src/index.ts#L85",
+          "lines": "85-100"
+        }
+      ]
+    },
+    {
+      "id": "excalidraw-q9",
+      "answer": "packages/excalidraw/tests/data/restore.test.ts contains 'should return empty array when isInvisiblySmallElement is true'. It creates a rectangle, replaces the spied predicate with an always-true implementation, enables deleteInvisibleElements, and expects one object containing isDeleted:true. The test name is misleading: the assertion retains the object. It proves the restoration response to a true predicate, not actual rectangle geometry or the 0.1 arrow threshold. The suite resets the spy before each test and restores it after all tests. No test was executed in this evaluation.",
+      "citations": [
+        {
+          "url": "https://github.com/excalidraw/excalidraw/blob/e65eca999e071503efb893d3379a29fb96ff37c4/packages/excalidraw/tests/data/restore.test.ts#L41",
+          "lines": "41-51"
+        },
+        {
+          "url": "https://github.com/excalidraw/excalidraw/blob/e65eca999e071503efb893d3379a29fb96ff37c4/packages/excalidraw/tests/data/restore.test.ts#L143",
+          "lines": "143-152"
+        }
+      ]
+    },
+    {
+      "id": "excalidraw-q10",
+      "answer": "Z enters as the optional third-argument field on restoreElements and is forwarded to restoreElement. In the reducer, Z && isInvisiblySmallElement(originalElement) becomes shouldMarkAsDeleted, triggering a version bump and isDeleted:true on the migrated object. Omission/false skips this predicate. Separately, restoreElement uses Z to delete empty, nondeleted text.",
+      "citations": [
+        {
+          "url": "https://github.com/excalidraw/excalidraw/blob/e65eca999e071503efb893d3379a29fb96ff37c4/packages/excalidraw/data/restore.ts#L946",
+          "lines": "946-1009"
+        },
+        {
+          "url": "https://github.com/excalidraw/excalidraw/blob/e65eca999e071503efb893d3379a29fb96ff37c4/packages/excalidraw/data/restore.ts#L517",
+          "lines": "517-531"
+        },
+        {
+          "url": "https://github.com/excalidraw/excalidraw/blob/e65eca999e071503efb893d3379a29fb96ff37c4/packages/excalidraw/data/restore.ts#L583",
+          "lines": "583-590"
+        }
+      ]
+    }
+  ],
+  "toolErrors": [
+    "Initial overview.json shell output was truncated; smaller subsequent requests were used.",
+    "A lattice_find restore.test response exceeded the shell output limit; JSON.parse failed with Unexpected token 'W' from the truncation warning. Retried with kind=module and a smaller limit.",
+    "GitHub blob access for pinned packages/excalidraw/data/restore.ts returned Internal Error; pinned raw content was accessible.",
+    "Guessed pinned packages/excalidraw/tests/restore.test.ts returned HTTP 404; map discovery located packages/excalidraw/tests/data/restore.test.ts successfully."
+  ],
+  "limitations": [
+    "Read-only static evaluation; no builds, tests, browser application execution or product implementation.",
+    "Lattice exact static callers for isInvisiblySmallElement were empty despite direct source consumers; graph absence was not treated as absence of calls.",
+    "Map exported:false metadata conflicts with visible export const declarations for inspected helpers; pinned source takes precedence.",
+    "Web raw rendering line numbers omit some source whitespace; citations use map-provided original definition spans where available, and encompassing source ranges elsewhere.",
+    "Paginated map node requests apply offset to nested source collections too; some later pages exposed IDs without source previews, recovered with exact-node requests where needed.",
+    "Authoritative token telemetry unavailable; no measured token estimate supplied.",
+    "selfReportedStartedAt is the first clock observation immediately after reading the supplied prompt, not authoritative delivery telemetry."
+  ],
+  "selfReportedStartedAt": "2026-10-13 07:30:38 UTC",
+  "selfReportedFinishedAt": "2026-10-13 07:35:17 UTC"
+}

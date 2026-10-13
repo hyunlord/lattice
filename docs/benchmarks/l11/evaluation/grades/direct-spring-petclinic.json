@@ -1,0 +1,297 @@
+{
+  "repository": "spring-projects/spring-petclinic",
+  "commit": "500158f732419217507c7656904b8e6aa1bcc0d6",
+  "arm": "direct",
+  "gradedBy": "independent fresh grader direct-spring-godot",
+  "answerSha256": "2bbf944ae75b26f879eac77af4738d7425ee8c55b76ed2d156c3533e98f1eff2",
+  "questions": [
+    {
+      "id": "q01",
+      "score": 2,
+      "reason": "Correctly describes the runnable Spring Boot clinic workflows, Maven/Gradle launchers and browser callers.",
+      "sourceReferences": [
+        {
+          "path": "README.md",
+          "startLine": 14,
+          "endLine": 36,
+          "commit": "500158f732419217507c7656904b8e6aa1bcc0d6"
+        },
+        {
+          "path": "src/main/java/org/springframework/samples/petclinic/owner/OwnerController.java",
+          "startLine": 89,
+          "endLine": 107,
+          "commit": "500158f732419217507c7656904b8e6aa1bcc0d6"
+        },
+        {
+          "path": "src/main/java/org/springframework/samples/petclinic/vet/VetController.java",
+          "startLine": 45,
+          "endLine": 54,
+          "commit": "500158f732419217507c7656904b8e6aa1bcc0d6"
+        },
+        {
+          "path": "src/main/java/org/springframework/samples/petclinic/owner/PetController.java",
+          "startLine": 48,
+          "endLine": 59,
+          "commit": "500158f732419217507c7656904b8e6aa1bcc0d6"
+        }
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "q02",
+      "score": 2,
+      "reason": "Covers owner/pet/visit persistence and web workflows, vet, shared model and system responsibilities within the application.",
+      "sourceReferences": [
+        {
+          "path": "src/main/java/org/springframework/samples/petclinic/owner/OwnerController.java",
+          "startLine": 48,
+          "endLine": 57,
+          "commit": "500158f732419217507c7656904b8e6aa1bcc0d6"
+        },
+        {
+          "path": "src/main/java/org/springframework/samples/petclinic/owner/PetController.java",
+          "startLine": 48,
+          "endLine": 59,
+          "commit": "500158f732419217507c7656904b8e6aa1bcc0d6"
+        },
+        {
+          "path": "src/main/java/org/springframework/samples/petclinic/owner/VisitController.java",
+          "startLine": 42,
+          "endLine": 49,
+          "commit": "500158f732419217507c7656904b8e6aa1bcc0d6"
+        },
+        {
+          "path": "src/main/java/org/springframework/samples/petclinic/owner/OwnerRepository.java",
+          "startLine": 36,
+          "endLine": 45,
+          "commit": "500158f732419217507c7656904b8e6aa1bcc0d6"
+        },
+        {
+          "path": "src/main/java/org/springframework/samples/petclinic/vet/VetController.java",
+          "startLine": 45,
+          "endLine": 62,
+          "commit": "500158f732419217507c7656904b8e6aa1bcc0d6"
+        },
+        {
+          "path": "src/main/java/org/springframework/samples/petclinic/model/package-info.java",
+          "startLine": 17,
+          "endLine": 20,
+          "commit": "500158f732419217507c7656904b8e6aa1bcc0d6"
+        },
+        {
+          "path": "src/main/java/org/springframework/samples/petclinic/system/WelcomeController.java",
+          "startLine": 22,
+          "endLine": 28,
+          "commit": "500158f732419217507c7656904b8e6aa1bcc0d6"
+        }
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "q03",
+      "score": 2,
+      "reason": "Correct Java 17, Maven/Gradle, Boot 4.1.0, MVC/JPA/Thymeleaf and same-application package boundaries.",
+      "sourceReferences": [
+        {
+          "path": "pom.xml",
+          "startLine": 5,
+          "endLine": 20,
+          "commit": "500158f732419217507c7656904b8e6aa1bcc0d6"
+        },
+        {
+          "path": "pom.xml",
+          "startLine": 50,
+          "endLine": 64,
+          "commit": "500158f732419217507c7656904b8e6aa1bcc0d6"
+        },
+        {
+          "path": "README.md",
+          "startLine": 14,
+          "endLine": 33,
+          "commit": "500158f732419217507c7656904b8e6aa1bcc0d6"
+        },
+        {
+          "path": "src/main/java/org/springframework/samples/petclinic/owner/OwnerController.java",
+          "startLine": 94,
+          "endLine": 96,
+          "commit": "500158f732419217507c7656904b8e6aa1bcc0d6"
+        }
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "q04",
+      "score": 1,
+      "reason": "Correct main and SpringApplication.run bootstrap with framework dispatch boundary, but substitutes the welcome route for the frozen required /owners -> processFindForm entry connection.",
+      "sourceReferences": [
+        {
+          "path": "src/main/java/org/springframework/samples/petclinic/PetClinicApplication.java",
+          "startLine": 28,
+          "endLine": 34,
+          "commit": "500158f732419217507c7656904b8e6aa1bcc0d6"
+        },
+        {
+          "path": "src/main/java/org/springframework/samples/petclinic/owner/OwnerController.java",
+          "startLine": 94,
+          "endLine": 96,
+          "commit": "500158f732419217507c7656904b8e6aa1bcc0d6"
+        }
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "q05",
+      "score": 1,
+      "reason": "Correct repository declaration, prefix semantics, helper consumer and generated JPA boundary; omits processFindForm normalization and the helper five-entry page required by this question reference.",
+      "sourceReferences": [
+        {
+          "path": "src/main/java/org/springframework/samples/petclinic/owner/OwnerController.java",
+          "startLine": 94,
+          "endLine": 107,
+          "commit": "500158f732419217507c7656904b8e6aa1bcc0d6"
+        },
+        {
+          "path": "src/main/java/org/springframework/samples/petclinic/owner/OwnerController.java",
+          "startLine": 141,
+          "endLine": 145,
+          "commit": "500158f732419217507c7656904b8e6aa1bcc0d6"
+        },
+        {
+          "path": "src/main/java/org/springframework/samples/petclinic/owner/OwnerRepository.java",
+          "startLine": 24,
+          "endLine": 45,
+          "commit": "500158f732419217507c7656904b8e6aa1bcc0d6"
+        }
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "q06",
+      "score": 1,
+      "reason": "Correct repository injection/call and Owner accessor dependencies; omits the required distinction between view-name framework dispatch and direct Java calls. Constructor/field injection is loose wording: this is constructor injection into a field.",
+      "sourceReferences": [
+        {
+          "path": "src/main/java/org/springframework/samples/petclinic/owner/OwnerController.java",
+          "startLine": 53,
+          "endLine": 57,
+          "commit": "500158f732419217507c7656904b8e6aa1bcc0d6"
+        },
+        {
+          "path": "src/main/java/org/springframework/samples/petclinic/owner/OwnerController.java",
+          "startLine": 94,
+          "endLine": 145,
+          "commit": "500158f732419217507c7656904b8e6aa1bcc0d6"
+        }
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "q07",
+      "score": 1,
+      "reason": "Correct MVC/helper/repository chain, page request, result branches and runtime caveats; omits surname stripping and multiple-result pagination population from the frozen trace requirements.",
+      "sourceReferences": [
+        {
+          "path": "src/main/java/org/springframework/samples/petclinic/owner/OwnerController.java",
+          "startLine": 94,
+          "endLine": 145,
+          "commit": "500158f732419217507c7656904b8e6aa1bcc0d6"
+        },
+        {
+          "path": "src/main/java/org/springframework/samples/petclinic/owner/OwnerRepository.java",
+          "startLine": 36,
+          "endLine": 45,
+          "commit": "500158f732419217507c7656904b8e6aa1bcc0d6"
+        }
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "q08",
+      "score": 2,
+      "reason": "Names all three evidenced direct production consumers and separates contract dependency from query-specific or speculative impact.",
+      "sourceReferences": [
+        {
+          "path": "src/main/java/org/springframework/samples/petclinic/owner/OwnerController.java",
+          "startLine": 53,
+          "endLine": 57,
+          "commit": "500158f732419217507c7656904b8e6aa1bcc0d6"
+        },
+        {
+          "path": "src/main/java/org/springframework/samples/petclinic/owner/PetController.java",
+          "startLine": 53,
+          "endLine": 59,
+          "commit": "500158f732419217507c7656904b8e6aa1bcc0d6"
+        },
+        {
+          "path": "src/main/java/org/springframework/samples/petclinic/owner/VisitController.java",
+          "startLine": 45,
+          "endLine": 49,
+          "commit": "500158f732419217507c7656904b8e6aa1bcc0d6"
+        }
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": true
+    },
+    {
+      "id": "q09",
+      "score": 2,
+      "reason": "Correct MVC and repository tests, HTTP entry, mocked persistence distinction, whitespace cases and inspected-not-run qualification.",
+      "sourceReferences": [
+        {
+          "path": "src/test/java/org/springframework/samples/petclinic/owner/OwnerControllerTests.java",
+          "startLine": 60,
+          "endLine": 63,
+          "commit": "500158f732419217507c7656904b8e6aa1bcc0d6"
+        },
+        {
+          "path": "src/test/java/org/springframework/samples/petclinic/owner/OwnerControllerTests.java",
+          "startLine": 190,
+          "endLine": 222,
+          "commit": "500158f732419217507c7656904b8e6aa1bcc0d6"
+        }
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "q10",
+      "score": 2,
+      "reason": "Correct binding through Owner/Person, null-to-empty and strip normalization, query handoff and lack of assignment back to Owner.",
+      "sourceReferences": [
+        {
+          "path": "src/main/java/org/springframework/samples/petclinic/owner/OwnerController.java",
+          "startLine": 94,
+          "endLine": 107,
+          "commit": "500158f732419217507c7656904b8e6aa1bcc0d6"
+        },
+        {
+          "path": "src/main/java/org/springframework/samples/petclinic/owner/OwnerController.java",
+          "startLine": 141,
+          "endLine": 145,
+          "commit": "500158f732419217507c7656904b8e6aa1bcc0d6"
+        },
+        {
+          "path": "src/test/java/org/springframework/samples/petclinic/owner/OwnerControllerTests.java",
+          "startLine": 200,
+          "endLine": 222,
+          "commit": "500158f732419217507c7656904b8e6aa1bcc0d6"
+        }
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    }
+  ],
+  "total": 16,
+  "referenceIssues": [],
+  "limitations": [
+    "Answer citations use browser-rendered/zero-based line coordinates which cannot be verified as physical source spans. Pinned URL file targets and explicit definitions were verified against local pinned Git objects; sourceReferences record physical oracle spans, not corrected answer citations.",
+    "All frozen oracle file hashes and logical excerpts matched pinned Git objects. Source inspection only; no target builds/scripts or runtime tests executed."
+  ]
+}

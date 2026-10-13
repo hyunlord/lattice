@@ -1,0 +1,190 @@
+{
+  "repository": "sqlite/sqlite",
+  "arm": "direct",
+  "commit": "6e35c19f170958b1e846e01c55318988f2d192e0",
+  "answers": [
+    {
+      "id": "sqlite-q1",
+      "answer": "SQLite is a SQL database engine embedded as a library in applications. Applications call its public C interface on database connections; repository users can also run the sqlite3 command-line shell. The Tcl bindings and testfixture supply another evidenced caller boundary for tests. No particular external application or deployed user population was established.",
+      "citations": [
+        {
+          "url": "https://raw.githubusercontent.com/sqlite/sqlite/6e35c19f170958b1e846e01c55318988f2d192e0/README.md",
+          "lines": "Web-rendered L244-L257; L320-L332"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/sqlite/sqlite/6e35c19f170958b1e846e01c55318988f2d192e0/src/sqlite.h.in",
+          "lines": "Web-rendered L252-L265; L352-L369"
+        }
+      ]
+    },
+    {
+      "id": "sqlite-q2",
+      "answer": "Principal components: public API (sqlite.h.in); tokenizer (tokenize.c); Lemon SQL grammar/parser (parse.y); SELECT compilation (select.c) and query optimization (where*.c); prepared-statement virtual machine (vdbe.c and helpers); B-tree storage (btree.c); transaction pager (pager.c); pluggable OS/VFS implementations (os_unix.c/os_win.c). The shell, Tcl binding, and testfixture are consumers outside the core.",
+      "citations": [
+        {
+          "url": "https://raw.githubusercontent.com/sqlite/sqlite/6e35c19f170958b1e846e01c55318988f2d192e0/README.md",
+          "lines": "Web-rendered L281-L332"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/sqlite/sqlite/6e35c19f170958b1e846e01c55318988f2d192e0/src/tokenize.c",
+          "lines": "Web-rendered L586-L634"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/sqlite/sqlite/6e35c19f170958b1e846e01c55318988f2d192e0/src/parse.y",
+          "lines": "Web-rendered L486-L495"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/sqlite/sqlite/6e35c19f170958b1e846e01c55318988f2d192e0/src/select.c",
+          "lines": "Web-rendered L7417-L7458"
+        }
+      ]
+    },
+    {
+      "id": "sqlite-q3",
+      "answer": "C implements the core; SQL is parsed through Lemon-generated C from parse.y. Tcl supports tests and source generation. Unix builds use configure (autosetup) plus make; Windows uses MSVC and Makefile.msc/nmake. The amalgamation combines core sources into sqlite3.c. src/ holds core and separately named test code, test/ holds Tcl suites, tool/ generators, ext/ extensions. Public sqlite3.h is generated from sqlite.h.in; sqliteInt.h and subsystem headers are internal boundaries. Shell and Tcl bindings are outside the core.",
+      "citations": [
+        {
+          "url": "https://raw.githubusercontent.com/sqlite/sqlite/6e35c19f170958b1e846e01c55318988f2d192e0/README.md",
+          "lines": "Web-rendered L82-L159; L168-L257; L281-L332"
+        }
+      ]
+    },
+    {
+      "id": "sqlite-q4",
+      "answer": "For the selected one-step public-library route, execution begins at sqlite3_exec(db, sql, callback, context, errmsg), declared in src/sqlite.h.in and defined in src/legacy.c. The caller supplies an already-open database connection. This entry point is distinct from the CLI executable entry.",
+      "citations": [
+        {
+          "url": "https://raw.githubusercontent.com/sqlite/sqlite/6e35c19f170958b1e846e01c55318988f2d192e0/src/sqlite.h.in",
+          "lines": "Web-rendered L352-L421"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/sqlite/sqlite/6e35c19f170958b1e846e01c55318988f2d192e0/src/legacy.c",
+          "lines": "Web-rendered L27-L48"
+        }
+      ]
+    },
+    {
+      "id": "sqlite-q5",
+      "answer": "src/legacy.c implements sqlite3_exec. Its loop prepares statements, steps rows, obtains column names/text, invokes xCallback(pArg,nCol,azVals,azCols), then finalizes. The public contract specifies NULL pointers for SQL NULL, no callback when omitted, and SQLITE_ABORT when the callback returns nonzero; callback arrays/strings must not be retained after return.",
+      "citations": [
+        {
+          "url": "https://raw.githubusercontent.com/sqlite/sqlite/6e35c19f170958b1e846e01c55318988f2d192e0/src/legacy.c",
+          "lines": "Web-rendered L44-L119"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/sqlite/sqlite/6e35c19f170958b1e846e01c55318988f2d192e0/src/sqlite.h.in",
+          "lines": "Web-rendered L360-L395; L405-L412"
+        }
+      ]
+    },
+    {
+      "id": "sqlite-q6",
+      "answer": "Direct dependencies include sqlite3_prepare_v2; sqlite3_step; sqlite3_column_count/name/text/type; sqlite3VdbeFinalize (not a direct call to public sqlite3_finalize); database mutex/safety helpers; sqlite3Error, sqlite3ApiExit, sqlite3_errmsg; sqlite3DbMallocRaw, sqlite3DbFree, sqlite3DbStrDup, sqlite3OomFault; whitespace classification; and the supplied xCallback function pointer. Parser, planner, B-tree and pager are downstream, not direct calls in this function.",
+      "citations": [
+        {
+          "url": "https://raw.githubusercontent.com/sqlite/sqlite/6e35c19f170958b1e846e01c55318988f2d192e0/src/legacy.c",
+          "lines": "Web-rendered L39-L132"
+        }
+      ]
+    },
+    {
+      "id": "sqlite-q7",
+      "answer": "Supported source path: sqlite3_exec -> sqlite3_prepare_v2 -> sqlite3LockAndPrepare -> sqlite3Prepare -> sqlite3RunParser -> generated sqlite3Parser. The SELECT grammar invokes sqlite3Select with SRT_Output; SELECT code generation emits OP_ResultRow (the unsorted output branch is explicitly evidenced). Execution resumes through sqlite3_step -> sqlite3Step -> sqlite3VdbeExec. OP_ResultRow exposes result registers and returns SQLITE_ROW; exec extracts columns and calls xCallback. Dynamic boundary: the callback target comes from the caller, so an arbitrary application destination is unknown. Generated parser transitions and query-specific VDBE instructions are not a single fixed C call chain; the shown branch does not imply every SELECT performs a B-tree read. This is source-supported tracing, not a captured runtime trace.",
+      "citations": [
+        {
+          "url": "https://raw.githubusercontent.com/sqlite/sqlite/6e35c19f170958b1e846e01c55318988f2d192e0/src/legacy.c",
+          "lines": "Web-rendered L48-L108"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/sqlite/sqlite/6e35c19f170958b1e846e01c55318988f2d192e0/src/prepare.c",
+          "lines": "Web-rendered L749-L799; L814-L851; L911-L927"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/sqlite/sqlite/6e35c19f170958b1e846e01c55318988f2d192e0/src/tokenize.c",
+          "lines": "Web-rendered L633-L705"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/sqlite/sqlite/6e35c19f170958b1e846e01c55318988f2d192e0/src/parse.y",
+          "lines": "Web-rendered L486-L495"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/sqlite/sqlite/6e35c19f170958b1e846e01c55318988f2d192e0/src/select.c",
+          "lines": "Web-rendered L1439-L1451"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/sqlite/sqlite/6e35c19f170958b1e846e01c55318988f2d192e0/src/vdbeapi.c",
+          "lines": "Web-rendered L897-L906; L946-L964"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/sqlite/sqlite/6e35c19f170958b1e846e01c55318988f2d192e0/src/vdbe.c",
+          "lines": "Web-rendered L1718-L1755"
+        }
+      ]
+    },
+    {
+      "id": "sqlite-q8",
+      "answer": "An evidenced direct consumer is sqlite3_get_table in src/table.c: it calls sqlite3_exec with sqlite3_get_table_cb and a TabResult accumulator. The callback copies names on the first row, preserves NULL values, copies row strings, counts rows, and rejects incompatible column counts. The wrapper specially handles SQLITE_ABORT to propagate callback-side errors. Changes to row shape, NULL handling, callback frequency, or abort semantics therefore require reviewing this consumer. It is conditional on SQLITE_OMIT_GET_TABLE being absent; this is an evidenced consumer, not an exhaustive impact list.",
+      "citations": [
+        {
+          "url": "https://raw.githubusercontent.com/sqlite/sqlite/6e35c19f170958b1e846e01c55318988f2d192e0/src/table.c",
+          "lines": "Web-rendered L19-L96; L108-L170"
+        }
+      ]
+    },
+    {
+      "id": "sqlite-q9",
+      "answer": "test/exec.test contains direct tests exec-1.2 (comments/empty statements surrounding SELECT) and exec-1.3 (SELECT after a second connection changes the schema); both expect success and column-name/value output {0 {a b 1 2}}. Tcl command registration in src/test1.c maps sqlite3_exec to test_exec; that bridge resolves DB, transforms its SQL argument, calls C sqlite3_exec with exec_printf_cb, and returns the result code plus accumulated output. exec_printf_cb appends names and row values to a Tcl_DString. Thus the evidenced path crosses Tcl command dispatch into C, then the function-pointer callback. exec-1.1 uses execsql for setup; I do not claim its generic helper necessarily enters sqlite3_exec. Tests were inspected, not executed; exhaustive callback/abort coverage is unknown.",
+      "citations": [
+        {
+          "url": "https://raw.githubusercontent.com/sqlite/sqlite/6e35c19f170958b1e846e01c55318988f2d192e0/test/exec.test",
+          "lines": "Web-rendered L15-L35"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/sqlite/sqlite/6e35c19f170958b1e846e01c55318988f2d192e0/src/test1.c",
+          "lines": "Web-rendered L228-L244; L473-L515; L8826-L8829; L9107-L9112"
+        }
+      ]
+    },
+    {
+      "id": "sqlite-q10",
+      "answer": "SQL enters as sqlite3_exec's zSql; NULL becomes an empty string. Each prepare_v2 call uses nBytes=-1 and receives zLeftover. prepare_v2 forwards through sqlite3LockAndPrepare to sqlite3Prepare. sqlite3RunParser tokenizes with sqlite3GetToken, sends tokens to sqlite3Parser, advances zSql, and records pParse->zTail. sqlite3Prepare publishes that tail through pzTail, saves the consumed SQL in the VDBE, and returns the compiled statement. Its bounded non-NUL-terminated input branch copies SQL and translates the tail offset back to the original buffer; exec's -1 route uses the original string. After finishing a statement, exec assigns zLeftover to zSql, skips whitespace, and continues; comments/empty statements also advance the tail. The unconsumed tail is a position in input, not a separate parsed statement or callback argument.",
+      "citations": [
+        {
+          "url": "https://raw.githubusercontent.com/sqlite/sqlite/6e35c19f170958b1e846e01c55318988f2d192e0/src/legacy.c",
+          "lines": "Web-rendered L27-L55; L103-L108"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/sqlite/sqlite/6e35c19f170958b1e846e01c55318988f2d192e0/src/prepare.c",
+          "lines": "Web-rendered L749-L799; L814-L838; L911-L927"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/sqlite/sqlite/6e35c19f170958b1e846e01c55318988f2d192e0/src/tokenize.c",
+          "lines": "Web-rendered L589-L634; L658-L669; L684-L705; L732-L749"
+        }
+      ]
+    }
+  ],
+  "toolErrors": [
+    {
+      "url": "https://github.com/sqlite/sqlite/tree/6e35c19f170958b1e846e01c55318988f2d192e0",
+      "error": "Web fetch failed: restricted URL. Pinned raw sources and two pinned blob pages remained accessible."
+    },
+    {
+      "url": "https://raw.githubusercontent.com/sqlite/sqlite/6e35c19f170958b1e846e01c55318988f2d192e0/test/capi.test",
+      "error": "Web returned Internal Error without a detailed cause."
+    },
+    {
+      "url": "https://raw.githubusercontent.com/sqlite/sqlite/6e35c19f170958b1e846e01c55318988f2d192e0/test/e_exec.test",
+      "error": "Web fetch returned 404 Not Found."
+    }
+  ],
+  "limitations": [
+    "Source-only evaluation; no builds or tests executed; no implementation work performed.",
+    "Citation line ranges use the web tool's zero-based rendered raw-text lines. The renderer elides some blank lines (legacy.c rendered 134 lines while the GitHub blob reports 141), so these are not asserted to be exact GitHub editor line numbers.",
+    "No exhaustive caller/test inventory was established. Arbitrary application callback targets and query-specific bytecode paths remain dynamic.",
+    "Only the supplied prompt was read locally; all repository evidence came from pinned GitHub raw/blob web access. No local checkout, Lattice, MCP, oracle, or other answers were used.",
+    "Authoritative token telemetry was unavailable; no token count is reported."
+  ],
+  "selfReportedStartedAt": "2026-10-13 06:49:26 UTC",
+  "selfReportedFinishedAt": "2026-10-13 06:53:06 UTC"
+}

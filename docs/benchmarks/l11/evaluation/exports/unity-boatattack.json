@@ -1,0 +1,70 @@
+{
+  "repository": "unity-boatattack",
+  "commit": "6acf5f773a440030489cb5e2b3c009fb5fe1e8ce",
+  "candidate": "2b7c00f",
+  "startedAt": "2026-10-13T07:12:49.686Z",
+  "reused": false,
+  "priorSetupFailure": {
+    "repository": "unity-boatattack",
+    "commit": "6acf5f773a440030489cb5e2b3c009fb5fe1e8ce",
+    "candidate": "2b7c00f",
+    "startedAt": "2026-10-13T07:11:29.046Z",
+    "reused": false,
+    "command": [
+      "node",
+      "/tmp/lattice-l11-first-impression/bin/lattice.mjs",
+      "export",
+      "/tmp/l11-visual/unity-boatattack",
+      "--root",
+      "/tmp/l9-benchmark-extra/unity-boatattack",
+      "--no-lens",
+      "--cache-dir",
+      "/tmp/l11-visual-cache/unity-boatattack",
+      "--force",
+      "--json"
+    ],
+    "exitCode": 2,
+    "timedOut": false,
+    "seconds": 0.206628375,
+    "status": "failed",
+    "finishedAt": "2026-10-13T07:11:29.253Z"
+  },
+  "buildCommand": [
+    "node",
+    "/tmp/lattice-l11-first-impression/bin/lattice.mjs",
+    "build",
+    "--root",
+    "/tmp/l9-benchmark-extra/unity-boatattack",
+    "--no-lens",
+    "--cache-dir",
+    "/tmp/l11-visual-cache/unity-boatattack",
+    "--json"
+  ],
+  "buildExitCode": 0,
+  "command": [
+    "node",
+    "/tmp/lattice-l11-first-impression/bin/lattice.mjs",
+    "export",
+    "/tmp/l11-visual/unity-boatattack",
+    "--root",
+    "/tmp/l9-benchmark-extra/unity-boatattack",
+    "--no-lens",
+    "--cache-dir",
+    "/tmp/l11-visual-cache/unity-boatattack",
+    "--force",
+    "--json"
+  ],
+  "exitCode": 0,
+  "timedOut": false,
+  "seconds": 2.25476675,
+  "graphHash": "c4a157a55f0f6e954a40aa341aa65e5b2f6b59d6e1e6f9d6efdad7b1b7c05949",
+  "source": {
+    "name": "BoatAttack",
+    "dirty": false,
+    "sourceFingerprint": "318c42827fe73c09822873c7904d9ed006b4a06ddc29b484107aba30d5b4dd2b",
+    "commit": "6acf5f773a440030489cb5e2b3c009fb5fe1e8ce",
+    "remoteUrl": "https://github.com/Unity-Technologies/BoatAttack"
+  },
+  "status": "ready",
+  "finishedAt": "2026-10-13T07:12:51.941Z"
+}
