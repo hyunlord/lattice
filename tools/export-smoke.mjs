@@ -25,7 +25,20 @@ export function verifyExport(cli, repository) {
     const decoded = gunzipSync(bytes); assert.equal(decoded.length, pack.decoded); assert.ok(decoded.length <= 262144);
     return decoded;
   });
-  assert.ok(manifest.version === 1 || manifest.version === 2);
+  assert.ok(manifest.version === 1 || manifest.version === 2 || manifest.version === 3);
+  if (manifest.version === 3) {
+    assert.ok(manifest.initial.includes('app.js'));
+    assert.ok(manifest.deferred.length > 0);
+    assert.equal(new Set([...manifest.initial, ...manifest.deferred]).size, manifest.initial.length + manifest.deferred.length);
+    assert.ok(manifest.packs.some(pack => pack.stage === 'initial'));
+    assert.ok(manifest.packs.some(pack => pack.stage === 'deferred'));
+    for (const stage of ['initial', 'deferred']) {
+      const script = Buffer.concat(decodedPacks.filter((_, index) => manifest.packs[index].stage === stage)).toString('utf8');
+      const names = [...script.matchAll(/^define\("([a-zA-Z0-9_-]+)",/gmu)].map(match => match[1] + '.js').sort();
+      assert.deepEqual(names, [...manifest[stage]].sort());
+      assert.match(script, stage === 'initial' ? /lattice-assets-ready/u : /lattice-assets-register/u);
+    }
+  }
   if (manifest.version === 1) {
     const modules = Object.fromEntries(decodedPacks.flatMap(decoded => JSON.parse(decoded)));
     for (const name of ['structural-dependency-groups.js', 'evidence.js', 'source-groups.js']) assert.ok(modules[name]);

@@ -1,10 +1,11 @@
 import ts from 'typescript';
 
-function bundleRuntime(register, entry) {
+function bundleRuntime(register, entry, stages) {
   const script = document.currentScript;
   try {
     const modules = new Map();
     const canonical = name => name.replace(/^\.\//u, '').replace(/\.js$/u, '');
+    let deferredLoader, deferredPromise;
     const define = (name, dependencies, factory) => {
       if (modules.has(name)) throw new Error(`Duplicate viewer module: ${name}`);
       modules.set(name, { dependencies, factory, exports: Object.create(null), state: 0, error: undefined });
@@ -17,7 +18,24 @@ function bundleRuntime(register, entry) {
       if (module.state === 1) throw new Error(`Unexpected viewer module cycle: ${name}`);
       module.state = 1;
       try {
-        const require = (names, resolve, reject) => { Promise.resolve().then(() => names.map(load)).then(values => resolve(...values), reject); };
+        const require = (names, resolve, reject) => {
+          Promise.resolve().then(() => {
+            if (stages && names.some(name => !modules.has(canonical(name)))) {
+              deferredPromise ??= Promise.resolve().then(() => deferredLoader()).then(registerBatch => {
+                const batch = new Map(), expected = new Set(stages.deferred);
+                if (typeof registerBatch !== 'function') throw new Error('Invalid viewer deferred batch');
+                registerBatch((name, dependencies, factory) => {
+                  if (typeof name !== 'string' || canonical(name) !== name || !expected.has(name) || modules.has(name) || batch.has(name) || !Array.isArray(dependencies) || !dependencies.every(value => typeof value === 'string') || typeof factory !== 'function') throw new Error('Invalid or duplicate viewer deferred module');
+                  batch.set(name, { dependencies, factory, exports: Object.create(null), state: 0, error: undefined });
+                });
+                if (batch.size !== expected.size) throw new Error('Incomplete viewer deferred batch');
+                for (const [name, module] of batch) modules.set(name, module);
+              });
+              return deferredPromise.then(() => names.map(load));
+            }
+            return names.map(load);
+          }).then(values => resolve(...values), reject);
+        };
         Reflect.apply(module.factory, undefined, module.dependencies.map(dependency => dependency === 'require' ? require : dependency === 'exports' ? module.exports : load(dependency)));
         Object.defineProperty(module.exports, Symbol.toStringTag, { value: 'Module' });
         Object.freeze(module.exports);
@@ -26,8 +44,16 @@ function bundleRuntime(register, entry) {
       } catch (error) { module.error = error; module.state = 3; throw error; }
     };
     register(define);
+    if (stages && (modules.size !== stages.initial.length || stages.initial.some(name => !modules.has(name)))) throw new Error('Invalid viewer initial batch');
     load(script.dataset?.['latticeEntry'] ?? entry);
-    script.dispatchEvent(new Event('lattice-assets-ready'));
+    if (stages) {
+      const install = loader => {
+        if (deferredLoader || typeof loader !== 'function') throw new Error('Invalid viewer deferred loader handoff');
+        deferredLoader = loader;
+      };
+      script.dispatchEvent(new CustomEvent('lattice-assets-ready', { detail: install }));
+      if (!deferredLoader) throw new Error('Missing viewer deferred loader handoff');
+    } else script.dispatchEvent(new Event('lattice-assets-ready'));
   } catch (error) { script.dispatchEvent(new CustomEvent('lattice-assets-error', { detail: error })); }
 }
 
@@ -120,4 +146,36 @@ export function bundleModules(modules, entry = 'app.js') {
   const errors = [...program.getOptionsDiagnostics(), ...program.getSyntacticDiagnostics(), ...result.diagnostics].filter(diagnostic => diagnostic.category === ts.DiagnosticCategory.Error);
   if (result.emitSkipped || errors.length || !emitted) throw new Error(`Viewer bundle compiler failed: ${errors.map(error => ts.flattenDiagnosticMessageText(error.messageText, '\n')).join('; ')}`);
   return `(${bundleRuntime.toString()})(function(define){\n${emitted}\n},${JSON.stringify(entry)});\n`;
+}
+
+/** Split only self-contained compiler factories; lexical compiler helpers retain v2. */
+export function stageBundleModules(source, entry = 'app.js') {
+  const file = ts.createSourceFile('bundle.js', source, ts.ScriptTarget.Latest, true, ts.ScriptKind.JS);
+  const call = file.statements[0]?.expression;
+  const register = call && ts.isCallExpression(call) ? call.arguments[0] : undefined;
+  if (!register || !ts.isFunctionExpression(register)) return null;
+  const definitions = new Map();
+  for (const statement of register.body.statements) {
+    const expression = ts.isExpressionStatement(statement) ? statement.expression : undefined;
+    if (!expression || !ts.isCallExpression(expression) || !ts.isIdentifier(expression.expression) || expression.expression.text !== 'define' || expression.arguments.length !== 3) return null;
+    const [name, deps, factory] = expression.arguments;
+    if (!ts.isStringLiteral(name) || !/^[a-zA-Z0-9_-]+$/u.test(name.text) || definitions.has(name.text) || !ts.isArrayLiteralExpression(deps) || !deps.elements.every(ts.isStringLiteral) || !ts.isFunctionExpression(factory)) return null;
+    definitions.set(name.text, { text: statement.getText(file), dependencies: deps.elements.map(node => node.text).filter(name => name !== 'require' && name !== 'exports') });
+  }
+  const canonical = name => name.replace(/^\.\//u, '').replace(/\.js$/u, '');
+  const eager = new Set(), pending = [canonical(entry)];
+  while (pending.length) {
+    const name = pending.pop(); if (eager.has(name)) continue;
+    const definition = definitions.get(name); if (!definition) return null;
+    eager.add(name); pending.push(...definition.dependencies.map(canonical));
+  }
+  const initial = [...definitions.keys()].filter(name => eager.has(name));
+  const deferred = [...definitions.keys()].filter(name => !eager.has(name));
+  if (!deferred.length) return null;
+  const body = names => names.map(name => definitions.get(name).text).join('\n');
+  return {
+    initial: initial.map(name => name + '.js').sort(), deferred: deferred.map(name => name + '.js').sort(),
+    initialSource: '(' + bundleRuntime.toString() + ')(function(define){\n' + body(initial) + '\n},' + JSON.stringify(entry) + ',' + JSON.stringify({ initial, deferred }) + ');\n',
+    deferredSource: 'document.currentScript.dispatchEvent(new CustomEvent("lattice-assets-register",{detail:function(define){\n' + body(deferred) + '\n}}));\n',
+  };
 }

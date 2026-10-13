@@ -49,7 +49,7 @@ async function start(modules, transform = bytes => bytes) {
         },
         fetch: async url => {
             assert.equal(url.searchParams.get('generation'), 'generation-a');
-            if (url.pathname.endsWith('manifest.json')) return new Response(JSON.stringify({ version: plan.version, entry: 'app.js', packs: plan.packs.map(pack => pack.entry) }));
+            if (url.pathname.endsWith('manifest.json')) return new Response(JSON.stringify({ ...plan, entry: 'app.js', packs: plan.packs.map(pack => pack.entry) }));
             const pack = plan.packs.find(pack => url.pathname.endsWith(pack.entry.path));
             assert.ok(pack); return new Response(transform(pack.bytes));
         },
@@ -65,12 +65,13 @@ test('verified bundle publishes one script and keeps dynamic factories lazy', as
         ['app.js', 'globalThis.initial=true;globalThis.later=()=>import("./lazy.js");'],
         ['lazy.js', 'globalThis.lazyRuns=(globalThis.lazyRuns??0)+1;export const value=7;'],
     ]);
-    assert.equal(state.plan.version, 2);
+    assert.equal(state.plan.version, 3);
     assert.deepEqual(state.messages, []);
     assert.equal(state.context.initial, true);
     assert.equal(state.context.lazyRuns, undefined);
-    assert.equal((await state.context.later()).value, 7);
     assert.deepEqual(state.events, ['publish', 'append', 'remove', 'revoke']);
+    assert.equal((await state.context.later()).value, 7);
+    assert.deepEqual(state.events, ['publish', 'append', 'remove', 'revoke', 'publish', 'append', 'remove', 'revoke']);
 });
 
 test('bundle entry failure is visible and releases its temporary script URL', async () => {
@@ -95,4 +96,18 @@ test('bundle preserves repeated content-addressed chunks in original order', asy
     assert.deepEqual(state.messages, []);
     assert.equal(state.context.value, value);
     assert.deepEqual(state.events, ['publish', 'append', 'remove', 'revoke']);
+});
+
+test('v3 validates disjoint stage identities and stages before fetching pack bytes', () => {
+    const source = transpile('../viewer/asset-bootstrap.ts').replace(/^import[^\n]+\n/u, '').replace(/void boot\(\)\.catch\([\s\S]*$/u, '');
+    const context = createContext({ TextDecoder, Uint8Array, Blob, AbortSignal, DecompressionStream });
+    new Script(source + '\nglobalThis.validate=manifest;').runInContext(context);
+    const plan = viewerArchivePlan([['app.js', 'globalThis.later=()=>import("./lazy.js");'], ['lazy.js', 'export const value=1;']]);
+    const valid = { ...plan, entry: 'app.js', packs: plan.packs.map(pack => pack.entry) };
+    assert.equal(context.validate(valid).version, 3);
+    for (const invalid of [
+        { ...valid, initial: [] }, { ...valid, deferred: ['app.js'] }, { ...valid, deferred: ['../bad.js'] },
+        { ...valid, packs: valid.packs.filter(pack => pack.stage === 'initial') },
+        { ...valid, packs: valid.packs.map(pack => ({ ...pack, stage: 'unknown' })) },
+    ]) assert.throws(() => context.validate(invalid), /stage/u);
 });

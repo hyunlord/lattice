@@ -1,7 +1,7 @@
 import { packedHash } from './packed-hash.js';
 
 const assetLimit = 256 * 1024;
-type AssetPack = { readonly path: string; readonly hash: string; readonly encoded: number; readonly decoded: number; readonly modules: readonly string[]; };
+type AssetPack = { readonly path: string; readonly hash: string; readonly encoded: number; readonly decoded: number; readonly modules: readonly string[]; readonly stage?: 'initial' | 'deferred'; };
 const record = (value: unknown): value is Record<string, unknown> => typeof value === 'object' && value !== null && !Array.isArray(value);
 const moduleName = (value: unknown): value is string => typeof value === 'string' && /^[a-zA-Z0-9_-]+\.js$/u.test(value);
 const size = (value: unknown): value is number => typeof value === 'number' && Number.isSafeInteger(value) && value > 0 && value <= assetLimit;
@@ -27,9 +27,13 @@ async function fetchAsset(path: string): Promise<Uint8Array<ArrayBuffer>> {
     if (!response.ok) throw new Error(`Viewer asset HTTP ${response.status}: ${path}`);
     return bounded(response.body);
 }
-function manifest(value: unknown): { readonly version: 1 | 2; readonly entry: string; readonly packs: readonly AssetPack[]; } {
-    if (!record(value) || (value['version'] !== 1 && value['version'] !== 2) || !moduleName(value['entry']) || !Array.isArray(value['packs']) || !value['packs'].length) throw new Error('Invalid viewer asset manifest');
+function manifest(value: unknown): { readonly version: 1 | 2 | 3; readonly entry: string; readonly packs: readonly AssetPack[]; } {
+    if (!record(value) || (value['version'] !== 1 && value['version'] !== 2 && value['version'] !== 3) || !moduleName(value['entry']) || !Array.isArray(value['packs']) || !value['packs'].length) throw new Error('Invalid viewer asset manifest');
     const version = value['version'];
+    if (version === 3) {
+        const initial = value['initial'], deferred = value['deferred'];
+        if (!Array.isArray(initial) || !Array.isArray(deferred) || !initial.length || !deferred.length || !initial.every(moduleName) || !deferred.every(moduleName) || !initial.includes(value['entry']) || new Set([...initial, ...deferred]).size !== initial.length + deferred.length) throw new Error('Invalid viewer stage modules');
+    }
     const names = new Set<string>(), paths = new Map<string, string>();
     const packs = value['packs'].map((pack: unknown): AssetPack => {
         if (!record(pack) || typeof pack['hash'] !== 'string' || !/^[a-f0-9]{64}$/u.test(pack['hash']) || pack['path'] !== `${pack['hash']}.gz` || !size(pack['encoded']) || !size(pack['decoded'])) throw new Error('Invalid viewer asset pack');
@@ -39,9 +43,12 @@ function manifest(value: unknown): { readonly version: 1 | 2; readonly entry: st
         const modules = version === 1 ? pack['modules'] : [];
         if (!Array.isArray(modules) || (version === 1 && !modules.length) || !modules.every(moduleName)) throw new Error('Invalid viewer asset modules');
         for (const name of modules) { if (names.has(name)) throw new Error('Duplicate viewer module'); names.add(name); }
-        return { path, hash: pack['hash'], encoded: pack['encoded'], decoded: pack['decoded'], modules };
+        const stage = pack['stage'];
+        if (version === 3 && stage !== 'initial' && stage !== 'deferred') throw new Error('Invalid viewer asset stage');
+        return { path, hash: pack['hash'], encoded: pack['encoded'], decoded: pack['decoded'], modules, ...(stage === 'initial' || stage === 'deferred' ? { stage } : {}) };
     });
     if (version === 1 && !names.has(value['entry'])) throw new Error('Missing viewer entry module');
+    if (version === 3 && (!packs.some(pack => pack.stage === 'initial') || !packs.some(pack => pack.stage === 'deferred'))) throw new Error('Missing viewer stage packs');
     return { version, entry: value['entry'], packs };
 }
 async function readPack(pack: AssetPack): Promise<Uint8Array<ArrayBuffer>> {
@@ -53,22 +60,31 @@ async function readPack(pack: AssetPack): Promise<Uint8Array<ArrayBuffer>> {
     if (decoded.length !== pack.decoded) throw new Error('Viewer asset decoded size mismatch');
     return decoded;
 }
-async function publishBundle(chunks: readonly Uint8Array<ArrayBuffer>[], entry: string): Promise<void> {
+async function publishBundle(chunks: readonly Uint8Array<ArrayBuffer>[], entry: string, mode: 'ready' | 'register' = 'ready', loader?: () => Promise<unknown>): Promise<unknown> {
     const script = document.createElement('script'); script.dataset['latticeEntry'] = entry;
     const bootstrap = document.querySelector<HTMLScriptElement>('script[src$="asset-bootstrap.js"]'); if (bootstrap?.nonce) script.nonce = bootstrap.nonce;
     const url = URL.createObjectURL(new Blob([...chunks], { type: 'text/javascript' })); script.src = url;
     let detach = (): void => { };
     try {
-        await new Promise<void>((resolve, reject) => {
+        return await new Promise<unknown>((resolve, reject) => {
             let started = false;
-            const ready = (): void => { started = true; resolve(); };
+            const ready = (event: Event): void => {
+                started = true;
+                try {
+                    if (mode === 'register' || loader) {
+                        if (!(event instanceof CustomEvent) || typeof event.detail !== 'function') throw new Error('Invalid viewer bundle handoff');
+                        if (loader) event.detail(loader);
+                        resolve(mode === 'register' ? event.detail : undefined);
+                    } else resolve(undefined);
+                } catch (error) { reject(error); }
+            };
             const failed = (event: Event): void => {
                 started = true;
                 reject(event instanceof CustomEvent && event.detail instanceof Error ? event.detail : new Error('Viewer bundle execution failed'));
             };
             const error = (): void => reject(new Error('Viewer bundle script was blocked or failed to load'));
             const loaded = (): void => { if (!started) reject(new Error('Viewer bundle did not start')); };
-            const listeners: readonly (readonly [string, EventListener])[] = [['lattice-assets-ready', ready], ['lattice-assets-error', failed], ['error', error], ['load', loaded]];
+            const listeners: readonly (readonly [string, EventListener])[] = [[mode === 'register' ? 'lattice-assets-register' : 'lattice-assets-ready', ready], ['lattice-assets-error', failed], ['error', error], ['load', loaded]];
             for (const [name, callback] of listeners) script.addEventListener(name, callback, { once: true });
             detach = (): void => { for (const [name, callback] of listeners) script.removeEventListener(name, callback); };
             document.head.append(script);
@@ -79,6 +95,20 @@ async function boot(): Promise<void> {
     if (typeof DecompressionStream !== 'function') throw new Error('This browser needs gzip decompression');
     const generation = document.querySelector<HTMLMetaElement>('meta[name="lattice-generation"]')?.content;
     const plan = manifest(JSON.parse(new TextDecoder().decode(await fetchAsset('manifest.json'))));
+    if (plan.version === 3) {
+        const checkGeneration = (): void => {
+            if (document.querySelector<HTMLMetaElement>('meta[name="lattice-generation"]')?.content !== generation) throw new Error('Viewer generation changed while loading');
+        };
+        const deferred = async (): Promise<unknown> => {
+            checkGeneration();
+            const chunks = await Promise.all(plan.packs.filter(pack => pack.stage === 'deferred').map(readPack));
+            checkGeneration();
+            return publishBundle(chunks, plan.entry, 'register');
+        };
+        const chunks = await Promise.all(plan.packs.filter(pack => pack.stage === 'initial').map(readPack));
+        checkGeneration();
+        await publishBundle(chunks, plan.entry, 'ready', deferred); return;
+    }
     if (plan.version === 2) {
         const chunks = await Promise.all(plan.packs.map(readPack));
         if (document.querySelector<HTMLMetaElement>('meta[name="lattice-generation"]')?.content !== generation) throw new Error('Viewer generation changed while loading');
