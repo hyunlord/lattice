@@ -41,6 +41,12 @@ export class FreshRepository {
         };
         const started = performance.now();
         const cache = cacheDirectory(this.options.root, this.options.cacheDir);
+        if (!this.current) {
+            // Cold construction needs source bytes locally; do not retain a second inventory in the worker.
+            const local = await observeRepositoryAsync({ ...this.options });
+            assertCurrent();
+            return this.refresh(local, started);
+        }
         const observed = this.observer.observe(this.options).then(value => ({ value, durationMs: performance.now() - started }));
         const artifacts = Promise.all(['graph.json', 'presentation.json'].map(file => this.artifactDigests.digest(join(cache, file)))).then(values => values.join(':'));
         const [observation, artifactFingerprint] = await Promise.all([observed, artifacts]);

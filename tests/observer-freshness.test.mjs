@@ -88,9 +88,10 @@ test('actual stdio serves a worker-backed request and exits cleanly when input e
         { jsonrpc: '2.0', id: 1, method: 'initialize', params: { protocolVersion: '2025-11-25', capabilities: {}, clientInfo: { name: 'test', version: '1' } } },
         { jsonrpc: '2.0', method: 'notifications/initialized' },
         { jsonrpc: '2.0', id: 2, method: 'tools/call', params: { name: 'lattice_freshness', arguments: {} } },
+        { jsonrpc: '2.0', id: 3, method: 'tools/call', params: { name: 'lattice_freshness', arguments: {} } },
     ].map(value => JSON.stringify(value)).join('\n') + '\n');
     assert.equal(await closed, 0, stderr); assert.equal(stderr, '');
-    const reply = stdout.trim().split('\n').map(line => JSON.parse(line)).find(value => value.id === 2);
+    const reply = stdout.trim().split('\n').map(line => JSON.parse(line)).find(value => value.id === 3);
     assert.equal(reply.result.isError, false); assert.equal(reply.result.structuredContent.freshness.status, 'fresh');
 });
 test('environment changes restart the real worker with current external interpretations', async t => {
@@ -126,6 +127,8 @@ test('local rebuild observes changes made after the worker summary rather than p
         }, dispose: async () => { }
     };
     const service = new FreshRepository(f.options, client); t.after(() => service.dispose());
+    await service.ensureFreshAsync();
+    writeFileSync(f.path, '[{"id":"one","name":"Delta"}]');
     const result = await service.ensureFreshAsync();
     assert.notEqual(result.freshness.fingerprint, oldFingerprint);
     assert.equal(result.freshness.fingerprint, (await observeRepositoryAsync({ ...f.options })).fingerprint);
@@ -136,6 +139,7 @@ test('mixed synchronous publication and disposal invalidate pending async proofs
     const summary = observationSummary(await observeRepositoryAsync(f.options));
     const client = { observe: () => new Promise(resolve => { release = resolve; }), dispose: async () => { } };
     const service = new FreshRepository(f.options, client); t.after(() => service.dispose());
+    await service.ensureFreshAsync();
     const pending = service.ensureFreshAsync(); await new Promise(resolve => setImmediate(resolve));
     service.ensureFresh(); release(summary); await assert.rejects(pending, /generation/u);
     const second = service.ensureFreshAsync(); await new Promise(resolve => setImmediate(resolve));

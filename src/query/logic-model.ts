@@ -41,19 +41,46 @@ function buildIndex(graph: LogicGraph, includeEstimated: boolean) {
     }
     const packageSet = new Set(packages.map(node => node.id));
     for (const edge of graph.edges) if (edge.kind === 'contains' && packageSet.has(edge.source)) add(edge.target, edge.source);
-    const describe = (node: Node): LogicNode => ({ node, entrypoints: entrypoints(node), packageIds: [...new Set([...(packageIds.get(node.id) ?? []), ...(packageIds.get(String(node.attributes['module'] ?? '')) ?? [])])].sort() });
-    const edges = graph.edges.filter(edge => edge.kind === 'calls' && edge.directed && nodes.has(edge.source) && nodes.has(edge.target) && (edge.attributes?.['resolution'] === 'exact' || (includeEstimated && edge.attributes?.['resolution'] === 'estimated'))).sort(compare);
-    const incoming = new Map<string, Edge[]>(), outgoing = new Map<string, Edge[]>(), exactOutgoing = new Map<string, number>();
-    for (const edge of edges) {
-        const ins = incoming.get(edge.target) ?? []; ins.push(edge); incoming.set(edge.target, ins);
-        const outs = outgoing.get(edge.source) ?? []; outs.push(edge); outgoing.set(edge.source, outs);
-        if (edge.attributes?.['resolution'] === 'exact') exactOutgoing.set(edge.source, (exactOutgoing.get(edge.source) ?? 0) + 1);
-    }
-    const described = [...nodes.values()].sort(compare).map(describe);
+    const descriptions = new WeakMap<Node, LogicNode>();
+    const describe = (node: Node): LogicNode => {
+        let value = descriptions.get(node);
+        if (!value) { value = { node, entrypoints: entrypoints(node), packageIds: [...new Set([...(packageIds.get(node.id) ?? []), ...(packageIds.get(String(node.attributes['module'] ?? '')) ?? [])])].sort() }; descriptions.set(node, value); }
+        return value;
+    };
+    const accepted = (edge: Edge): boolean => edge.kind === 'calls' && edge.directed && nodes.has(edge.source) && nodes.has(edge.target) && (edge.attributes?.['resolution'] === 'exact' || (includeEstimated && edge.attributes?.['resolution'] === 'estimated'));
+    let adjacency: { readonly incoming: Map<string, Edge[]>; readonly outgoing: Map<string, Edge[]>; } | undefined;
+    const connections = () => {
+        if (adjacency) return adjacency;
+        const incoming = new Map<string, Edge[]>(), outgoing = new Map<string, Edge[]>();
+        for (const edge of graph.edges.filter(accepted).sort(compare)) {
+            const ins = incoming.get(edge.target) ?? []; ins.push(edge); incoming.set(edge.target, ins);
+            const outs = outgoing.get(edge.source) ?? []; outs.push(edge); outgoing.set(edge.source, outs);
+        }
+        adjacency = { incoming, outgoing }; return adjacency;
+    };
+    let rankingCounts: { readonly incoming: Map<string, number>; readonly exactOutgoing: Map<string, number>; } | undefined;
+    const counts = () => {
+        if (rankingCounts) return rankingCounts;
+        const incoming = new Map<string, number>(), exactOutgoing = new Map<string, number>();
+        for (const edge of graph.edges) if (accepted(edge)) {
+            incoming.set(edge.target, (incoming.get(edge.target) ?? 0) + 1);
+            if (edge.attributes?.['resolution'] === 'exact') exactOutgoing.set(edge.source, (exactOutgoing.get(edge.source) ?? 0) + 1);
+        }
+        rankingCounts = { incoming, exactOutgoing }; return rankingCounts;
+    };
     const priority = (node: LogicNode): number => node.entrypoints.some(entry => executionCategory(entry.category)) ? 0 : node.entrypoints.some(entry => entry.category === 'public-api') ? 1 : 2;
-    const ranked = described.filter(item => productLogicPath(item.node.sources[0]?.path ?? '')).sort((a, b) => priority(a) - priority(b) || (priority(a) === 0 ? (exactOutgoing.get(b.node.id) ?? 0) - (exactOutgoing.get(a.node.id) ?? 0) : 0) || (incoming.get(b.node.id)?.length ?? 0) - (incoming.get(a.node.id)?.length ?? 0) || compare(a.node, b.node));
-    const entries = ranked.filter(item => item.entrypoints.length > 0);
-    return { nodes, edges, describe, described, ranked, entries, incoming, outgoing };
+    const rank = (values: LogicNode[]) => {
+        const { incoming, exactOutgoing } = counts();
+        return values.filter(item => productLogicPath(item.node.sources[0]?.path ?? '')).sort((a, b) => priority(a) - priority(b) || (priority(a) === 0 ? (exactOutgoing.get(b.node.id) ?? 0) - (exactOutgoing.get(a.node.id) ?? 0) : 0) || (incoming.get(b.node.id) ?? 0) - (incoming.get(a.node.id) ?? 0) || compare(a.node, b.node));
+    };
+    let described: LogicNode[] | undefined, ranked: LogicNode[] | undefined, entries: LogicNode[] | undefined;
+    return {
+        nodes, describe,
+        get described() { return described ??= [...nodes.values()].sort(compare).map(describe); },
+        get ranked() { return ranked ??= rank([...nodes.values()].map(describe)); },
+        get entries() { return entries ??= rank([...nodes.values()].filter(node => Array.isArray(node.attributes['entrypoints']) && node.attributes['entrypoints'].length > 0).map(describe)).filter(item => item.entrypoints.length > 0); },
+        get incoming() { return connections().incoming; }, get outgoing() { return connections().outgoing; },
+    };
 }
 export type LogicOverviewMetadata = { readonly defaultFocus?: string; readonly executableModuleIds: readonly string[]; };
 export function logicOverviewMetadata(graph: LogicGraph): LogicOverviewMetadata {

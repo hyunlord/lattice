@@ -2,15 +2,20 @@ import { automaticViews } from '../dist/query/views-model.js';
 import { canonicalJson, type JsonValue } from '../dist/core/canonical.js';
 import type { Scope } from './mcp-query-scope.mjs';
 import type { Graph, Node, Edge } from '../dist/core/model.js';
-type ResidentIndex = { readonly nodes: ReadonlyMap<string, Node>; readonly incident: ReadonlyMap<string, readonly Edge[]>; };
+type ResidentIndex = { readonly nodes: ReadonlyMap<string, Node>; readonly incident: Pick<ReadonlyMap<string, readonly Edge[]>, 'get'>; };
 const indexes = new WeakMap<Graph, ResidentIndex>();
 /** Immutable graph identity binds indexes to exactly one observed source generation. */
 export function residentIndex(graph: Graph): ResidentIndex {
     const cached = indexes.get(graph);
     if (cached) return cached;
-    const incident = new Map<string, Edge[]>();
-    const add = (id: string, edge: Edge) => { const edges = incident.get(id) ?? []; edges.push(edge); incident.set(id, edges); };
-    for (const edge of graph.edges) { add(edge.source, edge); if (edge.target !== edge.source) add(edge.target, edge); }
+    const selected = new Map<string, readonly Edge[]>();
+    const incident = {
+        get(id: string): readonly Edge[] {
+            let edges = selected.get(id);
+            if (!edges) { edges = graph.edges.filter(edge => edge.source === id || edge.target === id); selected.set(id, edges); }
+            return edges;
+        }
+    };
     const index = { nodes: new Map(graph.nodes.map(node => [node.id, node])), incident };
     indexes.set(graph, index);
     return index;
