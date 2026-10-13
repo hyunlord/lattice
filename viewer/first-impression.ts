@@ -34,7 +34,10 @@ export function renderFirstImpression(host: HTMLElement, model: FirstImpression,
     if (model.stack.length) root.append(stack);
     const layout = el('div', '', 'fi-layout');
     const parts = section(t('구성과 연결', 'Components & connections'), 'fi-parts');
-    parts.append(el('p', t(`${model.fileCount}개 제품 파일 · 주요 구성 ${model.components.length}개`, `${model.fileCount} product files · ${model.components.length} featured components`), 'muted'));
+    const auxiliary = model.components.filter(component => component.category === 'auxiliary');
+    const productFiles = model.fileCount - auxiliary.reduce((sum, component) => sum + component.fileCount, 0);
+    const productCount = model.components.length - auxiliary.length;
+    parts.append(el('p', t(`${productFiles}개 제품 파일 · 주요 구성 ${productCount}개`, `${productFiles} product files · ${productCount} featured components`), 'muted'));
     const cards = el('div', '', 'fi-components');
     const card = (component: FirstImpressionComponent, index: number) => {
         const box = el('details', '', 'fi-component'); box.id = 'part-' + index;
@@ -52,7 +55,9 @@ export function renderFirstImpression(host: HTMLElement, model: FirstImpression,
         details.append(context.sources(component.sources), membershipDisclosure(component, model.graphHash, english));
         box.append(details); return box;
     };
-    model.components.forEach((component, index) => cards.append(card(component, index)));
+    const auxiliaryDetails = el('details', '', 'fi-auxiliary'); auxiliaryDetails.append(el('summary', t(`도구·설정 · ${auxiliary.length}개 구성`, `Tools & configuration · ${auxiliary.length} components`)));
+    model.components.forEach((component, index) => (component.category === 'auxiliary' ? auxiliaryDetails : cards).append(card(component, index)));
+    if (auxiliary.length) root.append(auxiliaryDetails);
     const strongest = [...model.dependencies].sort((a, b) => b.importingFileCount + b.declarationCount - a.importingFileCount - a.declarationCount);
     const numbers = new Map(model.components.map((component, index) => [component.id, String(index + 1).padStart(2, '0')]));
     const preview = el('div', '', 'fi-dependency-preview');

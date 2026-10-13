@@ -1,3 +1,4 @@
+import { auxiliaryComponent } from './first-impression-auxiliary.js';
 import { firstImpressionPages } from './first-impression-pages.js';
 import type { ClaimInterpretation } from '../interpretation/model.js';
 import type { Graph } from '../core/model.js';
@@ -24,7 +25,7 @@ export function buildFirstImpression(graph: FirstImpressionGraph, write: FirstIm
         const projectedClaims = note?.validatedClaims.filter(claim => claim.citations.length > 0 && claim.citations.length <= 4).map(claim => ({ purpose: claim.purpose, text: claim.text, citations: claim.citations.map(citation => ({ path: citation.path, contentHash: citation.contentHash, startLine: citation.startLine, endLine: citation.endLine, ...(citation.nodeId ? { nodeId: citation.nodeId } : {}), ...(citation.edgeId ? { edgeId: citation.edgeId } : {}), ...(citation.url ? { url: citation.url } : {}) })) }));
         const titleClaim = projectedClaims?.find(claim => claim.purpose === 'component-name');
         const claims = projectedClaims?.filter(claim => claim.purpose !== 'component-name').slice(0, 2);
-        return { ...component, ...(claims?.length ? { claims } : {}), ...(titleClaim ? { titleClaim } : {}) };
+        return { ...component, ...(auxiliaryComponent(group.members) ? { category: 'auxiliary' as const } : {}), ...(claims?.length ? { claims } : {}), ...(titleClaim ? { titleClaim } : {}) };
     });
     const featured = components.slice(0, 9), visible = new Set(featured.map(component => component.id));
     const remaining = components.slice(9), path = (page: number): string => `${prefix}/remaining-${page}.json`;
