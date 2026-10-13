@@ -26,6 +26,12 @@ Acceptance requires aggregate map+source score at least source-only and either a
 
 ## Verification and delivery
 
+### User closure decision (2026-10-13)
+
+The user accepted the completed comparison: map+source96/96 and16.96% elapsed-time reduction. The original20% target and its failed numerical result above remain historical; do not run another optimization or evaluation campaign to reach20%. Final closure is limited to the reported large-repository MCP cold-request OOM, first-display regressions, two clipped desktop cards, readable dependency counts, and reversible box selection/hover emphasis. The cold request must succeed with the default Node heap and a peak **sum of resident memory across the complete process tree of at most6GB (6000000000bytes)**, using the same frozen large repository. Record sampling method and interval with the result. Existing freshness and warm-response requirements remain.
+
+The initial map has no selected box; execution starts use a badge. Selection and desktop hover distinguish incoming and outgoing dependencies, keep connected boxes prominent, dim unrelated content, and preserve a single selected box. Repeated selection or blank-space interaction clears selection. Retain same-width initial captures and add selected/hover captures for the two requested package maps. Tangled layout is a follow-up issue only; no layout redesign or additional features are authorized. After the closure gates pass, merge PR95 through the normal policy and publish the minimal consumer update, then return to maintenance scope.
+
 Freeze this protocol in a commit before product implementation. Use synthetic regression cases without benchmark identifiers in production code. Retain generic-name CI, all existing tests and Node20/22/24, installed-package and real-browser checks. Validate initial map, expansion, individual focus, calls/flow, details, lazy evidence, snapshot history, URLs/back and390px overflow on the candidate. Review provenance and actual rendered directions, not merely model counts.
 
 Report six equal-width desktop/mobile before-and-after capture sheets first, then the complete per-repository table and a short gate verdict. Partial results stay partial. Lattice and bs-mobile updates follow issue/PR/CI; consumer pins and the existing ADR0040 maintenance paragraph are a separate minimal PR after Lattice verification and merge. No consumer data, lens or gameplay changes are authorized here.
