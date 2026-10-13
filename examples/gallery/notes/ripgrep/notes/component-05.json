@@ -1,0 +1,134 @@
+{
+  "schemaVersion": 1,
+  "targetId": "component:module:crates/matcher/src/interpolate.rs",
+  "summary": "Provides the common text-matching interface and implementations for Rust regex and PCRE2.",
+  "author": "Codex (external agent)",
+  "sources": [
+    {
+      "path": "crates/matcher/src/interpolate.rs",
+      "contentHash": "00b130d37cf2ca685e25f10201f37aa332f5d4cdfe04fe59b00df24a3be1e3a4",
+      "line": 1
+    },
+    {
+      "path": "crates/matcher/src/lib.rs",
+      "contentHash": "98f194a9cd6a5db50fdd08fe20913f6865bd78b8760236d50395155121ea806e",
+      "line": 1
+    },
+    {
+      "path": "crates/pcre2/src/error.rs",
+      "contentHash": "a1d5c41111a55c81a640333b05f8edd41088df9632cc5b20e19fa0eda5ba75b7",
+      "line": 1
+    },
+    {
+      "path": "crates/pcre2/src/lib.rs",
+      "contentHash": "e15a9899c2726518e140e7c464f16ab33928a6da111e75432587e15e2dce48bf",
+      "line": 1
+    },
+    {
+      "path": "crates/pcre2/src/matcher.rs",
+      "contentHash": "dbcc491d733c9eaceaa86c3cdb0819548c2deeb5c2efa3b5b0d001fb443ea380",
+      "line": 1
+    },
+    {
+      "path": "crates/regex/src/ast.rs",
+      "contentHash": "9e45d49f5a06afc87a492b86845a32055e4a7e448474f98990c8d27fb034a9b8",
+      "line": 1
+    },
+    {
+      "path": "crates/regex/src/ban.rs",
+      "contentHash": "9ea2fd822d4e4445df3c54a3081fce35bc2d7b839cc19985aa984e6062d06459",
+      "line": 1
+    },
+    {
+      "path": "crates/regex/src/config.rs",
+      "contentHash": "8af11cac22616a5227542beead8d7ee9fb62c208a5cfc9923c07186eae1fd9cb",
+      "line": 1
+    },
+    {
+      "path": "crates/regex/src/error.rs",
+      "contentHash": "af7b8bfe1575546a9a31780c009bbf315a81a02f823099da34f106e416743ffd",
+      "line": 1
+    },
+    {
+      "path": "crates/regex/src/lib.rs",
+      "contentHash": "1aaa3edac9982c2aea9522c0381a17a6204f826419d58876531fb9de4b13e22a",
+      "line": 1
+    },
+    {
+      "path": "crates/regex/src/literal.rs",
+      "contentHash": "f1746f2df93ba9defed55f36ad0f7cd5dada16a7fa881f80193f8d98948c981f",
+      "line": 1
+    },
+    {
+      "path": "crates/regex/src/matcher.rs",
+      "contentHash": "a98966ab3326c1ff8121987222f602dc8d861b627fbb4f9fa804667ca643065f",
+      "line": 1
+    },
+    {
+      "path": "crates/regex/src/non_matching.rs",
+      "contentHash": "197c6a6e372644a8942f503848d7d1c7749dbbe9694fb6e65073c62cf92a9769",
+      "line": 1
+    },
+    {
+      "path": "crates/regex/src/strip.rs",
+      "contentHash": "f799bbc604e6a306070f8acdf612f396c7ae230d755e2fb98efdad61367ee7ac",
+      "line": 1
+    }
+  ],
+  "claims": [
+    {
+      "purpose": "component-name",
+      "text": "Pattern matching engines",
+      "citations": [
+        {
+          "path": "crates/matcher/src/lib.rs",
+          "contentHash": "98f194a9cd6a5db50fdd08fe20913f6865bd78b8760236d50395155121ea806e",
+          "startLine": 1,
+          "endLine": 12,
+          "excerpt": "/*!\nThis crate provides an interface for regular expressions, with a focus on line\noriented search. The purpose of this crate is to provide a low level matching\ninterface that permits any kind of substring or regex implementation to power\nthe search routines provided by the\n[`grep-searcher`](https://docs.rs/grep-searcher)\ncrate.\n\nThe primary thing provided by this crate is the [`Matcher`] trait. The trait\ndefines an abstract interface for text search. It is robust enough to support\neverything from basic substring search all the way to arbitrarily complex\nregular expression implementations without sacrificing performance."
+        },
+        {
+          "path": "crates/regex/src/lib.rs",
+          "contentHash": "1aaa3edac9982c2aea9522c0381a17a6204f826419d58876531fb9de4b13e22a",
+          "startLine": 1,
+          "endLine": 9,
+          "excerpt": "/*!\nAn implementation of `grep-matcher`'s `Matcher` trait for Rust's regex engine.\n*/\n#![deny(missing_docs)]\n\npub use crate::{\n    error::{Error, ErrorKind},\n    matcher::{RegexCaptures, RegexMatcher, RegexMatcherBuilder},\n};"
+        },
+        {
+          "path": "crates/pcre2/src/lib.rs",
+          "contentHash": "e15a9899c2726518e140e7c464f16ab33928a6da111e75432587e15e2dce48bf",
+          "startLine": 1,
+          "endLine": 13,
+          "excerpt": "/*!\nAn implementation of `grep-matcher`'s `Matcher` trait for\n[PCRE2](https://www.pcre.org/).\n*/\n\n#![deny(missing_docs)]\n\npub use pcre2::{is_jit_available, version};\n\npub use crate::{\n    error::{Error, ErrorKind},\n    matcher::{RegexCaptures, RegexMatcher, RegexMatcherBuilder},\n};"
+        }
+      ]
+    },
+    {
+      "purpose": "component-role",
+      "text": "Provides the common text-matching interface and implementations for Rust regex and PCRE2.",
+      "citations": [
+        {
+          "path": "crates/matcher/src/lib.rs",
+          "contentHash": "98f194a9cd6a5db50fdd08fe20913f6865bd78b8760236d50395155121ea806e",
+          "startLine": 1,
+          "endLine": 12,
+          "excerpt": "/*!\nThis crate provides an interface for regular expressions, with a focus on line\noriented search. The purpose of this crate is to provide a low level matching\ninterface that permits any kind of substring or regex implementation to power\nthe search routines provided by the\n[`grep-searcher`](https://docs.rs/grep-searcher)\ncrate.\n\nThe primary thing provided by this crate is the [`Matcher`] trait. The trait\ndefines an abstract interface for text search. It is robust enough to support\neverything from basic substring search all the way to arbitrarily complex\nregular expression implementations without sacrificing performance."
+        },
+        {
+          "path": "crates/regex/src/lib.rs",
+          "contentHash": "1aaa3edac9982c2aea9522c0381a17a6204f826419d58876531fb9de4b13e22a",
+          "startLine": 1,
+          "endLine": 9,
+          "excerpt": "/*!\nAn implementation of `grep-matcher`'s `Matcher` trait for Rust's regex engine.\n*/\n#![deny(missing_docs)]\n\npub use crate::{\n    error::{Error, ErrorKind},\n    matcher::{RegexCaptures, RegexMatcher, RegexMatcherBuilder},\n};"
+        },
+        {
+          "path": "crates/pcre2/src/lib.rs",
+          "contentHash": "e15a9899c2726518e140e7c464f16ab33928a6da111e75432587e15e2dce48bf",
+          "startLine": 1,
+          "endLine": 13,
+          "excerpt": "/*!\nAn implementation of `grep-matcher`'s `Matcher` trait for\n[PCRE2](https://www.pcre.org/).\n*/\n\n#![deny(missing_docs)]\n\npub use pcre2::{is_jit_available, version};\n\npub use crate::{\n    error::{Error, ErrorKind},\n    matcher::{RegexCaptures, RegexMatcher, RegexMatcherBuilder},\n};"
+        }
+      ]
+    }
+  ]
+}

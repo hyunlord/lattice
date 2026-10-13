@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "targetId": "component:module:build.gradle.kts",
+  "summary": "Lists shared Gradle plugins to keep subproject build classpaths consistent.",
+  "author": "Codex (external agent)",
+  "sources": [
+    {
+      "path": "build.gradle.kts",
+      "contentHash": "6506127cc13f998f0e7fefcab2629f19262132ff5e8b61fb2c1c9e62429c1730",
+      "line": 1
+    }
+  ],
+  "claims": [
+    {
+      "purpose": "component-name",
+      "text": "Shared build plugins",
+      "citations": [
+        {
+          "path": "build.gradle.kts",
+          "contentHash": "6506127cc13f998f0e7fefcab2629f19262132ff5e8b61fb2c1c9e62429c1730",
+          "startLine": 17,
+          "endLine": 30,
+          "excerpt": "/*\n * By listing all the plugins used throughout all subprojects in the root project build script, it\n * ensures that the build script classpath remains the same for all projects. This avoids potential\n * problems with mismatching versions of transitive plugin dependencies. A subproject that applies\n * an unlisted plugin will have that plugin and its dependencies _appended_ to the classpath, not\n * replacing pre-existing dependencies.\n */\nplugins {\n    alias(libs.plugins.android.application) apply false\n    alias(libs.plugins.android.library) apply false\n    alias(libs.plugins.android.test) apply false\n    alias(libs.plugins.baselineprofile) apply false\n    alias(libs.plugins.compose) apply false\n    alias(libs.plugins.kotlin.jvm) apply false"
+        }
+      ]
+    },
+    {
+      "purpose": "component-role",
+      "text": "Lists shared Gradle plugins to keep subproject build classpaths consistent.",
+      "citations": [
+        {
+          "path": "build.gradle.kts",
+          "contentHash": "6506127cc13f998f0e7fefcab2629f19262132ff5e8b61fb2c1c9e62429c1730",
+          "startLine": 17,
+          "endLine": 30,
+          "excerpt": "/*\n * By listing all the plugins used throughout all subprojects in the root project build script, it\n * ensures that the build script classpath remains the same for all projects. This avoids potential\n * problems with mismatching versions of transitive plugin dependencies. A subproject that applies\n * an unlisted plugin will have that plugin and its dependencies _appended_ to the classpath, not\n * replacing pre-existing dependencies.\n */\nplugins {\n    alias(libs.plugins.android.application) apply false\n    alias(libs.plugins.android.library) apply false\n    alias(libs.plugins.android.test) apply false\n    alias(libs.plugins.baselineprofile) apply false\n    alias(libs.plugins.compose) apply false\n    alias(libs.plugins.kotlin.jvm) apply false"
+        }
+      ]
+    }
+  ]
+}

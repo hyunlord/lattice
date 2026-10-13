@@ -1,0 +1,108 @@
+{
+  "schemaVersion": 1,
+  "targetId": "component:module:src/main/java/org/springframework/samples/petclinic/PetClinicRuntimeHints.java",
+  "summary": "Combines owner, visit, and veterinarian records with native resource and serialization hints.",
+  "author": "Codex (external agent)",
+  "sources": [
+    {
+      "path": "src/main/java/org/springframework/samples/petclinic/model/BaseEntity.java",
+      "contentHash": "2c8f47a328f8bc4ad0ed887890dcf731469ec8f1032b5420d173c7aa5a352600",
+      "line": 1
+    },
+    {
+      "path": "src/main/java/org/springframework/samples/petclinic/model/Person.java",
+      "contentHash": "a872c368cd5b09a7cb8a3f42e1baff1f6b0adc7cfc5bccf5f426374292ba4244",
+      "line": 1
+    },
+    {
+      "path": "src/main/java/org/springframework/samples/petclinic/owner/Owner.java",
+      "contentHash": "a5273cbccaf4993c92cc204c4481d52ebc611b731862f078b203b2a7eefa5f8a",
+      "line": 1
+    },
+    {
+      "path": "src/main/java/org/springframework/samples/petclinic/owner/Visit.java",
+      "contentHash": "587191bc74fbbb696e90114366db6988cd6f07c25cd2e991c038d6bda52df123",
+      "line": 1
+    },
+    {
+      "path": "src/main/java/org/springframework/samples/petclinic/PetClinicRuntimeHints.java",
+      "contentHash": "2a365e4c85ec16300ccc6101e2543980a30ea72c34c6a0c51d5e56c0d5ad6633",
+      "line": 1
+    },
+    {
+      "path": "src/main/java/org/springframework/samples/petclinic/vet/Vet.java",
+      "contentHash": "8548e47aaf310b276d5cc9f58976756339b16a02ac47944f778260f2ed121b78",
+      "line": 1
+    }
+  ],
+  "claims": [
+    {
+      "purpose": "component-name",
+      "text": "Clinic records and runtime hints",
+      "citations": [
+        {
+          "path": "src/main/java/org/springframework/samples/petclinic/owner/Owner.java",
+          "contentHash": "a5273cbccaf4993c92cc204c4481d52ebc611b731862f078b203b2a7eefa5f8a",
+          "startLine": 38,
+          "endLine": 50,
+          "excerpt": "/**\n * Simple JavaBean domain object representing an owner.\n *\n * @author Ken Krebs\n * @author Juergen Hoeller\n * @author Sam Brannen\n * @author Michael Isvy\n * @author Oliver Drotbohm\n * @author Wick Dynex\n */\n@Entity\n@Table(name = \"owners\")\npublic class Owner extends Person {"
+        },
+        {
+          "path": "src/main/java/org/springframework/samples/petclinic/owner/Visit.java",
+          "contentHash": "587191bc74fbbb696e90114366db6988cd6f07c25cd2e991c038d6bda52df123",
+          "startLine": 29,
+          "endLine": 37,
+          "excerpt": "/**\n * Simple JavaBean domain object representing a visit.\n *\n * @author Ken Krebs\n * @author Dave Syer\n */\n@Entity\n@Table(name = \"visits\")\npublic class Visit extends BaseEntity {"
+        },
+        {
+          "path": "src/main/java/org/springframework/samples/petclinic/vet/Vet.java",
+          "contentHash": "8548e47aaf310b276d5cc9f58976756339b16a02ac47944f778260f2ed121b78",
+          "startLine": 35,
+          "endLine": 45,
+          "excerpt": "/**\n * Simple JavaBean domain object representing a veterinarian.\n *\n * @author Ken Krebs\n * @author Juergen Hoeller\n * @author Sam Brannen\n * @author Arjen Poutsma\n */\n@Entity\n@Table(name = \"vets\")\npublic class Vet extends Person {"
+        },
+        {
+          "path": "src/main/java/org/springframework/samples/petclinic/PetClinicRuntimeHints.java",
+          "contentHash": "2a365e4c85ec16300ccc6101e2543980a30ea72c34c6a0c51d5e56c0d5ad6633",
+          "startLine": 25,
+          "endLine": 35,
+          "excerpt": "public class PetClinicRuntimeHints implements RuntimeHintsRegistrar {\n\n\t@Override\n\tpublic void registerHints(RuntimeHints hints, ClassLoader classLoader) {\n\t\thints.resources().registerPattern(\"db/*\"); // https://github.com/spring-projects/spring-boot/issues/32654\n\t\thints.resources().registerPattern(\"db/*/*\"); // nested db/{h2,mysql,postgres}\n\t\thints.resources().registerPattern(\"messages/*\");\n\t\thints.resources().registerPattern(\"mysql-default-conf\");\n\t\thints.reflection().registerType(BaseEntity.class, typeHint -> typeHint.withJavaSerialization(true));\n\t\thints.reflection().registerType(Person.class, typeHint -> typeHint.withJavaSerialization(true));\n\t\thints.reflection().registerType(Vet.class, typeHint -> typeHint.withJavaSerialization(true));"
+        }
+      ]
+    },
+    {
+      "purpose": "component-role",
+      "text": "Combines owner, visit, and veterinarian records with native resource and serialization hints.",
+      "citations": [
+        {
+          "path": "src/main/java/org/springframework/samples/petclinic/owner/Owner.java",
+          "contentHash": "a5273cbccaf4993c92cc204c4481d52ebc611b731862f078b203b2a7eefa5f8a",
+          "startLine": 38,
+          "endLine": 50,
+          "excerpt": "/**\n * Simple JavaBean domain object representing an owner.\n *\n * @author Ken Krebs\n * @author Juergen Hoeller\n * @author Sam Brannen\n * @author Michael Isvy\n * @author Oliver Drotbohm\n * @author Wick Dynex\n */\n@Entity\n@Table(name = \"owners\")\npublic class Owner extends Person {"
+        },
+        {
+          "path": "src/main/java/org/springframework/samples/petclinic/owner/Visit.java",
+          "contentHash": "587191bc74fbbb696e90114366db6988cd6f07c25cd2e991c038d6bda52df123",
+          "startLine": 29,
+          "endLine": 37,
+          "excerpt": "/**\n * Simple JavaBean domain object representing a visit.\n *\n * @author Ken Krebs\n * @author Dave Syer\n */\n@Entity\n@Table(name = \"visits\")\npublic class Visit extends BaseEntity {"
+        },
+        {
+          "path": "src/main/java/org/springframework/samples/petclinic/vet/Vet.java",
+          "contentHash": "8548e47aaf310b276d5cc9f58976756339b16a02ac47944f778260f2ed121b78",
+          "startLine": 35,
+          "endLine": 45,
+          "excerpt": "/**\n * Simple JavaBean domain object representing a veterinarian.\n *\n * @author Ken Krebs\n * @author Juergen Hoeller\n * @author Sam Brannen\n * @author Arjen Poutsma\n */\n@Entity\n@Table(name = \"vets\")\npublic class Vet extends Person {"
+        },
+        {
+          "path": "src/main/java/org/springframework/samples/petclinic/PetClinicRuntimeHints.java",
+          "contentHash": "2a365e4c85ec16300ccc6101e2543980a30ea72c34c6a0c51d5e56c0d5ad6633",
+          "startLine": 25,
+          "endLine": 35,
+          "excerpt": "public class PetClinicRuntimeHints implements RuntimeHintsRegistrar {\n\n\t@Override\n\tpublic void registerHints(RuntimeHints hints, ClassLoader classLoader) {\n\t\thints.resources().registerPattern(\"db/*\"); // https://github.com/spring-projects/spring-boot/issues/32654\n\t\thints.resources().registerPattern(\"db/*/*\"); // nested db/{h2,mysql,postgres}\n\t\thints.resources().registerPattern(\"messages/*\");\n\t\thints.resources().registerPattern(\"mysql-default-conf\");\n\t\thints.reflection().registerType(BaseEntity.class, typeHint -> typeHint.withJavaSerialization(true));\n\t\thints.reflection().registerType(Person.class, typeHint -> typeHint.withJavaSerialization(true));\n\t\thints.reflection().registerType(Vet.class, typeHint -> typeHint.withJavaSerialization(true));"
+        }
+      ]
+    }
+  ]
+}

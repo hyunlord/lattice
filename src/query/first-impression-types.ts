@@ -13,12 +13,13 @@ export type FirstImpressionComponent = {
     readonly sources: readonly Source[];
     readonly membershipPath: string;
     readonly claims?: readonly FirstImpressionClaim[];
+    readonly titleClaim?: FirstImpressionClaim;
 };
 export type FirstImpressionDependency = { readonly source: string; readonly target: string; readonly importingFileCount: number; readonly declarationCount: number; readonly sources: readonly Source[]; };
-export type FirstImpressionEntrypoint = { readonly id: string; readonly name: string; readonly category: 'executable' | 'public-api'; readonly source: Source; };
+export type FirstImpressionEntrypoint = { readonly id: string; readonly name: string; readonly category: 'executable' | 'public-api'; readonly source: Source; readonly componentId?: string; readonly targetKind?: 'function' | 'node'; readonly basis?: 'static-call-graph' | 'package-entry' | 'ui-root'; };
 export type FirstImpressionFlow = {
     readonly rootId: string;
-    readonly nodes: readonly { readonly id: string; readonly name: string; readonly source?: Source; }[];
+    readonly nodes: readonly { readonly id: string; readonly name: string; readonly source?: Source; readonly componentId?: string; }[];
     readonly edges: readonly { readonly id: string; readonly source: string; readonly target: string; readonly sources: readonly Source[]; }[];
     readonly truncated: boolean;
     readonly basis: 'static-call-graph';

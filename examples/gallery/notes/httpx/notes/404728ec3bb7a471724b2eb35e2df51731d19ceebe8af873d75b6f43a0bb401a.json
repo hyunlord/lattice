@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "targetId": "component:module:httpx/_auth.py",
+  "summary": "Defines pluggable authentication flows for synchronous and asynchronous clients.",
+  "author": "Codex (external agent)",
+  "sources": [
+    {
+      "path": "httpx/_auth.py",
+      "contentHash": "60f0aac5d3c7b9b60c0f5a2bc284636e284a4b1e0f65c0028567dc98841f580b",
+      "line": 1
+    }
+  ],
+  "claims": [
+    {
+      "purpose": "component-name",
+      "text": "Authentication",
+      "citations": [
+        {
+          "path": "httpx/_auth.py",
+          "contentHash": "60f0aac5d3c7b9b60c0f5a2bc284636e284a4b1e0f65c0028567dc98841f580b",
+          "startLine": 19,
+          "endLine": 33,
+          "excerpt": "__all__ = [\"Auth\", \"BasicAuth\", \"DigestAuth\", \"FunctionAuth\", \"NetRCAuth\"]\n\n\nclass Auth:\n    \"\"\"\n    Base class for all authentication schemes.\n\n    To implement a custom authentication scheme, subclass `Auth` and override\n    the `.auth_flow()` method.\n\n    If the authentication scheme does I/O such as disk access or network calls, or uses\n    synchronization primitives such as locks, you should override `.sync_auth_flow()`\n    and/or `.async_auth_flow()` instead of `.auth_flow()` to provide specialized\n    implementations that will be used by `Client` and `AsyncClient` respectively.\n    \"\"\""
+        }
+      ]
+    },
+    {
+      "purpose": "component-role",
+      "text": "Defines pluggable authentication flows for synchronous and asynchronous clients.",
+      "citations": [
+        {
+          "path": "httpx/_auth.py",
+          "contentHash": "60f0aac5d3c7b9b60c0f5a2bc284636e284a4b1e0f65c0028567dc98841f580b",
+          "startLine": 19,
+          "endLine": 33,
+          "excerpt": "__all__ = [\"Auth\", \"BasicAuth\", \"DigestAuth\", \"FunctionAuth\", \"NetRCAuth\"]\n\n\nclass Auth:\n    \"\"\"\n    Base class for all authentication schemes.\n\n    To implement a custom authentication scheme, subclass `Auth` and override\n    the `.auth_flow()` method.\n\n    If the authentication scheme does I/O such as disk access or network calls, or uses\n    synchronization primitives such as locks, you should override `.sync_auth_flow()`\n    and/or `.async_auth_flow()` instead of `.auth_flow()` to provide specialized\n    implementations that will be used by `Client` and `AsyncClient` respectively.\n    \"\"\""
+        }
+      ]
+    }
+  ]
+}

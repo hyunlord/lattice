@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "targetId": "component:module:httpx/_urlparse.py",
+  "summary": "Validates URLs and normalizes schemes, hosts, ports and paths.",
+  "author": "Codex (external agent)",
+  "sources": [
+    {
+      "path": "httpx/_urlparse.py",
+      "contentHash": "640987e3b38d7e4c6bae3f8f3d88467a21e36fa0232824be00d58837838bfca6",
+      "line": 1
+    },
+    {
+      "path": "httpx/_urls.py",
+      "contentHash": "a9ef05964015f9499a66e55cd0c4e1e0ae7a51f93cd9a1fe9e007d793edb7981",
+      "line": 1
+    }
+  ],
+  "claims": [
+    {
+      "purpose": "component-name",
+      "text": "URL parsing and normalization",
+      "citations": [
+        {
+          "path": "httpx/_urlparse.py",
+          "contentHash": "640987e3b38d7e4c6bae3f8f3d88467a21e36fa0232824be00d58837838bfca6",
+          "startLine": 1,
+          "endLine": 16,
+          "excerpt": "\"\"\"\nAn implementation of `urlparse` that provides URL validation and normalization\nas described by RFC3986.\n\nWe rely on this implementation rather than the one in Python's stdlib, because:\n\n* It provides more complete URL validation.\n* It properly differentiates between an empty querystring and an absent querystring,\n  to distinguish URLs with a trailing '?'.\n* It handles scheme, hostname, port, and path normalization.\n* It supports IDNA hostnames, normalizing them to their encoded form.\n* The API supports passing individual components, as well as the complete URL string.\n\nPreviously we relied on the excellent `rfc3986` package to handle URL parsing and\nvalidation, but this module provides a simpler alternative, with less indirection\nrequired."
+        }
+      ]
+    },
+    {
+      "purpose": "component-role",
+      "text": "Validates URLs and normalizes schemes, hosts, ports and paths.",
+      "citations": [
+        {
+          "path": "httpx/_urlparse.py",
+          "contentHash": "640987e3b38d7e4c6bae3f8f3d88467a21e36fa0232824be00d58837838bfca6",
+          "startLine": 1,
+          "endLine": 16,
+          "excerpt": "\"\"\"\nAn implementation of `urlparse` that provides URL validation and normalization\nas described by RFC3986.\n\nWe rely on this implementation rather than the one in Python's stdlib, because:\n\n* It provides more complete URL validation.\n* It properly differentiates between an empty querystring and an absent querystring,\n  to distinguish URLs with a trailing '?'.\n* It handles scheme, hostname, port, and path normalization.\n* It supports IDNA hostnames, normalizing them to their encoded form.\n* The API supports passing individual components, as well as the complete URL string.\n\nPreviously we relied on the excellent `rfc3986` package to handle URL parsing and\nvalidation, but this module provides a simpler alternative, with less indirection\nrequired."
+        }
+      ]
+    }
+  ]
+}

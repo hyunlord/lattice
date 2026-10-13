@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "targetId": "component:module:kokoro/build.sh",
+  "summary": "Installs Java and builds the project and Android test artifacts for CI.",
+  "author": "Codex (external agent)",
+  "sources": [
+    {
+      "path": "kokoro/build.sh",
+      "contentHash": "3ce9740df9f8649435037454b4d8f9f9fe30b0456dc0dd67ea5e802cd0c21a0f",
+      "line": 1
+    },
+    {
+      "path": "kokoro/nightly.sh",
+      "contentHash": "9579c5e859db35bb16bfed8c673936594bf0197d680bc82c57973db21b4d4fae",
+      "line": 1
+    }
+  ],
+  "claims": [
+    {
+      "purpose": "component-name",
+      "text": "CI build preparation",
+      "citations": [
+        {
+          "path": "kokoro/build.sh",
+          "contentHash": "3ce9740df9f8649435037454b4d8f9f9fe30b0456dc0dd67ea5e802cd0c21a0f",
+          "startLine": 38,
+          "endLine": 51,
+          "excerpt": "# The build needs Java 17, set it as the default Java version.\nsudo apt-get update\nsudo apt-get install -y openjdk-17-jdk\nsudo update-alternatives --set java /usr/lib/jvm/java-17-openjdk-amd64/bin/java\njava -version\n\n# Also clear JAVA_HOME variable so java -version is used instead\nexport JAVA_HOME=\n\n./gradlew \"${GRADLE_FLAGS[@]}\" build\n\n# For Firebase Test Lab\n./gradlew assembleAndroidTest\n./gradlew assembleDebug"
+        }
+      ]
+    },
+    {
+      "purpose": "component-role",
+      "text": "Installs Java and builds the project and Android test artifacts for CI.",
+      "citations": [
+        {
+          "path": "kokoro/build.sh",
+          "contentHash": "3ce9740df9f8649435037454b4d8f9f9fe30b0456dc0dd67ea5e802cd0c21a0f",
+          "startLine": 38,
+          "endLine": 51,
+          "excerpt": "# The build needs Java 17, set it as the default Java version.\nsudo apt-get update\nsudo apt-get install -y openjdk-17-jdk\nsudo update-alternatives --set java /usr/lib/jvm/java-17-openjdk-amd64/bin/java\njava -version\n\n# Also clear JAVA_HOME variable so java -version is used instead\nexport JAVA_HOME=\n\n./gradlew \"${GRADLE_FLAGS[@]}\" build\n\n# For Firebase Test Lab\n./gradlew assembleAndroidTest\n./gradlew assembleDebug"
+        }
+      ]
+    }
+  ]
+}

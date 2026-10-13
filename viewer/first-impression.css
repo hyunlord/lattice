@@ -2,7 +2,7 @@
 .fi-head { margin-bottom:var(--space-4); }
 .fi-eyebrow,.fi-label { color:var(--muted); font-size:var(--type-meta); }
 .fi-eyebrow { margin-bottom:var(--space-1); }
-.fi-purpose { max-width:80ch; font-size:var(--type-section); line-height:1.5; }
+.fi-purpose { max-width:80ch; font-size:var(--type-section); line-height:1.5; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
 .fi-tools { display:flex; flex-wrap:wrap; gap:var(--space-2) var(--space-5); }
 .fi-tools a { display:inline-flex; align-items:center; min-height:44px; }
 .fi-stack { display:flex; flex-wrap:wrap; gap:var(--space-2); margin-bottom:var(--space-5); }
@@ -71,3 +71,39 @@ body.picture-home .first-impression { padding:var(--space-6); }
  .fi-parts>.muted { margin-bottom:var(--space-2); }
  .fi-entry,.fi-flows { margin-top:var(--space-3); }
 }
+.fi-structure { margin-block:var(--space-4) var(--space-6); }
+.fi-structure h2 { margin-bottom:var(--space-1); }
+.fi-diagram-legend { color:var(--muted); font-size:var(--type-meta); margin-bottom:0; }
+.fi-diagram { width:100%; position:relative; }
+.fi-diagram-lines { position:absolute; inset:0; width:100%; height:100%; overflow:visible; }
+.fi-dependency-line { stroke:var(--muted); opacity:.72; }
+.fi-arrow { fill:var(--muted); }
+.fi-call-line { stroke:var(--accent); stroke-dasharray:8 4; }
+.fi-call-arrow { fill:var(--accent); }
+.fi-edge-count { fill:var(--text); font-size:12px; font-family:var(--mono); paint-order:stroke; stroke:var(--canvas); stroke-width:5px; stroke-linejoin:round; }
+.fi-diagram-box { position:absolute; box-sizing:border-box; padding:var(--space-3); border:1px solid var(--border); border-radius:4px; background:var(--surface); display:flex; flex-direction:column; min-width:0; }
+.fi-diagram-box h3 { font-size:var(--type-body); line-height:1.35; margin:0 0 var(--space-2); }
+.fi-diagram-box h3 button { color:var(--text); border:0; background:transparent; padding:0; text-align:left; font:inherit; font-weight:650; cursor:pointer; width:100%; min-height:32px; overflow-wrap:anywhere; }
+.fi-diagram-role { font-size:var(--type-meta); line-height:1.45; margin:0; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
+.fi-diagram-citations { font-size:11px; line-height:1.4; margin-top:auto; display:flex; align-items:baseline; gap:var(--space-1); overflow:hidden; max-height:32px; }
+.fi-diagram-citations details { margin:0; }
+.fi-diagram-citations ul { margin:0; padding:0; list-style:none; }
+.fi-diagram-citations a { overflow-wrap:anywhere; }
+.fi-start-badge { font-size:11px; color:var(--accent); margin-bottom:var(--space-1); }
+.fi-diagram-flow { border-left:3px dashed var(--accent); padding-left:var(--space-3); font-size:var(--type-meta); }
+.fi-layout { border-top:1px solid var(--border); padding-top:var(--space-5); }
+@media(max-width:639px) { .fi-diagram-box h3 button { min-height:44px; } .fi-diagram-box { padding:var(--space-2); } .fi-head h1 { font-size:24px; margin-bottom:var(--space-1); } .fi-purpose { margin-bottom:var(--space-2); } .fi-diagram-legend { font-size:12px; } }
+.fi-flow-component { border-color:var(--accent); border-left:3px dashed var(--accent); }
+.fi-expand-directions { min-height:44px; }
+@media(max-width:639px) {
+ .fi-diagram-box h3 { font-size:14px; margin-bottom:var(--space-1); }
+ .fi-diagram-box h3 button { min-height:0; line-height:1.3; }
+ .fi-diagram-role { font-size:12px; }
+ .fi-diagram-citations { font-size:11px; flex-wrap:wrap; max-height:28px; gap:0 var(--space-1); }
+ .fi-diagram-citations a { white-space:nowrap; }
+ .fi-start-badge { font-size:10px; }
+ .fi-eyebrow { display:none; }
+ .fi-structure { margin-top:var(--space-2); }
+ .fi-diagram-legend { line-height:1.3; }
+}
+@media(max-width:639px) { .fi-edge-count { display:none; } }

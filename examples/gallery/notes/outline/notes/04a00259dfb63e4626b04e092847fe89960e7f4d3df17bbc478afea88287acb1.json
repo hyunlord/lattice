@@ -1,0 +1,85 @@
+{
+  "schemaVersion": 1,
+  "targetId": "component:module:app/components/List/List.ts",
+  "summary": "Defines a plain ordered-list component and declarations for application interfaces.",
+  "author": "Codex (external agent)",
+  "sources": [
+    {
+      "path": "app/components/List/index.ts",
+      "contentHash": "191179de4d1db650824660c7b5e759f769dcc934cf11e732fce49a10dd0869f8",
+      "line": 1
+    },
+    {
+      "path": "app/components/List/List.ts",
+      "contentHash": "33969ccea237fdb55319bf4a88c8817b22cdf768ca7fe76fbc9791c75f522248",
+      "line": 1
+    },
+    {
+      "path": "app/typings/i18next.d.ts",
+      "contentHash": "e68acb20c34536ff3b074895a2d7cc48c6f2918823a7fc52d66834c30924df62",
+      "line": 1
+    },
+    {
+      "path": "app/typings/index.d.ts",
+      "contentHash": "3d100fc92c39da1489e9248692252da63a5445ea967113bc5103e73aee2dd361",
+      "line": 1
+    },
+    {
+      "path": "app/typings/prosemirror-view.d.ts",
+      "contentHash": "d2b694f670bc255cd46a0e84e322a9f87737fe7392bc469b546906cce60338ed",
+      "line": 1
+    },
+    {
+      "path": "app/typings/react.d.ts",
+      "contentHash": "dfe8484c9af7cd1e0cd1bc8ad0ea92f81b40924a4e11dbc3e7e3fd825fe6b72b",
+      "line": 1
+    },
+    {
+      "path": "app/typings/styled-components.d.ts",
+      "contentHash": "3b4e4e6d708e4e8dd8295aecd1cc2b821ec663fb04be0b2b1be5f30005ee34f1",
+      "line": 1
+    }
+  ],
+  "claims": [
+    {
+      "purpose": "component-name",
+      "text": "List styling and interface types",
+      "citations": [
+        {
+          "path": "app/components/List/List.ts",
+          "contentHash": "33969ccea237fdb55319bf4a88c8817b22cdf768ca7fe76fbc9791c75f522248",
+          "startLine": 1,
+          "endLine": 9,
+          "excerpt": "import styled from \"styled-components\";\n\nconst List = styled.ol`\n  margin: 0;\n  padding: 0;\n  list-style: none;\n`;\n\nexport default List;"
+        },
+        {
+          "path": "app/typings/i18next.d.ts",
+          "contentHash": "e68acb20c34536ff3b074895a2d7cc48c6f2918823a7fc52d66834c30924df62",
+          "startLine": 1,
+          "endLine": 7,
+          "excerpt": "import \"i18next\";\n\ndeclare module \"i18next\" {\n  interface CustomTypeOptions {\n    returnNull: false;\n  }\n}"
+        }
+      ]
+    },
+    {
+      "purpose": "component-role",
+      "text": "Defines a plain ordered-list component and declarations for application interfaces.",
+      "citations": [
+        {
+          "path": "app/components/List/List.ts",
+          "contentHash": "33969ccea237fdb55319bf4a88c8817b22cdf768ca7fe76fbc9791c75f522248",
+          "startLine": 1,
+          "endLine": 9,
+          "excerpt": "import styled from \"styled-components\";\n\nconst List = styled.ol`\n  margin: 0;\n  padding: 0;\n  list-style: none;\n`;\n\nexport default List;"
+        },
+        {
+          "path": "app/typings/i18next.d.ts",
+          "contentHash": "e68acb20c34536ff3b074895a2d7cc48c6f2918823a7fc52d66834c30924df62",
+          "startLine": 1,
+          "endLine": 7,
+          "excerpt": "import \"i18next\";\n\ndeclare module \"i18next\" {\n  interface CustomTypeOptions {\n    returnNull: false;\n  }\n}"
+        }
+      ]
+    }
+  ]
+}

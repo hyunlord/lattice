@@ -1,0 +1,89 @@
+{
+  "schemaVersion": 1,
+  "targetId": "component:module:httpx/_config.py",
+  "summary": "Configures pooled network connections and handles content decoding and request errors.",
+  "author": "Codex (external agent)",
+  "sources": [
+    {
+      "path": "httpx/_config.py",
+      "contentHash": "a4fa7653ec2271f70ab05f8a6111352d876dddee84446788a1767c1a3a372d67",
+      "line": 1
+    },
+    {
+      "path": "httpx/_decoders.py",
+      "contentHash": "a74757f08d0d1077b1b37506a784ac66eb62321b17aeb5a5ebe1a7a956f488a3",
+      "line": 1
+    },
+    {
+      "path": "httpx/_exceptions.py",
+      "contentHash": "494a7dec969198444f988c6ab8dc480273a6f2aa11ae523a094e0cbc90f1b7d7",
+      "line": 1
+    },
+    {
+      "path": "httpx/_models.py",
+      "contentHash": "af118b075a5bcece608acbc989b221703935cbea128a4a98ca21a23ff3e860ac",
+      "line": 1
+    },
+    {
+      "path": "httpx/_transports/default.py",
+      "contentHash": "bfb106716ce33f4c29583cc1e43803109a9dba532613ec4f6fe2cd09e7c022e3",
+      "line": 1
+    }
+  ],
+  "claims": [
+    {
+      "purpose": "component-name",
+      "text": "HTTP transport and decoding",
+      "citations": [
+        {
+          "path": "httpx/_transports/default.py",
+          "contentHash": "bfb106716ce33f4c29583cc1e43803109a9dba532613ec4f6fe2cd09e7c022e3",
+          "startLine": 135,
+          "endLine": 167,
+          "excerpt": "class HTTPTransport(BaseTransport):\n    def __init__(\n        self,\n        verify: ssl.SSLContext | str | bool = True,\n        cert: CertTypes | None = None,\n        trust_env: bool = True,\n        http1: bool = True,\n        http2: bool = False,\n        limits: Limits = DEFAULT_LIMITS,\n        proxy: ProxyTypes | None = None,\n        uds: str | None = None,\n        local_address: str | None = None,\n        retries: int = 0,\n        socket_options: typing.Iterable[SOCKET_OPTION] | None = None,\n    ) -> None:\n        import httpcore\n\n        proxy = Proxy(url=proxy) if isinstance(proxy, (str, URL)) else proxy\n        ssl_context = create_ssl_context(verify=verify, cert=cert, trust_env=trust_env)\n\n        if proxy is None:\n            self._pool = httpcore.ConnectionPool(\n                ssl_context=ssl_context,\n                max_connections=limits.max_connections,\n                max_keepalive_connections=limits.max_keepalive_connections,\n                keepalive_expiry=limits.keepalive_expiry,\n                http1=http1,\n                http2=http2,\n                uds=uds,\n                local_address=local_address,\n                retries=retries,\n                socket_options=socket_options,\n            )"
+        },
+        {
+          "path": "httpx/_decoders.py",
+          "contentHash": "a74757f08d0d1077b1b37506a784ac66eb62321b17aeb5a5ebe1a7a956f488a3",
+          "startLine": 1,
+          "endLine": 5,
+          "excerpt": "\"\"\"\nHandlers for Content-Encoding.\n\nSee: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Encoding\n\"\"\""
+        },
+        {
+          "path": "httpx/_exceptions.py",
+          "contentHash": "494a7dec969198444f988c6ab8dc480273a6f2aa11ae523a094e0cbc90f1b7d7",
+          "startLine": 1,
+          "endLine": 32,
+          "excerpt": "\"\"\"\nOur exception hierarchy:\n\n* HTTPError\n  x RequestError\n    + TransportError\n      - TimeoutException\n        \u00b7 ConnectTimeout\n        \u00b7 ReadTimeout\n        \u00b7 WriteTimeout\n        \u00b7 PoolTimeout\n      - NetworkError\n        \u00b7 ConnectError\n        \u00b7 ReadError\n        \u00b7 WriteError\n        \u00b7 CloseError\n      - ProtocolError\n        \u00b7 LocalProtocolError\n        \u00b7 RemoteProtocolError\n      - ProxyError\n      - UnsupportedProtocol\n    + DecodingError\n    + TooManyRedirects\n  x HTTPStatusError\n* InvalidURL\n* CookieConflict\n* StreamError\n  x StreamConsumed\n  x StreamClosed\n  x ResponseNotRead\n  x RequestNotRead\n\"\"\""
+        }
+      ]
+    },
+    {
+      "purpose": "component-role",
+      "text": "Configures pooled network connections and handles content decoding and request errors.",
+      "citations": [
+        {
+          "path": "httpx/_transports/default.py",
+          "contentHash": "bfb106716ce33f4c29583cc1e43803109a9dba532613ec4f6fe2cd09e7c022e3",
+          "startLine": 135,
+          "endLine": 167,
+          "excerpt": "class HTTPTransport(BaseTransport):\n    def __init__(\n        self,\n        verify: ssl.SSLContext | str | bool = True,\n        cert: CertTypes | None = None,\n        trust_env: bool = True,\n        http1: bool = True,\n        http2: bool = False,\n        limits: Limits = DEFAULT_LIMITS,\n        proxy: ProxyTypes | None = None,\n        uds: str | None = None,\n        local_address: str | None = None,\n        retries: int = 0,\n        socket_options: typing.Iterable[SOCKET_OPTION] | None = None,\n    ) -> None:\n        import httpcore\n\n        proxy = Proxy(url=proxy) if isinstance(proxy, (str, URL)) else proxy\n        ssl_context = create_ssl_context(verify=verify, cert=cert, trust_env=trust_env)\n\n        if proxy is None:\n            self._pool = httpcore.ConnectionPool(\n                ssl_context=ssl_context,\n                max_connections=limits.max_connections,\n                max_keepalive_connections=limits.max_keepalive_connections,\n                keepalive_expiry=limits.keepalive_expiry,\n                http1=http1,\n                http2=http2,\n                uds=uds,\n                local_address=local_address,\n                retries=retries,\n                socket_options=socket_options,\n            )"
+        },
+        {
+          "path": "httpx/_decoders.py",
+          "contentHash": "a74757f08d0d1077b1b37506a784ac66eb62321b17aeb5a5ebe1a7a956f488a3",
+          "startLine": 1,
+          "endLine": 5,
+          "excerpt": "\"\"\"\nHandlers for Content-Encoding.\n\nSee: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Encoding\n\"\"\""
+        },
+        {
+          "path": "httpx/_exceptions.py",
+          "contentHash": "494a7dec969198444f988c6ab8dc480273a6f2aa11ae523a094e0cbc90f1b7d7",
+          "startLine": 1,
+          "endLine": 32,
+          "excerpt": "\"\"\"\nOur exception hierarchy:\n\n* HTTPError\n  x RequestError\n    + TransportError\n      - TimeoutException\n        \u00b7 ConnectTimeout\n        \u00b7 ReadTimeout\n        \u00b7 WriteTimeout\n        \u00b7 PoolTimeout\n      - NetworkError\n        \u00b7 ConnectError\n        \u00b7 ReadError\n        \u00b7 WriteError\n        \u00b7 CloseError\n      - ProtocolError\n        \u00b7 LocalProtocolError\n        \u00b7 RemoteProtocolError\n      - ProxyError\n      - UnsupportedProtocol\n    + DecodingError\n    + TooManyRedirects\n  x HTTPStatusError\n* InvalidURL\n* CookieConflict\n* StreamError\n  x StreamConsumed\n  x StreamClosed\n  x ResponseNotRead\n  x RequestNotRead\n\"\"\""
+        }
+      ]
+    }
+  ]
+}

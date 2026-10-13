@@ -1,0 +1,103 @@
+{
+  "schemaVersion": 1,
+  "targetId": "component:module:src/main/java/org/springframework/samples/petclinic/system/CacheConfiguration.java",
+  "summary": "Configures caching and language preferences alongside welcome and error-demonstration pages.",
+  "author": "Codex (external agent)",
+  "sources": [
+    {
+      "path": "src/main/java/org/springframework/samples/petclinic/system/CacheConfiguration.java",
+      "contentHash": "1375dfc554a1efa859d2e54cf6fe82724aecea8b46d0c2ab06aabd1aa14ef9da",
+      "line": 1
+    },
+    {
+      "path": "src/main/java/org/springframework/samples/petclinic/system/CrashController.java",
+      "contentHash": "d7c003dc6357596eefa345eff63ecf3909a50238e030e3c93f09426e537ba517",
+      "line": 1
+    },
+    {
+      "path": "src/main/java/org/springframework/samples/petclinic/system/package-info.java",
+      "contentHash": "0abef93e8f17f46c984af46d98e7e5308dea22b4bce4cca6c7776d6773aa968a",
+      "line": 1
+    },
+    {
+      "path": "src/main/java/org/springframework/samples/petclinic/system/WebConfiguration.java",
+      "contentHash": "d9eb227f4ffcd434b2000ac30fce9b5e341f85e893c4b3536b50fbbc15384b92",
+      "line": 1
+    },
+    {
+      "path": "src/main/java/org/springframework/samples/petclinic/system/WelcomeController.java",
+      "contentHash": "cfdffa794c8ec7a0c634a7d39d39f9abc1dd2ddc4b4d7a591b341136015a6f66",
+      "line": 1
+    }
+  ],
+  "claims": [
+    {
+      "purpose": "component-name",
+      "text": "Web configuration and pages",
+      "citations": [
+        {
+          "path": "src/main/java/org/springframework/samples/petclinic/system/CacheConfiguration.java",
+          "contentHash": "1375dfc554a1efa859d2e54cf6fe82724aecea8b46d0c2ab06aabd1aa14ef9da",
+          "startLine": 26,
+          "endLine": 38,
+          "excerpt": "/**\n * Cache configuration intended for caches providing the JCache API. This configuration\n * creates the used cache for the application and enables statistics that become\n * accessible via JMX.\n */\n@Configuration(proxyBeanMethods = false)\n@EnableCaching\nclass CacheConfiguration {\n\n\t@Bean\n\tpublic JCacheManagerCustomizer petclinicCacheConfigurationCustomizer() {\n\t\treturn cm -> cm.createCache(\"vets\", cacheConfiguration());\n\t}"
+        },
+        {
+          "path": "src/main/java/org/springframework/samples/petclinic/system/WebConfiguration.java",
+          "contentHash": "d9eb227f4ffcd434b2000ac30fce9b5e341f85e893c4b3536b50fbbc15384b92",
+          "startLine": 27,
+          "endLine": 48,
+          "excerpt": "\t/**\n\t * Uses session storage to remember the user\u2019s language setting across requests.\n\t * Defaults to English if nothing is specified.\n\t * @return session-based {@link LocaleResolver}\n\t */\n\t@Bean\n\tpublic LocaleResolver localeResolver() {\n\t\tSessionLocaleResolver resolver = new SessionLocaleResolver();\n\t\tresolver.setDefaultLocale(Locale.ENGLISH);\n\t\treturn resolver;\n\t}\n\n\t/**\n\t * Allows the app to switch languages using a URL parameter like\n\t * <code>?lang=es</code>.\n\t * @return a {@link LocaleChangeInterceptor} that handles the change\n\t */\n\t@Bean\n\tpublic LocaleChangeInterceptor localeChangeInterceptor() {\n\t\tLocaleChangeInterceptor interceptor = new LocaleChangeInterceptor();\n\t\tinterceptor.setParamName(\"lang\");\n\t\treturn interceptor;"
+        },
+        {
+          "path": "src/main/java/org/springframework/samples/petclinic/system/WelcomeController.java",
+          "contentHash": "cfdffa794c8ec7a0c634a7d39d39f9abc1dd2ddc4b4d7a591b341136015a6f66",
+          "startLine": 22,
+          "endLine": 28,
+          "excerpt": "@Controller\nclass WelcomeController {\n\n\t@GetMapping(\"/\")\n\tpublic String welcome() {\n\t\treturn \"welcome\";\n\t}"
+        },
+        {
+          "path": "src/main/java/org/springframework/samples/petclinic/system/CrashController.java",
+          "contentHash": "d7c003dc6357596eefa345eff63ecf3909a50238e030e3c93f09426e537ba517",
+          "startLine": 21,
+          "endLine": 34,
+          "excerpt": "/**\n * Controller used to showcase what happens when an exception is thrown\n *\n * @author Michael Isvy\n * <p/>\n * Also see how a view that resolves to \"error\" has been added (\"error.html\").\n */\n@Controller\nclass CrashController {\n\n\t@GetMapping(\"/oups\")\n\tpublic String triggerException() {\n\t\tthrow new RuntimeException(\n\t\t\t\t\"Expected: controller used to showcase what \" + \"happens when an exception is thrown\");"
+        }
+      ]
+    },
+    {
+      "purpose": "component-role",
+      "text": "Configures caching and language preferences alongside welcome and error-demonstration pages.",
+      "citations": [
+        {
+          "path": "src/main/java/org/springframework/samples/petclinic/system/CacheConfiguration.java",
+          "contentHash": "1375dfc554a1efa859d2e54cf6fe82724aecea8b46d0c2ab06aabd1aa14ef9da",
+          "startLine": 26,
+          "endLine": 38,
+          "excerpt": "/**\n * Cache configuration intended for caches providing the JCache API. This configuration\n * creates the used cache for the application and enables statistics that become\n * accessible via JMX.\n */\n@Configuration(proxyBeanMethods = false)\n@EnableCaching\nclass CacheConfiguration {\n\n\t@Bean\n\tpublic JCacheManagerCustomizer petclinicCacheConfigurationCustomizer() {\n\t\treturn cm -> cm.createCache(\"vets\", cacheConfiguration());\n\t}"
+        },
+        {
+          "path": "src/main/java/org/springframework/samples/petclinic/system/WebConfiguration.java",
+          "contentHash": "d9eb227f4ffcd434b2000ac30fce9b5e341f85e893c4b3536b50fbbc15384b92",
+          "startLine": 27,
+          "endLine": 48,
+          "excerpt": "\t/**\n\t * Uses session storage to remember the user\u2019s language setting across requests.\n\t * Defaults to English if nothing is specified.\n\t * @return session-based {@link LocaleResolver}\n\t */\n\t@Bean\n\tpublic LocaleResolver localeResolver() {\n\t\tSessionLocaleResolver resolver = new SessionLocaleResolver();\n\t\tresolver.setDefaultLocale(Locale.ENGLISH);\n\t\treturn resolver;\n\t}\n\n\t/**\n\t * Allows the app to switch languages using a URL parameter like\n\t * <code>?lang=es</code>.\n\t * @return a {@link LocaleChangeInterceptor} that handles the change\n\t */\n\t@Bean\n\tpublic LocaleChangeInterceptor localeChangeInterceptor() {\n\t\tLocaleChangeInterceptor interceptor = new LocaleChangeInterceptor();\n\t\tinterceptor.setParamName(\"lang\");\n\t\treturn interceptor;"
+        },
+        {
+          "path": "src/main/java/org/springframework/samples/petclinic/system/WelcomeController.java",
+          "contentHash": "cfdffa794c8ec7a0c634a7d39d39f9abc1dd2ddc4b4d7a591b341136015a6f66",
+          "startLine": 22,
+          "endLine": 28,
+          "excerpt": "@Controller\nclass WelcomeController {\n\n\t@GetMapping(\"/\")\n\tpublic String welcome() {\n\t\treturn \"welcome\";\n\t}"
+        },
+        {
+          "path": "src/main/java/org/springframework/samples/petclinic/system/CrashController.java",
+          "contentHash": "d7c003dc6357596eefa345eff63ecf3909a50238e030e3c93f09426e537ba517",
+          "startLine": 21,
+          "endLine": 34,
+          "excerpt": "/**\n * Controller used to showcase what happens when an exception is thrown\n *\n * @author Michael Isvy\n * <p/>\n * Also see how a view that resolves to \"error\" has been added (\"error.html\").\n */\n@Controller\nclass CrashController {\n\n\t@GetMapping(\"/oups\")\n\tpublic String triggerException() {\n\t\tthrow new RuntimeException(\n\t\t\t\t\"Expected: controller used to showcase what \" + \"happens when an exception is thrown\");"
+        }
+      ]
+    }
+  ]
+}

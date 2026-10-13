@@ -1,3 +1,4 @@
+import { uiRootAnnotations } from './logic-ui-roots.mjs';
 import { definitionTypes, argumentCount, hasPrototypeAccess } from './logic-facts-types.mjs';
 import type { Node } from 'web-tree-sitter';
 import type { SourceInput } from '../dist/adapters/types.js';
@@ -64,8 +65,9 @@ export function extractLogicFacts(input: SourceInput, language: string, root: No
         }
         for (const child of children(node).toReversed()) scan.push({ node: child, caller });
     }
+    const uiRoots = ['javascript', 'typescript'].includes(language) ? uiRootAnnotations(root, logicImports(root, language)) : [];
     const mainGuard = language === 'python' ? descendants(root, node => node.type === 'if_statement').find(node => /^__name__\s*==\s*['"]__main__['"]$/u.test(field(node, 'condition')?.text ?? '')) : undefined;
-    if (calls.some(call => call.caller === moduleId)) definitions.unshift({ id: moduleId, name: '<module>', line: 1, endLine: root.endPosition.row + 1, start: 0, end: root.endIndex, parent: '', scopeStart: 0, scopeEnd: root.endIndex, owner: '', static: true, exported: false, exportNames: [], bindings: [], annotations: mainGuard ? [`python-main-guard@${mainGuard.startPosition.row + 1}`] : [] });
+    if (calls.some(call => call.caller === moduleId)) definitions.unshift({ id: moduleId, name: '<module>', line: 1, endLine: root.endPosition.row + 1, start: 0, end: root.endIndex, parent: '', scopeStart: 0, scopeEnd: root.endIndex, owner: '', static: true, exported: false, exportNames: [], bindings: [], annotations: [...(mainGuard ? [`python-main-guard@${mainGuard.startPosition.row + 1}`] : []), ...uiRoots] });
     const namespaceExports = language === 'python' ? pythonNamespaceExports(root) : undefined;
     return { ...(['javascript', 'typescript'].includes(language) && hasPrototypeAccess(root) ? { mutableReceivers: true } : {}), ...(namespaceExports === undefined ? {} : { namespaceExports }), version: 1, path: input.path, language, contentHash: input.contentHash, definitions, calls, imports: logicImports(root, language), classes, topBindings: bindings(root), diagnostics: [], supported: true };
 }

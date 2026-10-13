@@ -1,0 +1,104 @@
+{
+  "schemaVersion": 1,
+  "targetId": "component:module:src/main/java/org/springframework/samples/petclinic/owner/OwnerController.java",
+  "summary": "Prepares owner, pet, and visit forms and saves validated owner registrations.",
+  "author": "Codex (external agent)",
+  "sources": [
+    {
+      "path": "src/main/java/org/springframework/samples/petclinic/owner/OwnerController.java",
+      "contentHash": "611115841f671065ca2796fbb096102d56ce6aafd20bfe9a264f0a6968cca3ff",
+      "line": 1
+    },
+    {
+      "path": "src/main/java/org/springframework/samples/petclinic/owner/OwnerRepository.java",
+      "contentHash": "654cc5a38b2806748116caf4fbd6a99010a35605db32a12707078c34ccec2cd9",
+      "line": 1
+    },
+    {
+      "path": "src/main/java/org/springframework/samples/petclinic/owner/package-info.java",
+      "contentHash": "ef81fe2aec55635182295f564699812c334c9a6ccf85b0bae1fe7e38d487c05a",
+      "line": 1
+    },
+    {
+      "path": "src/main/java/org/springframework/samples/petclinic/owner/PetController.java",
+      "contentHash": "1a8a8097ff334b85d3a62c4df79ec52c2dbee8777925970e140081cff7e7c25e",
+      "line": 1
+    },
+    {
+      "path": "src/main/java/org/springframework/samples/petclinic/owner/PetTypeFormatter.java",
+      "contentHash": "af232944dba211094ee5f6b5b3e2bc9696e46ba8f40cad0e5bf7e0b283aacac7",
+      "line": 1
+    },
+    {
+      "path": "src/main/java/org/springframework/samples/petclinic/owner/PetTypeRepository.java",
+      "contentHash": "696705e51ab5835ac28630397de2d3f3541d3f419f19461e11755a9aac2afa04",
+      "line": 1
+    },
+    {
+      "path": "src/main/java/org/springframework/samples/petclinic/owner/PetValidator.java",
+      "contentHash": "1cee4c2a57afd7edb3521fa7a19c4b643f23c2f5b91406ecd638319c6cce9f7f",
+      "line": 1
+    },
+    {
+      "path": "src/main/java/org/springframework/samples/petclinic/owner/VisitController.java",
+      "contentHash": "b7c8f9cb7b2b2b5827d85787d1f18c95762a0213760013cef9d0a9e1c2c0f8d8",
+      "line": 1
+    }
+  ],
+  "claims": [
+    {
+      "purpose": "component-name",
+      "text": "Owner and pet forms",
+      "citations": [
+        {
+          "path": "src/main/java/org/springframework/samples/petclinic/owner/OwnerController.java",
+          "contentHash": "611115841f671065ca2796fbb096102d56ce6aafd20bfe9a264f0a6968cca3ff",
+          "startLine": 72,
+          "endLine": 86,
+          "excerpt": "\t@GetMapping(\"/owners/new\")\n\tpublic String initCreationForm() {\n\t\treturn VIEWS_OWNER_CREATE_OR_UPDATE_FORM;\n\t}\n\n\t@PostMapping(\"/owners/new\")\n\tpublic String processCreationForm(@Valid Owner owner, BindingResult result, RedirectAttributes redirectAttributes) {\n\t\tif (result.hasErrors()) {\n\t\t\tredirectAttributes.addFlashAttribute(\"error\", \"There was an error in creating the owner.\");\n\t\t\treturn VIEWS_OWNER_CREATE_OR_UPDATE_FORM;\n\t\t}\n\n\t\tthis.owners.save(owner);\n\t\tredirectAttributes.addFlashAttribute(\"message\", \"New Owner Created\");\n\t\treturn \"redirect:/owners/\" + owner.getId();"
+        },
+        {
+          "path": "src/main/java/org/springframework/samples/petclinic/owner/PetController.java",
+          "contentHash": "1a8a8097ff334b85d3a62c4df79ec52c2dbee8777925970e140081cff7e7c25e",
+          "startLine": 47,
+          "endLine": 65,
+          "excerpt": "@Controller\n@RequestMapping(\"/owners/{ownerId}\")\nclass PetController {\n\n\tprivate static final String VIEWS_PETS_CREATE_OR_UPDATE_FORM = \"pets/createOrUpdatePetForm\";\n\n\tprivate final OwnerRepository owners;\n\n\tprivate final PetTypeRepository types;\n\n\tpublic PetController(OwnerRepository owners, PetTypeRepository types) {\n\t\tthis.owners = owners;\n\t\tthis.types = types;\n\t}\n\n\t@ModelAttribute(\"types\")\n\tpublic Collection<PetType> populatePetTypes() {\n\t\treturn this.types.findPetTypes();\n\t}"
+        },
+        {
+          "path": "src/main/java/org/springframework/samples/petclinic/owner/VisitController.java",
+          "contentHash": "b7c8f9cb7b2b2b5827d85787d1f18c95762a0213760013cef9d0a9e1c2c0f8d8",
+          "startLine": 63,
+          "endLine": 80,
+          "excerpt": "\t@ModelAttribute(\"visit\")\n\tpublic Visit loadPetWithVisit(@PathVariable(\"ownerId\") int ownerId, @PathVariable(\"petId\") int petId,\n\t\t\tMap<String, Object> model) {\n\t\tOptional<Owner> optionalOwner = owners.findById(ownerId);\n\t\tOwner owner = optionalOwner.orElseThrow(() -> new IllegalArgumentException(\n\t\t\t\t\"Owner not found with id: \" + ownerId + \". Please ensure the ID is correct \"));\n\n\t\tPet pet = owner.getPet(petId);\n\t\tif (pet == null) {\n\t\t\tthrow new IllegalArgumentException(\n\t\t\t\t\t\"Pet with id \" + petId + \" not found for owner with id \" + ownerId + \".\");\n\t\t}\n\t\tmodel.put(\"pet\", pet);\n\t\tmodel.put(\"owner\", owner);\n\n\t\tVisit visit = new Visit();\n\t\tpet.addVisit(visit);\n\t\treturn visit;"
+        }
+      ]
+    },
+    {
+      "purpose": "component-role",
+      "text": "Prepares owner, pet, and visit forms and saves validated owner registrations.",
+      "citations": [
+        {
+          "path": "src/main/java/org/springframework/samples/petclinic/owner/OwnerController.java",
+          "contentHash": "611115841f671065ca2796fbb096102d56ce6aafd20bfe9a264f0a6968cca3ff",
+          "startLine": 72,
+          "endLine": 86,
+          "excerpt": "\t@GetMapping(\"/owners/new\")\n\tpublic String initCreationForm() {\n\t\treturn VIEWS_OWNER_CREATE_OR_UPDATE_FORM;\n\t}\n\n\t@PostMapping(\"/owners/new\")\n\tpublic String processCreationForm(@Valid Owner owner, BindingResult result, RedirectAttributes redirectAttributes) {\n\t\tif (result.hasErrors()) {\n\t\t\tredirectAttributes.addFlashAttribute(\"error\", \"There was an error in creating the owner.\");\n\t\t\treturn VIEWS_OWNER_CREATE_OR_UPDATE_FORM;\n\t\t}\n\n\t\tthis.owners.save(owner);\n\t\tredirectAttributes.addFlashAttribute(\"message\", \"New Owner Created\");\n\t\treturn \"redirect:/owners/\" + owner.getId();"
+        },
+        {
+          "path": "src/main/java/org/springframework/samples/petclinic/owner/PetController.java",
+          "contentHash": "1a8a8097ff334b85d3a62c4df79ec52c2dbee8777925970e140081cff7e7c25e",
+          "startLine": 47,
+          "endLine": 65,
+          "excerpt": "@Controller\n@RequestMapping(\"/owners/{ownerId}\")\nclass PetController {\n\n\tprivate static final String VIEWS_PETS_CREATE_OR_UPDATE_FORM = \"pets/createOrUpdatePetForm\";\n\n\tprivate final OwnerRepository owners;\n\n\tprivate final PetTypeRepository types;\n\n\tpublic PetController(OwnerRepository owners, PetTypeRepository types) {\n\t\tthis.owners = owners;\n\t\tthis.types = types;\n\t}\n\n\t@ModelAttribute(\"types\")\n\tpublic Collection<PetType> populatePetTypes() {\n\t\treturn this.types.findPetTypes();\n\t}"
+        },
+        {
+          "path": "src/main/java/org/springframework/samples/petclinic/owner/VisitController.java",
+          "contentHash": "b7c8f9cb7b2b2b5827d85787d1f18c95762a0213760013cef9d0a9e1c2c0f8d8",
+          "startLine": 63,
+          "endLine": 80,
+          "excerpt": "\t@ModelAttribute(\"visit\")\n\tpublic Visit loadPetWithVisit(@PathVariable(\"ownerId\") int ownerId, @PathVariable(\"petId\") int petId,\n\t\t\tMap<String, Object> model) {\n\t\tOptional<Owner> optionalOwner = owners.findById(ownerId);\n\t\tOwner owner = optionalOwner.orElseThrow(() -> new IllegalArgumentException(\n\t\t\t\t\"Owner not found with id: \" + ownerId + \". Please ensure the ID is correct \"));\n\n\t\tPet pet = owner.getPet(petId);\n\t\tif (pet == null) {\n\t\t\tthrow new IllegalArgumentException(\n\t\t\t\t\t\"Pet with id \" + petId + \" not found for owner with id \" + ownerId + \".\");\n\t\t}\n\t\tmodel.put(\"pet\", pet);\n\t\tmodel.put(\"owner\", owner);\n\n\t\tVisit visit = new Visit();\n\t\tpet.addVisit(visit);\n\t\treturn visit;"
+        }
+      ]
+    }
+  ]
+}

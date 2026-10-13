@@ -1,0 +1,76 @@
+{
+  "schemaVersion": 1,
+  "targetId": "component:module:src/algo/algo.go",
+  "summary": "Scores pattern matches using fast first-match or optimal-match algorithms.",
+  "author": "Codex (external agent)",
+  "sources": [
+    {
+      "path": "src/algo/algo.go",
+      "contentHash": "461ca9f3b6d5bfbddaf59b3477f8f0b8cf87622420d4f422f94892ad40bd626a",
+      "line": 1
+    },
+    {
+      "path": "src/algo/indexbyte2_amd64.go",
+      "contentHash": "d00db0e34112bb1aaf07f31c51bf610bb2ef78d005372b16dc861e99125bbdcb",
+      "line": 1
+    },
+    {
+      "path": "src/algo/indexbyte2_arm64.go",
+      "contentHash": "59db8dd426103b508e9e1bd9a9c5c4179c8b2d4c5ed4a6bed89e9cb9bbbff83e",
+      "line": 1
+    },
+    {
+      "path": "src/algo/indexbyte2_other.go",
+      "contentHash": "924682ff03dbcf54396343e5fdb0a62d4c8dbacd9e2142dca57b9cfc59c27783",
+      "line": 1
+    },
+    {
+      "path": "src/algo/normalize.go",
+      "contentHash": "72c8968169a45092cc682c0e9be534822387ed300fee51a411d8bdd1bff2c220",
+      "line": 1
+    },
+    {
+      "path": "src/algo/runeindex_others.go",
+      "contentHash": "f1158525a9e68b2818add968dabe0c6d4acef50f99a6ab4f73f5368d1e790ab8",
+      "line": 1
+    },
+    {
+      "path": "src/algo/runeindex_ref.go",
+      "contentHash": "e6d65a9695d23a32a794b4953be2e85cbebcd8f236a0f15718510bd021c67810",
+      "line": 1
+    },
+    {
+      "path": "src/algo/runeindex_x86.go",
+      "contentHash": "4c49398cc782e9942c4a56ef77a3f468a341a2c42e2686abe45148f889c106b1",
+      "line": 1
+    }
+  ],
+  "claims": [
+    {
+      "purpose": "component-name",
+      "text": "Fuzzy matching",
+      "citations": [
+        {
+          "path": "src/algo/algo.go",
+          "contentHash": "461ca9f3b6d5bfbddaf59b3477f8f0b8cf87622420d4f422f94892ad40bd626a",
+          "startLine": 8,
+          "endLine": 26,
+          "excerpt": "FuzzyMatchV1 finds the first \"fuzzy\" occurrence of the pattern within the given\ntext in O(n) time where n is the length of the text. Once the position of the\nlast character is located, it traverses backwards to see if there's a shorter\nsubstring that matches the pattern.\n\n    a_____b___abc__  To find \"abc\"\n    *-----*-----*>   1. Forward scan\n             <***    2. Backward scan\n\nThe algorithm is simple and fast, but as it only sees the first occurrence,\nit is not guaranteed to find the occurrence with the highest score.\n\n    a_____b__c__abc\n    *-----*--*  ***\n\nFuzzyMatchV2 implements a modified version of Smith-Waterman algorithm to find\nthe optimal solution (highest score) according to the scoring criteria. Unlike\nthe original algorithm, omission or mismatch of a character in the pattern is\nnot allowed."
+        }
+      ]
+    },
+    {
+      "purpose": "component-role",
+      "text": "Scores pattern matches using fast first-match or optimal-match algorithms.",
+      "citations": [
+        {
+          "path": "src/algo/algo.go",
+          "contentHash": "461ca9f3b6d5bfbddaf59b3477f8f0b8cf87622420d4f422f94892ad40bd626a",
+          "startLine": 8,
+          "endLine": 26,
+          "excerpt": "FuzzyMatchV1 finds the first \"fuzzy\" occurrence of the pattern within the given\ntext in O(n) time where n is the length of the text. Once the position of the\nlast character is located, it traverses backwards to see if there's a shorter\nsubstring that matches the pattern.\n\n    a_____b___abc__  To find \"abc\"\n    *-----*-----*>   1. Forward scan\n             <***    2. Backward scan\n\nThe algorithm is simple and fast, but as it only sees the first occurrence,\nit is not guaranteed to find the occurrence with the highest score.\n\n    a_____b__c__abc\n    *-----*--*  ***\n\nFuzzyMatchV2 implements a modified version of Smith-Waterman algorithm to find\nthe optimal solution (highest score) according to the scoring criteria. Unlike\nthe original algorithm, omission or mismatch of a character in the pattern is\nnot allowed."
+        }
+      ]
+    }
+  ]
+}

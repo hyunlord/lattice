@@ -1,0 +1,325 @@
+{
+  "schemaVersion": 1,
+  "targetId": "component:module:core/model/build.gradle.kts",
+  "summary": "Defines news records and displays bookmarked articles with loading and empty states.",
+  "author": "Codex (external agent)",
+  "sources": [
+    {
+      "path": "core/model/build.gradle.kts",
+      "contentHash": "319375dffe4e5a3c9def8eb02cd70ace6a70404d2dfdc861226d2327873839ba",
+      "line": 1
+    },
+    {
+      "path": "core/model/src/main/kotlin/com/google/samples/apps/nowinandroid/core/model/data/DarkThemeConfig.kt",
+      "contentHash": "b7f86125c8142bbb26c3b9beb7f4841dbf52be8d444b3e4b3bd966cd5ae70b84",
+      "line": 1
+    },
+    {
+      "path": "core/model/src/main/kotlin/com/google/samples/apps/nowinandroid/core/model/data/FollowableTopic.kt",
+      "contentHash": "d98cadfa60b40d28dc9298e5bb2bff24aa8a5a0af4b1c0bffe8740e029b6a4af",
+      "line": 1
+    },
+    {
+      "path": "core/model/src/main/kotlin/com/google/samples/apps/nowinandroid/core/model/data/NewsResource.kt",
+      "contentHash": "73a049011823294a1bdc66eacd962ff2b5764247da85e8ab3d7b2a1891ccd91f",
+      "line": 1
+    },
+    {
+      "path": "core/model/src/main/kotlin/com/google/samples/apps/nowinandroid/core/model/data/SearchResult.kt",
+      "contentHash": "195c03a90b353f926b8b119c4500b51ea2d037a50c7c7917b858a11b45ea399e",
+      "line": 1
+    },
+    {
+      "path": "core/model/src/main/kotlin/com/google/samples/apps/nowinandroid/core/model/data/ThemeBrand.kt",
+      "contentHash": "ca7516db6df944f81490104ad8ea37de02c39c9db523ca24aa11a3773d45ae29",
+      "line": 1
+    },
+    {
+      "path": "core/model/src/main/kotlin/com/google/samples/apps/nowinandroid/core/model/data/Topic.kt",
+      "contentHash": "48dc5386a02398ac71e549122bf6938f31580bddbaab19cf5821185cc25f65ee",
+      "line": 1
+    },
+    {
+      "path": "core/model/src/main/kotlin/com/google/samples/apps/nowinandroid/core/model/data/UserData.kt",
+      "contentHash": "a4e03257d979a2bbba43f4e500ce17a8bfb4f271bb8b22b460a9f4ff27dec9e7",
+      "line": 1
+    },
+    {
+      "path": "core/model/src/main/kotlin/com/google/samples/apps/nowinandroid/core/model/data/UserNewsResource.kt",
+      "contentHash": "6714cabf1b2534b988d2e4e1e63d8a71dd36eb8579a932738d2279a47a2e2e05",
+      "line": 1
+    },
+    {
+      "path": "core/model/src/main/kotlin/com/google/samples/apps/nowinandroid/core/model/data/UserSearchResult.kt",
+      "contentHash": "82e90e74e02df0e2fb4164d5d95b935cd2e2b6b975e6f82a46e8352fe14aa919",
+      "line": 1
+    },
+    {
+      "path": "core/testing/build.gradle.kts",
+      "contentHash": "650a7f5cb33b724879476e7e166c50a40bb527f5f78dc99762a180c5df5e3539",
+      "line": 1
+    },
+    {
+      "path": "core/testing/src/main/kotlin/com/google/samples/apps/nowinandroid/core/rules/GrantPostNotificationsPermissionRule.kt",
+      "contentHash": "a913ae6d061268afc0d447e07b0ded80e446b2f3918a6ab3182ba2436b2e40cc",
+      "line": 1
+    },
+    {
+      "path": "core/testing/src/main/kotlin/com/google/samples/apps/nowinandroid/core/testing/data/FollowableTopicTestData.kt",
+      "contentHash": "aaac2cd8df04f5501bd11656ff4130cc8d83738ff88ed39eafec156b82a01834",
+      "line": 1
+    },
+    {
+      "path": "core/testing/src/main/kotlin/com/google/samples/apps/nowinandroid/core/testing/data/NewsResourcesTestData.kt",
+      "contentHash": "73088e78e3687ad2d1337b971b68c0d88b3148c3ea9745f5e8343152007a87c2",
+      "line": 1
+    },
+    {
+      "path": "core/testing/src/main/kotlin/com/google/samples/apps/nowinandroid/core/testing/data/TopicsTestData.kt",
+      "contentHash": "c7147e40458976701dacee38d8b574f78fc1db52bdd96c6dc2113fe332c71f0f",
+      "line": 1
+    },
+    {
+      "path": "core/testing/src/main/kotlin/com/google/samples/apps/nowinandroid/core/testing/data/UserNewsResourcesTestData.kt",
+      "contentHash": "abfcc4cf9be309993dbf3391e92e5e61be9869b6ae275ddc418c645664fbfcc4",
+      "line": 1
+    },
+    {
+      "path": "core/testing/src/main/kotlin/com/google/samples/apps/nowinandroid/core/testing/di/TestDispatcherModule.kt",
+      "contentHash": "f64aca8fe322c0f81db8e0a7656c946f22b42cd0b487984faab8a95b158faef8",
+      "line": 1
+    },
+    {
+      "path": "core/testing/src/main/kotlin/com/google/samples/apps/nowinandroid/core/testing/di/TestDispatchersModule.kt",
+      "contentHash": "0cc87d53ad3e0e791d5a89d5574da2327299ca2e8bd00473e7275108050ee455",
+      "line": 1
+    },
+    {
+      "path": "core/testing/src/main/kotlin/com/google/samples/apps/nowinandroid/core/testing/NiaTestRunner.kt",
+      "contentHash": "3231ab7ecfab3cbf48dfa773fc625847326a4d792c3767d0f2094dd724b9eeec",
+      "line": 1
+    },
+    {
+      "path": "core/testing/src/main/kotlin/com/google/samples/apps/nowinandroid/core/testing/notifications/TestNotifier.kt",
+      "contentHash": "e0a486505fbeb3e727d4e60e558551dc638df18734bfa43022e1c9e9001e2313",
+      "line": 1
+    },
+    {
+      "path": "core/testing/src/main/kotlin/com/google/samples/apps/nowinandroid/core/testing/repository/TestNewsRepository.kt",
+      "contentHash": "81713ed224a60caba93d3e101b7f76e8715239ed345b14c1ba61a9ffc0321490",
+      "line": 1
+    },
+    {
+      "path": "core/testing/src/main/kotlin/com/google/samples/apps/nowinandroid/core/testing/repository/TestRecentSearchRepository.kt",
+      "contentHash": "b210764dc54df91bdd1fe01f652e62f16c6e7b28d33e579b7ebd7cfc46867e9d",
+      "line": 1
+    },
+    {
+      "path": "core/testing/src/main/kotlin/com/google/samples/apps/nowinandroid/core/testing/repository/TestSearchContentsRepository.kt",
+      "contentHash": "40ca5fb827f09f3350f60e1401949edf6a582ede41aa728ae4d924d8d42df273",
+      "line": 1
+    },
+    {
+      "path": "core/testing/src/main/kotlin/com/google/samples/apps/nowinandroid/core/testing/repository/TestTopicsRepository.kt",
+      "contentHash": "6756131f5664801170a5250017aa7214e5ebdb334648b586f30b04385b726be0",
+      "line": 1
+    },
+    {
+      "path": "core/testing/src/main/kotlin/com/google/samples/apps/nowinandroid/core/testing/repository/TestUserDataRepository.kt",
+      "contentHash": "129b59a22b738ad36c210adf4d005e71decf9daea673175c423a2ecba890455d",
+      "line": 1
+    },
+    {
+      "path": "core/testing/src/main/kotlin/com/google/samples/apps/nowinandroid/core/testing/util/MainDispatcherRule.kt",
+      "contentHash": "f6e00c6388a343fbee52e1503c309d54b555fcdfbfcc91034ea87414b9c53601",
+      "line": 1
+    },
+    {
+      "path": "core/testing/src/main/kotlin/com/google/samples/apps/nowinandroid/core/testing/util/TestAnalyticsHelper.kt",
+      "contentHash": "2f1af1d750f71ede93fd05ddae25039528ec616bb69a082fea498b3d18924a02",
+      "line": 1
+    },
+    {
+      "path": "core/testing/src/main/kotlin/com/google/samples/apps/nowinandroid/core/testing/util/TestNetworkMonitor.kt",
+      "contentHash": "c6f030811420dc8f0d437619afdcae9324e5a608bca04a48b4607c1b2a331a6d",
+      "line": 1
+    },
+    {
+      "path": "core/testing/src/main/kotlin/com/google/samples/apps/nowinandroid/core/testing/util/TestSyncManager.kt",
+      "contentHash": "74136adae879f3753008b39c7600e2577579b719f3cf7ad2dd6f1e65e85ccfda",
+      "line": 1
+    },
+    {
+      "path": "core/testing/src/main/kotlin/com/google/samples/apps/nowinandroid/core/testing/util/TestTimeZoneMonitor.kt",
+      "contentHash": "27c25966239a2856cbe034fc38b0d24cec20154795eafb6bfd1cca028d480bb6",
+      "line": 1
+    },
+    {
+      "path": "core/ui/build.gradle.kts",
+      "contentHash": "e7c8cf71f1dad20d4d769b73cc48c8e4e852ebaa7aa2cf2c3008963c36bab9e1",
+      "line": 1
+    },
+    {
+      "path": "core/ui/src/main/kotlin/com/google/samples/apps/nowinandroid/core/ui/AnalyticsExtensions.kt",
+      "contentHash": "5459325df40ab1226c41a6777374030b92770e479c54d32058a4f1db1230f18c",
+      "line": 1
+    },
+    {
+      "path": "core/ui/src/main/kotlin/com/google/samples/apps/nowinandroid/core/ui/DevicePreviews.kt",
+      "contentHash": "344847e0badee3c24549d172ba41775e1e4f4df29112a5326449b076031526f4",
+      "line": 1
+    },
+    {
+      "path": "core/ui/src/main/kotlin/com/google/samples/apps/nowinandroid/core/ui/FollowableTopicPreviewParameterProvider.kt",
+      "contentHash": "64b2892de54063272d6d91a88bf7e888bdb878b268afadc0a045371123b89f6a",
+      "line": 1
+    },
+    {
+      "path": "core/ui/src/main/kotlin/com/google/samples/apps/nowinandroid/core/ui/InterestsItem.kt",
+      "contentHash": "3fa14180ecec5ab0e6a13f60c577f3f38690a766b7ca04bba9cc4da4ce03fc82",
+      "line": 1
+    },
+    {
+      "path": "core/ui/src/main/kotlin/com/google/samples/apps/nowinandroid/core/ui/JankStatsExtensions.kt",
+      "contentHash": "98529a08d03f1206c5651d5633c4d1c92e81bdb62287690c21378dec7e04c064",
+      "line": 1
+    },
+    {
+      "path": "core/ui/src/main/kotlin/com/google/samples/apps/nowinandroid/core/ui/LocalTimeZone.kt",
+      "contentHash": "142d3a0a10081855094b8f55b06d0645052c7e9c13461593babe54e66fbf1d22",
+      "line": 1
+    },
+    {
+      "path": "core/ui/src/main/kotlin/com/google/samples/apps/nowinandroid/core/ui/NewsFeed.kt",
+      "contentHash": "7d8a286fc44f6cbf1e971281bba3f160726146981c4d687e52c55b9c1618f41f",
+      "line": 1
+    },
+    {
+      "path": "core/ui/src/main/kotlin/com/google/samples/apps/nowinandroid/core/ui/NewsResourceCard.kt",
+      "contentHash": "40bab269c81db4de31fa17d0d03555e74e87c5b50645b9c416edcfe480c9da61",
+      "line": 1
+    },
+    {
+      "path": "core/ui/src/main/kotlin/com/google/samples/apps/nowinandroid/core/ui/NewsResourceCardList.kt",
+      "contentHash": "4ac9f9dd62062f94213d43c8d49cc9b1634841b6a599edf996288d0aa40940e8",
+      "line": 1
+    },
+    {
+      "path": "core/ui/src/main/kotlin/com/google/samples/apps/nowinandroid/core/ui/UserNewsResourcePreviewParameterProvider.kt",
+      "contentHash": "51bda2f565f0874bbe407bf1903f166f2f2515e8d6fb81ba20e4b5b9134a708a",
+      "line": 1
+    },
+    {
+      "path": "feature/bookmarks/api/build.gradle.kts",
+      "contentHash": "eb1b9ed600b32364aedbb50fa404cdaaa043d5b21ef8a2b3d7ba28a73e35f0b7",
+      "line": 1
+    },
+    {
+      "path": "feature/bookmarks/api/src/main/kotlin/com/google/samples/apps/nowinandroid/feature/bookmarks/api/navigation/BookmarksNavKey.kt",
+      "contentHash": "179842493bd6093304f7facbcb46110f074fdf81a671264823dce79cfe7daff2",
+      "line": 1
+    },
+    {
+      "path": "feature/bookmarks/impl/build.gradle.kts",
+      "contentHash": "d9ada214d9ba97f098c12b269f95d298a393ca7f86c611727961f4cabefbb13e",
+      "line": 1
+    },
+    {
+      "path": "feature/bookmarks/impl/src/main/kotlin/com/google/samples/apps/nowinandroid/feature/bookmarks/impl/BookmarksScreen.kt",
+      "contentHash": "d8d1374fbcea4a9e2edfb4d66063ba5f886147cf3eceba4002b39cb7b2d7ff49",
+      "line": 1
+    },
+    {
+      "path": "feature/bookmarks/impl/src/main/kotlin/com/google/samples/apps/nowinandroid/feature/bookmarks/impl/BookmarksViewModel.kt",
+      "contentHash": "ee7d43eedfb2b2c3a7c3505c5b808c7d9c941a99542012e013d7a3a37c2da1ba",
+      "line": 1
+    },
+    {
+      "path": "feature/bookmarks/impl/src/main/kotlin/com/google/samples/apps/nowinandroid/feature/bookmarks/impl/navigation/BookmarksEntryProvider.kt",
+      "contentHash": "7807f353ecd2d5c0140fec955db29f83a61db89e46b3829dfb93a7223f26505d",
+      "line": 1
+    },
+    {
+      "path": "feature/foryou/impl/build.gradle.kts",
+      "contentHash": "456e473a86ed4b4da2629fe468db84f8fef1ef785857da68f31b981e747eadb8",
+      "line": 1
+    },
+    {
+      "path": "feature/foryou/impl/src/main/kotlin/com/google/samples/apps/nowinandroid/feature/foryou/impl/ForYouScreen.kt",
+      "contentHash": "aa840282206ff1752d2c357494291caedd10e328f819542a0f7aff4ab1f422af",
+      "line": 1
+    },
+    {
+      "path": "feature/foryou/impl/src/main/kotlin/com/google/samples/apps/nowinandroid/feature/foryou/impl/ForYouViewModel.kt",
+      "contentHash": "baa58847af56073d546e08fee1e89149a786434a5377ccc16095d2b3d4e23df3",
+      "line": 1
+    },
+    {
+      "path": "feature/foryou/impl/src/main/kotlin/com/google/samples/apps/nowinandroid/feature/foryou/impl/navigation/ForYouEntryProvider.kt",
+      "contentHash": "19fb5342c8d382ec4750c2ca15f6df2d253a2c4bee8d8ec75725f27cd5a10fd7",
+      "line": 1
+    },
+    {
+      "path": "feature/foryou/impl/src/main/kotlin/com/google/samples/apps/nowinandroid/feature/foryou/impl/OnboardingUiState.kt",
+      "contentHash": "fc29cd69ac56ac127581f971ce8c432926f78466ebe9e9091f6ffd5daeba3b62",
+      "line": 1
+    },
+    {
+      "path": "feature/settings/impl/build.gradle.kts",
+      "contentHash": "07a49287fe6923bcdab2e7d7adb53a68c237e7031e9cb67b3960b743a89e4cca",
+      "line": 1
+    },
+    {
+      "path": "feature/settings/impl/src/main/kotlin/com/google/samples/apps/nowinandroid/feature/settings/impl/SettingsDialog.kt",
+      "contentHash": "391dea1a81ac24215e0404f1058748f5bbda87cfdb8eb1c7f9f3a758ea013cc2",
+      "line": 1
+    },
+    {
+      "path": "feature/settings/impl/src/main/kotlin/com/google/samples/apps/nowinandroid/feature/settings/impl/SettingsViewModel.kt",
+      "contentHash": "14746710f0822e91111e96818f8a79bc3bb9d87a91394858b12db44230371b6e",
+      "line": 1
+    }
+  ],
+  "claims": [
+    {
+      "purpose": "component-name",
+      "text": "News models & bookmarked articles",
+      "citations": [
+        {
+          "path": "core/model/src/main/kotlin/com/google/samples/apps/nowinandroid/core/model/data/NewsResource.kt",
+          "contentHash": "73a049011823294a1bdc66eacd962ff2b5764247da85e8ab3d7b2a1891ccd91f",
+          "startLine": 21,
+          "endLine": 33,
+          "excerpt": "/**\n * External data layer representation of a fully populated NiA news resource\n */\ndata class NewsResource(\n    val id: String,\n    val title: String,\n    val content: String,\n    val url: String,\n    val headerImageUrl: String?,\n    val publishDate: Instant,\n    val type: String,\n    val topics: List<Topic>,\n)"
+        },
+        {
+          "path": "feature/bookmarks/impl/src/main/kotlin/com/google/samples/apps/nowinandroid/feature/bookmarks/impl/BookmarksScreen.kt",
+          "contentHash": "d8d1374fbcea4a9e2edfb4d66063ba5f886147cf3eceba4002b39cb7b2d7ff49",
+          "startLine": 100,
+          "endLine": 114,
+          "excerpt": "/**\n * Displays the user's bookmarked articles. Includes support for loading and empty states.\n */\n@VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)\n@Composable\ninternal fun BookmarksScreen(\n    feedState: NewsFeedUiState,\n    onShowSnackbar: suspend (String, String?) -> Boolean,\n    removeFromBookmarks: (String) -> Unit,\n    onNewsResourceViewed: (String) -> Unit,\n    onTopicClick: (String) -> Unit,\n    modifier: Modifier = Modifier,\n    shouldDisplayUndoBookmark: Boolean = false,\n    undoBookmarkRemoval: () -> Unit = {},\n    clearUndoState: () -> Unit = {},"
+        }
+      ]
+    },
+    {
+      "purpose": "component-role",
+      "text": "Defines news records and displays bookmarked articles with loading and empty states.",
+      "citations": [
+        {
+          "path": "core/model/src/main/kotlin/com/google/samples/apps/nowinandroid/core/model/data/NewsResource.kt",
+          "contentHash": "73a049011823294a1bdc66eacd962ff2b5764247da85e8ab3d7b2a1891ccd91f",
+          "startLine": 21,
+          "endLine": 33,
+          "excerpt": "/**\n * External data layer representation of a fully populated NiA news resource\n */\ndata class NewsResource(\n    val id: String,\n    val title: String,\n    val content: String,\n    val url: String,\n    val headerImageUrl: String?,\n    val publishDate: Instant,\n    val type: String,\n    val topics: List<Topic>,\n)"
+        },
+        {
+          "path": "feature/bookmarks/impl/src/main/kotlin/com/google/samples/apps/nowinandroid/feature/bookmarks/impl/BookmarksScreen.kt",
+          "contentHash": "d8d1374fbcea4a9e2edfb4d66063ba5f886147cf3eceba4002b39cb7b2d7ff49",
+          "startLine": 100,
+          "endLine": 114,
+          "excerpt": "/**\n * Displays the user's bookmarked articles. Includes support for loading and empty states.\n */\n@VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)\n@Composable\ninternal fun BookmarksScreen(\n    feedState: NewsFeedUiState,\n    onShowSnackbar: suspend (String, String?) -> Boolean,\n    removeFromBookmarks: (String) -> Unit,\n    onNewsResourceViewed: (String) -> Unit,\n    onTopicClick: (String) -> Unit,\n    modifier: Modifier = Modifier,\n    shouldDisplayUndoBookmark: Boolean = false,\n    undoBookmarkRemoval: () -> Unit = {},\n    clearUndoState: () -> Unit = {},"
+        }
+      ]
+    }
+  ]
+}

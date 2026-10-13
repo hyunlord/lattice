@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "targetId": "component:module:settings.gradle.kts",
+  "summary": "Registers application and core modules with the Gradle build.",
+  "author": "Codex (external agent)",
+  "sources": [
+    {
+      "path": "settings.gradle.kts",
+      "contentHash": "4a6a375ab6ae98e9f794183a3f89f29017acd030f98b9c141e51ebc06754b1a7",
+      "line": 1
+    }
+  ],
+  "claims": [
+    {
+      "purpose": "component-name",
+      "text": "Module registration",
+      "citations": [
+        {
+          "path": "settings.gradle.kts",
+          "contentHash": "4a6a375ab6ae98e9f794183a3f89f29017acd030f98b9c141e51ebc06754b1a7",
+          "startLine": 45,
+          "endLine": 64,
+          "excerpt": "rootProject.name = \"nowinandroid\"\n\nenableFeaturePreview(\"TYPESAFE_PROJECT_ACCESSORS\")\ninclude(\":app\")\ninclude(\":app-nia-catalog\")\ninclude(\":benchmarks\")\ninclude(\":core:analytics\")\ninclude(\":core:common\")\ninclude(\":core:data\")\ninclude(\":core:data-test\")\ninclude(\":core:database\")\ninclude(\":core:datastore\")\ninclude(\":core:datastore-proto\")\ninclude(\":core:datastore-test\")\ninclude(\":core:designsystem\")\ninclude(\":core:domain\")\ninclude(\":core:model\")\ninclude(\":core:navigation\")\ninclude(\":core:network\")\ninclude(\":core:notifications\")"
+        }
+      ]
+    },
+    {
+      "purpose": "component-role",
+      "text": "Registers application and core modules with the Gradle build.",
+      "citations": [
+        {
+          "path": "settings.gradle.kts",
+          "contentHash": "4a6a375ab6ae98e9f794183a3f89f29017acd030f98b9c141e51ebc06754b1a7",
+          "startLine": 45,
+          "endLine": 64,
+          "excerpt": "rootProject.name = \"nowinandroid\"\n\nenableFeaturePreview(\"TYPESAFE_PROJECT_ACCESSORS\")\ninclude(\":app\")\ninclude(\":app-nia-catalog\")\ninclude(\":benchmarks\")\ninclude(\":core:analytics\")\ninclude(\":core:common\")\ninclude(\":core:data\")\ninclude(\":core:data-test\")\ninclude(\":core:database\")\ninclude(\":core:datastore\")\ninclude(\":core:datastore-proto\")\ninclude(\":core:datastore-test\")\ninclude(\":core:designsystem\")\ninclude(\":core:domain\")\ninclude(\":core:model\")\ninclude(\":core:navigation\")\ninclude(\":core:network\")\ninclude(\":core:notifications\")"
+        }
+      ]
+    }
+  ]
+}

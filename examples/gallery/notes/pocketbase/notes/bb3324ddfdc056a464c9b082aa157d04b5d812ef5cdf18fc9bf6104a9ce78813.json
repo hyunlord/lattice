@@ -1,0 +1,301 @@
+{
+  "schemaVersion": 1,
+  "targetId": "component:module:apis/backup.go",
+  "summary": "Handles record listing, reading, creation, updates and deletion through collection endpoints.",
+  "author": "Codex (external agent)",
+  "sources": [
+    {
+      "path": "apis/backup.go",
+      "contentHash": "296950f8f39a018ce9f452448a600f7a32d4f789270e27da07d210c63157de42",
+      "line": 1
+    },
+    {
+      "path": "apis/batch.go",
+      "contentHash": "2accbef93391c9eb3fbbdb20894adba57cebfb4ae48d448c19b98507a8da6a99",
+      "line": 1
+    },
+    {
+      "path": "apis/cron.go",
+      "contentHash": "aa7c2a3d1b08f0cd78f95a9e15e191d8e0df59aea757b882278e185aa3830cf6",
+      "line": 1
+    },
+    {
+      "path": "apis/file.go",
+      "contentHash": "c8ca827af390f8a792e7bc53fd1c35d88d8aee5f6f3ec9b5115f031c138ff9c7",
+      "line": 1
+    },
+    {
+      "path": "apis/middlewares_rate_limit.go",
+      "contentHash": "b34ebb56f896ce02e39ca116062eb9acfc66d1b288be26d90d370a8015055eed",
+      "line": 1
+    },
+    {
+      "path": "apis/middlewares.go",
+      "contentHash": "a0ba83a4d6c992dd0b32effa2c6efb9fd7889406a467aeacc3cdfe4f1174e699",
+      "line": 1
+    },
+    {
+      "path": "apis/realtime.go",
+      "contentHash": "c144370ea269f3a09cefdc823101edd0027961799834eebdafa519a4f0bc7f2a",
+      "line": 1
+    },
+    {
+      "path": "apis/record_auth_otp_request.go",
+      "contentHash": "080fe3457265f31a10c8b37f0ac192e1e858d291ff44c710dc59fa2ccd514b5d",
+      "line": 1
+    },
+    {
+      "path": "apis/record_auth_password_reset_request.go",
+      "contentHash": "9682956a33c044344a4933cf6f941d7eb2a1eb35051770b01aa693aadfd9199a",
+      "line": 1
+    },
+    {
+      "path": "apis/record_auth_verification_request.go",
+      "contentHash": "8cae4d251dba62b8511fcc9dc666875357ebe822eaf1e64d7277335bb2a0054d",
+      "line": 1
+    },
+    {
+      "path": "apis/record_auth_with_password.go",
+      "contentHash": "28fd93e661c3ef2975ad4b028a91cb6e09aa4441418c235b0c758ac635074649",
+      "line": 1
+    },
+    {
+      "path": "apis/record_crud.go",
+      "contentHash": "a277f2ea8ab41cc40b5f5aa29ba72935115bb25a1dcad71398f4aff484428ce2",
+      "line": 1
+    },
+    {
+      "path": "apis/record_helpers.go",
+      "contentHash": "17f19a50bc9aad05de9b12d4ef4a05b44cbf705f5948671b65c8b22588dab1a2",
+      "line": 1
+    },
+    {
+      "path": "apis/serve.go",
+      "contentHash": "6a0db6dee94c8f17895056786d8366001ced5666a3908d9f0a4066c458d8ee3f",
+      "line": 1
+    },
+    {
+      "path": "core/app.go",
+      "contentHash": "7473db23f4b6006098621b4db890b6247404a2676e8f7a1a493303e375eadb51",
+      "line": 1
+    },
+    {
+      "path": "core/backup_create.go",
+      "contentHash": "7a9ede02afe47e59a4a272e50b592839b32b1148f7b3cca77c9d0ee719e4621d",
+      "line": 1
+    },
+    {
+      "path": "core/base.go",
+      "contentHash": "705195cf24fc1930ab4b7128b6c738ecf2964c2eb5c85b328e7ed4562b70c766",
+      "line": 1
+    },
+    {
+      "path": "core/collection_model_auth_options.go",
+      "contentHash": "d49548ca387efcfc62f45777dc8a4927ca477110c7b0434a9dc3d7ab8da7d5d0",
+      "line": 1
+    },
+    {
+      "path": "core/collection_query.go",
+      "contentHash": "55947150a4c55a58d38fdb8b9ba49a92bea165a0a27b16ebb7e36adcf08633fb",
+      "line": 1
+    },
+    {
+      "path": "core/collection_validate.go",
+      "contentHash": "7a3781b0851d4a6ace97b0f310aa09de5d34f6e0f3c7b7ca1570b711a0d3e121",
+      "line": 1
+    },
+    {
+      "path": "core/field_file.go",
+      "contentHash": "7aa7b4b73f37b68a8c6a1d9b9d26b6a79962960b1b5a90f2cdf21d20d1460d06",
+      "line": 1
+    },
+    {
+      "path": "core/field_relation.go",
+      "contentHash": "55763eff22791609300f6c493a7d8b1871cdea7c4018cdd7af3b8572b920b24c",
+      "line": 1
+    },
+    {
+      "path": "core/field_select.go",
+      "contentHash": "40553d7d83d44926aa424219c79af792e8cb3186027a75dcbddf858402643b05",
+      "line": 1
+    },
+    {
+      "path": "core/field.go",
+      "contentHash": "451cf094d112df878b1701db89a56685332c78f43a57c537ffc397fd00128ea1",
+      "line": 1
+    },
+    {
+      "path": "core/log_printer.go",
+      "contentHash": "53bed23e342ea0d2553e7183de3d44ec424579963dd974546a282148000894ec",
+      "line": 1
+    },
+    {
+      "path": "core/notify_watcher.go",
+      "contentHash": "be0e39f6a762298f2bcff913a8c7068297daf8f588aebff731b723fa63006721",
+      "line": 1
+    },
+    {
+      "path": "core/record_field_resolver_runner.go",
+      "contentHash": "529240cd454f6c1440ec6d3626f0994d89ec97fa64aea91d2dcbc03f170191a6",
+      "line": 1
+    },
+    {
+      "path": "core/record_model.go",
+      "contentHash": "943ec8558c64ff9cac183ae48e9ca23b8451a5f7d0f8928a1a746eb30cb602ed",
+      "line": 1
+    },
+    {
+      "path": "core/record_query_expand.go",
+      "contentHash": "16dbc6c6b014370be7cbca162af86ab2735fbf100ac8b1ba8af9d7ea6c859481",
+      "line": 1
+    },
+    {
+      "path": "core/record_query.go",
+      "contentHash": "0b828105cfb5b30d7a7d4eeb5b9314ac5f591c401f4adfb521bcb60c5e69fe10",
+      "line": 1
+    },
+    {
+      "path": "plugins/jsvm/binds.go",
+      "contentHash": "51156bc594ecaf63ce8d13f39311b8698c26bd69eef338c85c9e5b3b49af1b73",
+      "line": 1
+    },
+    {
+      "path": "plugins/jsvm/internal/types/generated/embed.go",
+      "contentHash": "27cd54a56047432857511a4acbc3d59ba96da7b36caef91379d1433402d0efc7",
+      "line": 1
+    },
+    {
+      "path": "plugins/jsvm/internal/types/types.go",
+      "contentHash": "bc3593f01754391ef14e1fc2fc1850d737baaeb21fb0416bea35f5c269996ff6",
+      "line": 1
+    },
+    {
+      "path": "plugins/jsvm/jsvm.go",
+      "contentHash": "aeb56feb76434eb515e5701d1aabe7e13b1f97c9ca57daa8e569c0618f3aee80",
+      "line": 1
+    },
+    {
+      "path": "pocketbase.go",
+      "contentHash": "31541501de6d150d608faf151421d41b09d6cea19d5fbf7053fc7fe325732ed6",
+      "line": 1
+    },
+    {
+      "path": "tools/cron/cron.go",
+      "contentHash": "b58d6223bf1f5d6645bd7c14e44d8d566ede1e005bac45be3362db32e8f0c930",
+      "line": 1
+    },
+    {
+      "path": "tools/filesystem/filesystem.go",
+      "contentHash": "1607e666bcd101be3ac53a478d7bc3a4e2b5fddb798f51286f0d9f4929cec2d8",
+      "line": 1
+    },
+    {
+      "path": "tools/filesystem/internal/s3blob/s3/uploader.go",
+      "contentHash": "2e47f0947e4829e2abf3a3d8cf678a34df207e7129033d1ce3cdd7b5cea205b5",
+      "line": 1
+    },
+    {
+      "path": "tools/filesystem/internal/s3blob/s3blob.go",
+      "contentHash": "e3e3452794b74b93e7283b9dce27af816099c2aa796ff4a8c420e3135f635b56",
+      "line": 1
+    },
+    {
+      "path": "tools/hook/tagged.go",
+      "contentHash": "79244cee94b2e8f1d9fd1def295b434d6aeed0020a8697949298dbc562a87bd7",
+      "line": 1
+    },
+    {
+      "path": "tools/inflector/singularize.go",
+      "contentHash": "7feffede4c5da2c6959c8e8e67ba3f386eae08e6085971288d3e77244bf704e4",
+      "line": 1
+    },
+    {
+      "path": "tools/list/list.go",
+      "contentHash": "867184df0e099e029e62d09e0feff9d577ca5cedc99abf45fd153339223d909e",
+      "line": 1
+    },
+    {
+      "path": "tools/mailer/html2text.go",
+      "contentHash": "b1b9d0f3baa91390fd17743f88fe154995211f15273aae766613aef67fb635d4",
+      "line": 1
+    },
+    {
+      "path": "tools/osutils/dir.go",
+      "contentHash": "2d9ac94f43781c3a2ed28631e22e0a1e385623ca020e988f2b70d8526d1e34ac",
+      "line": 1
+    },
+    {
+      "path": "tools/picker/excerpt_modifier.go",
+      "contentHash": "323df6254231853d122a76657310b7b98c354b2521b1f763f35d9738ec5860a3",
+      "line": 1
+    },
+    {
+      "path": "tools/router/event.go",
+      "contentHash": "e5a6a9c38966c2bb92b3366dd9107569f5f27d8ca8313a8052e33d8c51cce6f3",
+      "line": 1
+    },
+    {
+      "path": "tools/routine/routine.go",
+      "contentHash": "8e68a2ddb8dae7696519a305443c98b778f1278ad6225673269af2fc1df21af3",
+      "line": 1
+    },
+    {
+      "path": "tools/search/filter.go",
+      "contentHash": "243a154cd00d647e4da390071eb2fa6bfecb4b3543cfe57ddfb3e38d4047f102",
+      "line": 1
+    },
+    {
+      "path": "tools/search/provider.go",
+      "contentHash": "45d129c88b451fd28fe00ad9b3349640675c8db9642ade93bcb76bf0bb07aafd",
+      "line": 1
+    },
+    {
+      "path": "tools/search/simple_field_resolver.go",
+      "contentHash": "7c54da2d48fa382ab61bd7cd4335fbc3c062de1011fe014461b6b463b40e434c",
+      "line": 1
+    },
+    {
+      "path": "tools/store/store.go",
+      "contentHash": "f22dd8cea5a48fbeaed96e16e84b58ed51e09c85f1e31e479e4b1e9f7ef7b98f",
+      "line": 1
+    },
+    {
+      "path": "tools/subscriptions/broker.go",
+      "contentHash": "b41ab2025511519228c84ad8ad007a67b960cd26bf4754e257fe2375e6dd19bf",
+      "line": 1
+    },
+    {
+      "path": "tools/template/registry.go",
+      "contentHash": "3f479e93615a2961140c5b100b0222d9d2c038559dc426ab47e8529b461bd3fb",
+      "line": 1
+    }
+  ],
+  "claims": [
+    {
+      "purpose": "component-name",
+      "text": "Record operations and application services",
+      "citations": [
+        {
+          "path": "apis/record_crud.go",
+          "contentHash": "a277f2ea8ab41cc40b5f5aa29ba72935115bb25a1dcad71398f4aff484428ce2",
+          "startLine": 23,
+          "endLine": 34,
+          "excerpt": "// bindRecordCrudApi registers the record crud api endpoints and\n// the corresponding handlers.\n//\n// note: the rate limiter is \"inlined\" because some of the crud actions are also used in the batch APIs\nfunc bindRecordCrudApi(app core.App, rg *router.RouterGroup[*core.RequestEvent]) {\n\tsubGroup := rg.Group(\"/collections/{collection}/records\").Unbind(DefaultRateLimitMiddlewareId)\n\tsubGroup.GET(\"\", recordsList)\n\tsubGroup.GET(\"/{id}\", recordView)\n\tsubGroup.POST(\"\", recordCreate(true, nil)).Bind(dynamicCollectionBodyLimit(\"\"))\n\tsubGroup.PATCH(\"/{id}\", recordUpdate(true, nil)).Bind(dynamicCollectionBodyLimit(\"\"))\n\tsubGroup.DELETE(\"/{id}\", recordDelete(true, nil))\n}"
+        }
+      ]
+    },
+    {
+      "purpose": "component-role",
+      "text": "Handles record listing, reading, creation, updates and deletion through collection endpoints.",
+      "citations": [
+        {
+          "path": "apis/record_crud.go",
+          "contentHash": "a277f2ea8ab41cc40b5f5aa29ba72935115bb25a1dcad71398f4aff484428ce2",
+          "startLine": 23,
+          "endLine": 34,
+          "excerpt": "// bindRecordCrudApi registers the record crud api endpoints and\n// the corresponding handlers.\n//\n// note: the rate limiter is \"inlined\" because some of the crud actions are also used in the batch APIs\nfunc bindRecordCrudApi(app core.App, rg *router.RouterGroup[*core.RequestEvent]) {\n\tsubGroup := rg.Group(\"/collections/{collection}/records\").Unbind(DefaultRateLimitMiddlewareId)\n\tsubGroup.GET(\"\", recordsList)\n\tsubGroup.GET(\"/{id}\", recordView)\n\tsubGroup.POST(\"\", recordCreate(true, nil)).Bind(dynamicCollectionBodyLimit(\"\"))\n\tsubGroup.PATCH(\"/{id}\", recordUpdate(true, nil)).Bind(dynamicCollectionBodyLimit(\"\"))\n\tsubGroup.DELETE(\"/{id}\", recordDelete(true, nil))\n}"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,56 @@
+{
+  "schemaVersion": 1,
+  "targetId": "component:module:src/smolagents/_function_type_hints_utils.py",
+  "summary": "Defines agent tools with input descriptions, output types and callable implementations.",
+  "author": "Codex (external agent)",
+  "sources": [
+    {
+      "path": "src/smolagents/_function_type_hints_utils.py",
+      "contentHash": "9ce6ce943a6ce86d6bfc8f9df084761a927c5799efee0aa6e13b1d804374a438",
+      "line": 1
+    },
+    {
+      "path": "src/smolagents/agent_types.py",
+      "contentHash": "2a46ef484405d9a7f6316ae8608c3a9dda0f46fbdffedde8e5f94b0969ad9335",
+      "line": 1
+    },
+    {
+      "path": "src/smolagents/gradio_ui.py",
+      "contentHash": "a3e601768f58523f59ee85e4770bab94b8ad1180184fa2c6b79a7234662d3590",
+      "line": 1
+    },
+    {
+      "path": "src/smolagents/tools.py",
+      "contentHash": "0f7395444c1efa48d0995efacf07bc6b68e5bad75a4312b509604eb447aff5e8",
+      "line": 1
+    }
+  ],
+  "claims": [
+    {
+      "purpose": "component-name",
+      "text": "Tool definitions and interfaces",
+      "citations": [
+        {
+          "path": "src/smolagents/tools.py",
+          "contentHash": "0f7395444c1efa48d0995efacf07bc6b68e5bad75a4312b509604eb447aff5e8",
+          "startLine": 106,
+          "endLine": 129,
+          "excerpt": "class Tool(BaseTool):\n    \"\"\"\n    A base class for the functions used by the agent. Subclass this and implement the `forward` method as well as the\n    following class attributes:\n\n    - **description** (`str`) -- A short description of what your tool does, the inputs it expects and the output(s) it\n      will return. For instance 'This is a tool that downloads a file from a `url`. It takes the `url` as input, and\n      returns the text contained in the file'.\n    - **name** (`str`) -- A performative name that will be used for your tool in the prompt to the agent. For instance\n      `\"text-classifier\"` or `\"image_generator\"`.\n    - **inputs** (`Dict[str, Dict[str, Union[str, type, bool]]]`) -- The dict of modalities expected for the inputs.\n      It has one `type`key and a `description`key.\n      This is used by `launch_gradio_demo` or to make a nice space from your tool, and also can be used in the generated\n      description for your tool.\n    - **output_type** (`type`) -- The type of the tool output. This is used by `launch_gradio_demo`\n      or to make a nice space from your tool, and also can be used in the generated description for your tool.\n    - **output_schema** (`Dict[str, Any]`, *optional*) -- The JSON schema defining the expected structure of the tool output.\n      This can be included in system prompts to help agents understand the expected output format. Note: This is currently\n      used for informational purposes only and does not perform actual output validation.\n\n    You can also override the method [`~Tool.setup`] if your tool has an expensive operation to perform before being\n    usable (such as loading a model). [`~Tool.setup`] will be called the first time you use your tool, but not at\n    instantiation.\n    \"\"\""
+        }
+      ]
+    },
+    {
+      "purpose": "component-role",
+      "text": "Defines agent tools with input descriptions, output types and callable implementations.",
+      "citations": [
+        {
+          "path": "src/smolagents/tools.py",
+          "contentHash": "0f7395444c1efa48d0995efacf07bc6b68e5bad75a4312b509604eb447aff5e8",
+          "startLine": 106,
+          "endLine": 129,
+          "excerpt": "class Tool(BaseTool):\n    \"\"\"\n    A base class for the functions used by the agent. Subclass this and implement the `forward` method as well as the\n    following class attributes:\n\n    - **description** (`str`) -- A short description of what your tool does, the inputs it expects and the output(s) it\n      will return. For instance 'This is a tool that downloads a file from a `url`. It takes the `url` as input, and\n      returns the text contained in the file'.\n    - **name** (`str`) -- A performative name that will be used for your tool in the prompt to the agent. For instance\n      `\"text-classifier\"` or `\"image_generator\"`.\n    - **inputs** (`Dict[str, Dict[str, Union[str, type, bool]]]`) -- The dict of modalities expected for the inputs.\n      It has one `type`key and a `description`key.\n      This is used by `launch_gradio_demo` or to make a nice space from your tool, and also can be used in the generated\n      description for your tool.\n    - **output_type** (`type`) -- The type of the tool output. This is used by `launch_gradio_demo`\n      or to make a nice space from your tool, and also can be used in the generated description for your tool.\n    - **output_schema** (`Dict[str, Any]`, *optional*) -- The JSON schema defining the expected structure of the tool output.\n      This can be included in system prompts to help agents understand the expected output format. Note: This is currently\n      used for informational purposes only and does not perform actual output validation.\n\n    You can also override the method [`~Tool.setup`] if your tool has an expensive operation to perform before being\n    usable (such as loading a model). [`~Tool.setup`] will be called the first time you use your tool, but not at\n    instantiation.\n    \"\"\""
+        }
+      ]
+    }
+  ]
+}

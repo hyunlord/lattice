@@ -1,0 +1,86 @@
+{
+  "schemaVersion": 1,
+  "targetId": "component:module:crates/searcher/src/lib.rs",
+  "summary": "Reads source bytes, applies a matcher, and reports matching or contextual lines to a result sink.",
+  "author": "Codex (external agent)",
+  "sources": [
+    {
+      "path": "crates/searcher/src/lib.rs",
+      "contentHash": "7b6c771a3d3e5c40dabe776ea0d8b5af9dbacd84508b9e367bd93ede032f968d",
+      "line": 1
+    },
+    {
+      "path": "crates/searcher/src/line_buffer.rs",
+      "contentHash": "b5f96b093387ca9aacaf3660b2b0be8741cbb01a50076162ebeb413395a7fb10",
+      "line": 1
+    },
+    {
+      "path": "crates/searcher/src/lines.rs",
+      "contentHash": "37ec6404ed642b0692a726e21313acadae8ca4202da859d6421d5dfd44594bc1",
+      "line": 1
+    },
+    {
+      "path": "crates/searcher/src/macros.rs",
+      "contentHash": "8514cf191aef22ad187ffe84d48f2edf1e9e7df04e963d8ad8026f5137ed17c2",
+      "line": 1
+    },
+    {
+      "path": "crates/searcher/src/searcher/core.rs",
+      "contentHash": "7f3fd0976fc91e8aca2eaa07b423ab2a6ad919984b261604d35d715fa02ab3ef",
+      "line": 1
+    },
+    {
+      "path": "crates/searcher/src/searcher/glue.rs",
+      "contentHash": "c2a6d3055a7a2e69a7208113e837eec247d30a43e0c96029aad307f83632fb02",
+      "line": 1
+    },
+    {
+      "path": "crates/searcher/src/searcher/mmap.rs",
+      "contentHash": "403f00eca491e20ef654d0bd6572acccb07c546489054bc514adf528afee8a2c",
+      "line": 1
+    },
+    {
+      "path": "crates/searcher/src/searcher/mod.rs",
+      "contentHash": "6ae846df42f0868385bc54ef728db822c86f20f6d6457777d8f8058fc4c67bf0",
+      "line": 1
+    },
+    {
+      "path": "crates/searcher/src/sink.rs",
+      "contentHash": "703f25a0f08dac9a39742cabc029a332c7e027d9356980d6ffeec34f68953657",
+      "line": 1
+    },
+    {
+      "path": "crates/searcher/src/testutil.rs",
+      "contentHash": "34055e71ee830bdc897686554a3be65499150e1d67a7d4cde45d7bf9aa9e9e2b",
+      "line": 1
+    }
+  ],
+  "claims": [
+    {
+      "purpose": "component-name",
+      "text": "Search execution",
+      "citations": [
+        {
+          "path": "crates/searcher/src/lib.rs",
+          "contentHash": "7b6c771a3d3e5c40dabe776ea0d8b5af9dbacd84508b9e367bd93ede032f968d",
+          "startLine": 1,
+          "endLine": 15,
+          "excerpt": "/*!\nThis crate provides an implementation of line oriented search, with optional\nsupport for multi-line search.\n\n# Brief overview\n\nThe principle type in this crate is a [`Searcher`], which can be configured\nand built by a [`SearcherBuilder`]. A `Searcher` is responsible for reading\nbytes from a source (e.g., a file), executing a search of those bytes using\na `Matcher` (e.g., a regex) and then reporting the results of that search to\na [`Sink`] (e.g., stdout). The `Searcher` itself is principally responsible\nfor managing the consumption of bytes from a source and applying a `Matcher`\nover those bytes in an efficient way. The `Searcher` is also responsible for\ninverting a search, counting lines, reporting contextual lines, detecting\nbinary data and even deciding whether or not to use memory maps."
+        }
+      ]
+    },
+    {
+      "purpose": "component-role",
+      "text": "Reads source bytes, applies a matcher, and reports matching or contextual lines to a result sink.",
+      "citations": [
+        {
+          "path": "crates/searcher/src/lib.rs",
+          "contentHash": "7b6c771a3d3e5c40dabe776ea0d8b5af9dbacd84508b9e367bd93ede032f968d",
+          "startLine": 1,
+          "endLine": 15,
+          "excerpt": "/*!\nThis crate provides an implementation of line oriented search, with optional\nsupport for multi-line search.\n\n# Brief overview\n\nThe principle type in this crate is a [`Searcher`], which can be configured\nand built by a [`SearcherBuilder`]. A `Searcher` is responsible for reading\nbytes from a source (e.g., a file), executing a search of those bytes using\na `Matcher` (e.g., a regex) and then reporting the results of that search to\na [`Sink`] (e.g., stdout). The `Searcher` itself is principally responsible\nfor managing the consumption of bytes from a source and applying a `Matcher`\nover those bytes in an efficient way. The `Searcher` is also responsible for\ninverting a search, counting lines, reporting contextual lines, detecting\nbinary data and even deciding whether or not to use memory maps."
+        }
+      ]
+    }
+  ]
+}

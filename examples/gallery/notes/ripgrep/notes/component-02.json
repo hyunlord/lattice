@@ -1,0 +1,111 @@
+{
+  "schemaVersion": 1,
+  "targetId": "component:module:crates/core/flags/complete/bash.rs",
+  "summary": "Parses search flags and configuration, and generates shell completions and command help.",
+  "author": "Codex (external agent)",
+  "sources": [
+    {
+      "path": "crates/core/flags/complete/bash.rs",
+      "contentHash": "2eb1185195cc3fa00e72d3e7e08b0b81a8251f2410a04856f33f0ba24610bf7e",
+      "line": 1
+    },
+    {
+      "path": "crates/core/flags/complete/encodings.sh",
+      "contentHash": "2f7e59154c52114358dd7c12df046c26a2ba449af98f915180e820a04a681e43",
+      "line": 1
+    },
+    {
+      "path": "crates/core/flags/complete/fish.rs",
+      "contentHash": "3f4128d017c70aada8d865383c43122b39e219773d0fd4160f337d4ffb4227af",
+      "line": 1
+    },
+    {
+      "path": "crates/core/flags/complete/mod.rs",
+      "contentHash": "f3f0f698353fe778f96fd2d6dcd8b81d40196b0e45a63c26cedb6314afa8ee68",
+      "line": 1
+    },
+    {
+      "path": "crates/core/flags/complete/powershell.rs",
+      "contentHash": "cb3de24afe392e3e797df4c796abe037978d22885d317ea88ba5098456c66d22",
+      "line": 1
+    },
+    {
+      "path": "crates/core/flags/complete/zsh.rs",
+      "contentHash": "a1c280d862443f49d34a44861d53e37b7ce023a69f870e310e34025f20aae21b",
+      "line": 1
+    },
+    {
+      "path": "crates/core/flags/config.rs",
+      "contentHash": "adb0b126590521b981db9d913091f6d564f0b142b2d024861e84538a225cf23e",
+      "line": 1
+    },
+    {
+      "path": "crates/core/flags/doc/help.rs",
+      "contentHash": "c3a5ff9abf738dd84fe957378f2bb8e088838a531783f55a3b5e860a982877cb",
+      "line": 1
+    },
+    {
+      "path": "crates/core/flags/doc/man.rs",
+      "contentHash": "5cd7a74aa3f3bf9eaa0e2ad24b2b0214544c53c7a7b7aac3720a3c8af9ed769e",
+      "line": 1
+    },
+    {
+      "path": "crates/core/flags/doc/mod.rs",
+      "contentHash": "49de2b86f8efe2e9807705ae87014c2e80561ce430f8501303ad4553dba9c6ed",
+      "line": 1
+    },
+    {
+      "path": "crates/core/flags/doc/version.rs",
+      "contentHash": "190b63e9c03db51205ead9a80a61655b618961bea111366dbf4fc2adb38bd6ad",
+      "line": 1
+    },
+    {
+      "path": "crates/core/flags/mod.rs",
+      "contentHash": "73bfbf149d375461e7b57d3967a5ee9c8a1875fad258f53c4c93083687348b71",
+      "line": 1
+    },
+    {
+      "path": "crates/core/flags/parse.rs",
+      "contentHash": "c2a3375396800a6c8d8e00d98c321d5caf3c91f7938fd90eafb4e82ea95b5ca5",
+      "line": 1
+    },
+    {
+      "path": "crates/core/index/disabled.rs",
+      "contentHash": "a679181596d9770082e4fde9d15172da3371fd07c1de25ccba4cf45dd656ab22",
+      "line": 1
+    },
+    {
+      "path": "crates/core/index/enabled.rs",
+      "contentHash": "9a6a4b0fc68e3048dc08dc2ea6396cf48e2619504aef00f84a317d822497c69f",
+      "line": 1
+    }
+  ],
+  "claims": [
+    {
+      "purpose": "component-name",
+      "text": "Arguments and configuration",
+      "citations": [
+        {
+          "path": "crates/core/flags/mod.rs",
+          "contentHash": "73bfbf149d375461e7b57d3967a5ee9c8a1875fad258f53c4c93083687348b71",
+          "startLine": 1,
+          "endLine": 10,
+          "excerpt": "/*!\nDefines ripgrep's command line interface.\n\nThis modules deals with everything involving ripgrep's flags and positional\narguments. This includes generating shell completions, `--help` output and even\nripgrep's man page. It's also responsible for parsing and validating every\nflag (including reading ripgrep's config file), and manages the contact points\nbetween these flags and ripgrep's cast of supporting libraries. For example,\nonce [`HiArgs`] has been created, it knows how to create a multi threaded\nrecursive directory traverser."
+        }
+      ]
+    },
+    {
+      "purpose": "component-role",
+      "text": "Parses search flags and configuration, and generates shell completions and command help.",
+      "citations": [
+        {
+          "path": "crates/core/flags/mod.rs",
+          "contentHash": "73bfbf149d375461e7b57d3967a5ee9c8a1875fad258f53c4c93083687348b71",
+          "startLine": 1,
+          "endLine": 10,
+          "excerpt": "/*!\nDefines ripgrep's command line interface.\n\nThis modules deals with everything involving ripgrep's flags and positional\narguments. This includes generating shell completions, `--help` output and even\nripgrep's man page. It's also responsible for parsing and validating every\nflag (including reading ripgrep's config file), and manages the contact points\nbetween these flags and ripgrep's cast of supporting libraries. For example,\nonce [`HiArgs`] has been created, it knows how to create a multi threaded\nrecursive directory traverser."
+        }
+      ]
+    }
+  ]
+}

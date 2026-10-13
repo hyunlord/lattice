@@ -1,0 +1,81 @@
+{
+  "schemaVersion": 1,
+  "targetId": "component:module:src/tui/dummy.go",
+  "summary": "Defines terminal drawing, resizing, cursor control and keyboard events.",
+  "author": "Codex (external agent)",
+  "sources": [
+    {
+      "path": "src/tui/dummy.go",
+      "contentHash": "0fbc7c459d0f36cd0080689318dbe09b868e0457d427ac241f855a049946946a",
+      "line": 1
+    },
+    {
+      "path": "src/tui/eventtype_string.go",
+      "contentHash": "a3a759bcdd72518ba4b94bfe75b89f30c6b9250d6ac9853410b7a07e185e4463",
+      "line": 1
+    },
+    {
+      "path": "src/tui/light_unix.go",
+      "contentHash": "9655b91ccd30afffb5e88bf0da88535be60a9b154b606fe1983050598fa7c8c0",
+      "line": 1
+    },
+    {
+      "path": "src/tui/light_windows.go",
+      "contentHash": "e4a36a703aae10025355ec1d7d4e5bab2d96103840e7ac97380db2df05227f5c",
+      "line": 1
+    },
+    {
+      "path": "src/tui/light.go",
+      "contentHash": "a540f8a2f1e16f7b73386f93f1500d4bc6d74a436db85eebd435fa3b61a7c5a1",
+      "line": 1
+    },
+    {
+      "path": "src/tui/tcell.go",
+      "contentHash": "fa3fe4a7ac3a764636e59a32c2b353c02fe34db7dc7820fdff350fa3df1df857",
+      "line": 1
+    },
+    {
+      "path": "src/tui/ttyname_unix.go",
+      "contentHash": "718e04527c008bf07b5a71178e10dbbad2b769e7dcc304df7c7ec6c4a82875ec",
+      "line": 1
+    },
+    {
+      "path": "src/tui/ttyname_windows.go",
+      "contentHash": "be226e55b8283f4c9e178188f533739350894070ffdb8ebc71b5a205fc1e96e9",
+      "line": 1
+    },
+    {
+      "path": "src/tui/tui.go",
+      "contentHash": "256eabfb76bd61686a558c4c9d1d594c419abec0cd74ac2551ecde700af83796",
+      "line": 1
+    }
+  ],
+  "claims": [
+    {
+      "purpose": "component-name",
+      "text": "Terminal display and input",
+      "citations": [
+        {
+          "path": "src/tui/tui.go",
+          "contentHash": "256eabfb76bd61686a558c4c9d1d594c419abec0cd74ac2551ecde700af83796",
+          "startLine": 855,
+          "endLine": 881,
+          "excerpt": "type Renderer interface {\n\tDefaultTheme() *ColorTheme\n\tInit() error\n\tResize(maxHeightFunc func(int) int)\n\tPause(clear bool)\n\tResume(clear bool, sigcont bool)\n\tClear()\n\tRefreshWindows(windows []Window)\n\tRefresh()\n\tClose()\n\tPassThrough(string)\n\tNeedScrollbarRedraw() bool\n\tShouldEmitResizeEvent() bool\n\tBell()\n\tHideCursor()\n\tShowCursor()\n\n\tGetChar(cancellable bool) Event\n\tCancelGetChar()\n\n\tTop() int\n\tMaxX() int\n\tMaxY() int\n\n\tSize() TermSize\n\n\tNewWindow(top int, left int, width int, height int, windowType WindowType, borderStyle BorderStyle, erase bool) Window"
+        }
+      ]
+    },
+    {
+      "purpose": "component-role",
+      "text": "Defines terminal drawing, resizing, cursor control and keyboard events.",
+      "citations": [
+        {
+          "path": "src/tui/tui.go",
+          "contentHash": "256eabfb76bd61686a558c4c9d1d594c419abec0cd74ac2551ecde700af83796",
+          "startLine": 855,
+          "endLine": 881,
+          "excerpt": "type Renderer interface {\n\tDefaultTheme() *ColorTheme\n\tInit() error\n\tResize(maxHeightFunc func(int) int)\n\tPause(clear bool)\n\tResume(clear bool, sigcont bool)\n\tClear()\n\tRefreshWindows(windows []Window)\n\tRefresh()\n\tClose()\n\tPassThrough(string)\n\tNeedScrollbarRedraw() bool\n\tShouldEmitResizeEvent() bool\n\tBell()\n\tHideCursor()\n\tShowCursor()\n\n\tGetChar(cancellable bool) Event\n\tCancelGetChar()\n\n\tTop() int\n\tMaxX() int\n\tMaxY() int\n\n\tSize() TermSize\n\n\tNewWindow(top int, left int, width int, height int, windowType WindowType, borderStyle BorderStyle, erase bool) Window"
+        }
+      ]
+    }
+  ]
+}

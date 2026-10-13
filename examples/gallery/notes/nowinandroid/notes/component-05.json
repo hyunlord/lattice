@@ -1,0 +1,335 @@
+{
+  "schemaVersion": 1,
+  "targetId": "component:module:core/analytics/build.gradle.kts",
+  "summary": "Fetches news and topics and delegates background synchronization to repositories.",
+  "author": "Codex (external agent)",
+  "sources": [
+    {
+      "path": "core/analytics/build.gradle.kts",
+      "contentHash": "d8479f028616bda040d4752ce9278829ab9a133be32c43afd41ab651f244636f",
+      "line": 1
+    },
+    {
+      "path": "core/analytics/src/demo/kotlin/com/google/samples/apps/nowinandroid/core/analytics/AnalyticsModule.kt",
+      "contentHash": "9bc24936f999a539ba3fe12f5e7772690aea1c8a713144e2cfb54a70f5a2f2c7",
+      "line": 1
+    },
+    {
+      "path": "core/analytics/src/main/kotlin/com/google/samples/apps/nowinandroid/core/analytics/AnalyticsEvent.kt",
+      "contentHash": "34ba938463409a19d4ed9f7116e1a3d510261dfd0fcfd24b27274a9faa5f8074",
+      "line": 1
+    },
+    {
+      "path": "core/analytics/src/main/kotlin/com/google/samples/apps/nowinandroid/core/analytics/AnalyticsHelper.kt",
+      "contentHash": "ab1ac08505b45303415a43660efee207051f0d02a1a6c2f91a26d18cd97dbeed",
+      "line": 1
+    },
+    {
+      "path": "core/analytics/src/main/kotlin/com/google/samples/apps/nowinandroid/core/analytics/NoOpAnalyticsHelper.kt",
+      "contentHash": "5b75b0f46168a18649168ea7b168151142453ae1a9ad85cfca35a77f5dc3f87b",
+      "line": 1
+    },
+    {
+      "path": "core/analytics/src/main/kotlin/com/google/samples/apps/nowinandroid/core/analytics/StubAnalyticsHelper.kt",
+      "contentHash": "02c3ece60179749644abd614d4d5461e4a36cc924f69795316abbf711a8563f9",
+      "line": 1
+    },
+    {
+      "path": "core/analytics/src/main/kotlin/com/google/samples/apps/nowinandroid/core/analytics/UiHelpers.kt",
+      "contentHash": "b2db0d43bdf542d1b7ec336addfc36bbbc8829613af8435658b0f07eddbf2947",
+      "line": 1
+    },
+    {
+      "path": "core/analytics/src/prod/kotlin/com/google/samples/apps/nowinandroid/core/analytics/AnalyticsModule.kt",
+      "contentHash": "d6abc3e64ec15e4ccbf6ebf6c51e0da6ce858ea75de0f64440dd7f458224f3a0",
+      "line": 1
+    },
+    {
+      "path": "core/analytics/src/prod/kotlin/com/google/samples/apps/nowinandroid/core/analytics/FirebaseAnalyticsHelper.kt",
+      "contentHash": "ae07b61d86820d5a1808be52ea17d3e9e8bcdfcf429919d2a32207dc8c150909",
+      "line": 1
+    },
+    {
+      "path": "core/common/build.gradle.kts",
+      "contentHash": "556582dc0c00f86ecca560e4d95f1430f30b8a42eb094dddbe5360cee0f09ee5",
+      "line": 1
+    },
+    {
+      "path": "core/common/src/main/kotlin/com/google/samples/apps/nowinandroid/core/common/network/di/CoroutineScopesModule.kt",
+      "contentHash": "3a5cc8bd98a969c2a666ca4fb51a91d1783cb7dbd9401b3573ee30a8a102eda2",
+      "line": 1
+    },
+    {
+      "path": "core/common/src/main/kotlin/com/google/samples/apps/nowinandroid/core/common/network/di/DispatchersModule.kt",
+      "contentHash": "ada20be90a83db60752c69edbb6a9e34855bb2d01111e2394af0542f9bd9605e",
+      "line": 1
+    },
+    {
+      "path": "core/common/src/main/kotlin/com/google/samples/apps/nowinandroid/core/common/network/NiaDispatchers.kt",
+      "contentHash": "4ad548d6a2ab295b04999096aaaf5b53ebfc7454253de9e709aea0135d4b5df0",
+      "line": 1
+    },
+    {
+      "path": "core/common/src/main/kotlin/com/google/samples/apps/nowinandroid/core/common/result/Result.kt",
+      "contentHash": "85708fd2021f94b6914747f4fa6d3799d7996bb7b2c67227d5a7c3c3a83a7f13",
+      "line": 1
+    },
+    {
+      "path": "core/datastore-proto/build.gradle.kts",
+      "contentHash": "9341c6774bb0beee7b36c931c73b525f445b5d23398d445119b866b6d0a95bdb",
+      "line": 1
+    },
+    {
+      "path": "core/datastore-test/src/main/kotlin/com/google/samples/apps/nowinandroid/core/datastore/test/InMemoryDataStore.kt",
+      "contentHash": "6ac9ca7f65736eabbd32bc71ef676cba7047350b66b12ccfa61b4c7c80549955",
+      "line": 1
+    },
+    {
+      "path": "core/datastore-test/src/main/kotlin/com/google/samples/apps/nowinandroid/core/datastore/test/TestDataStoreModule.kt",
+      "contentHash": "c8657a49c5d173fd225667a019bd6a6a1df687561951646a78404bf2a1aba6f2",
+      "line": 1
+    },
+    {
+      "path": "core/datastore/build.gradle.kts",
+      "contentHash": "b14a09ba4670203f3676c0a07fbd439780315d8532abbbb323e82097db70bf4f",
+      "line": 1
+    },
+    {
+      "path": "core/datastore/src/main/kotlin/com/google/samples/apps/nowinandroid/core/datastore/ChangeListVersions.kt",
+      "contentHash": "0e1909db62aa1243d527013c956949f3149c44638cd83756825eb59af57bf4ef",
+      "line": 1
+    },
+    {
+      "path": "core/datastore/src/main/kotlin/com/google/samples/apps/nowinandroid/core/datastore/di/DataStoreModule.kt",
+      "contentHash": "2a33b142d672561919e44ace873d7d5db46be196a14cc94ec09ee2de77deef04",
+      "line": 1
+    },
+    {
+      "path": "core/datastore/src/main/kotlin/com/google/samples/apps/nowinandroid/core/datastore/IntToStringIdsMigration.kt",
+      "contentHash": "191da6f9496ca050a74e48dd86bc4bf51ed9491ed67e0a4c79e2a6730679c309",
+      "line": 1
+    },
+    {
+      "path": "core/datastore/src/main/kotlin/com/google/samples/apps/nowinandroid/core/datastore/ListToMapMigration.kt",
+      "contentHash": "81eb694f71925fb53a965f43cc07241a60e308e7fd647390f3b93df3bec7b9c3",
+      "line": 1
+    },
+    {
+      "path": "core/datastore/src/main/kotlin/com/google/samples/apps/nowinandroid/core/datastore/NiaPreferencesDataSource.kt",
+      "contentHash": "67633dbbccc11697ff931c3bbb103878634a44992c202a11d33736fce6953726",
+      "line": 1
+    },
+    {
+      "path": "core/datastore/src/main/kotlin/com/google/samples/apps/nowinandroid/core/datastore/UserPreferencesSerializer.kt",
+      "contentHash": "173c8f5a030e401764568003b2c810abe1f493294609a4dede65de99ebf3f605",
+      "line": 1
+    },
+    {
+      "path": "core/network/build.gradle.kts",
+      "contentHash": "fd6fcc48d4123a3443bf556a60ef48f453da9886270db1ef6b07d4c9e290ef61",
+      "line": 1
+    },
+    {
+      "path": "core/network/src/demo/kotlin/com/google/samples/apps/nowinandroid/core/network/di/FlavoredNetworkModule.kt",
+      "contentHash": "b55ddfe6ff5cd6e5202af0fd126301836d6ced6750f9601432f922b2d636613c",
+      "line": 1
+    },
+    {
+      "path": "core/network/src/main/kotlin/com/google/samples/apps/nowinandroid/core/network/demo/DemoAssetManager.kt",
+      "contentHash": "69d4e19e35a42c28fa8ed9d0f8c9a6c100db25aea9962e608d34fb017e6fbaa9",
+      "line": 1
+    },
+    {
+      "path": "core/network/src/main/kotlin/com/google/samples/apps/nowinandroid/core/network/demo/DemoNiaNetworkDataSource.kt",
+      "contentHash": "1cf164494ce2cd18ae55f50b065a845d65d65c6433f311f75d0fbca56a751ca6",
+      "line": 1
+    },
+    {
+      "path": "core/network/src/main/kotlin/com/google/samples/apps/nowinandroid/core/network/di/NetworkModule.kt",
+      "contentHash": "de05fffbad9bdc336fe81b98c32f291a36022d10a2be3c04b64957b63e63b33b",
+      "line": 1
+    },
+    {
+      "path": "core/network/src/main/kotlin/com/google/samples/apps/nowinandroid/core/network/model/NetworkChangeList.kt",
+      "contentHash": "d85edc92e6bdab9910a0bda328f44d2937a8c6c563e549ce6626a4ec59ab4f5a",
+      "line": 1
+    },
+    {
+      "path": "core/network/src/main/kotlin/com/google/samples/apps/nowinandroid/core/network/model/NetworkNewsResource.kt",
+      "contentHash": "19b2dc8b1ec5f711b80ae63c1f2c3495380127e0b3dccd5f33be1ed8f36961b5",
+      "line": 1
+    },
+    {
+      "path": "core/network/src/main/kotlin/com/google/samples/apps/nowinandroid/core/network/model/NetworkTopic.kt",
+      "contentHash": "dae4196f2b428aba22f29952cedd7cb506b799383930ea27db8d852d8c52dcf8",
+      "line": 1
+    },
+    {
+      "path": "core/network/src/main/kotlin/com/google/samples/apps/nowinandroid/core/network/NiaNetworkDataSource.kt",
+      "contentHash": "b66c9901f682643ca3924c4048b6ac0853c87447851c3ebfa9cd4e95811c90d3",
+      "line": 1
+    },
+    {
+      "path": "core/network/src/main/kotlin/com/google/samples/apps/nowinandroid/core/network/retrofit/RetrofitNiaNetwork.kt",
+      "contentHash": "0996c1bfbb640afef9192549874ecfadd248d8130ed8953a0b764a1ed4fadbe9",
+      "line": 1
+    },
+    {
+      "path": "core/network/src/main/kotlin/JvmUnitTestDemoAssetManager.kt",
+      "contentHash": "d88fd26e49c1b4189b6ac724e00bd912f55b180c6923e12416b481cfa955de11",
+      "line": 1
+    },
+    {
+      "path": "core/network/src/prod/kotlin/com/google/samples/apps/nowinandroid/core/network/di/FlavoredNetworkModule.kt",
+      "contentHash": "60a4736a5ac89b56b9129e4f2847b3b9957fc5fe899116cc30d0ec48779524ff",
+      "line": 1
+    },
+    {
+      "path": "core/notifications/build.gradle.kts",
+      "contentHash": "78539a137d5014097295754c1398538672981cf7292e6ae5e18a8bf5e980ba29",
+      "line": 1
+    },
+    {
+      "path": "core/notifications/src/demo/kotlin/com/google/samples/apps/nowinandroid/core/notifications/NotificationsModule.kt",
+      "contentHash": "35c4bd6f716dc667a358019692e80b62d632674816c0b6e25f0257c5627bfd6f",
+      "line": 1
+    },
+    {
+      "path": "core/notifications/src/main/kotlin/com/google/samples/apps/nowinandroid/core/notifications/NoOpNotifier.kt",
+      "contentHash": "193c40bd1616b09f9bf68d32fa21aab06f3d982b7b625d16b39411fa1f778a0a",
+      "line": 1
+    },
+    {
+      "path": "core/notifications/src/main/kotlin/com/google/samples/apps/nowinandroid/core/notifications/Notifier.kt",
+      "contentHash": "45651fe8c7cc86d037073da975367af286372f24957cf715ff8e55ad95118c11",
+      "line": 1
+    },
+    {
+      "path": "core/notifications/src/main/kotlin/com/google/samples/apps/nowinandroid/core/notifications/SystemTrayNotifier.kt",
+      "contentHash": "5eb05bfa7a89b28aa4a013419a2a27a64e351a331033a28507845a08fdfec456",
+      "line": 1
+    },
+    {
+      "path": "core/notifications/src/prod/kotlin/com/google/samples/apps/nowinandroid/core/notifications/NotificationsModule.kt",
+      "contentHash": "199a6de07b2c39250c70df1f5a14313fbf88eded2d020108e4df439916f773a5",
+      "line": 1
+    },
+    {
+      "path": "sync/sync-test/src/main/kotlin/com/google/samples/apps/nowinandroid/core/sync/test/NeverSyncingSyncManager.kt",
+      "contentHash": "94e791599b4f10bbb7fe62e478602cdadebe8521a68570f549b17318d762b1c0",
+      "line": 1
+    },
+    {
+      "path": "sync/sync-test/src/main/kotlin/com/google/samples/apps/nowinandroid/core/sync/test/TestSyncModule.kt",
+      "contentHash": "5e23d6724a343cb4401db17a136dec8cdd00360e2a9a4c8ae88dc5ac857ea941",
+      "line": 1
+    },
+    {
+      "path": "sync/work/build.gradle.kts",
+      "contentHash": "bf934042580ba3dad672cac69214e086908b00841b6b183b3cd7b2f567b886e6",
+      "line": 1
+    },
+    {
+      "path": "sync/work/src/demo/kotlin/com/google/samples/apps/nowinandroid/sync/di/SyncModule.kt",
+      "contentHash": "f7b334612eb15c73f356d119e70930bd282b85ec8a4feb4168a74db2ee60ba1c",
+      "line": 1
+    },
+    {
+      "path": "sync/work/src/main/kotlin/com/google/samples/apps/nowinandroid/sync/initializers/SyncInitializer.kt",
+      "contentHash": "9b2c31189936492b8d75ba09a71d4aa4bec54ac0add10aaf3f3f8d312e1a1a2c",
+      "line": 1
+    },
+    {
+      "path": "sync/work/src/main/kotlin/com/google/samples/apps/nowinandroid/sync/initializers/SyncWorkHelpers.kt",
+      "contentHash": "f8c15a3dea15cf517d3565fcea34c90ef964182ab9291997e16a162e18ae2427",
+      "line": 1
+    },
+    {
+      "path": "sync/work/src/main/kotlin/com/google/samples/apps/nowinandroid/sync/status/StubSyncSubscriber.kt",
+      "contentHash": "ce00d282ac9bb6f280207610afd4894cb71f2541526e933b42af21afc6ca29be",
+      "line": 1
+    },
+    {
+      "path": "sync/work/src/main/kotlin/com/google/samples/apps/nowinandroid/sync/status/SyncSubscriber.kt",
+      "contentHash": "3b4439aacc0898670b26c53c999edf70a416ed70ed77028bc0c8961f2a2fb97f",
+      "line": 1
+    },
+    {
+      "path": "sync/work/src/main/kotlin/com/google/samples/apps/nowinandroid/sync/status/WorkManagerSyncManager.kt",
+      "contentHash": "beede167c5083a8e143a1548f8d111b1901266ca0a17c46963cac734eaeb7795",
+      "line": 1
+    },
+    {
+      "path": "sync/work/src/main/kotlin/com/google/samples/apps/nowinandroid/sync/workers/AnalyticsExtensions.kt",
+      "contentHash": "b6b72900bf48d71a82e98fe6457e698b0babea1b99e48d9ae66222ab716e1140",
+      "line": 1
+    },
+    {
+      "path": "sync/work/src/main/kotlin/com/google/samples/apps/nowinandroid/sync/workers/DelegatingWorker.kt",
+      "contentHash": "bf202152b1dad1f401254e8d0bafb51bda66a9740deadfb684ab96aabf610556",
+      "line": 1
+    },
+    {
+      "path": "sync/work/src/main/kotlin/com/google/samples/apps/nowinandroid/sync/workers/SyncWorker.kt",
+      "contentHash": "c608d98bc5211e8aafdbe141845c7a37e4ccfb057f057022a3b28e7a0d585cea",
+      "line": 1
+    },
+    {
+      "path": "sync/work/src/prod/kotlin/com/google/samples/apps/nowinandroid/sync/di/SyncModule.kt",
+      "contentHash": "2b2af957e8ec21242c265dfac0fa702986adbaf5960394e766e300ef4de7167c",
+      "line": 1
+    },
+    {
+      "path": "sync/work/src/prod/kotlin/com/google/samples/apps/nowinandroid/sync/services/SyncNotificationsService.kt",
+      "contentHash": "b262b0b1fef6eb5691627fc2c46be0f06abc70ef20cfd28c06bcb9dc52e00164",
+      "line": 1
+    },
+    {
+      "path": "sync/work/src/prod/kotlin/com/google/samples/apps/nowinandroid/sync/status/FirebaseSyncSubscriber.kt",
+      "contentHash": "138ccfc63cf2a8c88ccd8b15cbf89ff54ad04da4568bb00141a70162a69f19e3",
+      "line": 1
+    }
+  ],
+  "claims": [
+    {
+      "purpose": "component-name",
+      "text": "Network & synchronization",
+      "citations": [
+        {
+          "path": "core/network/src/main/kotlin/com/google/samples/apps/nowinandroid/core/network/NiaNetworkDataSource.kt",
+          "contentHash": "b66c9901f682643ca3924c4048b6ac0853c87447851c3ebfa9cd4e95811c90d3",
+          "startLine": 23,
+          "endLine": 34,
+          "excerpt": "/**\n * Interface representing network calls to the NIA backend\n */\ninterface NiaNetworkDataSource {\n    suspend fun getTopics(ids: List<String>? = null): List<NetworkTopic>\n\n    suspend fun getNewsResources(ids: List<String>? = null): List<NetworkNewsResource>\n\n    suspend fun getTopicChangeList(after: Int? = null): List<NetworkChangeList>\n\n    suspend fun getNewsResourceChangeList(after: Int? = null): List<NetworkChangeList>\n}"
+        },
+        {
+          "path": "sync/work/src/main/kotlin/com/google/samples/apps/nowinandroid/sync/workers/SyncWorker.kt",
+          "contentHash": "c608d98bc5211e8aafdbe141845c7a37e4ccfb057f057022a3b28e7a0d585cea",
+          "startLine": 47,
+          "endLine": 59,
+          "excerpt": " * Syncs the data layer by delegating to the appropriate repository instances with\n * sync functionality.\n */\n@HiltWorker\ninternal class SyncWorker @AssistedInject constructor(\n    @Assisted private val appContext: Context,\n    @Assisted workerParams: WorkerParameters,\n    private val niaPreferences: NiaPreferencesDataSource,\n    private val topicRepository: TopicsRepository,\n    private val newsRepository: NewsRepository,\n    private val searchContentsRepository: SearchContentsRepository,\n    @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher,\n    private val analyticsHelper: AnalyticsHelper,"
+        }
+      ]
+    },
+    {
+      "purpose": "component-role",
+      "text": "Fetches news and topics and delegates background synchronization to repositories.",
+      "citations": [
+        {
+          "path": "core/network/src/main/kotlin/com/google/samples/apps/nowinandroid/core/network/NiaNetworkDataSource.kt",
+          "contentHash": "b66c9901f682643ca3924c4048b6ac0853c87447851c3ebfa9cd4e95811c90d3",
+          "startLine": 23,
+          "endLine": 34,
+          "excerpt": "/**\n * Interface representing network calls to the NIA backend\n */\ninterface NiaNetworkDataSource {\n    suspend fun getTopics(ids: List<String>? = null): List<NetworkTopic>\n\n    suspend fun getNewsResources(ids: List<String>? = null): List<NetworkNewsResource>\n\n    suspend fun getTopicChangeList(after: Int? = null): List<NetworkChangeList>\n\n    suspend fun getNewsResourceChangeList(after: Int? = null): List<NetworkChangeList>\n}"
+        },
+        {
+          "path": "sync/work/src/main/kotlin/com/google/samples/apps/nowinandroid/sync/workers/SyncWorker.kt",
+          "contentHash": "c608d98bc5211e8aafdbe141845c7a37e4ccfb057f057022a3b28e7a0d585cea",
+          "startLine": 47,
+          "endLine": 59,
+          "excerpt": " * Syncs the data layer by delegating to the appropriate repository instances with\n * sync functionality.\n */\n@HiltWorker\ninternal class SyncWorker @AssistedInject constructor(\n    @Assisted private val appContext: Context,\n    @Assisted workerParams: WorkerParameters,\n    private val niaPreferences: NiaPreferencesDataSource,\n    private val topicRepository: TopicsRepository,\n    private val newsRepository: NewsRepository,\n    private val searchContentsRepository: SearchContentsRepository,\n    @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher,\n    private val analyticsHelper: AnalyticsHelper,"
+        }
+      ]
+    }
+  ]
+}

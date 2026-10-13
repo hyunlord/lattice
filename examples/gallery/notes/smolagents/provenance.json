@@ -1,0 +1,6 @@
+{
+  "repository": "huggingface/smolagents",
+  "commit": "96f33faaf028479119ec8d34507b47694cf14e34",
+  "author": "Codex (external agent)",
+  "basis": "Source-cited interpretation, not runtime observation"
+}

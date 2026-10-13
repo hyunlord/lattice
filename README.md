@@ -10,13 +10,13 @@ npx --yes https://github.com/hyunlord/lattice/releases/download/v0.1.0-l11/hyunl
 
 Node20+ and Git are required. The command installs the [published L11 prerelease](https://github.com/hyunlord/lattice/releases/tag/v0.1.0-l11); the unscoped npm name `lattice` belongs to another project. Public GitHub repository URLs also work. `--no-browser` prints the local address for remote/headless sessions. No lens, model key or target installation is required; analysis does not run repository code.
 
-[Open the public demo gallery](https://hyunlord.github.io/lattice/) — six public repositories, no setup.
+[Open the public demo gallery](https://hyunlord.github.io/lattice/) — six public repositories, no setup. The L12 diagram preview is delivered through the gallery; the installation command above remains the L11 prerelease.
 
 ## Start with the structure
 
-The first screen summarizes purpose, dependency-based components, starts, representative static flows and the technology stack. Large inputs show actual discovery progress and a partial inventory before the complete analysis is ready. Open the detailed map, functions and source evidence when you need them.
+The first screen draws components and directed dependencies, marks reading starts, and highlights a source-backed call path when one is available. File counts control arrow width; explanations and full evidence follow below the diagram. Large inputs show actual discovery progress and a partial inventory before the complete analysis is ready. Open the detailed map, functions and source evidence when you need them.
 
-Descriptions come from repository documentation, manifests and clearly labelled source inventories. Optional external-agent summaries must cite fresh source lines. Static calls describe resolvable code relationships, not observed execution or complete dynamic dispatch.
+Descriptions come from repository documentation, manifests and clearly labelled source inventories. Optional external-agent component names and roles must cite fresh source lines. Package entries and UI roots are labelled reading alternatives, not invented call sequences. Static calls describe resolvable code relationships, not observed execution or complete dynamic dispatch.
 
 ## Why this approach
 
@@ -31,6 +31,8 @@ Descriptions come from repository documentation, manifests and clearly labelled 
 - [Usage, lenses, MCP and automation](docs/guide.md)
 - [Architecture](docs/design/lattice-v0.md), [design system](DESIGN.md) and [contributor contract](AGENTS.md)
 - [L11 frozen public corpus and questions](docs/benchmarks/l11/questions.json), [evaluation and unmet targets](docs/benchmarks/l11/evaluation/evaluation-report.md), and [public delivery](docs/benchmarks/l11/publication/README.md)
+- [L12 diagram delivery and limits](docs/benchmarks/l12/delivery.md)
+- [L12 five-minute human test](docs/benchmarks/l12/worksheet.ko.md) — Lattice first, then a qualitative comparison; user verdict pending. Reference answers are withheld until completion.
 - [Earlier acceptance evidence](docs/review/acceptance.md) and accepted [L10 performance residuals](docs/benchmarks/l10/closure-display.md)
 - [Domain lens example: bs-mobile](https://hyunlord.github.io/bs-mobile/) — a configured example, separate from the generic product gallery
 

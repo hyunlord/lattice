@@ -1,0 +1,2261 @@
+{
+  "schemaVersion": 1,
+  "targetId": "component:module:app/actions/definitions/groupUsers.tsx",
+  "summary": "Starts service processes with database models, middleware and an HTTP or HTTPS server.",
+  "author": "Codex (external agent)",
+  "sources": [
+    {
+      "path": "app/actions/definitions/groups.tsx",
+      "contentHash": "3cf16e425ed527cf407ab2977291ab07d24be19bd9f7e681b29b057846be3ab2",
+      "line": 1
+    },
+    {
+      "path": "app/actions/definitions/groupUsers.tsx",
+      "contentHash": "360d5c00d2f063d4a006ac88d4ed345e1aa8f05397718e6c858dbb5ac7627421",
+      "line": 1
+    },
+    {
+      "path": "app/actions/definitions/shares.tsx",
+      "contentHash": "921762fb1d73fe46ec33e681caa4fc984eaeabe517988d333dade859be2c54a9",
+      "line": 1
+    },
+    {
+      "path": "app/actions/definitions/templates.tsx",
+      "contentHash": "11b8fa45565318118b532f29a355e68c3de24e0dc6c128a035edb7d8981d8afd",
+      "line": 1
+    },
+    {
+      "path": "app/actions/definitions/users.tsx",
+      "contentHash": "1c5bd0dcbe4e34863a1e8b4f1b820e6988783d64d0bcc733ae87efe96ed8f713",
+      "line": 1
+    },
+    {
+      "path": "app/components/AsyncEditor.ts",
+      "contentHash": "724a8f7f2e48d145de1de405756e775ff4ed6e61baca404c0fc9f50399982cc2",
+      "line": 1
+    },
+    {
+      "path": "app/components/Breadcrumb.tsx",
+      "contentHash": "c824fe1330159917ae16a98d35607bb8573e883bd7e8bdd8542dd0e45f03bebe",
+      "line": 1
+    },
+    {
+      "path": "app/components/Collaborators.tsx",
+      "contentHash": "f067563470ab23d9bfa58dc6fbe3173723cbc9f9a6bcaab2528398d055c02729",
+      "line": 1
+    },
+    {
+      "path": "app/components/CollectionBreadcrumb.tsx",
+      "contentHash": "facb820a9ecfb2a2df9d31d160cedbe6c049adc62518b56097b54cdb1d6dcec1",
+      "line": 1
+    },
+    {
+      "path": "app/components/DocumentSelectionToolbar.tsx",
+      "contentHash": "fcd0fbf94c13241a2294d699ff391a30b95847a85b6332ea7e6697da30f6e8af",
+      "line": 1
+    },
+    {
+      "path": "app/components/DocumentViews.tsx",
+      "contentHash": "d62847d218a531a0ee4887f01980facd7c39f99d76faa0a579ab054954501536",
+      "line": 1
+    },
+    {
+      "path": "app/components/Facepile.tsx",
+      "contentHash": "d5e12d8bab7410cc6056692eb4aa929d97a50b61a9ac0851f7c51ed8c9d62598",
+      "line": 1
+    },
+    {
+      "path": "app/components/FilterOptions.tsx",
+      "contentHash": "78a2c9798f8301b74a31cd487d0ce7006f2d1c597ee474bf28f499fc487a45b2",
+      "line": 1
+    },
+    {
+      "path": "app/components/HoverPreview/Components.tsx",
+      "contentHash": "b467c7a9af4863febfb7a52a6b0b6bd138f34e7f65e97660c5095394c371f94d",
+      "line": 1
+    },
+    {
+      "path": "app/components/HoverPreview/HoverPreview.tsx",
+      "contentHash": "ea453c8fbffc9b5501787ec5070304d15e239404f5ec767b2d099f54c5124fd7",
+      "line": 1
+    },
+    {
+      "path": "app/components/HoverPreview/HoverPreviewDocument.tsx",
+      "contentHash": "daf9c2408d138cea9feba5941bbc411c60c0f80146716c2be117879437b4ebbd",
+      "line": 1
+    },
+    {
+      "path": "app/components/HoverPreview/HoverPreviewGroup.tsx",
+      "contentHash": "5b2df9de1d01249c7ff95655a537ad344845b1afa61b5159a57d6b16b593d2f2",
+      "line": 1
+    },
+    {
+      "path": "app/components/HoverPreview/HoverPreviewLink.tsx",
+      "contentHash": "c55e006bcc64f998c36cc6fdddf722f40fa1b6d57432fcf2b02e7c65ee1390e2",
+      "line": 1
+    },
+    {
+      "path": "app/components/HoverPreview/HoverPreviewMention.tsx",
+      "contentHash": "ab091e67ce545016b66ad206711796be1ca7e3b40779bdc4f0b8684320b7caf7",
+      "line": 1
+    },
+    {
+      "path": "app/components/HoverPreview/index.ts",
+      "contentHash": "9f4d2e76f3c8b9b86eff5e73356ce725a8f9d21c9b7c5ab76503146677c7e219",
+      "line": 1
+    },
+    {
+      "path": "app/components/Menu/OverflowMenuButton.tsx",
+      "contentHash": "8192ae2b65d0fc89121894816ca6a2cdc9edb2af1fa3d7ab2a0ae977d57855d0",
+      "line": 1
+    },
+    {
+      "path": "app/components/ModelSelection.ts",
+      "contentHash": "a8510234e4fe684eb4a8b6694b701cd5e194b3d4799452e40e1696b700117a36",
+      "line": 1
+    },
+    {
+      "path": "app/components/ModelSelectionActionToolbar.tsx",
+      "contentHash": "41df2b43d03f5e86c34a18a6bec55016feb4c89c62a59524c492f8ca672b3d54",
+      "line": 1
+    },
+    {
+      "path": "app/components/ModelSelectionContext.tsx",
+      "contentHash": "6f81d50b3638e7ca74e88bfe026627f761de88b1785a1310cedc380ee6aa9e21",
+      "line": 1
+    },
+    {
+      "path": "app/components/ModelSelectionToolbar.tsx",
+      "contentHash": "05cf5108f9db87dc50bede65b8f4c99c030cc943dd55791d35eeed457435804f",
+      "line": 1
+    },
+    {
+      "path": "app/components/PaginatedList.tsx",
+      "contentHash": "7f160ba9bba97ffdab62c8aac2fffac56effeffa4f31db9ad68028ee5701b912",
+      "line": 1
+    },
+    {
+      "path": "app/components/Presentation.tsx",
+      "contentHash": "1a349c12b57ec97dbcd8e01b39af88892ca231c61487a10ab4f79c4ab729d11c",
+      "line": 1
+    },
+    {
+      "path": "app/components/primitives/components/Menu.tsx",
+      "contentHash": "a90ded3787add0879f0730ba23069ba02ee8b34f1a239a20734f13bb87fd6230",
+      "line": 1
+    },
+    {
+      "path": "app/components/SelectionCheckbox.tsx",
+      "contentHash": "dd9a667edf85f86d7217aac74785f56242a81f3eb3bbc8c1fb07010fcdaeebed",
+      "line": 1
+    },
+    {
+      "path": "app/components/SortableTable.tsx",
+      "contentHash": "4f4828b7e0a63713ab54aee00ce6886cdd11a025890c649ef2da86a1097e7a59",
+      "line": 1
+    },
+    {
+      "path": "app/components/Table.tsx",
+      "contentHash": "0901ab215f8f77bb4756bed1e1a6ce1dd86714a4396d194c59ddbd128c832046",
+      "line": 1
+    },
+    {
+      "path": "app/components/Tooltip.tsx",
+      "contentHash": "7049382c144b1339800559460a1cfc285173cb4093e65ae77876092b0622dc4f",
+      "line": 1
+    },
+    {
+      "path": "app/editor/components/Input.tsx",
+      "contentHash": "86e250d82fb92accbe8efc10bb018eb9e15ff26233b5ec4230893a0e961af373",
+      "line": 1
+    },
+    {
+      "path": "app/editor/components/LinkEditor.tsx",
+      "contentHash": "b0cd5854b4eebf5fb9245509f0e9e6d5df9111f3dd8b92ff3cd4d26bc06bf847",
+      "line": 1
+    },
+    {
+      "path": "app/editor/components/MediaLinkEditor.tsx",
+      "contentHash": "6f1f60ffac958877de89ef4efbf8999b3c14e3a0a19838edc69976742897889a",
+      "line": 1
+    },
+    {
+      "path": "app/editor/components/ToolbarButton.tsx",
+      "contentHash": "47327500c442c4d2a1169666ebab65e170d302211a8185f7f5a295a4bf3558f3",
+      "line": 1
+    },
+    {
+      "path": "app/editor/components/Tooltip.tsx",
+      "contentHash": "1ac1c93491947791c038680b40222bb2f0f1d8ed53a87548945e6cea41b6f99c",
+      "line": 1
+    },
+    {
+      "path": "app/editor/extensions/DragHandle.ts",
+      "contentHash": "3458989d3fa1a636e07aa5a9f181233c7fdbc7d667890a0e7cd02184fd0a959d",
+      "line": 1
+    },
+    {
+      "path": "app/editor/extensions/HoverPreviews.tsx",
+      "contentHash": "c3c2cd47a590ef6050f43ef006e5e0f1422fa183acfe92a01f52a5c74dbc3e47",
+      "line": 1
+    },
+    {
+      "path": "app/editor/extensions/index.ts",
+      "contentHash": "7d06100772cb92163eed397e3f649dbd57a51b5646a797c2db89981168f9ad98",
+      "line": 1
+    },
+    {
+      "path": "app/editor/extensions/Keys.ts",
+      "contentHash": "e7c341f890a4647cbdeceae8f6a95828531cd5f86148fbd68d277cd19692049c",
+      "line": 1
+    },
+    {
+      "path": "app/editor/extensions/PreventTab.ts",
+      "contentHash": "f4169fab6c9b4af60322fb5b63051dd27ee90a38a89a0039da6f0477aa3eb117",
+      "line": 1
+    },
+    {
+      "path": "app/editor/extensions/SmartText.ts",
+      "contentHash": "5d707e3e65ab9696ccbbfeb4adfadf99c4aedf7a7da590ae6253ba6789822cf1",
+      "line": 1
+    },
+    {
+      "path": "app/editor/extensions/UpArrowAtStart.ts",
+      "contentHash": "466fcc068123540c3bb57e6d6dff0e0fe1c848ac9b67fbf82420fb62aaae5dcc",
+      "line": 1
+    },
+    {
+      "path": "app/editor/plugins/DragTarget.ts",
+      "contentHash": "2b381758a43114d4ee83ef6e8977c0b0bd74b08eee2866b437134cfdf8b99d7a",
+      "line": 1
+    },
+    {
+      "path": "app/hooks/useCommandBarActions.ts",
+      "contentHash": "c305b356a12c3f44894ad3e4d31b721bf9b921e1e0713621412829a0201428fb",
+      "line": 1
+    },
+    {
+      "path": "app/hooks/useGroupMenuActions.tsx",
+      "contentHash": "e2d9c8af2caeb73beb7cc85cf274aa199fedee0788aeb91456360bb1b7fef1e4",
+      "line": 1
+    },
+    {
+      "path": "app/hooks/useGroupUserMenuActions.tsx",
+      "contentHash": "601163fd088858c041b118db49122ad269a4e1c38eb961881342333db8b5aafe",
+      "line": 1
+    },
+    {
+      "path": "app/hooks/useOnClickOutside.ts",
+      "contentHash": "7f1a107f7f3875642de99893e2d550c68a7a88d3339b225f3beda7ef423f52c6",
+      "line": 1
+    },
+    {
+      "path": "app/hooks/usePageVisibility.ts",
+      "contentHash": "70fca8459f7b7ee940eefe538a86c007affbba26c557cc8d94b13c1051e3c5a5",
+      "line": 1
+    },
+    {
+      "path": "app/hooks/useShareMenuActions.tsx",
+      "contentHash": "43827c94eba732df3077d5dac361347d59083dfdf6f26eb87ca0edb38bae2cbf",
+      "line": 1
+    },
+    {
+      "path": "app/hooks/useTemplateSettingsActions.tsx",
+      "contentHash": "f72f302cc220d63f3abda5837ea3db793ba913a9d7f1a648c7952241d7757560",
+      "line": 1
+    },
+    {
+      "path": "app/hooks/useUserMenuActions.tsx",
+      "contentHash": "7a6f04c0757e8b3780879cd81b8b9a8f6ab35bf8e6f0cb6151f323072e0f2055",
+      "line": 1
+    },
+    {
+      "path": "app/hooks/useWebMCPActions.ts",
+      "contentHash": "b7693c200ec80019a8073fe9d14fc9b3a7ebacdcc8bacba4900a4cd335c63764",
+      "line": 1
+    },
+    {
+      "path": "app/menus/BreadcrumbMenu.tsx",
+      "contentHash": "9e976590453d9fccc79d3ef652c2820a579f1853a4bec578564d6dd496ec47ce",
+      "line": 1
+    },
+    {
+      "path": "app/menus/GroupMemberMenu.tsx",
+      "contentHash": "19eca1f56fc0e54140ddc94781098602caac63ef07889b7e7aa04567a26bbcab",
+      "line": 1
+    },
+    {
+      "path": "app/menus/GroupMenu.tsx",
+      "contentHash": "5395e769f4e8ea67c1e7b1920793c2206d37c5225a2d1acafa3f82e6a6b3190e",
+      "line": 1
+    },
+    {
+      "path": "app/menus/ShareMenu.tsx",
+      "contentHash": "34e9c7a5d3e82d0e2debc6a6190c96a3f0d48adf48347eb25a5a0707221c586f",
+      "line": 1
+    },
+    {
+      "path": "app/menus/TemplateMenu.tsx",
+      "contentHash": "5f9c06b7edd106b24db489333ed8274256bc714c3d72e30ff6006384c2b2eee2",
+      "line": 1
+    },
+    {
+      "path": "app/menus/UserMenu.tsx",
+      "contentHash": "fdc2a0ffc1d77c06fb175ad7b83419f8f9b1562084077f75c1e39d4899ef6dea",
+      "line": 1
+    },
+    {
+      "path": "app/routes/scenes.ts",
+      "contentHash": "04cbf3445a1184c80750957f599d7940bf92f6d5b65899eb05a3fde9959e325d",
+      "line": 1
+    },
+    {
+      "path": "app/scenes/Collection/components/MembershipPreview.tsx",
+      "contentHash": "2c4979285d018f8ace7a618ec4df25d85a23dad8df6bd26a4f9f9381a7444b29",
+      "line": 1
+    },
+    {
+      "path": "app/scenes/Document/components/AsyncMultiplayerEditor.ts",
+      "contentHash": "d32def3e16a01c1e25236f25464805d115547963f85f0843ba1bc1ed0fc69748",
+      "line": 1
+    },
+    {
+      "path": "app/scenes/Document/components/Comments/CommentEditor.tsx",
+      "contentHash": "d50ee6ffe8c1231b0f77189083b039d85edaef395980b3314923d790a6e8d698",
+      "line": 1
+    },
+    {
+      "path": "app/scenes/Document/components/Comments/CommentForm.tsx",
+      "contentHash": "5b02472b4d0b25c91588211fa3b95b944ca30e275d189748a3124e2bdb783683",
+      "line": 1
+    },
+    {
+      "path": "app/scenes/Document/components/Comments/CommentThread.tsx",
+      "contentHash": "82bf868e58dce5671ec1eae6e344e2940eb87f295886092c0fd794847add1014",
+      "line": 1
+    },
+    {
+      "path": "app/scenes/Document/components/Comments/CommentThreadItem.tsx",
+      "contentHash": "8fdaaed8d378c21d800b2dea0392e455ebcb46b52f862d72298c69849afb2a65",
+      "line": 1
+    },
+    {
+      "path": "app/scenes/Document/components/Comments/HighlightText.ts",
+      "contentHash": "d74c1725e26f94fe2afd013a03ee1915e31e5f12e342af87749d3aa041f93bd2",
+      "line": 1
+    },
+    {
+      "path": "app/scenes/Document/components/ConnectionStatus.tsx",
+      "contentHash": "3d976a60ff37f969fb1685f81777a4512ff3a0b4aeeeacfa14d643c388107b73",
+      "line": 1
+    },
+    {
+      "path": "app/scenes/Document/components/Editor.tsx",
+      "contentHash": "34bdf458e9aef6e957dae1a796d96e8e570e8b88e0e291b996193de0a44aef85",
+      "line": 1
+    },
+    {
+      "path": "app/scenes/Document/components/MultiplayerEditor.tsx",
+      "contentHash": "9ed0f1fc8f246f01a35108b79a0433589491c21c28ef96cdb4ec2cdc152525b2",
+      "line": 1
+    },
+    {
+      "path": "app/scenes/Document/components/PresentationMode.tsx",
+      "contentHash": "9d351bece2fddbd9a9317d684fcbccb9cbab6e05562c44f41efd1ac4ed20baac",
+      "line": 1
+    },
+    {
+      "path": "app/scenes/Document/components/PublicBreadcrumb.tsx",
+      "contentHash": "30b8ae464922d81dac7fef5b0dcf1f5dfe85fe050093ac5e6980554115fe7dbb",
+      "line": 1
+    },
+    {
+      "path": "app/scenes/Document/components/References.tsx",
+      "contentHash": "b83def213a4845773c72bf345853f35276e2f5ece2c8759b2d00d9ec63649315",
+      "line": 1
+    },
+    {
+      "path": "app/scenes/Invite.tsx",
+      "contentHash": "8a11e08b819805e5c463ff21ddccae08acc1391f62f845dd7da2d97f48fdfc47",
+      "line": 1
+    },
+    {
+      "path": "app/scenes/Search/components/DocumentFilter.tsx",
+      "contentHash": "eff391677889de386194146e2921e2747eeb4dd16a82022c66b0ed9eb47f0667",
+      "line": 1
+    },
+    {
+      "path": "app/scenes/Search/components/DocumentTypeFilter.tsx",
+      "contentHash": "3a7e16f6ee6bdea6cdafd3e9181e741b6f4a13465ce58395d71592c4c13e76cc",
+      "line": 1
+    },
+    {
+      "path": "app/scenes/Search/components/SearchInput.tsx",
+      "contentHash": "ec87762c04f47e181d31b2b10683806e500ed49ba2b9181b93a79d3e9f89ba73",
+      "line": 1
+    },
+    {
+      "path": "app/scenes/Search/components/SortInput.tsx",
+      "contentHash": "b4d7e2186dced00e1317d93c0b2c6b410d3a7e44b5826cde7c57f3f447c376e5",
+      "line": 1
+    },
+    {
+      "path": "app/scenes/Search/index.ts",
+      "contentHash": "ef697b66a90705ceea4b80f36fd2f27a4a3010152bd2e2458bcdb02235068da9",
+      "line": 1
+    },
+    {
+      "path": "app/scenes/Search/Search.tsx",
+      "contentHash": "d1082f28d131b758a6aa084c1cc3f823f622837e8458987cd446da86460c0ffe",
+      "line": 1
+    },
+    {
+      "path": "app/scenes/Settings/components/GroupMemberSelectionToolbar.tsx",
+      "contentHash": "1880956599ac33ff1abc306afa0878d98c9a586a1924c2dd1c6701e897c08559",
+      "line": 1
+    },
+    {
+      "path": "app/scenes/Settings/components/GroupMembersTable.tsx",
+      "contentHash": "877fccb7a3e7e62e3ad6b4d5f6308651fe42e9c60f73ce3c9b4c835e4d21f756",
+      "line": 1
+    },
+    {
+      "path": "app/scenes/Settings/components/GroupPermissionFilter.tsx",
+      "contentHash": "717998cf06682cb39122dc76a72f08e7db457fd306b8cc4c0c16830af9173fcf",
+      "line": 1
+    },
+    {
+      "path": "app/scenes/Settings/components/GroupSelectionToolbar.tsx",
+      "contentHash": "e735f466f874c30f097877802785b6b39ba6461a92582874f7bfec4c14d18a24",
+      "line": 1
+    },
+    {
+      "path": "app/scenes/Settings/components/GroupSourceFilter.tsx",
+      "contentHash": "bba9d65d40b0f270c21eb4c22cdd9afdcb46f80edb7dee1610c7d62ba1d4bcf6",
+      "line": 1
+    },
+    {
+      "path": "app/scenes/Settings/components/GroupsTable.tsx",
+      "contentHash": "faeb5a90a5f828b1744eb9636b84bd0ec53c915a65eb6a01b591697eca92e2d6",
+      "line": 1
+    },
+    {
+      "path": "app/scenes/Settings/components/ShareSelectionToolbar.tsx",
+      "contentHash": "16f0cb842870bebc698557fc7c8b5c7f1b1fa58e342d9478ebadad5573740634",
+      "line": 1
+    },
+    {
+      "path": "app/scenes/Settings/components/SharesTable.tsx",
+      "contentHash": "4a9fa662dc073064f6203566301893e816841623a2d4664e7fc23479c5c9be37",
+      "line": 1
+    },
+    {
+      "path": "app/scenes/Settings/components/TemplateSelectionToolbar.tsx",
+      "contentHash": "353b814655b0d53ec9fd5d16453f1b0a73af9345446fa59d86308a894a17670c",
+      "line": 1
+    },
+    {
+      "path": "app/scenes/Settings/components/UserRoleFilter.tsx",
+      "contentHash": "27a6705acc9479e5d452ba00beacb912d75d4a93ae4d71a8ed89c081fbff48b1",
+      "line": 1
+    },
+    {
+      "path": "app/scenes/Settings/components/UserSelectionToolbar.tsx",
+      "contentHash": "62fcaeb8fc020f6a0fd71d0d094540aaea2505b85ad55d1eaf7a8f08ddfc80b8",
+      "line": 1
+    },
+    {
+      "path": "app/scenes/Settings/components/UsersTable.tsx",
+      "contentHash": "815cb683de74b1176426ec15039ca6cad8889fb04cf2e4822ed820ad6949f610",
+      "line": 1
+    },
+    {
+      "path": "app/scenes/Settings/components/UserStatusFilter.tsx",
+      "contentHash": "b86b27bb3c37f708b9b1479b8237ca99f4090f1b15a36c5bd637059fb2689b94",
+      "line": 1
+    },
+    {
+      "path": "app/scenes/Settings/GroupMembers.tsx",
+      "contentHash": "8d16930bffbe98c0ef57d3704fe0799871e9845ce0d83c2164da421438b06b10",
+      "line": 1
+    },
+    {
+      "path": "app/scenes/Settings/Groups.tsx",
+      "contentHash": "169ec01a70a872679ad734cfb04305147acf158df74ba4c5dec2155379957a9a",
+      "line": 1
+    },
+    {
+      "path": "app/scenes/Settings/Template.tsx",
+      "contentHash": "8616d53dda038a226252be35925750b3c607e08893549cd8ba885c63feb9a7c4",
+      "line": 1
+    },
+    {
+      "path": "app/scenes/Settings/Users.tsx",
+      "contentHash": "ef5b5b646a709432fc4f5bfe044a5b34e318512bd01fe254adbd451149ac86a9",
+      "line": 1
+    },
+    {
+      "path": "app/stores/UsersStore.ts",
+      "contentHash": "3e081f4639dce224e3e912ea3664ece5ea4cde4b735b255122e8564624e06e87",
+      "line": 1
+    },
+    {
+      "path": "app/utils/Analytics.ts",
+      "contentHash": "5055fcd3ffeb648b25019a6927737bc6e9efee55299e9158010b248716ac6b0d",
+      "line": 1
+    },
+    {
+      "path": "app/utils/Logger.ts",
+      "contentHash": "71814c464e5d7f4dedf9ab1f3b35c1963de48c925ea960a1e3c3cf6595b39ff0",
+      "line": 1
+    },
+    {
+      "path": "app/utils/ModelContext.ts",
+      "contentHash": "e71400bf11dd62315c90da33cd8fd01d902a82a241b77e7983d05c811bd5dca1",
+      "line": 1
+    },
+    {
+      "path": "app/utils/multiplayer/CollaborationProvider.ts",
+      "contentHash": "34d0b645944d9aa4ee431ef8b68d6ab122ee7c50a1806a2f4a2e862b8a7652b5",
+      "line": 1
+    },
+    {
+      "path": "app/utils/multiplayer/IndexeddbPersistence.ts",
+      "contentHash": "32272dc7ea69a3926f77dd3b8ad00a4bca4dc34902efb5c53b8ab989094afeaf",
+      "line": 1
+    },
+    {
+      "path": "plugins/azure/server/auth/azure.ts",
+      "contentHash": "1d612bcd3404087f3fd10c2fb8df4d5c3718c4914780b5f256e5e59638c4b563",
+      "line": 1
+    },
+    {
+      "path": "plugins/azure/server/auth/getEmailVerified.ts",
+      "contentHash": "6d88a8d629e5cff1b631515f009d42108b175d9e8c2b9a92a0f0d0aa2b3736f2",
+      "line": 1
+    },
+    {
+      "path": "plugins/azure/server/azure.ts",
+      "contentHash": "ef4d271e622664b7c52d6a894b8c94e0c653fd4a7bee7193bc1a8ebbd0477d3d",
+      "line": 1
+    },
+    {
+      "path": "plugins/azure/server/env.ts",
+      "contentHash": "49c37752a9969851ebb5387fbba7265be493b69bbc61f2b5d2823a7c2a095a4b",
+      "line": 1
+    },
+    {
+      "path": "plugins/azure/server/index.ts",
+      "contentHash": "ed31a6351422d4988a0a684eb0ad9af4d544215f464445b2436ed10fe07bc4d2",
+      "line": 1
+    },
+    {
+      "path": "plugins/discord/server/auth/discord.ts",
+      "contentHash": "cc8916b858e0849a1035b5c712279642637ae5ca830bd3071097bbe9787f1611",
+      "line": 1
+    },
+    {
+      "path": "plugins/discord/server/discord.ts",
+      "contentHash": "6c59262e11ba5c5b4c953567b1bc094a6a7e55e19bd7ebbdae25cf57c34e70ea",
+      "line": 1
+    },
+    {
+      "path": "plugins/discord/server/env.ts",
+      "contentHash": "53d57407ca170f543372df925706f01f47227bca68fc50b545eebe0a193739ce",
+      "line": 1
+    },
+    {
+      "path": "plugins/discord/server/errors.ts",
+      "contentHash": "a0dc556cd70d545d62e824a472e56f0caa69f7115e67d89ec44f4d87f3fa0ebe",
+      "line": 1
+    },
+    {
+      "path": "plugins/discord/server/index.ts",
+      "contentHash": "499f77e923dc034a63795ff38e5f32859d0acbb1719388a648cbcf618dee52da",
+      "line": 1
+    },
+    {
+      "path": "plugins/email/server/auth/email.ts",
+      "contentHash": "ebe1895207edc0633e5afe8773e983f7f8cc328279a31b8d5b1738aa6c3ee3c4",
+      "line": 1
+    },
+    {
+      "path": "plugins/email/server/auth/schema.ts",
+      "contentHash": "f3d0aa64f5f742a8afb412b1be4d79acb4e990e651ff318f139c2bf810902be4",
+      "line": 1
+    },
+    {
+      "path": "plugins/email/server/index.ts",
+      "contentHash": "7aee92a4c5854ef0f134400ea2b838bc04cb56ea1eadd85e6285ebaf2c424ec2",
+      "line": 1
+    },
+    {
+      "path": "plugins/figma/server/api/figma.ts",
+      "contentHash": "b804836643fc21c4daccff88f79076545910973fb1d839ffded5d0f70c249823",
+      "line": 1
+    },
+    {
+      "path": "plugins/figma/server/api/schema.ts",
+      "contentHash": "3b7c294731ff1624173ff4a3ee9b293c3c818daabc214eb99a638f80639eca11",
+      "line": 1
+    },
+    {
+      "path": "plugins/github/server/api/github.ts",
+      "contentHash": "2f774be3cc3db090332860c718dca51c900dccdbec4a0a504f694f406d7c5f51",
+      "line": 1
+    },
+    {
+      "path": "plugins/github/server/api/schema.ts",
+      "contentHash": "cd9f97d9aac9f68f5ba91e62d85510b6333188e2ecad449842f4bffbf93d3627",
+      "line": 1
+    },
+    {
+      "path": "plugins/gitlab/server/api/gitlab.ts",
+      "contentHash": "04fe8e9319849991503e30fa2213cd222bb1e6285b09e0b47e58311d9797fd47",
+      "line": 1
+    },
+    {
+      "path": "plugins/gitlab/server/api/schema.ts",
+      "contentHash": "95b5c42186de557d52b60576f44287444b45a4e0db55b65b0c07c485664846c5",
+      "line": 1
+    },
+    {
+      "path": "plugins/gitlab/server/gitlab.ts",
+      "contentHash": "ad628a2dfc0b6c14da4771eb3e998574047770f566626a21ddb8755316116ed2",
+      "line": 1
+    },
+    {
+      "path": "plugins/google/server/auth/google.ts",
+      "contentHash": "dcf5c7ccd92e53649cd40fc4687fb06f002f95910b7085300b3698c3dd25b093",
+      "line": 1
+    },
+    {
+      "path": "plugins/google/server/env.ts",
+      "contentHash": "7335ceb32279a09a8a5ec2627eaea39797cf4bfd9400757cd2826576268777a1",
+      "line": 1
+    },
+    {
+      "path": "plugins/google/server/google.ts",
+      "contentHash": "20fca1d9b3c13349fea3f3f2d38e8570a2ef3d31f37e6ae75cce1e48f3bb9f5a",
+      "line": 1
+    },
+    {
+      "path": "plugins/google/server/index.ts",
+      "contentHash": "19f7fb08ffc08e335a71c29b434604e1986997a72764d0599d75c4ccf6ff9c3c",
+      "line": 1
+    },
+    {
+      "path": "plugins/iframely/server/env.ts",
+      "contentHash": "57d9f235f3f227ee8dde79ba8dc3082987ca64e59023131ea711f6060393853a",
+      "line": 1
+    },
+    {
+      "path": "plugins/iframely/server/iframely.ts",
+      "contentHash": "af409e999d4a577264342b5b0166fc029edd735c3f8aacaf2d8f45dead77a3ea",
+      "line": 1
+    },
+    {
+      "path": "plugins/iframely/server/index.ts",
+      "contentHash": "9fb94b5b9a7d0310405c1fd624cb7943b66f6b0912b5d8ef4efa72926d3baaf3",
+      "line": 1
+    },
+    {
+      "path": "plugins/linear/server/api/linear.ts",
+      "contentHash": "c716433984db9b382332f9a1391b1569daa1eebfb39a8d1f06ebafffbcfeaa5a",
+      "line": 1
+    },
+    {
+      "path": "plugins/linear/server/api/schema.ts",
+      "contentHash": "602825b5a1b1fe1045c3f0749c2b9c3c6170e9be13f2dee37f05f2521276e44f",
+      "line": 1
+    },
+    {
+      "path": "plugins/oidc/server/auth/oidc.ts",
+      "contentHash": "fa2f8366383ed7d806589df9a96706bb645bfaf62922039525ffedec57247326",
+      "line": 1
+    },
+    {
+      "path": "plugins/oidc/server/auth/oidcRouter.ts",
+      "contentHash": "4c796676ce8d5bab64e84956d50cd7d48373e8a2f715a2ef7ab90d3ca3e18c2a",
+      "line": 1
+    },
+    {
+      "path": "plugins/oidc/server/auth/OIDCStrategy.ts",
+      "contentHash": "51c707f29b81ee396be578e81c49b0e7258c27428874bcd44bdbf80a5b411702",
+      "line": 1
+    },
+    {
+      "path": "plugins/oidc/server/env.ts",
+      "contentHash": "eb3bfd77fb0e40de619b2737b683013ba21e30fce889081734fca0091f601a22",
+      "line": 1
+    },
+    {
+      "path": "plugins/oidc/server/index.ts",
+      "contentHash": "43c83b1e7b2a4dae17d2b2d642872ba0b2253b0f68e5dde62bc2ffd3d2f1d61a",
+      "line": 1
+    },
+    {
+      "path": "plugins/oidc/server/oidc.ts",
+      "contentHash": "324070cd42686f58f1d1ffaa3e6917654acd6ddf8754f89e511cf22ebcc5cf55",
+      "line": 1
+    },
+    {
+      "path": "plugins/oidc/server/oidcDiscovery.ts",
+      "contentHash": "b629e66521d6206c721d09b7009b33f955cf135e3e99eea6a075fd6fb0b52fda",
+      "line": 1
+    },
+    {
+      "path": "plugins/passkeys/client/components/PasskeyIcon.tsx",
+      "contentHash": "41840c580d8cede98a3b5de7e7158a19cbb950ee9a54a3f8170da6beddaf101f",
+      "line": 1
+    },
+    {
+      "path": "plugins/passkeys/client/components/PasskeyListItem.tsx",
+      "contentHash": "955298d4766199263fb8c7ebe5ffa37f7883afe93d81830c487ef3c966014cf3",
+      "line": 1
+    },
+    {
+      "path": "plugins/passkeys/server/api/passkeys.ts",
+      "contentHash": "e93af9037e61f629eca7caad1b697f92691f6080caa3366784ee36307a882900",
+      "line": 1
+    },
+    {
+      "path": "plugins/passkeys/server/api/schema.ts",
+      "contentHash": "9062bfb4041dd06e4773de60456899c77241cd1caa3d3492e52cfd27c865694a",
+      "line": 1
+    },
+    {
+      "path": "plugins/passkeys/server/auth/passkeys.ts",
+      "contentHash": "7afb74553da968d2544385ddf67742abd2c5446575922897d35f3338033faab0",
+      "line": 1
+    },
+    {
+      "path": "plugins/passkeys/server/auth/schema.ts",
+      "contentHash": "db4e300343bcee41947114a73cfa59a1e6e2d1415f395ceaee2fe92937fc5d6b",
+      "line": 1
+    },
+    {
+      "path": "plugins/passkeys/server/email/templates/PasskeyCreatedEmail.tsx",
+      "contentHash": "0059ef2f9c3431b4d66f451897a9044af5578f08bc43709e0f9481141df20fe7",
+      "line": 1
+    },
+    {
+      "path": "plugins/passkeys/server/index.ts",
+      "contentHash": "7ea3f0ccce94ae1791cbf07d2f317177ed14c27308b0167934b5d93589c55f78",
+      "line": 1
+    },
+    {
+      "path": "plugins/passkeys/server/presenters/userPasskey.ts",
+      "contentHash": "2dc25cfcd1a8b6ac5329efcee4f747f0fb84aff380f78ca3529899bdd53161ef",
+      "line": 1
+    },
+    {
+      "path": "plugins/passkeys/server/processors/PasskeyCreatedProcessor.ts",
+      "contentHash": "2cad2365f89cc91a27a5d2f426f10af4a9e3e4bfd50b56e813f12a5a283ea18d",
+      "line": 1
+    },
+    {
+      "path": "plugins/slab/server/index.ts",
+      "contentHash": "bb84bc7e5ecb2925ecd9e6ed1dab0629b65401f5bdc58b36af1c80470af384ed",
+      "line": 1
+    },
+    {
+      "path": "plugins/slab/server/processors/SlabImportsProcessor.ts",
+      "contentHash": "a191698b7e4d7fb8d1cc3e93f7d7d51f83574d04f7106aa503331544a769488b",
+      "line": 1
+    },
+    {
+      "path": "plugins/slab/server/tasks/SlabAPIImportTask.ts",
+      "contentHash": "cc029469d346e40a850c5f68e781c80079e33c4d5eea66509fc38ba235d7a7d2",
+      "line": 1
+    },
+    {
+      "path": "plugins/slack/server/api/hooks.ts",
+      "contentHash": "244cb493cd3fe44147a803b96dcd8cf54404c119bf45f18a58b7b1b7c69ba576",
+      "line": 1
+    },
+    {
+      "path": "plugins/slack/server/api/schema.ts",
+      "contentHash": "4f3ed253b9732947a1286ec6509b3507a9e012e00b8e10d9cce23c862ca9759f",
+      "line": 1
+    },
+    {
+      "path": "plugins/slack/server/auth/schema.ts",
+      "contentHash": "31f467e068a096dc3386370911d561e37349d01a8211932eddbd813e4480ed20",
+      "line": 1
+    },
+    {
+      "path": "plugins/slack/server/auth/slack.ts",
+      "contentHash": "0778a97827d2605ab374ebcb949128f2a0ab20f43ac8b4ed8b13d167d8db0a3b",
+      "line": 1
+    },
+    {
+      "path": "plugins/slack/server/env.ts",
+      "contentHash": "94daeb57cc224879594e6584fe24643f973ca01ceee2d6e86c0703fb4a1d2bb3",
+      "line": 1
+    },
+    {
+      "path": "plugins/slack/server/index.ts",
+      "contentHash": "983306b707af14c16d5799f1cc4d143216e416daab79f07b8d42ae39431789ae",
+      "line": 1
+    },
+    {
+      "path": "plugins/slack/server/presenters/messageAttachment.ts",
+      "contentHash": "45fa57c968118d7551a0a43271581988d64dc660db30f39a309939b2b85b2f5d",
+      "line": 1
+    },
+    {
+      "path": "plugins/slack/server/presenters/userNotLinkedBlocks.ts",
+      "contentHash": "a387a6a4eb072543c75a1c46b439f9b412e62ea5acf29ab83b57af0e754d1af9",
+      "line": 1
+    },
+    {
+      "path": "plugins/slack/server/processors/SlackProcessor.ts",
+      "contentHash": "23f8f4f4498b003e460638669d2ed2b20a95eede5d5503048d0a82088a36373b",
+      "line": 1
+    },
+    {
+      "path": "plugins/webhooks/server/api/schema.ts",
+      "contentHash": "5241db9190685272e6bdad4ca9b0031f01449f632151fe1161de687a9b42ab95",
+      "line": 1
+    },
+    {
+      "path": "plugins/webhooks/server/api/webhookSubscriptions.ts",
+      "contentHash": "bd3c7090232b52d969f860ec9c22f17199ab6a0edca7fa57b570f185133400a4",
+      "line": 1
+    },
+    {
+      "path": "plugins/webhooks/server/index.ts",
+      "contentHash": "adde11c8466599215e8b5aa64acde2b2b151a28ad9e35d0ca36aec7cd1a5150d",
+      "line": 1
+    },
+    {
+      "path": "plugins/webhooks/server/presenters/webhook.ts",
+      "contentHash": "b4e5031a0ba9c6ad7b0ccd92cbc535539b375df94a2c9f5d38e3d0cdc728aa30",
+      "line": 1
+    },
+    {
+      "path": "plugins/webhooks/server/presenters/webhookSubscription.ts",
+      "contentHash": "c5b76999cbdf37d9a86a30e7e1b50d03a72ae43095eb654ba431e9fb897074da",
+      "line": 1
+    },
+    {
+      "path": "plugins/webhooks/server/processors/WebhookProcessor.ts",
+      "contentHash": "10241c35065cb776fd7e46e27fbd48a04b7dfb15757eded8e061af292f46fd0e",
+      "line": 1
+    },
+    {
+      "path": "plugins/webhooks/server/tasks/CleanupWebhookDeliveriesTask.ts",
+      "contentHash": "caafd11d89a2a3cb912e5b638e929d98aa9b477d8c0728006fe7ab95eefd6b3d",
+      "line": 1
+    },
+    {
+      "path": "plugins/webhooks/server/tasks/DeliverWebhookTask.ts",
+      "contentHash": "ca133828ef9133e76083339538ce50c4b8dcb5598af8cacc2dcfd6a9102b521e",
+      "line": 1
+    },
+    {
+      "path": "server/collaboration/APIUpdateExtension.ts",
+      "contentHash": "960176d6baf2a3cd205c925a342d3dc4a1af38e9a9bfcad20bcffb093766aa23",
+      "line": 1
+    },
+    {
+      "path": "server/collaboration/AuthenticationExtension.ts",
+      "contentHash": "fece0c34bcc690bc52fd204211098263f6881892fd78c6351e314267c1684d9b",
+      "line": 1
+    },
+    {
+      "path": "server/collaboration/AwarenessIdentityExtension.ts",
+      "contentHash": "cf427eafdc179b7216e382745be8e5987e0e0aafca5f12c27bc356c2c89a1a12",
+      "line": 1
+    },
+    {
+      "path": "server/collaboration/ConnectionLimitExtension.ts",
+      "contentHash": "71d096343c2d40ef30e70d53df45cae92ec279c027ca75a0ac42d03ee1424428",
+      "line": 1
+    },
+    {
+      "path": "server/collaboration/EditorVersionExtension.ts",
+      "contentHash": "dc72ff3e4eb87475124bbf0283a6cd4625b3b8eeeb61e88e6f5dfc80e20441d6",
+      "line": 1
+    },
+    {
+      "path": "server/collaboration/LoggerExtension.ts",
+      "contentHash": "55da81e23b6f26276ac6a95b852186f7bc7bb5d82a5078dd74f1cf347509b601",
+      "line": 1
+    },
+    {
+      "path": "server/collaboration/MetricsExtension.ts",
+      "contentHash": "186e1c3360d678c6ef5e5a12fe4eb29283862dcf4b341609dfc3c5b175a05bd4",
+      "line": 1
+    },
+    {
+      "path": "server/collaboration/PersistenceExtension.ts",
+      "contentHash": "bb424ce19bbf50c1031c1e09cc3cadd4ae9ba7c3de1cdb4929c83e5fc33a4f82",
+      "line": 1
+    },
+    {
+      "path": "server/collaboration/types.ts",
+      "contentHash": "2baf2ae07e1776411f925eb4df499317f82946d7640149d878dab06c713ea465",
+      "line": 1
+    },
+    {
+      "path": "server/collaboration/ViewsExtension.ts",
+      "contentHash": "57d53a359a65e42a9c8c8009d56ff7719b3e49ddcd211ed31c97e51cbcac3464",
+      "line": 1
+    },
+    {
+      "path": "server/commands/collectionDuplicator.ts",
+      "contentHash": "013c3390b1880e40d7bbe8cc2542e862c511574af82fdd3865fc0a67e1b95404",
+      "line": 1
+    },
+    {
+      "path": "server/commands/documentCollaborativeUpdater.ts",
+      "contentHash": "1f580054be58d83132f55cea82ca373a84c49b5e16393c9b1e36883c9ad41af8",
+      "line": 1
+    },
+    {
+      "path": "server/commands/documentCreator.ts",
+      "contentHash": "25466a179c8d6d7725d239a7d91dd331163f112b0377a56daed5c2d5b551eb9a",
+      "line": 1
+    },
+    {
+      "path": "server/commands/documentDuplicator.ts",
+      "contentHash": "24c7a1f737689ed1b59088ea9fb77cbf9ecfb11eae35c0b916116120c419e012",
+      "line": 1
+    },
+    {
+      "path": "server/commands/documentImporter.ts",
+      "contentHash": "b26d1c9b711c502089d99930d0844944d935cb9f6ef6b11fd14275c0fc8ef872",
+      "line": 1
+    },
+    {
+      "path": "server/commands/documentPermanentDeleter.ts",
+      "contentHash": "2d99c28796d2397f655a28543951624992578f555986dc0eee94d92a3f3c48a0",
+      "line": 1
+    },
+    {
+      "path": "server/commands/groupsSyncer.ts",
+      "contentHash": "74aa739e4ca96f24433d8c3f1bb08e461b1f258f362b94042c78ae98759672fe",
+      "line": 1
+    },
+    {
+      "path": "server/commands/teamPermanentDeleter.ts",
+      "contentHash": "6dd54fc978c7f4cad56876226a3a1198d190afff6d53e64b968ccfd31f6b98ef",
+      "line": 1
+    },
+    {
+      "path": "server/converters/BaseConverter.ts",
+      "contentHash": "134faa8881174fedd2d408a59c74ba09920bbe5d5a52c652a7d2ef5465c5c170",
+      "line": 1
+    },
+    {
+      "path": "server/converters/CsvConverter.ts",
+      "contentHash": "1f64823be77e8439426f0fe6ad7f8c18a24f7fc9afc9fd5dfb1b18b0b9abe429",
+      "line": 1
+    },
+    {
+      "path": "server/converters/DocumentConverter.ts",
+      "contentHash": "02ee35cf20e7110024417a292eaaf169cdbe2e3d211a2c9ac5c54cbdf16fed79",
+      "line": 1
+    },
+    {
+      "path": "server/converters/DocxConverter.ts",
+      "contentHash": "b515e689535d2ae86e5c2aaeb31e2acf51a158903c902cf2dd4094299ad703fd",
+      "line": 1
+    },
+    {
+      "path": "server/converters/HtmlPreprocessor.ts",
+      "contentHash": "8d90162bae4198e8e8ec87048ecce47a211115886f92123638a57675bcf28ca9",
+      "line": 1
+    },
+    {
+      "path": "server/converters/MimeArchiveConverter.ts",
+      "contentHash": "ab779693cbcb632ca4157395003704efedb5ab3c432104f56fff485d27bb56ea",
+      "line": 1
+    },
+    {
+      "path": "server/converters/PdfConverter.ts",
+      "contentHash": "af17e6edb2f883625ed8b98666c3e57fbe6d0bcb8ee1a17a77d398c1ea996943",
+      "line": 1
+    },
+    {
+      "path": "server/converters/TextPackConverter.ts",
+      "contentHash": "4400e2ab1fd2ad680809df75f5ef132a3c3278d255cfc240c3a2388551728762",
+      "line": 1
+    },
+    {
+      "path": "server/editor/index.ts",
+      "contentHash": "700a4223740a6c364cc4648dfd75ab8aec8e8091237187115fd6d03c17f59f5a",
+      "line": 1
+    },
+    {
+      "path": "server/editor/rules/mentions.ts",
+      "contentHash": "d6354f067bead8f0d93eb212f5c0f8c68d736b81b40d19d5d5ec658b87fcf5f3",
+      "line": 1
+    },
+    {
+      "path": "server/emails/templates/EmailUpdatedEmail.tsx",
+      "contentHash": "0a2203d1b07ae383ccfe00ff0a95b43d2384b960fb39d81d2b9b987db6c0e94d",
+      "line": 1
+    },
+    {
+      "path": "server/emails/templates/index.ts",
+      "contentHash": "d0fb3c09b41abfde3e131f35b6e9296d1c59ec920dd5845ddf3d6404d8de1c99",
+      "line": 1
+    },
+    {
+      "path": "server/emails/templates/WelcomeEmail.tsx",
+      "contentHash": "eee4db83a193120bf64cfb7aac9506895f418f5ff189281c5f581bab19d9c30c",
+      "line": 1
+    },
+    {
+      "path": "server/index.ts",
+      "contentHash": "15af7e0b74e637c58242fe8fc5f1ae2cdc2fee21f4eba62dc235ce98e584a8b6",
+      "line": 1
+    },
+    {
+      "path": "server/logging/Metrics.ts",
+      "contentHash": "206702a8db6ce5150a42903ef6790b50ae3dc81720a23e5fc2e6ef840971b714",
+      "line": 1
+    },
+    {
+      "path": "server/logging/sentry.ts",
+      "contentHash": "b9020377083462fdc78ba0149f281d3ff732c99c49417835a3772fd3c8272de5",
+      "line": 1
+    },
+    {
+      "path": "server/logging/tracer.ts",
+      "contentHash": "40393f88a4a2df77fe8ba2d2cb433b0285883a3b4cf2e3ab1eaa9b91cce4c930",
+      "line": 1
+    },
+    {
+      "path": "server/logging/tracing.ts",
+      "contentHash": "8ac5b6d9227df1dce4653311ff86c55e2731e5a8f2e50eb3746ac254869c4b40",
+      "line": 1
+    },
+    {
+      "path": "server/main.ts",
+      "contentHash": "bb3f1f1ccf224cd8ee652ce1e78974f5f0e78a7f9be77179be04fd26b79cd240",
+      "line": 1
+    },
+    {
+      "path": "server/middlewares/apexRedirect.ts",
+      "contentHash": "fba81eb3f33c92273971334dbad95761dbc43e4c00681b84fe69d4dfa688318f",
+      "line": 1
+    },
+    {
+      "path": "server/middlewares/apiContext.ts",
+      "contentHash": "9949b586509b002a5efef6bc94738ad337cbc634f46b57c7f0c0f6af65b3288b",
+      "line": 1
+    },
+    {
+      "path": "server/middlewares/coaleseBody.ts",
+      "contentHash": "39217932487352ad3be633b313f67e352344d26592a3a16a01c906053afb209e",
+      "line": 1
+    },
+    {
+      "path": "server/middlewares/csp.ts",
+      "contentHash": "0df2fe18cbde5b9b2f9e43eb7f5cac9626b93aedb7788cfaa03df8bfbbcf678c",
+      "line": 1
+    },
+    {
+      "path": "server/middlewares/csrf.ts",
+      "contentHash": "b308b58def8a0d4784cc0d4e183c520caf3005855bad9dcae12dcbe1aa2f9a0a",
+      "line": 1
+    },
+    {
+      "path": "server/middlewares/requestTracer.ts",
+      "contentHash": "9987c252009f3b19e7918e5d8daa62f89d6936c9073915b64089b3461ae20de7",
+      "line": 1
+    },
+    {
+      "path": "server/middlewares/shareDomains.ts",
+      "contentHash": "30d67b661570d867f915d05ed00d11f360404b3de41948a1c6e290cce889b2dd",
+      "line": 1
+    },
+    {
+      "path": "server/middlewares/validateWebhook.ts",
+      "contentHash": "88778e3fd3eb785f6cdbfd7d3db6282e6844fdcc39231544147799f4679dcc8a",
+      "line": 1
+    },
+    {
+      "path": "server/models/ApiKey.ts",
+      "contentHash": "adc8cb232a0d7106a27f4ff503be3dd18a4f0b3c7fd56fc1b74d3741a7593ced",
+      "line": 1
+    },
+    {
+      "path": "server/models/AuthenticationProvider.ts",
+      "contentHash": "f5fae5a476d3c582f1248c5235c30603a585e3e901b68f67c3071708f8133692",
+      "line": 1
+    },
+    {
+      "path": "server/models/base/ArchivableModel.ts",
+      "contentHash": "a7ccdd0b93f9d43b2d747f9e43d933f9414e11b66cddadc41f0c3044f0baae83",
+      "line": 1
+    },
+    {
+      "path": "server/models/base/IdModel.ts",
+      "contentHash": "e2cd1feec09b95cf630936f274b9b48887450cfe554b9e42f7deaa0fa2166c70",
+      "line": 1
+    },
+    {
+      "path": "server/models/base/Model.ts",
+      "contentHash": "80ae50617c3a03369c165e37f67a9d278f0e087878d0ba3a7cf6b323a860acca",
+      "line": 1
+    },
+    {
+      "path": "server/models/base/ParanoidModel.ts",
+      "contentHash": "b10b03a1963a1e32f064dca72c529b91377ae37ea93175981a3f37d4d8e42460",
+      "line": 1
+    },
+    {
+      "path": "server/models/Comment.ts",
+      "contentHash": "dbd43982e3114d4bd09be622c8d5e4d192f6c7a1681e6103c8e3401c1dc377fe",
+      "line": 1
+    },
+    {
+      "path": "server/models/decorators/Changeset.ts",
+      "contentHash": "943dc7c71be9a94a574c23b9c189473b0a067a422c5b2c430e8a7981613a6404",
+      "line": 1
+    },
+    {
+      "path": "server/models/decorators/CounterCache.ts",
+      "contentHash": "c1089d0d88ac8d3ff2a771f66d4b188c7f91b6c56dce99afb27669bc8d90b82b",
+      "line": 1
+    },
+    {
+      "path": "server/models/decorators/Deprecated.ts",
+      "contentHash": "f4d9d521321141ff5a3cd23397c8977952d11e81c725bd923c397a74ac9f436b",
+      "line": 1
+    },
+    {
+      "path": "server/models/decorators/Encrypted.ts",
+      "contentHash": "c1beeb86700a759e65ea37c3607069e1b98a3ca7edc97e10e5a41414c4818d8c",
+      "line": 1
+    },
+    {
+      "path": "server/models/Document.ts",
+      "contentHash": "f7ec1105e773a329c1912db47743ca64a281c50c527612c072b0144cafeded52",
+      "line": 1
+    },
+    {
+      "path": "server/models/DocumentInsight.ts",
+      "contentHash": "257c81fbf2fe7c8c8e18871a45e30d840ef7017a8dce91d8ab455b7649905676",
+      "line": 1
+    },
+    {
+      "path": "server/models/Event.ts",
+      "contentHash": "b551d15367f796f786ae95a5d6ab2e10e46678fa96d361c2254707ef29bab372",
+      "line": 1
+    },
+    {
+      "path": "server/models/ExternalGroup.ts",
+      "contentHash": "d57f8ac94814e617f6d85998ba34f60ab917a11967ee185411cf3c77183c1ad3",
+      "line": 1
+    },
+    {
+      "path": "server/models/Group.ts",
+      "contentHash": "1147a674bd7c67532fac8de2fc704372893d7e1da140c92e9b99582c0b9721f3",
+      "line": 1
+    },
+    {
+      "path": "server/models/GroupMembership.ts",
+      "contentHash": "349e69ddae5b1bccb0e540b615fc313415bac350b017b229c885faa9f18cc76d",
+      "line": 1
+    },
+    {
+      "path": "server/models/GroupUser.ts",
+      "contentHash": "6f8d7a85b6eaa2de79247a703f7ca184a4035cffe348d9048956920235411afa",
+      "line": 1
+    },
+    {
+      "path": "server/models/helpers/AuthenticationHelper.ts",
+      "contentHash": "9ff3e876686170e15414443b49555f5534e5bc5c5878f3c0c11f50bc41e82ef4",
+      "line": 1
+    },
+    {
+      "path": "server/models/helpers/HTMLHelper.ts",
+      "contentHash": "2fc0ba61d89ea46402575bd568de33b2c2587ce35a3cb6fcd6dbbca72c90ada0",
+      "line": 1
+    },
+    {
+      "path": "server/models/helpers/IntegrationHelper.ts",
+      "contentHash": "f3409ffaac421a9bc1f06fc1120114493d1d5f514ef3e2cad005e28ab9a31686",
+      "line": 1
+    },
+    {
+      "path": "server/models/helpers/OKFHelper.ts",
+      "contentHash": "48142dbf1f755f742ac74b89bcf54e20d7b00bdbc173c854712cffb0582f8b5a",
+      "line": 1
+    },
+    {
+      "path": "server/models/helpers/ProsemirrorHelper.tsx",
+      "contentHash": "a49c562686f4f9e4f35ff53a957fefb84969bc550a4dfda55b24338e7ab09c78",
+      "line": 1
+    },
+    {
+      "path": "server/models/helpers/TextBundleHelper.ts",
+      "contentHash": "118ed78308eb205f2d0d8b194ee7ee93dfe91d805ffbba8b2f9857b6799edea2",
+      "line": 1
+    },
+    {
+      "path": "server/models/helpers/TextHelper.ts",
+      "contentHash": "e7a573b5a194366613674d038c1c901ab30d9699085a085d706b7935af744508",
+      "line": 1
+    },
+    {
+      "path": "server/models/Import.ts",
+      "contentHash": "2e9fdfd8c83582016fa09c19187b7dd7d59e8eb4f7618b04b2390065f0d0ab93",
+      "line": 1
+    },
+    {
+      "path": "server/models/Integration.ts",
+      "contentHash": "d5f1e29af756486df734388f8db40f2ca870c60ab92e0543a970a1bdc9878636",
+      "line": 1
+    },
+    {
+      "path": "server/models/IntegrationAuthentication.ts",
+      "contentHash": "8cfb6a563f3e7cdeb4e3b55900143a0f051d2c4bf7668bbf9385c199d35c309a",
+      "line": 1
+    },
+    {
+      "path": "server/models/oauth/OAuthAuthentication.ts",
+      "contentHash": "bef11989ec69fdd497c83aa6c292be12329a2f1c63d90da1e8be9fa9ce06a3a1",
+      "line": 1
+    },
+    {
+      "path": "server/models/oauth/OAuthAuthorizationCode.ts",
+      "contentHash": "5bde40662776e9e1d33584771dcbdcadcdd95b24e0974ccd92eb972451f71b4f",
+      "line": 1
+    },
+    {
+      "path": "server/models/Reaction.ts",
+      "contentHash": "7b109b383efc315c0d41c4ac77fb4614f3930779f9e175b5dc812cdace10271d",
+      "line": 1
+    },
+    {
+      "path": "server/models/Revision.ts",
+      "contentHash": "b1feb08734835a0cdabf48ca7ba141f861b749cef64ed4d51cee765b89ef9b8f",
+      "line": 1
+    },
+    {
+      "path": "server/models/Star.ts",
+      "contentHash": "39f0dca20f7fb08c111dc15776bb6c8042c5cc4a9984bcdc307712e43c744fd4",
+      "line": 1
+    },
+    {
+      "path": "server/models/Subscription.ts",
+      "contentHash": "4badc80b2574af86f25bde96c2206665fd2e73bd67ced78cb63f3fd51bfc0cdb",
+      "line": 1
+    },
+    {
+      "path": "server/models/Template.ts",
+      "contentHash": "047f7f61d15c7202fb4224d917a91ad2565b23efe1134ea6ccf43477f2bb1a79",
+      "line": 1
+    },
+    {
+      "path": "server/models/UserAuthentication.ts",
+      "contentHash": "92aa16b8da51f9bc76e6cea632ddeeaac0f575fedd2f9a0a5fef5750072b8c0a",
+      "line": 1
+    },
+    {
+      "path": "server/models/UserMembership.ts",
+      "contentHash": "df674dc87a9780ca4d62bb66a7686ab488a2b5d48d2afd1e12cde127f8a010c6",
+      "line": 1
+    },
+    {
+      "path": "server/models/UserPasskey.ts",
+      "contentHash": "774958de70bf06465e684f9d3f1cc7e3782ba3f90803daa4b691081fe2f575e4",
+      "line": 1
+    },
+    {
+      "path": "server/models/validators/IsHexColor.ts",
+      "contentHash": "4f386c6ea602babb1f64bd18b1f96cdd5c6659ef03db819e91dbeccfb8db1eaf",
+      "line": 1
+    },
+    {
+      "path": "server/models/validators/IsScope.ts",
+      "contentHash": "bd48a7d66ebcc82397b88c27a958cef2d2610e8dfc602006dc25c33403d2191b",
+      "line": 1
+    },
+    {
+      "path": "server/models/validators/IsUrl.ts",
+      "contentHash": "a042152a02decdbb4a485c21665df5892053e7b9e18de1d8a9fb6911bf0b6d3a",
+      "line": 1
+    },
+    {
+      "path": "server/models/validators/Length.ts",
+      "contentHash": "c6f724648d4622bc6cdbcc581a8cb7184cd731f18ec7d8a31e319e2f5a4ebd9d",
+      "line": 1
+    },
+    {
+      "path": "server/models/validators/NotContainsUrl.ts",
+      "contentHash": "3237ce2bcedb9b03ff4665fccc786571785942585702020cde933eef89abc8b0",
+      "line": 1
+    },
+    {
+      "path": "server/models/validators/TextLength.ts",
+      "contentHash": "b47f16243dcaeda87c8564bbf2d272db49b98fdc3f3cc91527580563bc2cb058",
+      "line": 1
+    },
+    {
+      "path": "server/models/View.ts",
+      "contentHash": "f59ebed3cecb89e026f059b51faaffee3a137cf33b65eac24d80bb01e5c09963",
+      "line": 1
+    },
+    {
+      "path": "server/models/WebhookDelivery.ts",
+      "contentHash": "e0e0d3fc1bd11d75c99967765cf27fb77b8b8bfdd59e13f824b9d499f3ea5d3b",
+      "line": 1
+    },
+    {
+      "path": "server/models/WebhookSubscription.ts",
+      "contentHash": "b1179a95ae76c0e2f8d52fca488ba9a53f08eee271b478ba39490c90049ec540",
+      "line": 1
+    },
+    {
+      "path": "server/onerror.ts",
+      "contentHash": "a3447ac6d14c37a85110ba9298b3f020a3baaa3a073412c5a3baebd94b1962f6",
+      "line": 1
+    },
+    {
+      "path": "server/onupgrade.ts",
+      "contentHash": "a47024a44ef78618c2ee553412dc0153446aa6d18945ba06f9aceddd5188523f",
+      "line": 1
+    },
+    {
+      "path": "server/presenters/accessRequest.ts",
+      "contentHash": "5248817e646c2342d7470b4d4aaea6e11df2c016c9c0f95d60a0d8c1d8eaea85",
+      "line": 1
+    },
+    {
+      "path": "server/presenters/apiKey.ts",
+      "contentHash": "9b627816c680e89555c2b5df2527a454be74a9bfd9fe6dd78bf0f2ad5d6d920a",
+      "line": 1
+    },
+    {
+      "path": "server/presenters/collection.ts",
+      "contentHash": "3c3b4016e6b750b5a1dbbb44874513425ed53effc81f7c26e43adee1845b385e",
+      "line": 1
+    },
+    {
+      "path": "server/presenters/comment.ts",
+      "contentHash": "61e2e4ad7777210428bad7f3c22f7e62a52dc6edf6d71eb9469c838315d3b2f3",
+      "line": 1
+    },
+    {
+      "path": "server/presenters/emoji.ts",
+      "contentHash": "0bd0a3128336a5c851061df1aa0cf04402d935c6636178d4c080a3c5d78eb50c",
+      "line": 1
+    },
+    {
+      "path": "server/presenters/env.ts",
+      "contentHash": "a22068244c596e026c696def7f79c160d785a990c77a6e7200b6885253e333fb",
+      "line": 1
+    },
+    {
+      "path": "server/presenters/event.ts",
+      "contentHash": "9debf868cf637eda816180992cb133c06e3f31abf07f2ae9131a63b28b0347c1",
+      "line": 1
+    },
+    {
+      "path": "server/presenters/externalGroup.ts",
+      "contentHash": "fab9550466495780dc186bae53426d81fb67e90ff97f49c678e41bb969c70157",
+      "line": 1
+    },
+    {
+      "path": "server/presenters/fileOperation.ts",
+      "contentHash": "8294a32323e889737cc28aee6094b86a692c7ba40c74e0a0313cf0b9b4e2e1c4",
+      "line": 1
+    },
+    {
+      "path": "server/presenters/group.ts",
+      "contentHash": "ce857dc1c7b577653e3f8036555a0a885b5497d1244571240e9593ca7edefd3b",
+      "line": 1
+    },
+    {
+      "path": "server/presenters/groupUser.ts",
+      "contentHash": "b2ac0800b83cad3bd96245c2960222126a0421d430e534e37005ff1137b14a22",
+      "line": 1
+    },
+    {
+      "path": "server/presenters/import.ts",
+      "contentHash": "2e110cc0e11f9c517f5f00ef92007c28be61d1c4b7e39b65152f2556895621e8",
+      "line": 1
+    },
+    {
+      "path": "server/presenters/index.ts",
+      "contentHash": "35031103d16dc9884634cd298977ade13b270e4aa90ea927ed992ae95e971713",
+      "line": 1
+    },
+    {
+      "path": "server/presenters/notification.ts",
+      "contentHash": "ccf0f08e2e7a104386631fde3aceae650972369d23d0bdbfc35d179379d21078",
+      "line": 1
+    },
+    {
+      "path": "server/presenters/oauthAuthentication.ts",
+      "contentHash": "3a7618d033aa58f2d32b8e140b1238acd0aa85c8bb1cabd290fd574c0547912c",
+      "line": 1
+    },
+    {
+      "path": "server/presenters/oauthClient.ts",
+      "contentHash": "5aeda479e4056aa73ae3858ef18e9c4a5cf1fad8388489d2351ed9ce5cf5a8a6",
+      "line": 1
+    },
+    {
+      "path": "server/presenters/policy.ts",
+      "contentHash": "77f719e4ba6b8e3e4f6cd907834e7e016518c3662894a3711fffaf06ea3cce05",
+      "line": 1
+    },
+    {
+      "path": "server/presenters/reaction.ts",
+      "contentHash": "1e04fd4b102fb0a6a9cbeb57cc9fe9890bd5343092cb606944901b93e76a5a7c",
+      "line": 1
+    },
+    {
+      "path": "server/presenters/revision.ts",
+      "contentHash": "c88c742620c27b769d9a45315eb4201da36cc128cfc0e5e76145658ded0b8553",
+      "line": 1
+    },
+    {
+      "path": "server/presenters/share.ts",
+      "contentHash": "1176fd2091e718035a730647a8e4a46424ddc0eb16b8d7a27303e8c9556e7c0f",
+      "line": 1
+    },
+    {
+      "path": "server/presenters/template.ts",
+      "contentHash": "3c5ae5738a08c37a7173c40568818cace466203ee984a4ac5c86066038c41b4a",
+      "line": 1
+    },
+    {
+      "path": "server/presenters/unfurl.ts",
+      "contentHash": "9164a7e584e7c84bfbf2ea70cec9e57d5b767a2f6961c3a0225e6d3d57908326",
+      "line": 1
+    },
+    {
+      "path": "server/presenters/user.ts",
+      "contentHash": "d09bfba70950763e8e49a944c05b0ada026a9b6cc83dbf93fc2594ff5a9fb623",
+      "line": 1
+    },
+    {
+      "path": "server/presenters/view.ts",
+      "contentHash": "5ad16672e8d65ace726fcba52f3390786613f9267087744552068ce3e61f9d80",
+      "line": 1
+    },
+    {
+      "path": "server/queues/HealthMonitor.ts",
+      "contentHash": "75d87ee558c6efc389c79a8abef2112e2aaebb10a05cf321d10b33e6458d5aac",
+      "line": 1
+    },
+    {
+      "path": "server/queues/index.ts",
+      "contentHash": "249cca3930d92d76f3156cd38b54f4b07d1b8688223c2cd4a0f83b8d19afb602",
+      "line": 1
+    },
+    {
+      "path": "server/queues/processors/BaseProcessor.ts",
+      "contentHash": "8ea0eb86f585616d6b860d1ed0c388d8a6b5dc8d14a2999acd546c7f8f2749a9",
+      "line": 1
+    },
+    {
+      "path": "server/queues/processors/CollaborationAuthorizationProcessor.ts",
+      "contentHash": "6ff7c18cb0145e2b75df1eee372ab5994b7213dfc8969074a583ec71331b9dcc",
+      "line": 1
+    },
+    {
+      "path": "server/queues/processors/DebounceProcessor.ts",
+      "contentHash": "0c058be64bbe9f1796232bbf7bc09dfadbd9a4f12707a61c4c1ff29ba931dec9",
+      "line": 1
+    },
+    {
+      "path": "server/queues/processors/DocumentArchivedProcessor.ts",
+      "contentHash": "3d91dc3855a50951d13b5d345c4045eaf209c96dd6911d44084911beacb198af",
+      "line": 1
+    },
+    {
+      "path": "server/queues/processors/DocumentMovedProcessor.ts",
+      "contentHash": "912d92148660a05e1c20a0dfa6826e0a92d82296d793fd6d644d402d36a7bd09",
+      "line": 1
+    },
+    {
+      "path": "server/queues/processors/FileOperationCreatedProcessor.ts",
+      "contentHash": "bd30a5166f297cead8145cd19162b5ec93ff5c3c9f116d9ee73d696cdd4b202b",
+      "line": 1
+    },
+    {
+      "path": "server/queues/processors/index.ts",
+      "contentHash": "609c9e592013861c2ed7b2020f41ebe76acf3b2907b70c57b2ab1b8fcfb65414",
+      "line": 1
+    },
+    {
+      "path": "server/queues/processors/IntegrationCreatedProcessor.ts",
+      "contentHash": "a0e2ffe2d22705e28f9a2f034745375e7277e3eaf2e46b3edd911f3a18f3039f",
+      "line": 1
+    },
+    {
+      "path": "server/queues/processors/IntegrationDeletedProcessor.ts",
+      "contentHash": "6ec02c5c9c514fdf1e93449e84191d8716a23a684dc69c853750e884775b99ae",
+      "line": 1
+    },
+    {
+      "path": "server/queues/processors/MarkdownImportsProcessor.ts",
+      "contentHash": "d6e92fa9d1a5301eb1a83f962312eeb3296f4f8f9efe2cbba500b41c72270bf9",
+      "line": 1
+    },
+    {
+      "path": "server/queues/processors/OAuthClientDeletedProcessor.ts",
+      "contentHash": "e67f0f4e521d6a4ca14feebf68322127f80691aa1142819f4b041420abd63d5f",
+      "line": 1
+    },
+    {
+      "path": "server/queues/processors/OAuthClientUnpublishedProcessor.ts",
+      "contentHash": "19be941770b08f26293c3a4e84c308a8907d46a1d5c143eadc88cabea761556f",
+      "line": 1
+    },
+    {
+      "path": "server/queues/processors/OKFImportsProcessor.ts",
+      "contentHash": "d62515a6453eca3ecb37e4d4e1d71969bc27dccba5bd12f58a01fa4619e38517",
+      "line": 1
+    },
+    {
+      "path": "server/queues/processors/TeamUpdatedProcessor.ts",
+      "contentHash": "30ac4316131b5c2d99a68d02b1f806b37f25abe7855e3a3a8046c6121a7b60ba",
+      "line": 1
+    },
+    {
+      "path": "server/queues/processors/UserCreatedProcessor.ts",
+      "contentHash": "6356d62517e548f9a6b397613746342022fd576888e406d845ead7a82564a74e",
+      "line": 1
+    },
+    {
+      "path": "server/queues/processors/UserDeletedProcessor.ts",
+      "contentHash": "e3fabc00dd3eb53ac54b2bfac4981dbbab79079e94647c56a908b962fb67e957",
+      "line": 1
+    },
+    {
+      "path": "server/queues/processors/UserDemotedProcessor.ts",
+      "contentHash": "239e11c8b713187030b7dc6ca50abf9fad465cf297a936ed3b22d72820ae4395",
+      "line": 1
+    },
+    {
+      "path": "server/queues/processors/UserSuspendedProcessor.ts",
+      "contentHash": "5f7b5d7f65e7e04963cef1e6a15ece311cd2a5bf62c0d02bd2684031f57fab69",
+      "line": 1
+    },
+    {
+      "path": "server/queues/processors/UserUpdatedProcessor.ts",
+      "contentHash": "00370638af078664581577bf348decf56387d02ecd223c83bffd65f178c5691d",
+      "line": 1
+    },
+    {
+      "path": "server/queues/processors/WebsocketsProcessor.ts",
+      "contentHash": "777a3f56c826df54bc1288180d526454c8dcfdda7f67853b8d9608cb87b6c7d3",
+      "line": 1
+    },
+    {
+      "path": "server/queues/queue.ts",
+      "contentHash": "d70ca08a5703f85e54d5c6d66801c43260428e0f57e73202cac8b4c3cc128b42",
+      "line": 1
+    },
+    {
+      "path": "server/queues/tasks/base/BaseTask.ts",
+      "contentHash": "c4e88a98e82a3073ab12677145bd2bf8d78c2cb82afa5b6288b282f520ed945b",
+      "line": 1
+    },
+    {
+      "path": "server/queues/tasks/base/CronTask.ts",
+      "contentHash": "52b6855cf1d14163e8e5bc22cfd306e51be11874e2bd132edddb295aa90b50cd",
+      "line": 1
+    },
+    {
+      "path": "server/queues/tasks/CacheIssueSourcesTask.ts",
+      "contentHash": "1fb399c3d77e25b9a57ff97d7dbf466424d0cc2d21d57c2bc2816e4f4cdd3041",
+      "line": 1
+    },
+    {
+      "path": "server/queues/tasks/CleanupDeletedDocumentsTask.ts",
+      "contentHash": "1e0df8352ae8e04af80e5052aafec9d2de723b2b706c83c7ceababb75e236f59",
+      "line": 1
+    },
+    {
+      "path": "server/queues/tasks/CleanupDeletedTeamsTask.ts",
+      "contentHash": "c8a8536fe32e69b357837de5dbaa19633d4a9cd3d803ec478a7799a488655a98",
+      "line": 1
+    },
+    {
+      "path": "server/queues/tasks/CleanupDeletedTeamTask.ts",
+      "contentHash": "47aa4c73cc0ef33bdeb77bad925b8348de6f23fcf90573ee108afe6d503760a2",
+      "line": 1
+    },
+    {
+      "path": "server/queues/tasks/CleanupDemotedUserTask.ts",
+      "contentHash": "90fd2861b880607830bc89af58d3a6faf21cee97caa7efd3acd5d729bc895fa5",
+      "line": 1
+    },
+    {
+      "path": "server/queues/tasks/CleanupDynamicOAuthClientsTask.ts",
+      "contentHash": "832ba0d5fcbe942b96d86d51ce6db2d994b15fbf8227edfe4d0a165b6f0cba51",
+      "line": 1
+    },
+    {
+      "path": "server/queues/tasks/CleanupExpiredAttachmentsTask.ts",
+      "contentHash": "7ef35319c054fe0444d2dad2e9ce5b5d0a14905ac59037d3898be8fc1f3bc4ed",
+      "line": 1
+    },
+    {
+      "path": "server/queues/tasks/CleanupExpiredFileOperationsTask.ts",
+      "contentHash": "529434a3590ea4eac97785af6517066619897bb24b0fb1994fe6f17d28538ded",
+      "line": 1
+    },
+    {
+      "path": "server/queues/tasks/CleanupOldEventsTask.ts",
+      "contentHash": "02355239f6ec9d388aa5cc9eda17b5b7797905c48cf05f43684d3baaffd6c8eb",
+      "line": 1
+    },
+    {
+      "path": "server/queues/tasks/CleanupOldNotificationsTask.ts",
+      "contentHash": "e091ce58af9fad5af268b60e62c31a72b8b9138aa657c3d5ea765b16c699f29e",
+      "line": 1
+    },
+    {
+      "path": "server/queues/tasks/CleanupOldSearchQueriesTask.ts",
+      "contentHash": "a3cf71d68a04e79155081dde88d02c0a579ea1a3c21faf049ee16d11996d42ea",
+      "line": 1
+    },
+    {
+      "path": "server/queues/tasks/DeleteAttachmentTask.ts",
+      "contentHash": "c6887ce0153736452221a12067689c43a94093fd6ae753235ee0ca828af6292c",
+      "line": 1
+    },
+    {
+      "path": "server/queues/tasks/DocumentImportTask.ts",
+      "contentHash": "d5780e3c40a6b79636155963b69da5b83a41cf286416adbadddf31540d471fb6",
+      "line": 1
+    },
+    {
+      "path": "server/queues/tasks/DuplicateCollectionDocumentsTask.ts",
+      "contentHash": "43addb2c325ecfe0f024fe79fe95852036aff40385745a56feb108f524c252e7",
+      "line": 1
+    },
+    {
+      "path": "server/queues/tasks/EmailTask.ts",
+      "contentHash": "3dd7765db9a78b6d2a6779d3360dfe95df44acd434258fdb7b34a787c1e280d7",
+      "line": 1
+    },
+    {
+      "path": "server/queues/tasks/EmptyTrashTask.ts",
+      "contentHash": "91821b7e2bfdadfbdb4481511a05ff4f9f649ffef74dfc08ec4a92968878dfaa",
+      "line": 1
+    },
+    {
+      "path": "server/queues/tasks/ErrorTimedOutFileOperationsTask.ts",
+      "contentHash": "2bf23863b9cb4181f77c3d792663f62967aeceff3ad2850e67eab09d5254842a",
+      "line": 1
+    },
+    {
+      "path": "server/queues/tasks/ErrorTimedOutImportsTask.ts",
+      "contentHash": "778f090d772439e320179ff1974c7651bcde0b718760f903f08fe5f7a9359b1e",
+      "line": 1
+    },
+    {
+      "path": "server/queues/tasks/ExportDocumentTreeTask.ts",
+      "contentHash": "dcb7aefc56401cfdbdb62d799a2c24bebf39d55f4096b6b7490298944aceaa63",
+      "line": 1
+    },
+    {
+      "path": "server/queues/tasks/ExportHTMLZipTask.ts",
+      "contentHash": "3a9a93f6eacb0014a1e1b591d63893bff80453505e58b905e7b902e6f8543fd2",
+      "line": 1
+    },
+    {
+      "path": "server/queues/tasks/ExportJSONTask.ts",
+      "contentHash": "db862dc2fd7664ece481bb973da629ba98ee39e435fa06b268c32bac8d01f76c",
+      "line": 1
+    },
+    {
+      "path": "server/queues/tasks/ExportMarkdownZipTask.ts",
+      "contentHash": "10362d96418c6f03c18e77891e954d4d061a10efe8f4185073bb3b59ee0aa1f0",
+      "line": 1
+    },
+    {
+      "path": "server/queues/tasks/ExportOKFZipTask.ts",
+      "contentHash": "a82edd75ade39ec0496583f4085b873728ac61d57e8eb55df47a82b95074f827",
+      "line": 1
+    },
+    {
+      "path": "server/queues/tasks/ExportTask.ts",
+      "contentHash": "c3a98b0b075d2ab0096c53e6492b1c64486cd778905b8828b2ec5caafb2c4fc2",
+      "line": 1
+    },
+    {
+      "path": "server/queues/tasks/ExportTextBundleZipTask.ts",
+      "contentHash": "dc9d5a3d459e928f4c5bb267d891ff20d9ebf279cdd5acde35266cf5258fc336",
+      "line": 1
+    },
+    {
+      "path": "server/queues/tasks/index.ts",
+      "contentHash": "6bda1ed959ae16972868a2734da756878cc01843b2ea3ba427183ad059fac96b",
+      "line": 1
+    },
+    {
+      "path": "server/queues/tasks/MarkdownAPIImportTask.ts",
+      "contentHash": "ce4581ed633b1f79e072c7bf8d16ec413582908b8686efa511951320ca029e7d",
+      "line": 1
+    },
+    {
+      "path": "server/queues/tasks/OKFAPIImportTask.ts",
+      "contentHash": "602d45966a9fe044a82a50ec791bdb22d07221159cd8e94e11f5437132d55d6e",
+      "line": 1
+    },
+    {
+      "path": "server/queues/tasks/RevokeDynamicOAuthClientsTask.ts",
+      "contentHash": "e1b3ea08a7ce5a69f77543c8841d2eb1454440126fed8a79e010ffc86d549284",
+      "line": 1
+    },
+    {
+      "path": "server/queues/tasks/RollupDocumentInsightsTask.ts",
+      "contentHash": "506023c944faf92f53f23022a727aa5a3b6a8f27fcf9a17154d22ae448bb878e",
+      "line": 1
+    },
+    {
+      "path": "server/queues/tasks/RollupWeeklyDocumentInsightsTask.ts",
+      "contentHash": "580850bc2c54bcb8b1c8586719d6a88d3e41494576f73ccb21901c824da76855",
+      "line": 1
+    },
+    {
+      "path": "server/queues/tasks/SyncUserGroupsTask.ts",
+      "contentHash": "97a38355f4df68199a2817dc1efc056f2463d1a95abe2db2ec9e7c15d6069b99",
+      "line": 1
+    },
+    {
+      "path": "server/queues/tasks/UpdateDocumentsPopularityScoreTask.ts",
+      "contentHash": "ef36a9c998fe30eb17f5af1976e1c6cf212456d55f24b608973a4d8f3cef0493",
+      "line": 1
+    },
+    {
+      "path": "server/queues/tasks/ValidateSSOAccessTask.ts",
+      "contentHash": "52af66c5564d2b268b85a09ac736c1edca350049566c5b7bd5c4899b48674b19",
+      "line": 1
+    },
+    {
+      "path": "server/routes/api/apiKeys/apiKeys.ts",
+      "contentHash": "e3c70688560a8346f2ac441460a4098584c034bf3f3e6b61d0d04762c28052c1",
+      "line": 1
+    },
+    {
+      "path": "server/routes/api/apiKeys/index.ts",
+      "contentHash": "d97a4157637fb0a90301825734ae8681771b1cbe460fdb14b5783122a1b3e917",
+      "line": 1
+    },
+    {
+      "path": "server/routes/api/apiKeys/schema.ts",
+      "contentHash": "838b7f322179a903163a898fdc50be903c7f205b458b40176cd46123daa5b768",
+      "line": 1
+    },
+    {
+      "path": "server/routes/api/cron/cron.ts",
+      "contentHash": "cfcc6d9de43e626dd117e723457e4ab2d0e2b42fd5451c117c022f06ccce6026",
+      "line": 1
+    },
+    {
+      "path": "server/routes/api/cron/index.ts",
+      "contentHash": "066e351b04fce152d70e9558a716b710ddc7ac9a2dfab559045a792ef0f4f8a5",
+      "line": 1
+    },
+    {
+      "path": "server/routes/api/cron/schema.ts",
+      "contentHash": "8826a92275106e7bf7829dbfee4c428b4b7560db76a9dc5dcb5f4675405873ef",
+      "line": 1
+    },
+    {
+      "path": "server/routes/api/middlewares/editor.ts",
+      "contentHash": "18bf465bb640c5f91f4bf8aebe740f2ae967292b29942ecffde8c9dc622cc82c",
+      "line": 1
+    },
+    {
+      "path": "server/routes/api/oauthAuthentications/index.ts",
+      "contentHash": "c0b41c72f20a69c4e782992f75b4760f03e7713b9192c2cc0cb914f928272e93",
+      "line": 1
+    },
+    {
+      "path": "server/routes/api/oauthAuthentications/oauthAuthentications.ts",
+      "contentHash": "1b90bd6b42f47c4ff6f23c6579518ab2965cd6a2275be2adaa1b520b4ff5c9a5",
+      "line": 1
+    },
+    {
+      "path": "server/routes/api/oauthAuthentications/schema.ts",
+      "contentHash": "eff26bcf83732f3446cf8a821477a19926fa401cd90a2f7fd390931c305b852d",
+      "line": 1
+    },
+    {
+      "path": "server/routes/api/schema.ts",
+      "contentHash": "33b5e707a92d46d9bdc422be1f1a923f08b1bd1a9290029308ef8df2d1e63cd1",
+      "line": 1
+    },
+    {
+      "path": "server/routes/app.ts",
+      "contentHash": "91694bff7549eb3e39594472bd552731fc4a561fa309984d3d6539faa107c570",
+      "line": 1
+    },
+    {
+      "path": "server/routes/auth/index.ts",
+      "contentHash": "836bb801cf613fcaac9469d0d71635c60742708e343082046d5179fc3cb754b3",
+      "line": 1
+    },
+    {
+      "path": "server/routes/discovery/index.ts",
+      "contentHash": "605fa592bea16d6cbba142161f715a645b3c2482f7dfa0a30cfd3fc372c8138b",
+      "line": 1
+    },
+    {
+      "path": "server/routes/discovery/mcp.ts",
+      "contentHash": "027e89b21d3589be02c042d5cb9b02cfd9c9ca87c9822649a71c839f9d388d12",
+      "line": 1
+    },
+    {
+      "path": "server/routes/discovery/opensearch.ts",
+      "contentHash": "1215e731f582486a3ffae65656a2907c2632f888bef8facc45ebb4fec53124d1",
+      "line": 1
+    },
+    {
+      "path": "server/routes/discovery/robots.ts",
+      "contentHash": "48204abfc8f2bb7ee1b0eb9a6c9d5a2d196dcac05659b541c0d2620a832e6f2b",
+      "line": 1
+    },
+    {
+      "path": "server/routes/embeds.ts",
+      "contentHash": "61df717a39898013b2c81e6e99be45fac8437bd5022adda4a743b78e228c81d3",
+      "line": 1
+    },
+    {
+      "path": "server/routes/errors.ts",
+      "contentHash": "85b0701c94b167ea458065df1b8feea055107cd4b3dc9692e7df7b5d0241e70e",
+      "line": 1
+    },
+    {
+      "path": "server/routes/index.ts",
+      "contentHash": "5f705f9e26ed5908802513d246df2b5bd4a5786548ecc60e32451da17ceb333a",
+      "line": 1
+    },
+    {
+      "path": "server/routes/mcp/index.ts",
+      "contentHash": "2d0f9d288eee32f83f4c8d3e639ebccbf84e6752fd6cd7ae25298336a5b71be4",
+      "line": 1
+    },
+    {
+      "path": "server/routes/oauth/index.ts",
+      "contentHash": "faadaa0c2fa7458850e8380584a6ad92c7d540eba08af9d8ca3d80ffc93af02d",
+      "line": 1
+    },
+    {
+      "path": "server/routes/oauth/middlewares/oauthErrorHandler.ts",
+      "contentHash": "d1337c14998247a3dc5a8adcdb6d7f5cd4be3bd2d41dee2db2b62450b3281071",
+      "line": 1
+    },
+    {
+      "path": "server/routes/oauth/middlewares/registrationAuth.ts",
+      "contentHash": "7cf1666623f68a019c0f7ee05680bc558295c7c67c99b173becbc3ef9e41ac6a",
+      "line": 1
+    },
+    {
+      "path": "server/routes/oauth/schema.ts",
+      "contentHash": "cf2a5f83c2889136499eacca5f6c9a59f1efedb43935892b821fdcef98f6fa6c",
+      "line": 1
+    },
+    {
+      "path": "server/services/admin.ts",
+      "contentHash": "d047c5cb42b39563262fb99d701a57c0f4022a25042e5fe3c5e2632f48627324",
+      "line": 1
+    },
+    {
+      "path": "server/services/collaboration.ts",
+      "contentHash": "564f6cb119133a804e0f9e60b9a81fb464c7a1b88d24e163f49f3292bc6e54aa",
+      "line": 1
+    },
+    {
+      "path": "server/services/cron.ts",
+      "contentHash": "80d25a688c77daf9153d9174549e2095c075a0609de4abf240774f00c0491f49",
+      "line": 1
+    },
+    {
+      "path": "server/services/index.ts",
+      "contentHash": "07683955095ac7e1910e1ab57f095c7cb4554f0b86428c817b971d70033fecd0",
+      "line": 1
+    },
+    {
+      "path": "server/services/web.ts",
+      "contentHash": "beebe550756c0ada5bd6ea3f9083ad5c7d207fd92b193b7152e6626504aa5df3",
+      "line": 1
+    },
+    {
+      "path": "server/services/websockets.ts",
+      "contentHash": "16d375b46747bd4e1e881c8011acc6bb3326cd67fb085f11090cbda84514fa9a",
+      "line": 1
+    },
+    {
+      "path": "server/services/worker.ts",
+      "contentHash": "635e7f05549fbf87341437dd79f78e15fdf17ca08c215b0bfa55f8de7d62faad",
+      "line": 1
+    },
+    {
+      "path": "server/storage/files/LocalStorage.ts",
+      "contentHash": "f7165e0331aea8a93db4044141310380460a9bd8794b09639dc65c2f92e843d6",
+      "line": 1
+    },
+    {
+      "path": "server/storage/redis.ts",
+      "contentHash": "8d761785f60ad72e3c2eaae86c473f02c25cb61977c42c1d15ea36ca3c3a04bb",
+      "line": 1
+    },
+    {
+      "path": "server/storage/utils.ts",
+      "contentHash": "af6ab0195ae9849b6a48e1a75a1e523046ee382f40101a0dc2b4c9da4190b51b",
+      "line": 1
+    },
+    {
+      "path": "server/utils/args.ts",
+      "contentHash": "848730b481e10031b6673ef2803cb649aabf0bcd0b815c449cd8bdcadaca9662",
+      "line": 1
+    },
+    {
+      "path": "server/utils/CacheHelper.ts",
+      "contentHash": "7d717ce1f5ac3c08a532b2a648384a9853c17ebd478ffdc8bdcec37dfba9330b",
+      "line": 1
+    },
+    {
+      "path": "server/utils/crypto.ts",
+      "contentHash": "3eb3276a159e612a15701232214104fe78434d8db41e9b16bbbc5b30fda13d6a",
+      "line": 1
+    },
+    {
+      "path": "server/utils/csrf.ts",
+      "contentHash": "941853bc034062fcadc01e1b6d83c99751bd1d19daf3818a224d960f2439cf37",
+      "line": 1
+    },
+    {
+      "path": "server/utils/environment.ts",
+      "contentHash": "2e5d6a650b1ca61e8e73eb18ab9659f450183bcd98a7cbfee0a65dde553370ef",
+      "line": 1
+    },
+    {
+      "path": "server/utils/fs.ts",
+      "contentHash": "26d3baac39ddd452a80794bf42f841e2d043c415eea2e7651985590ab2e0588f",
+      "line": 1
+    },
+    {
+      "path": "server/utils/GroupSyncProvider.ts",
+      "contentHash": "0147d0526bdf7212874dfc4c6d3491373a6c22e7c9f9d38d7cb8cd17895dd550",
+      "line": 1
+    },
+    {
+      "path": "server/utils/i18n.ts",
+      "contentHash": "d82d1c758b436c43ace756266e565c95a1b016425616cec8a011351e6f04db71",
+      "line": 1
+    },
+    {
+      "path": "server/utils/ip.ts",
+      "contentHash": "4da96098bb5c63aed12f5d8226ad40b1acc67306f432d5164c283c4b8c7f7415",
+      "line": 1
+    },
+    {
+      "path": "server/utils/jwt.ts",
+      "contentHash": "ebbfea75c148298101e7835bd65bbcfefa2ff58eee762806b7fd136b67e2d686",
+      "line": 1
+    },
+    {
+      "path": "server/utils/lazyRegistry.ts",
+      "contentHash": "819d7a3d21b5acafc0c117f17e9a7b240c8e3a2a69026c253089ae7bc46e8a6a",
+      "line": 1
+    },
+    {
+      "path": "server/utils/LogoutTokenStore.ts",
+      "contentHash": "8483fc58ab1891c247c9a167aa6714786d5614affaed0314acd5a026ada5f03c",
+      "line": 1
+    },
+    {
+      "path": "server/utils/MutexLock.ts",
+      "contentHash": "551d3e8189cfa0c45a1e1448d74fecefc51877c30983597c9a98c66c22d2c5c1",
+      "line": 1
+    },
+    {
+      "path": "server/utils/oauth.ts",
+      "contentHash": "db9a7cfb9a458fc73a8256c6fa8e1c101f1e46165fed45d1f211831570862926",
+      "line": 1
+    },
+    {
+      "path": "server/utils/oauth/OAuthHelper.ts",
+      "contentHash": "05eb4259b5b4ab40a55c1827e68d2ee64eb1f18f3583694152733dac797f4bfc",
+      "line": 1
+    },
+    {
+      "path": "server/utils/oauth/OAuthInterface.ts",
+      "contentHash": "549db9a30477374c2e1e224b7ca08ff8b8b5894c6cc124f9e9d5d7d31a42c0c4",
+      "line": 1
+    },
+    {
+      "path": "server/utils/oauthState.ts",
+      "contentHash": "95de9018d149c175cb51562f19c4bc15e699a6c83d08d914c765587698b12702",
+      "line": 1
+    },
+    {
+      "path": "server/utils/parseAttachmentIds.ts",
+      "contentHash": "fd22b5b8b34a492f35ad683ab1a3e3fe3f43b654166ce09f94f309ef9404967b",
+      "line": 1
+    },
+    {
+      "path": "server/utils/parseImages.ts",
+      "contentHash": "1fb14963d2669122fa961e0a2ad9671f49b0843986f6cf30b801dee627a3ba75",
+      "line": 1
+    },
+    {
+      "path": "server/utils/passport.ts",
+      "contentHash": "70ccc09bffedd06bd2549f01a436f849064a8792270c0640bd8d24dfc7fe7fac",
+      "line": 1
+    },
+    {
+      "path": "server/utils/PluginManager.ts",
+      "contentHash": "fb37d2d4e7e9d6575bb39a6816572d772c61d18f76ccbfc872a2e9d27d8cfeb6",
+      "line": 1
+    },
+    {
+      "path": "server/utils/prefetchTags.tsx",
+      "contentHash": "6c23516351ae07c825fcee96a3b6967093d163a9eaa848fa5b1960c34b8d7bef",
+      "line": 1
+    },
+    {
+      "path": "server/utils/readManifestFile.ts",
+      "contentHash": "84a9fbd5f186341c00c70ae1b8ee9164e626840643244b18b3a97b86536b11e4",
+      "line": 1
+    },
+    {
+      "path": "server/utils/redirectOnClient.ts",
+      "contentHash": "63bff26ccad9ba1e38ceb7618db411c2791d5106fc531b00d4b27a273a209ff9",
+      "line": 1
+    },
+    {
+      "path": "server/utils/RedisPrefixHelper.ts",
+      "contentHash": "1d9ec280db5498fb3130f931f1d20a4182ca59b9588b268f1aa30195c7259438",
+      "line": 1
+    },
+    {
+      "path": "server/utils/ShutdownHelper.ts",
+      "contentHash": "d842222e0d185233364f6d54a8d6925e7507dc8795a2cb7b1e9a95ace4dc6642",
+      "line": 1
+    },
+    {
+      "path": "server/utils/ssl.ts",
+      "contentHash": "37bfea999ebee03d5191ed7f21485a76c0e277f95f439701659ae5f805bbda55",
+      "line": 1
+    },
+    {
+      "path": "server/utils/startup.ts",
+      "contentHash": "74c111d12ebcd30c9c2ff0420a09049563737b3d230c5a50644662f43b9ac8ef",
+      "line": 1
+    },
+    {
+      "path": "server/utils/url.ts",
+      "contentHash": "5dfba4ca89ff10bd71af03c8b898563586c45b093c161f968d5da1e6f99405fa",
+      "line": 1
+    },
+    {
+      "path": "server/utils/validators.ts",
+      "contentHash": "e248ed6e80e8ec003da324bffed4f856e1428aa425b2ad6a9b2b0c135e949b30",
+      "line": 1
+    },
+    {
+      "path": "server/utils/VerificationCode.ts",
+      "contentHash": "445805b793532a4d08714ab6db6f116c384e19861117a3aec1340754193d0d91",
+      "line": 1
+    },
+    {
+      "path": "server/utils/ZipHelper.ts",
+      "contentHash": "c8b6b6b9fe26cdbe7678866c5eb353e8bfd2001f01eb46568ef8ec0e4508947b",
+      "line": 1
+    },
+    {
+      "path": "shared/collaboration/CloseEvents.ts",
+      "contentHash": "103d466411aa29712e12808f5e8c0aaf9d38686f909bcec849f57bf4367919c8",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/extensions/DateTime.ts",
+      "contentHash": "5a9d69593a318e121d744e0cd6ec643ed530f5e66f06d37b66a75a1a6c01a286",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/extensions/DeleteNearAtom.ts",
+      "contentHash": "e4d4d296e49735880588612c3052804580ac569b80f7ec6d1000b1e790bd49ed",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/extensions/History.ts",
+      "contentHash": "a5d1b328269ba649b30c762d717e3ee8227b056076a01cd1079ba718819e459c",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/extensions/InputRuleUndo.ts",
+      "contentHash": "bfcdd607a60dcb8b6be145b0e5bb8d84471d1d483d49b2a4e401e9c804703448",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/extensions/MaxLength.ts",
+      "contentHash": "a631b65f638915b23a5fa646fab5af1b3fe845218b041bde5f3230421d78a6d8",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/extensions/TrailingNode.ts",
+      "contentHash": "1711d7301241bfe136fd478b7e149ab2aff60e664cf446791c503602b7ccfbe8",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/lib/Extension.ts",
+      "contentHash": "3b006a140b534b709a10a1fdee0be71e65910798305f0453e2e56a0811e15221",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/lib/ExtensionManager.ts",
+      "contentHash": "196c2e5203384be7309dfc248be48cb2c1e13fda132aa78d9afa4980bf2f40bd",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/lib/InputRule.ts",
+      "contentHash": "9f199ee7a028e0069c0d52eb5aefa542e2a09966d26cb4493b5c0b190e6ea858",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/lib/markdown/rules.ts",
+      "contentHash": "f99cf2ac25c42f12930827dbf065e68f5d782f666a3a5cb7b589eb0d6f8cf439",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/lib/trailingNode.ts",
+      "contentHash": "34a5a3595a31c8d4c2c55d26453e502044140b926c4ec72cddb40ee36e25e001",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/lib/types.ts",
+      "contentHash": "3705e1861ea17af3683b360d4fb2ceb65cda1e8871f81e890fe0984109b9a388",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/nodes/HardBreak.ts",
+      "contentHash": "b7e1c46a188c69117b9f49934d8af08ee267e2ada300f0e06d3bc82c2371e1bc",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/nodes/index.ts",
+      "contentHash": "35b9700552ee26d0b41046cbd36cc0001958c16088b07d5cebcd161ab9539d13",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/queries/getCurrentBlock.ts",
+      "contentHash": "9469c0420cb94b4137f15ab3e7fd4b3403a45f874d21735e0859b165f5ba5091",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/queries/isInCode.ts",
+      "contentHash": "22dda0d3abec2b5caf4d35c64a56be469ceb74cfa1c659271589812ec4630cb0",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/rules/breaks.ts",
+      "contentHash": "94958b04e0e084f89b11d783d33bf791f4e2b7c9d607d6975643d979c1d45de3",
+      "line": 1
+    },
+    {
+      "path": "shared/editor/version.ts",
+      "contentHash": "f2c0a81b3fede49b5b350d55ea699d4aa7a7425dba1818f20751967e9ddba953",
+      "line": 1
+    },
+    {
+      "path": "shared/helpers/AuthenticationHelper.ts",
+      "contentHash": "a7af134e0f477c746013428befbfef1546ba85924da4bb10dc5c6ecf1b7c23f2",
+      "line": 1
+    },
+    {
+      "path": "shared/utils/email.ts",
+      "contentHash": "5e67552abf5cb7ad3d3ec1ae9120e63d10177ee46668fce81cfe710cfb0ae127",
+      "line": 1
+    },
+    {
+      "path": "shared/utils/GroupPermissionHelper.ts",
+      "contentHash": "73dad042c1d2f6c0dd4ca63f4022a1b536a7b0d566a2e1d8c130037eec2cc777",
+      "line": 1
+    },
+    {
+      "path": "shared/utils/lazyWithRetry.tsx",
+      "contentHash": "375cc88ab0393b700f9d802c820471b1355cc930d2447757b7f4d3436155fc48",
+      "line": 1
+    },
+    {
+      "path": "shared/utils/markdown.ts",
+      "contentHash": "3b68bcc7354017f39ba01106705f4c24a1641caadf8aac86a59db1e8a385bdb3",
+      "line": 1
+    },
+    {
+      "path": "shared/utils/parseDocumentSlug.ts",
+      "contentHash": "cf14932e0ca72173586d231fffccba0b5c752b35b64c147d731709f34d2c735d",
+      "line": 1
+    },
+    {
+      "path": "shared/utils/parseTitle.ts",
+      "contentHash": "3bd4135a14e611767f14a93a3b88cb3316f1ca66c6cb371e781f8b9aeb3bf534",
+      "line": 1
+    },
+    {
+      "path": "shared/utils/passkeys.ts",
+      "contentHash": "6fa10100e71b781a2588649727eb2e737053051d9249b8ac2349506bfefe9609",
+      "line": 1
+    },
+    {
+      "path": "shared/utils/ProsemirrorDataHelper.ts",
+      "contentHash": "037c0c4efebd47351f7ca01ade5f415e9f678a5f1e6205d848bf75fb30c402d6",
+      "line": 1
+    },
+    {
+      "path": "shared/utils/slugify.ts",
+      "contentHash": "49fa6b8a348b98582ad0a63fbcf9daeb39100358488255edaf2018e71cf173d2",
+      "line": 1
+    },
+    {
+      "path": "shared/utils/timers.ts",
+      "contentHash": "1426bdae82eb2441adfed049ac8d5d8a5aec31ba0d08f7054bf12147a32a89ef",
+      "line": 1
+    },
+    {
+      "path": "shared/utils/UserRoleHelper.ts",
+      "contentHash": "ad2833b0ee833e2c5db91193d8cf8c1b197d6bf26c57cf552feda75be379605d",
+      "line": 1
+    }
+  ],
+  "claims": [
+    {
+      "purpose": "component-name",
+      "text": "Server startup and background work",
+      "citations": [
+        {
+          "path": "server/main.ts",
+          "contentHash": "bb3f1f1ccf224cd8ee652ce1e78974f5f0e78a7f9be77179be04fd26b79cd240",
+          "startLine": 29,
+          "endLine": 58,
+          "excerpt": "/**\n * Starts a single forked service process. This is where the heavy dependency\n * graph (Sequelize models, services, middleware) is loaded, so it is imported\n * dynamically from the entry point to keep the supervising master process lean.\n *\n * @param id the cluster worker id assigned by throng.\n * @param disconnect callback used to signal the worker has stopped.\n */\nexport async function start(id: number, disconnect: () => void) {\n  // Ensure plugins are loaded\n  PluginManager.loadPlugins();\n\n  // Clear unfurl cache in development so code changes take effect immediately\n  if (env.isDevelopment) {\n    void CacheHelper.clearData(RedisPrefixHelper.getUnfurlKey(\"\"));\n  }\n\n  // Find if SSL certs are available\n  const ssl = getSSLOptions();\n  const useHTTPS = !!ssl.key && !!ssl.cert;\n\n  // If a --port flag is passed then it takes priority over the env variable\n  const normalizedPort = getArg(\"port\", \"p\") || env.PORT;\n  const app = new Koa();\n  const server = stoppable(\n    useHTTPS\n      ? https.createServer(ssl, app.callback())\n      : http.createServer(app.callback()),\n    ShutdownHelper.connectionGraceTimeout\n  );"
+        }
+      ]
+    },
+    {
+      "purpose": "component-role",
+      "text": "Starts service processes with database models, middleware and an HTTP or HTTPS server.",
+      "citations": [
+        {
+          "path": "server/main.ts",
+          "contentHash": "bb3f1f1ccf224cd8ee652ce1e78974f5f0e78a7f9be77179be04fd26b79cd240",
+          "startLine": 29,
+          "endLine": 58,
+          "excerpt": "/**\n * Starts a single forked service process. This is where the heavy dependency\n * graph (Sequelize models, services, middleware) is loaded, so it is imported\n * dynamically from the entry point to keep the supervising master process lean.\n *\n * @param id the cluster worker id assigned by throng.\n * @param disconnect callback used to signal the worker has stopped.\n */\nexport async function start(id: number, disconnect: () => void) {\n  // Ensure plugins are loaded\n  PluginManager.loadPlugins();\n\n  // Clear unfurl cache in development so code changes take effect immediately\n  if (env.isDevelopment) {\n    void CacheHelper.clearData(RedisPrefixHelper.getUnfurlKey(\"\"));\n  }\n\n  // Find if SSL certs are available\n  const ssl = getSSLOptions();\n  const useHTTPS = !!ssl.key && !!ssl.cert;\n\n  // If a --port flag is passed then it takes priority over the env variable\n  const normalizedPort = getArg(\"port\", \"p\") || env.PORT;\n  const app = new Koa();\n  const server = stoppable(\n    useHTTPS\n      ? https.createServer(ssl, app.callback())\n      : http.createServer(app.callback()),\n    ShutdownHelper.connectionGraceTimeout\n  );"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,551 @@
+{
+  "schemaVersion": 1,
+  "targetId": "component:module:packages/excalidraw/actions/actionAddToLibrary.ts",
+  "summary": "Registers editor actions and selects the action matching a keyboard shortcut.",
+  "author": "Codex (external agent)",
+  "sources": [
+    {
+      "path": "packages/excalidraw/actions/actionAddToLibrary.ts",
+      "contentHash": "bf4037ebaca1c8bea96336f7d75a4c5eff519ed6458c85feefce2fe0f1d17e72",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/actions/actionCropEditor.tsx",
+      "contentHash": "1bbe7890bfdabc8905049f90cd3867e34f139eba94d31a58afcdedc6604c8f5c",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/actions/actionDeselect.ts",
+      "contentHash": "304a9d6a532b7f9da0fd59e80bb225e0fc007ae203ca39ff2dba191e958e5ad6",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/actions/actionDuplicateSelection.tsx",
+      "contentHash": "1c34ed15a1075e2682e1ebe395a79e4e79d0a36737048c2962c8b4d548cf7edc",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/actions/actionElementLock.ts",
+      "contentHash": "d810b4a4a869105e7c3e4cf1d6a5a9f26d9b0ac08b79e6996767c602318f7118",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/actions/actionExport.tsx",
+      "contentHash": "e23c3ff540df6fbfdd4e2508478cb16fa9869457197891fe6438614e77e4719a",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/actions/actionFinalize.tsx",
+      "contentHash": "a4dfa6398320274e9cae17bb81ffae6378749aabfba4fc222ddbb96e1da4def7",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/actions/actionHistory.tsx",
+      "contentHash": "03188e13d15c2da33d317073937d75b57cb1cb96e5e2f25638391651730280af",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/actions/actionLinearEditor.tsx",
+      "contentHash": "4257ed9db48bafd519eb30f47fa9beb34eeb338193cc8d01374b9c6cc70d04ac",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/actions/actionLink.tsx",
+      "contentHash": "83db7a4e99323a9303359ba1df4431afe9a62cdb937cdb2cc52bfd443dd48e7b",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/actions/actionMenu.tsx",
+      "contentHash": "544905f9beb8e33d35245ba114b87ffa6e16c9810fd3c0efc4867fb015ea5cbf",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/actions/actionSelectAll.ts",
+      "contentHash": "a80f51d369ce3cd29801bcf923fbc29858d228a9364929bd52c6d001bbd3be48",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/actions/actionToggleArrowBinding.tsx",
+      "contentHash": "35eaa4ff7cb327833007078c6863c783881f4e9e90c0d16f178a9621ccfb7cc4",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/actions/actionToggleGridMode.tsx",
+      "contentHash": "4632f18ce365c8798a2b9f2d219d88a6eec420d82cd0565cd9d4d5eb5421964c",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/actions/actionToggleMidpointSnapping.tsx",
+      "contentHash": "d4edd3205f47f7b4b4f138d6bd2bc00a1abe20bea3653d92be33b6f4d029745e",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/actions/actionToggleObjectsSnapMode.tsx",
+      "contentHash": "59d53c2b4bb4b30f1f11974ab18eaf72d03e9fecf8166bb2a9b9ade23f6ec1f6",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/actions/actionToggleSearchMenu.ts",
+      "contentHash": "3c0d2a9afbd63a34e2bc8c9bd218882ff8991150aee91ccad171f22542d16e78",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/actions/actionToggleShapeSwitch.tsx",
+      "contentHash": "c4f78fe7f7065af52f0bde562ccbed3d847dd08b716852f9dd70e1b73f84f701",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/actions/actionToggleShowHints.tsx",
+      "contentHash": "2cb043bad6badd3407cb4465c16c2786b8b60fd1112517027427e54e0e42a141",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/actions/actionToggleStats.tsx",
+      "contentHash": "2ceaa7bb2e958c89bf3d1c3c5e3061ed02e1e34650db450c232419b44c452e11",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/actions/actionToggleZenMode.tsx",
+      "contentHash": "ab1b683396e8bab0cedd66cafd0a2d4231efb2072a8fe1c085f5357ad7eeae81",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/actions/actionZindex.tsx",
+      "contentHash": "1926de13f1dc4d09b32082e81ff09d97b045568cc2a45bd357fd59aa94d31693",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/actions/index.ts",
+      "contentHash": "efe48bb720f92434b4d6e5d45051c2b46508af89a2351a49fd7953286b578316",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/actions/manager.tsx",
+      "contentHash": "fd9740dc54aae851b8759e3c7fb7c8dff40e9668309a5f44c5a7b94a4a3b3031",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/actions/register.ts",
+      "contentHash": "d75b47c9d5f34eb98da0dfdc11740f7c0eefd9db8b1a3258ddbf4e98a8c7cee4",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/actions/shortcuts.ts",
+      "contentHash": "436b3143fb58100895409220eaf440fd43fe873c02a5566995fab951785d9948",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/actions/types.ts",
+      "contentHash": "92fdf1c6581181effa47b1e87126c8dac3536cbabd3b0d4288c38ad5788ef972",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/analytics.ts",
+      "contentHash": "1a695387e385a9d017825c391eb4d19de1c2e3a1b502bf8fc4079691b07a81e6",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/App.bucketFill.ts",
+      "contentHash": "861206aeed0802073f376ec795dbc295f400ded144aa875bd16b346642e1ef35",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/App.duplicate.ts",
+      "contentHash": "5e6bc0d9f963963fca76d83db545f635cd548a494413e251c08c5bf9d74b5e31",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/App.flowchart.ts",
+      "contentHash": "cd6842d63815f8e4b26ef5df9abbf5d7256d4d5e8c5e722fad8039a8c99aa33a",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/App.selection.ts",
+      "contentHash": "79dd9e9733f1792f940e18001441952228bb5e6fb22edbb4aede561944466eff",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/App.selectionTool.ts",
+      "contentHash": "dafd81592a719bdc10be31d20d56837ff42322f9c5d486a360632ddefadf900a",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/App.textTool.ts",
+      "contentHash": "56b08f892c104e99d5a9fb6d38e72554c5dfb0780c833c40e24971a37542dcce",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/App.toolDrag.ts",
+      "contentHash": "dc9b9273401d3840208e8365a77c07847b2e008dd4bb0136f24db185874e11b1",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/App.tsx",
+      "contentHash": "8aaf45ace6e6aa8bedde2b36669aeca42b362ec76755b5de74563fded76da651",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/AppStateObserver.ts",
+      "contentHash": "0cc33d338dc0a73d1d471190ce3834de108a81e7a2187d4b3f99cf62ad3bbdd3",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/BraveMeasureTextError.tsx",
+      "contentHash": "bf9dfbde39cd28a612054956d7df3df28bc66fa3e46632470cffe188637773cf",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/CheckboxItem.tsx",
+      "contentHash": "e3ca7216b663a9139e7d66c43c31cf8c298d66826a20d039c2bb34d541ad0ca9",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/CommandPalette/CommandPalette.tsx",
+      "contentHash": "92e821f8114be769e703601e24cf215dde086e2d4988c897a5aa43c7b702b945",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/CommandPalette/defaultCommandPaletteItems.ts",
+      "contentHash": "8e609bb71c20b858c77f0e9f90bb1319db8477b13f9f965f1a1e18524bf50881",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/CommandPalette/types.ts",
+      "contentHash": "0a9c27fc3a2957795473b11ab218b9be73d3260d7704ce8de0c231fc1734a427",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/ContextMenu.tsx",
+      "contentHash": "6ae9e734ac67fa2333d2bca8f88fb00e0baee57bf599010c0ff90940ee2c348f",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/DarkModeToggle.tsx",
+      "contentHash": "df256a6a8ec39a3785117f9fc3db244c3b943287f2e96f829a456c527ea97857",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/DefaultSidebar.tsx",
+      "contentHash": "9e45fd6173ad3f8d1849862083eaed363bd7302072605c385cbc391af4ec9db8",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/ElementCanvasButtons.tsx",
+      "contentHash": "59541d78ca4168a404ea4e0a30b71871af7bffbc50c9b91f3386356c33073ab6",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/ErrorDialog.tsx",
+      "contentHash": "137b045feb239bc038ed9c26309aadcd3c5c4e58ae236af1774e83cd40d3a611",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/FileDropOverlay.tsx",
+      "contentHash": "7bc9f13640a3975cf0d4179c6506e11091daba742844b9cc12faf32862be8add",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/FixedSideContainer.tsx",
+      "contentHash": "80a3220a173a43c3d3ffa67d9b9dc9d9b8ff1ea6937f031dbcd47ccc0d7f4c12",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/HelpDialog.tsx",
+      "contentHash": "9af1dfd98f990fd228732394eb3da89a3d694ededc9ae77769ae6e35afb3669e",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/HintViewer.tsx",
+      "contentHash": "c9b0dd80bb721980d9706e68e60a9645b7b167de84a7a032339da3755e84cdb9",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/hyperlink/helpers.ts",
+      "contentHash": "33664982789a75d1631247a4fb72b6ee25ed98dc02985192fd379a957eaa55da",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/hyperlink/Hyperlink.tsx",
+      "contentHash": "124bb011ce8060a6fd16c9c7e15693d8e5e408428286d3f8e93c56929073e3a1",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/IconButton.tsx",
+      "contentHash": "81552c381884d308632585e205efae8eb1faa292c1eaad4ac2d7f3f31499c41a",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/icons.tsx",
+      "contentHash": "1d263db1690b510571bf737b2f1733ad4579ffcc54f9a519c4db3ec9ff109cfd",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/LaserPointerButton.tsx",
+      "contentHash": "0f5c5add7317e01ffac0c223e841d26271d74e35b848c03de203ac124c614341",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/LayerUI.tsx",
+      "contentHash": "32bbc7da2b827fa87b2b6931f8ed9825884e90a8c4ddfc00ef52fe9e32fb48f4",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/LibraryMenu.tsx",
+      "contentHash": "8f5728a1f5a292f29b3fb4cd5367ee3caaac977a5cb92b795e0e6f345248a5bb",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/LibraryMenuBrowseButton.tsx",
+      "contentHash": "521458da79b67ba278b67597c1d374f75825230540a657cdb1f778ea5247df0e",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/LibraryMenuControlButtons.tsx",
+      "contentHash": "386bcee444f0278a5374ebc9411025098d2e5cddf90551b27418d70b0b3ce89b",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/LibraryMenuHeaderContent.tsx",
+      "contentHash": "ded5c319ed326b73029361a60334a987827885de944c7e7bc2c62715d8a28c76",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/LibraryMenuItems.tsx",
+      "contentHash": "2da4db3ad326b0571dc33fab8102d7ea0d964557d15504876b4a1506d2918487",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/LibraryMenuSection.tsx",
+      "contentHash": "07702745a565625ad9f761f5e2a0891b2baee6f87d93d30ffc3f4a54d07649c4",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/LibraryUnit.tsx",
+      "contentHash": "848a8ba0df59c2cfb622c54e565885efaa0d2f9609b5e20ce2d94c5e3c703f0c",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/LockButton.tsx",
+      "contentHash": "ff855c84e24d20abf03fb4fe47f6bd0c32a70258536ead0263ad367dedf414f0",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/MagicButton.tsx",
+      "contentHash": "121e916572f07305a0b4fedf5f0191853e3fbd69b04e6c75909d245a92879a14",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/MobileMenu.tsx",
+      "contentHash": "fda2de8492aaa374b5b1684b65e967d89bd7ed4be71b8b9737b4901512f39bbd",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/MobileToolbar.tsx",
+      "contentHash": "9ee65fcac6aa99375af1cda6c18b8a6e51d500e8b2360089e366d68e5b8dc690",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/PenModeButton.tsx",
+      "contentHash": "d9e683c3e194c9fcaf60674603d640e65563cfeb97d30d629ab2298449b197c8",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/Popover.tsx",
+      "contentHash": "8a259a198b5da5987084007d0b49c2d87881b1de654b0dcbd48903a9c86cad42",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/ProjectName.tsx",
+      "contentHash": "8e46a0de54017953de2f7a714a592b9b8e0709a3a9737498a34bb0883d9f438b",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/SearchMenu.tsx",
+      "contentHash": "5757e62ee3a69e3dd0573f3210ce9e1b784b8fcb7e83b3a99f2981024fd1c3c2",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/Toast.tsx",
+      "contentHash": "815077f24ccf396f699e20ec4da0d4a0f51046473ff4e2ff96503f195d221d59",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/Toolbar.tsx",
+      "contentHash": "562ee5b579ba23fe630092d4a751030cae4d8ff5417f45e6fef653ab29a28169",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/ToolPopover.tsx",
+      "contentHash": "31f9a6bb18ab2c282708e663f483f3e7bcc04a27a21cba036de2282ddeaa552e",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/Tools.tsx",
+      "contentHash": "4f3601bd5e0cc7950179ba1887e098f1b20879814f55bda646081fc2f0bf40b6",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/Trans.tsx",
+      "contentHash": "ef2b34b1fad510c25264199f8d541e644cb73ee5a404489c9f63031bac21b3f6",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/TTDDialog/common.ts",
+      "contentHash": "4ced1857522c2e92f72031077a24c55938683263219264ac57ab3d6249146af3",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/TTDDialog/hooks/useMermaidRenderer.ts",
+      "contentHash": "bc1139805a2b49baab8f8750feea2110f852beb28c11cabc9f29304828762036",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/TTDDialog/TextToDiagram.tsx",
+      "contentHash": "224d066a54e9aca798a51a6474867055543edb74b6396e067ab0368c1dfdfd1b",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/TTDDialog/TTDDialogTrigger.tsx",
+      "contentHash": "b338582bb684db39f256aa7cdc9cebb7e34506703a73b3f372bca16edf2475f6",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/TTDDialog/utils/mermaidValidation.ts",
+      "contentHash": "7a5ddf9a71bc6bd578790b390dc5562b97d4c5e07d0f4fd9d206d04b4088e642",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/UnlockPopup.tsx",
+      "contentHash": "90766f5b20f8bdeb2625d9bf36579c11c4daf5ffea75810aed15827febd7ba4a",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/ViewportStatusFrame/ViewportStatusFrame.tsx",
+      "contentHash": "2c051927cda33446d03865e1fe66857cab1161316f7fbc17af0bdf9701083cc3",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/data/EditorLocalStorage.ts",
+      "contentHash": "4652f28a216a3726ca8a89f659e00af39cd96730a11bc3c5ea97c281b0fdf0ba",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/data/library.ts",
+      "contentHash": "b242773104cb14645820e5b7f1d43d2a56f86d95206f7b9571360fbddfbc8b61",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/data/resave.ts",
+      "contentHash": "acf971f295298ab3962e8b877c28b72c9e5dfe473c3cfb47595102a9f3f3acbe",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/data/types.ts",
+      "contentHash": "0388bc60a0ff5477d088f1b8185a8f9a2069fda2d8c9a42419116efce717b255",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/deburr.ts",
+      "contentHash": "f375bf4b731a5ad54a93ca401a5b8fe99b5e54571b6b1dc18acb45b4a577adf4",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/editor-jotai.ts",
+      "contentHash": "0e3ab7724605564bba4c50fd15deccfe69ee2f2a7f8bf94c2889dedab806b62b",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/gesture.ts",
+      "contentHash": "4964b16fbf58474e705801199221da83a2a5cb4338eb6e477a6c3ac25a66534f",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/history.ts",
+      "contentHash": "49d28407b8a5fa7f3b871095cf6b674c5b019eda426a14509c91534725f08773",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/hooks/useEmitter.ts",
+      "contentHash": "4b4479f7d4eb9607310c3a3a3c48aa90c5c995be3813f562e720ce6100a10898",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/hooks/useLibraryItemSvg.ts",
+      "contentHash": "5bcc5537b8e455ddf8109116d85c974cdeca847aa91f7f46047a5d1b296c2498",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/hooks/useScrollPosition.ts",
+      "contentHash": "4ced7a6cbe4e8902b4e8499c6c742d7a8a0fe4e81a588ff7e4c67935a9d7bdc4",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/hooks/useStableCallback.ts",
+      "contentHash": "8a417249192da76e2b1533b52b50fa477cc6ffd8005bfae35d955cbcc976a0f9",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/hooks/useTransition.ts",
+      "contentHash": "c65961a7cb1c48d49f01ca9ded6a29aa1b8c93d35ab6c859e63265cb7bbd1a76",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/scene/scrollbars.ts",
+      "contentHash": "628c819e400c2034f2fff0c3759ff9d97dde33be5030f21e200877d6d7e448ae",
+      "line": 1
+    },
+    {
+      "path": "packages/utils/global.d.ts",
+      "contentHash": "4bbb7cd08392b521ff7ba7db4387162fc15aa6af1f400ff6c9e460485b2457f5",
+      "line": 1
+    },
+    {
+      "path": "packages/utils/src/export.ts",
+      "contentHash": "b0e651ca352eb89e9feb61a4e2633d1737a77d99d201e5a090745332bef8f933",
+      "line": 1
+    },
+    {
+      "path": "packages/utils/src/index.ts",
+      "contentHash": "b78b4512407370564adb767e37cae1c8015e8571c1945da0f7821f7843beac1c",
+      "line": 1
+    },
+    {
+      "path": "packages/utils/src/shape.ts",
+      "contentHash": "ec4ab1aab5fcca5edd94addc5f9f8ee4d12d9a8b635e141e7c29c1d17c697335",
+      "line": 1
+    },
+    {
+      "path": "packages/utils/src/test-utils.ts",
+      "contentHash": "bfffa0523bba06703a1cbbecb062ef01f5c3ba7624c9ab2e155302e7d5beafef",
+      "line": 1
+    }
+  ],
+  "claims": [
+    {
+      "purpose": "component-name",
+      "text": "Editor actions & commands",
+      "citations": [
+        {
+          "path": "packages/excalidraw/actions/manager.tsx",
+          "contentHash": "fd9740dc54aae851b8759e3c7fb7c8dff40e9668309a5f44c5a7b94a4a3b3031",
+          "startLine": 85,
+          "endLine": 118,
+          "excerpt": "  registerAll(actions: readonly Action[]) {\n    actions.forEach((action) => this.registerAction(action));\n  }\n\n  private isActionBlockedByViewportTransition = (action: Action) =>\n    action.navigation === true && this.app.viewport.isLockedTransitionPending;\n\n  handleKeyDown(event: React.KeyboardEvent | KeyboardEvent) {\n    if (!this.app.isInteractionEnabled() && !this.app.isNavigationEnabled()) {\n      return false;\n    }\n\n    const canvasActions = this.app.props.UIOptions.canvasActions;\n    const data = Object.values(this.actions)\n      .sort((a, b) => (b.keyPriority || 0) - (a.keyPriority || 0))\n      .filter(\n        (action) =>\n          (action.name in canvasActions\n            ? canvasActions[action.name as keyof typeof canvasActions]\n            : true) &&\n          action.keyTest &&\n          action.keyTest(\n            event,\n            this.getAppState(),\n            this.getElementsIncludingDeleted(),\n            this.app,\n          ),\n      );\n\n    if (data.length !== 1) {\n      if (data.length > 1) {\n        console.warn(\"Canceling as multiple actions match this shortcut\", data);\n      }\n      return false;"
+        }
+      ]
+    },
+    {
+      "purpose": "component-role",
+      "text": "Registers editor actions and selects the action matching a keyboard shortcut.",
+      "citations": [
+        {
+          "path": "packages/excalidraw/actions/manager.tsx",
+          "contentHash": "fd9740dc54aae851b8759e3c7fb7c8dff40e9668309a5f44c5a7b94a4a3b3031",
+          "startLine": 85,
+          "endLine": 118,
+          "excerpt": "  registerAll(actions: readonly Action[]) {\n    actions.forEach((action) => this.registerAction(action));\n  }\n\n  private isActionBlockedByViewportTransition = (action: Action) =>\n    action.navigation === true && this.app.viewport.isLockedTransitionPending;\n\n  handleKeyDown(event: React.KeyboardEvent | KeyboardEvent) {\n    if (!this.app.isInteractionEnabled() && !this.app.isNavigationEnabled()) {\n      return false;\n    }\n\n    const canvasActions = this.app.props.UIOptions.canvasActions;\n    const data = Object.values(this.actions)\n      .sort((a, b) => (b.keyPriority || 0) - (a.keyPriority || 0))\n      .filter(\n        (action) =>\n          (action.name in canvasActions\n            ? canvasActions[action.name as keyof typeof canvasActions]\n            : true) &&\n          action.keyTest &&\n          action.keyTest(\n            event,\n            this.getAppState(),\n            this.getElementsIncludingDeleted(),\n            this.app,\n          ),\n      );\n\n    if (data.length !== 1) {\n      if (data.length > 1) {\n        console.warn(\"Canceling as multiple actions match this shortcut\", data);\n      }\n      return false;"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,75 @@
+{
+  "schemaVersion": 1,
+  "targetId": "component:module:httpx/_api.py",
+  "summary": "Sends HTTP requests through clients with connection pooling, redirects and cookie persistence.",
+  "author": "Codex (external agent)",
+  "sources": [
+    {
+      "path": "httpx/_api.py",
+      "contentHash": "aff660b388c8a5c3c92ea2b975b6d26b2aa8fe254c2856b164277ea0e1f12c4b",
+      "line": 1
+    },
+    {
+      "path": "httpx/_client.py",
+      "contentHash": "ed717b3ac00debb48d089daeb4dd7fbaf47cb5642ebc4a6e76f3a2fc6cfc0f70",
+      "line": 1
+    },
+    {
+      "path": "httpx/_multipart.py",
+      "contentHash": "28e1c465997aa28860f663da2b2caedf8e6aab5ac92e0df94d41b7600cd70776",
+      "line": 1
+    },
+    {
+      "path": "httpx/_types.py",
+      "contentHash": "272878d4642aec039ebfc20e58a0c083bcc26ef1c07ee7e65b983f3e24ed12b6",
+      "line": 1
+    },
+    {
+      "path": "httpx/_utils.py",
+      "contentHash": "fd355ea802afc4990a1ddcfb74579be2cd0b66a41781e1645d281f88704aff5a",
+      "line": 1
+    }
+  ],
+  "claims": [
+    {
+      "purpose": "component-name",
+      "text": "Requests and clients",
+      "citations": [
+        {
+          "path": "httpx/_api.py",
+          "contentHash": "aff660b388c8a5c3c92ea2b975b6d26b2aa8fe254c2856b164277ea0e1f12c4b",
+          "startLine": 39,
+          "endLine": 60,
+          "excerpt": "def request(\n    method: str,\n    url: URL | str,\n    *,\n    params: QueryParamTypes | None = None,\n    content: RequestContent | None = None,\n    data: RequestData | None = None,\n    files: RequestFiles | None = None,\n    json: typing.Any | None = None,\n    headers: HeaderTypes | None = None,\n    cookies: CookieTypes | None = None,\n    auth: AuthTypes | None = None,\n    proxy: ProxyTypes | None = None,\n    timeout: TimeoutTypes = DEFAULT_TIMEOUT_CONFIG,\n    follow_redirects: bool = False,\n    verify: ssl.SSLContext | str | bool = True,\n    trust_env: bool = True,\n) -> Response:\n    \"\"\"\n    Sends an HTTP request.\n\n    **Parameters:**"
+        },
+        {
+          "path": "httpx/_client.py",
+          "contentHash": "ed717b3ac00debb48d089daeb4dd7fbaf47cb5642ebc4a6e76f3a2fc6cfc0f70",
+          "startLine": 594,
+          "endLine": 605,
+          "excerpt": "class Client(BaseClient):\n    \"\"\"\n    An HTTP client, with connection pooling, HTTP/2, redirects, cookie persistence, etc.\n\n    It can be shared between threads.\n\n    Usage:\n\n    ```python\n    >>> client = httpx.Client()\n    >>> response = client.get('https://example.org')\n    ```"
+        }
+      ]
+    },
+    {
+      "purpose": "component-role",
+      "text": "Sends HTTP requests through clients with connection pooling, redirects and cookie persistence.",
+      "citations": [
+        {
+          "path": "httpx/_api.py",
+          "contentHash": "aff660b388c8a5c3c92ea2b975b6d26b2aa8fe254c2856b164277ea0e1f12c4b",
+          "startLine": 39,
+          "endLine": 60,
+          "excerpt": "def request(\n    method: str,\n    url: URL | str,\n    *,\n    params: QueryParamTypes | None = None,\n    content: RequestContent | None = None,\n    data: RequestData | None = None,\n    files: RequestFiles | None = None,\n    json: typing.Any | None = None,\n    headers: HeaderTypes | None = None,\n    cookies: CookieTypes | None = None,\n    auth: AuthTypes | None = None,\n    proxy: ProxyTypes | None = None,\n    timeout: TimeoutTypes = DEFAULT_TIMEOUT_CONFIG,\n    follow_redirects: bool = False,\n    verify: ssl.SSLContext | str | bool = True,\n    trust_env: bool = True,\n) -> Response:\n    \"\"\"\n    Sends an HTTP request.\n\n    **Parameters:**"
+        },
+        {
+          "path": "httpx/_client.py",
+          "contentHash": "ed717b3ac00debb48d089daeb4dd7fbaf47cb5642ebc4a6e76f3a2fc6cfc0f70",
+          "startLine": 594,
+          "endLine": 605,
+          "excerpt": "class Client(BaseClient):\n    \"\"\"\n    An HTTP client, with connection pooling, HTTP/2, redirects, cookie persistence, etc.\n\n    It can be shared between threads.\n\n    Usage:\n\n    ```python\n    >>> client = httpx.Client()\n    >>> response = client.get('https://example.org')\n    ```"
+        }
+      ]
+    }
+  ]
+}

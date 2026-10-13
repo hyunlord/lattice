@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "targetId": "component:module:shell/common.sh",
+  "summary": "Combines default options and chooses a compatible awk command.",
+  "author": "Codex (external agent)",
+  "sources": [
+    {
+      "path": "shell/common.sh",
+      "contentHash": "cc9b9c5741abe7b05959527950bef8941c6f59df905f2aa27dd4d45ed3a84b6a",
+      "line": 1
+    }
+  ],
+  "claims": [
+    {
+      "purpose": "component-name",
+      "text": "Shell integration helpers",
+      "citations": [
+        {
+          "path": "shell/common.sh",
+          "contentHash": "cc9b9c5741abe7b05959527950bef8941c6f59df905f2aa27dd4d45ed3a84b6a",
+          "startLine": 1,
+          "endLine": 25,
+          "excerpt": "__fzf_defaults() {\n  # $1: Prepend to FZF_DEFAULT_OPTS_FILE and FZF_DEFAULT_OPTS\n  # $2: Append to FZF_DEFAULT_OPTS_FILE and FZF_DEFAULT_OPTS\n  builtin printf '%s\\n' \"--height ${FZF_TMUX_HEIGHT:-40%} --min-height 20+ --bind=ctrl-z:ignore $1\"\n  command cat \"${FZF_DEFAULT_OPTS_FILE-}\" 2> /dev/null\n  builtin printf '%s\\n' \"${FZF_DEFAULT_OPTS-} $2\"\n}\n\n__fzf_exec_awk() {\n  # This function performs `exec awk \"$@\"` safely by working around awk\n  # compatibility issues.\n  #\n  # To reduce an extra fork, this function performs \"exec\" so is expected to be\n  # run as the last command in a subshell.\n  if [[ -z ${__fzf_awk-} ]]; then\n    __fzf_awk=awk\n    if [[ $OSTYPE == solaris* && -x /usr/xpg4/bin/awk ]]; then\n      # Note: Solaris awk at /usr/bin/awk is meant for backward compatibility\n      # with an ancient implementation of 1977 awk in the original UNIX.  It\n      # lacks many features of POSIX awk, so it is essentially useless in the\n      # modern point of view.  To use a standard-conforming version in Solaris,\n      # one needs to explicitly use /usr/xpg4/bin/awk.\n      __fzf_awk=/usr/xpg4/bin/awk\n    elif command -v mawk > /dev/null 2>&1; then\n      # choose the faster mawk if: it's installed && build date >= 20230322 &&"
+        }
+      ]
+    },
+    {
+      "purpose": "component-role",
+      "text": "Combines default options and chooses a compatible awk command.",
+      "citations": [
+        {
+          "path": "shell/common.sh",
+          "contentHash": "cc9b9c5741abe7b05959527950bef8941c6f59df905f2aa27dd4d45ed3a84b6a",
+          "startLine": 1,
+          "endLine": 25,
+          "excerpt": "__fzf_defaults() {\n  # $1: Prepend to FZF_DEFAULT_OPTS_FILE and FZF_DEFAULT_OPTS\n  # $2: Append to FZF_DEFAULT_OPTS_FILE and FZF_DEFAULT_OPTS\n  builtin printf '%s\\n' \"--height ${FZF_TMUX_HEIGHT:-40%} --min-height 20+ --bind=ctrl-z:ignore $1\"\n  command cat \"${FZF_DEFAULT_OPTS_FILE-}\" 2> /dev/null\n  builtin printf '%s\\n' \"${FZF_DEFAULT_OPTS-} $2\"\n}\n\n__fzf_exec_awk() {\n  # This function performs `exec awk \"$@\"` safely by working around awk\n  # compatibility issues.\n  #\n  # To reduce an extra fork, this function performs \"exec\" so is expected to be\n  # run as the last command in a subshell.\n  if [[ -z ${__fzf_awk-} ]]; then\n    __fzf_awk=awk\n    if [[ $OSTYPE == solaris* && -x /usr/xpg4/bin/awk ]]; then\n      # Note: Solaris awk at /usr/bin/awk is meant for backward compatibility\n      # with an ancient implementation of 1977 awk in the original UNIX.  It\n      # lacks many features of POSIX awk, so it is essentially useless in the\n      # modern point of view.  To use a standard-conforming version in Solaris,\n      # one needs to explicitly use /usr/xpg4/bin/awk.\n      __fzf_awk=/usr/xpg4/bin/awk\n    elif command -v mawk > /dev/null 2>&1; then\n      # choose the faster mawk if: it's installed && build date >= 20230322 &&"
+        }
+      ]
+    }
+  ]
+}

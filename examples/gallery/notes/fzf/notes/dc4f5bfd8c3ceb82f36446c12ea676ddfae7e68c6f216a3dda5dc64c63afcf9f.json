@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "targetId": "component:module:bin/fzf-preview.sh",
+  "summary": "Previews text files and images in the finder window.",
+  "author": "Codex (external agent)",
+  "sources": [
+    {
+      "path": "bin/fzf-preview.sh",
+      "contentHash": "5181e2638181bce97ba44e55dab19aa91a76a9e86a98c1e04e1c4eb503baca84",
+      "line": 1
+    }
+  ],
+  "claims": [
+    {
+      "purpose": "component-name",
+      "text": "File previews",
+      "citations": [
+        {
+          "path": "bin/fzf-preview.sh",
+          "contentHash": "5181e2638181bce97ba44e55dab19aa91a76a9e86a98c1e04e1c4eb503baca84",
+          "startLine": 1,
+          "endLine": 9,
+          "excerpt": "#!/usr/bin/env bash\n#\n# The purpose of this script is to demonstrate how to preview a file or an\n# image in the preview window of fzf.\n#\n# Dependencies:\n# - https://github.com/sharkdp/bat\n# - https://github.com/hpjansson/chafa\n# - https://iterm2.com/utilities/imgcat"
+        }
+      ]
+    },
+    {
+      "purpose": "component-role",
+      "text": "Previews text files and images in the finder window.",
+      "citations": [
+        {
+          "path": "bin/fzf-preview.sh",
+          "contentHash": "5181e2638181bce97ba44e55dab19aa91a76a9e86a98c1e04e1c4eb503baca84",
+          "startLine": 1,
+          "endLine": 9,
+          "excerpt": "#!/usr/bin/env bash\n#\n# The purpose of this script is to demonstrate how to preview a file or an\n# image in the preview window of fzf.\n#\n# Dependencies:\n# - https://github.com/sharkdp/bat\n# - https://github.com/hpjansson/chafa\n# - https://iterm2.com/utilities/imgcat"
+        }
+      ]
+    }
+  ]
+}

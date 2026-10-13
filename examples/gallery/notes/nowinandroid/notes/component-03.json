@@ -1,0 +1,55 @@
+{
+  "schemaVersion": 1,
+  "targetId": "component:module:build_android_release.sh",
+  "summary": "Builds and copies the production Android APK and app bundle for the internal release process.",
+  "author": "Codex (external agent)",
+  "sources": [
+    {
+      "path": "build_android_release.sh",
+      "contentHash": "aff2151d742a2b3f2bad62e320ba4b20c480b87f263e3dbbce4c0bde1ccae671",
+      "line": 1
+    }
+  ],
+  "claims": [
+    {
+      "purpose": "component-name",
+      "text": "Release packaging",
+      "citations": [
+        {
+          "path": "build_android_release.sh",
+          "contentHash": "aff2151d742a2b3f2bad62e320ba4b20c480b87f263e3dbbce4c0bde1ccae671",
+          "startLine": 19,
+          "endLine": 22,
+          "excerpt": "# IGNORE this file, it's only used in the internal Google release process\n\nDIR=\"$( cd \"$( dirname \"${BASH_SOURCE[0]}\" )\" && pwd )\"\nAPP_OUT=$DIR/app/build/outputs"
+        },
+        {
+          "path": "build_android_release.sh",
+          "contentHash": "aff2151d742a2b3f2bad62e320ba4b20c480b87f263e3dbbce4c0bde1ccae671",
+          "startLine": 38,
+          "endLine": 48,
+          "excerpt": "# Build the prodRelease variant\nGRADLE_PARAMS=\" --stacktrace -Puse-google-services\"\n$DIR/gradlew :app:clean :app:assembleProdRelease :app:bundleProdRelease ${GRADLE_PARAMS}\nBUILD_RESULT=$?\n\n# Prod release apk\ncp $APP_OUT/apk/prod/release/app-prod-release.apk $DIST_DIR/app-prod-release.apk\n# Prod release bundle\ncp $APP_OUT/bundle/prodRelease/app-prod-release.aab $DIST_DIR/app-prod-release.aab\n# Prod release bundle mapping\ncp $APP_OUT/mapping/prodRelease/mapping.txt $DIST_DIR/mobile-release-aab-mapping.txt"
+        }
+      ]
+    },
+    {
+      "purpose": "component-role",
+      "text": "Builds and copies the production Android APK and app bundle for the internal release process.",
+      "citations": [
+        {
+          "path": "build_android_release.sh",
+          "contentHash": "aff2151d742a2b3f2bad62e320ba4b20c480b87f263e3dbbce4c0bde1ccae671",
+          "startLine": 19,
+          "endLine": 22,
+          "excerpt": "# IGNORE this file, it's only used in the internal Google release process\n\nDIR=\"$( cd \"$( dirname \"${BASH_SOURCE[0]}\" )\" && pwd )\"\nAPP_OUT=$DIR/app/build/outputs"
+        },
+        {
+          "path": "build_android_release.sh",
+          "contentHash": "aff2151d742a2b3f2bad62e320ba4b20c480b87f263e3dbbce4c0bde1ccae671",
+          "startLine": 38,
+          "endLine": 48,
+          "excerpt": "# Build the prodRelease variant\nGRADLE_PARAMS=\" --stacktrace -Puse-google-services\"\n$DIR/gradlew :app:clean :app:assembleProdRelease :app:bundleProdRelease ${GRADLE_PARAMS}\nBUILD_RESULT=$?\n\n# Prod release apk\ncp $APP_OUT/apk/prod/release/app-prod-release.apk $DIST_DIR/app-prod-release.apk\n# Prod release bundle\ncp $APP_OUT/bundle/prodRelease/app-prod-release.aab $DIST_DIR/app-prod-release.aab\n# Prod release bundle mapping\ncp $APP_OUT/mapping/prodRelease/mapping.txt $DIST_DIR/mobile-release-aab-mapping.txt"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,60 @@
+{
+  "schemaVersion": 1,
+  "targetId": "component:module:cmd/serve.go",
+  "summary": "Starts the web server and provides commands for managing superusers.",
+  "author": "Codex (external agent)",
+  "sources": [
+    {
+      "path": "cmd/serve.go",
+      "contentHash": "4e93819a5d39c48015edce5b5e391662f6402d69cf4bdf8c5b1d7b3713a91163",
+      "line": 1
+    },
+    {
+      "path": "cmd/superuser.go",
+      "contentHash": "038577c02a51c7644dc85f1ac47baf107203c5a593c85a3e217cbc7f33b71838",
+      "line": 1
+    }
+  ],
+  "claims": [
+    {
+      "purpose": "component-name",
+      "text": "Server and administrator commands",
+      "citations": [
+        {
+          "path": "cmd/serve.go",
+          "contentHash": "4e93819a5d39c48015edce5b5e391662f6402d69cf4bdf8c5b1d7b3713a91163",
+          "startLine": 12,
+          "endLine": 24,
+          "excerpt": "// NewServeCommand creates and returns new command responsible for\n// starting the default PocketBase web server.\nfunc NewServeCommand(app core.App, showStartBanner bool) *cobra.Command {\n\tvar allowedOrigins []string\n\tvar httpAddr string\n\tvar httpsAddr string\n\n\tcommand := &cobra.Command{\n\t\tUse:          \"serve [domain(s)]\",\n\t\tArgs:         cobra.ArbitraryArgs,\n\t\tShort:        \"Starts the web server (default to 127.0.0.1:8090 if no domain is specified)\",\n\t\tSilenceUsage: true,\n\t\tRunE: func(command *cobra.Command, args []string) error {"
+        },
+        {
+          "path": "cmd/superuser.go",
+          "contentHash": "038577c02a51c7644dc85f1ac47baf107203c5a593c85a3e217cbc7f33b71838",
+          "startLine": 14,
+          "endLine": 28,
+          "excerpt": "// NewSuperuserCommand creates and returns new command for managing\n// superuser accounts (create, update, upsert, delete).\nfunc NewSuperuserCommand(app core.App) *cobra.Command {\n\tcommand := &cobra.Command{\n\t\tUse:   \"superuser\",\n\t\tShort: \"Manage superusers\",\n\t}\n\n\tcommand.AddCommand(superuserUpsertCommand(app))\n\tcommand.AddCommand(superuserCreateCommand(app))\n\tcommand.AddCommand(superuserUpdateCommand(app))\n\tcommand.AddCommand(superuserDeleteCommand(app))\n\tcommand.AddCommand(superuserOTPCommand(app))\n\tcommand.AddCommand(superuserIPsCommand(app))\n"
+        }
+      ]
+    },
+    {
+      "purpose": "component-role",
+      "text": "Starts the web server and provides commands for managing superusers.",
+      "citations": [
+        {
+          "path": "cmd/serve.go",
+          "contentHash": "4e93819a5d39c48015edce5b5e391662f6402d69cf4bdf8c5b1d7b3713a91163",
+          "startLine": 12,
+          "endLine": 24,
+          "excerpt": "// NewServeCommand creates and returns new command responsible for\n// starting the default PocketBase web server.\nfunc NewServeCommand(app core.App, showStartBanner bool) *cobra.Command {\n\tvar allowedOrigins []string\n\tvar httpAddr string\n\tvar httpsAddr string\n\n\tcommand := &cobra.Command{\n\t\tUse:          \"serve [domain(s)]\",\n\t\tArgs:         cobra.ArbitraryArgs,\n\t\tShort:        \"Starts the web server (default to 127.0.0.1:8090 if no domain is specified)\",\n\t\tSilenceUsage: true,\n\t\tRunE: func(command *cobra.Command, args []string) error {"
+        },
+        {
+          "path": "cmd/superuser.go",
+          "contentHash": "038577c02a51c7644dc85f1ac47baf107203c5a593c85a3e217cbc7f33b71838",
+          "startLine": 14,
+          "endLine": 28,
+          "excerpt": "// NewSuperuserCommand creates and returns new command for managing\n// superuser accounts (create, update, upsert, delete).\nfunc NewSuperuserCommand(app core.App) *cobra.Command {\n\tcommand := &cobra.Command{\n\t\tUse:   \"superuser\",\n\t\tShort: \"Manage superusers\",\n\t}\n\n\tcommand.AddCommand(superuserUpsertCommand(app))\n\tcommand.AddCommand(superuserCreateCommand(app))\n\tcommand.AddCommand(superuserUpdateCommand(app))\n\tcommand.AddCommand(superuserDeleteCommand(app))\n\tcommand.AddCommand(superuserOTPCommand(app))\n\tcommand.AddCommand(superuserIPsCommand(app))\n"
+        }
+      ]
+    }
+  ]
+}

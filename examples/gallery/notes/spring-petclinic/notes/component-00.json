@@ -1,0 +1,98 @@
+{
+  "schemaVersion": 1,
+  "targetId": "component:module:src/main/java/org/springframework/samples/petclinic/model/NamedEntity.java",
+  "summary": "Represents pets, pet types, and veterinary specialties using a shared named entity.",
+  "author": "Codex (external agent)",
+  "sources": [
+    {
+      "path": "src/main/java/org/springframework/samples/petclinic/model/NamedEntity.java",
+      "contentHash": "6695dafa9b8d4cc67c0cf9305b17b897c58103ca33c12dd0f9375edcfe815b32",
+      "line": 1
+    },
+    {
+      "path": "src/main/java/org/springframework/samples/petclinic/owner/Pet.java",
+      "contentHash": "ec77c2d70ae043c6eb441e47ebc93a3d848d8ae9729068e8f4e997aedfa0bbd7",
+      "line": 1
+    },
+    {
+      "path": "src/main/java/org/springframework/samples/petclinic/owner/PetType.java",
+      "contentHash": "9e64329633ce98a96f18cecf7426338d57b753fd24b7b47f7af483467a3df92e",
+      "line": 1
+    },
+    {
+      "path": "src/main/java/org/springframework/samples/petclinic/vet/Specialty.java",
+      "contentHash": "0fa07bcb3b7b4ddb380a278d98dcfe03bec5e3a1e42b9f08c555d75a6be256d0",
+      "line": 1
+    }
+  ],
+  "claims": [
+    {
+      "purpose": "component-name",
+      "text": "Named clinic records",
+      "citations": [
+        {
+          "path": "src/main/java/org/springframework/samples/petclinic/model/NamedEntity.java",
+          "contentHash": "6695dafa9b8d4cc67c0cf9305b17b897c58103ca33c12dd0f9375edcfe815b32",
+          "startLine": 22,
+          "endLine": 35,
+          "excerpt": "/**\n * Simple JavaBean domain object adds a name property to <code>BaseEntity</code>. Used as\n * a base class for objects needing these properties.\n *\n * @author Ken Krebs\n * @author Juergen Hoeller\n * @author Wick Dynex\n */\n@MappedSuperclass\npublic class NamedEntity extends BaseEntity {\n\n\t@Column\n\t@NotBlank\n\tprivate String name;"
+        },
+        {
+          "path": "src/main/java/org/springframework/samples/petclinic/owner/Pet.java",
+          "contentHash": "ec77c2d70ae043c6eb441e47ebc93a3d848d8ae9729068e8f4e997aedfa0bbd7",
+          "startLine": 36,
+          "endLine": 46,
+          "excerpt": "/**\n * Simple business object representing a pet.\n *\n * @author Ken Krebs\n * @author Juergen Hoeller\n * @author Sam Brannen\n * @author Wick Dynex\n */\n@Entity\n@Table(name = \"pets\")\npublic class Pet extends NamedEntity {"
+        },
+        {
+          "path": "src/main/java/org/springframework/samples/petclinic/owner/PetType.java",
+          "contentHash": "9e64329633ce98a96f18cecf7426338d57b753fd24b7b47f7af483467a3df92e",
+          "startLine": 23,
+          "endLine": 28,
+          "excerpt": "/**\n * @author Juergen Hoeller Can be Cat, Dog, Hamster...\n */\n@Entity\n@Table(name = \"types\")\npublic class PetType extends NamedEntity {"
+        },
+        {
+          "path": "src/main/java/org/springframework/samples/petclinic/vet/Specialty.java",
+          "contentHash": "0fa07bcb3b7b4ddb380a278d98dcfe03bec5e3a1e42b9f08c555d75a6be256d0",
+          "startLine": 23,
+          "endLine": 30,
+          "excerpt": "/**\n * Models a {@link Vet Vet's} specialty (for example, dentistry).\n *\n * @author Juergen Hoeller\n */\n@Entity\n@Table(name = \"specialties\")\npublic class Specialty extends NamedEntity {"
+        }
+      ]
+    },
+    {
+      "purpose": "component-role",
+      "text": "Represents pets, pet types, and veterinary specialties using a shared named entity.",
+      "citations": [
+        {
+          "path": "src/main/java/org/springframework/samples/petclinic/model/NamedEntity.java",
+          "contentHash": "6695dafa9b8d4cc67c0cf9305b17b897c58103ca33c12dd0f9375edcfe815b32",
+          "startLine": 22,
+          "endLine": 35,
+          "excerpt": "/**\n * Simple JavaBean domain object adds a name property to <code>BaseEntity</code>. Used as\n * a base class for objects needing these properties.\n *\n * @author Ken Krebs\n * @author Juergen Hoeller\n * @author Wick Dynex\n */\n@MappedSuperclass\npublic class NamedEntity extends BaseEntity {\n\n\t@Column\n\t@NotBlank\n\tprivate String name;"
+        },
+        {
+          "path": "src/main/java/org/springframework/samples/petclinic/owner/Pet.java",
+          "contentHash": "ec77c2d70ae043c6eb441e47ebc93a3d848d8ae9729068e8f4e997aedfa0bbd7",
+          "startLine": 36,
+          "endLine": 46,
+          "excerpt": "/**\n * Simple business object representing a pet.\n *\n * @author Ken Krebs\n * @author Juergen Hoeller\n * @author Sam Brannen\n * @author Wick Dynex\n */\n@Entity\n@Table(name = \"pets\")\npublic class Pet extends NamedEntity {"
+        },
+        {
+          "path": "src/main/java/org/springframework/samples/petclinic/owner/PetType.java",
+          "contentHash": "9e64329633ce98a96f18cecf7426338d57b753fd24b7b47f7af483467a3df92e",
+          "startLine": 23,
+          "endLine": 28,
+          "excerpt": "/**\n * @author Juergen Hoeller Can be Cat, Dog, Hamster...\n */\n@Entity\n@Table(name = \"types\")\npublic class PetType extends NamedEntity {"
+        },
+        {
+          "path": "src/main/java/org/springframework/samples/petclinic/vet/Specialty.java",
+          "contentHash": "0fa07bcb3b7b4ddb380a278d98dcfe03bec5e3a1e42b9f08c555d75a6be256d0",
+          "startLine": 23,
+          "endLine": 30,
+          "excerpt": "/**\n * Models a {@link Vet Vet's} specialty (for example, dentistry).\n *\n * @author Juergen Hoeller\n */\n@Entity\n@Table(name = \"specialties\")\npublic class Specialty extends NamedEntity {"
+        }
+      ]
+    }
+  ]
+}

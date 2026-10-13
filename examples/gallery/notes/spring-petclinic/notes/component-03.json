@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "targetId": "component:module:src/main/java/org/springframework/samples/petclinic/package-info.java",
+  "summary": "Declares the application namespace.",
+  "author": "Codex (external agent)",
+  "sources": [
+    {
+      "path": "src/main/java/org/springframework/samples/petclinic/package-info.java",
+      "contentHash": "517071851080c7b62c81842b14d0abf5a8cbc2b270fecd00b19ef580c9e29d59",
+      "line": 1
+    }
+  ],
+  "claims": [
+    {
+      "purpose": "component-name",
+      "text": "Application package declaration",
+      "citations": [
+        {
+          "path": "src/main/java/org/springframework/samples/petclinic/package-info.java",
+          "contentHash": "517071851080c7b62c81842b14d0abf5a8cbc2b270fecd00b19ef580c9e29d59",
+          "startLine": 16,
+          "endLine": 16,
+          "excerpt": "package org.springframework.samples.petclinic;"
+        }
+      ]
+    },
+    {
+      "purpose": "component-role",
+      "text": "Declares the application namespace.",
+      "citations": [
+        {
+          "path": "src/main/java/org/springframework/samples/petclinic/package-info.java",
+          "contentHash": "517071851080c7b62c81842b14d0abf5a8cbc2b270fecd00b19ef580c9e29d59",
+          "startLine": 16,
+          "endLine": 16,
+          "excerpt": "package org.springframework.samples.petclinic;"
+        }
+      ]
+    }
+  ]
+}

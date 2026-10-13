@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "targetId": "component:module:src/main/java/org/springframework/samples/petclinic/PetClinicApplication.java",
+  "summary": "Starts the Spring Boot application and registers native runtime hints.",
+  "author": "Codex (external agent)",
+  "sources": [
+    {
+      "path": "src/main/java/org/springframework/samples/petclinic/PetClinicApplication.java",
+      "contentHash": "9d99b4b59cc6e185e9a27964b24ede04180ca34211a7e19f968249ee3dac9df3",
+      "line": 1
+    }
+  ],
+  "claims": [
+    {
+      "purpose": "component-name",
+      "text": "Application startup",
+      "citations": [
+        {
+          "path": "src/main/java/org/springframework/samples/petclinic/PetClinicApplication.java",
+          "contentHash": "9d99b4b59cc6e185e9a27964b24ede04180ca34211a7e19f968249ee3dac9df3",
+          "startLine": 23,
+          "endLine": 34,
+          "excerpt": "/**\n * PetClinic Spring Boot Application.\n *\n * @author Dave Syer\n */\n@SpringBootApplication\n@ImportRuntimeHints(PetClinicRuntimeHints.class)\npublic class PetClinicApplication {\n\n\tpublic static void main(String[] args) {\n\t\tSpringApplication.run(PetClinicApplication.class, args);\n\t}"
+        }
+      ]
+    },
+    {
+      "purpose": "component-role",
+      "text": "Starts the Spring Boot application and registers native runtime hints.",
+      "citations": [
+        {
+          "path": "src/main/java/org/springframework/samples/petclinic/PetClinicApplication.java",
+          "contentHash": "9d99b4b59cc6e185e9a27964b24ede04180ca34211a7e19f968249ee3dac9df3",
+          "startLine": 23,
+          "endLine": 34,
+          "excerpt": "/**\n * PetClinic Spring Boot Application.\n *\n * @author Dave Syer\n */\n@SpringBootApplication\n@ImportRuntimeHints(PetClinicRuntimeHints.class)\npublic class PetClinicApplication {\n\n\tpublic static void main(String[] args) {\n\t\tSpringApplication.run(PetClinicApplication.class, args);\n\t}"
+        }
+      ]
+    }
+  ]
+}

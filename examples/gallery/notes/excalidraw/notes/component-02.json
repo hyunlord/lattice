@@ -1,0 +1,565 @@
+{
+  "schemaVersion": 1,
+  "targetId": "component:module:packages/common/debug.ts",
+  "summary": "Provides geometric primitives and scene-element version hashing.",
+  "author": "Codex (external agent)",
+  "sources": [
+    {
+      "path": "packages/common/debug.ts",
+      "contentHash": "cb57f6a6d3a62d7ec80090684e7c617df9996c890d05472e51209b2cad6c861e",
+      "line": 1
+    },
+    {
+      "path": "packages/common/global.d.ts",
+      "contentHash": "4bbb7cd08392b521ff7ba7db4387162fc15aa6af1f400ff6c9e460485b2457f5",
+      "line": 1
+    },
+    {
+      "path": "packages/common/src/appEventBus.ts",
+      "contentHash": "e18449b55cf04312c9a5e724be383a753a6372273174cc0fa272d0fa69aeea42",
+      "line": 1
+    },
+    {
+      "path": "packages/common/src/binary-heap.ts",
+      "contentHash": "5760816ea22f1b3014ca1820fb444a98f60e4ed16153fe8ee81f76ddfec6c5f8",
+      "line": 1
+    },
+    {
+      "path": "packages/common/src/bounds.ts",
+      "contentHash": "66a08e2ee323ad34608fe68b7aad284716c2a70e8aaa0fbf98af1e4f0e4cba4c",
+      "line": 1
+    },
+    {
+      "path": "packages/common/src/colors.ts",
+      "contentHash": "2350aca6e19da59b24cf009ecc670271e100b0fe7e74ed967dc16a6c17beb26e",
+      "line": 1
+    },
+    {
+      "path": "packages/common/src/constants.ts",
+      "contentHash": "be5c14d191f218a77dad05f62127d7f846ed9a80c7151c26ebb8798df1c83f66",
+      "line": 1
+    },
+    {
+      "path": "packages/common/src/editorInterface.ts",
+      "contentHash": "5873bcc094c4d12376dc6e90d7e0e0099a71d48e0972b303fa731be21486a858",
+      "line": 1
+    },
+    {
+      "path": "packages/common/src/emitter.ts",
+      "contentHash": "b9de81414ef25a13e2d522c97482c19cab121524cab66ed33567a198c3d2ca75",
+      "line": 1
+    },
+    {
+      "path": "packages/common/src/font-metadata.ts",
+      "contentHash": "8a7c8fe4a611042e4e7acd3db814f131632e3d3337d4b2672b85549632070f7e",
+      "line": 1
+    },
+    {
+      "path": "packages/common/src/index.ts",
+      "contentHash": "6820e1f6b57fe4858be01820a25cda69f5252274cb2f3f77e02082d277c2072c",
+      "line": 1
+    },
+    {
+      "path": "packages/common/src/keys.ts",
+      "contentHash": "8279d78e39d96cf7b435fec8d6ac850098e61928749fea8d740598b7c550eacc",
+      "line": 1
+    },
+    {
+      "path": "packages/common/src/points.ts",
+      "contentHash": "2d5d91f5060934fa978606b2a8928418917d5e1621c3b786ed6177ba8e8c839d",
+      "line": 1
+    },
+    {
+      "path": "packages/common/src/promise-pool.ts",
+      "contentHash": "c971a402165bc68ba5385f7b8728ad7b46ca7186e10670fef57a6bc25cbd4e31",
+      "line": 1
+    },
+    {
+      "path": "packages/common/src/queue.ts",
+      "contentHash": "e51385a439c1a9a462126fe098581a26b587f145f1e0bcd9e31dcd2de3f9bfad",
+      "line": 1
+    },
+    {
+      "path": "packages/common/src/random.ts",
+      "contentHash": "bd878122bfc427cc1b7c4176f961736bbd910ed7033e33b23e38503810adfda2",
+      "line": 1
+    },
+    {
+      "path": "packages/common/src/url.ts",
+      "contentHash": "4a40af5baee296bb6b6f7e39e20285b5fb532c597c552671f306ee5a0f60d1e4",
+      "line": 1
+    },
+    {
+      "path": "packages/common/src/utility-types.ts",
+      "contentHash": "25ce1c5ad53a11077d8ccf0afa450de53e4dd46e0ce4bf2d0a42d302a1e30ae8",
+      "line": 1
+    },
+    {
+      "path": "packages/common/src/utils.ts",
+      "contentHash": "bad02983aed865fd7fe89dd9cc2fbe19d135875dae5c22b6d015687202edfb53",
+      "line": 1
+    },
+    {
+      "path": "packages/common/src/versionedSnapshotStore.ts",
+      "contentHash": "1f76726fe5147afd3ee7c3521ffbc445cf6bdddc75e3dce896b5b45cb53e8729",
+      "line": 1
+    },
+    {
+      "path": "packages/element/global.d.ts",
+      "contentHash": "4bbb7cd08392b521ff7ba7db4387162fc15aa6af1f400ff6c9e460485b2457f5",
+      "line": 1
+    },
+    {
+      "path": "packages/element/src/align.ts",
+      "contentHash": "8fcafd91d12afcf6226aade16f5464d3b71750e08f34dc8106433f45c104aafe",
+      "line": 1
+    },
+    {
+      "path": "packages/element/src/arrowEndpointText.ts",
+      "contentHash": "a91fddf5fe6843f949e03323344ac59dd42d1d8d14032a4ddd03fbfb125c787d",
+      "line": 1
+    },
+    {
+      "path": "packages/element/src/arrowheads.ts",
+      "contentHash": "ded721e82d48a48d53d3d0a5052f3be9c5b28441db9e5a15ff127b52af8669d2",
+      "line": 1
+    },
+    {
+      "path": "packages/element/src/arrows/focus.ts",
+      "contentHash": "a07189a4a663eb2fdd54e7d15ca2e2963a501606d3bbd7c197fb01d7c534ef15",
+      "line": 1
+    },
+    {
+      "path": "packages/element/src/arrows/helpers.ts",
+      "contentHash": "0a34c048e6883469d1651f78ed27ecc96c590037097658078ea2d42544ff7d38",
+      "line": 1
+    },
+    {
+      "path": "packages/element/src/binding.ts",
+      "contentHash": "bd1cedbe62fcc13f0dcb527f50d1215a29938d98deade600663c52a863894d70",
+      "line": 1
+    },
+    {
+      "path": "packages/element/src/bounds.ts",
+      "contentHash": "1b2dd85e6c679ae53c9da82427c0cf73d4fcc15113636d1104cc25ebf8de6a57",
+      "line": 1
+    },
+    {
+      "path": "packages/element/src/bucketFill.ts",
+      "contentHash": "fac97d6a2c1d23537c8fe0ba6bea72f344c3eb00825bf891d62e051fdddcb5b1",
+      "line": 1
+    },
+    {
+      "path": "packages/element/src/collision.ts",
+      "contentHash": "8276f0215460f3f8b396d4e1b0f684aae5f22109f02ae2a340adffa22b9bea33",
+      "line": 1
+    },
+    {
+      "path": "packages/element/src/comparisons.ts",
+      "contentHash": "290f5fb88e6e3477b9400a7f9f39f89d5593d742f5350726e75ee31d7e401cb7",
+      "line": 1
+    },
+    {
+      "path": "packages/element/src/containerCache.ts",
+      "contentHash": "ad153ecd3f879d0bf830030de1f2c4ccf151091baa173ec44aa6e4ce7870b5ae",
+      "line": 1
+    },
+    {
+      "path": "packages/element/src/convertToShape.ts",
+      "contentHash": "326f46fcfd465878dea76ba2d2c6e4938893f6ec480fed028857c42e595aa267",
+      "line": 1
+    },
+    {
+      "path": "packages/element/src/cropElement.ts",
+      "contentHash": "19a26ab7c7771f8bd49a31547caf7fec079f42bfae628b5aff3eea04430cbe84",
+      "line": 1
+    },
+    {
+      "path": "packages/element/src/delta.ts",
+      "contentHash": "adbe42369e21e5b69091a3728c5b8e2d1dfec4dca5804e78f823edfae7fbaf54",
+      "line": 1
+    },
+    {
+      "path": "packages/element/src/distance.ts",
+      "contentHash": "7f2a2c58dd42fd314b023a3460ca9cac2a868f1e3ce9bd940dcd397faa66a5cf",
+      "line": 1
+    },
+    {
+      "path": "packages/element/src/distribute.ts",
+      "contentHash": "f23bb2613444e122dc03d1bf78d7f78b1bf9b800ea23d8e78d22a43587baa92a",
+      "line": 1
+    },
+    {
+      "path": "packages/element/src/dragElements.ts",
+      "contentHash": "ad514775600d0c2dd0ef0c536fda2c76020894defafa6e65a3678909bf193166",
+      "line": 1
+    },
+    {
+      "path": "packages/element/src/duplicate.ts",
+      "contentHash": "6ea4e5048ab6c5cc45dbb51361e171bace0a89d9875cd7ff0d558f72bdee402b",
+      "line": 1
+    },
+    {
+      "path": "packages/element/src/elbowArrow.ts",
+      "contentHash": "5bc1ae35ee1645048daffd33332ba13b2245e738b280b6332694b0abde93b8af",
+      "line": 1
+    },
+    {
+      "path": "packages/element/src/elementLink.ts",
+      "contentHash": "29388a8caf1aa6260c68ae2371ae7e12880458c0d407b4f1563f367f63b59a83",
+      "line": 1
+    },
+    {
+      "path": "packages/element/src/embeddable.ts",
+      "contentHash": "032779bd471f5e87f14d67986bf2bff23fb2619db5cc02885491cf7bc5e84335",
+      "line": 1
+    },
+    {
+      "path": "packages/element/src/flowchart.ts",
+      "contentHash": "a552b99159211136ffcc4ac40079a90a61d1a35a2229833eb82623a6b39a84fa",
+      "line": 1
+    },
+    {
+      "path": "packages/element/src/fractionalIndex.ts",
+      "contentHash": "c1d65ed45dac1c7d0ed8b5a28b13c03e9412c6cb10b74c4ac156834e7441e9aa",
+      "line": 1
+    },
+    {
+      "path": "packages/element/src/frame.ts",
+      "contentHash": "6dd0d70f22f7528865244bee8854ca645766961af86a9468119576b5f2208871",
+      "line": 1
+    },
+    {
+      "path": "packages/element/src/groups.ts",
+      "contentHash": "c1d259042c2ae0179c3d0dcb497ea317838c4799bafca491c41e143c889b24fd",
+      "line": 1
+    },
+    {
+      "path": "packages/element/src/heading.ts",
+      "contentHash": "638ef9760c2cf97a09f08bea3b49c514b1506562cc58f958b7026a2022cb2ca5",
+      "line": 1
+    },
+    {
+      "path": "packages/element/src/image.ts",
+      "contentHash": "d9e2a06d6c23d1d7ab972db146b4f00adfd4660d695b1b505cf5f7cc7a1ff0a9",
+      "line": 1
+    },
+    {
+      "path": "packages/element/src/index.ts",
+      "contentHash": "9f1484cf6e511fd9d2899721733d155d37c33322ef4e3097068e8b1f92f53b4e",
+      "line": 1
+    },
+    {
+      "path": "packages/element/src/linearElementEditor.ts",
+      "contentHash": "5a1196b739fc269fdf05641dde396b64e9b8b724c2b09254cca03d8e7800ee62",
+      "line": 1
+    },
+    {
+      "path": "packages/element/src/listMarker.ts",
+      "contentHash": "e30c73a2458afb834a2dfc56955259cc3c9cf2e2cf279cd6b55ad74265e64b55",
+      "line": 1
+    },
+    {
+      "path": "packages/element/src/mutateElement.ts",
+      "contentHash": "fe0a157b339a128b8e049f57a1c726b053aa91b0e415971dc5983e4e6f806a70",
+      "line": 1
+    },
+    {
+      "path": "packages/element/src/newElement.ts",
+      "contentHash": "03d3f55fb6a19f0cb8618122e7d38ee5566705dea5b83095e39fc960bfd9e680",
+      "line": 1
+    },
+    {
+      "path": "packages/element/src/positionElementsOnGrid.ts",
+      "contentHash": "ea3145d9c7a39f56dc0359f4f4012fbbdc36ae09b46e16e489f86ddea5873363",
+      "line": 1
+    },
+    {
+      "path": "packages/element/src/renderElement.ts",
+      "contentHash": "92c12311cef36022d0a6118a5946ee1353a9a0bf6f3a2a3b6f7865773c2be49b",
+      "line": 1
+    },
+    {
+      "path": "packages/element/src/resizeElements.ts",
+      "contentHash": "db291eeaa59e817f18612f82226d1e2dfdcf7c38b58c70b450cd9f6d445c71c6",
+      "line": 1
+    },
+    {
+      "path": "packages/element/src/resizeTest.ts",
+      "contentHash": "622c55b71dd0367dbd7180e365030177fcbab50cda0492825847db67eebdd301",
+      "line": 1
+    },
+    {
+      "path": "packages/element/src/Scene.ts",
+      "contentHash": "c9272616db31877872bb9f46af154adc51d6f54877627973a76303e3cd8f1f92",
+      "line": 1
+    },
+    {
+      "path": "packages/element/src/selection.ts",
+      "contentHash": "86e7ce99d42dec19c3fcd8c18cbbed3053f80fdfa655993fae571eac6e43f1c4",
+      "line": 1
+    },
+    {
+      "path": "packages/element/src/shape.ts",
+      "contentHash": "1121578b920a03e74e713bcf5ec454faedd09b46a327a55296948e038cfe97b2",
+      "line": 1
+    },
+    {
+      "path": "packages/element/src/showSelectedShapeActions.ts",
+      "contentHash": "38373e045507a37a26b38bb512ba8f5610e99f460d87e9623a173c2524f858d7",
+      "line": 1
+    },
+    {
+      "path": "packages/element/src/sizeHelpers.ts",
+      "contentHash": "41522fd29ede43035294d8f29057ad5e6b49e6b7120f66e579088b2a341d40df",
+      "line": 1
+    },
+    {
+      "path": "packages/element/src/sortElements.ts",
+      "contentHash": "2f4423b47e1a53e88fb926ba14b5dbb45c9ec955fefbcd64ae548d846c03ccdb",
+      "line": 1
+    },
+    {
+      "path": "packages/element/src/stickyNote.ts",
+      "contentHash": "353ebde771a8d28a8f9289a994c22fc11cc72b256a7b7ed4c9943e2fc29c3e07",
+      "line": 1
+    },
+    {
+      "path": "packages/element/src/store.ts",
+      "contentHash": "45cad877e99ced5c813539e4ad422f8c8bc5a71d15307750f374d648ae82e480",
+      "line": 1
+    },
+    {
+      "path": "packages/element/src/textElement.ts",
+      "contentHash": "e3ffdc5c9c52d631911b309ac9bee1f0fff7f9a40d0a19cbe82d897e78c8a5c5",
+      "line": 1
+    },
+    {
+      "path": "packages/element/src/textMeasurements.ts",
+      "contentHash": "a8a9e7a4af7259635c580ae6eb5c8280789fc1b1c30655cde2f6bdd97f11eb24",
+      "line": 1
+    },
+    {
+      "path": "packages/element/src/textWrapping.ts",
+      "contentHash": "64703cde698f69eac4132ebee9da60969f6a8a9d4b58fc84a02f40d0160aa886",
+      "line": 1
+    },
+    {
+      "path": "packages/element/src/transform.ts",
+      "contentHash": "259a11a6f85a2f13127712e14bbd800df1309399498a89d500db84eef6d81c31",
+      "line": 1
+    },
+    {
+      "path": "packages/element/src/transformHandles.ts",
+      "contentHash": "16a51dca2bea8b9efbdb47c5d392b6ae2ffd935f2e5f2e83450d1036a41406c0",
+      "line": 1
+    },
+    {
+      "path": "packages/element/src/typeChecks.ts",
+      "contentHash": "c5a156114ef397f77e3e4f33f1025c44c04865f513e3251b83a3ec9724044bfa",
+      "line": 1
+    },
+    {
+      "path": "packages/element/src/types.ts",
+      "contentHash": "ae55b7f4e5e62aa33c36ae54c26b34e7c5853c0a4bb9accbf384a635b4070ef4",
+      "line": 1
+    },
+    {
+      "path": "packages/element/src/utils.ts",
+      "contentHash": "3298aed68967c41efc7b337212b26208ecc05798fa384ae4b07fda5b567b237d",
+      "line": 1
+    },
+    {
+      "path": "packages/element/src/visualdebug.ts",
+      "contentHash": "d262e92313e1d454c6054f2c8cf5ef60037e7819d3ad66ba288879e9e593df8b",
+      "line": 1
+    },
+    {
+      "path": "packages/element/src/zindex.ts",
+      "contentHash": "6d8a10576e5bd945c384558e2fd2dff7ecea93795546aec0c21ec0acb89d87c3",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/actions/actionBoundText.tsx",
+      "contentHash": "b46dfd8f2bf6433738f5f2e258fe2674aa48f3366655022baa8f482e2bb4023f",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/actions/actionDeleteSelected.tsx",
+      "contentHash": "0e2fdde51fb7bef6d8a473e39a853bf68707480a255018c4d3d72e1ee9bf1d55",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/actions/actionDistribute.tsx",
+      "contentHash": "2d23032367736553c2c47a39515b05c91e02ea1671bea7e4e9e00c82bf1fb9dc",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/actions/actionFlip.ts",
+      "contentHash": "ee9d60918cd8f0f89af13bf50b8af44f401cf8f7692617dc8c43fc25b0bd3b2a",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/actions/actionFrame.ts",
+      "contentHash": "70d5d324c92cdc75ccc68ff3b28f1f98848caa029641ecda67780c226687e04a",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/ConvertElementTypePopup.tsx",
+      "contentHash": "a4cf30245e68196f6f504b93ba4d52e7d4c7a8e44c72bb59554e7846e29e0e11",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/components/Stats/Dimension.tsx",
+      "contentHash": "840f4b4babb70f698a70876fef2f401a7513d25c1a21c1e820114d27bdd4c88e",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/data/restore.ts",
+      "contentHash": "0da843833ddafc18962a5ef2c1c18801a296a8818f2b4753cc9c7ce63caa0808",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/renderer/staticScene.ts",
+      "contentHash": "711213e3422e48cf41f6aaff2c4d81b7202fdf0ebb78819f99e4a7ea33f128b2",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/renderer/staticSvgScene.ts",
+      "contentHash": "0e42c65dbb356a8d0d7609df053d659748479ce79fc7ea7c04480d70daf06ebe",
+      "line": 1
+    },
+    {
+      "path": "packages/excalidraw/wysiwyg/textWysiwyg.tsx",
+      "contentHash": "a4d16b699e5d71b3083564fd6e3c775f813aeb61190f8a89e2cdc982fad038a1",
+      "line": 1
+    },
+    {
+      "path": "packages/math/global.d.ts",
+      "contentHash": "4bbb7cd08392b521ff7ba7db4387162fc15aa6af1f400ff6c9e460485b2457f5",
+      "line": 1
+    },
+    {
+      "path": "packages/math/src/angle.ts",
+      "contentHash": "fad5a8e86381be41aae536fadf548ab3fac993a23de6908170d03dc7c0a52bc9",
+      "line": 1
+    },
+    {
+      "path": "packages/math/src/constants.ts",
+      "contentHash": "d50200a75bb5634420c3cf544e929bb4a51af42c315730aef19a5ddb98a060b9",
+      "line": 1
+    },
+    {
+      "path": "packages/math/src/curve.ts",
+      "contentHash": "0daacd7eac825619f221282dd17ae75d82355999f6a34ee3b6d243c49b8cc108",
+      "line": 1
+    },
+    {
+      "path": "packages/math/src/ellipse.ts",
+      "contentHash": "887ca9d5114901ec71c56a6004af8473ccdcf69f4ad9e99162f73c60e43fa4f7",
+      "line": 1
+    },
+    {
+      "path": "packages/math/src/index.ts",
+      "contentHash": "4bf3b98b243262308b9222506d5879f61ecb2dab3826ac5fc09dc960c23336a0",
+      "line": 1
+    },
+    {
+      "path": "packages/math/src/line.ts",
+      "contentHash": "11a7498a8a6bbd8ae4e3ad4628ab2b24b3aad93e88f9eaa0deb858e600e0e63e",
+      "line": 1
+    },
+    {
+      "path": "packages/math/src/pca.ts",
+      "contentHash": "7d201baf253b0d9fc47e19554ab4535c4377abce0a1622b002dbdfd03ba6cdf4",
+      "line": 1
+    },
+    {
+      "path": "packages/math/src/point.ts",
+      "contentHash": "9dc06414ec2fd9606c3733e39f2dc0716192acc859962b2b6c07d75b0a081651",
+      "line": 1
+    },
+    {
+      "path": "packages/math/src/polygon.ts",
+      "contentHash": "b900230aa514d69110b00fe731b33ba971a9e4a0ae1a6c489200e754a934f892",
+      "line": 1
+    },
+    {
+      "path": "packages/math/src/range.ts",
+      "contentHash": "96f448ce1c725d788df573261800d9b1270410b170094876ba7d720670a28818",
+      "line": 1
+    },
+    {
+      "path": "packages/math/src/rectangle.ts",
+      "contentHash": "298c4d21a14b499d53870ccde52821f9d7ae0864679331038f58cd5441fac3ee",
+      "line": 1
+    },
+    {
+      "path": "packages/math/src/segment.ts",
+      "contentHash": "a5fa070ff83d7b732338bfbcd5d8aee79c3a26bbe8f5372010ed95cff51e8b9e",
+      "line": 1
+    },
+    {
+      "path": "packages/math/src/triangle.ts",
+      "contentHash": "b15b458cd3b781eac3c1e2a00f1dd5df292bcf1a5f8b3a466f430e1e9a497aa1",
+      "line": 1
+    },
+    {
+      "path": "packages/math/src/types.ts",
+      "contentHash": "4543449aac4fec77437bcb2a3ffdd29a4bd26b986a64ce85db931c38c79edb52",
+      "line": 1
+    },
+    {
+      "path": "packages/math/src/utils.ts",
+      "contentHash": "18af91526daf025a957f07040b79bea57d3412fe910a998ca64f11fab8e01ade",
+      "line": 1
+    },
+    {
+      "path": "packages/math/src/vector.ts",
+      "contentHash": "782f79f8c9d2b23b31d5dcbb6397466229d31cc982570ad1a51565f7c46d2499",
+      "line": 1
+    }
+  ],
+  "claims": [
+    {
+      "purpose": "component-name",
+      "text": "Geometry & scene helpers",
+      "citations": [
+        {
+          "path": "packages/math/src/index.ts",
+          "contentHash": "4bf3b98b243262308b9222506d5879f61ecb2dab3826ac5fc09dc960c23336a0",
+          "startLine": 1,
+          "endLine": 14,
+          "excerpt": "export * from \"./angle\";\nexport * from \"./curve\";\nexport * from \"./ellipse\";\nexport * from \"./line\";\nexport * from \"./pca\";\nexport * from \"./point\";\nexport * from \"./polygon\";\nexport * from \"./range\";\nexport * from \"./rectangle\";\nexport * from \"./segment\";\nexport * from \"./triangle\";\nexport * from \"./types\";\nexport * from \"./vector\";\nexport * from \"./utils\";"
+        },
+        {
+          "path": "packages/element/src/index.ts",
+          "contentHash": "9f1484cf6e511fd9d2899721733d155d37c33322ef4e3097068e8b1f92f53b4e",
+          "startLine": 18,
+          "endLine": 27,
+          "excerpt": "/**\n * Hashes elements' versionNonce (using djb2 algo). Order of elements matters.\n */\nexport const hashElementsVersion = (elements: ElementsMapOrArray): number => {\n  let hash = 5381;\n  for (const element of toIterable(elements)) {\n    hash = (hash << 5) + hash + element.versionNonce;\n  }\n  return hash >>> 0; // Ensure unsigned 32-bit integer\n};"
+        }
+      ]
+    },
+    {
+      "purpose": "component-role",
+      "text": "Provides geometric primitives and scene-element version hashing.",
+      "citations": [
+        {
+          "path": "packages/math/src/index.ts",
+          "contentHash": "4bf3b98b243262308b9222506d5879f61ecb2dab3826ac5fc09dc960c23336a0",
+          "startLine": 1,
+          "endLine": 14,
+          "excerpt": "export * from \"./angle\";\nexport * from \"./curve\";\nexport * from \"./ellipse\";\nexport * from \"./line\";\nexport * from \"./pca\";\nexport * from \"./point\";\nexport * from \"./polygon\";\nexport * from \"./range\";\nexport * from \"./rectangle\";\nexport * from \"./segment\";\nexport * from \"./triangle\";\nexport * from \"./types\";\nexport * from \"./vector\";\nexport * from \"./utils\";"
+        },
+        {
+          "path": "packages/element/src/index.ts",
+          "contentHash": "9f1484cf6e511fd9d2899721733d155d37c33322ef4e3097068e8b1f92f53b4e",
+          "startLine": 18,
+          "endLine": 27,
+          "excerpt": "/**\n * Hashes elements' versionNonce (using djb2 algo). Order of elements matters.\n */\nexport const hashElementsVersion = (elements: ElementsMapOrArray): number => {\n  let hash = 5381;\n  for (const element of toIterable(elements)) {\n    hash = (hash << 5) + hash + element.versionNonce;\n  }\n  return hash >>> 0; // Ensure unsigned 32-bit integer\n};"
+        }
+      ]
+    }
+  ]
+}

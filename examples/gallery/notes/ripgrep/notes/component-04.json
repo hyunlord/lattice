@@ -1,0 +1,65 @@
+{
+  "schemaVersion": 1,
+  "targetId": "component:module:crates/index/src/index.rs",
+  "summary": "Exposes index construction and discovery, with checks for an on-disk index database.",
+  "author": "Codex (external agent)",
+  "sources": [
+    {
+      "path": "crates/index/src/index.rs",
+      "contentHash": "d559c2bb83bd345954e8a7d37063e3d08f162a715130f79a261b640f4b1b990b",
+      "line": 1
+    },
+    {
+      "path": "crates/index/src/lib.rs",
+      "contentHash": "ff82405e4dc2c1db6a4116c757feecaf3cc0e4a5b1ee5c05500e22d5b448e42f",
+      "line": 1
+    },
+    {
+      "path": "crates/index/src/literal.rs",
+      "contentHash": "09c40115a676960db2e4f40b39c4b4ba07f180fc19ab4169b90a3ce5543d2714",
+      "line": 1
+    }
+  ],
+  "claims": [
+    {
+      "purpose": "component-name",
+      "text": "Index storage",
+      "citations": [
+        {
+          "path": "crates/index/src/lib.rs",
+          "contentHash": "ff82405e4dc2c1db6a4116c757feecaf3cc0e4a5b1ee5c05500e22d5b448e42f",
+          "startLine": 1,
+          "endLine": 6,
+          "excerpt": "#![allow(warnings)]\n\npub use index::{Index, IndexBuilder, IndexDiscovery};\n\nmod index;\npub mod literal;"
+        },
+        {
+          "path": "crates/index/src/index.rs",
+          "contentHash": "d559c2bb83bd345954e8a7d37063e3d08f162a715130f79a261b640f4b1b990b",
+          "startLine": 9,
+          "endLine": 25,
+          "excerpt": "const INDEX_FILE_NAME: &str = \"index.db\";\n\n#[derive(Debug)]\npub struct Index {\n    path: PathBuf,\n    db: Handle,\n}\n\nimpl Index {\n    pub fn builder() -> IndexBuilder {\n        IndexBuilder::new()\n    }\n\n    pub fn exists(path: impl AsRef<Path>) -> bool {\n        let path = path.as_ref();\n        path.is_dir() && path.join(INDEX_FILE_NAME).is_file()\n    }"
+        }
+      ]
+    },
+    {
+      "purpose": "component-role",
+      "text": "Exposes index construction and discovery, with checks for an on-disk index database.",
+      "citations": [
+        {
+          "path": "crates/index/src/lib.rs",
+          "contentHash": "ff82405e4dc2c1db6a4116c757feecaf3cc0e4a5b1ee5c05500e22d5b448e42f",
+          "startLine": 1,
+          "endLine": 6,
+          "excerpt": "#![allow(warnings)]\n\npub use index::{Index, IndexBuilder, IndexDiscovery};\n\nmod index;\npub mod literal;"
+        },
+        {
+          "path": "crates/index/src/index.rs",
+          "contentHash": "d559c2bb83bd345954e8a7d37063e3d08f162a715130f79a261b640f4b1b990b",
+          "startLine": 9,
+          "endLine": 25,
+          "excerpt": "const INDEX_FILE_NAME: &str = \"index.db\";\n\n#[derive(Debug)]\npub struct Index {\n    path: PathBuf,\n    db: Handle,\n}\n\nimpl Index {\n    pub fn builder() -> IndexBuilder {\n        IndexBuilder::new()\n    }\n\n    pub fn exists(path: impl AsRef<Path>) -> bool {\n        let path = path.as_ref();\n        path.is_dir() && path.join(INDEX_FILE_NAME).is_file()\n    }"
+        }
+      ]
+    }
+  ]
+}

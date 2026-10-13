@@ -1,0 +1,84 @@
+{
+  "schemaVersion": 1,
+  "targetId": "component:module:mails/base.go",
+  "summary": "Sends login alerts, one-time passwords and password-reset emails to account records.",
+  "author": "Codex (external agent)",
+  "sources": [
+    {
+      "path": "mails/base.go",
+      "contentHash": "8e419e7976b8c9703d958bdbb5d15cea1c6336539ea66c516a5cf137ccb4e5bb",
+      "line": 1
+    },
+    {
+      "path": "mails/record.go",
+      "contentHash": "bdc57e1cf11fc29b9ee5f3fdaa657dc5f29c50ffd3a549a7565e5b254328f9fc",
+      "line": 1
+    },
+    {
+      "path": "mails/templates/html_content.go",
+      "contentHash": "8b12a16847f5a79adc9870fcc85ecbb29faddf7617e96047feb899a3dd533110",
+      "line": 1
+    },
+    {
+      "path": "mails/templates/layout.go",
+      "contentHash": "4ef684eabef706cdbb4f7bbfe7a71b3c960c49730a2b691fb7798c6d6ae81c39",
+      "line": 1
+    }
+  ],
+  "claims": [
+    {
+      "purpose": "component-name",
+      "text": "Account notification emails",
+      "citations": [
+        {
+          "path": "mails/record.go",
+          "contentHash": "bdc57e1cf11fc29b9ee5f3fdaa657dc5f29c50ffd3a549a7565e5b254328f9fc",
+          "startLine": 14,
+          "endLine": 24,
+          "excerpt": "// SendRecordAuthAlert sends a new device login alert to the specified auth record.\nfunc SendRecordAuthAlert(app core.App, authRecord *core.Record, info string) error {\n\tmailClient := app.NewMailClient()\n\n\tinfo = html.EscapeString(info)\n\n\tsubject, body, err := resolveEmailTemplate(app, authRecord, authRecord.Collection().AuthAlert.EmailTemplate, map[string]any{\n\t\tcore.EmailPlaceholderAlertInfo: info,\n\t})\n\tif err != nil {\n\t\treturn err"
+        },
+        {
+          "path": "mails/record.go",
+          "contentHash": "bdc57e1cf11fc29b9ee5f3fdaa657dc5f29c50ffd3a549a7565e5b254328f9fc",
+          "startLine": 51,
+          "endLine": 60,
+          "excerpt": "// SendRecordOTP sends OTP email to the specified auth record.\n//\n// This method will also update the \"sentTo\" field of the related OTP record to the mail sent To address (if the OTP exists and not already assigned).\nfunc SendRecordOTP(app core.App, authRecord *core.Record, otpId string, pass string) error {\n\tmailClient := app.NewMailClient()\n\n\tsubject, body, err := resolveEmailTemplate(app, authRecord, authRecord.Collection().OTP.EmailTemplate, map[string]any{\n\t\tcore.EmailPlaceholderOTPId: otpId,\n\t\tcore.EmailPlaceholderOTP:   pass,\n\t})"
+        },
+        {
+          "path": "mails/record.go",
+          "contentHash": "bdc57e1cf11fc29b9ee5f3fdaa657dc5f29c50ffd3a549a7565e5b254328f9fc",
+          "startLine": 127,
+          "endLine": 138,
+          "excerpt": "// SendRecordPasswordReset sends a password reset request email to the specified auth record.\nfunc SendRecordPasswordReset(app core.App, authRecord *core.Record) error {\n\ttoken, tokenErr := authRecord.NewPasswordResetToken()\n\tif tokenErr != nil {\n\t\treturn tokenErr\n\t}\n\n\tmailClient := app.NewMailClient()\n\n\tsubject, body, err := resolveEmailTemplate(app, authRecord, authRecord.Collection().ResetPasswordTemplate, map[string]any{\n\t\tcore.EmailPlaceholderToken: token,\n\t})"
+        }
+      ]
+    },
+    {
+      "purpose": "component-role",
+      "text": "Sends login alerts, one-time passwords and password-reset emails to account records.",
+      "citations": [
+        {
+          "path": "mails/record.go",
+          "contentHash": "bdc57e1cf11fc29b9ee5f3fdaa657dc5f29c50ffd3a549a7565e5b254328f9fc",
+          "startLine": 14,
+          "endLine": 24,
+          "excerpt": "// SendRecordAuthAlert sends a new device login alert to the specified auth record.\nfunc SendRecordAuthAlert(app core.App, authRecord *core.Record, info string) error {\n\tmailClient := app.NewMailClient()\n\n\tinfo = html.EscapeString(info)\n\n\tsubject, body, err := resolveEmailTemplate(app, authRecord, authRecord.Collection().AuthAlert.EmailTemplate, map[string]any{\n\t\tcore.EmailPlaceholderAlertInfo: info,\n\t})\n\tif err != nil {\n\t\treturn err"
+        },
+        {
+          "path": "mails/record.go",
+          "contentHash": "bdc57e1cf11fc29b9ee5f3fdaa657dc5f29c50ffd3a549a7565e5b254328f9fc",
+          "startLine": 51,
+          "endLine": 60,
+          "excerpt": "// SendRecordOTP sends OTP email to the specified auth record.\n//\n// This method will also update the \"sentTo\" field of the related OTP record to the mail sent To address (if the OTP exists and not already assigned).\nfunc SendRecordOTP(app core.App, authRecord *core.Record, otpId string, pass string) error {\n\tmailClient := app.NewMailClient()\n\n\tsubject, body, err := resolveEmailTemplate(app, authRecord, authRecord.Collection().OTP.EmailTemplate, map[string]any{\n\t\tcore.EmailPlaceholderOTPId: otpId,\n\t\tcore.EmailPlaceholderOTP:   pass,\n\t})"
+        },
+        {
+          "path": "mails/record.go",
+          "contentHash": "bdc57e1cf11fc29b9ee5f3fdaa657dc5f29c50ffd3a549a7565e5b254328f9fc",
+          "startLine": 127,
+          "endLine": 138,
+          "excerpt": "// SendRecordPasswordReset sends a password reset request email to the specified auth record.\nfunc SendRecordPasswordReset(app core.App, authRecord *core.Record) error {\n\ttoken, tokenErr := authRecord.NewPasswordResetToken()\n\tif tokenErr != nil {\n\t\treturn tokenErr\n\t}\n\n\tmailClient := app.NewMailClient()\n\n\tsubject, body, err := resolveEmailTemplate(app, authRecord, authRecord.Collection().ResetPasswordTemplate, map[string]any{\n\t\tcore.EmailPlaceholderToken: token,\n\t})"
+        }
+      ]
+    }
+  ]
+}

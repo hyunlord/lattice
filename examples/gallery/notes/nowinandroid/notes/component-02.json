@@ -1,0 +1,311 @@
+{
+  "schemaVersion": 1,
+  "targetId": "component:module:app/build.gradle.kts",
+  "summary": "Builds the application shell and switches between top-level destinations.",
+  "author": "Codex (external agent)",
+  "sources": [
+    {
+      "path": "app/build.gradle.kts",
+      "contentHash": "8b0bc6f164938629dc6096380c97c5526f5e05e9fcbd77f74cdd8ff3c4319499",
+      "line": 1
+    },
+    {
+      "path": "app/src/main/kotlin/com/google/samples/apps/nowinandroid/di/JankStatsModule.kt",
+      "contentHash": "fb4a71c1996d8dd188451cbacafe86bb3abf54adefe1624b60cb2946e3029ae6",
+      "line": 1
+    },
+    {
+      "path": "app/src/main/kotlin/com/google/samples/apps/nowinandroid/MainActivity.kt",
+      "contentHash": "1c26d2e91cbfa13039963645421eca8ccf18719611fa2bcb2674d38c8ef2cd00",
+      "line": 1
+    },
+    {
+      "path": "app/src/main/kotlin/com/google/samples/apps/nowinandroid/MainActivityViewModel.kt",
+      "contentHash": "548b96a11374a6dfcdb3180f3d88422ae31b50d8c309260c3501c728ee770f33",
+      "line": 1
+    },
+    {
+      "path": "app/src/main/kotlin/com/google/samples/apps/nowinandroid/navigation/TopLevelNavItem.kt",
+      "contentHash": "db7fcfb3fd08d03b6ce7e278d3cbdc9348ba41565b0557546b46f80e9d61aaae",
+      "line": 1
+    },
+    {
+      "path": "app/src/main/kotlin/com/google/samples/apps/nowinandroid/NiaApplication.kt",
+      "contentHash": "dddbd8536a7614bb7dfb58290f42ca434a8faa3ef561a8fcd5eaef82e3d5c52b",
+      "line": 1
+    },
+    {
+      "path": "app/src/main/kotlin/com/google/samples/apps/nowinandroid/ui/NiaApp.kt",
+      "contentHash": "7cf1eefd9dc998dd0ec7346ec389e7311bb4d970ffa13171ae4f2101a86e66d7",
+      "line": 1
+    },
+    {
+      "path": "app/src/main/kotlin/com/google/samples/apps/nowinandroid/ui/NiaAppState.kt",
+      "contentHash": "147f6b081f774e74103d92f6ca6e07fb7ca77bc3eb08c668ff70e0abddbda848",
+      "line": 1
+    },
+    {
+      "path": "app/src/main/kotlin/com/google/samples/apps/nowinandroid/util/ProfileVerifierLogger.kt",
+      "contentHash": "bd1b5869d0b97a632919a31e5ef776dd98a7528d9c8be6d0df6bba9064e7f1c0",
+      "line": 1
+    },
+    {
+      "path": "app/src/main/kotlin/com/google/samples/apps/nowinandroid/util/UiExtensions.kt",
+      "contentHash": "f9b8561c926780d4c574bf51f96dc725461e5b757395d5f8b793249a3a66354b",
+      "line": 1
+    },
+    {
+      "path": "benchmarks/src/main/kotlin/androidx/test/uiautomator/UiAutomatorHelpers.kt",
+      "contentHash": "f6f34a7594a5c0984ce63264646cdb71c86c6b2ee4fb2ddc64b46479a9b257ca",
+      "line": 1
+    },
+    {
+      "path": "benchmarks/src/main/kotlin/com/google/samples/apps/nowinandroid/baselineprofile/BookmarksBaselineProfile.kt",
+      "contentHash": "cb042b8cbbb77173b55581e521e9579a2b5b85a1f7bb09d82a0b4895670ee0f4",
+      "line": 1
+    },
+    {
+      "path": "benchmarks/src/main/kotlin/com/google/samples/apps/nowinandroid/baselineprofile/ForYouBaselineProfile.kt",
+      "contentHash": "e1f6ff10c6bfd4521d3a0bdee2cc4ce19cd9eb84314843fd71df88c4d432e421",
+      "line": 1
+    },
+    {
+      "path": "benchmarks/src/main/kotlin/com/google/samples/apps/nowinandroid/baselineprofile/InterestsBaselineProfile.kt",
+      "contentHash": "bcb981187901b579c2ffac59091089ebcf9f45c677208b45b1a087a181b57f0d",
+      "line": 1
+    },
+    {
+      "path": "benchmarks/src/main/kotlin/com/google/samples/apps/nowinandroid/baselineprofile/StartupBaselineProfile.kt",
+      "contentHash": "05970881854c6e16eff05a2dfe6627d123cabd349c1baa9d06706144203618aa",
+      "line": 1
+    },
+    {
+      "path": "benchmarks/src/main/kotlin/com/google/samples/apps/nowinandroid/BaselineProfileMetrics.kt",
+      "contentHash": "af4f8e82facccdffb581b9d1d32668f8e273202a80a2bdfc3ae530d1fd7cf3a2",
+      "line": 1
+    },
+    {
+      "path": "benchmarks/src/main/kotlin/com/google/samples/apps/nowinandroid/bookmarks/BookmarksActions.kt",
+      "contentHash": "607a7e7895aa20f9fcda7e70a55c7b3e22f9f2ff66069b2f6aa2300c81d9755c",
+      "line": 1
+    },
+    {
+      "path": "benchmarks/src/main/kotlin/com/google/samples/apps/nowinandroid/foryou/ForYouActions.kt",
+      "contentHash": "6505a65b60c4e60cd2c36b76f317aca37a3b530d7ab47775f60084aff0879225",
+      "line": 1
+    },
+    {
+      "path": "benchmarks/src/main/kotlin/com/google/samples/apps/nowinandroid/foryou/ScrollForYouFeedBenchmark.kt",
+      "contentHash": "9363961d00835db051d4eee731ccdb72bc6ae5925ed214418d71eb2c0386cdf1",
+      "line": 1
+    },
+    {
+      "path": "benchmarks/src/main/kotlin/com/google/samples/apps/nowinandroid/GeneralActions.kt",
+      "contentHash": "36c1bc817b8bb2985d49c5a24ada2bddc53fd7359db90ccf699934cf2ce52ca6",
+      "line": 1
+    },
+    {
+      "path": "benchmarks/src/main/kotlin/com/google/samples/apps/nowinandroid/interests/InterestsActions.kt",
+      "contentHash": "92f48c05f6a245a467fa84cee3f9f2b8e50574a81384ffc2ab47cc2bc908e0f9",
+      "line": 1
+    },
+    {
+      "path": "benchmarks/src/main/kotlin/com/google/samples/apps/nowinandroid/interests/ScrollTopicListBenchmark.kt",
+      "contentHash": "be9db635abbc646cea9b9945cb87cfc088d0df9a855d8f2d487f825759c43ca7",
+      "line": 1
+    },
+    {
+      "path": "benchmarks/src/main/kotlin/com/google/samples/apps/nowinandroid/interests/ScrollTopicListPowerMetricsBenchmark.kt",
+      "contentHash": "2626c5801611bf862776f11aeff003d5635cf79dda6492b94d29cefdd4dd6a38",
+      "line": 1
+    },
+    {
+      "path": "benchmarks/src/main/kotlin/com/google/samples/apps/nowinandroid/interests/TopicsScreenRecompositionBenchmark.kt",
+      "contentHash": "d2019743a47f9f7ebadbc01cbed91a4a1e6b40ed0156fab43bb5da1f96f8c7d3",
+      "line": 1
+    },
+    {
+      "path": "benchmarks/src/main/kotlin/com/google/samples/apps/nowinandroid/startup/StartupBenchmark.kt",
+      "contentHash": "a28c7ab9d2ac7d5c010e5d37f451590468a0b699538906fdf7fb3a72d3e23508",
+      "line": 1
+    },
+    {
+      "path": "benchmarks/src/main/kotlin/com/google/samples/apps/nowinandroid/Utils.kt",
+      "contentHash": "026eff9fea4130008ad7c23625ae7a6d2c23b899d3ee359401c0a4c7590038d0",
+      "line": 1
+    },
+    {
+      "path": "core/navigation/build.gradle.kts",
+      "contentHash": "39428b6afa68c2a83e4dfc3a70f9d43716af5c27b3e676be6302adf45b24b9dd",
+      "line": 1
+    },
+    {
+      "path": "core/navigation/src/main/kotlin/com/google/samples/apps/nowinandroid/core/navigation/NavigationState.kt",
+      "contentHash": "a3a63fe6ea9a7ffd4b2d5d365577495db06d7aec421e767f3b11b7f280efb355",
+      "line": 1
+    },
+    {
+      "path": "core/navigation/src/main/kotlin/com/google/samples/apps/nowinandroid/core/navigation/Navigator.kt",
+      "contentHash": "3210fe528678a3447156cb0ff96dde61516fe72913aa9cd89466ebdc5e1094d7",
+      "line": 1
+    },
+    {
+      "path": "feature/foryou/api/build.gradle.kts",
+      "contentHash": "b223cc1359c32e950b31b1f923e4571c28b59a7c6334eb4530683f551c7c668d",
+      "line": 1
+    },
+    {
+      "path": "feature/foryou/api/src/main/kotlin/com/google/samples/apps/nowinandroid/feature/foryou/api/navigation/ForYouNavKey.kt",
+      "contentHash": "ac9f0845ecbb322e694bd201a51c824812c242eabb40ad3c48d724cf05110469",
+      "line": 1
+    },
+    {
+      "path": "feature/interests/api/build.gradle.kts",
+      "contentHash": "cc0bcf99da34f123ac835a749e4836bd094b1531e074ce1ec61d2809f00fdf7e",
+      "line": 1
+    },
+    {
+      "path": "feature/interests/api/src/main/kotlin/com/google/samples/apps/nowinandroid/feature/interests/api/navigation/InterestsNavKey.kt",
+      "contentHash": "c04b81a32886f2d77f49f98ece52baab376c9fb5b4c81b7f402c0333e7327b41",
+      "line": 1
+    },
+    {
+      "path": "feature/interests/impl/build.gradle.kts",
+      "contentHash": "c122a0fcbf67d01a6aaccd52f709cdd2dbb336a051b0cc4b4ce623938389b00a",
+      "line": 1
+    },
+    {
+      "path": "feature/interests/impl/src/main/kotlin/com/google/samples/apps/nowinandroid/feature/interests/impl/InterestsDetailPlaceholder.kt",
+      "contentHash": "e6a4404abd3678b1b2969880468fbecfea725a7c552653452e909a0cc10937f9",
+      "line": 1
+    },
+    {
+      "path": "feature/interests/impl/src/main/kotlin/com/google/samples/apps/nowinandroid/feature/interests/impl/InterestsScreen.kt",
+      "contentHash": "5728f1707d7cfa18ed9443d4304f7b6efdb034d29f36af8d1874073491b1e929",
+      "line": 1
+    },
+    {
+      "path": "feature/interests/impl/src/main/kotlin/com/google/samples/apps/nowinandroid/feature/interests/impl/InterestsViewModel.kt",
+      "contentHash": "4c733221aec5dade7c1798aa5ae4aa070c56ce0958ad271825e51ebc909a366e",
+      "line": 1
+    },
+    {
+      "path": "feature/interests/impl/src/main/kotlin/com/google/samples/apps/nowinandroid/feature/interests/impl/navigation/InterestsEntryProvider.kt",
+      "contentHash": "1426aee55e9e0391b0b5c455f9ced41b29f0f82b638603f078f54be597952b35",
+      "line": 1
+    },
+    {
+      "path": "feature/interests/impl/src/main/kotlin/com/google/samples/apps/nowinandroid/feature/interests/impl/TabContent.kt",
+      "contentHash": "2e66cf804f960c461753abbd23dcca3057adb5a8718f17e22a7eecc6fdd15a0b",
+      "line": 1
+    },
+    {
+      "path": "feature/search/api/build.gradle.kts",
+      "contentHash": "1621cd4f4a5005233591fdd9892321c3b75b9ae6234d7df33c9e6dac6432a8e3",
+      "line": 1
+    },
+    {
+      "path": "feature/search/api/src/main/kotlin/com/google/samples/apps/nowinandroid/feature/search/api/navigation/SearchNavKey.kt",
+      "contentHash": "8371077d20efed9e4709774f35209ef5106a90b4b9d61688276df02b18c84084",
+      "line": 1
+    },
+    {
+      "path": "feature/search/impl/build.gradle.kts",
+      "contentHash": "af2144bdfadc547dc21a2773421b7697ea1b4fc37defab9b3874fc57087b2c91",
+      "line": 1
+    },
+    {
+      "path": "feature/search/impl/src/main/kotlin/com/google/samples/apps/nowinandroid/feature/search/impl/navigation/SearchEntryProvider.kt",
+      "contentHash": "fcb21869673841034e1d2555149ea48e0ff5868b1b852a64ca8f683999a7bbf7",
+      "line": 1
+    },
+    {
+      "path": "feature/search/impl/src/main/kotlin/com/google/samples/apps/nowinandroid/feature/search/impl/RecentSearchQueriesUiState.kt",
+      "contentHash": "77582715f18486f63d54f3d8ce5ec0af226874903cb1e7bd0126a24c05bc27bd",
+      "line": 1
+    },
+    {
+      "path": "feature/search/impl/src/main/kotlin/com/google/samples/apps/nowinandroid/feature/search/impl/SearchResultUiState.kt",
+      "contentHash": "4aa23983583bbbc84f9c36cdff27395c04d4d8d8384a5c0ac79af5c3f989e64b",
+      "line": 1
+    },
+    {
+      "path": "feature/search/impl/src/main/kotlin/com/google/samples/apps/nowinandroid/feature/search/impl/SearchScreen.kt",
+      "contentHash": "eb14bfad02adf3a3b2010ff20ee57a7425df6702eab60b620f909688a58dbbf8",
+      "line": 1
+    },
+    {
+      "path": "feature/search/impl/src/main/kotlin/com/google/samples/apps/nowinandroid/feature/search/impl/SearchUiStatePreviewParameterProvider.kt",
+      "contentHash": "333e95c5c5321c8026a51ce1c1f0c7e33902c8216b2194548a98d21074c50269",
+      "line": 1
+    },
+    {
+      "path": "feature/search/impl/src/main/kotlin/com/google/samples/apps/nowinandroid/feature/search/impl/SearchViewModel.kt",
+      "contentHash": "e6b0c1321b24919f6dfde3ebc7d7c839cf9cdbe870ddae05c6f6a0cbf23e41fc",
+      "line": 1
+    },
+    {
+      "path": "feature/topic/api/build.gradle.kts",
+      "contentHash": "f6738278a39e306bd2aed753878261578bc6c672a372b7bd022fec2f0440fb31",
+      "line": 1
+    },
+    {
+      "path": "feature/topic/api/src/main/kotlin/com/google/samples/apps/nowinandroid/feature/topic/api/navigation/TopicNavKey.kt",
+      "contentHash": "1dbe2bac900f0e2129cda3fe63f388e5839ef481d5caf80b1ff760d7d8372764",
+      "line": 1
+    },
+    {
+      "path": "feature/topic/impl/build.gradle.kts",
+      "contentHash": "6b1863a61e49e4f044442cf6cd9d4a410302984929e9fc57f4b58c1a06f93788",
+      "line": 1
+    },
+    {
+      "path": "feature/topic/impl/src/main/kotlin/com/google/samples/apps/nowinandroid/feature/topic/impl/navigation/TopicEntryProvider.kt",
+      "contentHash": "5c405579ab40862d3e6a7f3ea651daf610f241064bfc2c7fc35736f32228a5c8",
+      "line": 1
+    },
+    {
+      "path": "feature/topic/impl/src/main/kotlin/com/google/samples/apps/nowinandroid/feature/topic/impl/TopicScreen.kt",
+      "contentHash": "ea59ab8052aed12aadad925edb9dbbf6719e4176a1ffae24fb7cee085775cf13",
+      "line": 1
+    },
+    {
+      "path": "feature/topic/impl/src/main/kotlin/com/google/samples/apps/nowinandroid/feature/topic/impl/TopicViewModel.kt",
+      "contentHash": "cf4d603f0aed82be91660669b0421a780481b77a94d499c4daf15fdd8e8a9700",
+      "line": 1
+    },
+    {
+      "path": "ui-test-hilt-manifest/src/main/kotlin/com/google/samples/apps/nowinandroid/uitesthiltmanifest/HiltComponentActivity.kt",
+      "contentHash": "6fb18f32122281963dc16341ee62d8dd57f82828bd8d87434ce7cf73cc105622",
+      "line": 1
+    }
+  ],
+  "claims": [
+    {
+      "purpose": "component-name",
+      "text": "Application & navigation",
+      "citations": [
+        {
+          "path": "app/src/main/kotlin/com/google/samples/apps/nowinandroid/ui/NiaApp.kt",
+          "contentHash": "7cf1eefd9dc998dd0ec7346ec389e7311bb4d970ffa13171ae4f2101a86e66d7",
+          "startLine": 158,
+          "endLine": 181,
+          "excerpt": "    val snackbarHostState = LocalSnackbarHostState.current\n\n    val navigator = remember { Navigator(appState.navigationState) }\n\n    NiaNavigationSuiteScaffold(\n        navigationSuiteItems = {\n            TOP_LEVEL_NAV_ITEMS.forEach { (navKey, navItem) ->\n                val hasUnread = unreadNavKeys.contains(navKey)\n                val selected = navKey == appState.navigationState.currentTopLevelKey\n                item(\n                    selected = selected,\n                    onClick = { navigator.navigate(navKey) },\n                    icon = {\n                        Icon(\n                            imageVector = navItem.unselectedIcon,\n                            contentDescription = null,\n                        )\n                    },\n                    selectedIcon = {\n                        Icon(\n                            imageVector = navItem.selectedIcon,\n                            contentDescription = null,\n                        )\n                    },"
+        }
+      ]
+    },
+    {
+      "purpose": "component-role",
+      "text": "Builds the application shell and switches between top-level destinations.",
+      "citations": [
+        {
+          "path": "app/src/main/kotlin/com/google/samples/apps/nowinandroid/ui/NiaApp.kt",
+          "contentHash": "7cf1eefd9dc998dd0ec7346ec389e7311bb4d970ffa13171ae4f2101a86e66d7",
+          "startLine": 158,
+          "endLine": 181,
+          "excerpt": "    val snackbarHostState = LocalSnackbarHostState.current\n\n    val navigator = remember { Navigator(appState.navigationState) }\n\n    NiaNavigationSuiteScaffold(\n        navigationSuiteItems = {\n            TOP_LEVEL_NAV_ITEMS.forEach { (navKey, navItem) ->\n                val hasUnread = unreadNavKeys.contains(navKey)\n                val selected = navKey == appState.navigationState.currentTopLevelKey\n                item(\n                    selected = selected,\n                    onClick = { navigator.navigate(navKey) },\n                    icon = {\n                        Icon(\n                            imageVector = navItem.unselectedIcon,\n                            contentDescription = null,\n                        )\n                    },\n                    selectedIcon = {\n                        Icon(\n                            imageVector = navItem.selectedIcon,\n                            contentDescription = null,\n                        )\n                    },"
+        }
+      ]
+    }
+  ]
+}

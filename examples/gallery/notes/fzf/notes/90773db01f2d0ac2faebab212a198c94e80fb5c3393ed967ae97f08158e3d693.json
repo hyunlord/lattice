@@ -1,0 +1,191 @@
+{
+  "schemaVersion": 1,
+  "targetId": "component:module:src/actiontype_string.go",
+  "summary": "Coordinates input reading, matching and terminal result updates.",
+  "author": "Codex (external agent)",
+  "sources": [
+    {
+      "path": "src/actiontype_string.go",
+      "contentHash": "74ec3e6f75d6890b1ffeb7ce9513f54f02c32842d284df41503d70a91fc892ea",
+      "line": 1
+    },
+    {
+      "path": "src/ansi.go",
+      "contentHash": "3ae917240b6c4e9c6ca0ff536585ff2ccbe02b67b83fab6739317a921880f127",
+      "line": 1
+    },
+    {
+      "path": "src/cache.go",
+      "contentHash": "88740fe2cfe44d5f63bbeb36c8d95fca841c2f31c09bcf0901340c610408d073",
+      "line": 1
+    },
+    {
+      "path": "src/chunklist.go",
+      "contentHash": "602860020baacb15ee567fcb1867e77b7b4448c121c26c40556e4eaf1d4f82ac",
+      "line": 1
+    },
+    {
+      "path": "src/constants.go",
+      "contentHash": "372e48ddae5c4598a4c6f83f32719e39fc98a5ab91f127475a55ce857f654142",
+      "line": 1
+    },
+    {
+      "path": "src/core.go",
+      "contentHash": "11825c39271a445ead1b3132be6d990d46f945f1a96f59026c646359f3e0ddd9",
+      "line": 1
+    },
+    {
+      "path": "src/functions.go",
+      "contentHash": "a58c0783331a03aad985879fb1edba1147d541696c625a48716426fb2064cd0e",
+      "line": 1
+    },
+    {
+      "path": "src/history.go",
+      "contentHash": "2677024ed4a523bb0e4638ca6c87380ddcb27303d236a0ccf868ccd49c613413",
+      "line": 1
+    },
+    {
+      "path": "src/item.go",
+      "contentHash": "d6b3a3b6a9fd04a72e2f9400f6269c36c350f418dd79ef903dbf73c1fbf43430",
+      "line": 1
+    },
+    {
+      "path": "src/matcher.go",
+      "contentHash": "e3de19187afbab4e5ce8769dce0f85436aeb2cf99f85555c68eb1817b4cd3295",
+      "line": 1
+    },
+    {
+      "path": "src/merger.go",
+      "contentHash": "9a39eae409a62da9d3767fc2fc6d8aedcff20b25644cbd5f028c191b20578b2a",
+      "line": 1
+    },
+    {
+      "path": "src/options_no_pprof.go",
+      "contentHash": "95aa0ba40494b5b2145b467b7337342788d22639e4fae99000168b9e09499fde",
+      "line": 1
+    },
+    {
+      "path": "src/options_pprof.go",
+      "contentHash": "151909b02da70207945d32e624d69abb4ac99b912c3f0e114a5cd9b785b79981",
+      "line": 1
+    },
+    {
+      "path": "src/options.go",
+      "contentHash": "ffc17ccf3dd851c7fe95d71f8dea0a46885cc78c991979323b3477503dd27d2b",
+      "line": 1
+    },
+    {
+      "path": "src/pattern.go",
+      "contentHash": "68f5eae58d775122c353f88a575fba5e5ed7bbe0a27899ad48998cb6c580fb4d",
+      "line": 1
+    },
+    {
+      "path": "src/proxy_unix.go",
+      "contentHash": "7d89ae1e1ac15c1257f1cbb01102e186b772d4a0df5cf4888e05ec3fa5307c4c",
+      "line": 1
+    },
+    {
+      "path": "src/proxy_windows.go",
+      "contentHash": "30574721a2213f2f9514c858983883cf888bbdb17e46bc5a92e3ea7e4b639585",
+      "line": 1
+    },
+    {
+      "path": "src/proxy.go",
+      "contentHash": "99065c93f9cfb8442dbe9fd3b34f9275d7b4cc9bd20796bb0d944db2affdfd8b",
+      "line": 1
+    },
+    {
+      "path": "src/reader.go",
+      "contentHash": "d404c5f4be199c40e73ac886255cbab69c6cf691c57591fb269d4cffea251b4c",
+      "line": 1
+    },
+    {
+      "path": "src/result_others.go",
+      "contentHash": "b6cf7cfc0d9434aaa4af6a039c758b2f10d2845c1add2c1f9652b4021ac83424",
+      "line": 1
+    },
+    {
+      "path": "src/result_x86.go",
+      "contentHash": "81c0cdae9d85e447ec74f453c0cc2a65ed1642796b0916418d9deb5e8d8a8aff",
+      "line": 1
+    },
+    {
+      "path": "src/result.go",
+      "contentHash": "cd8d96e7c2b1784952af6416917e2851e8db89d34321225763d3e6810f497d16",
+      "line": 1
+    },
+    {
+      "path": "src/server.go",
+      "contentHash": "0248725e5dd2715d00811a6e49639e54e13cfccc79b4fb21fe4658acaee4fe7a",
+      "line": 1
+    },
+    {
+      "path": "src/terminal_unix.go",
+      "contentHash": "159e5fd5468fcb87fdeaf5a30ea43d3cd6d0098e995df1cc5c5a417d001a1097",
+      "line": 1
+    },
+    {
+      "path": "src/terminal_windows.go",
+      "contentHash": "f5349331fcd18de6b8509ac961e61706faa37773e0a078a817ab8fc82dd09659",
+      "line": 1
+    },
+    {
+      "path": "src/terminal.go",
+      "contentHash": "66cdd0489ed29776b7b77ebb462bfa2a2d03114cbe5cfc8444f17b50f2885de2",
+      "line": 1
+    },
+    {
+      "path": "src/tmux.go",
+      "contentHash": "8bbffcdb465b01689e554e7be21c74e0967de5ccceac02cf0c38824359cab936",
+      "line": 1
+    },
+    {
+      "path": "src/tokenizer.go",
+      "contentHash": "b20f6a18aa76d4e2f501c5f5d643243a7dee90db0735fc0802a2409ba5512592",
+      "line": 1
+    },
+    {
+      "path": "src/winpty_windows.go",
+      "contentHash": "10dc5808e7a67961ac80764a96f8c81b2ff9ce95eb98e2c20d4c51ef7e53e923",
+      "line": 1
+    },
+    {
+      "path": "src/winpty.go",
+      "contentHash": "cdb117c29f869312f4349318e0a368b18ba8e0311e2586ed4676942e56d33f97",
+      "line": 1
+    },
+    {
+      "path": "src/zellij.go",
+      "contentHash": "7e1588c2eb1228113bb24671b855cd938c2aeb2051afd9f7426237db7fa26736",
+      "line": 1
+    }
+  ],
+  "claims": [
+    {
+      "purpose": "component-name",
+      "text": "Interactive search",
+      "citations": [
+        {
+          "path": "src/core.go",
+          "contentHash": "11825c39271a445ead1b3132be6d990d46f945f1a96f59026c646359f3e0ddd9",
+          "startLine": 1,
+          "endLine": 22,
+          "excerpt": "// Package fzf implements fzf, a command-line fuzzy finder.\npackage fzf\n\nimport (\n\t\"fmt\"\n\t\"maps\"\n\t\"math\"\n\t\"os\"\n\t\"sync\"\n\t\"time\"\n\n\t\"github.com/junegunn/fzf/src/tui\"\n\t\"github.com/junegunn/fzf/src/util\"\n)\n\n/*\nReader   -> EvtReadFin\nReader   -> EvtReadNew        -> Matcher  (restart)\nTerminal -> EvtSearchNew:bool -> Matcher  (restart)\nMatcher  -> EvtSearchProgress -> Terminal (update info)\nMatcher  -> EvtSearchFin      -> Terminal (update list)\n*/"
+        }
+      ]
+    },
+    {
+      "purpose": "component-role",
+      "text": "Coordinates input reading, matching and terminal result updates.",
+      "citations": [
+        {
+          "path": "src/core.go",
+          "contentHash": "11825c39271a445ead1b3132be6d990d46f945f1a96f59026c646359f3e0ddd9",
+          "startLine": 1,
+          "endLine": 22,
+          "excerpt": "// Package fzf implements fzf, a command-line fuzzy finder.\npackage fzf\n\nimport (\n\t\"fmt\"\n\t\"maps\"\n\t\"math\"\n\t\"os\"\n\t\"sync\"\n\t\"time\"\n\n\t\"github.com/junegunn/fzf/src/tui\"\n\t\"github.com/junegunn/fzf/src/util\"\n)\n\n/*\nReader   -> EvtReadFin\nReader   -> EvtReadNew        -> Matcher  (restart)\nTerminal -> EvtSearchNew:bool -> Matcher  (restart)\nMatcher  -> EvtSearchProgress -> Terminal (update info)\nMatcher  -> EvtSearchFin      -> Terminal (update list)\n*/"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,125 @@
+{
+  "schemaVersion": 1,
+  "targetId": "component:module:crates/globset/src/fnv.rs",
+  "summary": "Traverses directories while applying ignore rules and matching file paths against glob patterns.",
+  "author": "Codex (external agent)",
+  "sources": [
+    {
+      "path": "crates/globset/src/fnv.rs",
+      "contentHash": "bf67b20b542db2a159f91da8b980fca27d93253a8fafaee7173d6493de985bd8",
+      "line": 1
+    },
+    {
+      "path": "crates/globset/src/glob.rs",
+      "contentHash": "d230e938384da768864b4aff78836271c1e923ee9f1ffae2d9319fed8bb2ccb4",
+      "line": 1
+    },
+    {
+      "path": "crates/globset/src/lib.rs",
+      "contentHash": "7e34c24673ee164d779de7d0efdaf97f19176f9e0bfc71e0842345ef76f0a38a",
+      "line": 1
+    },
+    {
+      "path": "crates/globset/src/pathutil.rs",
+      "contentHash": "5780ad5ec2bc89a42201a1532295e06a90f493929583c453f135759b39a70fa5",
+      "line": 1
+    },
+    {
+      "path": "crates/globset/src/serde_impl.rs",
+      "contentHash": "4fdc2b4a456fd9ffbe4555d27c760861adaec2ed2524a5f4149ebe827d4779f1",
+      "line": 1
+    },
+    {
+      "path": "crates/ignore/src/default_types.rs",
+      "contentHash": "7ed94507d800e77a98795fe0c50e1a05a16612d71bacfbb287fc3930bcc10ba9",
+      "line": 1
+    },
+    {
+      "path": "crates/ignore/src/dir.rs",
+      "contentHash": "e2ad00e37e22433feb6f06795e4a7aea6af2a4e06f44f6f56e171377e42f56f3",
+      "line": 1
+    },
+    {
+      "path": "crates/ignore/src/gitignore.rs",
+      "contentHash": "e7e4eb6e4a490bf67c4ae422c9cd89978607e20d3e65b52a886afd9bd500471b",
+      "line": 1
+    },
+    {
+      "path": "crates/ignore/src/incremental.rs",
+      "contentHash": "50ab6709241f88dd110e095db174e0018ff0c48697b21f4db049e8cdbabdca67",
+      "line": 1
+    },
+    {
+      "path": "crates/ignore/src/lib.rs",
+      "contentHash": "89cb2cbdd479ae4a8cf5ea0bbea4cad72b6833a6dfb95008e8f51b185b44aafc",
+      "line": 1
+    },
+    {
+      "path": "crates/ignore/src/overrides.rs",
+      "contentHash": "4283fd4dc169476a580ea1e393b1b125a357cda4c1862293800097bd91acb69e",
+      "line": 1
+    },
+    {
+      "path": "crates/ignore/src/pathutil.rs",
+      "contentHash": "69e4ca040721e33b94d0ce6a7ca2cd1289291ca336838fa67d71ed605a7a1f26",
+      "line": 1
+    },
+    {
+      "path": "crates/ignore/src/types.rs",
+      "contentHash": "d058f7a2987e81299b8f0c5dc3a8af0989959fd7aca2cc91b102689b6a7039bf",
+      "line": 1
+    },
+    {
+      "path": "crates/ignore/src/walk.rs",
+      "contentHash": "a81c751dc22763d8efda6fb88fd77c0e03c42fb17538a94497a5737ba8b4b919",
+      "line": 1
+    },
+    {
+      "path": "fuzz/fuzz_targets/fuzz_glob.rs",
+      "contentHash": "c57fbc71025d53b7dc5ece7f340f54eadf48e4e9289b16b1db096d14111d722c",
+      "line": 1
+    }
+  ],
+  "claims": [
+    {
+      "purpose": "component-name",
+      "text": "File discovery and filters",
+      "citations": [
+        {
+          "path": "crates/ignore/src/lib.rs",
+          "contentHash": "89cb2cbdd479ae4a8cf5ea0bbea4cad72b6833a6dfb95008e8f51b185b44aafc",
+          "startLine": 1,
+          "endLine": 8,
+          "excerpt": "/*!\nThe ignore crate provides a fast recursive directory iterator that respects\nvarious filters such as globs, file types and `.gitignore` files. The precise\nmatching rules and precedence is explained in the documentation for\n`WalkBuilder`.\n\nSecondarily, this crate exposes gitignore and file type matchers for use cases\nthat demand more fine-grained control."
+        },
+        {
+          "path": "crates/globset/src/lib.rs",
+          "contentHash": "7e34c24673ee164d779de7d0efdaf97f19176f9e0bfc71e0842345ef76f0a38a",
+          "startLine": 1,
+          "endLine": 6,
+          "excerpt": "/*!\nThe globset crate provides cross platform single glob and glob set matching.\n\nGlob set matching is the process of matching one or more glob patterns against\na single candidate path simultaneously, and returning all of the globs that\nmatched. For example, given this set of globs:"
+        }
+      ]
+    },
+    {
+      "purpose": "component-role",
+      "text": "Traverses directories while applying ignore rules and matching file paths against glob patterns.",
+      "citations": [
+        {
+          "path": "crates/ignore/src/lib.rs",
+          "contentHash": "89cb2cbdd479ae4a8cf5ea0bbea4cad72b6833a6dfb95008e8f51b185b44aafc",
+          "startLine": 1,
+          "endLine": 8,
+          "excerpt": "/*!\nThe ignore crate provides a fast recursive directory iterator that respects\nvarious filters such as globs, file types and `.gitignore` files. The precise\nmatching rules and precedence is explained in the documentation for\n`WalkBuilder`.\n\nSecondarily, this crate exposes gitignore and file type matchers for use cases\nthat demand more fine-grained control."
+        },
+        {
+          "path": "crates/globset/src/lib.rs",
+          "contentHash": "7e34c24673ee164d779de7d0efdaf97f19176f9e0bfc71e0842345ef76f0a38a",
+          "startLine": 1,
+          "endLine": 6,
+          "excerpt": "/*!\nThe globset crate provides cross platform single glob and glob set matching.\n\nGlob set matching is the process of matching one or more glob patterns against\na single candidate path simultaneously, and returning all of the globs that\nmatched. For example, given this set of globs:"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "targetId": "component:module:src/main/java/org/springframework/samples/petclinic/model/package-info.java",
+  "summary": "Documents the package containing utilities used by domain objects.",
+  "author": "Codex (external agent)",
+  "sources": [
+    {
+      "path": "src/main/java/org/springframework/samples/petclinic/model/package-info.java",
+      "contentHash": "60ad8255055c10e2af03b3b456527ba28f8def8d520037eb7230f647a634b387",
+      "line": 1
+    }
+  ],
+  "claims": [
+    {
+      "purpose": "component-name",
+      "text": "Domain utility package",
+      "citations": [
+        {
+          "path": "src/main/java/org/springframework/samples/petclinic/model/package-info.java",
+          "contentHash": "60ad8255055c10e2af03b3b456527ba28f8def8d520037eb7230f647a634b387",
+          "startLine": 17,
+          "endLine": 20,
+          "excerpt": "/**\n * The classes in this package represent utilities used by the domain.\n */\npackage org.springframework.samples.petclinic.model;"
+        }
+      ]
+    },
+    {
+      "purpose": "component-role",
+      "text": "Documents the package containing utilities used by domain objects.",
+      "citations": [
+        {
+          "path": "src/main/java/org/springframework/samples/petclinic/model/package-info.java",
+          "contentHash": "60ad8255055c10e2af03b3b456527ba28f8def8d520037eb7230f647a634b387",
+          "startLine": 17,
+          "endLine": 20,
+          "excerpt": "/**\n * The classes in this package represent utilities used by the domain.\n */\npackage org.springframework.samples.petclinic.model;"
+        }
+      ]
+    }
+  ]
+}
