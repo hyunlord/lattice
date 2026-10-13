@@ -1,5 +1,9 @@
 # Lattice agent contract
 
+## Final disposition — 2026-10-13
+
+The user ended the experiment after rejecting L12 usefulness and waived the five-minute test. **No new feature development, experiments or maintenance, including MCP and CI differences.** This decision supersedes every development/maintenance authorization below; retain those sections as history. Complete only the requested closure: retrospective, end-of-experiment notices, discontinued issue closure and separate bs-mobile automation-disable PR. Preserve public maps, historical evidence and unreleased private answer keys. Do not resume without a new explicit user instruction.
+
 Build the complete [v0.1 brief](docs/design/brief-v0.1.md) in L0 → L1 → L2 → L3 → L4 → L5 order. Work in this repository (`~/lattice`). Continue safe, authorized work without permission handoffs.
 
 - The graph/query/cache/CLI/viewer/MCP layers are domain-neutral. Domain names, classifications, interpretations, and display text belong in lenses under `examples/` or a consumer repository's `.lattice/lens.yaml`.
