@@ -1,6 +1,8 @@
 # Guide and historical verification
 
-**Status: L10 accepted; maintenance scope.** The user accepted the connected package/logic maps, bounded exports and map+source96/96 evaluation (16.96% elapsed saving). Eleven first-display regressions remain explicitly accepted residuals in [#97](https://github.com/hyunlord/lattice/issues/97), including the separate maximum444ms observation. See the [paired results](benchmarks/l10/closure-display.md), [frozen benchmark](benchmarks/l9/README.md) and earlier [L9 evidence](review/l9-package-logic.md). Preserve historical failures and unresolved static dispatch limitations. Complete the approved consumer Pages release, then make only fixes for reported usage problems; additional box-click UX work belongs to a separate small task.
+**Current scope: L11 generic first impressions, reopened by the user in [#100](https://github.com/hyunlord/lattice/issues/100).** See the [delivery evidence](benchmarks/l11/delivery.md), [startup observations](benchmarks/l11/startup.md) and [fixed evaluation protocol](benchmarks/l11/protocol.md). The earlier box-click task is deferred; this guide does not declare L11 accepted before its evaluation and public delivery.
+
+**Historical status: L10 accepted; maintenance scope.** The user accepted the connected package/logic maps, bounded exports and map+source96/96 evaluation (16.96% elapsed saving). Eleven first-display regressions remain explicitly accepted residuals in [#97](https://github.com/hyunlord/lattice/issues/97), including the separate maximum444ms observation. See the [paired results](benchmarks/l10/closure-display.md), [frozen benchmark](benchmarks/l9/README.md) and earlier [L9 evidence](review/l9-package-logic.md). Historical failures and unresolved static dispatch limitations remain preserved; L11 does not retroactively change that judgment.
 
 - [Original v0.1 brief](design/brief-v0.1.md)
 - [Architecture and lens contract](design/lattice-v0.md)

@@ -25,3 +25,9 @@ The public gallery is Lattice's own site with six non-game repository examples. 
 Installed-package timings and preserved failures are recorded in [startup.md](startup.md) with [machine-readable observations](startup.json). Comparative scores and publication verification remain separate; no pending result in this document is a pass.
 
 The actual six-map gallery passed twelve first-screen checks for language, pinned source links, browser errors, overflow and deferred graph loading. QA found and fixed local-clone source URLs, gallery hash-route language selection, long partial-inventory manifest paths, and expanded mobile evidence hashes. After the one-rule evidence wrapping fix, all twelve expanded views had zero overflow/errors and retained exact source text. These failures remain in the local QA artifacts; corrected views do not erase the initial observations.
+
+## Final implementation checks
+
+Candidate`43b2710` passes1,259 tests on [Node20/22/24 CI](https://github.com/hyunlord/lattice/actions/runs/38364215491), [installed-package CI](https://github.com/hyunlord/lattice/actions/runs/38364215471) and [documentation contracts](https://github.com/hyunlord/lattice/actions/runs/38364215412). Independent scope review found no new domain specialization, added dependency, model/API core path or target-build execution. The stale L10-only guide introduction was updated while preserving its historical acceptance.
+
+The final summary citation correction retains the immutable source URL and adjusts its line fragment after narrowing a README range; focused extraction checks produce `#L28` and `#L13-L16` for the two observed failures. The frozen2b7c00f evaluation keeps the original behavior and is not rerun with the repair. Public generation and exact-link checks are still required before declaring publication verified.
