@@ -30,7 +30,7 @@
 .fi-flows { margin-top:var(--space-6); }
 .fi-flow { padding-left:var(--space-5); margin-block:var(--space-3); }
 .fi-flow li { padding-block:var(--space-1); }
-.fi-provenance { margin-top:var(--space-6); padding-top:var(--space-2); border-top:1px solid var(--border); }
+.fi-provenance { overflow-wrap:anywhere; margin-top:var(--space-6); padding-top:var(--space-2); border-top:1px solid var(--border); }
 body.picture-home .first-impression { padding:var(--space-6); }
 @media(max-width:1023px) { .fi-components { grid-template-columns:repeat(2,minmax(0,1fr)); } .fi-layout { grid-template-columns:1fr; } .fi-reading { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:var(--space-6); } .fi-flows { margin-top:0; } }
 @media(max-width:639px) { body.picture-home .first-impression { padding:var(--space-4); } .fi-components { grid-template-columns:1fr; } .fi-reading { display:block; } .fi-flows { margin-top:var(--space-6); } .fi-component { padding:var(--space-3); } .fi-purpose { font-size:var(--type-body); } .fi-evidence summary,.fi-provenance>summary { min-height:44px; } .fi-tools { gap:var(--space-1) var(--space-4); } }
