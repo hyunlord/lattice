@@ -1,0 +1,70 @@
+{
+  "repository": "fastify",
+  "commit": "86368086171305df4e235f6d6bec892c67ec2ae2",
+  "candidate": "2b7c00f",
+  "startedAt": "2026-10-13T07:12:38.222Z",
+  "reused": false,
+  "priorSetupFailure": {
+    "repository": "fastify",
+    "commit": "86368086171305df4e235f6d6bec892c67ec2ae2",
+    "candidate": "2b7c00f",
+    "startedAt": "2026-10-13T07:11:28.779Z",
+    "reused": false,
+    "command": [
+      "node",
+      "/tmp/lattice-l11-first-impression/bin/lattice.mjs",
+      "export",
+      "/tmp/l11-visual/fastify",
+      "--root",
+      "/tmp/l9-benchmark-extra/fastify",
+      "--no-lens",
+      "--cache-dir",
+      "/tmp/l11-visual-cache/fastify",
+      "--force",
+      "--json"
+    ],
+    "exitCode": 2,
+    "timedOut": false,
+    "seconds": 0.209130792,
+    "status": "failed",
+    "finishedAt": "2026-10-13T07:11:28.988Z"
+  },
+  "buildCommand": [
+    "node",
+    "/tmp/lattice-l11-first-impression/bin/lattice.mjs",
+    "build",
+    "--root",
+    "/tmp/l9-benchmark-extra/fastify",
+    "--no-lens",
+    "--cache-dir",
+    "/tmp/l11-visual-cache/fastify",
+    "--json"
+  ],
+  "buildExitCode": 0,
+  "command": [
+    "node",
+    "/tmp/lattice-l11-first-impression/bin/lattice.mjs",
+    "export",
+    "/tmp/l11-visual/fastify",
+    "--root",
+    "/tmp/l9-benchmark-extra/fastify",
+    "--no-lens",
+    "--cache-dir",
+    "/tmp/l11-visual-cache/fastify",
+    "--force",
+    "--json"
+  ],
+  "exitCode": 0,
+  "timedOut": false,
+  "seconds": 11.410707208,
+  "graphHash": "3d249115cd2b2b9d68fc9d4076bc2275ba2a4aefd993de4207118825a355f52c",
+  "source": {
+    "name": "fastify",
+    "dirty": false,
+    "sourceFingerprint": "69ba452f4fc223622a127b8c623872949ebb4c2e5951872751399ae0b6d5af51",
+    "commit": "86368086171305df4e235f6d6bec892c67ec2ae2",
+    "remoteUrl": "https://github.com/fastify/fastify"
+  },
+  "status": "ready",
+  "finishedAt": "2026-10-13T07:12:49.633Z"
+}

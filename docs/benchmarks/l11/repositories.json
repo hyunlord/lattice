@@ -1,0 +1,120 @@
+{
+  "version": 1,
+  "baseline": "2aa61213c00ef3e4ebc982933d79bf89abd27092",
+  "repositories": [
+    {
+      "id": "click",
+      "repository": "pallets/click",
+      "commit": "2247b35ea1c47c727d7a06e51fa280e12a863ff6",
+      "cohort": "regression"
+    },
+    {
+      "id": "excalidraw",
+      "repository": "excalidraw/excalidraw",
+      "commit": "e65eca999e071503efb893d3379a29fb96ff37c4",
+      "cohort": "regression"
+    },
+    {
+      "id": "fzf",
+      "repository": "junegunn/fzf",
+      "commit": "c0a193e031f01fb50bf6f7be4381990a3753f7cf",
+      "cohort": "regression"
+    },
+    {
+      "id": "nowinandroid",
+      "repository": "android/nowinandroid",
+      "commit": "a49ed253d75e61a2b6ab80a8da677b57437b08eb",
+      "cohort": "regression"
+    },
+    {
+      "id": "ripgrep",
+      "repository": "BurntSushi/ripgrep",
+      "commit": "3fce3b5bb0236da2df6d99672afb8a719642eca7",
+      "cohort": "regression"
+    },
+    {
+      "id": "spring-petclinic",
+      "repository": "spring-projects/spring-petclinic",
+      "commit": "500158f732419217507c7656904b8e6aa1bcc0d6",
+      "cohort": "regression"
+    },
+    {
+      "id": "fastify",
+      "repository": "fastify/fastify",
+      "commit": "86368086171305df4e235f6d6bec892c67ec2ae2",
+      "trackedFiles": 395,
+      "cohort": "regression"
+    },
+    {
+      "id": "httpx",
+      "repository": "encode/httpx",
+      "commit": "b5addb64f0161ff6bfe94c124ef76f6a1fba5254",
+      "trackedFiles": 125,
+      "cohort": "regression"
+    },
+    {
+      "id": "unity-boatattack",
+      "repository": "Unity-Technologies/BoatAttack",
+      "commit": "6acf5f773a440030489cb5e2b3c009fb5fe1e8ce",
+      "trackedFiles": 1376,
+      "cohort": "regression"
+    },
+    {
+      "id": "godot-demos",
+      "repository": "godotengine/godot-demo-projects",
+      "commit": "b761b4cd5718a7118f2c95eb55f181d0a5f004f1",
+      "trackedFiles": 4071,
+      "cohort": "regression"
+    },
+    {
+      "id": "sqlite",
+      "repository": "sqlite/sqlite",
+      "commit": "6e35c19f170958b1e846e01c55318988f2d192e0",
+      "trackedFiles": 2287,
+      "cohort": "regression"
+    },
+    {
+      "id": "runtime",
+      "repository": "dotnet/runtime",
+      "commit": "8630d8988107478d249e2fdb8162f8c7dcbd3dbb",
+      "trackedFiles": 58427,
+      "cohort": "regression"
+    },
+    {
+      "id": "starlette",
+      "repository": "encode/starlette",
+      "commit": "96d5023c55b29224edb8d684868c49f681d079a9",
+      "cohort": "new"
+    },
+    {
+      "id": "axum",
+      "repository": "tokio-rs/axum",
+      "commit": "e57b547eb95de74b73b34719dd5926254a085634",
+      "cohort": "new"
+    },
+    {
+      "id": "chi",
+      "repository": "go-chi/chi",
+      "commit": "7f9b7448f51d28804fac98c0a17bc2a7cec1079f",
+      "cohort": "new"
+    },
+    {
+      "id": "swift-argument-parser",
+      "repository": "apple/swift-argument-parser",
+      "commit": "efd239f0055b3d6b6cc122a786c46a0ea8d0235b",
+      "cohort": "new"
+    },
+    {
+      "id": "dapper",
+      "repository": "DapperLib/Dapper",
+      "commit": "eb47546a408bbf6c178bda4f04dc205bc51ffbfe",
+      "cohort": "new"
+    },
+    {
+      "id": "vitest",
+      "repository": "vitest-dev/vitest",
+      "commit": "f15bdac4f05d2838855d4bd4f47e4076036ea18b",
+      "cohort": "new"
+    }
+  ]
+}

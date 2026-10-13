@@ -1,0 +1,305 @@
+{
+  "repository": "godotengine/godot-demo-projects",
+  "commit": "b761b4cd5718a7118f2c95eb55f181d0a5f004f1",
+  "arm": "map",
+  "gradedBy": "independent fresh grader map-spring-godot",
+  "answerSha256": "11f9007fc39c11febab4e119480e5cb6a0142d5409d26ec3947240403588b90f",
+  "questions": [
+    {
+      "id": "godot-demos-q1",
+      "score": 2,
+      "reason": "Correctly identifies the independent runnable demo collection and developer project-manager/browser entry paths; pinned README establishes purpose and users.",
+      "sourceReferences": [
+        {
+          "path": "README.md",
+          "startLine": 1,
+          "endLine": 51,
+          "commit": "b761b4cd5718a7118f2c95eb55f181d0a5f004f1"
+        },
+        {
+          "path": "LICENSE.md",
+          "startLine": 1,
+          "endLine": 2,
+          "commit": "b761b4cd5718a7118f2c95eb55f181d0a5f004f1"
+        }
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "godot-demos-q2",
+      "score": 2,
+      "reason": "Distinguishes repository-wide independent projects from selected Pong and identifies configuration/scene plus all four gameplay-script responsibilities.",
+      "sourceReferences": [
+        {
+          "path": "README.md",
+          "startLine": 1,
+          "endLine": 28,
+          "commit": "b761b4cd5718a7118f2c95eb55f181d0a5f004f1"
+        },
+        {
+          "path": "2d/pong/pong.tscn",
+          "startLine": 1,
+          "endLine": 103,
+          "commit": "b761b4cd5718a7118f2c95eb55f181d0a5f004f1"
+        },
+        {
+          "path": "2d/pong/logic/ball.gd",
+          "startLine": 1,
+          "endLine": 18,
+          "commit": "b761b4cd5718a7118f2c95eb55f181d0a5f004f1"
+        },
+        {
+          "path": "2d/pong/logic/paddle.gd",
+          "startLine": 1,
+          "endLine": 30,
+          "commit": "b761b4cd5718a7118f2c95eb55f181d0a5f004f1"
+        },
+        {
+          "path": "2d/pong/logic/wall.gd",
+          "startLine": 1,
+          "endLine": 6,
+          "commit": "b761b4cd5718a7118f2c95eb55f181d0a5f004f1"
+        },
+        {
+          "path": "2d/pong/logic/ceiling_floor.gd",
+          "startLine": 1,
+          "endLine": 7,
+          "commit": "b761b4cd5718a7118f2c95eb55f181d0a5f004f1"
+        }
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "godot-demos-q3",
+      "score": 2,
+      "reason": "Correct per-project Godot boundaries, GDScript/text scenes, Compatibility rendering and separate C# variant; SDK and auxiliary-language claims verified against pinned files.",
+      "sourceReferences": [
+        {
+          "path": "README.md",
+          "startLine": 1,
+          "endLine": 13,
+          "commit": "b761b4cd5718a7118f2c95eb55f181d0a5f004f1"
+        },
+        {
+          "path": "2d/pong/README.md",
+          "startLine": 1,
+          "endLine": 26,
+          "commit": "b761b4cd5718a7118f2c95eb55f181d0a5f004f1"
+        },
+        {
+          "path": "2d/pong/project.godot",
+          "startLine": 11,
+          "endLine": 71,
+          "commit": "b761b4cd5718a7118f2c95eb55f181d0a5f004f1"
+        },
+        {
+          "path": "mono/pong/Pong with C#.csproj",
+          "startLine": 1,
+          "endLine": 7,
+          "commit": "b761b4cd5718a7118f2c95eb55f181d0a5f004f1"
+        },
+        {
+          "path": "networking/webrtc_signaling/server_node/package.json",
+          "startLine": 1,
+          "endLine": 20,
+          "commit": "b761b4cd5718a7118f2c95eb55f181d0a5f004f1"
+        },
+        {
+          "path": "file_format.sh",
+          "startLine": 1,
+          "endLine": 8,
+          "commit": "b761b4cd5718a7118f2c95eb55f181d0a5f004f1"
+        },
+        {
+          "path": "compute/texture/README.md",
+          "startLine": 1,
+          "endLine": 25,
+          "commit": "b761b4cd5718a7118f2c95eb55f181d0a5f004f1"
+        }
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "godot-demos-q4",
+      "score": 2,
+      "reason": "Identifies project main_scene, scene script instantiation and engine-driven lifecycle callbacks without inventing a repository-wide main.",
+      "sourceReferences": [
+        {
+          "path": "2d/pong/project.godot",
+          "startLine": 11,
+          "endLine": 20,
+          "commit": "b761b4cd5718a7118f2c95eb55f181d0a5f004f1"
+        },
+        {
+          "path": "2d/pong/pong.tscn",
+          "startLine": 1,
+          "endLine": 103,
+          "commit": "b761b4cd5718a7118f2c95eb55f181d0a5f004f1"
+        },
+        {
+          "path": "2d/pong/logic/paddle.gd",
+          "startLine": 11,
+          "endLine": 24,
+          "commit": "b761b4cd5718a7118f2c95eb55f181d0a5f004f1"
+        },
+        {
+          "path": "2d/pong/logic/ball.gd",
+          "startLine": 8,
+          "endLine": 12,
+          "commit": "b761b4cd5718a7118f2c95eb55f181d0a5f004f1"
+        }
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "godot-demos-q5",
+      "score": 2,
+      "reason": "Names wall callback and Ball guard, reset invocation and all three restored ball values with exact pinned definitions.",
+      "sourceReferences": [
+        {
+          "path": "2d/pong/logic/wall.gd",
+          "startLine": 3,
+          "endLine": 6,
+          "commit": "b761b4cd5718a7118f2c95eb55f181d0a5f004f1"
+        },
+        {
+          "path": "2d/pong/logic/ball.gd",
+          "startLine": 3,
+          "endLine": 18,
+          "commit": "b761b4cd5718a7118f2c95eb55f181d0a5f004f1"
+        }
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "godot-demos-q6",
+      "score": 2,
+      "reason": "Identifies all four script resources and matching nodes, textures/collision shapes and six signal connections; describes scene binding rather than invented direct function calls.",
+      "sourceReferences": [
+        {
+          "path": "2d/pong/pong.tscn",
+          "startLine": 1,
+          "endLine": 103,
+          "commit": "b761b4cd5718a7118f2c95eb55f181d0a5f004f1"
+        }
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "godot-demos-q7",
+      "score": 2,
+      "reason": "Provides side-wall signal, named callback, Ball guard and reset path with all reset state changes; correctly marks engine delivery and receiver dispatch as dynamic.",
+      "sourceReferences": [
+        {
+          "path": "2d/pong/pong.tscn",
+          "startLine": 65,
+          "endLine": 103,
+          "commit": "b761b4cd5718a7118f2c95eb55f181d0a5f004f1"
+        },
+        {
+          "path": "2d/pong/logic/wall.gd",
+          "startLine": 3,
+          "endLine": 6,
+          "commit": "b761b4cd5718a7118f2c95eb55f181d0a5f004f1"
+        },
+        {
+          "path": "2d/pong/logic/ball.gd",
+          "startLine": 15,
+          "endLine": 18,
+          "commit": "b761b4cd5718a7118f2c95eb55f181d0a5f004f1"
+        }
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "godot-demos-q8",
+      "score": 2,
+      "reason": "Identifies the direct wall callback consumer and both side-wall instances, limits impact to reset handling, and does not treat empty analyzer callers as exhaustive absence.",
+      "sourceReferences": [
+        {
+          "path": "2d/pong/logic/wall.gd",
+          "startLine": 3,
+          "endLine": 6,
+          "commit": "b761b4cd5718a7118f2c95eb55f181d0a5f004f1"
+        },
+        {
+          "path": "2d/pong/pong.tscn",
+          "startLine": 65,
+          "endLine": 103,
+          "commit": "b761b4cd5718a7118f2c95eb55f181d0a5f004f1"
+        }
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": true
+    },
+    {
+      "id": "godot-demos-q9",
+      "score": 2,
+      "reason": "Identifies documented Pong example, Area2D signal description and project/scene/wall/reset entry path without claiming an automated test run.",
+      "sourceReferences": [
+        {
+          "path": "2d/pong/README.md",
+          "startLine": 1,
+          "endLine": 26,
+          "commit": "b761b4cd5718a7118f2c95eb55f181d0a5f004f1"
+        },
+        {
+          "path": "2d/pong/project.godot",
+          "startLine": 11,
+          "endLine": 20,
+          "commit": "b761b4cd5718a7118f2c95eb55f181d0a5f004f1"
+        },
+        {
+          "path": "2d/pong/pong.tscn",
+          "startLine": 98,
+          "endLine": 103,
+          "commit": "b761b4cd5718a7118f2c95eb55f181d0a5f004f1"
+        },
+        {
+          "path": "2d/pong/logic/wall.gd",
+          "startLine": 3,
+          "endLine": 6,
+          "commit": "b761b4cd5718a7118f2c95eb55f181d0a5f004f1"
+        }
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "godot-demos-q10",
+      "score": 2,
+      "reason": "Correct action configuration, node-name action prefix, down-minus-up strength, speed/delta transform and clamp with source citations.",
+      "sourceReferences": [
+        {
+          "path": "2d/pong/project.godot",
+          "startLine": 31,
+          "endLine": 63,
+          "commit": "b761b4cd5718a7118f2c95eb55f181d0a5f004f1"
+        },
+        {
+          "path": "2d/pong/logic/paddle.gd",
+          "startLine": 3,
+          "endLine": 24,
+          "commit": "b761b4cd5718a7118f2c95eb55f181d0a5f004f1"
+        }
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    }
+  ],
+  "total": 20,
+  "referenceIssues": [],
+  "limitations": [
+    "Read-only grading against pinned Git blobs; target builds, scripts, and runtime behavior were not executed. All oracle evidence hashes and logical-line excerpts match pinned source.",
+    "godot-demos-q3: citation 2d/pong/README.md:1-27 extends past EOF (26); actual supporting source verified within file.",
+    "godot-demos-q9: citation 2d/pong/README.md:1-27 extends past EOF (26); actual supporting source verified within file.",
+    "Answer reports unresolved static incoming calls for reset and category-tree access limitations; factual scoring uses pinned source, not absence of analyzer edges."
+  ]
+}

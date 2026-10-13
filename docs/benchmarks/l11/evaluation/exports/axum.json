@@ -1,0 +1,69 @@
+{
+  "repository": "axum",
+  "commit": "e57b547eb95de74b73b34719dd5926254a085634",
+  "candidate": "2b7c00f",
+  "startedAt": "2026-10-13T07:13:05.959Z",
+  "reused": false,
+  "priorSetupFailure": {
+    "repository": "axum",
+    "commit": "e57b547eb95de74b73b34719dd5926254a085634",
+    "candidate": "2b7c00f",
+    "startedAt": "2026-10-13T07:11:29.978Z",
+    "reused": false,
+    "command": [
+      "node",
+      "/tmp/lattice-l11-first-impression/bin/lattice.mjs",
+      "export",
+      "/tmp/l11-visual/axum",
+      "--root",
+      "/tmp/l11-sources/axum",
+      "--no-lens",
+      "--cache-dir",
+      "/tmp/l11-visual-cache/axum",
+      "--force",
+      "--json"
+    ],
+    "exitCode": 2,
+    "timedOut": false,
+    "seconds": 0.227298834,
+    "status": "failed",
+    "finishedAt": "2026-10-13T07:11:30.206Z"
+  },
+  "buildCommand": [
+    "node",
+    "/tmp/lattice-l11-first-impression/bin/lattice.mjs",
+    "build",
+    "--root",
+    "/tmp/l11-sources/axum",
+    "--no-lens",
+    "--cache-dir",
+    "/tmp/l11-visual-cache/axum",
+    "--json"
+  ],
+  "buildExitCode": 0,
+  "command": [
+    "node",
+    "/tmp/lattice-l11-first-impression/bin/lattice.mjs",
+    "export",
+    "/tmp/l11-visual/axum",
+    "--root",
+    "/tmp/l11-sources/axum",
+    "--no-lens",
+    "--cache-dir",
+    "/tmp/l11-visual-cache/axum",
+    "--force",
+    "--json"
+  ],
+  "exitCode": 0,
+  "timedOut": false,
+  "seconds": 5.806782917,
+  "graphHash": "a0767e3e64058dd559c2edda19319e2f1bd159cb1d48e446d3549ad5af6b16d2",
+  "source": {
+    "name": "axum",
+    "dirty": false,
+    "sourceFingerprint": "9e9eadc260aa99eff8ba0127447853204664b2706024373a479e3dda64a73da3",
+    "commit": "e57b547eb95de74b73b34719dd5926254a085634"
+  },
+  "status": "ready",
+  "finishedAt": "2026-10-13T07:13:11.766Z"
+}

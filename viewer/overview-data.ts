@@ -1,7 +1,9 @@
+import { firstImpression } from './first-impression-data.js';
+import type { FirstImpression } from '../dist/query/first-impression-types.js';
 import { object } from './data.js';
 import type { Repository } from '../dist/core/model.js';
 import type { LoopMap, LoopNode, LoopStage, LoopFlow } from './loop-map-types.js';
-export type OverviewLayer = { readonly id: string; readonly label: string; readonly path: string; readonly deferred: boolean; readonly parts?: string; readonly model: LoopMap; };
+export type OverviewLayer = { readonly id: string; readonly label: string; readonly path: string; readonly deferred: boolean; readonly firstImpression?: FirstImpression; readonly parts?: string; readonly model: LoopMap; };
 export type Overview = { readonly schemaVersion: 1; readonly hash: string; readonly repository: Repository; readonly defaultLayer: string; readonly limitations: readonly { readonly language: string; readonly fileCount: number; }[]; readonly kinds: readonly { readonly id: string; readonly label?: string; }[]; readonly layers: readonly OverviewLayer[]; };
 const count = (value: unknown): boolean => typeof value === 'number' && Number.isSafeInteger(value) && value >= 0;
 const string = (value: unknown): value is string => typeof value === 'string';
@@ -24,6 +26,7 @@ export function loopModel(value: unknown): value is LoopMap {
 function layer(value: unknown): value is OverviewLayer { return object(value) && string(value['id']) && string(value['label']) && string(value['path']) && /^overview\/[a-f0-9]{64}\.json$/u.test(value['path']) && (value['parts'] === undefined || string(value['parts']) && /^overview-parts\/[a-f0-9]{64}$/u.test(value['parts'])) && typeof value['deferred'] === 'boolean' && loopModel(value['model']); }
 export function parseOverview(value: unknown): Overview {
     if (!object(value) || value['schemaVersion'] !== 1 || !string(value['hash']) || !repository(value['repository']) || !string(value['defaultLayer']) || !list(value['layers'], layer) || !value['layers'].some(layer => layer.id === value['defaultLayer']) || !list(value['kinds'], (kind): kind is { id: string; label?: string; } => object(kind) && string(kind['id']) && (kind['label'] === undefined || string(kind['label'])))) throw new Error('첫 화면 데이터 형식이 올바르지 않습니다.');
+    for (const item of value['layers']) if (item.firstImpression !== undefined && !firstImpression(item.firstImpression, value['hash'])) throw new Error('첫 인상 데이터의 소스 또는 형식이 일치하지 않습니다.');
     const limitations = value['limitations'];
     const parsedLimitations = limitations === undefined ? [] : list(limitations, (item): item is { language: string; fileCount: number; } => object(item) && string(item['language']) && typeof item['fileCount'] === 'number' && Number.isSafeInteger(item['fileCount']) && item['fileCount'] > 0) ? limitations : undefined;
     if (!parsedLimitations) throw new Error('지원 범위 안내 형식이 올바르지 않습니다.');

@@ -1,0 +1,293 @@
+{
+  "id": "dapper",
+  "repository": "DapperLib/Dapper",
+  "commit": "eb47546a408bbf6c178bda4f04dc205bc51ffbfe",
+  "trackedFiles": 230,
+  "questions": [
+    {
+      "id": "q1",
+      "question": "What does Dapper do, and who calls it?",
+      "answer": "Dapper is a .NET micro-ORM library consumed by application code using ADO.NET connections. Connection extension methods execute SQL and return mapped rows or affected-row counts, with synchronous/asynchronous and buffered/unbuffered options. Equivalent terminology for the named source definitions is accepted; unsupported runtime claims are not.",
+      "requiredFacts": [
+        "Dapper is a .NET micro-ORM library consumed by application code using ADO.NET connections.",
+        "Connection extension methods execute SQL and return mapped rows or affected-row counts, with synchronous/asynchronous and buffered/unbuffered options."
+      ],
+      "evidence": [
+        {
+          "path": "Readme.md",
+          "startLine": 44,
+          "endLine": 61,
+          "excerpt": "Features\n--------\nDapper is a [NuGet library](https://www.nuget.org/packages/Dapper) that you can add in to your project that will enhance your ADO.NET connections via\nextension methods on your `DbConnection` instance. This provides a simple and efficient API for invoking SQL, with support for both synchronous and\nasynchronous data access, and allows both buffered and non-buffered queries.\n\nIt provides multiple helpers, but the key APIs are:\n\n``` csharp\n// insert/update/delete etc\nvar count  = connection.Execute(sql [, args]);\n\n// multi-row query\nIEnumerable<T> rows = connection.Query<T>(sql [, args]);\n\n// single-row query ({Single|First}[OrDefault])\nT row = connection.QuerySingle<T>(sql [, args]);\n```",
+          "sha256": "39ae4c8dd31e397e6578ed01affcae7c5c7e1425cf31880f2de3a862d28aebbb"
+        },
+        {
+          "path": "Dapper/Dapper.csproj",
+          "startLine": 1,
+          "endLine": 8,
+          "excerpt": "\ufeff<Project Sdk=\"Microsoft.NET.Sdk\">\n  <PropertyGroup>\n    <AssemblyName>Dapper</AssemblyName>\n    <Title>Dapper</Title>\n    <PackageTags>orm;sql;micro-orm</PackageTags>\n    <Description>A high performance Micro-ORM supporting SQL Server, MySQL, Sqlite, SqlCE, Firebird etc. Major Sponsor: Dapper Plus from ZZZ Projects.</Description>\n    <Authors>Sam Saffron;Marc Gravell;Nick Craver</Authors>\n    <TargetFrameworks>net461;netstandard2.0;net8.0;net10.0</TargetFrameworks>",
+          "sha256": "3f121f9bfbbedaf2ae2004fc8344e2c6490e2250d6a8efd53a1b314468a4edf7"
+        }
+      ]
+    },
+    {
+      "id": "q2",
+      "question": "Name the principal components and their responsibilities.",
+      "answer": "Dapper is the core library. Dapper.EntityFramework provides EntityFramework extension handlers. Dapper.Rainbow supplies CRUD helpers on Dapper; Dapper.SqlBuilder composes SQL queries dynamically. Equivalent terminology for the named source definitions is accepted; unsupported runtime claims are not.",
+      "requiredFacts": [
+        "Dapper is the core library.",
+        "Dapper.EntityFramework provides EntityFramework extension handlers.",
+        "Dapper.Rainbow supplies CRUD helpers on Dapper; Dapper.SqlBuilder composes SQL queries dynamically."
+      ],
+      "evidence": [
+        {
+          "path": "Readme.md",
+          "startLine": 21,
+          "endLine": 31,
+          "excerpt": "Package Purposes:\n* Dapper\n  * The core library\n* Dapper.EntityFramework\n  * Extension handlers for EntityFramework\n* Dapper.EntityFramework.StrongName\n  * Extension handlers for EntityFramework\n* Dapper.Rainbow\n  * Micro-ORM implemented on Dapper, provides CRUD helpers ([readme](Dapper.Rainbow/readme.md))\n* Dapper.SqlBuilder\n  * Component for building SQL queries dynamically and composably",
+          "sha256": "39ae4c8dd31e397e6578ed01affcae7c5c7e1425cf31880f2de3a862d28aebbb"
+        }
+      ]
+    },
+    {
+      "id": "q3",
+      "question": "Which languages, build systems and package boundaries organize it?",
+      "answer": "The implementation is C#, including SqlMapper and CommandDefinition. SDK-style .NET projects define package boundaries; Dapper targets net461, netstandard2.0, net8.0 and net10.0. Dapper.SqlBuilder is a distinct SDK project referencing Dapper. Equivalent terminology for the named source definitions is accepted; unsupported runtime claims are not.",
+      "requiredFacts": [
+        "The implementation is C#, including SqlMapper and CommandDefinition.",
+        "SDK-style .NET projects define package boundaries; Dapper targets net461, netstandard2.0, net8.0 and net10.0.",
+        "Dapper.SqlBuilder is a distinct SDK project referencing Dapper."
+      ],
+      "evidence": [
+        {
+          "path": "Dapper/Dapper.csproj",
+          "startLine": 1,
+          "endLine": 11,
+          "excerpt": "\ufeff<Project Sdk=\"Microsoft.NET.Sdk\">\n  <PropertyGroup>\n    <AssemblyName>Dapper</AssemblyName>\n    <Title>Dapper</Title>\n    <PackageTags>orm;sql;micro-orm</PackageTags>\n    <Description>A high performance Micro-ORM supporting SQL Server, MySQL, Sqlite, SqlCE, Firebird etc. Major Sponsor: Dapper Plus from ZZZ Projects.</Description>\n    <Authors>Sam Saffron;Marc Gravell;Nick Craver</Authors>\n    <TargetFrameworks>net461;netstandard2.0;net8.0;net10.0</TargetFrameworks>\n    <Nullable>enable</Nullable>\n    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>\n  </PropertyGroup>",
+          "sha256": "3f121f9bfbbedaf2ae2004fc8344e2c6490e2250d6a8efd53a1b314468a4edf7"
+        },
+        {
+          "path": "Dapper.SqlBuilder/Dapper.SqlBuilder.csproj",
+          "startLine": 1,
+          "endLine": 14,
+          "excerpt": "\ufeff<Project Sdk=\"Microsoft.NET.Sdk\">\n  <PropertyGroup>\n    <AssemblyName>Dapper.SqlBuilder</AssemblyName>\n    <PackageTags>orm;sql;micro-orm;query;sql-builder</PackageTags>\n    <Title>Dapper SqlBuilder component</Title>\n    <Description>The Dapper SqlBuilder component, for building SQL queries dynamically.</Description>\n    <Authors>Sam Saffron, Johan Danforth</Authors>\n    <TargetFrameworks>net461;netstandard2.0;net8.0</TargetFrameworks>\n    <GenerateDocumentationFile>false</GenerateDocumentationFile>\n    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>\n    <Nullable>enable</Nullable>\n  </PropertyGroup>\n  <ItemGroup>\n    <ProjectReference Include=\"..\\Dapper\\Dapper.csproj\" />",
+          "sha256": "a690d8572196f50240d6d4351eafb6015d9d7e7292e32ce9ce3852c075f0014f"
+        },
+        {
+          "path": "Dapper/SqlMapper.cs",
+          "startLine": 559,
+          "endLine": 563,
+          "excerpt": "        public static int Execute(this IDbConnection cnn, string sql, object? param = null, IDbTransaction? transaction = null, int? commandTimeout = null, CommandType? commandType = null)\n        {\n            var command = new CommandDefinition(sql, param, transaction, commandTimeout, commandType, CommandFlags.Buffered);\n            return ExecuteImpl(cnn, ref command);\n        }",
+          "sha256": "86b7b8e2fec90482eda1d87807c850d495131270175e11b188446c39fcc87cec"
+        }
+      ]
+    },
+    {
+      "id": "q4",
+      "question": "Where does selected public-library use, connection.Execute(sql), begin?",
+      "answer": "SqlMapper.Execute(this IDbConnection cnn, string sql, ...) is the extension entry. It constructs CommandDefinition with the supplied SQL and parameters and forwards to ExecuteImpl. Equivalent terminology for the named source definitions is accepted; unsupported runtime claims are not.",
+      "requiredFacts": [
+        "SqlMapper.Execute(this IDbConnection cnn, string sql, ...) is the extension entry.",
+        "It constructs CommandDefinition with the supplied SQL and parameters and forwards to ExecuteImpl."
+      ],
+      "evidence": [
+        {
+          "path": "Dapper/SqlMapper.cs",
+          "startLine": 550,
+          "endLine": 563,
+          "excerpt": "        /// Execute parameterized SQL.\n        /// </summary>\n        /// <param name=\"cnn\">The connection to query on.</param>\n        /// <param name=\"sql\">The SQL to execute for this query.</param>\n        /// <param name=\"param\">The parameters to use for this query.</param>\n        /// <param name=\"transaction\">The transaction to use for this query.</param>\n        /// <param name=\"commandTimeout\">Number of seconds before command execution timeout.</param>\n        /// <param name=\"commandType\">Is it a stored proc or a batch?</param>\n        /// <returns>The number of rows affected.</returns>\n        public static int Execute(this IDbConnection cnn, string sql, object? param = null, IDbTransaction? transaction = null, int? commandTimeout = null, CommandType? commandType = null)\n        {\n            var command = new CommandDefinition(sql, param, transaction, commandTimeout, commandType, CommandFlags.Buffered);\n            return ExecuteImpl(cnn, ref command);\n        }",
+          "sha256": "86b7b8e2fec90482eda1d87807c850d495131270175e11b188446c39fcc87cec"
+        }
+      ]
+    },
+    {
+      "id": "q5",
+      "question": "Where is X, synchronous single-command non-query execution, implemented?",
+      "answer": "Dapper/SqlMapper.cs defines ExecuteCommand. It obtains a command through CommandDefinition.SetupCommand, opens a previously closed connection, calls ExecuteNonQuery, calls OnCompleted and returns the affected-row result. Finally it restores a previously closed connection to closed and clears/disposes the command. Equivalent terminology for the named source definitions is accepted; unsupported runtime claims are not.",
+      "requiredFacts": [
+        "Dapper/SqlMapper.cs defines ExecuteCommand.",
+        "It obtains a command through CommandDefinition.SetupCommand, opens a previously closed connection, calls ExecuteNonQuery, calls OnCompleted and returns the affected-row result.",
+        "Finally it restores a previously closed connection to closed and clears/disposes the command."
+      ],
+      "evidence": [
+        {
+          "path": "Dapper/SqlMapper.cs",
+          "startLine": 3004,
+          "endLine": 3022,
+          "excerpt": "        private static int ExecuteCommand(IDbConnection cnn, ref CommandDefinition command, Action<IDbCommand, object?>? paramReader)\n        {\n            IDbCommand? cmd = null;\n            bool wasClosed = cnn.State == ConnectionState.Closed;\n            try\n            {\n                cmd = command.SetupCommand(cnn, paramReader);\n                if (wasClosed) cnn.Open();\n                int result = cmd.ExecuteNonQuery();\n                command.OnCompleted();\n                return result;\n            }\n            finally\n            {\n                if (wasClosed) cnn.Close();\n                cmd?.Parameters.Clear();\n                cmd?.Dispose();\n            }\n        }",
+          "sha256": "86b7b8e2fec90482eda1d87807c850d495131270175e11b188446c39fcc87cec"
+        }
+      ]
+    },
+    {
+      "id": "q6",
+      "question": "Which internal component does A, the Dapper.SqlBuilder project, directly use, and what proves the direction?",
+      "answer": "Dapper.SqlBuilder directly references Dapper through a ProjectReference to ../Dapper/Dapper.csproj. That proves a build dependency from SqlBuilder to Dapper; it does not itself establish a function call. Equivalent terminology for the named source definitions is accepted; unsupported runtime claims are not.",
+      "requiredFacts": [
+        "Dapper.SqlBuilder directly references Dapper through a ProjectReference to ../Dapper/Dapper.csproj.",
+        "That proves a build dependency from SqlBuilder to Dapper; it does not itself establish a function call."
+      ],
+      "evidence": [
+        {
+          "path": "Dapper.SqlBuilder/Dapper.SqlBuilder.csproj",
+          "startLine": 1,
+          "endLine": 14,
+          "excerpt": "\ufeff<Project Sdk=\"Microsoft.NET.Sdk\">\n  <PropertyGroup>\n    <AssemblyName>Dapper.SqlBuilder</AssemblyName>\n    <PackageTags>orm;sql;micro-orm;query;sql-builder</PackageTags>\n    <Title>Dapper SqlBuilder component</Title>\n    <Description>The Dapper SqlBuilder component, for building SQL queries dynamically.</Description>\n    <Authors>Sam Saffron, Johan Danforth</Authors>\n    <TargetFrameworks>net461;netstandard2.0;net8.0</TargetFrameworks>\n    <GenerateDocumentationFile>false</GenerateDocumentationFile>\n    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>\n    <Nullable>enable</Nullable>\n  </PropertyGroup>\n  <ItemGroup>\n    <ProjectReference Include=\"..\\Dapper\\Dapper.csproj\" />",
+          "sha256": "a690d8572196f50240d6d4351eafb6015d9d7e7292e32ce9ce3852c075f0014f"
+        }
+      ]
+    },
+    {
+      "id": "q7",
+      "question": "For R, connection.Execute(sql) with null parameters, give the source-supported path to the affected-row result and its unresolved boundaries.",
+      "answer": "SqlMapper.Execute creates CommandDefinition then calls ExecuteImpl. With null parameters the non-multi-execution branch reaches ExecuteCommand with a null parameter reader. ExecuteCommand calls SetupCommand and then IDbCommand.ExecuteNonQuery, returns its result and performs cleanup. SetupCommand calls IDbConnection.CreateCommand; actual database/provider behavior behind the interfaces is external dynamic dispatch and is not established by these sources. Equivalent terminology for the named source definitions is accepted; unsupported runtime claims are not.",
+      "requiredFacts": [
+        "SqlMapper.Execute creates CommandDefinition then calls ExecuteImpl.",
+        "With null parameters the non-multi-execution branch reaches ExecuteCommand with a null parameter reader.",
+        "ExecuteCommand calls SetupCommand and then IDbCommand.ExecuteNonQuery, returns its result and performs cleanup.",
+        "SetupCommand calls IDbConnection.CreateCommand; actual database/provider behavior behind the interfaces is external dynamic dispatch and is not established by these sources."
+      ],
+      "evidence": [
+        {
+          "path": "Dapper/SqlMapper.cs",
+          "startLine": 559,
+          "endLine": 563,
+          "excerpt": "        public static int Execute(this IDbConnection cnn, string sql, object? param = null, IDbTransaction? transaction = null, int? commandTimeout = null, CommandType? commandType = null)\n        {\n            var command = new CommandDefinition(sql, param, transaction, commandTimeout, commandType, CommandFlags.Buffered);\n            return ExecuteImpl(cnn, ref command);\n        }",
+          "sha256": "86b7b8e2fec90482eda1d87807c850d495131270175e11b188446c39fcc87cec"
+        },
+        {
+          "path": "Dapper/SqlMapper.cs",
+          "startLine": 636,
+          "endLine": 642,
+          "excerpt": "        private static int ExecuteImpl(this IDbConnection cnn, ref CommandDefinition command)\n        {\n            object? param = command.Parameters;\n            IEnumerable? multiExec = GetMultiExec(param);\n            Identity identity;\n            CacheInfo? info = null;\n            if (multiExec is not null)",
+          "sha256": "86b7b8e2fec90482eda1d87807c850d495131270175e11b188446c39fcc87cec"
+        },
+        {
+          "path": "Dapper/SqlMapper.cs",
+          "startLine": 685,
+          "endLine": 692,
+          "excerpt": "            // nice and simple\n            if (param is not null)\n            {\n                identity = new Identity(command.CommandText, command.CommandTypeDirect, cnn, null, param.GetType());\n                info = GetCacheInfo(identity, param, command.AddToCache);\n            }\n            return ExecuteCommand(cnn, ref command, param is null ? null : info!.ParamReader);\n        }",
+          "sha256": "86b7b8e2fec90482eda1d87807c850d495131270175e11b188446c39fcc87cec"
+        },
+        {
+          "path": "Dapper/SqlMapper.cs",
+          "startLine": 3004,
+          "endLine": 3022,
+          "excerpt": "        private static int ExecuteCommand(IDbConnection cnn, ref CommandDefinition command, Action<IDbCommand, object?>? paramReader)\n        {\n            IDbCommand? cmd = null;\n            bool wasClosed = cnn.State == ConnectionState.Closed;\n            try\n            {\n                cmd = command.SetupCommand(cnn, paramReader);\n                if (wasClosed) cnn.Open();\n                int result = cmd.ExecuteNonQuery();\n                command.OnCompleted();\n                return result;\n            }\n            finally\n            {\n                if (wasClosed) cnn.Close();\n                cmd?.Parameters.Clear();\n                cmd?.Dispose();\n            }\n        }",
+          "sha256": "86b7b8e2fec90482eda1d87807c850d495131270175e11b188446c39fcc87cec"
+        },
+        {
+          "path": "Dapper/CommandDefinition.cs",
+          "startLine": 121,
+          "endLine": 139,
+          "excerpt": "        internal IDbCommand SetupCommand(IDbConnection cnn, Action<IDbCommand, object?>? paramReader)\n        {\n            var cmd = cnn.CreateCommand();\n            var init = GetInit(cmd.GetType());\n            init?.Invoke(cmd);\n            if (Transaction is not null)\n                cmd.Transaction = Transaction;\n            cmd.CommandText = CommandText;\n            if (CommandTimeout.HasValue)\n            {\n                cmd.CommandTimeout = CommandTimeout.Value;\n            }\n            else if (SqlMapper.Settings.CommandTimeout.HasValue)\n            {\n                cmd.CommandTimeout = SqlMapper.Settings.CommandTimeout.Value;\n            }\n            cmd.CommandType = CommandTypeDirect;\n            paramReader?.Invoke(cmd, Parameters);\n            return cmd;",
+          "sha256": "3ce9d8efb1faa39f4b03698604d2be0f8f575a85595cd9850e337c2b820690f6"
+        },
+        {
+          "path": "Dapper/SqlMapper.cs",
+          "startLine": 625,
+          "endLine": 634,
+          "excerpt": "        private static IEnumerable? GetMultiExec(object? param)\n        {\n#pragma warning disable IDE0038 // Use pattern matching - complicated enough!\n            return (param is IEnumerable\n#pragma warning restore IDE0038 // Use pattern matching\n                    && !(param is string\n                      || param is IEnumerable<KeyValuePair<string, object>>\n                      || param is IDynamicParameters)\n                ) ? (IEnumerable)param : null;\n        }",
+          "sha256": "86b7b8e2fec90482eda1d87807c850d495131270175e11b188446c39fcc87cec"
+        }
+      ]
+    },
+    {
+      "id": "q8",
+      "question": "If Y, the Dapper core project, changes, which direct project consumers are evidenced?",
+      "answer": "Dapper.SqlBuilder, Dapper.Rainbow and Dapper.EntityFramework each declare a ProjectReference to Dapper. This selected direct-consumer set is evidenced at the project level; runtime impact depends on the specific change and is not established by a project reference. Equivalent terminology for the named source definitions is accepted; unsupported runtime claims are not.",
+      "requiredFacts": [
+        "Dapper.SqlBuilder, Dapper.Rainbow and Dapper.EntityFramework each declare a ProjectReference to Dapper.",
+        "This selected direct-consumer set is evidenced at the project level; runtime impact depends on the specific change and is not established by a project reference."
+      ],
+      "evidence": [
+        {
+          "path": "Dapper.SqlBuilder/Dapper.SqlBuilder.csproj",
+          "startLine": 12,
+          "endLine": 14,
+          "excerpt": "  </PropertyGroup>\n  <ItemGroup>\n    <ProjectReference Include=\"..\\Dapper\\Dapper.csproj\" />",
+          "sha256": "a690d8572196f50240d6d4351eafb6015d9d7e7292e32ce9ce3852c075f0014f"
+        },
+        {
+          "path": "Dapper.Rainbow/Dapper.Rainbow.csproj",
+          "startLine": 12,
+          "endLine": 14,
+          "excerpt": "  </PropertyGroup>\n  <ItemGroup>\n    <ProjectReference Include=\"..\\Dapper\\Dapper.csproj\" />",
+          "sha256": "ea1ff2af1428fb4bad916525abcabe8662dbaf578e14779b0a8139535b7f4398"
+        },
+        {
+          "path": "Dapper.EntityFramework/Dapper.EntityFramework.csproj",
+          "startLine": 12,
+          "endLine": 15,
+          "excerpt": "  <ItemGroup>\n    <ProjectReference Include=\"..\\Dapper\\Dapper.csproj\" />\n    <PackageReference Include=\"EntityFramework\" />\n    <PackageReference Include=\"Microsoft.SqlServer.Types\" />",
+          "sha256": "b75965ca0aeb9eee64ac9e488c8d0d07e69ff3fe941035271cf04eb1d6d666a8"
+        }
+      ]
+    },
+    {
+      "id": "q9",
+      "question": "Which documented example exercises X, synchronous non-query execution, and how does it enter?",
+      "answer": "Readme.md demonstrates connection.Execute with SQL and an anonymous {a=1,b=2} parameter object and asserts count equals 2. The public Execute string overload wraps inputs in CommandDefinition and enters ExecuteImpl; the non-multi-parameter path calls ExecuteCommand. The assertion is documentation, not a newly executed database test. Equivalent terminology for the named source definitions is accepted; unsupported runtime claims are not.",
+      "requiredFacts": [
+        "Readme.md demonstrates connection.Execute with SQL and an anonymous {a=1,b=2} parameter object and asserts count equals 2.",
+        "The public Execute string overload wraps inputs in CommandDefinition and enters ExecuteImpl; the non-multi-parameter path calls ExecuteCommand.",
+        "The assertion is documentation, not a newly executed database test."
+      ],
+      "evidence": [
+        {
+          "path": "Readme.md",
+          "startLine": 110,
+          "endLine": 122,
+          "excerpt": "Example usage:\n\n```csharp\nvar count = connection.Execute(@\"\n  set nocount on\n  create table #t(i int)\n  set nocount off\n  insert #t\n  select @a a union all select @b\n  set nocount on\n  drop table #t\", new {a=1, b=2 });\nAssert.Equal(2, count);\n```",
+          "sha256": "39ae4c8dd31e397e6578ed01affcae7c5c7e1425cf31880f2de3a862d28aebbb"
+        },
+        {
+          "path": "Dapper/SqlMapper.cs",
+          "startLine": 559,
+          "endLine": 563,
+          "excerpt": "        public static int Execute(this IDbConnection cnn, string sql, object? param = null, IDbTransaction? transaction = null, int? commandTimeout = null, CommandType? commandType = null)\n        {\n            var command = new CommandDefinition(sql, param, transaction, commandTimeout, commandType, CommandFlags.Buffered);\n            return ExecuteImpl(cnn, ref command);\n        }",
+          "sha256": "86b7b8e2fec90482eda1d87807c850d495131270175e11b188446c39fcc87cec"
+        },
+        {
+          "path": "Dapper/SqlMapper.cs",
+          "startLine": 685,
+          "endLine": 692,
+          "excerpt": "            // nice and simple\n            if (param is not null)\n            {\n                identity = new Identity(command.CommandText, command.CommandTypeDirect, cnn, null, param.GetType());\n                info = GetCacheInfo(identity, param, command.AddToCache);\n            }\n            return ExecuteCommand(cnn, ref command, param is null ? null : info!.ParamReader);\n        }",
+          "sha256": "86b7b8e2fec90482eda1d87807c850d495131270175e11b188446c39fcc87cec"
+        }
+      ]
+    },
+    {
+      "id": "q10",
+      "question": "Where does Z, the SQL string supplied to Execute, enter and get handled?",
+      "answer": "Execute passes sql into the CommandDefinition constructor. The constructor stores it as CommandText and infers CommandType when none is provided. SetupCommand assigns CommandText to the provider command before execution; this assignment is not an SQL parser or an injection-safety guarantee. Equivalent terminology for the named source definitions is accepted; unsupported runtime claims are not.",
+      "requiredFacts": [
+        "Execute passes sql into the CommandDefinition constructor.",
+        "The constructor stores it as CommandText and infers CommandType when none is provided.",
+        "SetupCommand assigns CommandText to the provider command before execution; this assignment is not an SQL parser or an injection-safety guarantee."
+      ],
+      "evidence": [
+        {
+          "path": "Dapper/SqlMapper.cs",
+          "startLine": 559,
+          "endLine": 563,
+          "excerpt": "        public static int Execute(this IDbConnection cnn, string sql, object? param = null, IDbTransaction? transaction = null, int? commandTimeout = null, CommandType? commandType = null)\n        {\n            var command = new CommandDefinition(sql, param, transaction, commandTimeout, commandType, CommandFlags.Buffered);\n            return ExecuteImpl(cnn, ref command);\n        }",
+          "sha256": "86b7b8e2fec90482eda1d87807c850d495131270175e11b188446c39fcc87cec"
+        },
+        {
+          "path": "Dapper/CommandDefinition.cs",
+          "startLine": 84,
+          "endLine": 95,
+          "excerpt": "        public CommandDefinition(string commandText, object? parameters = null, IDbTransaction? transaction = null, int? commandTimeout = null,\n                                 CommandType? commandType = null, CommandFlags flags = CommandFlags.Buffered\n                                 , CancellationToken cancellationToken = default\n            )\n        {\n            CommandText = commandText;\n            Parameters = parameters;\n            Transaction = transaction;\n            CommandTimeout = commandTimeout;\n            CommandTypeDirect = commandType ?? InferCommandType(commandText);\n            Flags = flags;\n            CancellationToken = cancellationToken;",
+          "sha256": "3ce9d8efb1faa39f4b03698604d2be0f8f575a85595cd9850e337c2b820690f6"
+        },
+        {
+          "path": "Dapper/CommandDefinition.cs",
+          "startLine": 121,
+          "endLine": 139,
+          "excerpt": "        internal IDbCommand SetupCommand(IDbConnection cnn, Action<IDbCommand, object?>? paramReader)\n        {\n            var cmd = cnn.CreateCommand();\n            var init = GetInit(cmd.GetType());\n            init?.Invoke(cmd);\n            if (Transaction is not null)\n                cmd.Transaction = Transaction;\n            cmd.CommandText = CommandText;\n            if (CommandTimeout.HasValue)\n            {\n                cmd.CommandTimeout = CommandTimeout.Value;\n            }\n            else if (SqlMapper.Settings.CommandTimeout.HasValue)\n            {\n                cmd.CommandTimeout = SqlMapper.Settings.CommandTimeout.Value;\n            }\n            cmd.CommandType = CommandTypeDirect;\n            paramReader?.Invoke(cmd, Parameters);\n            return cmd;",
+          "sha256": "3ce9d8efb1faa39f4b03698604d2be0f8f575a85595cd9850e337c2b820690f6"
+        }
+      ]
+    }
+  ]
+}

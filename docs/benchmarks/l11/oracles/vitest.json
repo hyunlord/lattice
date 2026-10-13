@@ -1,0 +1,387 @@
+{
+  "id": "vitest",
+  "repository": "vitest-dev/vitest",
+  "commit": "f15bdac4f05d2838855d4bd4f47e4076036ea18b",
+  "trackedFiles": 3189,
+  "questions": [
+    {
+      "id": "q1",
+      "question": "What does Vitest do, and who calls or runs it?",
+      "answer": "Vitest is a Vite-powered testing framework. Developers import testing APIs such as describe, it and expect into tests and run the vitest CLI (for example npx vitest). Equivalent terminology for the named source definitions is accepted; unsupported runtime claims are not.",
+      "requiredFacts": [
+        "Vitest is a Vite-powered testing framework.",
+        "Developers import testing APIs such as describe, it and expect into tests and run the vitest CLI (for example npx vitest)."
+      ],
+      "evidence": [
+        {
+          "path": "README.md",
+          "startLine": 19,
+          "endLine": 20,
+          "excerpt": "<p align=\"center\">\nNext generation testing framework powered by Vite.",
+          "sha256": "e8ebb122af88ef7d54982ada599ffbc3321db6d57f3902b800031d7745b7bdde"
+        },
+        {
+          "path": "README.md",
+          "startLine": 65,
+          "endLine": 86,
+          "excerpt": "```ts\nimport { assert, describe, expect, it } from 'vitest'\n\ndescribe('suite name', () => {\n  it('foo', () => {\n    expect(1 + 1).toEqual(2)\n    expect(true).to.be.true\n  })\n\n  it('bar', () => {\n    assert.equal(Math.sqrt(4), 2)\n  })\n\n  it('snapshot', () => {\n    expect({ foo: 'bar' }).toMatchSnapshot()\n  })\n})\n```\n\n```bash\n$ npx vitest\n```",
+          "sha256": "e8ebb122af88ef7d54982ada599ffbc3321db6d57f3902b800031d7745b7bdde"
+        }
+      ]
+    },
+    {
+      "id": "q2",
+      "question": "Name principal package components and their responsibilities.",
+      "answer": "vitest is the core testing framework package: its node Vitest.start coordinates reporter and coverage initialization and test execution, and its internal runtime runner startTests collects and runs files. The runner source is inside packages/vitest/src/runtime/runner at this pin; do not invent a separate packages/runner package. @vitest/browser exposes browser-provider utilities; browser-playwright runs tests with Playwright and browser-preview previews tests in a real browser. @vitest/ui displays test results in the browser and exposes a reporter entrypoint. @vitest/expect supplies Jest expect matchers as a Chai plugin; @vitest/snapshot manages snapshots; @vitest/spy provides lightweight Jest-compatible spies. Equivalent source-grounded component terminology is accepted; this is a principal-component overview, not a requirement to enumerate every package or proof that any test was executed.",
+      "requiredFacts": [
+        "vitest is the core testing framework package: its node Vitest.start coordinates reporter and coverage initialization and test execution, and its internal runtime runner startTests collects and runs files.",
+        "The runner source is inside packages/vitest/src/runtime/runner at this pin; do not invent a separate packages/runner package.",
+        "@vitest/browser exposes browser-provider utilities; browser-playwright runs tests with Playwright and browser-preview previews tests in a real browser.",
+        "@vitest/ui displays test results in the browser and exposes a reporter entrypoint.",
+        "@vitest/expect supplies Jest expect matchers as a Chai plugin; @vitest/snapshot manages snapshots; @vitest/spy provides lightweight Jest-compatible spies."
+      ],
+      "evidence": [
+        {
+          "path": "packages/vitest/package.json",
+          "startLine": 1,
+          "endLine": 5,
+          "excerpt": "{\n  \"name\": \"vitest\",\n  \"type\": \"module\",\n  \"version\": \"5.0.4\",\n  \"description\": \"Next generation testing framework powered by Vite\",",
+          "sha256": "582c3c135a78137ec608275cd1bbdb7bcec2a5aca6a50439ce4ceab8da099a7a"
+        },
+        {
+          "path": "packages/expect/package.json",
+          "startLine": 1,
+          "endLine": 5,
+          "excerpt": "{\n  \"name\": \"@vitest/expect\",\n  \"type\": \"module\",\n  \"version\": \"5.0.4\",\n  \"description\": \"Jest's expect matchers as a Chai plugin\",",
+          "sha256": "18656ee4215cd8270ace24118b209d5539066073708ce76378ee0bfe1b46761e"
+        },
+        {
+          "path": "packages/snapshot/package.json",
+          "startLine": 1,
+          "endLine": 5,
+          "excerpt": "{\n  \"name\": \"@vitest/snapshot\",\n  \"type\": \"module\",\n  \"version\": \"5.0.4\",\n  \"description\": \"Vitest snapshot manager\",",
+          "sha256": "a9707b15437c58b7b860f39b082e8201db0ca5fad6accaeb48abb5309d1d28a1"
+        },
+        {
+          "path": "packages/spy/package.json",
+          "startLine": 1,
+          "endLine": 5,
+          "excerpt": "{\n  \"name\": \"@vitest/spy\",\n  \"type\": \"module\",\n  \"version\": \"5.0.4\",\n  \"description\": \"Lightweight Jest compatible spy implementation\",",
+          "sha256": "1727715f599661bdfee041f02352ab76caf69ab9b36ebdccd0dcd102cb8c07e0"
+        },
+        {
+          "path": "packages/vitest/src/node/core.ts",
+          "startLine": 835,
+          "endLine": 858,
+          "excerpt": "  /**\n   * Initialize reporters, the coverage provider, and run tests.\n   * This method can throw an error:\n   *   - `FilesNotFoundError` if no tests are found\n   *   - `GitNotFoundError` if `--related` flag is used, but git repository is not initialized\n   *   - `Error` from the user reporters\n   * @param filters String filters to match the test files\n   */\n  async start(filters?: string[]): Promise<TestRunResult> {\n    return this._traces.$(\n      'vitest.start',\n      { context: this._traces.getContextFromEnv(process.env) },\n      async (startSpan) => {\n        startSpan.setAttributes({\n          config: this.vite.config.configFile,\n        })\n\n        try {\n          await this._traces.$('vitest.coverage.init', async () => {\n            await this.initCoverageProvider()\n            await this.coverageProvider?.clean(this._coverageOptions.clean)\n          })\n        } finally {\n          await this.report('onInit', this)",
+          "sha256": "ef6651ba01f8d087a36c6df69fad2c385022786970728850e043a7c57ad9e1fa"
+        },
+        {
+          "path": "packages/vitest/src/runtime/runner/run.ts",
+          "startLine": 1010,
+          "endLine": 1014,
+          "excerpt": "export async function startTests(\n  specs: string[] | FileSpecification[],\n  runner: VitestRunner,\n): Promise<File[]> {\n  runner.trace ??= defaultTrace",
+          "sha256": "ffe43060936bc166025bf413082d8406b36591f05d8b0b3704a991e6016a0858"
+        },
+        {
+          "path": "packages/vitest/src/runtime/runner/run.ts",
+          "startLine": 1040,
+          "endLine": 1055,
+          "excerpt": "    const paths = specs.map((f) => (typeof f === 'string' ? f : f.filepath))\n    await runner.onBeforeCollect?.(paths)\n\n    const files = await collectTests(specs, runner)\n\n    await runner.onCollected?.(files)\n    await runner.onBeforeRunFiles?.(files)\n\n    await runFiles(files, runner)\n\n    await runner.onAfterRunFiles?.(files)\n\n    await finishSendTasksUpdate(runner)\n\n    return files\n  } finally {",
+          "sha256": "ffe43060936bc166025bf413082d8406b36591f05d8b0b3704a991e6016a0858"
+        },
+        {
+          "path": "packages/browser/README.md",
+          "startLine": 1,
+          "endLine": 9,
+          "excerpt": "# @vitest/browser\n\n[![NPM version](https://img.shields.io/npm/v/@vitest/browser?color=a1b858&label=)](https://npmx.dev/package/@vitest/browser)\n\nThis package exposes utilities to make your own browser provider. If you just need to run tests in the browser, consider installing one of these packages instead:\n\n- [@vitest/browser-playwright](https://npmx.dev/package/@vitest/browser-playwright) - run tests using [playwright](https://playwright.dev/)\n- [@vitest/browser-webdriverio](https://npmx.dev/package/@vitest/browser-webdriverio) - run tests using [webdriverio](https://webdriver.io/)\n- [@vitest/browser-preview](https://npmx.dev/package/@vitest/browser-preview) to see how your tests look like in a real browser.",
+          "sha256": "174ab43fff7a7ddbdad05abdb4263f07c0e589b1aa5d298152e98f23c842254e"
+        },
+        {
+          "path": "packages/ui/README.md",
+          "startLine": 1,
+          "endLine": 7,
+          "excerpt": "# @vitest/ui\n\n[![NPM version](https://img.shields.io/npm/v/@vitest/ui?color=a1b858&label=)](https://npmx.dev/package/@vitest/ui)\n\nSee your test results in the browser.\n\n[GitHub](https://github.com/vitest-dev/vitest/tree/main/packages/ui) | [Documentation](https://vitest.dev/guide/ui)",
+          "sha256": "8cfa6291d8ba7a31bffe092e4ebc28a599fbfdb1f1ec50c73e1042ce3b673011"
+        },
+        {
+          "path": "packages/ui/package.json",
+          "startLine": 23,
+          "endLine": 33,
+          "excerpt": "  \"exports\": {\n    \".\": {\n      \"__vitest_source__\": \"./node/index.ts\",\n      \"types\": \"./dist/index.d.ts\",\n      \"default\": \"./dist/index.js\"\n    },\n    \"./reporter\": {\n      \"__vitest_source__\": \"./node/reporter.ts\",\n      \"types\": \"./reporter.d.ts\",\n      \"default\": \"./dist/reporter.js\"\n    },",
+          "sha256": "a01a67d8cda3143ec903f10499eb0144a7653616a8e7fc2839830a770da6d735"
+        }
+      ]
+    },
+    {
+      "id": "q3",
+      "question": "Which languages, build systems and package boundaries organize it?",
+      "answer": "This is a pnpm workspace monorepo with TypeScript sources and ESM packages. The root scripts recursively build packages and run TypeScript typechecking; vitest builds with Rollup. The vitest package exposes distinct root, node and config entrypoints and declares a vitest executable. Equivalent terminology for the named source definitions is accepted; unsupported runtime claims are not.",
+      "requiredFacts": [
+        "This is a pnpm workspace monorepo with TypeScript sources and ESM packages.",
+        "The root scripts recursively build packages and run TypeScript typechecking; vitest builds with Rollup.",
+        "The vitest package exposes distinct root, node and config entrypoints and declares a vitest executable."
+      ],
+      "evidence": [
+        {
+          "path": "package.json",
+          "startLine": 1,
+          "endLine": 15,
+          "excerpt": "{\n  \"name\": \"@vitest/monorepo\",\n  \"type\": \"module\",\n  \"version\": \"5.0.4\",\n  \"private\": true,\n  \"packageManager\": \"pnpm@11.28.5\",\n  \"description\": \"Next generation testing framework powered by Vite\",\n  \"engines\": {\n    \"node\": \"^22.12.0 || ^24.0.0 || >=26.0.0\"\n  },\n  \"scripts\": {\n    \"ci\": \"pnpm typecheck && pnpm lint && pnpm build && pnpm test:ci\",\n    \"ci:docs\": \"pnpm run build && pnpm run docs:build\",\n    \"build\": \"pnpm -r --filter @vitest/ui --filter='./packages/**' run build\",\n    \"dev\": \"NODE_OPTIONS=\\\"--max-old-space-size=8192\\\" pnpm -r --parallel --filter='./packages/**' run dev\",",
+          "sha256": "568f90acb30873b0a4d684e0bacd9b77a5a0ed7b1ca82970dfbc092cb6f9a014"
+        },
+        {
+          "path": "package.json",
+          "startLine": 36,
+          "endLine": 38,
+          "excerpt": "    \"typebuild\": \"node ./scripts/explain-types.ts\",\n    \"typecheck\": \"tsc -p tsconfig.check.json --noEmit\",\n    \"typecheck:why\": \"tsc -p tsconfig.check.json --noEmit --explainFiles > explainTypes.txt\",",
+          "sha256": "568f90acb30873b0a4d684e0bacd9b77a5a0ed7b1ca82970dfbc092cb6f9a014"
+        },
+        {
+          "path": "pnpm-workspace.yaml",
+          "startLine": 25,
+          "endLine": 31,
+          "excerpt": "packages:\n  - docs\n  - packages/*\n  - examples/*\n  - test/*\n  - test/e2e/dts/*\n  - test/e2e/fixtures/conditions-pkg",
+          "sha256": "64cd610eee4cd519d9147b88e364f3769979744a4d6239504c9188671ee05cc7"
+        },
+        {
+          "path": "packages/vitest/package.json",
+          "startLine": 33,
+          "endLine": 44,
+          "excerpt": "  \"exports\": {\n    \".\": {\n      \"__vitest_source__\": \"./src/public/index.ts\",\n      \"import\": {\n        \"types\": \"./dist/index.d.ts\",\n        \"default\": \"./dist/index.js\"\n      },\n      \"require\": {\n        \"types\": \"./index.d.cts\",\n        \"default\": \"./index.cjs\"\n      }\n    },",
+          "sha256": "582c3c135a78137ec608275cd1bbdb7bcec2a5aca6a50439ce4ceab8da099a7a"
+        },
+        {
+          "path": "packages/vitest/package.json",
+          "startLine": 68,
+          "endLine": 87,
+          "excerpt": "    \"./node\": {\n      \"__vitest_source__\": \"./src/public/node.ts\",\n      \"types\": \"./dist/node.d.ts\",\n      \"default\": \"./dist/node.js\"\n    },\n    \"./internal/browser\": {\n      \"__vitest_source__\": \"./src/public/browser.ts\",\n      \"types\": \"./dist/browser.d.ts\",\n      \"default\": \"./dist/browser.js\"\n    },\n    \"./internal/traces\": {\n      \"__vitest_source__\": \"./src/utils/traces.ts\",\n      \"default\": \"./dist/traces.js\"\n    },\n    \"./config\": {\n      \"__vitest_source__\": \"./src/public/config.ts\",\n      \"types\": \"./config.d.ts\",\n      \"require\": \"./dist/config.cjs\",\n      \"default\": \"./dist/config.js\"\n    },",
+          "sha256": "582c3c135a78137ec608275cd1bbdb7bcec2a5aca6a50439ce4ceab8da099a7a"
+        },
+        {
+          "path": "packages/vitest/package.json",
+          "startLine": 99,
+          "endLine": 119,
+          "excerpt": "  \"main\": \"./dist/index.js\",\n  \"module\": \"./dist/index.js\",\n  \"types\": \"./dist/index.d.ts\",\n  \"bin\": {\n    \"vitest\": \"./vitest.mjs\"\n  },\n  \"files\": [\n    \"*.cjs\",\n    \"*.d.cts\",\n    \"*.d.ts\",\n    \"*.mjs\",\n    \"bin\",\n    \"browser\",\n    \"dist\"\n  ],\n  \"engines\": {\n    \"node\": \"^22.12.0 || ^24.0.0 || >=26.0.0\"\n  },\n  \"scripts\": {\n    \"build\": \"premove dist && rollup -c\",\n    \"dev\": \"NODE_OPTIONS=\\\"--max-old-space-size=8192\\\" rollup -c --watch -m inline\"",
+          "sha256": "582c3c135a78137ec608275cd1bbdb7bcec2a5aca6a50439ce4ceab8da099a7a"
+        },
+        {
+          "path": "packages/vitest/src/node/cli/cac.ts",
+          "startLine": 224,
+          "endLine": 230,
+          "excerpt": "export function parseCLI(\n  argv: string | string[],\n  config: CliParseOptions = {},\n): {\n  filter: string[]\n  options: CliOptions\n} {",
+          "sha256": "db20fa9c4f895b74b84ea21f76ebfa894165be0f66c78fcb5bdb6496f7328d02"
+        }
+      ]
+    },
+    {
+      "id": "q4",
+      "question": "Where does selected public-library use, parseCLI from vitest/node, begin?",
+      "answer": "The vitest/node export maps to src/public/node.ts under the source condition and dist/node.js for runtime. src/public/node.ts reexports parseCLI from ../node/cli/cac; that file defines parseCLI(argv, config). Equivalent terminology for the named source definitions is accepted; unsupported runtime claims are not.",
+      "requiredFacts": [
+        "The vitest/node export maps to src/public/node.ts under the source condition and dist/node.js for runtime.",
+        "src/public/node.ts reexports parseCLI from ../node/cli/cac; that file defines parseCLI(argv, config)."
+      ],
+      "evidence": [
+        {
+          "path": "packages/vitest/package.json",
+          "startLine": 68,
+          "endLine": 72,
+          "excerpt": "    \"./node\": {\n      \"__vitest_source__\": \"./src/public/node.ts\",\n      \"types\": \"./dist/node.d.ts\",\n      \"default\": \"./dist/node.js\"\n    },",
+          "sha256": "582c3c135a78137ec608275cd1bbdb7bcec2a5aca6a50439ce4ceab8da099a7a"
+        },
+        {
+          "path": "packages/vitest/src/public/node.ts",
+          "startLine": 10,
+          "endLine": 13,
+          "excerpt": "export { createCLI, parseCLI } from '../node/cli/cac'\nexport type { CliParseOptions } from '../node/cli/cac'\nexport type { CliOptions } from '../node/cli/cli-api'\nexport { startVitest } from '../node/cli/cli-api'",
+          "sha256": "1f96a1a0e102a66a30c293700b7e337fc9c03c96fbc6dacab31e26495b96af99"
+        },
+        {
+          "path": "packages/vitest/src/node/cli/cac.ts",
+          "startLine": 224,
+          "endLine": 230,
+          "excerpt": "export function parseCLI(\n  argv: string | string[],\n  config: CliParseOptions = {},\n): {\n  filter: string[]\n  options: CliOptions\n} {",
+          "sha256": "db20fa9c4f895b74b84ea21f76ebfa894165be0f66c78fcb5bdb6496f7328d02"
+        }
+      ]
+    },
+    {
+      "id": "q5",
+      "question": "Where is X, parsing vitest run into options.run without executing tests, implemented?",
+      "answer": "packages/vitest/src/node/cli/cac.ts defines parseCLI. It calls createCLI(config).parse with run:false, then sets options.run=true for the run subcommand unless watch is set, and returns filters and options. Equivalent terminology for the named source definitions is accepted; unsupported runtime claims are not.",
+      "requiredFacts": [
+        "packages/vitest/src/node/cli/cac.ts defines parseCLI.",
+        "It calls createCLI(config).parse with run:false, then sets options.run=true for the run subcommand unless watch is set, and returns filters and options."
+      ],
+      "evidence": [
+        {
+          "path": "packages/vitest/src/node/cli/cac.ts",
+          "startLine": 224,
+          "endLine": 254,
+          "excerpt": "export function parseCLI(\n  argv: string | string[],\n  config: CliParseOptions = {},\n): {\n  filter: string[]\n  options: CliOptions\n} {\n  const arrayArgs = typeof argv === 'string' ? splitArgv(argv) : argv\n  if (arrayArgs[0] !== 'vitest') {\n    throw new Error(`Expected \"vitest\" as the first argument, received \"${arrayArgs[0]}\"`)\n  }\n  arrayArgs[0] = '/index.js'\n  arrayArgs.unshift('node')\n  let { args, options } = createCLI(config).parse(arrayArgs, {\n    run: false,\n  })\n  if (arrayArgs[2] === 'watch' || arrayArgs[2] === 'dev') {\n    options.watch = true\n  }\n  if (arrayArgs[2] === 'run' && !options.watch) {\n    options.run = true\n  }\n  if (arrayArgs[2] === 'related') {\n    options.related = args\n    options.passWithNoTests ??= true\n    args = []\n  }\n  return {\n    filter: args as string[],\n    options,\n  }",
+          "sha256": "db20fa9c4f895b74b84ea21f76ebfa894165be0f66c78fcb5bdb6496f7328d02"
+        }
+      ]
+    },
+    {
+      "id": "q6",
+      "question": "Which internal modules does A, packages/vitest/src/node/cli/cac.ts, directly use through runtime imports?",
+      "answer": "cac.ts imports toArray from @vitest/utils/helpers and isAgent/isForceColor from ../../utils/env. It imports cliOptionsConfig/collectCliOptionsConfig from ./cli-config and setupTabCompletions from ./completions. These named imports prove the direction from cac.ts to the internal modules; external cac, pathe and tinyrainbow imports are separate dependencies, not internal modules. Equivalent terminology for the named source definitions is accepted; unsupported runtime claims are not.",
+      "requiredFacts": [
+        "cac.ts imports toArray from @vitest/utils/helpers and isAgent/isForceColor from ../../utils/env.",
+        "It imports cliOptionsConfig/collectCliOptionsConfig from ./cli-config and setupTabCompletions from ./completions.",
+        "These named imports prove the direction from cac.ts to the internal modules; external cac, pathe and tinyrainbow imports are separate dependencies, not internal modules."
+      ],
+      "evidence": [
+        {
+          "path": "packages/vitest/src/node/cli/cac.ts",
+          "startLine": 1,
+          "endLine": 11,
+          "excerpt": "import type { CAC, Command } from 'cac'\nimport type { CliOptions } from './cli-api'\nimport type { CLIOption, CLIOptions as CLIOptionsConfig } from './cli-config'\nimport { toArray } from '@vitest/utils/helpers'\nimport cac from 'cac'\nimport { normalize } from 'pathe'\nimport { disableDefaultColors } from 'tinyrainbow'\nimport { version } from '../../../package.json' with { type: 'json' }\nimport { isAgent, isForceColor } from '../../utils/env'\nimport { cliOptionsConfig, collectCliOptionsConfig } from './cli-config'\nimport { setupTabCompletions } from './completions'",
+          "sha256": "db20fa9c4f895b74b84ea21f76ebfa894165be0f66c78fcb5bdb6496f7328d02"
+        }
+      ]
+    },
+    {
+      "id": "q7",
+      "question": "For R, parseCLI(\"vitest run\"), give the source-supported path and outcome, including unresolved boundaries.",
+      "answer": "parseCLI converts the string using splitArgv, requires vitest as the first token, replaces it with /index.js and prepends node. It calls createCLI(config).parse(arrayArgs,{run:false}); createCLI builds the cac CLI and registers run. parseCLI sets options.run=true when watch is not set and returns filter and options; the fixture expects an empty filter and run:true. CAC parsing is an external-library boundary, and run:false means this path does not establish test execution. Equivalent terminology for the named source definitions is accepted; unsupported runtime claims are not.",
+      "requiredFacts": [
+        "parseCLI converts the string using splitArgv, requires vitest as the first token, replaces it with /index.js and prepends node.",
+        "It calls createCLI(config).parse(arrayArgs,{run:false}); createCLI builds the cac CLI and registers run.",
+        "parseCLI sets options.run=true when watch is not set and returns filter and options; the fixture expects an empty filter and run:true.",
+        "CAC parsing is an external-library boundary, and run:false means this path does not establish test execution."
+      ],
+      "evidence": [
+        {
+          "path": "packages/vitest/src/node/cli/cac.ts",
+          "startLine": 215,
+          "endLine": 254,
+          "excerpt": "function splitArgv(argv: string): string[] {\n  const reg = /(['\"])(?:(?!\\1).)+\\1/g\n  argv = argv.replace(reg, (match) => match.replace(/\\s/g, '\\x00'))\n  return argv.split(' ').map((arg: string) => {\n    arg = arg.replace(/\\0/g, ' ')\n    return removeQuotes(arg)\n  })\n}\n\nexport function parseCLI(\n  argv: string | string[],\n  config: CliParseOptions = {},\n): {\n  filter: string[]\n  options: CliOptions\n} {\n  const arrayArgs = typeof argv === 'string' ? splitArgv(argv) : argv\n  if (arrayArgs[0] !== 'vitest') {\n    throw new Error(`Expected \"vitest\" as the first argument, received \"${arrayArgs[0]}\"`)\n  }\n  arrayArgs[0] = '/index.js'\n  arrayArgs.unshift('node')\n  let { args, options } = createCLI(config).parse(arrayArgs, {\n    run: false,\n  })\n  if (arrayArgs[2] === 'watch' || arrayArgs[2] === 'dev') {\n    options.watch = true\n  }\n  if (arrayArgs[2] === 'run' && !options.watch) {\n    options.run = true\n  }\n  if (arrayArgs[2] === 'related') {\n    options.related = args\n    options.passWithNoTests ??= true\n    args = []\n  }\n  return {\n    filter: args as string[],\n    options,\n  }",
+          "sha256": "db20fa9c4f895b74b84ea21f76ebfa894165be0f66c78fcb5bdb6496f7328d02"
+        },
+        {
+          "path": "packages/vitest/src/node/cli/cac.ts",
+          "startLine": 74,
+          "endLine": 83,
+          "excerpt": "export function createCLI(options: CliParseOptions = {}): CAC {\n  if (isAgent && !isForceColor()) {\n    disableDefaultColors()\n  }\n\n  const cli = cac('vitest')\n\n  cli.version(version)\n\n  addCliOptions(cli, cliOptionsConfig)",
+          "sha256": "db20fa9c4f895b74b84ea21f76ebfa894165be0f66c78fcb5bdb6496f7328d02"
+        },
+        {
+          "path": "packages/vitest/src/node/cli/cac.ts",
+          "startLine": 170,
+          "endLine": 174,
+          "excerpt": "  cli.command('run [...filters]', undefined, options).action(run)\n\n  cli.command('related [...filters]', undefined, options).action(runRelated)\n\n  cli.command('watch [...filters]', undefined, options).action(watch)",
+          "sha256": "db20fa9c4f895b74b84ea21f76ebfa894165be0f66c78fcb5bdb6496f7328d02"
+        },
+        {
+          "path": "test/unit/test/cli-test.test.ts",
+          "startLine": 423,
+          "endLine": 430,
+          "excerpt": "  expect(parseCLI('vitest run')).toEqual({\n    filter: [],\n    options: {\n      run: true,\n      '--': [],\n      color: true,\n    },\n  })",
+          "sha256": "4f90405e3533218fca776453a0ff8033e5d99950d4f1a7bf906b62919c9894f6"
+        }
+      ]
+    },
+    {
+      "id": "q8",
+      "question": "If Y, createCLI in cac.ts, changes, which direct consumers are evidenced?",
+      "answer": "src/node/cli.ts imports createCLI and calls createCLI().parse(). parseCLI in cac.ts directly calls createCLI(config), while src/public/node.ts reexports it. The unit CLI tests import createCLI through vitest/node; these are evidenced consumers/reexports, not proof every change alters test execution. Equivalent terminology for the named source definitions is accepted; unsupported runtime claims are not.",
+      "requiredFacts": [
+        "src/node/cli.ts imports createCLI and calls createCLI().parse().",
+        "parseCLI in cac.ts directly calls createCLI(config), while src/public/node.ts reexports it.",
+        "The unit CLI tests import createCLI through vitest/node; these are evidenced consumers/reexports, not proof every change alters test execution."
+      ],
+      "evidence": [
+        {
+          "path": "packages/vitest/src/node/cli.ts",
+          "startLine": 1,
+          "endLine": 3,
+          "excerpt": "import { createCLI } from './cli/cac'\n\ncreateCLI().parse()",
+          "sha256": "fe67160cdcfba453ec32f603b75aa8e434365660aa79258c5bc4912f04a6ed7a"
+        },
+        {
+          "path": "packages/vitest/src/node/cli/cac.ts",
+          "startLine": 235,
+          "endLine": 239,
+          "excerpt": "  arrayArgs[0] = '/index.js'\n  arrayArgs.unshift('node')\n  let { args, options } = createCLI(config).parse(arrayArgs, {\n    run: false,\n  })",
+          "sha256": "db20fa9c4f895b74b84ea21f76ebfa894165be0f66c78fcb5bdb6496f7328d02"
+        },
+        {
+          "path": "packages/vitest/src/public/node.ts",
+          "startLine": 10,
+          "endLine": 11,
+          "excerpt": "export { createCLI, parseCLI } from '../node/cli/cac'\nexport type { CliParseOptions } from '../node/cli/cac'",
+          "sha256": "1f96a1a0e102a66a30c293700b7e337fc9c03c96fbc6dacab31e26495b96af99"
+        },
+        {
+          "path": "test/unit/test/cli-test.test.ts",
+          "startLine": 1,
+          "endLine": 3,
+          "excerpt": "import { expect, test } from 'vitest'\nimport { createCLI, parseCLI, ReportersMap, resolveConfig, rolldownVersion } from 'vitest/node'\n",
+          "sha256": "4f90405e3533218fca776453a0ff8033e5d99950d4f1a7bf906b62919c9894f6"
+        }
+      ]
+    },
+    {
+      "id": "q9",
+      "question": "Which tests exercise X, parseCLI run-option handling, and how do they enter?",
+      "answer": "test/unit/test/cli-test.test.ts imports parseCLI from vitest/node. The public parseCLI works correctly test expects parseCLI(\"vitest run\") to return run:true and empty filters; the run --watch case instead records watch:true. The public node entry reexports the implementation from node/cli/cac; the tests were inspected, not executed. Equivalent terminology for the named source definitions is accepted; unsupported runtime claims are not.",
+      "requiredFacts": [
+        "test/unit/test/cli-test.test.ts imports parseCLI from vitest/node.",
+        "The public parseCLI works correctly test expects parseCLI(\"vitest run\") to return run:true and empty filters; the run --watch case instead records watch:true.",
+        "The public node entry reexports the implementation from node/cli/cac; the tests were inspected, not executed."
+      ],
+      "evidence": [
+        {
+          "path": "test/unit/test/cli-test.test.ts",
+          "startLine": 1,
+          "endLine": 3,
+          "excerpt": "import { expect, test } from 'vitest'\nimport { createCLI, parseCLI, ReportersMap, resolveConfig, rolldownVersion } from 'vitest/node'\n",
+          "sha256": "4f90405e3533218fca776453a0ff8033e5d99950d4f1a7bf906b62919c9894f6"
+        },
+        {
+          "path": "test/unit/test/cli-test.test.ts",
+          "startLine": 406,
+          "endLine": 439,
+          "excerpt": "test('public parseCLI works correctly', () => {\n  expect(parseCLI('vitest dev')).toEqual({\n    filter: [],\n    options: {\n      watch: true,\n      '--': [],\n      color: true,\n    },\n  })\n  expect(parseCLI('vitest watch')).toEqual({\n    filter: [],\n    options: {\n      watch: true,\n      '--': [],\n      color: true,\n    },\n  })\n  expect(parseCLI('vitest run')).toEqual({\n    filter: [],\n    options: {\n      run: true,\n      '--': [],\n      color: true,\n    },\n  })\n  expect(parseCLI('vitest run --watch')).toEqual({\n    filter: [],\n    options: {\n      watch: true,\n      w: true,\n      '--': [],\n      color: true,\n    },\n  })",
+          "sha256": "4f90405e3533218fca776453a0ff8033e5d99950d4f1a7bf906b62919c9894f6"
+        },
+        {
+          "path": "packages/vitest/src/public/node.ts",
+          "startLine": 10,
+          "endLine": 13,
+          "excerpt": "export { createCLI, parseCLI } from '../node/cli/cac'\nexport type { CliParseOptions } from '../node/cli/cac'\nexport type { CliOptions } from '../node/cli/cli-api'\nexport { startVitest } from '../node/cli/cli-api'",
+          "sha256": "1f96a1a0e102a66a30c293700b7e337fc9c03c96fbc6dacab31e26495b96af99"
+        },
+        {
+          "path": "packages/vitest/src/node/cli/cac.ts",
+          "startLine": 237,
+          "endLine": 254,
+          "excerpt": "  let { args, options } = createCLI(config).parse(arrayArgs, {\n    run: false,\n  })\n  if (arrayArgs[2] === 'watch' || arrayArgs[2] === 'dev') {\n    options.watch = true\n  }\n  if (arrayArgs[2] === 'run' && !options.watch) {\n    options.run = true\n  }\n  if (arrayArgs[2] === 'related') {\n    options.related = args\n    options.passWithNoTests ??= true\n    args = []\n  }\n  return {\n    filter: args as string[],\n    options,\n  }",
+          "sha256": "db20fa9c4f895b74b84ea21f76ebfa894165be0f66c78fcb5bdb6496f7328d02"
+        }
+      ]
+    },
+    {
+      "id": "q10",
+      "question": "Where does Z, a string argv supplied to parseCLI, enter and get transformed?",
+      "answer": "parseCLI accepts string or string[]; a string is sent to splitArgv. splitArgv temporarily protects spaces in quoted substrings, splits on spaces, restores protected spaces and invokes removeQuotes. parseCLI validates the leading vitest token, rewrites the program prefix and hands tokens to CAC with execution disabled. Equivalent terminology for the named source definitions is accepted; unsupported runtime claims are not.",
+      "requiredFacts": [
+        "parseCLI accepts string or string[]; a string is sent to splitArgv.",
+        "splitArgv temporarily protects spaces in quoted substrings, splits on spaces, restores protected spaces and invokes removeQuotes.",
+        "parseCLI validates the leading vitest token, rewrites the program prefix and hands tokens to CAC with execution disabled."
+      ],
+      "evidence": [
+        {
+          "path": "packages/vitest/src/node/cli/cac.ts",
+          "startLine": 199,
+          "endLine": 239,
+          "excerpt": "function removeQuotes<T>(str: T): T {\n  if (typeof str !== 'string') {\n    if (Array.isArray(str)) {\n      return str.map(removeQuotes) as unknown as T\n    }\n    return str\n  }\n  if (str[0] === '\"' && str.endsWith('\"')) {\n    return str.slice(1, -1) as unknown as T\n  }\n  if (str.startsWith(`'`) && str.endsWith(`'`)) {\n    return str.slice(1, -1) as unknown as T\n  }\n  return str\n}\n\nfunction splitArgv(argv: string): string[] {\n  const reg = /(['\"])(?:(?!\\1).)+\\1/g\n  argv = argv.replace(reg, (match) => match.replace(/\\s/g, '\\x00'))\n  return argv.split(' ').map((arg: string) => {\n    arg = arg.replace(/\\0/g, ' ')\n    return removeQuotes(arg)\n  })\n}\n\nexport function parseCLI(\n  argv: string | string[],\n  config: CliParseOptions = {},\n): {\n  filter: string[]\n  options: CliOptions\n} {\n  const arrayArgs = typeof argv === 'string' ? splitArgv(argv) : argv\n  if (arrayArgs[0] !== 'vitest') {\n    throw new Error(`Expected \"vitest\" as the first argument, received \"${arrayArgs[0]}\"`)\n  }\n  arrayArgs[0] = '/index.js'\n  arrayArgs.unshift('node')\n  let { args, options } = createCLI(config).parse(arrayArgs, {\n    run: false,\n  })",
+          "sha256": "db20fa9c4f895b74b84ea21f76ebfa894165be0f66c78fcb5bdb6496f7328d02"
+        }
+      ]
+    }
+  ]
+}

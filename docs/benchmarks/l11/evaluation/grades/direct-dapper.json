@@ -1,0 +1,130 @@
+{
+  "repository": "DapperLib/Dapper",
+  "commit": "eb47546a408bbf6c178bda4f04dc205bc51ffbfe",
+  "arm": "direct",
+  "gradedBy": "independent fresh grader batch2",
+  "answerSha256": "52f8b5d49074bed2216e1615c9b983b4670a6043ad69cb95796561312980ad38",
+  "questions": [
+    {
+      "id": "q1",
+      "score": 2,
+      "reason": "Correct .NET micro-ORM/ADO.NET connection extension use and synchronous/asynchronous buffered/unbuffered boundaries.",
+      "sourceReferences": [
+        "Readme.md:44-61",
+        "Dapper/Dapper.csproj:1-8"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "q2",
+      "score": 2,
+      "reason": "Correct core, EF, Rainbow, SqlBuilder and command/parameter responsibilities; project/package distinctions supported.",
+      "sourceReferences": [
+        "Readme.md:21-31"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "q3",
+      "score": 2,
+      "reason": "Correct C#, SDK/MSBuild, target frameworks and companion-project/package boundaries; extra shared build properties verified.",
+      "sourceReferences": [
+        "Dapper/Dapper.csproj:1-11",
+        "Dapper.SqlBuilder/Dapper.SqlBuilder.csproj:1-14",
+        "Dapper/SqlMapper.cs:559-563"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "q4",
+      "score": 2,
+      "reason": "Correct public IDbConnection Execute string overload -> CommandDefinition -> ExecuteImpl.",
+      "sourceReferences": [
+        "Dapper/SqlMapper.cs:550-563"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "q5",
+      "score": 1,
+      "reason": "Correct ExecuteCommand location and provider ExecuteNonQuery result, but omits SetupCommand, conditional connection opening, OnCompleted and finally cleanup in this implementation question.",
+      "sourceReferences": [
+        "Dapper/SqlMapper.cs:3004-3022"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "q6",
+      "score": 2,
+      "reason": "Correct SqlBuilder -> Dapper ProjectReference, distinguished from separately supported DynamicParameters construction/calls.",
+      "sourceReferences": [
+        "Dapper.SqlBuilder/Dapper.SqlBuilder.csproj:1-14"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "q7",
+      "score": 2,
+      "reason": "Correct null-parameter non-multi route, null reader, command creation/execution, completion, return and cleanup, with provider/database dispatch left external.",
+      "sourceReferences": [
+        "Dapper/SqlMapper.cs:559-563",
+        "Dapper/SqlMapper.cs:636-642",
+        "Dapper/SqlMapper.cs:685-692",
+        "Dapper/SqlMapper.cs:3004-3022",
+        "Dapper/CommandDefinition.cs:121-139",
+        "Dapper/SqlMapper.cs:625-634"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "q8",
+      "score": 2,
+      "reason": "Correct direct SqlBuilder/Rainbow/EF references and additional shared test/benchmark references; source-sharing signed build is properly separated from project-reference edges.",
+      "sourceReferences": [
+        "Dapper.SqlBuilder/Dapper.SqlBuilder.csproj:12-14",
+        "Dapper.Rainbow/Dapper.Rainbow.csproj:12-14",
+        "Dapper.EntityFramework/Dapper.EntityFramework.csproj:12-15"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "q9",
+      "score": 2,
+      "reason": "Correct documented parameterized Execute example, expected affected-row count 2, single-command route and non-execution caveat.",
+      "sourceReferences": [
+        "Readme.md:110-122",
+        "Dapper/SqlMapper.cs:559-563",
+        "Dapper/SqlMapper.cs:685-692"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "q10",
+      "score": 2,
+      "reason": "Correct sql -> CommandDefinition.CommandText, type inference and provider command assignment, with parameterized rewrite and external parser boundaries accurately separated.",
+      "sourceReferences": [
+        "Dapper/SqlMapper.cs:559-563",
+        "Dapper/CommandDefinition.cs:84-95",
+        "Dapper/CommandDefinition.cs:121-139"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    }
+  ],
+  "total": 19,
+  "referenceIssues": [],
+  "limitations": [
+    "Read-only source grading; no target builds, tests or scripts executed. All oracle evidence excerpts checked against pinned Git objects; Dapper line endings normalized according to frozen errata.",
+    "Answer citation line spans commonly reflect browser-rendered offsets and do not consistently match physical source lines. Explicit named definitions in the cited pinned files were verified; sourceReferences contain verified physical spans.",
+    "Required factual coverage and selected-path definitions were verified; this is not an exhaustive audit of every ancillary claim or every possible runtime caller."
+  ]
+}

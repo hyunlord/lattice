@@ -1,0 +1,18 @@
+{
+  "repository": "httpx",
+  "commit": "b5addb64f0161ff6bfe94c124ef76f6a1fba5254",
+  "candidate": "2b7c00f",
+  "startedAt": "2026-10-13T07:12:49.660Z",
+  "reused": true,
+  "seconds": 0.00035675,
+  "graphHash": "97c226ca7c266012367bd495dc319601000232fce98d18169f780ae1279bc2ed",
+  "source": {
+    "name": "httpx",
+    "dirty": false,
+    "sourceFingerprint": "4b2af88c1b3f54d977130312ca6e7558e0381776f67bb5ae1ce5df6e3b7571ff",
+    "commit": "b5addb64f0161ff6bfe94c124ef76f6a1fba5254",
+    "remoteUrl": "https://github.com/encode/httpx"
+  },
+  "status": "ready",
+  "finishedAt": "2026-10-13T07:12:49.661Z"
+}

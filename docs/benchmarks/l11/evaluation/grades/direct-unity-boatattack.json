@@ -1,0 +1,137 @@
+{
+  "repository": "unity-boatattack",
+  "commit": "6acf5f773a440030489cb5e2b3c009fb5fe1e8ce",
+  "arm": "direct",
+  "gradedBy": "independent fresh grader batch2",
+  "answerSha256": "05468bc912b68df531f0c09a72db320d6b2385314f6a39df30452f0a38ca7c8f",
+  "questions": [
+    {
+      "id": "unity-boatattack-q1",
+      "score": 2,
+      "reason": "Correctly identifies the URP learning/testing boat-racing slice and Unity/player consumers.",
+      "sourceReferences": [
+        "README.md:3-23",
+        "README.md:38-52"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "unity-boatattack-q2",
+      "score": 1,
+      "reason": "Gameplay, controllers, water sampling and UI responsibilities are supported, but the principal-component answer omits the menu/island scene organization and Cinemachine/Addressables responsibilities required by the frozen question.",
+      "sourceReferences": [
+        "README.md:12-23",
+        "README.md:42-50",
+        "Assets/Scripts/Boat/Boat.cs:57-78",
+        "Packages/com.verasl.water-system/package.json:1-12"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": true
+    },
+    {
+      "id": "unity-boatattack-q3",
+      "score": 1,
+      "reason": "Correct C#/Unity, manifest and embedded-package description. Explicitly leaves assembly boundaries unknown and omits the WaterSystem asmdef and Shader Graph rendering coverage.",
+      "sourceReferences": [
+        "Assets/Scripts/Boat/Engine.cs:1-10",
+        "Packages/manifest.json:1-17",
+        "Packages/com.verasl.water-system/package.json:1-12",
+        "Packages/com.verasl.water-system/Scripts/WaterSystem.Runtime.asmdef:1-19",
+        "README.md:12-23"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": true
+    },
+    {
+      "id": "unity-boatattack-q4",
+      "score": 1,
+      "reason": "Supported human-controller setup and lifecycle entry, but omits the documented main_menu full-demo entry in this answer. Serialized menu dispatch remains honestly unverified.",
+      "sourceReferences": [
+        "README.md:38-46",
+        "Assets/Scripts/Boat/Boat.cs:57-78",
+        "Assets/Scripts/Boat/HumanController.cs:18-38",
+        "Assets/Scripts/Boat/HumanController.cs:70-74"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": true
+    },
+    {
+      "id": "unity-boatattack-q5",
+      "score": 2,
+      "reason": "Correct Engine.Accelerate definition, strict water gate, clamp, horizontal forward acceleration and relative torque; source distinguishes the gate from the misleading informal depth comment.",
+      "sourceReferences": [
+        "Assets/Scripts/Boat/Engine.cs:60-75"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "unity-boatattack-q6",
+      "score": 2,
+      "reason": "Correct directed construction/call dependencies for InputControls, Engine, Boat reset, DayNightController and inherited Boat.engine wiring.",
+      "sourceReferences": [
+        "Assets/Scripts/Boat/HumanController.cs:18-38",
+        "Assets/Scripts/Boat/HumanController.cs:45-74",
+        "Assets/Scripts/Boat/BaseController.cs:5-14"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "unity-boatattack-q7",
+      "score": 2,
+      "reason": "Correct cached performed/canceled input, FixedUpdate-to-Accelerate path, Boat.engine resolution, water/physics boundary, and explicit absence of a synchronous callback-to-FixedUpdate edge.",
+      "sourceReferences": [
+        "Assets/Scripts/Boat/HumanController.cs:18-29",
+        "Assets/Scripts/Boat/HumanController.cs:70-74",
+        "Assets/Scripts/Boat/BaseController.cs:10-14",
+        "Assets/Scripts/Boat/Engine.cs:63-75"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "unity-boatattack-q8",
+      "score": 2,
+      "reason": "Both direct callers and the AI 1f/0.25f values are source-supported; correctly separates upstream setup from direct consumers and does not claim measured race effects.",
+      "sourceReferences": [
+        "Assets/Scripts/Boat/HumanController.cs:70-74",
+        "Assets/Scripts/Boat/AiController.cs:78-87"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": true
+    },
+    {
+      "id": "unity-boatattack-q9",
+      "score": 1,
+      "reason": "Identifies documented demo_island AI race and AiController-to-Accelerate call, but does not explain non-human Boat.SetupController selection linking the example to the AI controller. Serialized connection is explicitly left unverified.",
+      "sourceReferences": [
+        "README.md:42-46",
+        "Assets/Scripts/Boat/Boat.cs:57-78",
+        "Assets/Scripts/Boat/AiController.cs:78-87"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": true
+    },
+    {
+      "id": "unity-boatattack-q10",
+      "score": 1,
+      "reason": "Correct action entry, float capture, cancellation and clamp, including supported binding details; omits the FixedUpdate handoff and gate/horsepower scaling in this per-question dataflow answer.",
+      "sourceReferences": [
+        "Assets/Scripts/Boat/HumanController.cs:18-25",
+        "Assets/Scripts/Boat/HumanController.cs:70-74",
+        "Assets/Scripts/Boat/Engine.cs:63-75"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    }
+  ],
+  "total": 15,
+  "referenceIssues": [],
+  "limitations": [
+    "Read-only source grading; no target builds, tests or scripts executed. All oracle evidence excerpts checked against pinned Git objects; Dapper line endings normalized according to frozen errata.",
+    "Answer citation line spans commonly reflect browser-rendered offsets and do not consistently match physical source lines. Explicit named definitions in the cited pinned files were verified; sourceReferences contain verified physical spans.",
+    "Required factual coverage and selected-path definitions were verified; this is not an exhaustive audit of every ancillary claim or every possible runtime caller."
+  ]
+}

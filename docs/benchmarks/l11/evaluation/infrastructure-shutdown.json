@@ -1,0 +1,21 @@
+{
+  "timedTrialsFinished": 36,
+  "records": [
+    {
+      "pid": 4133,
+      "command": "node /tmp/l11-evaluation/watch-trials.mjs",
+      "signal": "SIGTERM",
+      "sentAt": "2026-10-13T08:15:39.929Z"
+    },
+    {
+      "pid": 29099,
+      "command": "node /tmp/l11-evaluation/transport-server.mjs",
+      "signal": "SIGTERM",
+      "sentAt": "2026-10-13T08:15:39.932Z"
+    }
+  ],
+  "limitation": "Historical session-close calls were not persisted in transport-events; shutdown record does not backfill them.",
+  "remainingProcesses": [],
+  "verifiedAt": "2026-10-13T08:15:55.739Z",
+  "portClosed": true
+}

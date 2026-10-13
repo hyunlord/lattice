@@ -38,16 +38,29 @@ export function checkBenchmarkContract(root) {
   for (const [path, expected] of Object.entries(freeze.files)) assert.equal(createHash('sha256').update(readFileSync(join(root, path))).digest('hex'), expected, `Frozen benchmark changed: ${path}`);
   const repositories = JSON.parse(readFileSync(join(directory, 'repositories.json'), 'utf8')).repositories;
   assert.equal(repositories.length, 12);
+  const firstImpression = join(root, 'docs/benchmarks/l11');
+  const registration = JSON.parse(readFileSync(join(firstImpression, 'freeze.json'), 'utf8'));
+  for (const [path, expected] of Object.entries(registration.files)) assert.equal(createHash('sha256').update(readFileSync(join(firstImpression, path))).digest('hex'), expected, `Frozen L11 benchmark changed: ${path}`);
+  const expanded = JSON.parse(readFileSync(join(firstImpression, 'repositories.json'), 'utf8')).repositories;
+  assert.equal(expanded.length, 18);
+  const questions = JSON.parse(readFileSync(join(firstImpression, 'questions.json'), 'utf8')).repositories;
+  assert.equal(questions.length, expanded.length);
+  for (const entry of expanded) {
+    const selected = questions.find(question => question.id === entry.id);
+    assert.equal(selected?.commit, entry.commit);
+    assert.equal(selected?.questions.length, 10);
+  }
+  const guarded = [...new Map([...repositories, ...expanded].map(entry => [entry.repository, entry])).values()];
   const errors = [];
   function visit(directory) {
     for (const entry of readdirSync(directory, { withFileTypes: true })) {
       const path = join(directory, entry.name);
       if (entry.isDirectory()) visit(path);
-      else if (/\.(?:[cm]?ts|tsx|[cm]?js|css|html)$/u.test(entry.name)) errors.push(...repositorySpecializations(relative(root, path), readFileSync(path, 'utf8'), repositories));
+      else if (/\.(?:[cm]?ts|tsx|[cm]?js|css|html)$/u.test(entry.name)) errors.push(...repositorySpecializations(relative(root, path), readFileSync(path, 'utf8'), guarded));
     }
   }
   for (const directory of ['src', 'cli', 'viewer', 'browser']) visit(join(root, directory));
   assert.deepEqual(errors, [], 'Benchmark-specific production code is forbidden');
-  console.log(`L9 benchmark contract: ${Object.keys(freeze.files).length} frozen artifacts, 12 repositories, no production specialization.`);
+  console.log(`L9/L11 benchmark contracts: ${Object.keys(freeze.files).length + Object.keys(registration.files).length} frozen artifacts, ${guarded.length} repositories, no production specialization.`);
 }
 if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) checkBenchmarkContract(resolve(fileURLToPath(new URL('..', import.meta.url))));

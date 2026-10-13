@@ -1,0 +1,373 @@
+{
+  "id": "fastify",
+  "repository": "fastify/fastify",
+  "commit": "86368086171305df4e235f6d6bec892c67ec2ae2",
+  "trackedFiles": 395,
+  "questions": [
+    {
+      "id": "fastify-q1",
+      "question": "What does Fastify do, and who calls or runs it?",
+      "answer": "Fastify is a low-overhead Node.js web framework. Application developers instantiate its exported factory, register routes and call listen; HTTP clients then trigger those handlers. It is a framework dependency rather than a single fixed application server shipped for one business domain.",
+      "requiredFacts": [
+        "Node.js web framework",
+        "Developer calls factory/registers routes/listens",
+        "HTTP clients trigger configured handlers"
+      ],
+      "evidence": [
+        {
+          "path": "package.json",
+          "startLine": 1,
+          "endLine": 7,
+          "excerpt": "{\n  \"name\": \"fastify\",\n  \"version\": \"6.0.0-alpha.4\",\n  \"description\": \"Fast and low overhead web framework, for Node.js\",\n  \"main\": \"fastify.js\",\n  \"type\": \"commonjs\",\n  \"types\": \"fastify.d.ts\",",
+          "sha256": "4bfab1c73710d1f815e2c5bf7af3659f6a58da3d7875506ee8c7a051be561d96"
+        },
+        {
+          "path": "README.md",
+          "startLine": 105,
+          "endLine": 138,
+          "excerpt": "### Install\n\nTo install Fastify in an existing project as a dependency:\n\n```sh\nnpm i fastify\n```\n\n### Example\n\n```js\n// Require the framework and instantiate it\n\n// ESM\nimport Fastify from 'fastify'\n\nconst fastify = Fastify({\n  logger: true\n})\n// CommonJS\nconst fastify = require('fastify')({\n  logger: true\n})\n\n// Declare a route\nfastify.get('/', (request, reply) => {\n  reply.send({ hello: 'world' })\n})\n\n// Run the server!\nfastify.listen({ port: 3000 }, (err, address) => {\n  if (err) throw err\n  // Server is now listening on ${address}\n})",
+          "sha256": "18a8e0e8a62fb80431d0a6495770d9e195c3afb06b17fa6464e62712ed7d256e"
+        }
+      ]
+    },
+    {
+      "id": "fastify-q2",
+      "question": "Name the principal Fastify components and their responsibilities.",
+      "answer": "fastify.js constructs the public instance and wires internal modules; lib/server.js constructs server/listen machinery; lib/route.js registers and dispatches routes; lib/handle-request.js coordinates parsing/validation/hooks and handler invocation; lib/wrap-thenable.js settles asynchronous handler results into replies. These are modules within one package, not independent npm packages.",
+      "requiredFacts": [
+        "fastify.js public factory wiring",
+        "server.js server/listen",
+        "route.js registration/dispatch",
+        "handle-request.js request lifecycle",
+        "wrap-thenable.js async result settlement"
+      ],
+      "evidence": [
+        {
+          "path": "fastify.js",
+          "startLine": 40,
+          "endLine": 54,
+          "excerpt": "const { createServer } = require('./lib/server')\nconst Reply = require('./lib/reply')\nconst Request = require('./lib/request')\nconst Context = require('./lib/context.js')\nconst decorator = require('./lib/decorate')\nconst ContentTypeParser = require('./lib/content-type-parser.js')\nconst SchemaController = require('./lib/schema-controller')\nconst { Hooks, hookRunnerApplication, supportedHooks } = require('./lib/hooks')\nconst { createChildLogger, defaultChildLoggerFactory, createLogger, createLogController, LogController } = require('./lib/logger-factory')\nconst pluginUtils = require('./lib/plugin-utils.js')\nconst { getGenReqId, reqIdGenFactory } = require('./lib/req-id-gen-factory.js')\nconst { buildRouting, validateBodyLimitOption, buildRouterOptions } = require('./lib/route')\nconst build404 = require('./lib/four-oh-four')\nconst getSecuredInitialConfig = require('./lib/initial-config-validation.js')\nconst override = require('./lib/plugin-override')",
+          "sha256": "2d717b2957e6b7afb0f9a57f822fb0c3c40f48a01f4ef366d417b293fe18cf86"
+        },
+        {
+          "path": "lib/server.js",
+          "startLine": 20,
+          "endLine": 32,
+          "excerpt": "module.exports.createServer = createServer\n\nfunction defaultResolveServerListeningText (address) {\n  return `Server listening at ${address}`\n}\n\nfunction createServer (options, httpHandler) {\n  const server = getServerInstance(options, httpHandler)\n\n  // `this` is the Fastify object\n  function listen (\n    listenOptions = { port: 0, host: 'localhost' },\n    cb = undefined",
+          "sha256": "c43b6db5ae74e51a24996a0819f93985620e67d1155a58936c34e642d9a4ce3a"
+        },
+        {
+          "path": "lib/route.js",
+          "startLine": 140,
+          "endLine": 147,
+          "excerpt": "  function prepareRoute ({ method, url, options, handler, isFastify }) {\n    if (typeof url !== 'string') {\n      throw new FST_ERR_INVALID_URL(typeof url)\n    }\n\n    if (!handler && typeof options === 'function') {\n      handler = options // for support over direct function calls such as fastify.get() options are reused as the handler\n      options = {}",
+          "sha256": "a873bf323bfeb26ea35b58f64d0b2ad0fcb89f1ac8a10a81cd924026554a8f7a"
+        },
+        {
+          "path": "lib/route.js",
+          "startLine": 460,
+          "endLine": 461,
+          "excerpt": "  function routeHandler (req, res, params, context, query) {\n    const id = getGenReqId(context.server, req)",
+          "sha256": "a873bf323bfeb26ea35b58f64d0b2ad0fcb89f1ac8a10a81cd924026554a8f7a"
+        },
+        {
+          "path": "lib/handle-request.js",
+          "startLine": 89,
+          "endLine": 122,
+          "excerpt": "function handler (request, reply) {\n  try {\n    if (request[kRouteContext].preValidation !== null) {\n      preValidationHookRunner(\n        request[kRouteContext].preValidation,\n        request,\n        reply,\n        preValidationCallback\n      )\n    } else {\n      preValidationCallback(null, request, reply)\n    }\n  } catch (err) {\n    preValidationCallback(err, request, reply)\n  }\n}\n\nfunction preValidationCallback (err, request, reply) {\n  if (reply.sent === true) return\n\n  if (err != null) {\n    reply[kReplyIsError] = true\n    reply.send(err)\n    return\n  }\n\n  const validationErr = validateSchema(reply[kRouteContext], request)\n  const isAsync = (validationErr && typeof validationErr.then === 'function') || false\n\n  if (isAsync) {\n    const cb = validationCompleted.bind(null, request, reply)\n    validationErr.then(cb, cb)\n  } else {\n    validationCompleted(request, reply, validationErr)",
+          "sha256": "14f3c8b213ab287131f54b03710a5c4afaad59a267b1580f9f694667cfc952dc"
+        },
+        {
+          "path": "lib/handle-request.js",
+          "startLine": 187,
+          "endLine": 209,
+          "excerpt": "    let result\n\n    try {\n      result = context.handler(request, reply)\n    } catch (err) {\n      if (store) {\n        store.error = err\n        // Set status code before publishing so subscribers see the correct value\n        setErrorStatusCode(reply, err)\n        channels.error.publish(store)\n      }\n\n      reply[kReplyIsError] = true\n      reply.send(err)\n      return\n    }\n\n    if (result !== undefined) {\n      if (result !== null && typeof result.then === 'function') {\n        wrapThenable(result, reply, store)\n      } else {\n        reply.send(result)\n      }",
+          "sha256": "14f3c8b213ab287131f54b03710a5c4afaad59a267b1580f9f694667cfc952dc"
+        },
+        {
+          "path": "lib/wrap-thenable.js",
+          "startLine": 12,
+          "endLine": 45,
+          "excerpt": "function wrapThenable (thenable, reply, store) {\n  if (store) store.async = true\n  thenable.then(function (payload) {\n    if (reply[kReplyHijacked] === true) {\n      return\n    }\n\n    if (store) {\n      channels.asyncStart.publish(store)\n    }\n\n    try {\n      // this is for async functions that are using reply.send directly\n      //\n      // since wrap-thenable will be called when using reply.send directly\n      // without actual return. the response can be sent already or\n      // the request may be terminated during the reply. in this situation,\n      // it require an extra checking of request.aborted to see whether\n      // the request is killed by client.\n      if (payload !== undefined || //\n        (reply.sent === false && //\n          reply.raw.headersSent === false &&\n          reply.request.raw.aborted === false &&\n          reply.request.socket &&\n          !reply.request.socket.destroyed\n        )\n      ) {\n        // we use a try-catch internally to avoid adding a catch to another\n        // promise, increase promise perf by 10%\n        try {\n          reply.send(payload)\n        } catch (err) {\n          reply[kReplyIsError] = true\n          reply.send(err)",
+          "sha256": "23e41424f4a19f947c0fe58cb21ee3fa97d15917d7d6dc668f375d71d8bf786b"
+        }
+      ]
+    },
+    {
+      "id": "fastify-q3",
+      "question": "Which languages, runtime/build tools and package boundaries organize Fastify?",
+      "answer": "The root fastify npm package uses CommonJS JavaScript on Node.js, with fastify.js as main and fastify.d.ts TypeScript declarations. package.json scripts run borp unit tests, tstyche type checks, ESLint and generated validation/error-serializer builds. lib modules belong to the same package; require dependencies are not automatically workspace packages.",
+      "requiredFacts": [
+        "CommonJS JavaScript on Node.js",
+        "One root npm package with fastify.js main",
+        "TypeScript declaration entry fastify.d.ts",
+        "borp/tstyche/ESLint and build:validation scripts"
+      ],
+      "evidence": [
+        {
+          "path": "package.json",
+          "startLine": 1,
+          "endLine": 30,
+          "excerpt": "{\n  \"name\": \"fastify\",\n  \"version\": \"6.0.0-alpha.4\",\n  \"description\": \"Fast and low overhead web framework, for Node.js\",\n  \"main\": \"fastify.js\",\n  \"type\": \"commonjs\",\n  \"types\": \"fastify.d.ts\",\n  \"scripts\": {\n    \"bench\": \"branchcmp -r 2 -g -s \\\"npm run benchmark\\\"\",\n    \"benchmark\": \"concurrently -k -s first \\\"node ./examples/benchmark/simple.js\\\" \\\"autocannon -c 100 -d 30 -p 10 localhost:3000/\\\"\",\n    \"benchmark:parser\": \"concurrently -k -s first \\\"node ./examples/benchmark/parser.js\\\" \\\"autocannon -c 100 -d 30 -p 10 -i ./examples/benchmark/body.json -H \\\"content-type:application/jsoff\\\" -m POST localhost:3000/\\\"\",\n    \"benchmark:parser:error\": \"concurrently -k -s first \\\"node ./examples/benchmark/parser.js\\\" \\\"autocannon -c 100 -d 30 -p 10 -i ./examples/benchmark/body.json -H \\\"content-type:application/jsoff\\\" -H \\\"content-length:123\\\" -m POST localhost:3000/\\\"\",\n    \"build:validation\": \"node build/build-error-serializer.js && node build/build-validation.js\",\n    \"build:sync-version\": \"node build/sync-version.js\",\n    \"coverage\": \"c8 --reporter html borp --reporter=@jsumners/line-reporter\",\n    \"coverage:ci-check-coverage\": \"borp --reporter=@jsumners/line-reporter --coverage --check-coverage --lines 100\",\n    \"lint\": \"npm run lint:eslint\",\n    \"lint:fix\": \"eslint --fix\",\n    \"lint:markdown\": \"markdownlint-cli2\",\n    \"lint:eslint\": \"eslint\",\n    \"prepublishOnly\": \"cross-env PREPUBLISH=true borp --reporter=@jsumners/line-reporter && npm run test:validator:integrity && npm run build:sync-version\",\n    \"test\": \"npm run lint && npm run unit && npm run test:types\",\n    \"test:ci\": \"npm run unit && npm run test:types\",\n    \"test:report\": \"npm run lint && npm run unit:report && npm run test:types\",\n    \"test:validator:integrity\": \"npm run build:validation && git diff --quiet --ignore-all-space --ignore-blank-lines --ignore-cr-at-eol lib/error-serializer.js && git diff --quiet --ignore-all-space --ignore-blank-lines --ignore-cr-at-eol lib/config-validator.js\",\n    \"test:types\": \"tstyche\",\n    \"test:watch\": \"npm run unit -- --watch --coverage-report=none --reporter=terse\",\n    \"unit\": \"borp\",\n    \"unit:report\": \"c8 --reporter html borp --reporter=@jsumners/line-reporter\",\n    \"citgm\": \"borp --reporter=@jsumners/line-reporter --coverage --check-coverage --concurrency=1\"",
+          "sha256": "4bfab1c73710d1f815e2c5bf7af3659f6a58da3d7875506ee8c7a051be561d96"
+        },
+        {
+          "path": "fastify.js",
+          "startLine": 1,
+          "endLine": 7,
+          "excerpt": "'use strict'\n\nconst VERSION = '6.0.0-alpha.4'\n\nconst Avvio = require('avvio')\nconst http = require('node:http')\nconst diagnostics = require('node:diagnostics_channel')",
+          "sha256": "2d717b2957e6b7afb0f9a57f822fb0c3c40f48a01f4ef366d417b293fe18cf86"
+        }
+      ]
+    },
+    {
+      "id": "fastify-q4",
+      "question": "Where does public-library use to create a Fastify server begin?",
+      "answer": "package.json main resolves fastify.js. Its function fastify(serverOptions) is exported as module.exports, and also as .fastify and .default. A consumer calls the factory before get/listen; this exported factory is the selected public entry rather than an unconditional executable startup.",
+      "requiredFacts": [
+        "main is fastify.js",
+        "fastify(serverOptions) is factory",
+        "CommonJS/default/named aliases export it",
+        "Consumer controls startup"
+      ],
+      "evidence": [
+        {
+          "path": "package.json",
+          "startLine": 1,
+          "endLine": 7,
+          "excerpt": "{\n  \"name\": \"fastify\",\n  \"version\": \"6.0.0-alpha.4\",\n  \"description\": \"Fast and low overhead web framework, for Node.js\",\n  \"main\": \"fastify.js\",\n  \"type\": \"commonjs\",\n  \"types\": \"fastify.d.ts\",",
+          "sha256": "4bfab1c73710d1f815e2c5bf7af3659f6a58da3d7875506ee8c7a051be561d96"
+        },
+        {
+          "path": "fastify.js",
+          "startLine": 86,
+          "endLine": 95,
+          "excerpt": "/**\n * @param {import('./fastify.js').FastifyServerOptions} serverOptions\n */\nfunction fastify (serverOptions) {\n  const {\n    options,\n    genReqId,\n    logController,\n    hasLogger,\n    initialConfig",
+          "sha256": "2d717b2957e6b7afb0f9a57f822fb0c3c40f48a01f4ef366d417b293fe18cf86"
+        },
+        {
+          "path": "fastify.js",
+          "startLine": 1005,
+          "endLine": 1009,
+          "excerpt": "module.exports = fastify\nmodule.exports.errorCodes = errorCodes\nmodule.exports.LogController = LogController\nmodule.exports.fastify = fastify\nmodule.exports.default = fastify",
+          "sha256": "2d717b2957e6b7afb0f9a57f822fb0c3c40f48a01f4ef366d417b293fe18cf86"
+        },
+        {
+          "path": "README.md",
+          "startLine": 119,
+          "endLine": 138,
+          "excerpt": "import Fastify from 'fastify'\n\nconst fastify = Fastify({\n  logger: true\n})\n// CommonJS\nconst fastify = require('fastify')({\n  logger: true\n})\n\n// Declare a route\nfastify.get('/', (request, reply) => {\n  reply.send({ hello: 'world' })\n})\n\n// Run the server!\nfastify.listen({ port: 3000 }, (err, address) => {\n  if (err) throw err\n  // Server is now listening on ${address}\n})",
+          "sha256": "18a8e0e8a62fb80431d0a6495770d9e195c3afb06b17fa6464e62712ed7d256e"
+        }
+      ]
+    },
+    {
+      "id": "fastify-q5",
+      "question": "Where is X = sending the resolved value returned by an async route handler implemented?",
+      "answer": "lib/handle-request.js preHandlerCallbackInner calls context.handler and detects a non-null result with a then function, passing it to wrapThenable. lib/wrap-thenable.js attaches fulfillment/rejection handlers; fulfillment sends the payload subject to hijack/sent/connection guards, while rejection marks reply as error and sends it unless already sent. It does not treat every return value as a promise.",
+      "requiredFacts": [
+        "preHandlerCallbackInner invokes configured context.handler",
+        "Thenable detection dispatches to wrapThenable",
+        "Fulfillment calls reply.send with guards",
+        "Rejection uses error reply handling"
+      ],
+      "evidence": [
+        {
+          "path": "lib/handle-request.js",
+          "startLine": 187,
+          "endLine": 209,
+          "excerpt": "    let result\n\n    try {\n      result = context.handler(request, reply)\n    } catch (err) {\n      if (store) {\n        store.error = err\n        // Set status code before publishing so subscribers see the correct value\n        setErrorStatusCode(reply, err)\n        channels.error.publish(store)\n      }\n\n      reply[kReplyIsError] = true\n      reply.send(err)\n      return\n    }\n\n    if (result !== undefined) {\n      if (result !== null && typeof result.then === 'function') {\n        wrapThenable(result, reply, store)\n      } else {\n        reply.send(result)\n      }",
+          "sha256": "14f3c8b213ab287131f54b03710a5c4afaad59a267b1580f9f694667cfc952dc"
+        },
+        {
+          "path": "lib/wrap-thenable.js",
+          "startLine": 12,
+          "endLine": 45,
+          "excerpt": "function wrapThenable (thenable, reply, store) {\n  if (store) store.async = true\n  thenable.then(function (payload) {\n    if (reply[kReplyHijacked] === true) {\n      return\n    }\n\n    if (store) {\n      channels.asyncStart.publish(store)\n    }\n\n    try {\n      // this is for async functions that are using reply.send directly\n      //\n      // since wrap-thenable will be called when using reply.send directly\n      // without actual return. the response can be sent already or\n      // the request may be terminated during the reply. in this situation,\n      // it require an extra checking of request.aborted to see whether\n      // the request is killed by client.\n      if (payload !== undefined || //\n        (reply.sent === false && //\n          reply.raw.headersSent === false &&\n          reply.request.raw.aborted === false &&\n          reply.request.socket &&\n          !reply.request.socket.destroyed\n        )\n      ) {\n        // we use a try-catch internally to avoid adding a catch to another\n        // promise, increase promise perf by 10%\n        try {\n          reply.send(payload)\n        } catch (err) {\n          reply[kReplyIsError] = true\n          reply.send(err)",
+          "sha256": "23e41424f4a19f947c0fe58cb21ee3fa97d15917d7d6dc668f375d71d8bf786b"
+        },
+        {
+          "path": "lib/wrap-thenable.js",
+          "startLine": 53,
+          "endLine": 70,
+          "excerpt": "  }, function (err) {\n    if (store) {\n      store.error = err\n      // Set status code before publishing so subscribers see the correct value\n      setErrorStatusCode(reply, err)\n      channels.error.publish(store) // note that error happens before asyncStart\n      channels.asyncStart.publish(store)\n    }\n\n    try {\n      if (reply.sent === true) {\n        reply.log.error({ err }, 'Promise errored, but reply.sent = true was set')\n        return\n      }\n\n      reply[kReplyIsError] = true\n\n      reply.send(err)",
+          "sha256": "23e41424f4a19f947c0fe58cb21ee3fa97d15917d7d6dc668f375d71d8bf786b"
+        }
+      ]
+    },
+    {
+      "id": "fastify-q6",
+      "question": "Which internal modules does A = lib/handle-request.js directly use, and what proves each direction?",
+      "answer": "Its explicit relative requires point to wrap-thenable, validation, hooks, errors, error-status, symbols and content-type. validation.validate is locally named validateSchema; hooks exports preValidationHookRunner and preHandlerHookRunner. node:diagnostics_channel is external Node runtime API, not an internal module. These imports prove handle-request -> dependency, not reverse calls.",
+      "requiredFacts": [
+        "Requires wrap-thenable and validation",
+        "Requires hooks and errors",
+        "Requires error-status and symbols",
+        "Requires content-type",
+        "Node diagnostics is external; direction follows require"
+      ],
+      "evidence": [
+        {
+          "path": "lib/handle-request.js",
+          "startLine": 1,
+          "endLine": 22,
+          "excerpt": "'use strict'\n\nconst diagnostics = require('node:diagnostics_channel')\nconst wrapThenable = require('./wrap-thenable')\nconst { validate: validateSchema } = require('./validation')\nconst { preValidationHookRunner, preHandlerHookRunner } = require('./hooks')\nconst {\n  FST_ERR_CTP_INVALID_MEDIA_TYPE,\n  FST_ERR_ROUTE_MISSING_CONTENT_TYPE\n} = require('./errors')\nconst { setErrorStatusCode } = require('./error-status')\nconst {\n  kReplyIsError,\n  kRouteContext,\n  kFourOhFourContext,\n  kSupportedHTTPMethods,\n  kRequestContentType,\n  kDiagnosticsStore\n} = require('./symbols')\nconst ContentType = require('./content-type')\n\nconst channels = diagnostics.tracingChannel('fastify.request.handler')",
+          "sha256": "14f3c8b213ab287131f54b03710a5c4afaad59a267b1580f9f694667cfc952dc"
+        }
+      ]
+    },
+    {
+      "id": "fastify-q7",
+      "question": "For R = a bodyless request reaching handleRequest whose configured handler returns a fulfilled promise, trace the path to reply.send and identify dynamic boundaries.",
+      "answer": "handleRequest calls handler for a bodyless method; handler enters preValidationCallback directly or via hooks; validationCompleted enters preHandlerCallback directly or via preHandler hooks; preHandlerCallbackInner invokes context.handler. A thenable result goes to wrapThenable, whose fulfillment branch sends the payload if guards allow. Hook functions, validators, configured context.handler and promise settlement are runtime boundaries. Validation/errors or an already sent reply can stop this path; the supplied assumptions do not identify a particular application handler.",
+      "requiredFacts": [
+        "handleRequest -> handler for bodyless methods",
+        "preValidationCallback/validationCompleted precede preHandlerCallback",
+        "preHandlerCallbackInner dispatches context.handler",
+        "Thenable -> wrapThenable -> guarded reply.send",
+        "Hooks/validation/application callback and promise are dynamic; early exits exist"
+      ],
+      "evidence": [
+        {
+          "path": "lib/handle-request.js",
+          "startLine": 24,
+          "endLine": 37,
+          "excerpt": "function handleRequest (err, request, reply) {\n  if (reply.sent === true) return\n  if (err != null) {\n    reply[kReplyIsError] = true\n    reply.send(err)\n    return\n  }\n\n  const method = request.method\n\n  if (this[kSupportedHTTPMethods].bodyless.has(method)) {\n    handler(request, reply)\n    return\n  }",
+          "sha256": "14f3c8b213ab287131f54b03710a5c4afaad59a267b1580f9f694667cfc952dc"
+        },
+        {
+          "path": "lib/handle-request.js",
+          "startLine": 89,
+          "endLine": 155,
+          "excerpt": "function handler (request, reply) {\n  try {\n    if (request[kRouteContext].preValidation !== null) {\n      preValidationHookRunner(\n        request[kRouteContext].preValidation,\n        request,\n        reply,\n        preValidationCallback\n      )\n    } else {\n      preValidationCallback(null, request, reply)\n    }\n  } catch (err) {\n    preValidationCallback(err, request, reply)\n  }\n}\n\nfunction preValidationCallback (err, request, reply) {\n  if (reply.sent === true) return\n\n  if (err != null) {\n    reply[kReplyIsError] = true\n    reply.send(err)\n    return\n  }\n\n  const validationErr = validateSchema(reply[kRouteContext], request)\n  const isAsync = (validationErr && typeof validationErr.then === 'function') || false\n\n  if (isAsync) {\n    const cb = validationCompleted.bind(null, request, reply)\n    validationErr.then(cb, cb)\n  } else {\n    validationCompleted(request, reply, validationErr)\n  }\n}\n\nfunction validationCompleted (request, reply, validationErr) {\n  if (validationErr) {\n    if (reply[kRouteContext].attachValidation === false) {\n      reply.send(validationErr)\n      return\n    }\n\n    reply.request.validationError = validationErr\n  }\n\n  // preHandler hook\n  if (request[kRouteContext].preHandler !== null) {\n    preHandlerHookRunner(\n      request[kRouteContext].preHandler,\n      request,\n      reply,\n      preHandlerCallback\n    )\n  } else {\n    preHandlerCallback(null, request, reply)\n  }\n}\n\nfunction preHandlerCallback (err, request, reply) {\n  if (reply.sent) return\n\n  const context = request[kRouteContext]\n\n  if (!channels.hasSubscribers || context[kFourOhFourContext] === null) {\n    preHandlerCallbackInner(err, request, reply)",
+          "sha256": "14f3c8b213ab287131f54b03710a5c4afaad59a267b1580f9f694667cfc952dc"
+        },
+        {
+          "path": "lib/handle-request.js",
+          "startLine": 171,
+          "endLine": 209,
+          "excerpt": "function preHandlerCallbackInner (err, request, reply, store) {\n  const context = request[kRouteContext]\n\n  try {\n    if (err != null) {\n      reply[kReplyIsError] = true\n      if (store) {\n        store.error = err\n        // Set status code before publishing so subscribers see the correct value\n        setErrorStatusCode(reply, err)\n        channels.error.publish(store)\n      }\n      reply.send(err)\n      return\n    }\n\n    let result\n\n    try {\n      result = context.handler(request, reply)\n    } catch (err) {\n      if (store) {\n        store.error = err\n        // Set status code before publishing so subscribers see the correct value\n        setErrorStatusCode(reply, err)\n        channels.error.publish(store)\n      }\n\n      reply[kReplyIsError] = true\n      reply.send(err)\n      return\n    }\n\n    if (result !== undefined) {\n      if (result !== null && typeof result.then === 'function') {\n        wrapThenable(result, reply, store)\n      } else {\n        reply.send(result)\n      }",
+          "sha256": "14f3c8b213ab287131f54b03710a5c4afaad59a267b1580f9f694667cfc952dc"
+        },
+        {
+          "path": "lib/wrap-thenable.js",
+          "startLine": 12,
+          "endLine": 45,
+          "excerpt": "function wrapThenable (thenable, reply, store) {\n  if (store) store.async = true\n  thenable.then(function (payload) {\n    if (reply[kReplyHijacked] === true) {\n      return\n    }\n\n    if (store) {\n      channels.asyncStart.publish(store)\n    }\n\n    try {\n      // this is for async functions that are using reply.send directly\n      //\n      // since wrap-thenable will be called when using reply.send directly\n      // without actual return. the response can be sent already or\n      // the request may be terminated during the reply. in this situation,\n      // it require an extra checking of request.aborted to see whether\n      // the request is killed by client.\n      if (payload !== undefined || //\n        (reply.sent === false && //\n          reply.raw.headersSent === false &&\n          reply.request.raw.aborted === false &&\n          reply.request.socket &&\n          !reply.request.socket.destroyed\n        )\n      ) {\n        // we use a try-catch internally to avoid adding a catch to another\n        // promise, increase promise perf by 10%\n        try {\n          reply.send(payload)\n        } catch (err) {\n          reply[kReplyIsError] = true\n          reply.send(err)",
+          "sha256": "23e41424f4a19f947c0fe58cb21ee3fa97d15917d7d6dc668f375d71d8bf786b"
+        }
+      ]
+    },
+    {
+      "id": "fastify-q8",
+      "question": "If Y = lib/handle-request.js exports change, which production modules directly consume them?",
+      "answer": "lib/route.js requires the default handleRequest and invokes it from runPreParsing (or supplies a bound callback to preParsing hooks). lib/reply.js requires the Symbol.for(internals) export and uses preHandlerCallback in its notFound path. These direct dependencies support reviewing route lifecycle and not-found behavior; they do not prove all routes or plugins fail after any change.",
+      "requiredFacts": [
+        "route.js consumes default export",
+        "runPreParsing calls/binds handleRequest",
+        "reply.js consumes internals export",
+        "notFound uses internals.preHandlerCallback",
+        "Potential impact is conditional"
+      ],
+      "evidence": [
+        {
+          "path": "lib/route.js",
+          "startLine": 3,
+          "endLine": 6,
+          "excerpt": "const FindMyWay = require('find-my-way')\nconst Context = require('./context')\nconst handleRequest = require('./handle-request.js')\nconst { onRequestAbortHookRunner, lifecycleHooks, preParsingHookRunner, onTimeoutHookRunner, onRequestHookRunner } = require('./hooks')",
+          "sha256": "a873bf323bfeb26ea35b58f64d0b2ad0fcb89f1ac8a10a81cd924026554a8f7a"
+        },
+        {
+          "path": "lib/route.js",
+          "startLine": 651,
+          "endLine": 665,
+          "excerpt": "function runPreParsing (err, request, reply) {\n  if (reply.sent === true) return\n  if (err != null) {\n    reply[kReplyIsError] = true\n    reply.send(err)\n    return\n  }\n\n  request[kRequestPayloadStream] = request.raw\n\n  if (request[kRouteContext].preParsing !== null) {\n    preParsingHookRunner(request[kRouteContext].preParsing, request, reply, handleRequest.bind(request.server))\n  } else {\n    handleRequest.call(request.server, null, request, reply)\n  }",
+          "sha256": "a873bf323bfeb26ea35b58f64d0b2ad0fcb89f1ac8a10a81cd924026554a8f7a"
+        },
+        {
+          "path": "lib/reply.js",
+          "startLine": 29,
+          "endLine": 36,
+          "excerpt": "const {\n  onSendHookRunner,\n  onResponseHookRunner,\n  preHandlerHookRunner,\n  preSerializationHookRunner\n} = require('./hooks')\n\nconst internals = require('./handle-request.js')[Symbol.for('internals')]",
+          "sha256": "bb74f653c1303082e6444fecf03b81f7a5e07717ac927030610a1a66b66e8d5d"
+        },
+        {
+          "path": "lib/reply.js",
+          "startLine": 1052,
+          "endLine": 1071,
+          "excerpt": "function notFound (reply) {\n  if (reply[kRouteContext][kFourOhFourContext] === null) {\n    reply.log.warn('Trying to send a NotFound error inside a 404 handler. Sending basic 404 response.')\n    reply.code(404).send('404 Not Found')\n    return\n  }\n\n  reply.request[kRouteContext] = reply[kRouteContext][kFourOhFourContext]\n\n  // preHandler hook\n  if (reply[kRouteContext].preHandler !== null) {\n    preHandlerHookRunner(\n      reply[kRouteContext].preHandler,\n      reply.request,\n      reply,\n      internals.preHandlerCallback\n    )\n  } else {\n    internals.preHandlerCallback(null, reply.request, reply)\n  }",
+          "sha256": "bb74f653c1303082e6444fecf03b81f7a5e07717ac927030610a1a66b66e8d5d"
+        },
+        {
+          "path": "lib/handle-request.js",
+          "startLine": 216,
+          "endLine": 217,
+          "excerpt": "module.exports = handleRequest\nmodule.exports[Symbol.for('internals')] = { handler, preHandlerCallback }",
+          "sha256": "14f3c8b213ab287131f54b03710a5c4afaad59a267b1580f9f694667cfc952dc"
+        }
+      ]
+    },
+    {
+      "id": "fastify-q9",
+      "question": "Which test exercises X through public server use, and how does it enter?",
+      "answer": "test/async-await.test.js async await test creates Fastify, registers an async GET handler returning {hello:world}, listens on an ephemeral port and fetches it. It asserts status 200 and the JSON body. This enters through real HTTP route dispatch in the test source, unlike a direct call of wrapThenable; no claim is made that the test was run in this oracle preparation.",
+      "requiredFacts": [
+        "async await test in test/async-await.test.js",
+        "Public Fastify/get/listen setup",
+        "async handler returns object",
+        "fetch response checked for 200 and expected JSON",
+        "Source inspection is not execution evidence"
+      ],
+      "evidence": [
+        {
+          "path": "test/async-await.test.js",
+          "startLine": 3,
+          "endLine": 7,
+          "excerpt": "const { test } = require('node:test')\nconst Fastify = require('..')\nconst split = require('split2')\nconst pino = require('pino')\nconst { sleep } = require('./helper')",
+          "sha256": "38871e4228212292ab202acba6c9e0a87185d321353b955cf354efd08589b738"
+        },
+        {
+          "path": "test/async-await.test.js",
+          "startLine": 45,
+          "endLine": 61,
+          "excerpt": "test('async await', async t => {\n  t.plan(15)\n  const fastify = Fastify()\n  try {\n    fastify.get('/', opts, async function awaitMyFunc (req, reply) {\n      await sleep(200)\n      return { hello: 'world' }\n    })\n    t.assert.ok(true)\n  } catch (e) {\n    t.assert.fail()\n  }\n\n  try {\n    fastify.get('/no-await', opts, async function (req, reply) {\n      return { hello: 'world' }\n    })",
+          "sha256": "38871e4228212292ab202acba6c9e0a87185d321353b955cf354efd08589b738"
+        },
+        {
+          "path": "test/async-await.test.js",
+          "startLine": 77,
+          "endLine": 87,
+          "excerpt": "  const fastifyServer = await fastify.listen({ port: 0 })\n\n  t.after(() => { fastify.close() })\n\n  const result = await fetch(fastifyServer)\n\n  const body = await result.text()\n  t.assert.ok(result.ok)\n  t.assert.strictEqual(result.status, 200)\n  t.assert.strictEqual(result.headers.get('content-length'), '' + body.length)\n  t.assert.deepStrictEqual(JSON.parse(body), { hello: 'world' })",
+          "sha256": "38871e4228212292ab202acba6c9e0a87185d321353b955cf354efd08589b738"
+        }
+      ]
+    },
+    {
+      "id": "fastify-q10",
+      "question": "Where does Z = a QUERY request lacking Content-Type enter and get handled?",
+      "answer": "handleRequest reads request.method and headers for body-carrying supported methods. In the QUERY branch, missing content-type marks kReplyIsError, sends status 400 with FST_ERR_ROUTE_MISSING_CONTENT_TYPE(method), and returns before content parsing or the application handler. This differs from a nonempty body with invalid media type, which has a later 415 branch.",
+      "requiredFacts": [
+        "handleRequest reads method and headers",
+        "QUERY missing content-type enters explicit check",
+        "Sets error marker and sends 400 FST_ERR_ROUTE_MISSING_CONTENT_TYPE",
+        "Returns before parser/handler; later 415 is distinct"
+      ],
+      "evidence": [
+        {
+          "path": "lib/handle-request.js",
+          "startLine": 32,
+          "endLine": 52,
+          "excerpt": "  const method = request.method\n\n  if (this[kSupportedHTTPMethods].bodyless.has(method)) {\n    handler(request, reply)\n    return\n  }\n\n  if (this[kSupportedHTTPMethods].bodywith.has(method)) {\n    const headers = request.headers\n    const ctHeader = headers['content-type']\n\n    if (method === 'QUERY') {\n      if (ctHeader === undefined) {\n        // https://datatracker.ietf.org/doc/html/rfc10008#section-2\n        // Servers MUST fail the request if the Content-Type request field\n        // ([HTTP], Section 8.3) is missing or is inconsistent with the\n        // request content.\n        reply[kReplyIsError] = true\n        reply.status(400).send(new FST_ERR_ROUTE_MISSING_CONTENT_TYPE(method))\n        return\n      }",
+          "sha256": "14f3c8b213ab287131f54b03710a5c4afaad59a267b1580f9f694667cfc952dc"
+        },
+        {
+          "path": "lib/handle-request.js",
+          "startLine": 71,
+          "endLine": 82,
+          "excerpt": "    // Conditional assignment to avoid creating a new ContentType instance\n    // It can be assigned when accessing the .mediaType in hooks\n    if (!request[kRequestContentType]) {\n      request[kRequestContentType] = ContentType.from(ctHeader)\n    }\n    if (request[kRequestContentType].isValid === false) {\n      reply[kReplyIsError] = true\n      reply.status(415).send(new FST_ERR_CTP_INVALID_MEDIA_TYPE())\n      return\n    }\n    request[kRouteContext].contentTypeParser.run(request[kRequestContentType].toString(), handler, request, reply)\n    return",
+          "sha256": "14f3c8b213ab287131f54b03710a5c4afaad59a267b1580f9f694667cfc952dc"
+        }
+      ]
+    }
+  ]
+}

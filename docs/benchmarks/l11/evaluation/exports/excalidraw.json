@@ -1,0 +1,70 @@
+{
+  "repository": "excalidraw",
+  "commit": "e65eca999e071503efb893d3379a29fb96ff37c4",
+  "candidate": "2b7c00f",
+  "startedAt": "2026-10-13T07:12:05.969Z",
+  "reused": false,
+  "priorSetupFailure": {
+    "repository": "excalidraw",
+    "commit": "e65eca999e071503efb893d3379a29fb96ff37c4",
+    "candidate": "2b7c00f",
+    "startedAt": "2026-10-13T07:11:28.026Z",
+    "reused": false,
+    "command": [
+      "node",
+      "/tmp/lattice-l11-first-impression/bin/lattice.mjs",
+      "export",
+      "/tmp/l11-visual/excalidraw",
+      "--root",
+      "/tmp/l9-benchmark-core/repos/excalidraw",
+      "--no-lens",
+      "--cache-dir",
+      "/tmp/l11-visual-cache/excalidraw",
+      "--force",
+      "--json"
+    ],
+    "exitCode": 2,
+    "timedOut": false,
+    "seconds": 0.219465625,
+    "status": "failed",
+    "finishedAt": "2026-10-13T07:11:28.245Z"
+  },
+  "buildCommand": [
+    "node",
+    "/tmp/lattice-l11-first-impression/bin/lattice.mjs",
+    "build",
+    "--root",
+    "/tmp/l9-benchmark-core/repos/excalidraw",
+    "--no-lens",
+    "--cache-dir",
+    "/tmp/l11-visual-cache/excalidraw",
+    "--json"
+  ],
+  "buildExitCode": 0,
+  "command": [
+    "node",
+    "/tmp/lattice-l11-first-impression/bin/lattice.mjs",
+    "export",
+    "/tmp/l11-visual/excalidraw",
+    "--root",
+    "/tmp/l9-benchmark-core/repos/excalidraw",
+    "--no-lens",
+    "--cache-dir",
+    "/tmp/l11-visual-cache/excalidraw",
+    "--force",
+    "--json"
+  ],
+  "exitCode": 0,
+  "timedOut": false,
+  "seconds": 26.371962417,
+  "graphHash": "070aede0089fc78546568137bc30249b0cce04a4164730486c9ecb0f42feaac2",
+  "source": {
+    "name": "excalidraw",
+    "dirty": false,
+    "sourceFingerprint": "997cba3de6f1623c17fe5fa12ff17d0c4193cf3e4cddf89d10cfc647170c1f56",
+    "commit": "e65eca999e071503efb893d3379a29fb96ff37c4",
+    "remoteUrl": "https://github.com/excalidraw/excalidraw"
+  },
+  "status": "ready",
+  "finishedAt": "2026-10-13T07:12:32.341Z"
+}

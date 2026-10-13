@@ -1,0 +1,243 @@
+{
+  "registration": "44f735a",
+  "hashes": {
+    "protocol.md": "3a801efb063749226f30981a40fea76f177928b57f5a3c7e6cdab863de8227de",
+    "questions.json": "05ac854ea6c22a4de2b18ee007d5085346e6afd7e5a2af95907a37164ab83acc",
+    "repositories.json": "c621674810282ff3e11253da48e31fd2a91077f44b929ddcb44501a8c1b89959",
+    "errata.md": "8bb0517ade20fcbab0739caa282e39d21f821eabee68a0f16f478103d55e5453"
+  },
+  "model": "inherited session default; exact authoritative model identifier unavailable",
+  "reasoning": "inherited session default; exact setting unavailable",
+  "maximumSeconds": 600,
+  "scorePerQuestion": [
+    0,
+    1,
+    2
+  ],
+  "maximumPerArm": 360,
+  "schedule": [
+    {
+      "repository": "click",
+      "arm": "direct",
+      "withinRepositoryOrder": 1,
+      "state": "not-started"
+    },
+    {
+      "repository": "click",
+      "arm": "map",
+      "withinRepositoryOrder": 2,
+      "state": "not-started"
+    },
+    {
+      "repository": "excalidraw",
+      "arm": "map",
+      "withinRepositoryOrder": 1,
+      "state": "not-started"
+    },
+    {
+      "repository": "excalidraw",
+      "arm": "direct",
+      "withinRepositoryOrder": 2,
+      "state": "not-started"
+    },
+    {
+      "repository": "fzf",
+      "arm": "direct",
+      "withinRepositoryOrder": 1,
+      "state": "not-started"
+    },
+    {
+      "repository": "fzf",
+      "arm": "map",
+      "withinRepositoryOrder": 2,
+      "state": "not-started"
+    },
+    {
+      "repository": "nowinandroid",
+      "arm": "map",
+      "withinRepositoryOrder": 1,
+      "state": "not-started"
+    },
+    {
+      "repository": "nowinandroid",
+      "arm": "direct",
+      "withinRepositoryOrder": 2,
+      "state": "not-started"
+    },
+    {
+      "repository": "ripgrep",
+      "arm": "direct",
+      "withinRepositoryOrder": 1,
+      "state": "not-started"
+    },
+    {
+      "repository": "ripgrep",
+      "arm": "map",
+      "withinRepositoryOrder": 2,
+      "state": "not-started"
+    },
+    {
+      "repository": "spring-petclinic",
+      "arm": "map",
+      "withinRepositoryOrder": 1,
+      "state": "not-started"
+    },
+    {
+      "repository": "spring-petclinic",
+      "arm": "direct",
+      "withinRepositoryOrder": 2,
+      "state": "not-started"
+    },
+    {
+      "repository": "fastify",
+      "arm": "direct",
+      "withinRepositoryOrder": 1,
+      "state": "not-started"
+    },
+    {
+      "repository": "fastify",
+      "arm": "map",
+      "withinRepositoryOrder": 2,
+      "state": "not-started"
+    },
+    {
+      "repository": "httpx",
+      "arm": "map",
+      "withinRepositoryOrder": 1,
+      "state": "not-started"
+    },
+    {
+      "repository": "httpx",
+      "arm": "direct",
+      "withinRepositoryOrder": 2,
+      "state": "not-started"
+    },
+    {
+      "repository": "unity-boatattack",
+      "arm": "direct",
+      "withinRepositoryOrder": 1,
+      "state": "not-started"
+    },
+    {
+      "repository": "unity-boatattack",
+      "arm": "map",
+      "withinRepositoryOrder": 2,
+      "state": "not-started"
+    },
+    {
+      "repository": "godot-demos",
+      "arm": "map",
+      "withinRepositoryOrder": 1,
+      "state": "not-started"
+    },
+    {
+      "repository": "godot-demos",
+      "arm": "direct",
+      "withinRepositoryOrder": 2,
+      "state": "not-started"
+    },
+    {
+      "repository": "sqlite",
+      "arm": "direct",
+      "withinRepositoryOrder": 1,
+      "state": "not-started"
+    },
+    {
+      "repository": "sqlite",
+      "arm": "map",
+      "withinRepositoryOrder": 2,
+      "state": "not-started"
+    },
+    {
+      "repository": "runtime",
+      "arm": "map",
+      "withinRepositoryOrder": 1,
+      "state": "not-started"
+    },
+    {
+      "repository": "runtime",
+      "arm": "direct",
+      "withinRepositoryOrder": 2,
+      "state": "not-started"
+    },
+    {
+      "repository": "starlette",
+      "arm": "direct",
+      "withinRepositoryOrder": 1,
+      "state": "not-started"
+    },
+    {
+      "repository": "starlette",
+      "arm": "map",
+      "withinRepositoryOrder": 2,
+      "state": "not-started"
+    },
+    {
+      "repository": "axum",
+      "arm": "map",
+      "withinRepositoryOrder": 1,
+      "state": "not-started"
+    },
+    {
+      "repository": "axum",
+      "arm": "direct",
+      "withinRepositoryOrder": 2,
+      "state": "not-started"
+    },
+    {
+      "repository": "chi",
+      "arm": "direct",
+      "withinRepositoryOrder": 1,
+      "state": "not-started"
+    },
+    {
+      "repository": "chi",
+      "arm": "map",
+      "withinRepositoryOrder": 2,
+      "state": "not-started"
+    },
+    {
+      "repository": "swift-argument-parser",
+      "arm": "map",
+      "withinRepositoryOrder": 1,
+      "state": "not-started"
+    },
+    {
+      "repository": "swift-argument-parser",
+      "arm": "direct",
+      "withinRepositoryOrder": 2,
+      "state": "not-started"
+    },
+    {
+      "repository": "dapper",
+      "arm": "direct",
+      "withinRepositoryOrder": 1,
+      "state": "not-started"
+    },
+    {
+      "repository": "dapper",
+      "arm": "map",
+      "withinRepositoryOrder": 2,
+      "state": "not-started"
+    },
+    {
+      "repository": "vitest",
+      "arm": "map",
+      "withinRepositoryOrder": 1,
+      "state": "not-started"
+    },
+    {
+      "repository": "vitest",
+      "arm": "direct",
+      "withinRepositoryOrder": 2,
+      "state": "not-started"
+    }
+  ],
+  "tokenTelemetry": null,
+  "competitor": {
+    "status": "N/A",
+    "reason": "Same pinned revision has not been verified; no enrollment or paid calls."
+  },
+  "timing": "Coordinator monotonic clock brackets spawn delivery; measured end is after final answer persistence. All tool/reasoning waits included. Record bracket overhead; never replace missing timings.",
+  "candidate": "2b7c00f"
+}

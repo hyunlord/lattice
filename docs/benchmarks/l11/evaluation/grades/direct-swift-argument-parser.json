@@ -1,0 +1,134 @@
+{
+  "repository": "apple/swift-argument-parser",
+  "commit": "efd239f0055b3d6b6cc122a786c46a0ea8d0235b",
+  "arm": "direct",
+  "gradedBy": "independent fresh grader direct-swift",
+  "answerSha256": "f4620298420feeabd36d0937e3b0dcd7f3553aa96a1ea03d32a8b18b6a17f524",
+  "questions": [
+    {
+      "id": "q1",
+      "score": 2,
+      "reason": "Correctly identifies the command-line library, property-wrapper author API, parse/instantiate/run behavior and executable consumers. Pinned README verifies these claims; example/adopter line ranges are misplaced.",
+      "sourceReferences": [
+        "README.md:5-11,41-47,85-96"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "q2",
+      "score": 1,
+      "reason": "Identifies the principal libraries, parser stages, plugins, generators, examples and tests with verified sources. Partial against the frozen required facts: it does not state that ArgumentParser consumes ArgumentParserToolInfo; this missing relationship is not supplied from the manifest by the grader.",
+      "sourceReferences": [
+        "Sources/ArgumentParser/Parsing/CommandParser.swift:201-258",
+        "Sources/ArgumentParserToolInfo/ToolInfo.swift:17-59",
+        "Sources/ArgumentParserTestHelpers/TestHelpers.swift:46-72,162-185",
+        "Package.swift:43-125",
+        "Tools/generate-manual/GenerateManual.swift:93-148"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "q3",
+      "score": 1,
+      "reason": "Correct Swift, SwiftPM tools-version 6.0, library/plugin products, executable/test boundaries and CMake description. Partial against the frozen required facts: no explicit ArgumentParser-to-ArgumentParserToolInfo dependency is given.",
+      "sourceReferences": [
+        "Package.swift:1-41,43-125",
+        "CMakeLists.txt:1-6,33-38",
+        "Examples/repeat/Repeat.swift:12-35"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "q4",
+      "score": 2,
+      "reason": "Names the correct @main Repeat declaration, inherited main(), main(nil) forwarding and run() entry. Verified in the cited pinned files; the stated ranges omit the forwarding definition and Repeat.run declaration.",
+      "sourceReferences": [
+        "Examples/repeat/Repeat.swift:12-35",
+        "Sources/ArgumentParser/Parsable Types/ParsableCommand.swift:159-179"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": true
+    },
+    {
+      "id": "q5",
+      "score": 2,
+      "reason": "Precisely locates ParsableCommand.main(_:) and correctly describes parseAsRoot, command.run and exit(withError:). The main implementation lies within the supplied range; additional parseAsRoot/forwarding claims are verified in the same pinned file outside the stated ranges.",
+      "sourceReferences": [
+        "Sources/ArgumentParser/Parsable Types/ParsableCommand.swift:63-69,148-179"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "q6",
+      "score": 2,
+      "reason": "Correct direct dependencies and edge direction, with manifest declaration and source imports/type uses as evidence. Correctly separates plugin-to-executable direction. Manifest and decoding ranges are misplaced, but explicit definitions in the cited pinned URLs verify the claims.",
+      "sourceReferences": [
+        "Package.swift:56-62,92-95",
+        "Tools/generate-manual/GenerateManual.swift:12-13,39-42,99-123"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "q7",
+      "score": 2,
+      "reason": "Complete source-supported Repeat entry, parse, decoding/validation and run path with count default 2 and two hello prints. Explicitly identifies compiler-generated and protocol dispatch boundaries and avoids claiming measured execution. Several ranges omit relevant definitions, which are present in the pinned cited files.",
+      "sourceReferences": [
+        "Examples/repeat/Repeat.swift:14-35",
+        "Sources/ArgumentParser/Parsable Types/ParsableCommand.swift:43-45,63-69,159-179",
+        "Sources/ArgumentParser/Parsing/CommandParser.swift:169-196,201-258,290-291,326-346,389-413",
+        "Sources/ArgumentParser/Parsable Types/CommandConfiguration.swift:132-145"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": true
+    },
+    {
+      "id": "q8",
+      "score": 2,
+      "reason": "Lists all five direct SwiftPM consumers and qualifies broader effects as possible/transitive. No runtime effect is asserted. Verified manifest definitions support the list, although supplied ranges miss the generate-manual and ToolInfoTests dependency declarations.",
+      "sourceReferences": [
+        "Package.swift:30-41,87-95,119-125"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "q9",
+      "score": 2,
+      "reason": "Answers the exact test-or-example question with the Repeat example and its @main-to-inherited-main-to-run path, backed by pinned sources. Explicitly avoids claiming test execution or inventing a test from a failed URL. Named test absence is recorded as a reference issue rather than denying the question's example alternative.",
+      "sourceReferences": [
+        "Examples/repeat/Repeat.swift:14-35",
+        "Sources/ArgumentParser/Parsable Types/ParsableCommand.swift:148-179"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": true
+    },
+    {
+      "id": "q10",
+      "score": 2,
+      "reason": "Correct optional explicit vector versus process arguments, dropFirst executable removal, CommandParser entry and SplitArguments transformation. Distinguishes the external OS/runtime boundary. Relevant definitions exist in the cited pinned files but several stated line ranges miss them.",
+      "sourceReferences": [
+        "Sources/ArgumentParser/Utilities/Platform.swift:12-17",
+        "Sources/ArgumentParser/Parsable Types/ParsableCommand.swift:63-69",
+        "Sources/ArgumentParser/Parsing/CommandParser.swift:326-346,389-405",
+        "Sources/ArgumentParser/Parsing/SplitArguments.swift:634-717"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": true
+    }
+  ],
+  "total": 18,
+  "referenceIssues": [
+    "q9 frozen question permits a test OR example; oracle requiredFacts specifically demand RepeatExampleTests.repeatBasic. The supplied Repeat example satisfies the stated alternative. Oracle evidence itself matches pinned source bytes and excerpts."
+  ],
+  "limitations": [
+    "Read-only source verification; no target builds, scripts or tests executed.",
+    "Pinned local HEAD verified as efd239f0055b3d6b6cc122a786c46a0ea8d0235b. All oracle source hashes and logical-line excerpts verified without mismatch.",
+    "Several answer citation line spans are inaccurate beyond a one-line numbering offset. Relevant explicit definitions in the supplied pinned file URLs were accepted as source citations as permitted; sourceReferences record verified source locations, not replacement answer facts.",
+    "Specific missed spans: README examples/adopters are 85-96; ParsableCommand.parseAsRoot body is 63-69 and main() forwarding 177-179; Package generate-manual dependency is 92-95 and ToolInfoTests 119-122; Platform argument snapshot is line 16; SplitArguments initializer is 695-717; synchronous custom-completion path is CommandParser 326-346 and descending/extraction calls 404-405."
+  ]
+}

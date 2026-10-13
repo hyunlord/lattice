@@ -1,0 +1,321 @@
+{
+  "schemaVersion": 1,
+  "gate": "partial: medium startup and real early partial inventory verified; original large full export timed out after20minutes",
+  "environment": {
+    "platform": "darwin",
+    "release": "27.0.0",
+    "arch": "arm64",
+    "cpu": "Apple M4 Max",
+    "logicalCPUs": 14,
+    "totalMemoryBytes": 38654705664,
+    "hardwareModel": "Mac16,5",
+    "osVersion": "ProductName:\t\tmacOS\nProductVersion:\t\t27.0.1\nBuildVersion:\t\t26A434",
+    "node": "v25.8.2",
+    "nodeExecArgv": [],
+    "nodeOptions": null,
+    "browserVersion": "155.0.8059.40"
+  },
+  "method": {
+    "clock": "Actual process launch to browser visible partial/full content plus two animation frames; CLI listening and rebuilt are separate.",
+    "mediumTargetMs": 60000,
+    "defaultHeap": true,
+    "cache": "Each open creates fresh external Lattice cache; fresh browser context HTTP cache disabled, service workers blocked; OS cache not flushed. Source/package hashing before timing.",
+    "browser": "Installed Chrome launches before CLI timer;1440x900CPU1 and390x844CPU4/touch.",
+    "rss": "Nominal100ms asynchronous ps summed CLIprocess-tree RSS; browser/controller excluded; sampled peak only, not continuous maximum.",
+    "trials": "One observation each; no p95. Original failed results preserved. Runtime390 cold omitted prospectively before1440result; fixed runtime partial-only intentionallycancelled after observed partialpaint.",
+    "source": "Exact regularfileSHA256 and symlink targets compared before/after excluding.git. Vitest metadata-schemafalseflag independently corrected from retainedsameHEAD/filehashes; no retiming."
+  },
+  "install": {
+    "originalLocalNpmSeconds": 0.62,
+    "fixedLocalNpmSeconds": 1.04,
+    "scope": "Fresh local install from built tarball with npm --ignore-scripts; npm cache not reset; excludes global registry publication or first network download."
+  },
+  "originals": [
+    {
+      "trial": "vitest-1440",
+      "candidate": "2b7c00f9b36ad52539e6b06a5b1fef969699f3f0",
+      "sourceCommit": "f15bdac4f05d2838855d4bd4f47e4076036ea18b",
+      "width": 1440,
+      "launchUTC": "2026-10-13T06:47:47.781Z",
+      "listeningMs": 533.6491250000001,
+      "partialMs": 758.10009765625,
+      "fullMs": 19198.5,
+      "completed": true,
+      "failure": null,
+      "peakSampledRssBytes": 3742121984,
+      "rssSamples": 186,
+      "maxSampleGapMs": 262.0266670000001,
+      "consoleErrors": 1,
+      "httpFailures": 0,
+      "documentOverflow": false,
+      "sourceUnchanged": true,
+      "phaseFirstMs": {
+        "inventory": 740.0149159999999,
+        "observe": 740.352541,
+        "extract": 2347.22275,
+        "resolve": 8905.624416,
+        "export": 10503.932916000002,
+        "complete": 19102.540916
+      }
+    },
+    {
+      "trial": "vitest-390",
+      "candidate": "2b7c00f9b36ad52539e6b06a5b1fef969699f3f0",
+      "sourceCommit": "f15bdac4f05d2838855d4bd4f47e4076036ea18b",
+      "width": 390,
+      "launchUTC": "2026-10-13T06:48:32.193Z",
+      "listeningMs": 201.73720900000012,
+      "partialMs": 435.300048828125,
+      "fullMs": 18338.800048828125,
+      "completed": true,
+      "failure": null,
+      "peakSampledRssBytes": 3990601728,
+      "rssSamples": 179,
+      "maxSampleGapMs": 239.07549999999992,
+      "consoleErrors": 1,
+      "httpFailures": 0,
+      "documentOverflow": false,
+      "sourceUnchanged": true,
+      "phaseFirstMs": {
+        "inventory": 370.9707500000002,
+        "observe": 371.54449999999997,
+        "extract": 1446.642084,
+        "resolve": 8149.959167,
+        "export": 9703.104584,
+        "complete": 18002.117125
+      }
+    },
+    {
+      "trial": "runtime-1440",
+      "candidate": "2b7c00f9b36ad52539e6b06a5b1fef969699f3f0",
+      "sourceCommit": "8630d8988107478d249e2fdb8162f8c7dcbd3dbb",
+      "width": 1440,
+      "launchUTC": "2026-10-13T06:49:08.462Z",
+      "listeningMs": 254.75454199999876,
+      "partialMs": 1265.7998046875,
+      "fullMs": null,
+      "completed": false,
+      "failure": "Error: 20-minute trial deadline reached",
+      "peakSampledRssBytes": 4478205952,
+      "rssSamples": 10987,
+      "maxSampleGapMs": 16540.708542000037,
+      "consoleErrors": 1,
+      "httpFailures": 0,
+      "documentOverflow": null,
+      "sourceUnchanged": true,
+      "phaseFirstMs": {
+        "inventory": 1255.3036249999986,
+        "observe": 1255.655584,
+        "extract": 52293.029167,
+        "resolve": 489978.007584,
+        "export": 592686.8565839999
+      }
+    }
+  ],
+  "fixedCandidate": [
+    {
+      "trial": "vitest-1440",
+      "candidate": "940b23cd53e36e3f8a745230fbb706000c8dfdaf",
+      "sourceCommit": "f15bdac4f05d2838855d4bd4f47e4076036ea18b",
+      "width": 1440,
+      "listeningMs": 544.5281249999998,
+      "partialMs": 818.300048828125,
+      "fullMs": 26225.800048828125,
+      "partialOnly": false,
+      "rssSamples": 208,
+      "maxSampleGapMs": 222.5192079999979,
+      "consoleErrors": 0,
+      "httpFailures": 0,
+      "documentOverflow": false,
+      "sourceUnchanged": true,
+      "phaseFirstMs": {
+        "inventory": 806.9028330000001,
+        "observe": 807.4615829999998,
+        "extract": 2366.921125,
+        "resolve": 10366.541458,
+        "export": 12786.489375,
+        "complete": 26113.0625
+      },
+      "originalHarnessSourceFlag": false,
+      "sourceCorrection": "vitest-1440/source-check-correction.json",
+      "peakSampledRssBytes": 3905421312,
+      "launchUTC": "2026-10-13T07:18:59.186Z",
+      "measuredEndUTC": "2026-10-13T07:19:25.477Z"
+    },
+    {
+      "trial": "runtime-partial-1440-attempt2",
+      "candidate": "940b23cd53e36e3f8a745230fbb706000c8dfdaf",
+      "sourceCommit": "8630d8988107478d249e2fdb8162f8c7dcbd3dbb",
+      "width": 1440,
+      "listeningMs": 218.12508399999933,
+      "partialMs": 858.199951171875,
+      "fullMs": null,
+      "partialOnly": true,
+      "rssSamples": 9,
+      "maxSampleGapMs": 123.73149999999987,
+      "consoleErrors": 0,
+      "httpFailures": 0,
+      "documentOverflow": false,
+      "sourceUnchanged": true,
+      "phaseFirstMs": {
+        "inventory": 844.2773340000003,
+        "observe": 844.7817500000001
+      },
+      "peakSampledRssBytes": 252182528,
+      "launchUTC": "2026-10-13T07:20:25.310Z",
+      "measuredEndUTC": "2026-10-13T07:20:26.220Z"
+    },
+    {
+      "trial": "runtime-partial-390",
+      "candidate": "940b23cd53e36e3f8a745230fbb706000c8dfdaf",
+      "sourceCommit": "8630d8988107478d249e2fdb8162f8c7dcbd3dbb",
+      "width": 390,
+      "listeningMs": 233.410167,
+      "partialMs": 984.800048828125,
+      "fullMs": null,
+      "partialOnly": true,
+      "rssSamples": 9,
+      "maxSampleGapMs": 198.366583,
+      "consoleErrors": 0,
+      "httpFailures": 0,
+      "documentOverflow": false,
+      "sourceUnchanged": true,
+      "phaseFirstMs": {
+        "inventory": 959.6785,
+        "observe": 960.3766670000005
+      },
+      "peakSampledRssBytes": 272613376,
+      "launchUTC": "2026-10-13T07:21:23.255Z",
+      "measuredEndUTC": "2026-10-13T07:21:24.277Z"
+    },
+    {
+      "trial": "boatattack-1440",
+      "candidate": "940b23cd53e36e3f8a745230fbb706000c8dfdaf",
+      "sourceCommit": "6acf5f773a440030489cb5e2b3c009fb5fe1e8ce",
+      "width": 1440,
+      "listeningMs": 252.79849999999988,
+      "partialMs": 491.5,
+      "fullMs": 3007.5,
+      "partialOnly": false,
+      "rssSamples": 30,
+      "maxSampleGapMs": 148.38475000000017,
+      "consoleErrors": 0,
+      "httpFailures": 0,
+      "documentOverflow": false,
+      "sourceUnchanged": true,
+      "phaseFirstMs": {
+        "inventory": 483.5861669999997,
+        "observe": 483.9610419999997,
+        "extract": 1523.751458,
+        "resolve": 1951.437083,
+        "export": 2101.0833329999996,
+        "complete": 2932.9761249999992
+      },
+      "peakSampledRssBytes": 363610112,
+      "launchUTC": "2026-10-13T07:22:27.955Z",
+      "measuredEndUTC": "2026-10-13T07:22:31.039Z"
+    },
+    {
+      "trial": "excalidraw-1440",
+      "candidate": "940b23cd53e36e3f8a745230fbb706000c8dfdaf",
+      "sourceCommit": "e65eca999e071503efb893d3379a29fb96ff37c4",
+      "width": 1440,
+      "listeningMs": 298.8594170000001,
+      "partialMs": 655.60009765625,
+      "fullMs": 18834.699951171875,
+      "partialOnly": false,
+      "rssSamples": 107,
+      "maxSampleGapMs": 7984.829749999999,
+      "consoleErrors": 0,
+      "httpFailures": 0,
+      "documentOverflow": false,
+      "sourceUnchanged": true,
+      "phaseFirstMs": {
+        "inventory": 650.6694169999998,
+        "observe": 652.2788750000002,
+        "extract": 1905.1852500000002,
+        "resolve": 9382.830917,
+        "export": 10643.941334,
+        "complete": 18739.68125
+      },
+      "peakSampledRssBytes": 2095022080,
+      "launchUTC": "2026-10-13T07:23:01.871Z",
+      "measuredEndUTC": "2026-10-13T07:23:20.775Z"
+    },
+    {
+      "trial": "httpx-url-1440",
+      "candidate": "940b23cd53e36e3f8a745230fbb706000c8dfdaf",
+      "sourceCommit": "b5addb64f0161ff6bfe94c124ef76f6a1fba5254",
+      "width": 1440,
+      "listeningMs": 354.66316700000004,
+      "partialMs": 1949.599853515625,
+      "fullMs": 4535.699951171875,
+      "partialOnly": false,
+      "rssSamples": 45,
+      "maxSampleGapMs": 206.3973749999999,
+      "consoleErrors": 0,
+      "httpFailures": 0,
+      "documentOverflow": false,
+      "sourceUnchanged": null,
+      "phaseFirstMs": {
+        "clone": 355.911833,
+        "inventory": 1938.540833,
+        "observe": 1938.8378749999997,
+        "extract": 2567.947167,
+        "resolve": 3195.686042,
+        "export": 3382.959625,
+        "complete": 4463.21875
+      },
+      "peakSampledRssBytes": 336740352,
+      "launchUTC": "2026-10-13T07:24:23.808Z",
+      "measuredEndUTC": "2026-10-13T07:24:28.408Z"
+    }
+  ],
+  "limits": [
+    {
+      "id": "large-full-timeout",
+      "detail": "runtime58427 observed files: no full render by1200s; original exported generation nevercompleted. Cachegraph1467230592bytes retained; no finalizedmap exists from thattrial."
+    },
+    {
+      "id": "original-console404",
+      "detail": "One console404 per originaltrial; missingfaviconfixed940b23c. Originalbrowser response listdidnotcapturefavicon request, so original diagnosis was subsequentlyverified byproductowner."
+    },
+    {
+      "id": "source-line-ending",
+      "detail": "Vitest indicator-position.test.js index226bytesLF/working241bytes15CRLF; equalafterCRLFnormalization, sourcebytesunchanged."
+    },
+    {
+      "id": "harness-source-schema",
+      "detail": "FixedVitest result sourceUntouched:false caused beforeindexEntries/afterstatus schema mismatch. Retainedallfilehashes andHEAD equal; source-check-correction.json supplies correction without rewritingrawresult."
+    },
+    {
+      "id": "harness-preflight-buffer",
+      "detail": "First fixedruntimepartial1440 gitls-files hit ENOBUFS beforeproduct/browserlaunch. Failure retained;64MiB buffer correction thenattempt2, no producttiming discarded."
+    },
+    {
+      "id": "secondary-scheduling-concern",
+      "detail": "Initial overlap concern preserved and corrected by exactepoch audit: BoatCLI completed beforeExcalCLI; allBoatpostflightresultswritten244.961ms beforeExcalCLIlaunch. No secondaryproducttiming overlap or rerun.",
+      "evidence": "fixed940b23c/secondary-overlap-correction.json"
+    },
+    {
+      "id": "background-fixture",
+      "detail": "Root reported lightweight manifestprogress fixture Chrome QA mayoverlap secondary/URL measurementwindow; no heavyanalyzer concurrency reported, but machineexclusiveCPU wasnot continuouslyverified. Fixture hasnoCPU throttling. Artifactenvelope07:23:37.491Z–07:25:35.349Z intersects HTTPX timedinterval07:24:23.808Z–07:24:28.408Z; exactChromeprocessinterval notrecorded, so cannot excludeinterference. Original2b7c00f trials predatefixture.",
+      "fixture": "/tmp/l11-manifest-wrap/probe.mjs"
+    },
+    {
+      "id": "partial-path-clipping",
+      "detail": "940b23c partialprose/faviconfixverified, but manifestpaths visiblyclipat390 despite documentoverflowfalse. Separate wrappingfix delegated; startup observations do notclaim verificationoflaterfix."
+    },
+    {
+      "id": "coverage",
+      "detail": "BoatAttack andExcal fullscreens reportno confidententrypoint/representativeflow. Fast startup isnotlogiccoverage orhumanunderstanding."
+    }
+  ],
+  "artifacts": {
+    "localRoot": "/tmp/l11-startup-measurement",
+    "fixedRoot": "/tmp/l11-startup-measurement/fixed940b23c",
+    "contract": "CONTRACT.md",
+    "raw": "Eachtrial: result/events/renders/rss/network/environment/installed-package/source-before/source-after JSON plus screenshots",
+    "retainedRuntimeCache": "/var/folders/0w/j63n8j5s46j4dl79hrwn0m2w0000gn/T/.lattice-open/session-oyN9HQ/cache"
+  }
+}

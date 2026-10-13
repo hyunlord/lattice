@@ -1,0 +1,315 @@
+{
+  "id": "sqlite",
+  "repository": "sqlite/sqlite",
+  "commit": "6e35c19f170958b1e846e01c55318988f2d192e0",
+  "trackedFiles": 2287,
+  "questions": [
+    {
+      "id": "sqlite-q1",
+      "question": "What does SQLite do, and who calls or runs it?",
+      "answer": "SQLite is a database engine supplied as a library for applications. This repository includes its source, tests and some documentation; the sqlite3 CLI shell is a separately linked consumer of the library.",
+      "requiredFacts": [
+        "Database engine library",
+        "Applications call public interface",
+        "Separately linked sqlite3 shell"
+      ],
+      "evidence": [
+        {
+          "path": "README.md",
+          "startLine": 1,
+          "endLine": 12,
+          "excerpt": "<h1 align=\"center\">SQLite Source Repository</h1>\n\nThis repository contains the complete source code for the\n[SQLite database engine](https://sqlite.org/) going back\nto 2000-05-29.  The tree includes many tests and some\ndocumentation, though additional tests and most documentation\nare managed separately.\n\nSee the [on-line documentation](https://sqlite.org/) for more information\nabout what SQLite is and how it works from a user's perspective.  This\nREADME file is about the source code that goes into building SQLite,\nnot about how SQLite is used.",
+          "sha256": "5168bcc8023d7f4c99200b9264c39199577c5db5a180c0c147876bdd7aa576ea"
+        },
+        {
+          "path": "README.md",
+          "startLine": 324,
+          "endLine": 334,
+          "excerpt": "  *  **sqlite.h.in** - This file defines the public interface to the SQLite\n     library.  Readers will need to be familiar with this interface before\n     trying to understand how the library works internally.  This file is\n     really a template that is transformed into the \"sqlite3.h\" deliverable\n     using a script invoked by the makefile.\n\n  *  **sqliteInt.h** - this header file defines many of the data objects\n     used internally by SQLite.  In addition to \"sqliteInt.h\", some\n     subsystems inside of sQLite have their own header files.  These internal\n     interfaces are not for use by applications.  They can and do change\n     from one release of SQLite to the next.",
+          "sha256": "5168bcc8023d7f4c99200b9264c39199577c5db5a180c0c147876bdd7aa576ea"
+        },
+        {
+          "path": "README.md",
+          "startLine": 367,
+          "endLine": 380,
+          "excerpt": "  *  **shell.c.in** - This file is not part of the core SQLite library.  This\n     is the file that, when linked against sqlite3.a, generates the\n     \"sqlite3.exe\" command-line shell.  The \"shell.c.in\" file is transformed\n     into \"shell.c\" as part of the build process.\n\n  *  **tclsqlite.c** - This file implements the Tcl bindings for SQLite.  It\n     is not part of the core SQLite library.  But as most of the tests in this\n     repository are written in Tcl, the Tcl language bindings are important.\n\n  *  **test\\*.c** - Files in the src/ folder that begin with \"test\" go into\n     building the \"testfixture.exe\" program.  The testfixture.exe program is\n     an enhanced Tcl shell.  The testfixture.exe program runs scripts in the\n     test/ folder to validate the core SQLite code.  The testfixture program\n     (and some other test programs too) is built and run when you type",
+          "sha256": "5168bcc8023d7f4c99200b9264c39199577c5db5a180c0c147876bdd7aa576ea"
+        }
+      ]
+    },
+    {
+      "id": "sqlite-q2",
+      "question": "Name the principal SQLite components and responsibilities.",
+      "answer": "sqlite.h.in defines the API; parse.y generates the SQL parser; where.c optimizes queries into VM code; vdbe.c runs prepared statements; btree.c stores data, pager.c implements transactions, os_unix.c/os_win.c implement VFS integration. Shell and Tcl bindings are outside the core library.",
+      "requiredFacts": [
+        "Public API and parser",
+        "Query optimizer and VDBE",
+        "B-tree storage and pager",
+        "OS VFS",
+        "Shell/Tcl outside core"
+      ],
+      "evidence": [
+        {
+          "path": "README.md",
+          "startLine": 322,
+          "endLine": 380,
+          "excerpt": "### Key source code files\n\n  *  **sqlite.h.in** - This file defines the public interface to the SQLite\n     library.  Readers will need to be familiar with this interface before\n     trying to understand how the library works internally.  This file is\n     really a template that is transformed into the \"sqlite3.h\" deliverable\n     using a script invoked by the makefile.\n\n  *  **sqliteInt.h** - this header file defines many of the data objects\n     used internally by SQLite.  In addition to \"sqliteInt.h\", some\n     subsystems inside of sQLite have their own header files.  These internal\n     interfaces are not for use by applications.  They can and do change\n     from one release of SQLite to the next.\n\n  *  **parse.y** - This file describes the LALR(1) grammar that SQLite uses\n     to parse SQL statements, and the actions that are taken at each step\n     in the parsing process.  The file is processed by the\n     [Lemon Parser Generator](./doc/lemon.html) to produce the actual C code\n     used for parsing.\n\n  *  **vdbe.c** - This file implements the virtual machine that runs\n     prepared statements.  There are various helper files whose names\n     begin with \"vdbe\".  The VDBE has access to the vdbeInt.h header file\n     which defines internal data objects.  The rest of SQLite interacts\n     with the VDBE through an interface defined by vdbe.h.\n\n  *  **where.c** - This file (together with its helper files named\n     by \"where*.c\") analyzes the WHERE clause and generates\n     virtual machine code to run queries efficiently.  This file is\n     sometimes called the \"query optimizer\".  It has its own private\n     header file, whereInt.h, that defines data objects used internally.\n\n  *  **btree.c** - This file contains the implementation of the B-Tree\n     storage engine used by SQLite.  The interface to the rest of the system\n     is defined by \"btree.h\".  The \"btreeInt.h\" header defines objects\n     used internally by btree.c and not published to the rest of the system.\n\n  *  **pager.c** - This file contains the \"pager\" implementation, the\n     module that implements transactions.  The \"pager.h\" header file\n     defines the interface between pager.c and the rest of the system.\n\n  *  **os_unix.c** and **os_win.c** - These two files implement the interface\n     between SQLite and the underlying operating system using the run-time\n     pluggable VFS interface.\n\n  *  **shell.c.in** - This file is not part of the core SQLite library.  This\n     is the file that, when linked against sqlite3.a, generates the\n     \"sqlite3.exe\" command-line shell.  The \"shell.c.in\" file is transformed\n     into \"shell.c\" as part of the build process.\n\n  *  **tclsqlite.c** - This file implements the Tcl bindings for SQLite.  It\n     is not part of the core SQLite library.  But as most of the tests in this\n     repository are written in Tcl, the Tcl language bindings are important.\n\n  *  **test\\*.c** - Files in the src/ folder that begin with \"test\" go into\n     building the \"testfixture.exe\" program.  The testfixture.exe program is\n     an enhanced Tcl shell.  The testfixture.exe program runs scripts in the\n     test/ folder to validate the core SQLite code.  The testfixture program\n     (and some other test programs too) is built and run when you type",
+          "sha256": "5168bcc8023d7f4c99200b9264c39199577c5db5a180c0c147876bdd7aa576ea"
+        }
+      ]
+    },
+    {
+      "id": "sqlite-q3",
+      "question": "Which languages, build systems and boundaries organize SQLite?",
+      "answer": "The core is C with Lemon-generated parser code from parse.y. Tcl supports generation/tests. Unix configure and make build the library, shell and sqlite3.c amalgamation; testfixture is separate test tooling.",
+      "requiredFacts": [
+        "C with Lemon parser generation",
+        "Tcl tooling/tests",
+        "configure/make and amalgamation",
+        "Core/shell/testfixture boundaries"
+      ],
+      "evidence": [
+        {
+          "path": "README.md",
+          "startLine": 94,
+          "endLine": 118,
+          "excerpt": "## Compiling for Unix-like systems\n\nFirst create a directory in which to place\nthe build products.  It is recommended, but not required, that the\nbuild directory be separate from the source directory.  Cd into the\nbuild directory and then from the build directory run the configure\nscript found at the root of the source tree.  Then run \"make\".\nSee the [compile-for-unix.md](doc/compile-for-unix.md) document for\nmore detail.\n\nFor example:\n\n        apt install gcc make tcl-dev  ;#  Install the necessary build tools\n        tar xzf sqlite.tar.gz         ;#  Unpack the source tree into \"sqlite\"\n        mkdir bld                     ;#  Build happens in a sibling directory\n        cd bld                        ;#  Change to the build directory\n        ../sqlite/configure           ;#  Run the configure script\n        make sqlite3                  ;#  The \"sqlite3\" command-line tool\n        make sqlite3.c                ;#  The \"amalgamation\" source file\n        make sqldiff                  ;#  The \"sqldiff\" command-line tool\n        #### Targets below require tcl-dev ####\n        make tclextension-install     ;#  Install the SQLite TCL extension\n        make test                     ;#  Run development tests\n        make releasetest              ;#  Run full release tests\n",
+          "sha256": "5168bcc8023d7f4c99200b9264c39199577c5db5a180c0c147876bdd7aa576ea"
+        },
+        {
+          "path": "README.md",
+          "startLine": 278,
+          "endLine": 291,
+          "excerpt": "### The Amalgamation\n\nAll of the individual C source code and header files (both manually-edited\nand automatically-generated) can be combined into a single big source file\n**sqlite3.c** called \"the amalgamation\".  The amalgamation is the recommended\nway of using SQLite in a larger application.  Combining all individual\nsource code files into a single big source code file allows the C compiler\nto perform more cross-procedure analysis and generate better code.  SQLite\nruns about 5% faster when compiled from the amalgamation versus when compiled\nfrom individual source files.\n\nThe amalgamation is generated from the tool/mksqlite3c.tcl Tcl script.\nFirst, all of the individual source files must be gathered into the tsrc/\nsubdirectory (using the equivalent of \"make target_source\") then the",
+          "sha256": "5168bcc8023d7f4c99200b9264c39199577c5db5a180c0c147876bdd7aa576ea"
+        },
+        {
+          "path": "README.md",
+          "startLine": 335,
+          "endLine": 342,
+          "excerpt": "\n  *  **parse.y** - This file describes the LALR(1) grammar that SQLite uses\n     to parse SQL statements, and the actions that are taken at each step\n     in the parsing process.  The file is processed by the\n     [Lemon Parser Generator](./doc/lemon.html) to produce the actual C code\n     used for parsing.\n\n  *  **vdbe.c** - This file implements the virtual machine that runs",
+          "sha256": "5168bcc8023d7f4c99200b9264c39199577c5db5a180c0c147876bdd7aa576ea"
+        },
+        {
+          "path": "README.md",
+          "startLine": 367,
+          "endLine": 382,
+          "excerpt": "  *  **shell.c.in** - This file is not part of the core SQLite library.  This\n     is the file that, when linked against sqlite3.a, generates the\n     \"sqlite3.exe\" command-line shell.  The \"shell.c.in\" file is transformed\n     into \"shell.c\" as part of the build process.\n\n  *  **tclsqlite.c** - This file implements the Tcl bindings for SQLite.  It\n     is not part of the core SQLite library.  But as most of the tests in this\n     repository are written in Tcl, the Tcl language bindings are important.\n\n  *  **test\\*.c** - Files in the src/ folder that begin with \"test\" go into\n     building the \"testfixture.exe\" program.  The testfixture.exe program is\n     an enhanced Tcl shell.  The testfixture.exe program runs scripts in the\n     test/ folder to validate the core SQLite code.  The testfixture program\n     (and some other test programs too) is built and run when you type\n     \"make test\".\n",
+          "sha256": "5168bcc8023d7f4c99200b9264c39199577c5db5a180c0c147876bdd7aa576ea"
+        }
+      ],
+      "notes": "Evaluation limitation, not a source fact: C call extraction is outside the evaluated map capability. Answers are established from C source and do not claim a C call map."
+    },
+    {
+      "id": "sqlite-q4",
+      "question": "Where does the selected public-library SQL execution begin?",
+      "answer": "A caller with a database connection invokes sqlite3_exec(db, SQL, callback, context, errorOut). Its API is documented in src/sqlite.h.in and implemented in src/legacy.c. This is a public C entry, not the shell main.",
+      "requiredFacts": [
+        "sqlite3_exec public API",
+        "Connection and SQL supplied by caller",
+        "sqlite.h.in interface; legacy.c implementation"
+      ],
+      "evidence": [
+        {
+          "path": "src/sqlite.h.in",
+          "startLine": 367,
+          "endLine": 395,
+          "excerpt": "** CAPI3REF: One-Step Query Execution Interface\n** METHOD: sqlite3\n**\n** The sqlite3_exec() interface is a convenience wrapper around\n** [sqlite3_prepare_v2()], [sqlite3_step()], and [sqlite3_finalize()],\n** that allows an application to run multiple statements of SQL\n** without having to use a lot of C code.\n**\n** ^The sqlite3_exec() interface runs zero or more UTF-8 encoded,\n** semicolon-separated SQL statements passed into its 2nd argument,\n** in the context of the [database connection] passed in as its 1st\n** argument.  ^If the callback function of the 3rd argument to\n** sqlite3_exec() is not NULL, then it is invoked for each result row\n** coming out of the evaluated SQL statements.  ^The 4th argument to\n** sqlite3_exec() is relayed through to the 1st argument of each\n** callback invocation.  ^If the callback pointer to sqlite3_exec()\n** is NULL, then no callback is ever invoked and result rows are\n** ignored.\n**\n** ^If an error occurs while evaluating the SQL statements passed into\n** sqlite3_exec(), then execution of the current statement stops and\n** subsequent statements are skipped.  ^If the 5th parameter to sqlite3_exec()\n** is not NULL then any error message is written into memory obtained\n** from [sqlite3_malloc()] and passed back through the 5th parameter.\n** To avoid memory leaks, the application should invoke [sqlite3_free()]\n** on error message strings returned through the 5th parameter of\n** sqlite3_exec() after the error message string is no longer needed.\n** ^If the 5th parameter to sqlite3_exec() is not NULL and no errors\n** occur, then sqlite3_exec() sets the pointer in its 5th parameter to",
+          "sha256": "a66be104bd89782526c11e251b88a92d7aaf91a2bf53460a8a6a3fb4dfb13226"
+        },
+        {
+          "path": "src/legacy.c",
+          "startLine": 20,
+          "endLine": 44,
+          "excerpt": "/*\n** Execute SQL code.  Return one of the SQLITE_ success/failure\n** codes.  Also write an error message into memory obtained from\n** malloc() and make *pzErrMsg point to that message.\n**\n** If the SQL is a query, then for each row in the query result\n** the xCallback() function is called.  pArg becomes the first\n** argument to xCallback().  If xCallback=NULL then no callback\n** is invoked, even for queries.\n*/\nint sqlite3_exec(\n  sqlite3 *db,                /* The database on which the SQL executes */\n  const char *zSql,           /* The SQL to be executed */\n  sqlite3_callback xCallback, /* Invoke this callback routine */\n  void *pArg,                 /* First argument to xCallback() */\n  char **pzErrMsg             /* Write error messages here */\n){\n  int rc = SQLITE_OK;         /* Return code */\n  const char *zLeftover;      /* Tail of unprocessed SQL */\n  sqlite3_stmt *pStmt = 0;    /* The current SQL statement */\n  char **azCols = 0;          /* Names of result columns */\n  int callbackIsInit;         /* True if callback data is initialized */\n\n  if( !sqlite3SafetyCheckOk(db) ) return SQLITE_MISUSE_BKPT;\n  if( zSql==0 ) zSql = \"\";",
+          "sha256": "a9491dee918654a10468df6e09f3fa538be888e93450331782812ef277bf1c74"
+        }
+      ]
+    },
+    {
+      "id": "sqlite-q5",
+      "question": "Where is X, executing SQL statements with result-row callbacks, implemented?",
+      "answer": "src/legacy.c sqlite3_exec prepares statements with sqlite3_prepare_v2, steps them, extracts column names/text and invokes xCallback when supplied. It finalizes statements and advances to leftover SQL.",
+      "requiredFacts": [
+        "sqlite3_exec in legacy.c",
+        "Prepare/step loop",
+        "Result values/names passed to callback",
+        "Finalize and advance tail"
+      ],
+      "evidence": [
+        {
+          "path": "src/legacy.c",
+          "startLine": 30,
+          "endLine": 67,
+          "excerpt": "int sqlite3_exec(\n  sqlite3 *db,                /* The database on which the SQL executes */\n  const char *zSql,           /* The SQL to be executed */\n  sqlite3_callback xCallback, /* Invoke this callback routine */\n  void *pArg,                 /* First argument to xCallback() */\n  char **pzErrMsg             /* Write error messages here */\n){\n  int rc = SQLITE_OK;         /* Return code */\n  const char *zLeftover;      /* Tail of unprocessed SQL */\n  sqlite3_stmt *pStmt = 0;    /* The current SQL statement */\n  char **azCols = 0;          /* Names of result columns */\n  int callbackIsInit;         /* True if callback data is initialized */\n\n  if( !sqlite3SafetyCheckOk(db) ) return SQLITE_MISUSE_BKPT;\n  if( zSql==0 ) zSql = \"\";\n\n  sqlite3_mutex_enter(db->mutex);\n  sqlite3Error(db, SQLITE_OK);\n  while( rc==SQLITE_OK && zSql[0] ){\n    int nCol = 0;\n    char **azVals = 0;\n\n    pStmt = 0;\n    rc = sqlite3_prepare_v2(db, zSql, -1, &pStmt, &zLeftover);\n    assert( rc==SQLITE_OK || pStmt==0 );\n    if( rc!=SQLITE_OK ){\n      continue;\n    }\n    if( !pStmt ){\n      /* this happens for a comment or white-space */\n      zSql = zLeftover;\n      continue;\n    }\n    callbackIsInit = 0;\n\n    while( 1 ){\n      int i;\n      rc = sqlite3_step(pStmt);",
+          "sha256": "a9491dee918654a10468df6e09f3fa538be888e93450331782812ef277bf1c74"
+        },
+        {
+          "path": "src/legacy.c",
+          "startLine": 69,
+          "endLine": 122,
+          "excerpt": "      /* Invoke the callback function if required */\n      if( xCallback && (SQLITE_ROW==rc || \n          (SQLITE_DONE==rc && !callbackIsInit\n                           && db->flags&SQLITE_NullCallback)) ){\n        if( !callbackIsInit ){\n          nCol = sqlite3_column_count(pStmt);\n          azCols = sqlite3DbMallocRaw(db, (2*nCol+1)*sizeof(const char*));\n          if( azCols==0 ){\n            goto exec_out;\n          }\n          for(i=0; i<nCol; i++){\n            azCols[i] = (char *)sqlite3_column_name(pStmt, i);\n            /* sqlite3VdbeSetColName() installs column names as UTF8\n            ** strings so there is no way for sqlite3_column_name() to fail. */\n            assert( azCols[i]!=0 );\n          }\n          callbackIsInit = 1;\n        }\n        if( rc==SQLITE_ROW ){\n          azVals = &azCols[nCol];\n          for(i=0; i<nCol; i++){\n            azVals[i] = (char *)sqlite3_column_text(pStmt, i);\n            if( !azVals[i] && sqlite3_column_type(pStmt, i)!=SQLITE_NULL ){\n              sqlite3OomFault(db);\n              goto exec_out;\n            }\n          }\n          azVals[i] = 0;\n        }\n        if( xCallback(pArg, nCol, azVals, azCols) ){\n          /* EVIDENCE-OF: R-38229-40159 If the callback function to\n          ** sqlite3_exec() returns non-zero, then sqlite3_exec() will\n          ** return SQLITE_ABORT. */\n          rc = SQLITE_ABORT;\n          sqlite3VdbeFinalize((Vdbe *)pStmt);\n          pStmt = 0;\n          sqlite3Error(db, SQLITE_ABORT);\n          goto exec_out;\n        }\n      }\n\n      if( rc!=SQLITE_ROW ){\n        rc = sqlite3VdbeFinalize((Vdbe *)pStmt);\n        pStmt = 0;\n        zSql = zLeftover;\n        while( sqlite3Isspace(zSql[0]) ) zSql++;\n        break;\n      }\n    }\n\n    sqlite3DbFree(db, azCols);\n    azCols = 0;\n  }\n",
+          "sha256": "a9491dee918654a10468df6e09f3fa538be888e93450331782812ef277bf1c74"
+        }
+      ]
+    },
+    {
+      "id": "sqlite-q6",
+      "question": "Which internal components does A, sqlite3_exec, directly use?",
+      "answer": "Direct calls use sqlite3_prepare_v2 for compilation, sqlite3_step and column APIs for execution/results, sqlite3VdbeFinalize for cleanup and allocation/free/error helpers. These literal call expressions prove directions; the user callback function-pointer target is unknown in general.",
+      "requiredFacts": [
+        "prepare_v2",
+        "step and column APIs",
+        "VdbeFinalize",
+        "Allocation/free helpers",
+        "User callback is dynamic"
+      ],
+      "evidence": [
+        {
+          "path": "src/legacy.c",
+          "startLine": 48,
+          "endLine": 107,
+          "excerpt": "  while( rc==SQLITE_OK && zSql[0] ){\n    int nCol = 0;\n    char **azVals = 0;\n\n    pStmt = 0;\n    rc = sqlite3_prepare_v2(db, zSql, -1, &pStmt, &zLeftover);\n    assert( rc==SQLITE_OK || pStmt==0 );\n    if( rc!=SQLITE_OK ){\n      continue;\n    }\n    if( !pStmt ){\n      /* this happens for a comment or white-space */\n      zSql = zLeftover;\n      continue;\n    }\n    callbackIsInit = 0;\n\n    while( 1 ){\n      int i;\n      rc = sqlite3_step(pStmt);\n\n      /* Invoke the callback function if required */\n      if( xCallback && (SQLITE_ROW==rc || \n          (SQLITE_DONE==rc && !callbackIsInit\n                           && db->flags&SQLITE_NullCallback)) ){\n        if( !callbackIsInit ){\n          nCol = sqlite3_column_count(pStmt);\n          azCols = sqlite3DbMallocRaw(db, (2*nCol+1)*sizeof(const char*));\n          if( azCols==0 ){\n            goto exec_out;\n          }\n          for(i=0; i<nCol; i++){\n            azCols[i] = (char *)sqlite3_column_name(pStmt, i);\n            /* sqlite3VdbeSetColName() installs column names as UTF8\n            ** strings so there is no way for sqlite3_column_name() to fail. */\n            assert( azCols[i]!=0 );\n          }\n          callbackIsInit = 1;\n        }\n        if( rc==SQLITE_ROW ){\n          azVals = &azCols[nCol];\n          for(i=0; i<nCol; i++){\n            azVals[i] = (char *)sqlite3_column_text(pStmt, i);\n            if( !azVals[i] && sqlite3_column_type(pStmt, i)!=SQLITE_NULL ){\n              sqlite3OomFault(db);\n              goto exec_out;\n            }\n          }\n          azVals[i] = 0;\n        }\n        if( xCallback(pArg, nCol, azVals, azCols) ){\n          /* EVIDENCE-OF: R-38229-40159 If the callback function to\n          ** sqlite3_exec() returns non-zero, then sqlite3_exec() will\n          ** return SQLITE_ABORT. */\n          rc = SQLITE_ABORT;\n          sqlite3VdbeFinalize((Vdbe *)pStmt);\n          pStmt = 0;\n          sqlite3Error(db, SQLITE_ABORT);\n          goto exec_out;\n        }",
+          "sha256": "a9491dee918654a10468df6e09f3fa538be888e93450331782812ef277bf1c74"
+        },
+        {
+          "path": "src/legacy.c",
+          "startLine": 110,
+          "endLine": 140,
+          "excerpt": "      if( rc!=SQLITE_ROW ){\n        rc = sqlite3VdbeFinalize((Vdbe *)pStmt);\n        pStmt = 0;\n        zSql = zLeftover;\n        while( sqlite3Isspace(zSql[0]) ) zSql++;\n        break;\n      }\n    }\n\n    sqlite3DbFree(db, azCols);\n    azCols = 0;\n  }\n\nexec_out:\n  if( pStmt ) sqlite3VdbeFinalize((Vdbe *)pStmt);\n  sqlite3DbFree(db, azCols);\n\n  rc = sqlite3ApiExit(db, rc);\n  if( rc!=SQLITE_OK && pzErrMsg ){\n    *pzErrMsg = sqlite3DbStrDup(0, sqlite3_errmsg(db));\n    if( *pzErrMsg==0 ){\n      rc = SQLITE_NOMEM_BKPT;\n      sqlite3Error(db, SQLITE_NOMEM);\n    }\n  }else if( pzErrMsg ){\n    *pzErrMsg = 0;\n  }\n\n  assert( (rc&db->errMask)==rc );\n  sqlite3_mutex_leave(db->mutex);\n  return rc;",
+          "sha256": "a9491dee918654a10468df6e09f3fa538be888e93450331782812ef277bf1c74"
+        }
+      ]
+    },
+    {
+      "id": "sqlite-q7",
+      "question": "For R, SELECT through sqlite3_exec with a callback, give the supported path and dynamic boundary.",
+      "answer": "sqlite3_exec prepares and steps the statement; rows populate name/value arrays passed to xCallback(pArg,nCol,azVals,azCols). It continues through rows and finalizes. Nonzero callback return triggers SQLITE_ABORT and skips remaining statements. The caller-supplied callback target is dynamic; deeper SQL execution is not inferred from a map.",
+      "requiredFacts": [
+        "Prepare then step",
+        "Column arrays feed callback",
+        "Finalize after rows",
+        "Callback nonzero aborts",
+        "Caller callback dynamic boundary"
+      ],
+      "evidence": [
+        {
+          "path": "src/legacy.c",
+          "startLine": 48,
+          "endLine": 118,
+          "excerpt": "  while( rc==SQLITE_OK && zSql[0] ){\n    int nCol = 0;\n    char **azVals = 0;\n\n    pStmt = 0;\n    rc = sqlite3_prepare_v2(db, zSql, -1, &pStmt, &zLeftover);\n    assert( rc==SQLITE_OK || pStmt==0 );\n    if( rc!=SQLITE_OK ){\n      continue;\n    }\n    if( !pStmt ){\n      /* this happens for a comment or white-space */\n      zSql = zLeftover;\n      continue;\n    }\n    callbackIsInit = 0;\n\n    while( 1 ){\n      int i;\n      rc = sqlite3_step(pStmt);\n\n      /* Invoke the callback function if required */\n      if( xCallback && (SQLITE_ROW==rc || \n          (SQLITE_DONE==rc && !callbackIsInit\n                           && db->flags&SQLITE_NullCallback)) ){\n        if( !callbackIsInit ){\n          nCol = sqlite3_column_count(pStmt);\n          azCols = sqlite3DbMallocRaw(db, (2*nCol+1)*sizeof(const char*));\n          if( azCols==0 ){\n            goto exec_out;\n          }\n          for(i=0; i<nCol; i++){\n            azCols[i] = (char *)sqlite3_column_name(pStmt, i);\n            /* sqlite3VdbeSetColName() installs column names as UTF8\n            ** strings so there is no way for sqlite3_column_name() to fail. */\n            assert( azCols[i]!=0 );\n          }\n          callbackIsInit = 1;\n        }\n        if( rc==SQLITE_ROW ){\n          azVals = &azCols[nCol];\n          for(i=0; i<nCol; i++){\n            azVals[i] = (char *)sqlite3_column_text(pStmt, i);\n            if( !azVals[i] && sqlite3_column_type(pStmt, i)!=SQLITE_NULL ){\n              sqlite3OomFault(db);\n              goto exec_out;\n            }\n          }\n          azVals[i] = 0;\n        }\n        if( xCallback(pArg, nCol, azVals, azCols) ){\n          /* EVIDENCE-OF: R-38229-40159 If the callback function to\n          ** sqlite3_exec() returns non-zero, then sqlite3_exec() will\n          ** return SQLITE_ABORT. */\n          rc = SQLITE_ABORT;\n          sqlite3VdbeFinalize((Vdbe *)pStmt);\n          pStmt = 0;\n          sqlite3Error(db, SQLITE_ABORT);\n          goto exec_out;\n        }\n      }\n\n      if( rc!=SQLITE_ROW ){\n        rc = sqlite3VdbeFinalize((Vdbe *)pStmt);\n        pStmt = 0;\n        zSql = zLeftover;\n        while( sqlite3Isspace(zSql[0]) ) zSql++;\n        break;\n      }\n    }\n",
+          "sha256": "a9491dee918654a10468df6e09f3fa538be888e93450331782812ef277bf1c74"
+        },
+        {
+          "path": "src/sqlite.h.in",
+          "startLine": 398,
+          "endLine": 410,
+          "excerpt": "** ^If an sqlite3_exec() callback returns non-zero, the sqlite3_exec()\n** routine returns SQLITE_ABORT without invoking the callback again and\n** without running any subsequent SQL statements.\n**\n** ^The 2nd argument to the sqlite3_exec() callback function is the\n** number of columns in the result.  ^The 3rd argument to the sqlite3_exec()\n** callback is an array of pointers to strings obtained as if from\n** [sqlite3_column_text()], one for each column.  ^If an element of a\n** result row is NULL then the corresponding string pointer for the\n** sqlite3_exec() callback is a NULL pointer.  ^The 4th argument to the\n** sqlite3_exec() callback is an array of pointers to strings where each\n** entry represents the name of a corresponding result column as obtained\n** from [sqlite3_column_name()].",
+          "sha256": "a66be104bd89782526c11e251b88a92d7aaf91a2bf53460a8a6a3fb4dfb13226"
+        }
+      ]
+    },
+    {
+      "id": "sqlite-q8",
+      "question": "If Y, sqlite3_exec row-callback semantics, changes, which direct consumer is evidenced?",
+      "answer": "src/test1.c test_exec calls sqlite3_exec with exec_printf_cb and collects output for Tcl. Registration exposes sqlite3_exec to test/exec.test. This is a concrete consumer/regression surface, not an exhaustive application impact claim.",
+      "requiredFacts": [
+        "test_exec calls sqlite3_exec with callback",
+        "Tcl command registration",
+        "exec.test consumer",
+        "No exhaustive impact claim"
+      ],
+      "evidence": [
+        {
+          "path": "src/test1.c",
+          "startLine": 494,
+          "endLine": 536,
+          "excerpt": "** Usage:  sqlite3_exec  DB  SQL\n**\n** Invoke the sqlite3_exec interface using the open database DB\n*/\nstatic int SQLITE_TCLAPI test_exec(\n  void *NotUsed,\n  Tcl_Interp *interp,    /* The TCL interpreter that invoked this command */\n  int argc,              /* Number of arguments */\n  char **argv            /* Text of each argument */\n){\n  sqlite3 *db;\n  Tcl_DString str;\n  int rc;\n  char *zErr = 0;\n  char *zSql;\n  int i, j;\n  char zBuf[30];\n  if( argc!=3 ){\n    Tcl_AppendResult(interp, \"wrong # args: should be \\\"\", argv[0], \n       \" DB SQL\", 0);\n    return TCL_ERROR;\n  }\n  if( getDbPointer(interp, argv[1], &db) ) return TCL_ERROR;\n  Tcl_DStringInit(&str);\n  zSql = sqlite3_mprintf(\"%s\", argv[2]);\n  for(i=j=0; zSql[i];){\n    if( zSql[i]=='%' ){\n      zSql[j++] = (testHexToInt(zSql[i+1])<<4) + testHexToInt(zSql[i+2]);\n      i += 3;\n    }else{\n      zSql[j++] = zSql[i++];\n    }\n  }\n  zSql[j] = 0;\n  rc = sqlite3_exec(db, zSql, exec_printf_cb, &str, &zErr);\n  sqlite3_free(zSql);\n  sqlite3_snprintf(sizeof(zBuf), zBuf, \"%d\", rc);\n  Tcl_AppendElement(interp, zBuf);\n  Tcl_AppendElement(interp, rc==SQLITE_OK ? Tcl_DStringValue(&str) : zErr);\n  Tcl_DStringFree(&str);\n  if( zErr ) sqlite3_free(zErr);\n  if( sqlite3TestErrCode(interp, db, rc) ) return TCL_ERROR;\n  return TCL_OK;",
+          "sha256": "2c041e0d125faf63866fe14550b86732d113d189f45cfdf781eb792bb20f2c21"
+        },
+        {
+          "path": "src/test1.c",
+          "startLine": 9304,
+          "endLine": 9308,
+          "excerpt": "     { \"sqlite3_exec_printf\",           (Tcl_CmdProc*)test_exec_printf      },\n     { \"sqlite3_exec_hex\",              (Tcl_CmdProc*)test_exec_hex         },\n     { \"sqlite3_exec\",                  (Tcl_CmdProc*)test_exec             },\n     { \"sqlite3_exec_nr\",               (Tcl_CmdProc*)test_exec_nr          },\n#ifndef SQLITE_OMIT_GET_TABLE",
+          "sha256": "2c041e0d125faf63866fe14550b86732d113d189f45cfdf781eb792bb20f2c21"
+        },
+        {
+          "path": "test/exec.test",
+          "startLine": 20,
+          "endLine": 35,
+          "excerpt": "do_test exec-1.1 {\n  execsql {\n    CREATE TABLE t1(a,b);\n    INSERT INTO t1 VALUES(1,2);\n    SELECT * FROM t1;\n  }\n} {1 2}\ndo_test exec-1.2 {\n  sqlite3_exec db {/* comment */;;; SELECT * FROM t1; /* comment */}\n} {0 {a b 1 2}}\ndo_test exec-1.3 {\n  sqlite3 db2 test.db\n  db2 eval {CREATE TABLE t2(x, y);}\n  db2 close\n  sqlite3_exec db {SELECT * FROM t1}\n} {0 {a b 1 2}}",
+          "sha256": "83548422e5b3aae693247858943ae980afc06e423436a4a7afaf029b726f1aff"
+        }
+      ]
+    },
+    {
+      "id": "sqlite-q9",
+      "question": "Which tests exercise X, SQL execution with result-row callbacks, and how do they enter implementation?",
+      "answer": "test/exec.test exec-1.2 passes comments, empty statements and SELECT to the sqlite3_exec Tcl command and expects 0 plus {a b 1 2}. test1.c registers test_exec, which invokes C sqlite3_exec with exec_printf_cb. These tests were inspected, not executed.",
+      "requiredFacts": [
+        "exec-1.2 comments/empty statements/SELECT",
+        "Expected 0 and {a b 1 2}",
+        "Registration -> test_exec -> sqlite3_exec",
+        "Source-only test evidence"
+      ],
+      "evidence": [
+        {
+          "path": "test/exec.test",
+          "startLine": 20,
+          "endLine": 35,
+          "excerpt": "do_test exec-1.1 {\n  execsql {\n    CREATE TABLE t1(a,b);\n    INSERT INTO t1 VALUES(1,2);\n    SELECT * FROM t1;\n  }\n} {1 2}\ndo_test exec-1.2 {\n  sqlite3_exec db {/* comment */;;; SELECT * FROM t1; /* comment */}\n} {0 {a b 1 2}}\ndo_test exec-1.3 {\n  sqlite3 db2 test.db\n  db2 eval {CREATE TABLE t2(x, y);}\n  db2 close\n  sqlite3_exec db {SELECT * FROM t1}\n} {0 {a b 1 2}}",
+          "sha256": "83548422e5b3aae693247858943ae980afc06e423436a4a7afaf029b726f1aff"
+        },
+        {
+          "path": "src/test1.c",
+          "startLine": 494,
+          "endLine": 536,
+          "excerpt": "** Usage:  sqlite3_exec  DB  SQL\n**\n** Invoke the sqlite3_exec interface using the open database DB\n*/\nstatic int SQLITE_TCLAPI test_exec(\n  void *NotUsed,\n  Tcl_Interp *interp,    /* The TCL interpreter that invoked this command */\n  int argc,              /* Number of arguments */\n  char **argv            /* Text of each argument */\n){\n  sqlite3 *db;\n  Tcl_DString str;\n  int rc;\n  char *zErr = 0;\n  char *zSql;\n  int i, j;\n  char zBuf[30];\n  if( argc!=3 ){\n    Tcl_AppendResult(interp, \"wrong # args: should be \\\"\", argv[0], \n       \" DB SQL\", 0);\n    return TCL_ERROR;\n  }\n  if( getDbPointer(interp, argv[1], &db) ) return TCL_ERROR;\n  Tcl_DStringInit(&str);\n  zSql = sqlite3_mprintf(\"%s\", argv[2]);\n  for(i=j=0; zSql[i];){\n    if( zSql[i]=='%' ){\n      zSql[j++] = (testHexToInt(zSql[i+1])<<4) + testHexToInt(zSql[i+2]);\n      i += 3;\n    }else{\n      zSql[j++] = zSql[i++];\n    }\n  }\n  zSql[j] = 0;\n  rc = sqlite3_exec(db, zSql, exec_printf_cb, &str, &zErr);\n  sqlite3_free(zSql);\n  sqlite3_snprintf(sizeof(zBuf), zBuf, \"%d\", rc);\n  Tcl_AppendElement(interp, zBuf);\n  Tcl_AppendElement(interp, rc==SQLITE_OK ? Tcl_DStringValue(&str) : zErr);\n  Tcl_DStringFree(&str);\n  if( zErr ) sqlite3_free(zErr);\n  if( sqlite3TestErrCode(interp, db, rc) ) return TCL_ERROR;\n  return TCL_OK;",
+          "sha256": "2c041e0d125faf63866fe14550b86732d113d189f45cfdf781eb792bb20f2c21"
+        },
+        {
+          "path": "src/test1.c",
+          "startLine": 9304,
+          "endLine": 9308,
+          "excerpt": "     { \"sqlite3_exec_printf\",           (Tcl_CmdProc*)test_exec_printf      },\n     { \"sqlite3_exec_hex\",              (Tcl_CmdProc*)test_exec_hex         },\n     { \"sqlite3_exec\",                  (Tcl_CmdProc*)test_exec             },\n     { \"sqlite3_exec_nr\",               (Tcl_CmdProc*)test_exec_nr          },\n#ifndef SQLITE_OMIT_GET_TABLE",
+          "sha256": "2c041e0d125faf63866fe14550b86732d113d189f45cfdf781eb792bb20f2c21"
+        }
+      ]
+    },
+    {
+      "id": "sqlite-q10",
+      "question": "Where does Z, SQL text and its unconsumed tail, enter and get transformed?",
+      "answer": "Second argument zSql is UTF-8 semicolon-separated SQL; null becomes empty text. sqlite3_prepare_v2 returns a statement and zLeftover. Comment/whitespace-only input may yield no statement; completed statements advance to zLeftover and skip whitespace.",
+      "requiredFacts": [
+        "Second argument SQL",
+        "Null becomes empty",
+        "prepare_v2 returns statement/tail",
+        "Loop advances/skips whitespace"
+      ],
+      "evidence": [
+        {
+          "path": "src/sqlite.h.in",
+          "startLine": 370,
+          "endLine": 383,
+          "excerpt": "** The sqlite3_exec() interface is a convenience wrapper around\n** [sqlite3_prepare_v2()], [sqlite3_step()], and [sqlite3_finalize()],\n** that allows an application to run multiple statements of SQL\n** without having to use a lot of C code.\n**\n** ^The sqlite3_exec() interface runs zero or more UTF-8 encoded,\n** semicolon-separated SQL statements passed into its 2nd argument,\n** in the context of the [database connection] passed in as its 1st\n** argument.  ^If the callback function of the 3rd argument to\n** sqlite3_exec() is not NULL, then it is invoked for each result row\n** coming out of the evaluated SQL statements.  ^The 4th argument to\n** sqlite3_exec() is relayed through to the 1st argument of each\n** callback invocation.  ^If the callback pointer to sqlite3_exec()\n** is NULL, then no callback is ever invoked and result rows are",
+          "sha256": "a66be104bd89782526c11e251b88a92d7aaf91a2bf53460a8a6a3fb4dfb13226"
+        },
+        {
+          "path": "src/legacy.c",
+          "startLine": 30,
+          "endLine": 61,
+          "excerpt": "int sqlite3_exec(\n  sqlite3 *db,                /* The database on which the SQL executes */\n  const char *zSql,           /* The SQL to be executed */\n  sqlite3_callback xCallback, /* Invoke this callback routine */\n  void *pArg,                 /* First argument to xCallback() */\n  char **pzErrMsg             /* Write error messages here */\n){\n  int rc = SQLITE_OK;         /* Return code */\n  const char *zLeftover;      /* Tail of unprocessed SQL */\n  sqlite3_stmt *pStmt = 0;    /* The current SQL statement */\n  char **azCols = 0;          /* Names of result columns */\n  int callbackIsInit;         /* True if callback data is initialized */\n\n  if( !sqlite3SafetyCheckOk(db) ) return SQLITE_MISUSE_BKPT;\n  if( zSql==0 ) zSql = \"\";\n\n  sqlite3_mutex_enter(db->mutex);\n  sqlite3Error(db, SQLITE_OK);\n  while( rc==SQLITE_OK && zSql[0] ){\n    int nCol = 0;\n    char **azVals = 0;\n\n    pStmt = 0;\n    rc = sqlite3_prepare_v2(db, zSql, -1, &pStmt, &zLeftover);\n    assert( rc==SQLITE_OK || pStmt==0 );\n    if( rc!=SQLITE_OK ){\n      continue;\n    }\n    if( !pStmt ){\n      /* this happens for a comment or white-space */\n      zSql = zLeftover;\n      continue;",
+          "sha256": "a9491dee918654a10468df6e09f3fa538be888e93450331782812ef277bf1c74"
+        },
+        {
+          "path": "src/legacy.c",
+          "startLine": 110,
+          "endLine": 117,
+          "excerpt": "      if( rc!=SQLITE_ROW ){\n        rc = sqlite3VdbeFinalize((Vdbe *)pStmt);\n        pStmt = 0;\n        zSql = zLeftover;\n        while( sqlite3Isspace(zSql[0]) ) zSql++;\n        break;\n      }\n    }",
+          "sha256": "a9491dee918654a10468df6e09f3fa538be888e93450331782812ef277bf1c74"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "repository": "nowinandroid",
+  "commit": "a49ed253d75e61a2b6ab80a8da677b57437b08eb",
+  "candidate": "2b7c00f",
+  "startedAt": "2026-10-13T07:12:36.610Z",
+  "reused": true,
+  "seconds": 0.000228833,
+  "graphHash": "e47aaedc2e17513d763de46077f489e635e329df6fdd0adcb89d9f0d68a956fd",
+  "source": {
+    "name": "nowinandroid",
+    "dirty": false,
+    "sourceFingerprint": "2a80e063e2c85bac319856208b676c0dd5d7b53354d2e07b84117fc5a43ed244",
+    "commit": "a49ed253d75e61a2b6ab80a8da677b57437b08eb",
+    "remoteUrl": "https://github.com/android/nowinandroid"
+  },
+  "status": "ready",
+  "finishedAt": "2026-10-13T07:12:36.611Z"
+}

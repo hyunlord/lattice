@@ -1,0 +1,153 @@
+{
+  "repository": "tokio-rs/axum",
+  "commit": "e57b547eb95de74b73b34719dd5926254a085634",
+  "arm": "map",
+  "gradedBy": "independent fresh grader map-axum-swift",
+  "answerSha256": "c508027e560f6f9056996b201cbaddf2d8c1e3f6386c72cd0650a60f6d85330f",
+  "questions": [
+    {
+      "id": "q1",
+      "score": 2,
+      "reason": "Correctly identifies HTTP routing/request handling, typed extraction/response conversion, application callers, Tokio serving, and Tower Service integration.",
+      "sourceReferences": [
+        "axum/README.md:1-65 @ e57b547eb95de74b73b34719dd5926254a085634",
+        "axum-core/src/lib.rs:1-8 @ e57b547eb95de74b73b34719dd5926254a085634"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "q2",
+      "score": 1,
+      "reason": "Names all principal crates and routing layers correctly, but does not explain FromRequest/FromRequestParts and IntoResponse responsibilities, the library-author axum-core dependency guidance, or the FromRequest derivation role of axum-macros. Component responsibilities are therefore incomplete against the frozen reference.",
+      "sourceReferences": [
+        "axum/src/routing/mod.rs:1-110 @ e57b547eb95de74b73b34719dd5926254a085634",
+        "axum-core/src/lib.rs:1-36 @ e57b547eb95de74b73b34719dd5926254a085634",
+        "axum-extra/src/lib.rs:1-60 @ e57b547eb95de74b73b34719dd5926254a085634",
+        "axum-macros/Cargo.toml:1-22 @ e57b547eb95de74b73b34719dd5926254a085634",
+        "examples/hello-world/Cargo.toml:1-9 @ e57b547eb95de74b73b34719dd5926254a085634",
+        "axum/src/routing/route.rs:29-58 @ e57b547eb95de74b73b34719dd5926254a085634"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "q3",
+      "score": 2,
+      "reason": "Correct Rust/Cargo workspace, edition/MSRV, internal crate dependencies, optional macro boundary, and external framework/service dependencies; manifest citations support the package and feature structure.",
+      "sourceReferences": [
+        "Cargo.toml:1-7 @ e57b547eb95de74b73b34719dd5926254a085634",
+        "axum/Cargo.toml:1-145 @ e57b547eb95de74b73b34719dd5926254a085634",
+        "axum-macros/Cargo.toml:1-35 @ e57b547eb95de74b73b34719dd5926254a085634",
+        "examples/hello-world/Cargo.toml:1-9 @ e57b547eb95de74b73b34719dd5926254a085634"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "q4",
+      "score": 2,
+      "reason": "Identifies the request-level Router<()> Service::call entry, Body::new normalization and call_with_state delegation, and distinguishes IncomingStream construction from request handling.",
+      "sourceReferences": [
+        "axum/src/routing/mod.rs:594-611 @ e57b547eb95de74b73b34719dd5926254a085634",
+        "axum/src/routing/mod.rs:445-455 @ e57b547eb95de74b73b34719dd5926254a085634",
+        "axum/src/routing/mod.rs:569-590 @ e57b547eb95de74b73b34719dd5926254a085634",
+        "axum/src/routing/mod.rs:631-638 @ e57b547eb95de74b73b34719dd5926254a085634",
+        "axum/src/routing/mod.rs:682-689 @ e57b547eb95de74b73b34719dd5926254a085634"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "q5",
+      "score": 2,
+      "reason": "Correctly locates HEAD-first/GET-second dispatch and top-level RouteFuture body removal after content-length processing, without inventing a HEAD-to-GET method rewrite.",
+      "sourceReferences": [
+        "axum/src/routing/method_routing.rs:1200-1257 @ e57b547eb95de74b73b34719dd5926254a085634",
+        "axum/src/routing/route.rs:55-58 @ e57b547eb95de74b73b34719dd5926254a085634",
+        "axum/src/routing/route.rs:120-140 @ e57b547eb95de74b73b34719dd5926254a085634",
+        "axum/src/routing/route.rs:147-181 @ e57b547eb95de74b73b34719dd5926254a085634"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "q6",
+      "score": 2,
+      "reason": "Enumerates source-confirmed outgoing calls and endpoint dispatch, including Node-to-matchit and captured-parameter insertion, and correctly distinguishes missing analyzer edges from source absence.",
+      "sourceReferences": [
+        "axum/src/routing/path_router.rs:280-327 @ e57b547eb95de74b73b34719dd5926254a085634",
+        "axum/src/routing/path_router.rs:357-390 @ e57b547eb95de74b73b34719dd5926254a085634"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": true
+    },
+    {
+      "id": "q7",
+      "score": 2,
+      "reason": "Reconstructs the complete Router/path/method/boxed handler/service/future chain to an empty HEAD body with source references and explicit external, erased-service and application-handler boundaries.",
+      "sourceReferences": [
+        "axum/src/routing/mod.rs:607-610 @ e57b547eb95de74b73b34719dd5926254a085634",
+        "axum/src/routing/mod.rs:445-455 @ e57b547eb95de74b73b34719dd5926254a085634",
+        "axum/src/routing/path_router.rs:280-327 @ e57b547eb95de74b73b34719dd5926254a085634",
+        "axum/src/routing/method_routing.rs:1200-1257 @ e57b547eb95de74b73b34719dd5926254a085634",
+        "axum/src/boxed.rs:12-47 @ e57b547eb95de74b73b34719dd5926254a085634",
+        "axum/src/handler/service.rs:165-175 @ e57b547eb95de74b73b34719dd5926254a085634",
+        "axum/src/routing/route.rs:49-58 @ e57b547eb95de74b73b34719dd5926254a085634",
+        "axum/src/routing/route.rs:147-181 @ e57b547eb95de74b73b34719dd5926254a085634"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "q8",
+      "score": 2,
+      "reason": "Correctly names the direct Router::call_with_state consumer, success and catch-all fallback branches, and limits behavioral impact claims to actual changes and route configuration.",
+      "sourceReferences": [
+        "axum/src/routing/mod.rs:445-455 @ e57b547eb95de74b73b34719dd5926254a085634",
+        "axum/src/routing/path_router.rs:280-327 @ e57b547eb95de74b73b34719dd5926254a085634"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": true
+    },
+    {
+      "id": "q9",
+      "score": 1,
+      "reason": "Provides valid direct MethodRouter get_accepts_head and helper evidence plus HTTP header regression tests. However, omits the frozen reference dedicated Router.oneshot handler and get_service tests and preservation of x-some-header. Reqwest empty-body assertions do not independently establish server body suppression (the dedicated tests explicitly avoid reqwest because it strips HEAD bodies).",
+      "sourceReferences": [
+        "axum/src/routing/method_routing.rs:1467-1480 @ e57b547eb95de74b73b34719dd5926254a085634",
+        "axum/src/routing/method_routing.rs:1739-1761 @ e57b547eb95de74b73b34719dd5926254a085634",
+        "axum/src/routing/method_routing.rs:1384-1387 @ e57b547eb95de74b73b34719dd5926254a085634",
+        "axum/src/routing/tests/mod.rs:824-838 @ e57b547eb95de74b73b34719dd5926254a085634",
+        "axum/src/routing/tests/mod.rs:851-876 @ e57b547eb95de74b73b34719dd5926254a085634",
+        "axum/src/test_helpers/test_client.rs:11-61 @ e57b547eb95de74b73b34719dd5926254a085634",
+        "axum/src/routing/route.rs:253-294 @ e57b547eb95de74b73b34719dd5926254a085634"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "q10",
+      "score": 2,
+      "reason": "Correctly traces URI capture matching, internal-key filtering, percent decoding/UTF-8 handling, extension storage and accumulation, and typed Path deserialization.",
+      "sourceReferences": [
+        "axum/src/routing/path_router.rs:280-327 @ e57b547eb95de74b73b34719dd5926254a085634",
+        "axum/src/routing/url_params.rs:17-66 @ e57b547eb95de74b73b34719dd5926254a085634",
+        "axum/src/util.rs:31-43 @ e57b547eb95de74b73b34719dd5926254a085634",
+        "axum/src/extract/path/mod.rs:174-176 @ e57b547eb95de74b73b34719dd5926254a085634",
+        "axum/src/extract/path/mod.rs:596-624 @ e57b547eb95de74b73b34719dd5926254a085634",
+        "axum/src/extract/path/mod.rs:501-522 @ e57b547eb95de74b73b34719dd5926254a085634"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    }
+  ],
+  "total": 18,
+  "referenceIssues": [],
+  "limitations": [
+    "Read-only grading against pinned local sources; no target builds, scripts, tests or runtime traces executed. Analyzer limitations are annotations and did not supply missing factual credit.",
+    "q2: answer citation axum-core/src/lib.rs:1-38 extends past EOF (36); the existing portion was verified and supports the relevant claim.",
+    "q2: answer citation examples/hello-world/Cargo.toml:1-10 extends past EOF (9); the existing portion was verified and supports the relevant claim.",
+    "q3: answer citation examples/hello-world/Cargo.toml:1-10 extends past EOF (9); the existing portion was verified and supports the relevant claim."
+  ]
+}

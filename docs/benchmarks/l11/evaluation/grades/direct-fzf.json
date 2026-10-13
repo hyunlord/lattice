@@ -1,0 +1,144 @@
+{
+  "repository": "fzf",
+  "commit": "c0a193e031f01fb50bf6f7be4381990a3753f7cf",
+  "arm": "direct",
+  "gradedBy": "independent fresh grader batch1",
+  "answerSha256": "711f3f91c2f7d49199dca753b26eb871c5b8215262526a29ddb57d3d0d4d3b81",
+  "questions": [
+    {
+      "id": "q01",
+      "score": 2,
+      "reason": "Correct fuzzy-finder purpose, terminal workflows, piped CLI consumers and shell/editor integration users.",
+      "sourceReferences": [
+        "README.md:28-43"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "q02",
+      "score": 2,
+      "reason": "Correct executable, options, Run, Reader, ChunkList, Pattern/algo, Matcher, Terminal and EventBox responsibilities.",
+      "sourceReferences": [
+        "main.go:57-64",
+        "main.go:113-115",
+        "src/core.go:16-22",
+        "src/algo/algo.go:1-26"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "q03",
+      "score": 2,
+      "reason": "Correct Go module/toolchain declaration, package boundaries, Make/Go tooling and Ruby integration tests.",
+      "sourceReferences": [
+        "go.mod:1-20",
+        "main.go:1-12",
+        "src/core.go:1-14",
+        "test/test_filter.rb:1-15"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "q04",
+      "score": 2,
+      "reason": "Correct main.main -> ParseOptions(os.Args[1:]) -> Run entry and special-mode qualification. Claimed line numbers drift, but named definitions are verified at the pinned file URLs.",
+      "sourceReferences": [
+        "main.go:57-64",
+        "main.go:113-115"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "q05",
+      "score": 2,
+      "reason": "Correctly locates noninteractive filtering in src/core.go Run and identifies opts.Filter with streaming MatchItem versus buffered Matcher.scan. This location/definition question does not require a full output trace.",
+      "sourceReferences": [
+        "src/core.go:260-291",
+        "src/core.go:340-351"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "q06",
+      "score": 2,
+      "reason": "Correct main-to-src and main-to-protector imports and uses; properly distinguishes indirect components and embedded data.",
+      "sourceReferences": [
+        "main.go:10-12",
+        "main.go:57-64",
+        "main.go:113-115"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "q07",
+      "score": 2,
+      "reason": "Correct conditional streaming path through ReadSource, stdin/feed, pusher callback, MatchItem and Printer, ending in match/no-match exits. Dynamic input/default-option boundaries are stated; callback construction and algorithm dispatch verified.",
+      "sourceReferences": [
+        "main.go:57-64",
+        "main.go:113-115",
+        "src/core.go:199-206",
+        "src/core.go:266-291",
+        "src/reader.go:125-150",
+        "src/reader.go:241-244",
+        "src/core.go:348-351",
+        "src/reader.go:20-48",
+        "src/reader.go:197-214",
+        "src/reader.go:236-238",
+        "src/pattern.go:388-400",
+        "src/pattern.go:416-498",
+        "src/options.go:740"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "q08",
+      "score": 2,
+      "reason": "Correct two Run call sites, asynchronous ingestion versus synchronous streaming; direct dependency is separated from speculative effects and non-exhaustiveness.",
+      "sourceReferences": [
+        "src/core.go:203-211",
+        "src/core.go:275-291"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": true
+    },
+    {
+      "id": "q09",
+      "score": 2,
+      "reason": "Correct TestFilter.test_filter_exitstatus shell entry, ordinary/no-sort variants, output and 0/1 assertions; clearly source inspection only.",
+      "sourceReferences": [
+        "test/test_filter.rb:28-37",
+        "main.go:57-64",
+        "main.go:113-115",
+        "test/lib/common.rb:25-28"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "q10",
+      "score": 2,
+      "reason": "Correct argv/default-option precedence, -f/--filter storage, rune conversion and pattern/term transformations.",
+      "sourceReferences": [
+        "main.go:57-64",
+        "src/options.go:2728-2733",
+        "src/core.go:260-267"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    }
+  ],
+  "total": 20,
+  "referenceIssues": [],
+  "limitations": [
+    "Read-only source grading; no target builds, scripts or tests executed. All oracle excerpt ranges matched local source and referenced files matched pinned git blobs and oracle hashes. Named-definition pinned file citations were accepted despite shifted numeric spans.",
+    "Many citation ranges are shifted relative to pinned source lines (e.g. Run/ReadSource); explicit named definitions and pinned files were verified.",
+    "Direct answer caller enumeration is bounded and runtime defaults/input are assumed."
+  ]
+}

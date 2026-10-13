@@ -1,0 +1,283 @@
+{
+  "repository": "go-chi/chi",
+  "arm": "map",
+  "commit": "7f9b7448f51d28804fac98c0a17bc2a7cec1079f",
+  "answers": [
+    {
+      "id": "q1",
+      "answer": "Chi is a composable Go HTTP routing library for services and REST APIs. Application authors construct routers, register handlers/middleware, and pass the router to net/http; the HTTP server invokes its handler interface. The repository also exercises it from Go tests and example applications. This is library usage, not a standalone chi server daemon.",
+      "citations": [
+        {
+          "url": "https://github.com/go-chi/chi/blob/7f9b7448f51d28804fac98c0a17bc2a7cec1079f/README.md",
+          "lines": "6-16"
+        },
+        {
+          "url": "https://github.com/go-chi/chi/blob/7f9b7448f51d28804fac98c0a17bc2a7cec1079f/chi.go",
+          "lines": "1-28"
+        },
+        {
+          "url": "https://github.com/go-chi/chi/blob/7f9b7448f51d28804fac98c0a17bc2a7cec1079f/mux_test.go",
+          "lines": "245-264"
+        }
+      ]
+    },
+    {
+      "id": "q2",
+      "answer": "The root chi package contains public router interfaces/constructor (chi.go), Mux registration/dispatch (mux.go), radix-tree endpoint matching (tree.go), request routing state and parameter access (context.go), and middleware composition (chain.go). middleware/ supplies optional net/http wrappers. _examples/ contains consuming applications; *_test.go supplies tests/benchmarks. render and docgen are external companion modules, not root routing implementation.",
+      "citations": [
+        {
+          "url": "https://github.com/go-chi/chi/blob/7f9b7448f51d28804fac98c0a17bc2a7cec1079f/chi.go",
+          "lines": "62-141"
+        },
+        {
+          "url": "https://github.com/go-chi/chi/blob/7f9b7448f51d28804fac98c0a17bc2a7cec1079f/mux.go",
+          "lines": "13-58"
+        },
+        {
+          "url": "https://github.com/go-chi/chi/blob/7f9b7448f51d28804fac98c0a17bc2a7cec1079f/tree.go",
+          "lines": "97-148"
+        },
+        {
+          "url": "https://github.com/go-chi/chi/blob/7f9b7448f51d28804fac98c0a17bc2a7cec1079f/context.go",
+          "lines": "11-77"
+        },
+        {
+          "url": "https://github.com/go-chi/chi/blob/7f9b7448f51d28804fac98c0a17bc2a7cec1079f/chain.go",
+          "lines": "1-49"
+        },
+        {
+          "url": "https://github.com/go-chi/chi/blob/7f9b7448f51d28804fac98c0a17bc2a7cec1079f/README.md",
+          "lines": "6-16"
+        },
+        {
+          "url": "https://github.com/go-chi/chi/blob/7f9b7448f51d28804fac98c0a17bc2a7cec1079f/middleware/clean_path.go",
+          "lines": "1-28"
+        },
+        {
+          "url": "https://github.com/go-chi/chi/blob/7f9b7448f51d28804fac98c0a17bc2a7cec1079f/mux_test.go",
+          "lines": "245-264"
+        }
+      ]
+    },
+    {
+      "id": "q3",
+      "answer": "Go source, Go modules, and standard net/http/context organize the library; root go.mod declares github.com/go-chi/chi/v5 and go 1.24 without third-party requirements. Root package chi and subpackage middleware are distinct Go package boundaries. _examples/rest and _examples/versions have separate Go 1.16 modules: rest-example requires chi/docgen/render; versions requires chi/render plus indirect ajg/form. Tests use Go testing and httptest. I did not verify a CI build command.",
+      "citations": [
+        {
+          "url": "https://github.com/go-chi/chi/blob/7f9b7448f51d28804fac98c0a17bc2a7cec1079f/go.mod",
+          "lines": "1-5"
+        },
+        {
+          "url": "https://github.com/go-chi/chi/blob/7f9b7448f51d28804fac98c0a17bc2a7cec1079f/chi.go",
+          "lines": "56-71"
+        },
+        {
+          "url": "https://github.com/go-chi/chi/blob/7f9b7448f51d28804fac98c0a17bc2a7cec1079f/middleware/clean_path.go",
+          "lines": "1-9"
+        },
+        {
+          "url": "https://github.com/go-chi/chi/blob/7f9b7448f51d28804fac98c0a17bc2a7cec1079f/_examples/rest/go.mod",
+          "lines": "1-9"
+        },
+        {
+          "url": "https://github.com/go-chi/chi/blob/7f9b7448f51d28804fac98c0a17bc2a7cec1079f/_examples/versions/go.mod",
+          "lines": "1-10"
+        },
+        {
+          "url": "https://github.com/go-chi/chi/blob/7f9b7448f51d28804fac98c0a17bc2a7cec1079f/mux_test.go",
+          "lines": "245-264"
+        }
+      ]
+    },
+    {
+      "id": "q4",
+      "answer": "Public setup starts at chi.NewRouter (chi.go:62), returning NewMux. Register routes, optionally Use middleware, then supply the router to http.ListenAndServe. HTTP execution enters Mux.ServeHTTP (mux.go:63), which prepares/reuses routing context and invokes its composed handler.",
+      "citations": [
+        {
+          "url": "https://github.com/go-chi/chi/blob/7f9b7448f51d28804fac98c0a17bc2a7cec1079f/chi.go",
+          "lines": "6-28"
+        },
+        {
+          "url": "https://github.com/go-chi/chi/blob/7f9b7448f51d28804fac98c0a17bc2a7cec1079f/chi.go",
+          "lines": "62-71"
+        },
+        {
+          "url": "https://github.com/go-chi/chi/blob/7f9b7448f51d28804fac98c0a17bc2a7cec1079f/mux.go",
+          "lines": "52-92"
+        }
+      ]
+    },
+    {
+      "id": "q5",
+      "answer": "Mux.routeHTTP (mux.go:455-499) orchestrates method/path dispatch. node.FindRoute (tree.go:383-406) delegates radix traversal to node.findRoute (410-557), returning the method-specific endpoint handler.",
+      "citations": [
+        {
+          "url": "https://github.com/go-chi/chi/blob/7f9b7448f51d28804fac98c0a17bc2a7cec1079f/mux.go",
+          "lines": "455-499"
+        },
+        {
+          "url": "https://github.com/go-chi/chi/blob/7f9b7448f51d28804fac98c0a17bc2a7cec1079f/tree.go",
+          "lines": "383-557"
+        }
+      ]
+    },
+    {
+      "id": "q6",
+      "answer": "Direct source dependencies: RouteCtxKey/*Context (context lookup); methodMap (index lookup); mx.tree.FindRoute (call); Context.RoutePattern (call); Mux.MethodNotAllowedHandler and NotFoundHandler (calls). The returned h.ServeHTTP is dynamic interface dispatch; Request.SetPathValue is external net/http. Direction is established by expressions inside routeHTTP, not inferred reverse links. Lattice returned zero incoming/outgoing call edges even with includeEstimated=true; that is incomplete graph evidence, not proof of no calls.",
+      "citations": [
+        {
+          "url": "https://github.com/go-chi/chi/blob/7f9b7448f51d28804fac98c0a17bc2a7cec1079f/mux.go",
+          "lines": "455-499"
+        },
+        {
+          "url": "https://github.com/go-chi/chi/blob/7f9b7448f51d28804fac98c0a17bc2a7cec1079f/context.go",
+          "lines": "33-77"
+        },
+        {
+          "url": "https://github.com/go-chi/chi/blob/7f9b7448f51d28804fac98c0a17bc2a7cec1079f/context.go",
+          "lines": "147-158"
+        },
+        {
+          "url": "https://github.com/go-chi/chi/blob/7f9b7448f51d28804fac98c0a17bc2a7cec1079f/tree.go",
+          "lines": "18-97"
+        },
+        {
+          "url": "https://github.com/go-chi/chi/blob/7f9b7448f51d28804fac98c0a17bc2a7cec1079f/tree.go",
+          "lines": "383-406"
+        }
+      ]
+    },
+    {
+      "id": "q7",
+      "answer": "TestMuxPlain constructs NewRouter and registers GET /hi with a closure writing bye. Registration: Get -> handle -> InsertRoute -> setEndpoint stores that callback under mGET. Test transport: httptest.NewServer(r), then testRequest builds GET ts.URL+/hi and calls http.DefaultClient.Do. Server -> Mux.ServeHTTP -> composed handler -> routeHTTP -> FindRoute -> findRoute -> stored handler's ServeHTTP -> closure -> ResponseWriter.Write. With no middleware, chain returns its endpoint. testRequest reads the response body; the test expects bye. HTTP transport/server invocation, interface dispatch, callback selection and response writing are dynamic boundaries; this is source-supported flow, not an observed run.",
+      "citations": [
+        {
+          "url": "https://github.com/go-chi/chi/blob/7f9b7448f51d28804fac98c0a17bc2a7cec1079f/mux_test.go",
+          "lines": "245-264"
+        },
+        {
+          "url": "https://github.com/go-chi/chi/blob/7f9b7448f51d28804fac98c0a17bc2a7cec1079f/mux_test.go",
+          "lines": "2075-2096"
+        },
+        {
+          "url": "https://github.com/go-chi/chi/blob/7f9b7448f51d28804fac98c0a17bc2a7cec1079f/mux.go",
+          "lines": "63-92"
+        },
+        {
+          "url": "https://github.com/go-chi/chi/blob/7f9b7448f51d28804fac98c0a17bc2a7cec1079f/mux.go",
+          "lines": "155-157"
+        },
+        {
+          "url": "https://github.com/go-chi/chi/blob/7f9b7448f51d28804fac98c0a17bc2a7cec1079f/mux.go",
+          "lines": "430-499"
+        },
+        {
+          "url": "https://github.com/go-chi/chi/blob/7f9b7448f51d28804fac98c0a17bc2a7cec1079f/mux.go",
+          "lines": "525-527"
+        },
+        {
+          "url": "https://github.com/go-chi/chi/blob/7f9b7448f51d28804fac98c0a17bc2a7cec1079f/tree.go",
+          "lines": "148-227"
+        },
+        {
+          "url": "https://github.com/go-chi/chi/blob/7f9b7448f51d28804fac98c0a17bc2a7cec1079f/tree.go",
+          "lines": "353-557"
+        },
+        {
+          "url": "https://github.com/go-chi/chi/blob/7f9b7448f51d28804fac98c0a17bc2a7cec1079f/chain.go",
+          "lines": "34-49"
+        }
+      ]
+    },
+    {
+      "id": "q8",
+      "answer": "The direct production Mux consumers are Find and routeHTTP, each calling mx.tree.FindRoute. Match is indirect through Find, not a third direct caller.",
+      "citations": [
+        {
+          "url": "https://github.com/go-chi/chi/blob/7f9b7448f51d28804fac98c0a17bc2a7cec1079f/mux.go",
+          "lines": "373-408"
+        },
+        {
+          "url": "https://github.com/go-chi/chi/blob/7f9b7448f51d28804fac98c0a17bc2a7cec1079f/mux.go",
+          "lines": "455-499"
+        }
+      ]
+    },
+    {
+      "id": "q9",
+      "answer": "TestMuxPlain exercises dispatch end-to-end: GET /hi must yield bye, while GET /nothing-here must yield its custom not-found body. It enters through httptest.NewServer(r) and testRequest/http.DefaultClient.Do, reaching Mux.ServeHTTP and then routeHTTP. The test is source evidence; no tests were executed in this trial.",
+      "citations": [
+        {
+          "url": "https://github.com/go-chi/chi/blob/7f9b7448f51d28804fac98c0a17bc2a7cec1079f/mux_test.go",
+          "lines": "245-264"
+        },
+        {
+          "url": "https://github.com/go-chi/chi/blob/7f9b7448f51d28804fac98c0a17bc2a7cec1079f/mux_test.go",
+          "lines": "2075-2096"
+        },
+        {
+          "url": "https://github.com/go-chi/chi/blob/7f9b7448f51d28804fac98c0a17bc2a7cec1079f/mux.go",
+          "lines": "63-92"
+        },
+        {
+          "url": "https://github.com/go-chi/chi/blob/7f9b7448f51d28804fac98c0a17bc2a7cec1079f/mux.go",
+          "lines": "455-499"
+        }
+      ]
+    },
+    {
+      "id": "q10",
+      "answer": "routeHTTP chooses Context.RoutePath, otherwise URL.RawPath then URL.Path, defaulting empty to /. FindRoute resets current-match state; findRoute consumes static prefixes, captures parameter/regexp/catch-all segments, validates constraints, and backtracks captured values on failure. Endpoint paramKeys originate from registered patterns. Successful keys/values append to Context.URLParams, preserving the subrouter stack. chi.URLParam -> URLParamFromCtx -> Context.URLParam searches newest keys first. routeHTTP exports captures through Request.SetPathValue and assigns Request.Pattern. Mount shifts RoutePath via nextRoutePath and clears its connecting wildcard value. Optional CleanPath middleware applies path.Clean; core matching itself does not universally clean/decode paths.",
+      "citations": [
+        {
+          "url": "https://github.com/go-chi/chi/blob/7f9b7448f51d28804fac98c0a17bc2a7cec1079f/mux.go",
+          "lines": "455-508"
+        },
+        {
+          "url": "https://github.com/go-chi/chi/blob/7f9b7448f51d28804fac98c0a17bc2a7cec1079f/mux.go",
+          "lines": "288-355"
+        },
+        {
+          "url": "https://github.com/go-chi/chi/blob/7f9b7448f51d28804fac98c0a17bc2a7cec1079f/tree.go",
+          "lines": "353-557"
+        },
+        {
+          "url": "https://github.com/go-chi/chi/blob/7f9b7448f51d28804fac98c0a17bc2a7cec1079f/tree.go",
+          "lines": "803-819"
+        },
+        {
+          "url": "https://github.com/go-chi/chi/blob/7f9b7448f51d28804fac98c0a17bc2a7cec1079f/context.go",
+          "lines": "11-27"
+        },
+        {
+          "url": "https://github.com/go-chi/chi/blob/7f9b7448f51d28804fac98c0a17bc2a7cec1079f/context.go",
+          "lines": "45-77"
+        },
+        {
+          "url": "https://github.com/go-chi/chi/blob/7f9b7448f51d28804fac98c0a17bc2a7cec1079f/context.go",
+          "lines": "124-158"
+        },
+        {
+          "url": "https://github.com/go-chi/chi/blob/7f9b7448f51d28804fac98c0a17bc2a7cec1079f/middleware/clean_path.go",
+          "lines": "10-28"
+        }
+      ]
+    }
+  ],
+  "toolErrors": [
+    {
+      "tool": "web.open",
+      "url": "https://raw.githubusercontent.com/go-chi/chi/7f9b7448f51d28804fac98c0a17bc2a7cec1079f/.github/workflows/test.yml",
+      "error": "Failed to fetch: (404) Not Found; tool labeled Internal Error."
+    }
+  ],
+  "limitations": [
+    "Static source inspection only; no build/test/runtime trace performed.",
+    "Map calls for Mux.routeHTTP were empty even with estimated calls enabled; receiver/interface/callback connections were verified manually in pinned source, not claimed as resolved graph edges.",
+    "Map overview flags gomod language limitation for three files; manifests were read directly through pinned web URLs.",
+    "Web text line numbering normalizes whitespace; citation ranges use source-file spans from map metadata where available.",
+    "No authoritative token telemetry was supplied; none estimated as measured."
+  ],
+  "selfReportedStartedAt": "2026-10-13T08:08:14Z",
+  "selfReportedFinishedAt": "2026-10-13 08:10:57 UTC"
+}

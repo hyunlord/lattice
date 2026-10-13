@@ -1,0 +1,151 @@
+{
+  "repository": "DapperLib/Dapper",
+  "commit": "eb47546a408bbf6c178bda4f04dc205bc51ffbfe",
+  "arm": "map",
+  "gradedBy": "independent fresh grader map-dapper",
+  "answerSha256": "a9a8db85c8702b489188f75fe4a9e2aaaa048fcce74d7d72502c539de743d8f8",
+  "questions": [
+    {
+      "id": "q1",
+      "score": 1,
+      "reason": "Correct library purpose, application/test consumers, connection extensions and sync/async access with verified citations. Omits required affected-row result and buffered/unbuffered query options; citations alone do not supply missing answer facts.",
+      "sourceReferences": [
+        "Readme.md:44-67",
+        "Readme.md:472-474",
+        "tests/Dapper.Tests/MiscTests.cs:389-400"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "q2",
+      "score": 2,
+      "reason": "Identifies core, EntityFramework handlers, Rainbow CRUD and SqlBuilder composition with supporting project definitions; added ProviderTools and signed source-sharing boundaries are supported.",
+      "sourceReferences": [
+        "Dapper/Dapper.csproj:1-10",
+        "Dapper.SqlBuilder/Dapper.SqlBuilder.csproj:1-14",
+        "Dapper.Rainbow/Dapper.Rainbow.csproj:1-14",
+        "Dapper.EntityFramework/Dapper.EntityFramework.csproj:1-15",
+        "Dapper.ProviderTools/Dapper.ProviderTools.csproj:1-15",
+        "Dapper.StrongName/Dapper.StrongName.csproj:1-17",
+        "Build.csproj:1-7",
+        "Dapper/CommandDefinition.cs:74-107",
+        "Dapper/CommandDefinition.cs:121-140"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "q3",
+      "score": 2,
+      "reason": "Correct C# language, SDK/MSBuild traversal, package boundaries and all four core targets. Cited SqlBuilder project supports its separate boundary and core reference; central package-management claims are verified.",
+      "sourceReferences": [
+        "Directory.Build.props:1-28",
+        "Build.csproj:1-7",
+        "Dapper/Dapper.csproj:1-10",
+        "Dapper.SqlBuilder/Dapper.SqlBuilder.csproj:1-14",
+        "Dapper.Rainbow/Dapper.Rainbow.csproj:1-14",
+        "Dapper.EntityFramework/Dapper.EntityFramework.csproj:1-15",
+        "Dapper.StrongName/Dapper.StrongName.csproj:1-17",
+        "Dapper.ProviderTools/Dapper.ProviderTools.csproj:1-15"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "q4",
+      "score": 2,
+      "reason": "Precisely identifies the public extension overload and its CommandDefinition construction and ExecuteImpl forwarding at the cited lines.",
+      "sourceReferences": [
+        "Dapper/SqlMapper.cs:559-563"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": true
+    },
+    {
+      "id": "q5",
+      "score": 1,
+      "reason": "Correctly locates ExecuteCommand and ExecuteNonQuery, but omits required SetupCommand, conditional connection opening, OnCompleted/result return and finally cleanup details. The cited function is valid but missing answer facts are not supplied by the grader.",
+      "sourceReferences": [
+        "Dapper/SqlMapper.cs:636-692",
+        "Dapper/SqlMapper.cs:3004-3022"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": true
+    },
+    {
+      "id": "q6",
+      "score": 2,
+      "reason": "Explicit ProjectReference proves SqlBuilder-to-core build dependency; separately cited ResolveSql source supports DynamicParameters use without inventing a call edge from the project reference.",
+      "sourceReferences": [
+        "Dapper.SqlBuilder/Dapper.SqlBuilder.csproj:12-14",
+        "Dapper.SqlBuilder/SqlBuilder.cs:72-91"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "q7",
+      "score": 2,
+      "reason": "Complete null-parameter branch, skipped parameter reader/cache, command creation, execution/result, cleanup and provider/database dispatch limits; pinned implementation supports the sequence.",
+      "sourceReferences": [
+        "Dapper/SqlMapper.cs:559-563",
+        "Dapper/SqlMapper.cs:625-692",
+        "Dapper/SqlMapper.cs:3004-3022",
+        "Dapper/CommandDefinition.cs:19-22",
+        "Dapper/CommandDefinition.cs:121-199"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": true
+    },
+    {
+      "id": "q8",
+      "score": 2,
+      "reason": "All selected direct library consumers are correctly evidenced; inherited test/benchmark references and signed source sharing are separately identified, with runtime impact appropriately qualified.",
+      "sourceReferences": [
+        "Dapper.EntityFramework/Dapper.EntityFramework.csproj:13-13",
+        "Dapper.Rainbow/Dapper.Rainbow.csproj:14-14",
+        "Dapper.SqlBuilder/Dapper.SqlBuilder.csproj:14-14",
+        "tests/Directory.Build.props:14-20",
+        "benchmarks/Directory.Build.props:10-14",
+        "Build.csproj:1-7",
+        "Dapper.StrongName/Dapper.StrongName.csproj:14-17"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "q9",
+      "score": 2,
+      "reason": "Correctly identifies the documented temporary-table example, anonymous parameters and expected count, ties it to the string overload and single-command path, and distinguishes documentation from newly executed evidence.",
+      "sourceReferences": [
+        "Readme.md:107-123",
+        "Dapper/SqlMapper.cs:559-563",
+        "tests/Dapper.Tests/MiscTests.cs:389-400"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "q10",
+      "score": 2,
+      "reason": "Correct SQL-to-CommandText constructor/storage, inferred command type, provider-command assignment and execution boundary; does not claim parsing or injection safety.",
+      "sourceReferences": [
+        "Dapper/SqlMapper.cs:559-563",
+        "Dapper/CommandDefinition.cs:74-107",
+        "Dapper/CommandDefinition.cs:121-140",
+        "Dapper/SqlMapper.cs:636-692",
+        "Dapper/SqlMapper.cs:3004-3022"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": true
+    }
+  ],
+  "total": 18,
+  "referenceIssues": [],
+  "limitations": [
+    "All cited line spans verified against clean pinned local checkout; no missing or unverifiable citation spans found.",
+    "Answer reports absent analyzer outgoing edges/flow and GetMultiExec lookup failure; source-recovered answers were scored on factual content independently of these analyzer limitations.",
+    "Read-only source verification only; no target scripts, builds, tests or database execution performed."
+  ]
+}

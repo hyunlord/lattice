@@ -4,7 +4,7 @@ import { maskMarkdownImages } from "./markdown-images.js";
 import { plain } from "./markdown-inline.js";
 
 /** visible lines already exclude fenced code and HTML comments. */
-export function markdownDescription(sourceLines: readonly string[], start: number, end: number, preferredName?: string): JsonObject | undefined {
+export function markdownParagraph(sourceLines: readonly string[], start: number, end: number, preferredName?: string): JsonObject | undefined {
     const lineOffset = start;
     const lines = maskMarkdownImages(sourceLines.slice(start, end + 1).join("\n")).split("\n");
     end -= start;
@@ -62,10 +62,20 @@ export function markdownDescription(sourceLines: readonly string[], start: numbe
         const content = plain(rawParagraph).replace(/<[^>]*>/gu, " ").replace(/\s+/gu, " ").trim();
         if (/^(?:note|warning|important|caution|tip)\s*:/iu.test(content) || /^(?:see|please see|read|visit)\b/iu.test(content) || /^(?:first[, :]|you (?:first |will )?need to|make sure|install(?:ation)?\b|clone\b|run (?:the|this|following)\b)/iu.test(content)) continue;
         if (!descriptiveProse(content)) continue;
-        const text = (/^.*?[.!?](?:\s|$)/u.exec(content)?.[0] ?? content).trim().slice(0, 320);
+        const text = content.slice(0, 1000);
         const result = { text, kind: "readme", line: lineOffset + first + 1, endLine: lineOffset + last + 1 };
+        const learningNavigation = /^learn how\b/iu.test(content) && /\[[^\]]+\]\([^)]+\)/u.test(rawParagraph) && /\b(?:case study|learning journey|guide|documentation|tutorial)\b/iu.test(content);
+        const repositoryWrapper = /^this is (?:the|a) (?:source(?: code)? )?repository (?:for|of)\b/iu.test(content);
+        if (learningNavigation || repositoryWrapper) { fallback ??= result; continue; }
         if (!preferredName || content.toLowerCase().split(/[^\p{L}\p{N}_.-]+/u).includes(preferredName.toLowerCase())) return result;
         fallback ??= result;
     }
     return fallback;
+}
+
+/** Existing descriptions retain the first-sentence contract; introductions may use the full paragraph. */
+export function markdownDescription(sourceLines: readonly string[], start: number, end: number, preferredName?: string): JsonObject | undefined {
+    const paragraph = markdownParagraph(sourceLines, start, end, preferredName);
+    if (!paragraph || typeof paragraph['text'] !== 'string') return undefined;
+    return { ...paragraph, text: (/^.*?[.!?](?:\s|$)/u.exec(paragraph['text'])?.[0] ?? paragraph['text']).trim().slice(0, 320) };
 }

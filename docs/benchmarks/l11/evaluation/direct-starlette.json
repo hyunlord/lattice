@@ -1,0 +1,289 @@
+{
+  "repository": "encode/starlette",
+  "arm": "direct",
+  "commit": "96d5023c55b29224edb8d684868c49f681d079a9",
+  "answers": [
+    {
+      "id": "q1",
+      "answer": "Starlette is a Python ASGI framework/toolkit for asynchronous web services: HTTP, WebSockets, lifecycle handling, middleware, responses and optional integrations. Application developers import it and supply routes/endpoints. An external ASGI server runs the resulting callable; the README demonstrates uvicorn main:app. Components can also be embedded independently in other ASGI applications. Tests invoke applications in-process through TestClient. This repository is the library, not the server's socket/HTTP parser.",
+      "citations": [
+        {
+          "url": "https://raw.githubusercontent.com/encode/starlette/96d5023c55b29224edb8d684868c49f681d079a9/README.md",
+          "lines": "browser-extracted L25-L39, L47-L74, L85-L112"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/encode/starlette/96d5023c55b29224edb8d684868c49f681d079a9/starlette/testclient.py",
+          "lines": "browser-extracted L321-L324, L349-L391"
+        }
+      ]
+    },
+    {
+      "id": "q2",
+      "answer": "Principal runtime package starlette/: applications.py composes application state and middleware; routing.py dispatches routes; convertors.py defines typed URL conversions; requests.py exposes HTTP scope/body/form APIs; responses.py serializes and sends responses, including JSON, streams and files; websockets.py manages message/state transitions; middleware/ provides composable cross-cutting wrappers. staticfiles.py serves directories/packages, templating.py integrates Jinja2, and background.py/concurrency.py run tasks and bridge synchronous work. tests/ contains pytest behavior tests and fixtures; scripts/ drives checks, coverage and tests; docs/ contains user guidance; pyproject.toml defines packaging and tool configuration.",
+      "citations": [
+        {
+          "url": "https://raw.githubusercontent.com/encode/starlette/96d5023c55b29224edb8d684868c49f681d079a9/starlette/applications.py",
+          "lines": "browser-extracted L17-L87"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/encode/starlette/96d5023c55b29224edb8d684868c49f681d079a9/starlette/routing.py",
+          "lines": "browser-extracted L625-L670"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/encode/starlette/96d5023c55b29224edb8d684868c49f681d079a9/starlette/convertors.py",
+          "lines": "browser-extracted L9-L84"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/encode/starlette/96d5023c55b29224edb8d684868c49f681d079a9/starlette/requests.py",
+          "lines": "browser-extracted L74-L82, L197-L305"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/encode/starlette/96d5023c55b29224edb8d684868c49f681d079a9/starlette/responses.py",
+          "lines": "browser-extracted L28-L75, L153-L189, L208-L263, L275-L307"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/encode/starlette/96d5023c55b29224edb8d684868c49f681d079a9/starlette/websockets.py",
+          "lines": "browser-extracted L29-L99"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/encode/starlette/96d5023c55b29224edb8d684868c49f681d079a9/starlette/middleware/__init__.py",
+          "lines": "browser-extracted L19-L27"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/encode/starlette/96d5023c55b29224edb8d684868c49f681d079a9/starlette/staticfiles.py",
+          "lines": "browser-extracted L37-L106"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/encode/starlette/96d5023c55b29224edb8d684868c49f681d079a9/starlette/templating.py",
+          "lines": "browser-extracted L50-L91"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/encode/starlette/96d5023c55b29224edb8d684868c49f681d079a9/starlette/background.py",
+          "lines": "browser-extracted L11-L33"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/encode/starlette/96d5023c55b29224edb8d684868c49f681d079a9/starlette/concurrency.py",
+          "lines": "browser-extracted L29-L54"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/encode/starlette/96d5023c55b29224edb8d684868c49f681d079a9/tests/test_routing.py",
+          "lines": "browser-extracted L160-L220"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/encode/starlette/96d5023c55b29224edb8d684868c49f681d079a9/scripts/check",
+          "lines": "browser-extracted L0-L9"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/encode/starlette/96d5023c55b29224edb8d684868c49f681d079a9/scripts/test",
+          "lines": "browser-extracted L0-L12"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/encode/starlette/96d5023c55b29224edb8d684868c49f681d079a9/docs/index.md",
+          "lines": "browser-extracted L28-L44"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/encode/starlette/96d5023c55b29224edb8d684868c49f681d079a9/pyproject.toml",
+          "lines": "browser-extracted L0-L10, L81-L118"
+        }
+      ]
+    },
+    {
+      "id": "q3",
+      "answer": "A single declared Python distribution, starlette, uses Hatchling (hatchling.build), with its version read from starlette/__init__.py and Python >=3.11. Runtime boundaries are ASGI callable/message contracts and the starlette modules; the server and application endpoints are external. Required dependencies are AnyIO >=4,<5 and conditional typing_extensions for Python <3.13. The full extra includes Jinja2, multipart, sessions/signing, YAML, telemetry and HTTP clients. TestClient prefers httpx2, with deprecated httpx fallback. uv manages dev/docs groups; pytest/coverage, Ruff and strict mypy provide checks. Documentation is Markdown/HTML with Zensical/mkdocstrings dependencies, shell scripts automate checks, and the debugger embeds HTML/CSS/JavaScript. No compiled-extension build is established by these inspected files.",
+      "citations": [
+        {
+          "url": "https://raw.githubusercontent.com/encode/starlette/96d5023c55b29224edb8d684868c49f681d079a9/pyproject.toml",
+          "lines": "browser-extracted L0-L10, L31-L71, L81-L118"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/encode/starlette/96d5023c55b29224edb8d684868c49f681d079a9/starlette/types.py",
+          "lines": "browser-extracted L11-L23"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/encode/starlette/96d5023c55b29224edb8d684868c49f681d079a9/starlette/testclient.py",
+          "lines": "browser-extracted L23-L42"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/encode/starlette/96d5023c55b29224edb8d684868c49f681d079a9/scripts/check",
+          "lines": "browser-extracted L0-L9"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/encode/starlette/96d5023c55b29224edb8d684868c49f681d079a9/scripts/test",
+          "lines": "browser-extracted L0-L12"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/encode/starlette/96d5023c55b29224edb8d684868c49f681d079a9/docs/index.md",
+          "lines": "browser-extracted L0-L31, L68-L89"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/encode/starlette/96d5023c55b29224edb8d684868c49f681d079a9/starlette/middleware/errors.py",
+          "lines": "browser-extracted L12-L113"
+        }
+      ]
+    },
+    {
+      "id": "q4",
+      "answer": "Construction is Starlette(routes=...), which creates Router. Runtime public-library entry is Starlette.__call__(scope, receive, send): it puts the application into scope['app'], lazily builds/caches middleware_stack, then awaits that stack. The ASGI server supplies the scope and receive/send callables. Parsing TCP/HTTP bytes into that scope is an external boundary, not implemented at this entry point. If lifespan ran first, the stack can already exist when the first HTTP request arrives.",
+      "citations": [
+        {
+          "url": "https://raw.githubusercontent.com/encode/starlette/96d5023c55b29224edb8d684868c49f681d079a9/starlette/applications.py",
+          "lines": "browser-extracted L19-L56, L83-L87"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/encode/starlette/96d5023c55b29224edb8d684868c49f681d079a9/starlette/types.py",
+          "lines": "browser-extracted L11-L20"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/encode/starlette/96d5023c55b29224edb8d684868c49f681d079a9/README.md",
+          "lines": "browser-extracted L54-L74"
+        }
+      ]
+    },
+    {
+      "id": "q5",
+      "answer": "routing.compile_path resolves ':int' through CONVERTOR_TYPES and builds the named regex capture. Route.__init__ stores the compiled result; Route.matches extracts groups and invokes convert(). convertors.IntegerConvertor supplies [0-9]+ and int(value); the registry maps 'int' to its instance.",
+      "citations": [
+        {
+          "url": "https://raw.githubusercontent.com/encode/starlette/96d5023c55b29224edb8d684868c49f681d079a9/starlette/routing.py",
+          "lines": "browser-extracted L97-L152, L221-L238"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/encode/starlette/96d5023c55b29224edb8d684868c49f681d079a9/starlette/convertors.py",
+          "lines": "browser-extracted L41-L49, L74-L84"
+        }
+      ]
+    },
+    {
+      "id": "q6",
+      "answer": "build_middleware_stack -> Middleware descriptors for ServerErrorMiddleware, optional RequestBodyLimitMiddleware, and ExceptionMiddleware; it also consumes self.user_middleware and self.router. Proof is executable construction at applications.py L67-L74, not imports alone: descriptors are iterated into cls/args/kwargs, then cls(app, ...) wraps the previous app. Middleware.__iter__ proves that unpacking direction. The Router instance was created by __init__, not by this method. Effective outside-in order: ServerError -> optional body limit -> configured user middleware -> ExceptionMiddleware -> Router. 500/Exception handlers go to ServerError; other handlers go to ExceptionMiddleware. __call__ -> build_middleware_stack is the incoming edge. Custom middleware classes remain runtime-supplied targets.",
+      "citations": [
+        {
+          "url": "https://raw.githubusercontent.com/encode/starlette/96d5023c55b29224edb8d684868c49f681d079a9/starlette/applications.py",
+          "lines": "browser-extracted L52-L75, L83-L87"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/encode/starlette/96d5023c55b29224edb8d684868c49f681d079a9/starlette/middleware/__init__.py",
+          "lines": "browser-extracted L19-L27"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/encode/starlette/96d5023c55b29224edb8d684868c49f681d079a9/starlette/middleware/errors.py",
+          "lines": "browser-extracted L132-L155"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/encode/starlette/96d5023c55b29224edb8d684868c49f681d079a9/starlette/middleware/exceptions.py",
+          "lines": "browser-extracted L16-L58"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/encode/starlette/96d5023c55b29224edb8d684868c49f681d079a9/starlette/middleware/body_limit.py",
+          "lines": "browser-extracted L28-L39"
+        }
+      ]
+    },
+    {
+      "id": "q7",
+      "answer": "For an unmounted route with no custom middleware: server -> Starlette.__call__ -> ServerErrorMiddleware -> ExceptionMiddleware -> Router.__call__/app -> route.matches -> FULL/child-scope merge -> route.handle -> request_response adapter -> int_convertor(Request) -> JSONResponse -> ASGI send. Matching/conversion is detailed in q5/q10. The synchronous test endpoint runs through run_in_threadpool -> AnyIO. Exception wrappers surround the downstream calls. Dynamic boundaries: server, ordered configured routes, middleware/endpoint callables, convertor registry, AnyIO scheduler, receive/send. This is a source-derived path, not an executed trace.",
+      "citations": [
+        {
+          "url": "https://raw.githubusercontent.com/encode/starlette/96d5023c55b29224edb8d684868c49f681d079a9/starlette/applications.py",
+          "lines": "browser-extracted L67-L87"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/encode/starlette/96d5023c55b29224edb8d684868c49f681d079a9/starlette/middleware/errors.py",
+          "lines": "browser-extracted L141-L155"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/encode/starlette/96d5023c55b29224edb8d684868c49f681d079a9/starlette/middleware/exceptions.py",
+          "lines": "browser-extracted L43-L58"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/encode/starlette/96d5023c55b29224edb8d684868c49f681d079a9/starlette/routing.py",
+          "lines": "browser-extracted L43-L62, L198-L221, L249-L258, L619-L643"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/encode/starlette/96d5023c55b29224edb8d684868c49f681d079a9/starlette/concurrency.py",
+          "lines": "browser-extracted L29-L31"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/encode/starlette/96d5023c55b29224edb8d684868c49f681d079a9/tests/test_routing.py",
+          "lines": "browser-extracted L79-L81, L145-L145"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/encode/starlette/96d5023c55b29224edb8d684868c49f681d079a9/starlette/responses.py",
+          "lines": "browser-extracted L153-L189"
+        }
+      ]
+    },
+    {
+      "id": "q8",
+      "answer": "Evidenced direct consumers: BaseRoute.__call__ uses self.matches for standalone routes; Router.app calls route.matches in both normal dispatch and slash-redirect probing. These are polymorphic calls resolving to Route.matches for Route instances. Changing match classifications or child_scope can affect endpoint selection, parameters, 404/405 and redirects. Exact failures, downstream applications and uninspected/custom callers remain speculative; no exhaustive whole-repository caller claim is made.",
+      "citations": [
+        {
+          "url": "https://raw.githubusercontent.com/encode/starlette/96d5023c55b29224edb8d684868c49f681d079a9/starlette/routing.py",
+          "lines": "browser-extracted L163-L179, L222-L238, L634-L670"
+        }
+      ]
+    },
+    {
+      "id": "q9",
+      "answer": "tests/test_routing.py::test_route_converters performs client.get('/int/5'), asserts status 200 and JSON {'int': 5}, and separately checks reverse URL generation. Its client fixture wraps the module-level Router containing the integer Route, not a Starlette instance. test_client_factory returns a backend-configured TestClient; its HTTP transport builds the scope and calls the app through an AnyIO portal, entering the Router dispatch described above. Thus this is an integration test of integer conversion and endpoint output, not a direct unit call to IntegerConvertor.convert.",
+      "citations": [
+        {
+          "url": "https://raw.githubusercontent.com/encode/starlette/96d5023c55b29224edb8d684868c49f681d079a9/tests/test_routing.py",
+          "lines": "browser-extracted L79-L81, L113-L158, L160-L165, L215-L220"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/encode/starlette/96d5023c55b29224edb8d684868c49f681d079a9/tests/conftest.py",
+          "lines": "browser-extracted L34-L45"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/encode/starlette/96d5023c55b29224edb8d684868c49f681d079a9/starlette/testclient.py",
+          "lines": "browser-extracted L199-L204, L242-L256, L321-L324, L349-L391"
+        }
+      ]
+    },
+    {
+      "id": "q10",
+      "answer": "In production the external server supplies scope['path']='/int/5'; in the test, _TestClientTransport reads request.url.path and sets scope['path']=unquote(path), separately retaining raw_path bytes. get_route_path reads path and handles root_path. The route regex captures param='5'; Route.matches calls IntegerConvertor.convert('5') -> int('5') -> 5, then returns child_scope.path_params. Router merges that scope. Request.path_params exposes the stored mapping; int_convertor reads ['param'] and returns JSON {'int': 5}. The endpoint receives a Request, not a separately injected integer argument. raw_path and the request body are not the conversion input.",
+      "citations": [
+        {
+          "url": "https://raw.githubusercontent.com/encode/starlette/96d5023c55b29224edb8d684868c49f681d079a9/starlette/testclient.py",
+          "lines": "browser-extracted L199-L204, L242-L256"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/encode/starlette/96d5023c55b29224edb8d684868c49f681d079a9/starlette/_utils.py",
+          "lines": "browser-extracted L128-L142"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/encode/starlette/96d5023c55b29224edb8d684868c49f681d079a9/starlette/routing.py",
+          "lines": "browser-extracted L222-L238, L638-L642"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/encode/starlette/96d5023c55b29224edb8d684868c49f681d079a9/starlette/convertors.py",
+          "lines": "browser-extracted L41-L44"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/encode/starlette/96d5023c55b29224edb8d684868c49f681d079a9/starlette/requests.py",
+          "lines": "browser-extracted L80-L82, L133-L136, L197-L203"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/encode/starlette/96d5023c55b29224edb8d684868c49f681d079a9/tests/test_routing.py",
+          "lines": "browser-extracted L79-L81, L215-L219"
+        }
+      ]
+    }
+  ],
+  "toolErrors": [
+    "web.open returned Internal Error for https://github.com/encode/starlette/tree/96d5023c55b29224edb8d684868c49f681d079a9",
+    "web.open returned Internal Error for https://raw.githubusercontent.com/encode/starlette/96d5023c55b29224edb8d684868c49f681d079a9/.github/workflows/test-suite.yml; its existence or contents were not established."
+  ],
+  "limitations": [
+    "Static pinned-source inspection only; no builds or tests executed. I did not implement the product.",
+    "Citation line ranges explicitly use the browser's raw-text extraction L numbers. It normalizes blank lines: routing.py was extracted as 705 lines while the pinned GitHub blob reports 765 source lines. These are not asserted to be literal GitHub editor line numbers.",
+    "GitHub blob navigation redirected encode/starlette to Kludex/starlette at the same pinned commit.",
+    "External ASGI-server, HTTP-client and AnyIO implementation internals were not inspected under the repository-only restriction.",
+    "Direct-consumer coverage is limited to inspected source; runtime configuration/subclasses/custom middleware can alter dispatch.",
+    "Authoritative token telemetry was unavailable; no measured token count is claimed."
+  ],
+  "selfReportedStartedAt": "2026-10-13 06:49:53 UTC",
+  "selfReportedFinishedAt": "2026-10-13 06:53:51 UTC"
+}

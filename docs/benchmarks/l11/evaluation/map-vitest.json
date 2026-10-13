@@ -1,0 +1,276 @@
+{
+  "repository": "vitest-dev/vitest",
+  "arm": "map",
+  "commit": "f15bdac4f05d2838855d4bd4f47e4076036ea18b",
+  "answers": [
+    {
+      "id": "q1",
+      "answer": "Vitest is a Vite-powered testing framework: assertions, snapshots, mocking/spies, watch mode, coverage, browser/component testing and benchmarks. Test authors import its testing API; developers run npx vitest or package scripts, and CI runs the repository's test scripts. Programmatic integrations can use vitest/node. The executable package entry is vitest.mjs, which imports dist/cli.js; its source calls createCLI().parse().",
+      "citations": [
+        {
+          "url": "https://github.com/vitest-dev/vitest/blob/f15bdac4f05d2838855d4bd4f47e4076036ea18b/README.md",
+          "lines": "39-88"
+        },
+        {
+          "url": "https://github.com/vitest-dev/vitest/blob/f15bdac4f05d2838855d4bd4f47e4076036ea18b/package.json",
+          "lines": "11-37"
+        },
+        {
+          "url": "https://github.com/vitest-dev/vitest/blob/f15bdac4f05d2838855d4bd4f47e4076036ea18b/packages/vitest/package.json",
+          "lines": "67-103"
+        },
+        {
+          "url": "https://github.com/vitest-dev/vitest/blob/f15bdac4f05d2838855d4bd4f47e4076036ea18b/packages/vitest/vitest.mjs",
+          "lines": "1-2"
+        },
+        {
+          "url": "https://github.com/vitest-dev/vitest/blob/f15bdac4f05d2838855d4bd4f47e4076036ea18b/packages/vitest/src/node/cli.ts",
+          "lines": "1-3"
+        }
+      ]
+    },
+    {
+      "id": "q2",
+      "answer": "Principal packages: vitest supplies the framework, CLI and public Node/runtime/worker interfaces; @vitest/expect implements Jest-style matchers atop Chai; snapshot manages snapshots; spy implements spies; mocker handles module mocking; utils supplies shared helpers; pretty-format supplies ESM-compatible value formatting. browser runs browser tests, browser-playwright provides Playwright integration, and browser-preview uses a chosen browser. coverage-v8 and coverage-istanbul are separate coverage providers. ui supplies the visual interface/reporting entry; web-worker supplies Web Worker test support. These are package boundaries, not claims that every package is loaded by parseCLI.",
+      "citations": [
+        {
+          "url": "https://github.com/vitest-dev/vitest/blob/f15bdac4f05d2838855d4bd4f47e4076036ea18b/packages/vitest/package.json",
+          "lines": "1-119"
+        },
+        {
+          "url": "https://github.com/vitest-dev/vitest/blob/f15bdac4f05d2838855d4bd4f47e4076036ea18b/packages/expect/package.json",
+          "lines": "1-12"
+        },
+        {
+          "url": "https://github.com/vitest-dev/vitest/blob/f15bdac4f05d2838855d4bd4f47e4076036ea18b/packages/snapshot/package.json",
+          "lines": "1-12"
+        },
+        {
+          "url": "https://github.com/vitest-dev/vitest/blob/f15bdac4f05d2838855d4bd4f47e4076036ea18b/packages/spy/package.json",
+          "lines": "1-12"
+        },
+        {
+          "url": "https://github.com/vitest-dev/vitest/blob/f15bdac4f05d2838855d4bd4f47e4076036ea18b/packages/mocker/package.json",
+          "lines": "1-12"
+        },
+        {
+          "url": "https://github.com/vitest-dev/vitest/blob/f15bdac4f05d2838855d4bd4f47e4076036ea18b/packages/utils/package.json",
+          "lines": "1-12"
+        },
+        {
+          "url": "https://github.com/vitest-dev/vitest/blob/f15bdac4f05d2838855d4bd4f47e4076036ea18b/packages/pretty-format/package.json",
+          "lines": "1-12"
+        },
+        {
+          "url": "https://github.com/vitest-dev/vitest/blob/f15bdac4f05d2838855d4bd4f47e4076036ea18b/packages/browser/package.json",
+          "lines": "1-12"
+        },
+        {
+          "url": "https://github.com/vitest-dev/vitest/blob/f15bdac4f05d2838855d4bd4f47e4076036ea18b/packages/browser-playwright/package.json",
+          "lines": "1-12"
+        },
+        {
+          "url": "https://github.com/vitest-dev/vitest/blob/f15bdac4f05d2838855d4bd4f47e4076036ea18b/packages/browser-preview/package.json",
+          "lines": "1-12"
+        },
+        {
+          "url": "https://github.com/vitest-dev/vitest/blob/f15bdac4f05d2838855d4bd4f47e4076036ea18b/packages/coverage-v8/package.json",
+          "lines": "1-12"
+        },
+        {
+          "url": "https://github.com/vitest-dev/vitest/blob/f15bdac4f05d2838855d4bd4f47e4076036ea18b/packages/coverage-istanbul/package.json",
+          "lines": "1-12"
+        },
+        {
+          "url": "https://github.com/vitest-dev/vitest/blob/f15bdac4f05d2838855d4bd4f47e4076036ea18b/packages/ui/package.json",
+          "lines": "1-12"
+        },
+        {
+          "url": "https://github.com/vitest-dev/vitest/blob/f15bdac4f05d2838855d4bd4f47e4076036ea18b/packages/web-worker/package.json",
+          "lines": "1-12"
+        }
+      ]
+    },
+    {
+      "id": "q3",
+      "answer": "The inspected implementation is TypeScript, with JavaScript/ESM launch and Rollup configuration files; JSON manifests and YAML define package/workspace structure, and Markdown holds documentation. pnpm organizes packages/*, examples/*, test/* and docs. The private root orchestrates recursive builds, TypeScript checks and tests. Rollup builds the Vitest library/CLI into dist ESM and declaration outputs, with a separate CJS config output. Browser/UI client builds use Vite; the UI additionally uses Vue tooling. package.json exports define public subpaths, while workspace:* dependencies connect packages.",
+      "citations": [
+        {
+          "url": "https://github.com/vitest-dev/vitest/blob/f15bdac4f05d2838855d4bd4f47e4076036ea18b/pnpm-workspace.yaml",
+          "lines": "24-45"
+        },
+        {
+          "url": "https://github.com/vitest-dev/vitest/blob/f15bdac4f05d2838855d4bd4f47e4076036ea18b/package.json",
+          "lines": "1-43"
+        },
+        {
+          "url": "https://github.com/vitest-dev/vitest/blob/f15bdac4f05d2838855d4bd4f47e4076036ea18b/packages/vitest/rollup.config.js",
+          "lines": "1-165"
+        },
+        {
+          "url": "https://github.com/vitest-dev/vitest/blob/f15bdac4f05d2838855d4bd4f47e4076036ea18b/packages/vitest/package.json",
+          "lines": "32-97"
+        },
+        {
+          "url": "https://github.com/vitest-dev/vitest/blob/f15bdac4f05d2838855d4bd4f47e4076036ea18b/packages/browser/package.json",
+          "lines": "65-76"
+        },
+        {
+          "url": "https://github.com/vitest-dev/vitest/blob/f15bdac4f05d2838855d4bd4f47e4076036ea18b/packages/ui/package.json",
+          "lines": "43-55"
+        },
+        {
+          "url": "https://github.com/vitest-dev/vitest/blob/f15bdac4f05d2838855d4bd4f47e4076036ea18b/packages/vitest/src/node/cli/cac.ts",
+          "lines": "224-255"
+        }
+      ]
+    },
+    {
+      "id": "q4",
+      "answer": "The documented library entry is import { parseCLI } from 'vitest/node'. The vitest package export './node' resolves normally to dist/node.js (types: dist/node.d.ts), or to src/public/node.ts under __vitest_source__. That source barrel re-exports parseCLI from ../node/cli/cac. Rollup's node entry is src/public/node.ts. Thus the implementation begins in cac.ts, not in the executable's automatic parse path.",
+      "citations": [
+        {
+          "url": "https://github.com/vitest-dev/vitest/blob/f15bdac4f05d2838855d4bd4f47e4076036ea18b/docs/guide/advanced/index.md",
+          "lines": "148-173"
+        },
+        {
+          "url": "https://github.com/vitest-dev/vitest/blob/f15bdac4f05d2838855d4bd4f47e4076036ea18b/packages/vitest/package.json",
+          "lines": "67-71"
+        },
+        {
+          "url": "https://github.com/vitest-dev/vitest/blob/f15bdac4f05d2838855d4bd4f47e4076036ea18b/packages/vitest/src/public/node.ts",
+          "lines": "1-12"
+        },
+        {
+          "url": "https://github.com/vitest-dev/vitest/blob/f15bdac4f05d2838855d4bd4f47e4076036ea18b/packages/vitest/rollup.config.js",
+          "lines": "16-30"
+        },
+        {
+          "url": "https://github.com/vitest-dev/vitest/blob/f15bdac4f05d2838855d4bd4f47e4076036ea18b/packages/vitest/src/node/cli/cac.ts",
+          "lines": "224-255"
+        }
+      ]
+    },
+    {
+      "id": "q5",
+      "answer": "In cac.ts, parseCLI calls createCLI(config).parse(arrayArgs, { run: false }), then sets options.run=true when arrayArgs[2] is 'run' and options.watch is falsy. It returns filter/options.",
+      "citations": [
+        {
+          "url": "https://github.com/vitest-dev/vitest/blob/f15bdac4f05d2838855d4bd4f47e4076036ea18b/packages/vitest/src/node/cli/cac.ts",
+          "lines": "224-255"
+        }
+      ]
+    },
+    {
+      "id": "q6",
+      "answer": "Runtime internal dependencies: @vitest/utils/helpers; ../../utils/env; ./cli-config; ./completions; package version JSON. Dynamic runtime imports additionally reach ./cli-api, ../reporters/renderers/utils, ./doctor, and ../../create/browser/creator. Type-only imports are excluded. cac, pathe and tinyrainbow are external packages.",
+      "citations": [
+        {
+          "url": "https://github.com/vitest-dev/vitest/blob/f15bdac4f05d2838855d4bd4f47e4076036ea18b/packages/vitest/src/node/cli/cac.ts",
+          "lines": "1-11"
+        },
+        {
+          "url": "https://github.com/vitest-dev/vitest/blob/f15bdac4f05d2838855d4bd4f47e4076036ea18b/packages/vitest/src/node/cli/cac.ts",
+          "lines": "302-401"
+        },
+        {
+          "url": "https://github.com/vitest-dev/vitest/blob/f15bdac4f05d2838855d4bd4f47e4076036ea18b/packages/utils/package.json",
+          "lines": "38-42"
+        }
+      ]
+    },
+    {
+      "id": "q7",
+      "answer": "Path: public re-export → parseCLI → splitArgv → createCLI → external CAC parse with execution disabled → run-option postprocessing → return. The pinned test expects {filter:[], options:{run:true,'--':[],color:true}}. Registered test-running actions are not invoked. CAC's external parser and the external completion adapter remain untraced boundaries; this is source/test evidence, not an observed execution.",
+      "citations": [
+        {
+          "url": "https://github.com/vitest-dev/vitest/blob/f15bdac4f05d2838855d4bd4f47e4076036ea18b/packages/vitest/src/public/node.ts",
+          "lines": "9-12"
+        },
+        {
+          "url": "https://github.com/vitest-dev/vitest/blob/f15bdac4f05d2838855d4bd4f47e4076036ea18b/packages/vitest/src/node/cli/cac.ts",
+          "lines": "74-255"
+        },
+        {
+          "url": "https://github.com/vitest-dev/vitest/blob/f15bdac4f05d2838855d4bd4f47e4076036ea18b/test/unit/test/cli-test.test.ts",
+          "lines": "406-567"
+        },
+        {
+          "url": "https://github.com/vitest-dev/vitest/blob/f15bdac4f05d2838855d4bd4f47e4076036ea18b/packages/vitest/src/node/cli/completions.ts",
+          "lines": "1-56"
+        }
+      ]
+    },
+    {
+      "id": "q8",
+      "answer": "Direct callers evidenced are node/cli.ts's top-level createCLI().parse(), parseCLI in cac.ts, and the unit test's top-level const vitestCli=createCLI(). The public node.ts barrel re-exports it, and advanced documentation demonstrates direct library consumption. The map reported only the first two exact call edges; the test source establishes the additional caller. External consumers are not exhaustively known.",
+      "citations": [
+        {
+          "url": "https://github.com/vitest-dev/vitest/blob/f15bdac4f05d2838855d4bd4f47e4076036ea18b/packages/vitest/src/node/cli.ts",
+          "lines": "1-3"
+        },
+        {
+          "url": "https://github.com/vitest-dev/vitest/blob/f15bdac4f05d2838855d4bd4f47e4076036ea18b/packages/vitest/src/node/cli/cac.ts",
+          "lines": "237-239"
+        },
+        {
+          "url": "https://github.com/vitest-dev/vitest/blob/f15bdac4f05d2838855d4bd4f47e4076036ea18b/test/unit/test/cli-test.test.ts",
+          "lines": "1-18"
+        },
+        {
+          "url": "https://github.com/vitest-dev/vitest/blob/f15bdac4f05d2838855d4bd4f47e4076036ea18b/packages/vitest/src/public/node.ts",
+          "lines": "9-10"
+        },
+        {
+          "url": "https://github.com/vitest-dev/vitest/blob/f15bdac4f05d2838855d4bd4f47e4076036ea18b/docs/guide/advanced/index.md",
+          "lines": "174-188"
+        }
+      ]
+    },
+    {
+      "id": "q9",
+      "answer": "test/unit/test/cli-test.test.ts registers 'public parseCLI works correctly' (406-567). It imports parseCLI through vitest/node and directly asserts 'vitest run' produces run:true, empty filters, '--':[], color:true. Its 'vitest run --watch' case expects watch:true and w:true without run:true; dev/watch cases also check watch handling. This tests the public wrapper, unlike nearby getCLIOptions tests using a shared createCLI parser. test/unit package scripts enter through vitest, including project-specific threads/forks/vmThreads scripts. Tests were inspected, not executed.",
+      "citations": [
+        {
+          "url": "https://github.com/vitest-dev/vitest/blob/f15bdac4f05d2838855d4bd4f47e4076036ea18b/test/unit/test/cli-test.test.ts",
+          "lines": "1-23"
+        },
+        {
+          "url": "https://github.com/vitest-dev/vitest/blob/f15bdac4f05d2838855d4bd4f47e4076036ea18b/test/unit/test/cli-test.test.ts",
+          "lines": "406-567"
+        },
+        {
+          "url": "https://github.com/vitest-dev/vitest/blob/f15bdac4f05d2838855d4bd4f47e4076036ea18b/test/unit/package.json",
+          "lines": "1-14"
+        }
+      ]
+    },
+    {
+      "id": "q10",
+      "answer": "String argv enters parseCLI's string branch. splitArgv protects whitespace inside quoted substrings with NULs, splits on literal spaces, restores spaces and removes surrounding quotes. parseCLI validates 'vitest', substitutes '/index.js', prepends 'node', parses, postprocesses command options, and returns filters/options.",
+      "citations": [
+        {
+          "url": "https://github.com/vitest-dev/vitest/blob/f15bdac4f05d2838855d4bd4f47e4076036ea18b/packages/vitest/src/node/cli/cac.ts",
+          "lines": "199-255"
+        }
+      ]
+    }
+  ],
+  "toolErrors": [
+    "Initial overview.json response exceeded the requested output budget and was truncated; bounded MCP queries supplied the needed evidence.",
+    "Two overly large MCP responses were truncated by exec_command. JSON.parse then failed with SyntaxError: Unexpected token 'W', \"Warning: t\"... is not valid JSON. Retried with bounded pagination/compact queries; no trial reset.",
+    "No pinned GitHub/raw access errors observed."
+  ],
+  "limitations": [
+    "Read-only source investigation only: no installation, build, or test execution.",
+    "Static map calls are not complete runtime traces. It reported only two createCLI callers and no test-to-parseCLI edge; public-import test calls were verified directly in pinned source.",
+    "Map import edges include type-only imports; runtime classification was checked against source.",
+    "External cac and @bomb.sh/tab implementations were not inspected because navigation was restricted to this pinned repository.",
+    "Browser-rendered raw source line numbering collapses some blank lines. GitHub source ranges for key functions/tests come from map provenance; wider source ranges are used elsewhere.",
+    "Language evidence covers the inspected TypeScript/JavaScript, manifests and documentation; no inference of unsupported-language call relationships.",
+    "Authoritative token telemetry unavailable; no token usage estimate is presented as measurement.",
+    "StartedAt is the first clock observation shortly after prompt/transport reads, not an authoritative delivery timestamp."
+  ],
+  "selfReportedStartedAt": "2026-10-13T07:53:55Z",
+  "selfReportedFinishedAt": "2026-10-13T07:58:27Z"
+}

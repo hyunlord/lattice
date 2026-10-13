@@ -1,0 +1,135 @@
+{
+  "repository": "encode/httpx",
+  "commit": "b5addb64f0161ff6bfe94c124ef76f6a1fba5254",
+  "arm": "direct",
+  "gradedBy": "independent fresh grader direct-second",
+  "answerSha256": "3b819121ccfc3be38f9c2530fb005ecfd7b2dadd16ca95c2dc441bd568cb63d7",
+  "questions": [
+    {
+      "id": "httpx-q1",
+      "score": 2,
+      "reason": "Correct client purpose, protocol support, sync/async API and optional CLI/Python consumers; pinned README and metadata support the account.",
+      "sourceReferences": [
+        "b5addb64f0161ff6bfe94c124ef76f6a1fba5254:README.md:15-16",
+        "b5addb64f0161ff6bfe94c124ef76f6a1fba5254:README.md:26-45",
+        "b5addb64f0161ff6bfe94c124ef76f6a1fba5254:pyproject.toml:58-59"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "httpx-q2",
+      "score": 2,
+      "reason": "Identifies principal API, orchestration, model, URL and pluggable transport responsibilities with pinned module citations.",
+      "sourceReferences": [
+        "b5addb64f0161ff6bfe94c124ef76f6a1fba5254:httpx/_api.py:6-20",
+        "b5addb64f0161ff6bfe94c124ef76f6a1fba5254:httpx/_api.py:102-115",
+        "b5addb64f0161ff6bfe94c124ef76f6a1fba5254:httpx/_client.py:13-49",
+        "b5addb64f0161ff6bfe94c124ef76f6a1fba5254:httpx/_client.py:930-946",
+        "b5addb64f0161ff6bfe94c124ef76f6a1fba5254:httpx/_transports/mock.py:15-27"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "httpx-q3",
+      "score": 1,
+      "reason": "Correct Python version, Hatchling, distribution boundary, runtime dependencies and extras. This exact answer omits the frozen required httpx:main command entry (stated elsewhere in q1, not supplied here).",
+      "sourceReferences": [
+        "b5addb64f0161ff6bfe94c124ef76f6a1fba5254:pyproject.toml:1-9",
+        "b5addb64f0161ff6bfe94c124ef76f6a1fba5254:pyproject.toml:30-59"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "httpx-q4",
+      "score": 2,
+      "reason": "Correct re-export, GET delegation, temporary context-managed Client and client.request entry; cites definitions.",
+      "sourceReferences": [
+        "b5addb64f0161ff6bfe94c124ef76f6a1fba5254:httpx/__init__.py:1-4",
+        "b5addb64f0161ff6bfe94c124ef76f6a1fba5254:httpx/__init__.py:51-55",
+        "b5addb64f0161ff6bfe94c124ef76f6a1fba5254:httpx/_api.py:174-207",
+        "b5addb64f0161ff6bfe94c124ef76f6a1fba5254:httpx/_api.py:102-121"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "httpx-q5",
+      "score": 1,
+      "reason": "Correct helper and all status/method rewrite rules. This exact answer omits the required _build_redirect_request caller relationship, although q7/q8 separately describe it.",
+      "sourceReferences": [
+        "b5addb64f0161ff6bfe94c124ef76f6a1fba5254:httpx/_client.py:475-515"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "httpx-q6",
+      "score": 1,
+      "reason": "Correct direct auth/model/base/default transport imports. Does not explain the frozen required selected handle_request dynamic dispatch in this answer; q7 separately does.",
+      "sourceReferences": [
+        "b5addb64f0161ff6bfe94c124ef76f6a1fba5254:httpx/_client.py:13-32",
+        "b5addb64f0161ff6bfe94c124ef76f6a1fba5254:httpx/_client.py:1001-1014"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "httpx-q7",
+      "score": 2,
+      "reason": "Complete static request/auth/redirect/transport trace, redirect rebuilding/history/reading/repetition and max-redirect bound, with configurable boundaries explicit.",
+      "sourceReferences": [
+        "b5addb64f0161ff6bfe94c124ef76f6a1fba5254:httpx/_client.py:812-825",
+        "b5addb64f0161ff6bfe94c124ef76f6a1fba5254:httpx/_client.py:903-919",
+        "b5addb64f0161ff6bfe94c124ef76f6a1fba5254:httpx/_client.py:930-946",
+        "b5addb64f0161ff6bfe94c124ef76f6a1fba5254:httpx/_client.py:964-1014"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": true
+    },
+    {
+      "id": "httpx-q8",
+      "score": 2,
+      "reason": "Correct direct builder consumer and indirect sync/async, method/header/body and next_request effects; no fabricated direct edge.",
+      "sourceReferences": [
+        "b5addb64f0161ff6bfe94c124ef76f6a1fba5254:httpx/_client.py:475-492",
+        "b5addb64f0161ff6bfe94c124ef76f6a1fba5254:httpx/_client.py:985-995",
+        "b5addb64f0161ff6bfe94c124ef76f6a1fba5254:httpx/_client.py:1699-1712"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": true
+    },
+    {
+      "id": "httpx-q9",
+      "score": 2,
+      "reason": "Correct named POST/301 test, local MockTransport handler, response fixture and URL/status/history assertions; explicitly avoids claiming execution or an explicit GET assertion.",
+      "sourceReferences": [
+        "b5addb64f0161ff6bfe94c124ef76f6a1fba5254:tests/client/test_redirects.py:8-16",
+        "b5addb64f0161ff6bfe94c124ef76f6a1fba5254:tests/client/test_redirects.py:116-121",
+        "b5addb64f0161ff6bfe94c124ef76f6a1fba5254:httpx/_transports/mock.py:15-27"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": true
+    },
+    {
+      "id": "httpx-q10",
+      "score": 2,
+      "reason": "Correct Location parsing, exception conversion, missing-host repair, relative joining, fragment inheritance and rebuilt Request URL.",
+      "sourceReferences": [
+        "b5addb64f0161ff6bfe94c124ef76f6a1fba5254:httpx/_client.py:475-491",
+        "b5addb64f0161ff6bfe94c124ef76f6a1fba5254:httpx/_client.py:517-544"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    }
+  ],
+  "total": 17,
+  "referenceIssues": [],
+  "limitations": [
+    "Read-only pinned git-blob verification; no target builds or tests run. All frozen oracle evidence hashes and logical-line excerpts verified against the specified commit.",
+    "Each exact question is graded independently; facts only stated in another answer are not inserted into an incomplete answer. Verified pinned definition URLs count as citations.",
+    "Submitted spans explicitly use web-rendered zero-based lines, not canonical source lines. Their rendered numbering could not be reproduced from local blobs; canonical verification spans are recorded in sourceReferences. Example: test_redirect_301 is canonical lines 116-121, submitted web-rendered 104-109."
+  ]
+}

@@ -1,0 +1,363 @@
+{
+  "id": "chi",
+  "repository": "go-chi/chi",
+  "commit": "7f9b7448f51d28804fac98c0a17bc2a7cec1079f",
+  "trackedFiles": 105,
+  "questions": [
+    {
+      "id": "q1",
+      "question": "What does chi do, and who calls or runs it?",
+      "answer": "chi is a composable Go router for HTTP services and REST APIs. Application developers register handlers; net/http can serve the Mux because it implements http.Handler. Equivalent terminology for the cited definitions is accepted; unsupported runtime claims are not.",
+      "requiredFacts": [
+        "chi is a composable Go router for HTTP services and REST APIs.",
+        "Application developers register handlers; net/http can serve the Mux because it implements http.Handler."
+      ],
+      "evidence": [
+        {
+          "path": "README.md",
+          "startLine": 6,
+          "endLine": 19,
+          "excerpt": "`chi` is a lightweight, idiomatic and composable router for building Go HTTP services. It's\nespecially good at helping you write large REST API services that are kept maintainable as your\nproject grows and changes. `chi` is built on the new `context` package introduced in Go 1.7 to\nhandle signaling, cancelation and request-scoped values across a handler chain.\n\nThe focus of the project has been to seek out an elegant and comfortable design for writing\nREST API servers, written during the development of the Pressly API service that powers our\npublic API service, which in turn powers all of our client-side applications.\n\nThe key considerations of chi's design are: project structure, maintainability, standard http\nhandlers (stdlib-only), developer productivity, and deconstructing a large system into many small\nparts. The core router `github.com/go-chi/chi` is quite small (less than 1000 LOC), but we've also\nincluded some useful/optional subpackages: [middleware](/middleware), [render](https://github.com/go-chi/render)\nand [docgen](https://github.com/go-chi/docgen). We hope you enjoy it too!",
+          "sha256": "d31e2beee2752986a30b90d7a07b50a53c107a917a3a755c7e6e2b727b0658d8"
+        },
+        {
+          "path": "README.md",
+          "startLine": 48,
+          "endLine": 65,
+          "excerpt": "```go\npackage main\n\nimport (\n\t\"net/http\"\n\n\t\"github.com/go-chi/chi/v5\"\n\t\"github.com/go-chi/chi/v5/middleware\"\n)\n\nfunc main() {\n\tr := chi.NewRouter()\n\tr.Use(middleware.Logger)\n\tr.Get(\"/\", func(w http.ResponseWriter, r *http.Request) {\n\t\tw.Write([]byte(\"welcome\"))\n\t})\n\thttp.ListenAndServe(\":3000\", r)\n}",
+          "sha256": "d31e2beee2752986a30b90d7a07b50a53c107a917a3a755c7e6e2b727b0658d8"
+        },
+        {
+          "path": "mux.go",
+          "startLine": 60,
+          "endLine": 63,
+          "excerpt": "// ServeHTTP is the single method of the http.Handler interface that makes\n// Mux interoperable with the standard library. It uses a sync.Pool to get and\n// reuse routing contexts for each request.\nfunc (mx *Mux) ServeHTTP(w http.ResponseWriter, r *http.Request) {",
+          "sha256": "cc44c2d620e6306b16d6d80f5f6c70f02b5814b357a4f5823372818f355ae67d"
+        }
+      ]
+    },
+    {
+      "id": "q2",
+      "question": "Name the principal repository components and their responsibilities.",
+      "answer": "The root chi package provides the core HTTP router: Mux owns the handler chain, radix tree, and reusable routing contexts. The node tree finds endpoint handlers and records captured parameters; Context holds route paths, methods, parameters and patterns. The middleware subpackage provides optional HTTP middleware: Logger logs request start/end, status and duration; Recoverer handles panics and attempts an HTTP 500 response. Mux builds a middleware chain ending in routeHTTP. The README links render and docgen as separate external repositories, not internal chi packages. Equivalent terminology for the cited components is accepted; this is not an exhaustive inventory of every utility.",
+      "requiredFacts": [
+        "The root chi package provides the core HTTP router: Mux owns the handler chain, radix tree, and reusable routing contexts.",
+        "The node tree finds endpoint handlers and records captured parameters; Context holds route paths, methods, parameters and patterns.",
+        "The middleware subpackage provides optional HTTP middleware: Logger logs request start/end, status and duration; Recoverer handles panics and attempts an HTTP 500 response.",
+        "Mux builds a middleware chain ending in routeHTTP. The README links render and docgen as separate external repositories, not internal chi packages."
+      ],
+      "evidence": [
+        {
+          "path": "mux.go",
+          "startLine": 13,
+          "endLine": 47,
+          "excerpt": "// Mux is a simple HTTP route multiplexer that parses a request path,\n// records any URL params, and executes an end handler. It implements\n// the http.Handler interface and is friendly with the standard library.\n//\n// Mux is designed to be fast, minimal and offer a powerful API for building\n// modular and composable HTTP services with a large set of handlers. It's\n// particularly useful for writing large REST API services that break a handler\n// into many smaller parts composed of middlewares and end handlers.\ntype Mux struct {\n\t// The computed mux handler made of the chained middleware stack and\n\t// the tree router\n\thandler http.Handler\n\n\t// The radix trie router\n\ttree *node\n\n\t// Custom method not allowed handler\n\tmethodNotAllowedHandler http.HandlerFunc\n\n\t// A reference to the parent mux used by subrouters when mounting\n\t// to a parent mux\n\tparent *Mux\n\n\t// Routing context pool\n\tpool *sync.Pool\n\n\t// Custom route not found handler\n\tnotFoundHandler http.HandlerFunc\n\n\t// The middleware stack\n\tmiddlewares []func(http.Handler) http.Handler\n\n\t// Controls the behaviour of middleware chain generation when a mux\n\t// is registered as an inline group inside another mux.\n\tinline bool",
+          "sha256": "cc44c2d620e6306b16d6d80f5f6c70f02b5814b357a4f5823372818f355ae67d"
+        },
+        {
+          "path": "tree.go",
+          "startLine": 383,
+          "endLine": 405,
+          "excerpt": "func (n *node) FindRoute(rctx *Context, method methodTyp, path string) (*node, endpoints, http.Handler) {\n\t// Reset the context routing pattern and params\n\trctx.routePattern = \"\"\n\trctx.routeParams.Keys = rctx.routeParams.Keys[:0]\n\trctx.routeParams.Values = rctx.routeParams.Values[:0]\n\n\t// Find the routing handlers for the path\n\trn := n.findRoute(rctx, method, path)\n\tif rn == nil {\n\t\treturn nil, nil, nil\n\t}\n\n\t// Record the routing params in the request lifecycle\n\trctx.URLParams.Keys = append(rctx.URLParams.Keys, rctx.routeParams.Keys...)\n\trctx.URLParams.Values = append(rctx.URLParams.Values, rctx.routeParams.Values...)\n\n\t// Record the routing pattern in the request lifecycle\n\tif rn.endpoints[method].pattern != \"\" {\n\t\trctx.routePattern = rn.endpoints[method].pattern\n\t\trctx.RoutePatterns = append(rctx.RoutePatterns, rctx.routePattern)\n\t}\n\n\treturn rn, rn.endpoints, rn.endpoints[method].handler",
+          "sha256": "f4b12b63b662fb8e36658172b36b35705cfb24eefae0665635f4fbd52e64fb79"
+        },
+        {
+          "path": "context.go",
+          "startLine": 40,
+          "endLine": 78,
+          "excerpt": "// Context is the default routing context set on the root node of a\n// request context to track route patterns, URL parameters and\n// an optional routing path.\n//\n// NOTE: New reference fields (slices, maps, pointers) must be deep-copied in Clone.\ntype Context struct {\n\tRoutes Routes\n\n\t// parentCtx is the parent of this one, for using Context as a\n\t// context.Context directly. This is an optimization that saves\n\t// 1 allocation.\n\tparentCtx context.Context\n\n\t// Routing path/method override used during the route search.\n\t// See Mux#routeHTTP method.\n\tRoutePath   string\n\tRouteMethod string\n\n\t// URLParams are the stack of routeParams captured during the\n\t// routing lifecycle across a stack of sub-routers.\n\tURLParams RouteParams\n\n\t// Route parameters matched for the current sub-router. It is\n\t// intentionally unexported so it can't be tampered.\n\trouteParams RouteParams\n\n\t// The endpoint routing pattern that matched the request URI path\n\t// or `RoutePath` of the current sub-router. This value will update\n\t// during the lifecycle of a request passing through a stack of\n\t// sub-routers.\n\troutePattern string\n\n\t// Routing pattern stack throughout the lifecycle of the request,\n\t// across all connected routers. It is a record of all matching\n\t// patterns across a stack of sub-routers.\n\tRoutePatterns []string\n\n\tmethodsAllowed   []methodTyp // allowed methods in case of a 405\n\tmethodNotAllowed bool",
+          "sha256": "b19edcca252e2fe74e82802c4c7ce1a1c0855728f9ede1288f0224283dfc7e53"
+        },
+        {
+          "path": "README.md",
+          "startLine": 15,
+          "endLine": 19,
+          "excerpt": "The key considerations of chi's design are: project structure, maintainability, standard http\nhandlers (stdlib-only), developer productivity, and deconstructing a large system into many small\nparts. The core router `github.com/go-chi/chi` is quite small (less than 1000 LOC), but we've also\nincluded some useful/optional subpackages: [middleware](/middleware), [render](https://github.com/go-chi/render)\nand [docgen](https://github.com/go-chi/docgen). We hope you enjoy it too!",
+          "sha256": "d31e2beee2752986a30b90d7a07b50a53c107a917a3a755c7e6e2b727b0658d8"
+        },
+        {
+          "path": "middleware/logger.go",
+          "startLine": 23,
+          "endLine": 40,
+          "excerpt": "// Logger is a middleware that logs the start and end of each request, along\n// with some useful data about what was requested, what the response status was,\n// and how long it took to return. When standard output is a TTY, Logger will\n// print in color, otherwise it will print in black and white. Logger prints a\n// request ID if one is provided.\n//\n// Alternatively, look at https://github.com/goware/httplog for a more in-depth\n// http logger with structured logging support.\n//\n// IMPORTANT NOTE: Logger should go before any other middleware that may change\n// the response, such as middleware.Recoverer. Example:\n//\n//\tr := chi.NewRouter()\n//\tr.Use(middleware.Logger)        // <--<< Logger should come before Recoverer\n//\tr.Use(middleware.Recoverer)\n//\tr.Get(\"/\", handler)\nfunc Logger(next http.Handler) http.Handler {\n\treturn DefaultLogger(next)",
+          "sha256": "40e7b7b01eb0363aad9930d3764880e3cf6f1f8aed6ad3fd918866ec34602729"
+        },
+        {
+          "path": "middleware/recoverer.go",
+          "startLine": 17,
+          "endLine": 22,
+          "excerpt": "// Recoverer is a middleware that recovers from panics, logs the panic (and a\n// backtrace), and returns a HTTP 500 (Internal Server Error) status if\n// possible. Recoverer prints a request ID if one is provided.\n//\n// Alternatively, look at https://github.com/go-chi/httplog middleware pkgs.\nfunc Recoverer(next http.Handler) http.Handler {",
+          "sha256": "efc38c7b32bfb29ebbe16b199832d1eff13179a34a025c07b53c733c11a2154c"
+        },
+        {
+          "path": "mux.go",
+          "startLine": 521,
+          "endLine": 527,
+          "excerpt": "// updateRouteHandler builds the single mux handler that is a chain of the middleware\n// stack, as defined by calls to Use(), and the tree router (Mux) itself. After this\n// point, no other middlewares can be registered on this Mux's stack. But you can still\n// compose additional middlewares via Group()'s or using a chained middleware handler.\nfunc (mx *Mux) updateRouteHandler() {\n\tmx.handler = chain(mx.middlewares, http.HandlerFunc(mx.routeHTTP))\n}",
+          "sha256": "cc44c2d620e6306b16d6d80f5f6c70f02b5814b357a4f5823372818f355ae67d"
+        }
+      ]
+    },
+    {
+      "id": "q3",
+      "question": "Which languages, build/framework systems and package boundaries organize chi?",
+      "answer": "The root Go module is github.com/go-chi/chi/v5 with go 1.24 declared. The root chi package uses net/http; middleware is imported as a separate package within the module. The README states that the router has no external dependencies and uses the Go standard library. Equivalent terminology for the cited definitions is accepted; unsupported runtime claims are not.",
+      "requiredFacts": [
+        "The root Go module is github.com/go-chi/chi/v5 with go 1.24 declared.",
+        "The root chi package uses net/http; middleware is imported as a separate package within the module.",
+        "The README states that the router has no external dependencies and uses the Go standard library."
+      ],
+      "evidence": [
+        {
+          "path": "go.mod",
+          "startLine": 1,
+          "endLine": 5,
+          "excerpt": "module github.com/go-chi/chi/v5\n\n// Chi supports the four most recent major versions of Go.\n// See https://github.com/go-chi/chi/issues/963.\ngo 1.24",
+          "sha256": "7eb620f0fce870d93eaba87bf6f8c36284db786108030ca229a5016461797090"
+        },
+        {
+          "path": "chi.go",
+          "startLine": 57,
+          "endLine": 68,
+          "excerpt": "package chi\n\nimport \"net/http\"\n\n// NewRouter returns a new Mux object that implements the Router interface.\nfunc NewRouter() *Mux {\n\treturn NewMux()\n}\n\n// Router consisting of the core routing methods used by chi's Mux,\n// using only the standard net/http.\ntype Router interface {",
+          "sha256": "47c70ececcbb9d71f973eda3cbadad0a46c8cc2261b285f7049b5261f337d678"
+        },
+        {
+          "path": "README.md",
+          "startLine": 32,
+          "endLine": 38,
+          "excerpt": "* **100% compatible with net/http** - use any http or middleware pkg in the ecosystem that is also compatible with `net/http`\n* **Designed for modular/composable APIs** - middlewares, inline middlewares, route groups and sub-router mounting\n* **Context control** - built on new `context` package, providing value chaining, cancellations and timeouts\n* **Robust** - in production at Pressly, Cloudflare, Heroku, 99Designs, and many others (see [discussion](https://github.com/go-chi/chi/issues/91))\n* **Doc generation** - `docgen` auto-generates routing documentation from your source to JSON or Markdown\n* **Go.mod support** - as of v5, go.mod support (see [CHANGELOG](https://github.com/go-chi/chi/blob/master/CHANGELOG.md))\n* **No external dependencies** - plain ol' Go stdlib + net/http",
+          "sha256": "d31e2beee2752986a30b90d7a07b50a53c107a917a3a755c7e6e2b727b0658d8"
+        },
+        {
+          "path": "README.md",
+          "startLine": 51,
+          "endLine": 55,
+          "excerpt": "import (\n\t\"net/http\"\n\n\t\"github.com/go-chi/chi/v5\"\n\t\"github.com/go-chi/chi/v5/middleware\"",
+          "sha256": "d31e2beee2752986a30b90d7a07b50a53c107a917a3a755c7e6e2b727b0658d8"
+        }
+      ]
+    },
+    {
+      "id": "q4",
+      "question": "Where does public-library use begin for a chi router serving HTTP?",
+      "answer": "chi.NewRouter delegates to NewMux. Application code registers Get handlers and passes the router to http.ListenAndServe. Mux.ServeHTTP is the request entry point and invokes the computed handler after arranging a routing context. Equivalent terminology for the cited definitions is accepted; unsupported runtime claims are not.",
+      "requiredFacts": [
+        "chi.NewRouter delegates to NewMux.",
+        "Application code registers Get handlers and passes the router to http.ListenAndServe.",
+        "Mux.ServeHTTP is the request entry point and invokes the computed handler after arranging a routing context."
+      ],
+      "evidence": [
+        {
+          "path": "chi.go",
+          "startLine": 61,
+          "endLine": 64,
+          "excerpt": "// NewRouter returns a new Mux object that implements the Router interface.\nfunc NewRouter() *Mux {\n\treturn NewMux()\n}",
+          "sha256": "47c70ececcbb9d71f973eda3cbadad0a46c8cc2261b285f7049b5261f337d678"
+        },
+        {
+          "path": "README.md",
+          "startLine": 58,
+          "endLine": 65,
+          "excerpt": "func main() {\n\tr := chi.NewRouter()\n\tr.Use(middleware.Logger)\n\tr.Get(\"/\", func(w http.ResponseWriter, r *http.Request) {\n\t\tw.Write([]byte(\"welcome\"))\n\t})\n\thttp.ListenAndServe(\":3000\", r)\n}",
+          "sha256": "d31e2beee2752986a30b90d7a07b50a53c107a917a3a755c7e6e2b727b0658d8"
+        },
+        {
+          "path": "mux.go",
+          "startLine": 63,
+          "endLine": 91,
+          "excerpt": "func (mx *Mux) ServeHTTP(w http.ResponseWriter, r *http.Request) {\n\t// Ensure the mux has some routes defined on the mux\n\tif mx.handler == nil {\n\t\tmx.NotFoundHandler().ServeHTTP(w, r)\n\t\treturn\n\t}\n\n\t// Check if a routing context already exists from a parent router.\n\trctx, _ := r.Context().Value(RouteCtxKey).(*Context)\n\tif rctx != nil {\n\t\tmx.handler.ServeHTTP(w, r)\n\t\treturn\n\t}\n\n\t// Fetch a RouteContext object from the sync pool, and call the computed\n\t// mx.handler that is comprised of mx.middlewares + mx.routeHTTP.\n\t// Once the request is finished, reset the routing context and put it back\n\t// into the pool for reuse from another request.\n\trctx = mx.pool.Get().(*Context)\n\trctx.Reset()\n\trctx.Routes = mx\n\trctx.parentCtx = r.Context()\n\n\t// NOTE: r.WithContext() causes 2 allocations and context.WithValue() causes 1 allocation\n\tr = r.WithContext(context.WithValue(r.Context(), RouteCtxKey, rctx))\n\n\t// Serve the request and once its done, put the request context back in the sync pool\n\tmx.handler.ServeHTTP(w, r)\n\tmx.pool.Put(rctx)",
+          "sha256": "cc44c2d620e6306b16d6d80f5f6c70f02b5814b357a4f5823372818f355ae67d"
+        }
+      ]
+    },
+    {
+      "id": "q5",
+      "question": "Where is X = dispatching an HTTP method/path to the matching chi handler implemented?",
+      "answer": "Mux.routeHTTP selects RoutePath or URL.RawPath/URL.Path and resolves the HTTP method through methodMap. It calls mx.tree.FindRoute and invokes the returned handler via ServeHTTP. Absent handlers lead to MethodNotAllowedHandler or NotFoundHandler. Equivalent terminology for the cited definitions is accepted; unsupported runtime claims are not.",
+      "requiredFacts": [
+        "Mux.routeHTTP selects RoutePath or URL.RawPath/URL.Path and resolves the HTTP method through methodMap.",
+        "It calls mx.tree.FindRoute and invokes the returned handler via ServeHTTP.",
+        "Absent handlers lead to MethodNotAllowedHandler or NotFoundHandler."
+      ],
+      "evidence": [
+        {
+          "path": "mux.go",
+          "startLine": 453,
+          "endLine": 498,
+          "excerpt": "// routeHTTP routes a http.Request through the Mux routing tree to serve\n// the matching handler for a particular http method.\nfunc (mx *Mux) routeHTTP(w http.ResponseWriter, r *http.Request) {\n\t// Grab the route context object\n\trctx := r.Context().Value(RouteCtxKey).(*Context)\n\n\t// The request routing path\n\troutePath := rctx.RoutePath\n\tif routePath == \"\" {\n\t\tif r.URL.RawPath != \"\" {\n\t\t\troutePath = r.URL.RawPath\n\t\t} else {\n\t\t\troutePath = r.URL.Path\n\t\t}\n\t\tif routePath == \"\" {\n\t\t\troutePath = \"/\"\n\t\t}\n\t}\n\n\t// Check if method is supported by chi\n\tif rctx.RouteMethod == \"\" {\n\t\trctx.RouteMethod = r.Method\n\t}\n\tmethod, ok := methodMap[rctx.RouteMethod]\n\tif !ok {\n\t\tmx.MethodNotAllowedHandler().ServeHTTP(w, r)\n\t\treturn\n\t}\n\n\t// Find the route\n\tif _, _, h := mx.tree.FindRoute(rctx, method, routePath); h != nil {\n\t\t// Set http.Request path values from our request context\n\t\tfor i, key := range rctx.URLParams.Keys {\n\t\t\tvalue := rctx.URLParams.Values[i]\n\t\t\tr.SetPathValue(key, value)\n\t\t}\n\t\tr.Pattern = rctx.RoutePattern()\n\n\t\th.ServeHTTP(w, r)\n\t\treturn\n\t}\n\tif rctx.methodNotAllowed {\n\t\tmx.MethodNotAllowedHandler(rctx.methodsAllowed...).ServeHTTP(w, r)\n\t} else {\n\t\tmx.NotFoundHandler().ServeHTTP(w, r)\n\t}",
+          "sha256": "cc44c2d620e6306b16d6d80f5f6c70f02b5814b357a4f5823372818f355ae67d"
+        }
+      ]
+    },
+    {
+      "id": "q6",
+      "question": "Which internal components does A = Mux.routeHTTP directly use, and what proves each direction?",
+      "answer": "routeHTTP reads chi Context from RouteCtxKey and calls tree.FindRoute. It calls Context.RoutePattern and copies URLParams into request path values. It invokes the matched http.Handler or mux not-found/method-not-allowed handlers; handler implementation is dynamically registered. Equivalent terminology for the cited definitions is accepted; unsupported runtime claims are not.",
+      "requiredFacts": [
+        "routeHTTP reads chi Context from RouteCtxKey and calls tree.FindRoute.",
+        "It calls Context.RoutePattern and copies URLParams into request path values.",
+        "It invokes the matched http.Handler or mux not-found/method-not-allowed handlers; handler implementation is dynamically registered."
+      ],
+      "evidence": [
+        {
+          "path": "mux.go",
+          "startLine": 455,
+          "endLine": 498,
+          "excerpt": "func (mx *Mux) routeHTTP(w http.ResponseWriter, r *http.Request) {\n\t// Grab the route context object\n\trctx := r.Context().Value(RouteCtxKey).(*Context)\n\n\t// The request routing path\n\troutePath := rctx.RoutePath\n\tif routePath == \"\" {\n\t\tif r.URL.RawPath != \"\" {\n\t\t\troutePath = r.URL.RawPath\n\t\t} else {\n\t\t\troutePath = r.URL.Path\n\t\t}\n\t\tif routePath == \"\" {\n\t\t\troutePath = \"/\"\n\t\t}\n\t}\n\n\t// Check if method is supported by chi\n\tif rctx.RouteMethod == \"\" {\n\t\trctx.RouteMethod = r.Method\n\t}\n\tmethod, ok := methodMap[rctx.RouteMethod]\n\tif !ok {\n\t\tmx.MethodNotAllowedHandler().ServeHTTP(w, r)\n\t\treturn\n\t}\n\n\t// Find the route\n\tif _, _, h := mx.tree.FindRoute(rctx, method, routePath); h != nil {\n\t\t// Set http.Request path values from our request context\n\t\tfor i, key := range rctx.URLParams.Keys {\n\t\t\tvalue := rctx.URLParams.Values[i]\n\t\t\tr.SetPathValue(key, value)\n\t\t}\n\t\tr.Pattern = rctx.RoutePattern()\n\n\t\th.ServeHTTP(w, r)\n\t\treturn\n\t}\n\tif rctx.methodNotAllowed {\n\t\tmx.MethodNotAllowedHandler(rctx.methodsAllowed...).ServeHTTP(w, r)\n\t} else {\n\t\tmx.NotFoundHandler().ServeHTTP(w, r)\n\t}",
+          "sha256": "cc44c2d620e6306b16d6d80f5f6c70f02b5814b357a4f5823372818f355ae67d"
+        }
+      ]
+    },
+    {
+      "id": "q7",
+      "question": "For R = GET /hi registered by TestMuxPlain, give the source-supported path to the bye response and dynamic boundaries.",
+      "answer": "Get registers mGET through Mux.handle, which initializes the handler chain and inserts the route into the tree. Mux.ServeHTTP invokes the computed middleware handler; updateRouteHandler terminates that chain in routeHTTP. routeHTTP obtains a handler from FindRoute and calls its ServeHTTP. TestMuxPlain registers the /hi callback that writes bye and requests it through httptest.NewServer. Middleware and http.Handler dispatch are dynamic boundaries; this is a source-supported path, not a recorded execution. Equivalent terminology for the cited definitions is accepted; unsupported runtime claims are not.",
+      "requiredFacts": [
+        "Get registers mGET through Mux.handle, which initializes the handler chain and inserts the route into the tree.",
+        "Mux.ServeHTTP invokes the computed middleware handler; updateRouteHandler terminates that chain in routeHTTP.",
+        "routeHTTP obtains a handler from FindRoute and calls its ServeHTTP.",
+        "TestMuxPlain registers the /hi callback that writes bye and requests it through httptest.NewServer.",
+        "Middleware and http.Handler dispatch are dynamic boundaries; this is a source-supported path, not a recorded execution."
+      ],
+      "evidence": [
+        {
+          "path": "mux.go",
+          "startLine": 153,
+          "endLine": 157,
+          "excerpt": "// Get adds the route `pattern` that matches a GET http method to\n// execute the `handlerFn` http.HandlerFunc.\nfunc (mx *Mux) Get(pattern string, handlerFn http.HandlerFunc) {\n\tmx.handle(mGET, pattern, handlerFn)\n}",
+          "sha256": "cc44c2d620e6306b16d6d80f5f6c70f02b5814b357a4f5823372818f355ae67d"
+        },
+        {
+          "path": "mux.go",
+          "startLine": 430,
+          "endLine": 450,
+          "excerpt": "func (mx *Mux) handle(method methodTyp, pattern string, handler http.Handler) *node {\n\tif len(pattern) == 0 || pattern[0] != '/' {\n\t\tpanic(fmt.Sprintf(\"chi: routing pattern must begin with '/' in '%s'\", pattern))\n\t}\n\n\t// Build the computed routing handler for this routing pattern.\n\tif !mx.inline && mx.handler == nil {\n\t\tmx.updateRouteHandler()\n\t}\n\n\t// Build endpoint handler with inline middlewares for the route\n\tvar h http.Handler\n\tif mx.inline {\n\t\tmx.handler = http.HandlerFunc(mx.routeHTTP)\n\t\th = Chain(mx.middlewares...).Handler(handler)\n\t} else {\n\t\th = handler\n\t}\n\n\t// Add the endpoint to the tree and return the node\n\treturn mx.tree.InsertRoute(method, pattern, h)",
+          "sha256": "cc44c2d620e6306b16d6d80f5f6c70f02b5814b357a4f5823372818f355ae67d"
+        },
+        {
+          "path": "mux.go",
+          "startLine": 63,
+          "endLine": 91,
+          "excerpt": "func (mx *Mux) ServeHTTP(w http.ResponseWriter, r *http.Request) {\n\t// Ensure the mux has some routes defined on the mux\n\tif mx.handler == nil {\n\t\tmx.NotFoundHandler().ServeHTTP(w, r)\n\t\treturn\n\t}\n\n\t// Check if a routing context already exists from a parent router.\n\trctx, _ := r.Context().Value(RouteCtxKey).(*Context)\n\tif rctx != nil {\n\t\tmx.handler.ServeHTTP(w, r)\n\t\treturn\n\t}\n\n\t// Fetch a RouteContext object from the sync pool, and call the computed\n\t// mx.handler that is comprised of mx.middlewares + mx.routeHTTP.\n\t// Once the request is finished, reset the routing context and put it back\n\t// into the pool for reuse from another request.\n\trctx = mx.pool.Get().(*Context)\n\trctx.Reset()\n\trctx.Routes = mx\n\trctx.parentCtx = r.Context()\n\n\t// NOTE: r.WithContext() causes 2 allocations and context.WithValue() causes 1 allocation\n\tr = r.WithContext(context.WithValue(r.Context(), RouteCtxKey, rctx))\n\n\t// Serve the request and once its done, put the request context back in the sync pool\n\tmx.handler.ServeHTTP(w, r)\n\tmx.pool.Put(rctx)",
+          "sha256": "cc44c2d620e6306b16d6d80f5f6c70f02b5814b357a4f5823372818f355ae67d"
+        },
+        {
+          "path": "mux.go",
+          "startLine": 521,
+          "endLine": 527,
+          "excerpt": "// updateRouteHandler builds the single mux handler that is a chain of the middleware\n// stack, as defined by calls to Use(), and the tree router (Mux) itself. After this\n// point, no other middlewares can be registered on this Mux's stack. But you can still\n// compose additional middlewares via Group()'s or using a chained middleware handler.\nfunc (mx *Mux) updateRouteHandler() {\n\tmx.handler = chain(mx.middlewares, http.HandlerFunc(mx.routeHTTP))\n}",
+          "sha256": "cc44c2d620e6306b16d6d80f5f6c70f02b5814b357a4f5823372818f355ae67d"
+        },
+        {
+          "path": "mux.go",
+          "startLine": 482,
+          "endLine": 498,
+          "excerpt": "\t// Find the route\n\tif _, _, h := mx.tree.FindRoute(rctx, method, routePath); h != nil {\n\t\t// Set http.Request path values from our request context\n\t\tfor i, key := range rctx.URLParams.Keys {\n\t\t\tvalue := rctx.URLParams.Values[i]\n\t\t\tr.SetPathValue(key, value)\n\t\t}\n\t\tr.Pattern = rctx.RoutePattern()\n\n\t\th.ServeHTTP(w, r)\n\t\treturn\n\t}\n\tif rctx.methodNotAllowed {\n\t\tmx.MethodNotAllowedHandler(rctx.methodsAllowed...).ServeHTTP(w, r)\n\t} else {\n\t\tmx.NotFoundHandler().ServeHTTP(w, r)\n\t}",
+          "sha256": "cc44c2d620e6306b16d6d80f5f6c70f02b5814b357a4f5823372818f355ae67d"
+        },
+        {
+          "path": "mux_test.go",
+          "startLine": 245,
+          "endLine": 260,
+          "excerpt": "func TestMuxPlain(t *testing.T) {\n\tr := NewRouter()\n\tr.Get(\"/hi\", func(w http.ResponseWriter, r *http.Request) {\n\t\tw.Write([]byte(\"bye\"))\n\t})\n\tr.NotFound(func(w http.ResponseWriter, r *http.Request) {\n\t\tw.WriteHeader(404)\n\t\tw.Write([]byte(\"nothing here\"))\n\t})\n\n\tts := httptest.NewServer(r)\n\tdefer ts.Close()\n\n\tif _, body := testRequest(t, ts, \"GET\", \"/hi\", nil); body != \"bye\" {\n\t\tt.Fatal(body)\n\t}",
+          "sha256": "162d82fa10418b99baf750e3fbcb1fee018bfd654850a9f01382a175390dc965"
+        }
+      ]
+    },
+    {
+      "id": "q8",
+      "question": "If Y = node.FindRoute changes, which direct production consumers in Mux are evidenced?",
+      "answer": "Mux.Find directly calls tree.FindRoute for a pattern lookup. Mux.routeHTTP directly calls tree.FindRoute for request dispatch. Mux.Match calls Find and is therefore indirect, not a direct FindRoute caller. These call dependencies do not by themselves establish a specific response change. Equivalent terminology for the cited definitions is accepted; unsupported runtime claims are not.",
+      "requiredFacts": [
+        "Mux.Find directly calls tree.FindRoute for a pattern lookup.",
+        "Mux.routeHTTP directly calls tree.FindRoute for request dispatch.",
+        "Mux.Match calls Find and is therefore indirect, not a direct FindRoute caller.",
+        "These call dependencies do not by themselves establish a specific response change."
+      ],
+      "evidence": [
+        {
+          "path": "mux.go",
+          "startLine": 373,
+          "endLine": 388,
+          "excerpt": "func (mx *Mux) Match(rctx *Context, method, path string) bool {\n\treturn mx.Find(rctx, method, path) != \"\"\n}\n\n// Find searches the routing tree for the pattern that matches\n// the method/path.\n//\n// Note: the *Context state is updated during execution, so manage\n// the state carefully or make a NewRouteContext().\nfunc (mx *Mux) Find(rctx *Context, method, path string) string {\n\tm, ok := methodMap[method]\n\tif !ok {\n\t\treturn \"\"\n\t}\n\n\tnode, _, _ := mx.tree.FindRoute(rctx, m, path)",
+          "sha256": "cc44c2d620e6306b16d6d80f5f6c70f02b5814b357a4f5823372818f355ae67d"
+        },
+        {
+          "path": "mux.go",
+          "startLine": 482,
+          "endLine": 491,
+          "excerpt": "\t// Find the route\n\tif _, _, h := mx.tree.FindRoute(rctx, method, routePath); h != nil {\n\t\t// Set http.Request path values from our request context\n\t\tfor i, key := range rctx.URLParams.Keys {\n\t\t\tvalue := rctx.URLParams.Values[i]\n\t\t\tr.SetPathValue(key, value)\n\t\t}\n\t\tr.Pattern = rctx.RoutePattern()\n\n\t\th.ServeHTTP(w, r)",
+          "sha256": "cc44c2d620e6306b16d6d80f5f6c70f02b5814b357a4f5823372818f355ae67d"
+        }
+      ]
+    },
+    {
+      "id": "q9",
+      "question": "Which test exercises X = method/path dispatch, and how does it enter the implementation?",
+      "answer": "TestMuxPlain creates NewRouter and registers GET /hi with a handler that writes bye. httptest.NewServer(r) serves the router; testRequest sends GET /hi and asserts the returned body. It also checks the configured not-found response for /nothing-here. Equivalent terminology for the cited definitions is accepted; unsupported runtime claims are not.",
+      "requiredFacts": [
+        "TestMuxPlain creates NewRouter and registers GET /hi with a handler that writes bye.",
+        "httptest.NewServer(r) serves the router; testRequest sends GET /hi and asserts the returned body.",
+        "It also checks the configured not-found response for /nothing-here."
+      ],
+      "evidence": [
+        {
+          "path": "mux_test.go",
+          "startLine": 245,
+          "endLine": 264,
+          "excerpt": "func TestMuxPlain(t *testing.T) {\n\tr := NewRouter()\n\tr.Get(\"/hi\", func(w http.ResponseWriter, r *http.Request) {\n\t\tw.Write([]byte(\"bye\"))\n\t})\n\tr.NotFound(func(w http.ResponseWriter, r *http.Request) {\n\t\tw.WriteHeader(404)\n\t\tw.Write([]byte(\"nothing here\"))\n\t})\n\n\tts := httptest.NewServer(r)\n\tdefer ts.Close()\n\n\tif _, body := testRequest(t, ts, \"GET\", \"/hi\", nil); body != \"bye\" {\n\t\tt.Fatal(body)\n\t}\n\tif _, body := testRequest(t, ts, \"GET\", \"/nothing-here\", nil); body != \"nothing here\" {\n\t\tt.Fatal(body)\n\t}\n}",
+          "sha256": "162d82fa10418b99baf750e3fbcb1fee018bfd654850a9f01382a175390dc965"
+        },
+        {
+          "path": "mux.go",
+          "startLine": 60,
+          "endLine": 63,
+          "excerpt": "// ServeHTTP is the single method of the http.Handler interface that makes\n// Mux interoperable with the standard library. It uses a sync.Pool to get and\n// reuse routing contexts for each request.\nfunc (mx *Mux) ServeHTTP(w http.ResponseWriter, r *http.Request) {",
+          "sha256": "cc44c2d620e6306b16d6d80f5f6c70f02b5814b357a4f5823372818f355ae67d"
+        }
+      ]
+    },
+    {
+      "id": "q10",
+      "question": "Where does Z = URL path and captured path parameters enter and get transformed during chi routing?",
+      "answer": "routeHTTP chooses a context override or RawPath/Path, defaulting an empty path to /. FindRoute resets route-local captures, calls findRoute and appends captured keys/values into Context.URLParams. routeHTTP copies each captured parameter into http.Request.SetPathValue before invoking the endpoint. chi.URLParam reads the same routing context via URLParamFromCtx and RouteContext. Equivalent terminology for the cited definitions is accepted; unsupported runtime claims are not.",
+      "requiredFacts": [
+        "routeHTTP chooses a context override or RawPath/Path, defaulting an empty path to /.",
+        "FindRoute resets route-local captures, calls findRoute and appends captured keys/values into Context.URLParams.",
+        "routeHTTP copies each captured parameter into http.Request.SetPathValue before invoking the endpoint.",
+        "chi.URLParam reads the same routing context via URLParamFromCtx and RouteContext."
+      ],
+      "evidence": [
+        {
+          "path": "mux.go",
+          "startLine": 459,
+          "endLine": 470,
+          "excerpt": "\t// The request routing path\n\troutePath := rctx.RoutePath\n\tif routePath == \"\" {\n\t\tif r.URL.RawPath != \"\" {\n\t\t\troutePath = r.URL.RawPath\n\t\t} else {\n\t\t\troutePath = r.URL.Path\n\t\t}\n\t\tif routePath == \"\" {\n\t\t\troutePath = \"/\"\n\t\t}\n\t}",
+          "sha256": "cc44c2d620e6306b16d6d80f5f6c70f02b5814b357a4f5823372818f355ae67d"
+        },
+        {
+          "path": "tree.go",
+          "startLine": 383,
+          "endLine": 405,
+          "excerpt": "func (n *node) FindRoute(rctx *Context, method methodTyp, path string) (*node, endpoints, http.Handler) {\n\t// Reset the context routing pattern and params\n\trctx.routePattern = \"\"\n\trctx.routeParams.Keys = rctx.routeParams.Keys[:0]\n\trctx.routeParams.Values = rctx.routeParams.Values[:0]\n\n\t// Find the routing handlers for the path\n\trn := n.findRoute(rctx, method, path)\n\tif rn == nil {\n\t\treturn nil, nil, nil\n\t}\n\n\t// Record the routing params in the request lifecycle\n\trctx.URLParams.Keys = append(rctx.URLParams.Keys, rctx.routeParams.Keys...)\n\trctx.URLParams.Values = append(rctx.URLParams.Values, rctx.routeParams.Values...)\n\n\t// Record the routing pattern in the request lifecycle\n\tif rn.endpoints[method].pattern != \"\" {\n\t\trctx.routePattern = rn.endpoints[method].pattern\n\t\trctx.RoutePatterns = append(rctx.RoutePatterns, rctx.routePattern)\n\t}\n\n\treturn rn, rn.endpoints, rn.endpoints[method].handler",
+          "sha256": "f4b12b63b662fb8e36658172b36b35705cfb24eefae0665635f4fbd52e64fb79"
+        },
+        {
+          "path": "mux.go",
+          "startLine": 482,
+          "endLine": 491,
+          "excerpt": "\t// Find the route\n\tif _, _, h := mx.tree.FindRoute(rctx, method, routePath); h != nil {\n\t\t// Set http.Request path values from our request context\n\t\tfor i, key := range rctx.URLParams.Keys {\n\t\t\tvalue := rctx.URLParams.Values[i]\n\t\t\tr.SetPathValue(key, value)\n\t\t}\n\t\tr.Pattern = rctx.RoutePattern()\n\n\t\th.ServeHTTP(w, r)",
+          "sha256": "cc44c2d620e6306b16d6d80f5f6c70f02b5814b357a4f5823372818f355ae67d"
+        },
+        {
+          "path": "context.go",
+          "startLine": 10,
+          "endLine": 28,
+          "excerpt": "// URLParam returns the url parameter from a http.Request object.\nfunc URLParam(r *http.Request, key string) string {\n\treturn URLParamFromCtx(r.Context(), key)\n}\n\n// URLParamFromCtx returns the url parameter from a http.Request Context.\nfunc URLParamFromCtx(ctx context.Context, key string) string {\n\tif rctx := RouteContext(ctx); rctx != nil {\n\t\treturn rctx.URLParam(key)\n\t}\n\treturn \"\"\n}\n\n// RouteContext returns chi's routing Context object from a\n// http.Request Context.\nfunc RouteContext(ctx context.Context) *Context {\n\tval, _ := ctx.Value(RouteCtxKey).(*Context)\n\treturn val\n}",
+          "sha256": "b19edcca252e2fe74e82802c4c7ce1a1c0855728f9ede1288f0224283dfc7e53"
+        }
+      ]
+    }
+  ]
+}

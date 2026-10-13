@@ -1,0 +1,222 @@
+{
+  "repository": "fastify/fastify",
+  "arm": "map",
+  "commit": "86368086171305df4e235f6d6bec892c67ec2ae2",
+  "answers": [
+    {
+      "id": "fastify-q1",
+      "answer": "Fastify is a low-overhead Node.js web-server framework with routes, validation/serialization, logging, hooks and plugins. Application authors import its factory, register handlers and call listen; HTTP clients then invoke those routes through the Node server. Public tests likewise construct servers and make requests. It is a library consumed by applications, not a standalone application whose business handlers are fixed here.",
+      "citations": [
+        {
+          "url": "https://github.com/fastify/fastify/blob/86368086171305df4e235f6d6bec892c67ec2ae2/package.json#L1",
+          "lines": "1-7"
+        },
+        {
+          "url": "https://github.com/fastify/fastify/blob/86368086171305df4e235f6d6bec892c67ec2ae2/README.md#L100",
+          "lines": "100-180"
+        },
+        {
+          "url": "https://github.com/fastify/fastify/blob/86368086171305df4e235f6d6bec892c67ec2ae2/test/async-await.test.js#L1",
+          "lines": "1-106"
+        }
+      ]
+    },
+    {
+      "id": "fastify-q2",
+      "answer": "fastify.js assembles the public instance and plugin lifecycle (Avvio/encapsulation). lib/server.js creates HTTP/HTTPS/HTTP2 servers and manages listening. lib/route.js registers routes with find-my-way and creates request/reply contexts. lib/request.js and lib/reply.js expose request/response APIs; Reply handles sending and serialization. lib/handle-request.js runs the request lifecycle; lib/wrap-thenable.js handles returned promises. Hooks/content-type-parser provide lifecycle extension and body parsing. schema-controller/validation/schemas manage schema storage and validator/serializer compilers; defaults use the Fastify AJV and fast-json-stringify compiler packages. Logger-factory and error-handler support logging and failures.",
+      "citations": [
+        {
+          "url": "https://github.com/fastify/fastify/blob/86368086171305df4e235f6d6bec892c67ec2ae2/fastify.js#L38",
+          "lines": "38-480"
+        },
+        {
+          "url": "https://github.com/fastify/fastify/blob/86368086171305df4e235f6d6bec892c67ec2ae2/lib/server.js#L1",
+          "lines": "1-160"
+        },
+        {
+          "url": "https://github.com/fastify/fastify/blob/86368086171305df4e235f6d6bec892c67ec2ae2/lib/route.js#L76",
+          "lines": "76-591"
+        },
+        {
+          "url": "https://github.com/fastify/fastify/blob/86368086171305df4e235f6d6bec892c67ec2ae2/lib/reply.js#L1",
+          "lines": "1-250"
+        },
+        {
+          "url": "https://github.com/fastify/fastify/blob/86368086171305df4e235f6d6bec892c67ec2ae2/lib/schema-controller.js#L1",
+          "lines": "1-40"
+        },
+        {
+          "url": "https://github.com/fastify/fastify/blob/86368086171305df4e235f6d6bec892c67ec2ae2/lib/handle-request.js#L89",
+          "lines": "89-214"
+        },
+        {
+          "url": "https://github.com/fastify/fastify/blob/86368086171305df4e235f6d6bec892c67ec2ae2/lib/wrap-thenable.js#L12",
+          "lines": "12-53"
+        }
+      ]
+    },
+    {
+      "id": "fastify-q3",
+      "answer": "The production library is JavaScript/CommonJS on Node.js, packaged as npm fastify with main fastify.js and types fastify.d.ts; types/ supplies TypeScript declarations, with TypeScript examples/type tests. npm scripts use Node for generated validation/error-serializer builds, borp for unit tests, c8 for coverage, ESLint for linting and tstyche for type tests. The map shows one principal root package and separate esbuild/webpack package manifests under test/bundler, which are test fixtures rather than separate production services. An integration shell script is also present.",
+      "citations": [
+        {
+          "url": "https://github.com/fastify/fastify/blob/86368086171305df4e235f6d6bec892c67ec2ae2/package.json#L1",
+          "lines": "1-30"
+        },
+        {
+          "url": "https://github.com/fastify/fastify/blob/86368086171305df4e235f6d6bec892c67ec2ae2/package.json#L168",
+          "lines": "168-221"
+        },
+        {
+          "url": "https://github.com/fastify/fastify/blob/86368086171305df4e235f6d6bec892c67ec2ae2/fastify.d.ts#L1",
+          "lines": "1-40"
+        },
+        {
+          "url": "https://github.com/fastify/fastify/blob/86368086171305df4e235f6d6bec892c67ec2ae2/test/bundler/esbuild/package.json#L1",
+          "lines": "1-20"
+        },
+        {
+          "url": "https://github.com/fastify/fastify/blob/86368086171305df4e235f6d6bec892c67ec2ae2/test/bundler/webpack/package.json#L1",
+          "lines": "1-20"
+        },
+        {
+          "url": "https://github.com/fastify/fastify/blob/86368086171305df4e235f6d6bec892c67ec2ae2/integration/test.sh#L1",
+          "lines": "1-24"
+        }
+      ]
+    },
+    {
+      "id": "fastify-q4",
+      "answer": "Begin with require('fastify')(options), or import the default/named fastify factory and call it. package.json points to fastify.js; its fastify(serverOptions) factory starts at line 89, processes options, builds routing and creates the server. The factory is exported directly and through .fastify/.default. Applications then register routes and call listen.",
+      "citations": [
+        {
+          "url": "https://github.com/fastify/fastify/blob/86368086171305df4e235f6d6bec892c67ec2ae2/package.json#L1",
+          "lines": "1-7"
+        },
+        {
+          "url": "https://github.com/fastify/fastify/blob/86368086171305df4e235f6d6bec892c67ec2ae2/fastify.js#L89",
+          "lines": "89-120"
+        },
+        {
+          "url": "https://github.com/fastify/fastify/blob/86368086171305df4e235f6d6bec892c67ec2ae2/fastify.js#L994",
+          "lines": "994-1009"
+        },
+        {
+          "url": "https://github.com/fastify/fastify/blob/86368086171305df4e235f6d6bec892c67ec2ae2/README.md#L100",
+          "lines": "100-150"
+        }
+      ]
+    },
+    {
+      "id": "fastify-q5",
+      "answer": "X is lib/wrap-thenable.js, wrapThenable's fulfillment callback (14-53), which calls reply.send(payload). lib/handle-request.js invokes wrapThenable at line 206 after detecting a thenable returned by the configured handler. Hijacked replies are skipped; an undefined result is sent only when the reply/headers are unsent and the request/socket remains live.",
+      "citations": [
+        {
+          "url": "https://github.com/fastify/fastify/blob/86368086171305df4e235f6d6bec892c67ec2ae2/lib/wrap-thenable.js#L12",
+          "lines": "12-53"
+        },
+        {
+          "url": "https://github.com/fastify/fastify/blob/86368086171305df4e235f6d6bec892c67ec2ae2/lib/handle-request.js#L171",
+          "lines": "171-214"
+        }
+      ]
+    },
+    {
+      "id": "fastify-q6",
+      "answer": "Seven direct internal dependencies, all proven by outgoing require declarations: wrap-thenable (4), validation (5), hooks (6), errors (7-10), error-status (11), symbols (12-19), content-type (20). Direction is handle-request.js → required module, not the reverse. node:diagnostics_channel is an additional Node built-in, not an internal module.",
+      "citations": [
+        {
+          "url": "https://github.com/fastify/fastify/blob/86368086171305df4e235f6d6bec892c67ec2ae2/lib/handle-request.js#L1",
+          "lines": "1-20"
+        }
+      ]
+    },
+    {
+      "id": "fastify-q7",
+      "answer": "With no prior error/sent reply: handleRequest → handler → optional preValidation hooks → preValidationCallback → validateSchema → validationCompleted → optional preHandler hooks → preHandlerCallback → preHandlerCallbackInner → context.handler → wrapThenable → fulfillment callback → reply.send(payload). Dynamic boundaries are configured hooks/validators, context.handler, promise scheduling, diagnostics runStores and receiver-dispatched reply.send. Validation/errors or an already-sent reply can stop progression; hijack or an undefined payload with a non-live/already-sent response suppresses automatic sending.",
+      "citations": [
+        {
+          "url": "https://github.com/fastify/fastify/blob/86368086171305df4e235f6d6bec892c67ec2ae2/lib/handle-request.js#L24",
+          "lines": "24-214"
+        },
+        {
+          "url": "https://github.com/fastify/fastify/blob/86368086171305df4e235f6d6bec892c67ec2ae2/lib/wrap-thenable.js#L12",
+          "lines": "12-53"
+        },
+        {
+          "url": "https://github.com/fastify/fastify/blob/86368086171305df4e235f6d6bec892c67ec2ae2/lib/reply.js#L150",
+          "lines": "150-250"
+        }
+      ]
+    },
+    {
+      "id": "fastify-q8",
+      "answer": "Two direct production consumers: lib/route.js requires the exported handleRequest function (line 5), using it from runPreParsing; lib/reply.js requires the Symbol.for('internals') export (line 36), using preHandlerCallback for not-found processing. Test consumers also exist but are outside the requested production set. This is the complete direct static-import set returned by the module's map incoming edges, not an assertion about arbitrary runtime require calls.",
+      "citations": [
+        {
+          "url": "https://github.com/fastify/fastify/blob/86368086171305df4e235f6d6bec892c67ec2ae2/lib/route.js#L1",
+          "lines": "1-6"
+        },
+        {
+          "url": "https://github.com/fastify/fastify/blob/86368086171305df4e235f6d6bec892c67ec2ae2/lib/route.js#L651",
+          "lines": "651-666"
+        },
+        {
+          "url": "https://github.com/fastify/fastify/blob/86368086171305df4e235f6d6bec892c67ec2ae2/lib/reply.js#L28",
+          "lines": "28-40"
+        },
+        {
+          "url": "https://github.com/fastify/fastify/blob/86368086171305df4e235f6d6bec892c67ec2ae2/lib/handle-request.js#L216",
+          "lines": "216-217"
+        }
+      ]
+    },
+    {
+      "id": "fastify-q9",
+      "answer": "test/async-await.test.js, test('async await'), exercises X publicly. It requires '..', constructs Fastify(), registers GET '/' with async awaitMyFunc (49-52) that waits and returns {hello:'world'}, and also registers an immediately resolving async '/no-await'. It listens on port 0, fetches both routes, and checks HTTP 200, content-length and returned JSON. Thus it enters through the package factory, public route registration and actual HTTP requests, rather than directly invoking wrapThenable. I inspected this test; I did not execute it.",
+      "citations": [
+        {
+          "url": "https://github.com/fastify/fastify/blob/86368086171305df4e235f6d6bec892c67ec2ae2/test/async-await.test.js#L1",
+          "lines": "1-106"
+        }
+      ]
+    },
+    {
+      "id": "fastify-q10",
+      "answer": "Public registration can start at fastify.query, which delegates a QUERY route to prepareRoute (204-206); QUERY belongs to the default bodywith set. A matched request runs routeHandler/onRequest → runPreParsing → handleRequest. There, missing Content-Type on QUERY sets kReplyIsError and sends status 400 with FST_ERR_ROUTE_MISSING_CONTENT_TYPE(method), returning before parsing, validation or the route handler—even if no body was supplied. This assumes earlier hooks have not already replied/failed.",
+      "citations": [
+        {
+          "url": "https://github.com/fastify/fastify/blob/86368086171305df4e235f6d6bec892c67ec2ae2/fastify.js#L130",
+          "lines": "130-155"
+        },
+        {
+          "url": "https://github.com/fastify/fastify/blob/86368086171305df4e235f6d6bec892c67ec2ae2/fastify.js#L204",
+          "lines": "204-206"
+        },
+        {
+          "url": "https://github.com/fastify/fastify/blob/86368086171305df4e235f6d6bec892c67ec2ae2/lib/route.js#L651",
+          "lines": "651-666"
+        },
+        {
+          "url": "https://github.com/fastify/fastify/blob/86368086171305df4e235f6d6bec892c67ec2ae2/lib/handle-request.js#L24",
+          "lines": "24-87"
+        }
+      ]
+    }
+  ],
+  "toolErrors": [
+    "web.open returned Internal Error for pinned raw test/query.test.js; no source content was obtained and its existence was not assumed.",
+    "web.open returned Internal Error for the pinned GitHub test directory tree.",
+    "Several combined tool outputs were truncated. Two attempts to JSON.parse large MCP command results failed with SyntaxError: Unexpected token 'W' because the output began with a truncation Warning. Smaller module queries succeeded; no trial reset.",
+    "Broad lattice_find QUERY/async-await searches were paginated or truncated and were not treated as exhaustive. Direct module incoming edges for handle-request.js were untruncated."
+  ],
+  "limitations": [
+    "Static source/map inspection only; no builds, installs, tests or live Fastify request execution.",
+    "Configured callbacks, promise scheduling, receiver-method dispatch and external dependency internals are dynamic boundaries; a static map is not a runtime trace.",
+    "The exported map reports unsupported shell analysis for one shell file; shell inventory is not a verified call graph.",
+    "Web raw rendering compressed some blank lines, so citations use source-line spans supplied by the pinned map where available and enclosing source ranges otherwise.",
+    "Authoritative token telemetry was unavailable; no measured token count is claimed."
+  ],
+  "selfReportedStartedAt": "2026-10-13T07:59:08Z",
+  "selfReportedFinishedAt": "2026-10-13T08:02:50Z"
+}

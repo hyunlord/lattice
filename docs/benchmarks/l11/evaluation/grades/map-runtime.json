@@ -1,0 +1,151 @@
+{
+  "repository": "dotnet/runtime",
+  "commit": "8630d8988107478d249e2fdb8162f8c7dcbd3dbb",
+  "arm": "map",
+  "gradedBy": "independent fresh grader map-runtime",
+  "answerSha256": "aab1fbc8e375a90d7cbed713c4366be8d451d38f3c32f7d8f30cccbc35082c6a",
+  "questions": [
+    {
+      "id": "runtime-q1",
+      "score": 2,
+      "reason": "Correct repository-wide runtime/library/shared-host/installers scope and managed/native launch consumers. The HTTP answers are treated as a selected slice, not the entire repository.",
+      "sourceReferences": [
+        "https://github.com/dotnet/runtime/blob/8630d8988107478d249e2fdb8162f8c7dcbd3dbb/README.md#L16-L26",
+        "https://github.com/dotnet/runtime/blob/8630d8988107478d249e2fdb8162f8c7dcbd3dbb/docs/design/features/host-components.md#L5-L38"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "runtime-q2",
+      "score": 2,
+      "reason": "Covers the two engines, runtime-coupled CoreLib, wider library APIs, native shims, hosting and packaging responsibilities. Named pinned documents substantiate the components despite inaccurate supplied ranges.",
+      "sourceReferences": [
+        "https://github.com/dotnet/runtime/blob/8630d8988107478d249e2fdb8162f8c7dcbd3dbb/docs/workflow/README.md#L62-L92",
+        "https://github.com/dotnet/runtime/blob/8630d8988107478d249e2fdb8162f8c7dcbd3dbb/src/mono/README.md#L3-L4",
+        "https://github.com/dotnet/runtime/blob/8630d8988107478d249e2fdb8162f8c7dcbd3dbb/docs/design/coreclr/botr/README.md#L13-L22",
+        "https://github.com/dotnet/runtime/blob/8630d8988107478d249e2fdb8162f8c7dcbd3dbb/docs/workflow/building/libraries/README.md#L75"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "runtime-q3",
+      "score": 1,
+      "reason": "Correct languages, managed projects/platform pivots, root subsets and native-shim CMake boundary. Does not state the frozen CoreCLR CMake fact; native-library shims do not establish that separate engine boundary. Analyzer language-support caution is not factual credit.",
+      "sourceReferences": [
+        "https://github.com/dotnet/runtime/blob/8630d8988107478d249e2fdb8162f8c7dcbd3dbb/docs/workflow/README.md#L62-L92",
+        "https://github.com/dotnet/runtime/blob/8630d8988107478d249e2fdb8162f8c7dcbd3dbb/docs/workflow/building/libraries/README.md#L118-L120",
+        "https://github.com/dotnet/runtime/blob/8630d8988107478d249e2fdb8162f8c7dcbd3dbb/docs/workflow/building/libraries/README.md#L165-L187",
+        "https://github.com/dotnet/runtime/blob/8630d8988107478d249e2fdb8162f8c7dcbd3dbb/src/libraries/System.Net.Http/src/System/Net/Http/HttpClientHandler.cs#L13-L23",
+        "https://github.com/dotnet/runtime/blob/8630d8988107478d249e2fdb8162f8c7dcbd3dbb/src/coreclr/CMakeLists.txt#L1-L12"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": true
+    },
+    {
+      "id": "runtime-q4",
+      "score": 2,
+      "reason": "Complete public GET creation/send path through invoker, default handler and conditional sockets dispatch, with injected/platform handlers correctly bounded. The explicit named definitions are verified in the cited pinned files; many supplied line numbers target other methods.",
+      "sourceReferences": [
+        "https://github.com/dotnet/runtime/blob/8630d8988107478d249e2fdb8162f8c7dcbd3dbb/src/libraries/System.Net.Http/src/System/Net/Http/HttpClient.cs#L143-L157",
+        "https://github.com/dotnet/runtime/blob/8630d8988107478d249e2fdb8162f8c7dcbd3dbb/src/libraries/System.Net.Http/src/System/Net/Http/HttpClient.cs#L365-L387",
+        "https://github.com/dotnet/runtime/blob/8630d8988107478d249e2fdb8162f8c7dcbd3dbb/src/libraries/System.Net.Http/src/System/Net/Http/HttpClient.cs#L526-L544",
+        "https://github.com/dotnet/runtime/blob/8630d8988107478d249e2fdb8162f8c7dcbd3dbb/src/libraries/System.Net.Http/src/System/Net/Http/HttpMessageInvoker.cs#L67-L78",
+        "https://github.com/dotnet/runtime/blob/8630d8988107478d249e2fdb8162f8c7dcbd3dbb/src/libraries/System.Net.Http/src/System/Net/Http/HttpClientHandler.cs#L13-L23",
+        "https://github.com/dotnet/runtime/blob/8630d8988107478d249e2fdb8162f8c7dcbd3dbb/src/libraries/System.Net.Http/src/System/Net/Http/HttpClientHandler.cs#L364-L367",
+        "https://github.com/dotnet/runtime/blob/8630d8988107478d249e2fdb8162f8c7dcbd3dbb/src/libraries/System.Net.Http/src/System/Net/Http/SocketsHttpHandler/SocketsHttpHandler.cs#L676-L705"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "runtime-q5",
+      "score": 2,
+      "reason": "Names the decision and application definitions and correctly covers POST-only 300/301/302, 303 except GET/HEAD, other statuses unchanged, content removal and chunked reset. Verified named definitions in the pinned URL satisfy citation credit although supplied ranges are shifted.",
+      "sourceReferences": [
+        "https://github.com/dotnet/runtime/blob/8630d8988107478d249e2fdb8162f8c7dcbd3dbb/src/libraries/System.Net.Http/src/System/Net/Http/SocketsHttpHandler/RedirectHandler.cs#L65-L78",
+        "https://github.com/dotnet/runtime/blob/8630d8988107478d249e2fdb8162f8c7dcbd3dbb/src/libraries/System.Net.Http/src/System/Net/Http/SocketsHttpHandler/RedirectHandler.cs#L158-L171"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "runtime-q6",
+      "score": 2,
+      "reason": "Complete direct-use inventory, conditional wrapping order, delegate factory distinction and atomic chain publication. No invented direct constructor edge. Provided range mostly precedes the body; named pinned definition independently verifies the claims.",
+      "sourceReferences": [
+        "https://github.com/dotnet/runtime/blob/8630d8988107478d249e2fdb8162f8c7dcbd3dbb/src/libraries/System.Net.Http/src/System/Net/Http/SocketsHttpHandler/SocketsHttpHandler.cs#L589-L639"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "runtime-q7",
+      "score": 2,
+      "reason": "The explicit q4 cross-reference supplies client/invoker/default forwarding, and this answer adds POST creation, conditional pool/connection boundaries and the allowed-302 rewrite/resend without guaranteeing 200. Source supports the described path.",
+      "sourceReferences": [
+        "https://github.com/dotnet/runtime/blob/8630d8988107478d249e2fdb8162f8c7dcbd3dbb/src/libraries/System.Net.Http/src/System/Net/Http/HttpClient.cs#L398-L403",
+        "https://github.com/dotnet/runtime/blob/8630d8988107478d249e2fdb8162f8c7dcbd3dbb/src/libraries/System.Net.Http/src/System/Net/Http/SocketsHttpHandler/HttpConnectionHandler.cs#L20-L23",
+        "https://github.com/dotnet/runtime/blob/8630d8988107478d249e2fdb8162f8c7dcbd3dbb/src/libraries/System.Net.Http/src/System/Net/Http/SocketsHttpHandler/HttpConnectionPoolManager.cs#L354-L401",
+        "https://github.com/dotnet/runtime/blob/8630d8988107478d249e2fdb8162f8c7dcbd3dbb/src/libraries/System.Net.Http/src/System/Net/Http/SocketsHttpHandler/ConnectionPool/HttpConnectionPool.cs#L356-L405",
+        "https://github.com/dotnet/runtime/blob/8630d8988107478d249e2fdb8162f8c7dcbd3dbb/src/libraries/System.Net.Http/src/System/Net/Http/SocketsHttpHandler/RedirectHandler.cs#L27-L90"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "runtime-q8",
+      "score": 2,
+      "reason": "Correct direct consumer, auto-redirect gate, maximum limit, inner stage and CredentialCache-dependent auth flag; effects are conditional on traversal. Exact named consumer verified despite inaccurate range.",
+      "sourceReferences": [
+        "https://github.com/dotnet/runtime/blob/8630d8988107478d249e2fdb8162f8c7dcbd3dbb/src/libraries/System.Net.Http/src/System/Net/Http/SocketsHttpHandler/SocketsHttpHandler.cs#L612-L617",
+        "https://github.com/dotnet/runtime/blob/8630d8988107478d249e2fdb8162f8c7dcbd3dbb/src/libraries/System.Net.Http/src/System/Net/Http/SocketsHttpHandler/RedirectHandler.cs#L19-L25"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "runtime-q9",
+      "score": 1,
+      "reason": "Correct named matrix/theory, supplemental chunking test, inherited variants, loopback/public client entry and no-execution qualification. Does not describe the required redirected-method plus final-200 assertions or explicitly identify the loopback Location response. Those facts are in the cited source but are not supplied in the answer.",
+      "sourceReferences": [
+        "https://github.com/dotnet/runtime/blob/8630d8988107478d249e2fdb8162f8c7dcbd3dbb/src/libraries/Common/tests/System/Net/Http/HttpClientHandlerTest.AutoRedirect.cs#L22-L82",
+        "https://github.com/dotnet/runtime/blob/8630d8988107478d249e2fdb8162f8c7dcbd3dbb/src/libraries/System.Net.Http/tests/FunctionalTests/SocketsHttpHandlerTest.cs#L1534-L1539",
+        "https://github.com/dotnet/runtime/blob/8630d8988107478d249e2fdb8162f8c7dcbd3dbb/src/libraries/System.Net.Http/tests/FunctionalTests/SyncHttpHandlerTest.cs#L47-L50",
+        "https://github.com/dotnet/runtime/blob/8630d8988107478d249e2fdb8162f8c7dcbd3dbb/src/libraries/Common/tests/System/Net/Http/HttpClientHandlerTestBase.cs#L149-L160",
+        "https://github.com/dotnet/runtime/blob/8630d8988107478d249e2fdb8162f8c7dcbd3dbb/src/libraries/System.Net.Http/src/System/Net/Http/SocketsHttpHandler/HttpMessageHandlerStage.cs#L11-L21"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": true
+    },
+    {
+      "id": "runtime-q10",
+      "score": 1,
+      "reason": "Accurate HTTP/1.x ingress/lazy URI parsing plus relative resolution, fragment inheritance, missing Location, scheme checks and assignment/resend. Omits the required redirect-status gate before Location use. HTTP/2/3 scope limitation is honest and does not replace that missing fact.",
+      "sourceReferences": [
+        "https://github.com/dotnet/runtime/blob/8630d8988107478d249e2fdb8162f8c7dcbd3dbb/src/libraries/System.Net.Http/src/System/Net/Http/SocketsHttpHandler/HttpConnection.cs#L1134-L1325",
+        "https://github.com/dotnet/runtime/blob/8630d8988107478d249e2fdb8162f8c7dcbd3dbb/src/libraries/System.Net.Http/src/System/Net/Http/Headers/KnownHeaders.cs#L66",
+        "https://github.com/dotnet/runtime/blob/8630d8988107478d249e2fdb8162f8c7dcbd3dbb/src/libraries/System.Net.Http/src/System/Net/Http/Headers/HttpResponseHeaders.cs#L47-L50",
+        "https://github.com/dotnet/runtime/blob/8630d8988107478d249e2fdb8162f8c7dcbd3dbb/src/libraries/System.Net.Http/src/System/Net/Http/Headers/HttpHeaders.cs#L806-L818",
+        "https://github.com/dotnet/runtime/blob/8630d8988107478d249e2fdb8162f8c7dcbd3dbb/src/libraries/System.Net.Http/src/System/Net/Http/Headers/HttpHeaders.cs#L1059-L1066",
+        "https://github.com/dotnet/runtime/blob/8630d8988107478d249e2fdb8162f8c7dcbd3dbb/src/libraries/System.Net.Http/src/System/Net/Http/Headers/UriHeaderParser.cs#L26-L51",
+        "https://github.com/dotnet/runtime/blob/8630d8988107478d249e2fdb8162f8c7dcbd3dbb/src/libraries/System.Net.Http/src/System/Net/Http/SocketsHttpHandler/RedirectHandler.cs#L93-L156",
+        "https://github.com/dotnet/runtime/blob/8630d8988107478d249e2fdb8162f8c7dcbd3dbb/src/libraries/System.Net.Http/src/System/Net/Http/SocketsHttpHandler/RedirectHandler.cs#L65-L87"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": true
+    }
+  ],
+  "total": 17,
+  "referenceIssues": [],
+  "limitations": [
+    "Pinned local HEAD matches the registered commit and the checkout is clean. All Runtime oracle source hashes and normalized excerpts matched pinned Git blobs; no reference contradiction found.",
+    "Verification is static, read-only source inspection. No target builds, tests or network scenarios were executed.",
+    "Answer citations use correct pinned file URLs but many supplied line spans do not cover their named definitions. Per grading instructions, verified explicit definitions in those pinned files count as citations; grader sourceReferences record actual verification locations. Missing answer facts were not inferred from those files for full credit.",
+    "Notable inaccurate spans: q4 HttpClient 331-349 is GetStreamAsyncCore, not GetAsync (386-387); 467-495 is synchronous Send, not SendAsync (526-544); HttpClientHandler 336-339 is SslProtocols, not forwarding (364-367); sockets SendAsync is 676-705 rather than 622-649.",
+    "Other inaccurate spans: q5 predicate is RedirectHandler 158-171 rather than 141-153, rewrite is 65-78; q6 SetupHandlerChain is 589-633 rather than 546-590; q8 construction is sockets 612-617 rather than 565-570; q7 PostAsync is HttpClient 398-403 rather than 351-362.",
+    "q9 sockets test inheritance is 1534-1539 rather than 1379-1384. q10 KnownHeaders.Location is 66 rather than 65; HttpResponseHeaders.Location is 47-50 rather than 42-45; lazy parse helpers are HttpHeaders 806-818 and 1059-1066 rather than 733-748 and 964-971; header add/store is HttpConnection 1232-1325; RequestUri assignment is RedirectHandler 65 rather than 56-57.",
+    "Answer reports incomplete map and unavailable MCP analysis and attributes substantive conclusions to pinned source reading. This is retained as an analyzer limitation, not validated map capability or a reason to restore omitted factual credit."
+  ]
+}

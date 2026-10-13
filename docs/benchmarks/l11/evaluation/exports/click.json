@@ -1,0 +1,70 @@
+{
+  "repository": "click",
+  "commit": "2247b35ea1c47c727d7a06e51fa280e12a863ff6",
+  "candidate": "2b7c00f",
+  "startedAt": "2026-10-13T07:12:00.388Z",
+  "reused": false,
+  "priorSetupFailure": {
+    "repository": "click",
+    "commit": "2247b35ea1c47c727d7a06e51fa280e12a863ff6",
+    "candidate": "2b7c00f",
+    "startedAt": "2026-10-13T07:11:27.769Z",
+    "reused": false,
+    "command": [
+      "node",
+      "/tmp/lattice-l11-first-impression/bin/lattice.mjs",
+      "export",
+      "/tmp/l11-visual/click",
+      "--root",
+      "/tmp/l9-benchmark-core/repos/click",
+      "--no-lens",
+      "--cache-dir",
+      "/tmp/l11-visual-cache/click",
+      "--force",
+      "--json"
+    ],
+    "exitCode": 2,
+    "timedOut": false,
+    "seconds": 0.232269041,
+    "status": "failed",
+    "finishedAt": "2026-10-13T07:11:28.001Z"
+  },
+  "buildCommand": [
+    "node",
+    "/tmp/lattice-l11-first-impression/bin/lattice.mjs",
+    "build",
+    "--root",
+    "/tmp/l9-benchmark-core/repos/click",
+    "--no-lens",
+    "--cache-dir",
+    "/tmp/l11-visual-cache/click",
+    "--json"
+  ],
+  "buildExitCode": 0,
+  "command": [
+    "node",
+    "/tmp/lattice-l11-first-impression/bin/lattice.mjs",
+    "export",
+    "/tmp/l11-visual/click",
+    "--root",
+    "/tmp/l9-benchmark-core/repos/click",
+    "--no-lens",
+    "--cache-dir",
+    "/tmp/l11-visual-cache/click",
+    "--force",
+    "--json"
+  ],
+  "exitCode": 0,
+  "timedOut": false,
+  "seconds": 5.558701417,
+  "graphHash": "2500d50c938d9870f34d1fa6e50d6795b2eeb96c5f0bee2b1d52de829a5099e6",
+  "source": {
+    "name": "click",
+    "dirty": false,
+    "sourceFingerprint": "82c60b930a55455b7e14b68b0960bde2f7b8196005f1cb103e57f18c7e580688",
+    "commit": "2247b35ea1c47c727d7a06e51fa280e12a863ff6",
+    "remoteUrl": "https://github.com/pallets/click"
+  },
+  "status": "ready",
+  "finishedAt": "2026-10-13T07:12:05.948Z"
+}

@@ -1,0 +1,133 @@
+{
+  "repository": "excalidraw/excalidraw",
+  "commit": "e65eca999e071503efb893d3379a29fb96ff37c4",
+  "arm": "direct",
+  "gradedBy": "independent fresh grader direct-excalidraw",
+  "answerSha256": "c4825daf48a4ff60fbb6edb8f1635100907674bc41a4b1c4429b1d26f3b8b88e",
+  "questions": [
+    {
+      "id": "excalidraw-q1",
+      "score": 2,
+      "reason": "Complete product, hosted-app and embedded React-package distinction. Pinned README and package manifest support the claims; README line spans are imperfect but the pinned file is identifiable.",
+      "sourceReferences": [
+        "README.md:54-95",
+        "packages/excalidraw/package.json:41-47"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "excalidraw-q2",
+      "score": 2,
+      "reason": "All four required component responsibilities are stated and supported by pinned package descriptions and editor/application source. No independently deployed service hierarchy is invented.",
+      "sourceReferences": [
+        "packages/excalidraw/index.tsx:210-265,401-429",
+        "packages/element/package.json:31",
+        "packages/math/package.json:25",
+        "packages/element/src/index.ts:59-104"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "excalidraw-q3",
+      "score": 2,
+      "reason": "Complete TypeScript/React, Yarn workspace, Vite/Vitest/tsc and separate app/editor build organization, supported by manifests and build source.",
+      "sourceReferences": [
+        "package.json:1-9,36-74",
+        "tsconfig.json:3-38",
+        "excalidraw-app/package.json:35-52",
+        "packages/excalidraw/package.json:72-79",
+        "scripts/buildPackage.js:59-80,108-124"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": true
+    },
+    {
+      "id": "excalidraw-q4",
+      "score": 1,
+      "reason": "Correct public reexport, implementation file and library-entry distinction, but omits the required input contract (target elements, existing context and options). The claimed definition at line 891 is inaccurate; the pinned definition starts at 946. Pinned source URL remains verifiable.",
+      "sourceReferences": [
+        "packages/excalidraw/index.tsx:415-420",
+        "packages/excalidraw/data/restore.ts:946-957",
+        "packages/excalidraw/package.json:28-32"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "excalidraw-q5",
+      "score": 2,
+      "reason": "Complete predicate location and geometry cases, including fewer than two points, two-point arrow tolerance and both-zero dimensions. Coordinate-wise strict tolerance is supported by pointsEqual. Some cited spans truncate the relevant definitions.",
+      "sourceReferences": [
+        "packages/element/src/sizeHelpers.ts:56-78",
+        "packages/math/src/point.ts:108-115",
+        "packages/element/src/typeChecks.ts:100-127,159-164"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "excalidraw-q6",
+      "score": 2,
+      "reason": "All three declared internal dependencies and element-to-dependency direction are correct. Clearly frames this as manifest evidence rather than universal function execution.",
+      "sourceReferences": [
+        "packages/element/package.json:65-70"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "excalidraw-q7",
+      "score": 2,
+      "reason": "Complete migration-before-check, original-element predicate, guarded version bump/tombstone retention, index synchronization, optional binding repair and failed-migration distinctions. Pinned files verify the explicit symbols despite shifted citation ranges.",
+      "sourceReferences": [
+        "packages/excalidraw/data/restore.ts:430-528,727-731,965-1017",
+        "packages/element/src/mutateElement.ts:188-195",
+        "packages/element/src/fractionalIndex.ts:223-234"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": true
+    },
+    {
+      "id": "excalidraw-q8",
+      "score": 1,
+      "reason": "Correctly identifies both requested direct calls and conditional impact, and distinguishes an element-barrel reexport from calls. However, the frozen required fact also names the editor public-index reexport; that exposure is omitted in this answer.",
+      "sourceReferences": [
+        "packages/excalidraw/data/restore.ts:986-998",
+        "packages/element/src/index.ts:3,43-57,95",
+        "packages/excalidraw/index.tsx:412"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": true
+    },
+    {
+      "id": "excalidraw-q9",
+      "score": 2,
+      "reason": "Complete test identification, mocked predicate, enabled option, retained tombstone assertion and real-geometry limitation. Test is present in the pinned cited file but at lines 143-152 rather than 132-140.",
+      "sourceReferences": [
+        "packages/excalidraw/tests/data/restore.test.ts:41-49,143-152"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": true
+    },
+    {
+      "id": "excalidraw-q10",
+      "score": 1,
+      "reason": "Correct option entry, forwarding, deletion guard, version bump and retained deletion state. Omits the frozen required distinction that the predicate receives the original element rather than the migrated element. That fact appears in q7 but is not supplied by this exact answer.",
+      "sourceReferences": [
+        "packages/excalidraw/data/restore.ts:946-998",
+        "excalidraw-app/App.tsx:243-246,269-272"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    }
+  ],
+  "total": 17,
+  "referenceIssues": [],
+  "limitations": [
+    "Read-only grading against pinned Git blobs; no target builds or tests executed. All frozen Excalidraw evidence file hashes and logical excerpts matched the pinned commit.",
+    "Answer citation line numbers frequently drift from actual pinned source lines, including public reexports, restoreElements, predicate, test and version/index helpers. Identifiable pinned URLs plus explicitly named definitions were accepted as source citations; sourceReferences record verified locations, not corrected answer content.",
+    "Reported browser/path-access errors and static-analysis/runtime limits do not substitute for missing required facts."
+  ]
+}

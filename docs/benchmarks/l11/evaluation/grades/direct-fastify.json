@@ -1,0 +1,139 @@
+{
+  "repository": "fastify",
+  "commit": "86368086171305df4e235f6d6bec892c67ec2ae2",
+  "arm": "direct",
+  "gradedBy": "independent fresh grader batch1",
+  "answerSha256": "8c8457704f5f15efb01179d265a2b3e3a819653803a136996ef28b0491ed7dba",
+  "questions": [
+    {
+      "id": "fastify-q1",
+      "score": 2,
+      "reason": "Correct Node.js web-framework purpose, application factory/registration/listen consumers and HTTP-client request entry.",
+      "sourceReferences": [
+        "package.json:1-7",
+        "README.md:105-138"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "fastify-q2",
+      "score": 1,
+      "reason": "Useful broad component map, but omits handle-request.js request lifecycle and wrap-thenable.js promise-settlement responsibilities, which are principal components of the selected behavior.",
+      "sourceReferences": [
+        "fastify.js:40-54",
+        "lib/server.js:20-32",
+        "lib/route.js:140-147",
+        "lib/route.js:460-461",
+        "lib/handle-request.js:89-122",
+        "lib/handle-request.js:187-209",
+        "lib/wrap-thenable.js:12-45"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "fastify-q3",
+      "score": 2,
+      "reason": "Correct CommonJS Node root package/main, declaration entry, borp/tstyche/ESLint and validation-generation tooling.",
+      "sourceReferences": [
+        "package.json:1-30",
+        "fastify.js:1-7"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "fastify-q4",
+      "score": 2,
+      "reason": "Correct package factory, export aliases and caller-owned startup. Factory/export numeric spans are shifted, but the explicit definitions exist in the pinned cited file.",
+      "sourceReferences": [
+        "package.json:1-7",
+        "fastify.js:86-95",
+        "fastify.js:1005-1009",
+        "README.md:119-138"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "fastify-q5",
+      "score": 2,
+      "reason": "Correctly locates resolved-payload sending in wrapThenable, explains thenable dispatch and guarded reply.send, including hijacking/undefined and duplicate-send handling. Promise rejection is adjacent behavior, not the asked resolved-value feature.",
+      "sourceReferences": [
+        "lib/handle-request.js:187-209",
+        "lib/wrap-thenable.js:12-45",
+        "lib/wrap-thenable.js:53-70"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "fastify-q6",
+      "score": 2,
+      "reason": "All seven direct internal requires and their directions are correct; diagnostics is properly separated as an external Node built-in.",
+      "sourceReferences": [
+        "lib/handle-request.js:1-22"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "fastify-q7",
+      "score": 2,
+      "reason": "Correct bodyless lifecycle, validation and hooks, inner application callback, thenable fulfillment and guarded sending; dynamic dispatch and early exits are explicit.",
+      "sourceReferences": [
+        "lib/handle-request.js:24-37",
+        "lib/handle-request.js:89-155",
+        "lib/handle-request.js:171-209",
+        "lib/wrap-thenable.js:12-45"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "fastify-q8",
+      "score": 2,
+      "reason": "Correct route default-export consumer and reply internals consumer with runPreParsing/notFound usage and conditional exposure. Non-exhaustiveness is disclosed.",
+      "sourceReferences": [
+        "lib/route.js:3-6",
+        "lib/route.js:651-665",
+        "lib/reply.js:29-36",
+        "lib/reply.js:1052-1071",
+        "lib/handle-request.js:216-217"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": true
+    },
+    {
+      "id": "fastify-q9",
+      "score": 2,
+      "reason": "Correct public Fastify/get/listen test and actual fetch response assertions for async handler results; clearly not executed.",
+      "sourceReferences": [
+        "test/async-await.test.js:3-7",
+        "test/async-await.test.js:45-61",
+        "test/async-await.test.js:77-87"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "fastify-q10",
+      "score": 2,
+      "reason": "Correct QUERY missing-content-type branch, error flag, 400 missing-content-type error and immediate return before parser/application handler; preceding dynamic boundaries are qualified.",
+      "sourceReferences": [
+        "lib/handle-request.js:32-52",
+        "lib/handle-request.js:71-82"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    }
+  ],
+  "total": 19,
+  "referenceIssues": [],
+  "limitations": [
+    "Read-only source grading; no target builds, scripts or tests executed. All oracle excerpt ranges matched local source and referenced files matched pinned git blobs and oracle hashes. Named-definition pinned file citations were accepted despite shifted numeric spans.",
+    "Several line citations are shifted, including factory exports at actual 1005-1009 versus claimed 943-947; explicit named definitions in pinned files were verified.",
+    "Direct answer reports failed directory browsing and bounded consumer coverage."
+  ]
+}

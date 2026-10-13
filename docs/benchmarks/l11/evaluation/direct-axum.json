@@ -1,0 +1,308 @@
+{
+  "repository": "tokio-rs/axum",
+  "arm": "direct",
+  "commit": "e57b547eb95de74b73b34719dd5926254a085634",
+  "answers": [
+    {
+      "id": "q1",
+      "answer": "Axum is a Rust HTTP routing/request-handling library: applications register async handlers, extract request data, and produce responses, using Tower middleware. Application authors run a Router with a Tokio listener and axum::serve; serve adapts the resulting Tower request service through TowerToHyperService for Hyper connections. It is also callable directly as a Service, including in tests. The application handler is user-supplied; no particular downstream deployment is established here.",
+      "citations": [
+        {
+          "url": "https://raw.githubusercontent.com/tokio-rs/axum/e57b547eb95de74b73b34719dd5926254a085634/axum/src/lib.rs",
+          "lines": "1-40"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/tokio-rs/axum/e57b547eb95de74b73b34719dd5926254a085634/axum/src/serve/mod.rs",
+          "lines": "747-800"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/tokio-rs/axum/e57b547eb95de74b73b34719dd5926254a085634/axum/src/routing/tests/get_to_head.rs",
+          "lines": "7-32"
+        }
+      ]
+    },
+    {
+      "id": "q2",
+      "answer": "Principal crates: axum supplies routing, handler adaptation, extraction, response generation and serving; axum-core supplies foundational body/extraction/response types and traits for extension authors; axum-extra supplies optional utilities such as cookies, typed headers/routing and extra bodies; axum-macros supplies procedural derives and handler diagnostics. examples is a separate workspace of demonstration applications. Within axum, PathRouter chooses paths, MethodRouter chooses methods, and Route/RouteFuture execute services and finalize responses. These are principal components, not an exhaustive directory inventory.",
+      "citations": [
+        {
+          "url": "https://raw.githubusercontent.com/tokio-rs/axum/e57b547eb95de74b73b34719dd5926254a085634/axum/src/lib.rs",
+          "lines": "1-20"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/tokio-rs/axum/e57b547eb95de74b73b34719dd5926254a085634/axum-core/src/lib.rs",
+          "lines": "1-31"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/tokio-rs/axum/e57b547eb95de74b73b34719dd5926254a085634/axum-extra/src/lib.rs",
+          "lines": "1-34"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/tokio-rs/axum/e57b547eb95de74b73b34719dd5926254a085634/axum-macros/src/lib.rs",
+          "lines": "1-26"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/tokio-rs/axum/e57b547eb95de74b73b34719dd5926254a085634/axum-macros/src/lib.rs",
+          "lines": "425-445"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/tokio-rs/axum/e57b547eb95de74b73b34719dd5926254a085634/examples/Cargo.toml",
+          "lines": "1-8"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/tokio-rs/axum/e57b547eb95de74b73b34719dd5926254a085634/axum/src/routing/path_router.rs",
+          "lines": "275-300"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/tokio-rs/axum/e57b547eb95de74b73b34719dd5926254a085634/axum/src/routing/method_routing.rs",
+          "lines": "1139-1192"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/tokio-rs/axum/e57b547eb95de74b73b34719dd5926254a085634/axum/src/routing/route.rs",
+          "lines": "133-168"
+        }
+      ]
+    },
+    {
+      "id": "q3",
+      "answer": "Rust implementation and Cargo/TOML package organization. Root workspace members are axum and axum-* (resolver 2, Rust minimum 1.85); axum uses edition 2021. axum depends on local axum-core and optionally local axum-macros, while axum-extra is also a development dependency. axum-macros is a proc-macro crate using syn/quote. Tokio and Hyper provide runtime/transport integration, Tower supplies Service/Layer middleware, matchit supplies path matching, and Serde supports data conversion. Cargo features gate capabilities. examples has its own workspace and minimum Rust version. No exhaustive repository language census was performed.",
+      "citations": [
+        {
+          "url": "https://raw.githubusercontent.com/tokio-rs/axum/e57b547eb95de74b73b34719dd5926254a085634/Cargo.toml",
+          "lines": "1-8"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/tokio-rs/axum/e57b547eb95de74b73b34719dd5926254a085634/axum/Cargo.toml",
+          "lines": "1-7"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/tokio-rs/axum/e57b547eb95de74b73b34719dd5926254a085634/axum/Cargo.toml",
+          "lines": "38-95"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/tokio-rs/axum/e57b547eb95de74b73b34719dd5926254a085634/axum/Cargo.toml",
+          "lines": "102-134"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/tokio-rs/axum/e57b547eb95de74b73b34719dd5926254a085634/axum/Cargo.toml",
+          "lines": "172-183"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/tokio-rs/axum/e57b547eb95de74b73b34719dd5926254a085634/axum-macros/Cargo.toml",
+          "lines": "1-30"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/tokio-rs/axum/e57b547eb95de74b73b34719dd5926254a085634/examples/Cargo.toml",
+          "lines": "1-8"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/tokio-rs/axum/e57b547eb95de74b73b34719dd5926254a085634/axum/src/lib.rs",
+          "lines": "12-20"
+        }
+      ]
+    },
+    {
+      "id": "q4",
+      "answer": "The per-request public entry is the Service<Request<B>> implementation for Router<()>: poll_ready immediately succeeds; call maps the body through Body::new and invokes Router::call_with_state(req, ()). That method delegates to its inner PathRouter, returning a matched future or using catch_all_fallback. RouterAsService and RouterIntoService forward here. The IncomingStream Service implementation is instead the connection-level factory used by serve.",
+      "citations": [
+        {
+          "url": "https://raw.githubusercontent.com/tokio-rs/axum/e57b547eb95de74b73b34719dd5926254a085634/axum/src/routing/mod.rs",
+          "lines": "412-421"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/tokio-rs/axum/e57b547eb95de74b73b34719dd5926254a085634/axum/src/routing/mod.rs",
+          "lines": "529-569"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/tokio-rs/axum/e57b547eb95de74b73b34719dd5926254a085634/axum/src/routing/mod.rs",
+          "lines": "579-594"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/tokio-rs/axum/e57b547eb95de74b73b34719dd5926254a085634/axum/src/routing/mod.rs",
+          "lines": "627-642"
+        }
+      ]
+    },
+    {
+      "id": "q5",
+      "answer": "Selection is in MethodRouter::call_with_state: it tries explicit HEAD first, then the GET endpoint for HEAD, then GET for GET. Route::oneshot_inner_owned records the original method. Suppression is in RouteFuture::poll: after the inner response resolves, its top-level branch sets content length before replacing a HEAD response body with Body::empty(). Thus the request method is retained rather than rewritten to GET.",
+      "citations": [
+        {
+          "url": "https://raw.githubusercontent.com/tokio-rs/axum/e57b547eb95de74b73b34719dd5926254a085634/axum/src/routing/method_routing.rs",
+          "lines": "1139-1177"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/tokio-rs/axum/e57b547eb95de74b73b34719dd5926254a085634/axum/src/routing/route.rs",
+          "lines": "50-53"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/tokio-rs/axum/e57b547eb95de74b73b34719dd5926254a085634/axum/src/routing/route.rs",
+          "lines": "110-119"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/tokio-rs/axum/e57b547eb95de74b73b34719dd5926254a085634/axum/src/routing/route.rs",
+          "lines": "133-168"
+        }
+      ]
+    },
+    {
+      "id": "q6",
+      "answer": "Direct outgoing uses, proven by expressions in the body: OriginalUri extension read/insert (original-uri feature); Node::at(parts.uri.path()); set_matched_path_for_request(id, route_id_to_path, extensions) (matched-path feature); url_params::insert_url_params(extensions, match_.params); routes.get(id.0) selecting Endpoint; MethodRouter::call_with_state(req,state) or cloned Route::call_owned(req). It splits/reconstructs Request and returns RouteFuture on success or (Request,state) on NotFound. Node::at delegates to its matchit::Router, an external boundary. Arrows run from PathRouter to these callees; extractors subsequently reading extensions are not direct calls from this method.",
+      "citations": [
+        {
+          "url": "https://raw.githubusercontent.com/tokio-rs/axum/e57b547eb95de74b73b34719dd5926254a085634/axum/src/routing/path_router.rs",
+          "lines": "258-301"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/tokio-rs/axum/e57b547eb95de74b73b34719dd5926254a085634/axum/src/routing/path_router.rs",
+          "lines": "330-357"
+        }
+      ]
+    },
+    {
+      "id": "q7",
+      "answer": "For a plain Router with only GET / registered: Tower Service::call -> Router::call_with_state -> PathRouter::call_with_state -> Node/matchit match of / -> Endpoint::MethodRouter -> method dispatch skips absent HEAD and selects GET. A boxed handler becomes a Route through BoxedIntoRoute; already-bound endpoints already contain a Route. Route creates a Tower oneshot and retains HEAD. The erased service reaches HandlerService::call -> Handler::call -> application async function -> IntoResponse. Polling the top-level RouteFuture clears the completed body as described in q5. Boundaries: matchit matching and Tower service polling are external; Box<dyn ErasedIntoRoute> and BoxCloneSyncService erase concrete types; the application handler is dynamic/user-provided. No middleware or transport execution is assumed; serve may bind state before requests.",
+      "citations": [
+        {
+          "url": "https://raw.githubusercontent.com/tokio-rs/axum/e57b547eb95de74b73b34719dd5926254a085634/axum/src/routing/mod.rs",
+          "lines": "412-421"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/tokio-rs/axum/e57b547eb95de74b73b34719dd5926254a085634/axum/src/routing/mod.rs",
+          "lines": "545-568"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/tokio-rs/axum/e57b547eb95de74b73b34719dd5926254a085634/axum/src/routing/path_router.rs",
+          "lines": "275-300"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/tokio-rs/axum/e57b547eb95de74b73b34719dd5926254a085634/axum/src/routing/path_router.rs",
+          "lines": "353-357"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/tokio-rs/axum/e57b547eb95de74b73b34719dd5926254a085634/axum/src/routing/method_routing.rs",
+          "lines": "1139-1177"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/tokio-rs/axum/e57b547eb95de74b73b34719dd5926254a085634/axum/src/boxed.rs",
+          "lines": "12-43"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/tokio-rs/axum/e57b547eb95de74b73b34719dd5926254a085634/axum/src/routing/route.rs",
+          "lines": "30-53"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/tokio-rs/axum/e57b547eb95de74b73b34719dd5926254a085634/axum/src/handler/service.rs",
+          "lines": "140-166"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/tokio-rs/axum/e57b547eb95de74b73b34719dd5926254a085634/axum/src/handler/mod.rs",
+          "lines": "201-211"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/tokio-rs/axum/e57b547eb95de74b73b34719dd5926254a085634/axum/src/handler/mod.rs",
+          "lines": "220-246"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/tokio-rs/axum/e57b547eb95de74b73b34719dd5926254a085634/axum/src/routing/route.rs",
+          "lines": "133-168"
+        }
+      ]
+    },
+    {
+      "id": "q8",
+      "answer": "The evidenced direct consumer is Router::call_with_state: its call to inner.path_router.call_with_state handles Ok by returning the future and Err by invoking catch_all_fallback. Router's request Service reaches that consumer. Changes may therefore affect routing/fallback behavior exposed to callers. Specific downstream application failures, performance changes, or a universal breakage claim are speculative without a concrete patch and execution; no exhaustive reverse-call analysis was performed.",
+      "citations": [
+        {
+          "url": "https://raw.githubusercontent.com/tokio-rs/axum/e57b547eb95de74b73b34719dd5926254a085634/axum/src/routing/mod.rs",
+          "lines": "412-421"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/tokio-rs/axum/e57b547eb95de74b73b34719dd5926254a085634/axum/src/routing/mod.rs",
+          "lines": "552-568"
+        }
+      ]
+    },
+    {
+      "id": "q9",
+      "answer": "routing/tests/get_to_head.rs has for_handlers::get_handles_head and for_services::get_handles_head: register GET /, send HEAD via Router.oneshot, assert OK, preserve x-some-header, and collect a zero-length body. This directly enters the Router service path in q4; the tests deliberately avoid reqwest body stripping. method_routing::tests::get_accepts_head enters MethodRouter directly through helper call (ready().call(request)), bypassing PathRouter; head_takes_precedence_over_get additionally checks explicit HEAD precedence and emptiness. route::tests::head_content_length_default and regression_3741 cover related HEAD header behavior, not direct body-suppression assertions. Tests were inspected, not run.",
+      "citations": [
+        {
+          "url": "https://raw.githubusercontent.com/tokio-rs/axum/e57b547eb95de74b73b34719dd5926254a085634/axum/src/routing/tests/get_to_head.rs",
+          "lines": "1-65"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/tokio-rs/axum/e57b547eb95de74b73b34719dd5926254a085634/axum/src/routing/method_routing.rs",
+          "lines": "1386-1398"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/tokio-rs/axum/e57b547eb95de74b73b34719dd5926254a085634/axum/src/routing/method_routing.rs",
+          "lines": "1297-1313"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/tokio-rs/axum/e57b547eb95de74b73b34719dd5926254a085634/axum/src/routing/method_routing.rs",
+          "lines": "1636-1660"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/tokio-rs/axum/e57b547eb95de74b73b34719dd5926254a085634/axum/src/routing/route.rs",
+          "lines": "235-273"
+        }
+      ]
+    },
+    {
+      "id": "q10",
+      "answer": "Captures enter at PathRouter's Node::at(uri.path()) match and are passed from match_.params into insert_url_params before endpoint dispatch. That helper filters internal nest-tail/fallback keys, turns keys into Arc<str>, percent-decodes values with UTF-8 validation, and appends/stores UrlParams in request extensions; decoding failures store InvalidUtf8InPathParam, preserving prior errors. PercentDecodedStr::new uses percent_decode then decode_utf8. Path<T>::from_request_parts reads UrlParams via get_params and deserializes through PathDeserializer/T::deserialize. RawPathParams clones decoded pairs without typed deserialization. InnerPath slices at inner_start before the same deserialization. Missing/invalid captures become extractor rejections; handler adaptation calls extraction before the user handler.",
+      "citations": [
+        {
+          "url": "https://raw.githubusercontent.com/tokio-rs/axum/e57b547eb95de74b73b34719dd5926254a085634/axum/src/routing/path_router.rs",
+          "lines": "275-295"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/tokio-rs/axum/e57b547eb95de74b73b34719dd5926254a085634/axum/src/routing/url_params.rs",
+          "lines": "5-56"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/tokio-rs/axum/e57b547eb95de74b73b34719dd5926254a085634/axum/src/util.rs",
+          "lines": "25-40"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/tokio-rs/axum/e57b547eb95de74b73b34719dd5926254a085634/axum/src/extract/path/mod.rs",
+          "lines": "165-174"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/tokio-rs/axum/e57b547eb95de74b73b34719dd5926254a085634/axum/src/extract/path/mod.rs",
+          "lines": "469-495"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/tokio-rs/axum/e57b547eb95de74b73b34719dd5926254a085634/axum/src/extract/path/mod.rs",
+          "lines": "564-589"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/tokio-rs/axum/e57b547eb95de74b73b34719dd5926254a085634/axum/src/extract/path/inner_path.rs",
+          "lines": "140-150"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/tokio-rs/axum/e57b547eb95de74b73b34719dd5926254a085634/axum/src/extract/path/inner_path.rs",
+          "lines": "174-199"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/tokio-rs/axum/e57b547eb95de74b73b34719dd5926254a085634/axum/src/handler/mod.rs",
+          "lines": "230-246"
+        }
+      ]
+    }
+  ],
+  "toolErrors": [
+    "GitHub pinned tree URL failed: Failed to fetch restricted URL; raw pinned source files worked.",
+    "Attempted axum/src/extract/path/inner.rs returned Internal Error; no source inferred from it.",
+    "Attempted axum/src/extract/inner_path.rs returned 404 Not Found; actual axum/src/extract/path/inner_path.rs subsequently read successfully."
+  ],
+  "limitations": [
+    "Source inspection only; no builds or tests executed.",
+    "External matchit/Tower/Hyper implementations and concrete downstream applications were not inspected; those are explicit boundaries.",
+    "No authoritative token telemetry was supplied; none is estimated.",
+    "Citation line ranges use one-based lines corresponding to the browser raw-source display (which labels its first line L0)."
+  ],
+  "selfReportedStartedAt": "2026-10-13 07:54:41 UTC (first clock observation after prompt read)",
+  "selfReportedFinishedAt": "2026-10-13 07:58:20 UTC"
+}

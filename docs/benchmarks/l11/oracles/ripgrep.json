@@ -1,0 +1,391 @@
+{
+  "id": "ripgrep",
+  "repository": "BurntSushi/ripgrep",
+  "commit": "3fce3b5bb0236da2df6d99672afb8a719642eca7",
+  "trackedFiles": 237,
+  "questions": [
+    {
+      "id": "q01",
+      "question": "What does the repository do, and who calls or runs it?",
+      "answer": "ripgrep provides rg, a command-line recursive regex search tool for users and scripts. By default it respects ignore rules and skips hidden/binary inputs. Reusable searching crates are exposed through the grep library facade.",
+      "requiredFacts": [
+        "ripgrep provides rg, a command-line recursive regex search tool for users and scripts.",
+        "By default it respects ignore rules and skips hidden/binary inputs.",
+        "Reusable searching crates are exposed through the grep library facade."
+      ],
+      "evidence": [
+        {
+          "path": "README.md",
+          "startLine": 1,
+          "endLine": 9,
+          "excerpt": "ripgrep (rg)\n------------\nripgrep is a line-oriented search tool that recursively searches the current\ndirectory for a regex pattern. By default, ripgrep will respect gitignore rules\nand automatically skip hidden files/directories and binary files. (To disable\nall automatic filtering by default, use `rg -uuu`.) ripgrep has first class\nsupport on Windows, macOS and Linux, with binary downloads available for [every\nrelease](https://github.com/BurntSushi/ripgrep/releases). ripgrep is similar to\nother popular search tools like The Silver Searcher, ack and grep.",
+          "sha256": "945622d974f65e4e141ef9726c948c2640eebd222c5b101afb6445728283921e"
+        },
+        {
+          "path": "Cargo.toml",
+          "startLine": 29,
+          "endLine": 33,
+          "excerpt": "\n[[bin]]\nbench = false\npath = \"crates/core/main.rs\"\nname = \"rg\"",
+          "sha256": "2f95013e611a48735f349ff98fd1e9513676bc7145d0be9af29c585ffce5e4fe"
+        },
+        {
+          "path": "crates/grep/src/lib.rs",
+          "startLine": 1,
+          "endLine": 21,
+          "excerpt": "/*!\nripgrep, as a library.\n\nThis library is intended to provide a high level facade to the crates that\nmake up ripgrep's core searching routines. However, there is no high level\ndocumentation available yet guiding users on how to fit all of the pieces\ntogether.\n\nEvery public API item in the constituent crates is documented, but examples\nare sparse.\n\nA cookbook and a guide are planned.\n*/\n\npub extern crate grep_cli as cli;\npub extern crate grep_matcher as matcher;\n#[cfg(feature = \"pcre2\")]\npub extern crate grep_pcre2 as pcre2;\npub extern crate grep_printer as printer;\npub extern crate grep_regex as regex;\npub extern crate grep_searcher as searcher;",
+          "sha256": "de71633dfaa300e1d4eb518ca76d48dfb38ca80a178e43b6610d4ae3ddb068cc"
+        }
+      ]
+    },
+    {
+      "id": "q02",
+      "question": "Name the principal components and their responsibilities.",
+      "answer": "crates/core coordinates CLI flags, haystacks and search workers. ignore walks files with filtering; grep is a facade over matcher/searcher/regex/printer/cli crates. SearchWorker coordinates matcher/searcher/printer, including preprocessing and decompression.",
+      "requiredFacts": [
+        "crates/core coordinates CLI flags, haystacks and search workers.",
+        "ignore walks files with filtering; grep is a facade over matcher/searcher/regex/printer/cli crates.",
+        "SearchWorker coordinates matcher/searcher/printer, including preprocessing and decompression."
+      ],
+      "evidence": [
+        {
+          "path": "crates/core/main.rs",
+          "startLine": 9,
+          "endLine": 18,
+          "excerpt": "use crate::flags::{HiArgs, SearchMode};\n\n#[macro_use]\nmod messages;\n\nmod flags;\nmod haystack;\nmod index;\nmod logger;\nmod search;",
+          "sha256": "21c10c3b35114543b90f38f27fd9102703a099bd504db950e1f10d2739b1444c"
+        },
+        {
+          "path": "crates/ignore/src/lib.rs",
+          "startLine": 1,
+          "endLine": 8,
+          "excerpt": "/*!\nThe ignore crate provides a fast recursive directory iterator that respects\nvarious filters such as globs, file types and `.gitignore` files. The precise\nmatching rules and precedence is explained in the documentation for\n`WalkBuilder`.\n\nSecondarily, this crate exposes gitignore and file type matchers for use cases\nthat demand more fine-grained control.",
+          "sha256": "89cb2cbdd479ae4a8cf5ea0bbea4cad72b6833a6dfb95008e8f51b185b44aafc"
+        },
+        {
+          "path": "crates/grep/src/lib.rs",
+          "startLine": 1,
+          "endLine": 21,
+          "excerpt": "/*!\nripgrep, as a library.\n\nThis library is intended to provide a high level facade to the crates that\nmake up ripgrep's core searching routines. However, there is no high level\ndocumentation available yet guiding users on how to fit all of the pieces\ntogether.\n\nEvery public API item in the constituent crates is documented, but examples\nare sparse.\n\nA cookbook and a guide are planned.\n*/\n\npub extern crate grep_cli as cli;\npub extern crate grep_matcher as matcher;\n#[cfg(feature = \"pcre2\")]\npub extern crate grep_pcre2 as pcre2;\npub extern crate grep_printer as printer;\npub extern crate grep_regex as regex;\npub extern crate grep_searcher as searcher;",
+          "sha256": "de71633dfaa300e1d4eb518ca76d48dfb38ca80a178e43b6610d4ae3ddb068cc"
+        },
+        {
+          "path": "crates/core/search.rs",
+          "startLine": 1,
+          "endLine": 8,
+          "excerpt": "/*!\nDefines a very high level \"search worker\" abstraction.\n\nA search worker manages the high level interaction points between the matcher\n(i.e., which regex engine is used), the searcher (i.e., how data is actually\nread and matched using the regex engine) and the printer. For example, the\nsearch worker is where things like preprocessors or decompression happens.\n*/",
+          "sha256": "53627fe6d2216552d3919586cd8746da3f392ba44e3bf59ccdc432c7c14e82d1"
+        }
+      ]
+    },
+    {
+      "id": "q03",
+      "question": "Which languages, build/framework systems and package boundaries organize it?",
+      "answer": "Rust Cargo workspace: root ripgrep builds rg from crates/core/main.rs. Member crates include globset, grep, cli, index, matcher, pcre2, printer, regex, searcher and ignore. Workspace edition 2024 and rust-version 1.96 are manifest declarations, not locally tested requirements. Local path dependencies define package edges; index and PCRE2 are optional.",
+      "requiredFacts": [
+        "Rust Cargo workspace: root ripgrep builds rg from crates/core/main.rs.",
+        "Member crates include globset, grep, cli, index, matcher, pcre2, printer, regex, searcher and ignore.",
+        "Workspace edition 2024 and rust-version 1.96 are manifest declarations, not locally tested requirements.",
+        "Local path dependencies define package edges; index and PCRE2 are optional."
+      ],
+      "evidence": [
+        {
+          "path": "Cargo.toml",
+          "startLine": 29,
+          "endLine": 63,
+          "excerpt": "\n[[bin]]\nbench = false\npath = \"crates/core/main.rs\"\nname = \"rg\"\n\n[[test]]\nname = \"integration\"\npath = \"tests/tests.rs\"\n\n[workspace]\nmembers = [\n  \"crates/globset\",\n  \"crates/grep\",\n  \"crates/cli\",\n  \"crates/index\",\n  \"crates/matcher\",\n  \"crates/pcre2\",\n  \"crates/printer\",\n  \"crates/regex\",\n  \"crates/searcher\",\n  \"crates/ignore\",\n]\n\n[workspace.package]\nedition = \"2024\"\nrust-version = \"1.96\"\n\n[dependencies]\nanyhow = \"1.0.75\"\nbstr = \"1.7.0\"\ngrep = { version = \"0.4.1\", path = \"crates/grep\" }\ngrep-index = { version = \"0.0.1\", path = \"crates/index\", optional = true }\nignore = { version = \"0.4.29\", path = \"crates/ignore\" }\nlexopt = \"0.3.0\"",
+          "sha256": "2f95013e611a48735f349ff98fd1e9513676bc7145d0be9af29c585ffce5e4fe"
+        },
+        {
+          "path": "Cargo.toml",
+          "startLine": 77,
+          "endLine": 81,
+          "excerpt": "[features]\npcre2 = [\"grep/pcre2\"]\n# This provides opt-in support for indexing. This is currently in active\n# development and may have very serious bugs. Use at your own risk.\nunstable-index = [\"dep:grep-index\"]",
+          "sha256": "2f95013e611a48735f349ff98fd1e9513676bc7145d0be9af29c585ffce5e4fe"
+        },
+        {
+          "path": "crates/grep/Cargo.toml",
+          "startLine": 18,
+          "endLine": 23,
+          "excerpt": "grep-cli = { version = \"0.1.12\", path = \"../cli\" }\ngrep-matcher = { version = \"0.1.8\", path = \"../matcher\" }\ngrep-pcre2 = { version = \"0.1.9\", path = \"../pcre2\", optional = true }\ngrep-printer = { version = \"0.3.1\", path = \"../printer\" }\ngrep-regex = { version = \"0.1.14\", path = \"../regex\" }\ngrep-searcher = { version = \"0.1.16\", path = \"../searcher\" }",
+          "sha256": "9abb413aee097d21b5dbf50334333520945b4be871a5c8081e6c7566a33628a8"
+        }
+      ]
+    },
+    {
+      "id": "q04",
+      "question": "Where does the selected executable use begin?",
+      "answer": "Cargo rg target points to crates/core/main.rs. main calls flags::parse and passes the result to run. run dispatches modes, choosing search when threads()==1 in ordinary search mode.",
+      "requiredFacts": [
+        "Cargo rg target points to crates/core/main.rs.",
+        "main calls flags::parse and passes the result to run.",
+        "run dispatches modes, choosing search when threads()==1 in ordinary search mode."
+      ],
+      "evidence": [
+        {
+          "path": "Cargo.toml",
+          "startLine": 29,
+          "endLine": 33,
+          "excerpt": "\n[[bin]]\nbench = false\npath = \"crates/core/main.rs\"\nname = \"rg\"",
+          "sha256": "2f95013e611a48735f349ff98fd1e9513676bc7145d0be9af29c585ffce5e4fe"
+        },
+        {
+          "path": "crates/core/main.rs",
+          "startLine": 44,
+          "endLine": 46,
+          "excerpt": "fn main() -> ExitCode {\n    match run(flags::parse()) {\n        Ok(code) => code,",
+          "sha256": "21c10c3b35114543b90f38f27fd9102703a099bd504db950e1f10d2739b1444c"
+        },
+        {
+          "path": "crates/core/main.rs",
+          "startLine": 78,
+          "endLine": 99,
+          "excerpt": "fn run(result: crate::flags::ParseResult<HiArgs>) -> anyhow::Result<ExitCode> {\n    use crate::flags::{Mode, ParseResult};\n\n    let args = match result {\n        ParseResult::Err(err) => return Err(err),\n        ParseResult::Special(mode) => return special(mode),\n        ParseResult::Ok(args) => args,\n    };\n    let matched = match args.mode() {\n        Mode::Search(_) if !args.matches_possible() => false,\n        Mode::Search(mode) if args.index() > 0 => index::read(&args, mode)?,\n        Mode::Search(mode) if args.threads() == 1 => search(&args, mode)?,\n        Mode::Search(mode) => search_parallel(&args, mode)?,\n        Mode::Index(_) => {\n            index::write(&args)?;\n            return Ok(ExitCode::from(0));\n        }\n        Mode::Files if args.threads() == 1 => files(&args)?,\n        Mode::Files => files_parallel(&args)?,\n        Mode::Types => return types(&args),\n        Mode::Generate(mode) => return generate(mode),\n    };",
+          "sha256": "21c10c3b35114543b90f38f27fd9102703a099bd504db950e1f10d2739b1444c"
+        }
+      ]
+    },
+    {
+      "id": "q05",
+      "question": "Where is sequential ordinary-file text searching implemented? Name its component and definition.",
+      "answer": "main.rs search iterates haystacks and calls SearchWorker.search. search.rs SearchWorker.search selects search_path when input is not stdin/preprocessed/decompressed. The worker and generic search_path helper choose a matcher and printer sink and call grep::searcher::Searcher.search_path.",
+      "requiredFacts": [
+        "main.rs search iterates haystacks and calls SearchWorker.search.",
+        "search.rs SearchWorker.search selects search_path when input is not stdin/preprocessed/decompressed.",
+        "The worker and generic search_path helper choose a matcher and printer sink and call grep::searcher::Searcher.search_path."
+      ],
+      "evidence": [
+        {
+          "path": "crates/core/main.rs",
+          "startLine": 113,
+          "endLine": 141,
+          "excerpt": "fn search(args: &HiArgs, mode: SearchMode) -> anyhow::Result<bool> {\n    let started_at = std::time::Instant::now();\n    let haystack_builder = args.haystack_builder();\n    let unsorted = args\n        .walk_builder()?\n        .build()\n        .filter_map(|result| haystack_builder.build_from_result(result));\n    let haystacks = args.sort(unsorted);\n\n    let mut matched = false;\n    let mut searched = false;\n    let mut stats = args.stats();\n    let mut searcher = args.search_worker(\n        args.matcher()?,\n        args.searcher()?,\n        args.printer(mode, args.stdout()),\n    )?;\n    for haystack in haystacks {\n        searched = true;\n        let search_result = match searcher.search(&haystack) {\n            Ok(search_result) => search_result,\n            // A broken pipe means graceful termination.\n            Err(err) if err.kind() == std::io::ErrorKind::BrokenPipe => break,\n            Err(err) => {\n                err_message!(\"{}: {}\", haystack.path().display(), err);\n                continue;\n            }\n        };\n        matched = matched || search_result.has_match();",
+          "sha256": "21c10c3b35114543b90f38f27fd9102703a099bd504db950e1f10d2739b1444c"
+        },
+        {
+          "path": "crates/core/search.rs",
+          "startLine": 245,
+          "endLine": 266,
+          "excerpt": "    pub(crate) fn search(\n        &mut self,\n        haystack: &crate::haystack::Haystack,\n    ) -> io::Result<SearchResult> {\n        let bin = if haystack.is_explicit() {\n            self.config.binary_explicit.clone()\n        } else {\n            self.config.binary_implicit.clone()\n        };\n        let path = haystack.path();\n        log::trace!(\"{}: binary detection: {:?}\", path.display(), bin);\n\n        self.searcher.set_binary_detection(bin);\n        if haystack.is_stdin() {\n            self.search_reader(path, &mut io::stdin().lock())\n        } else if self.should_preprocess(path) {\n            self.search_preprocessor(path)\n        } else if self.should_decompress(path) {\n            self.search_decompress(path)\n        } else {\n            self.search_path(path)\n        }",
+          "sha256": "53627fe6d2216552d3919586cd8746da3f392ba44e3bf59ccdc432c7c14e82d1"
+        },
+        {
+          "path": "crates/core/search.rs",
+          "startLine": 342,
+          "endLine": 350,
+          "excerpt": "    fn search_path(&mut self, path: &Path) -> io::Result<SearchResult> {\n        use self::PatternMatcher::*;\n\n        let (searcher, printer) = (&mut self.searcher, &mut self.printer);\n        match self.matcher {\n            RustRegex(ref m) => search_path(m, searcher, printer, path),\n            #[cfg(feature = \"pcre2\")]\n            PCRE2(ref m) => search_path(m, searcher, printer, path),\n        }",
+          "sha256": "53627fe6d2216552d3919586cd8746da3f392ba44e3bf59ccdc432c7c14e82d1"
+        },
+        {
+          "path": "crates/core/search.rs",
+          "startLine": 380,
+          "endLine": 393,
+          "excerpt": "fn search_path<M: Matcher, W: WriteColor>(\n    matcher: M,\n    searcher: &mut grep::searcher::Searcher,\n    printer: &mut Printer<W>,\n    path: &Path,\n) -> io::Result<SearchResult> {\n    match *printer {\n        Printer::Standard(ref mut p) => {\n            let mut sink = p.sink_with_path(&matcher, path);\n            searcher.search_path(&matcher, path, &mut sink)?;\n            Ok(SearchResult {\n                has_match: sink.has_match(),\n                stats: sink.stats().cloned(),\n            })",
+          "sha256": "53627fe6d2216552d3919586cd8746da3f392ba44e3bf59ccdc432c7c14e82d1"
+        }
+      ]
+    },
+    {
+      "id": "q06",
+      "question": "Which internal packages does the grep facade directly use, and what proves each direction?",
+      "answer": "crates/grep/Cargo.toml declares local dependencies on grep-cli, grep-matcher, grep-printer, grep-regex and grep-searcher. grep-pcre2 is an optional local dependency. lib.rs reexports these as cli/matcher/printer/regex/searcher and feature-gated pcre2; these prove facade-to-component directions, not execution order.",
+      "requiredFacts": [
+        "crates/grep/Cargo.toml declares local dependencies on grep-cli, grep-matcher, grep-printer, grep-regex and grep-searcher.",
+        "grep-pcre2 is an optional local dependency.",
+        "lib.rs reexports these as cli/matcher/printer/regex/searcher and feature-gated pcre2; these prove facade-to-component directions, not execution order."
+      ],
+      "evidence": [
+        {
+          "path": "crates/grep/Cargo.toml",
+          "startLine": 18,
+          "endLine": 23,
+          "excerpt": "grep-cli = { version = \"0.1.12\", path = \"../cli\" }\ngrep-matcher = { version = \"0.1.8\", path = \"../matcher\" }\ngrep-pcre2 = { version = \"0.1.9\", path = \"../pcre2\", optional = true }\ngrep-printer = { version = \"0.3.1\", path = \"../printer\" }\ngrep-regex = { version = \"0.1.14\", path = \"../regex\" }\ngrep-searcher = { version = \"0.1.16\", path = \"../searcher\" }",
+          "sha256": "9abb413aee097d21b5dbf50334333520945b4be871a5c8081e6c7566a33628a8"
+        },
+        {
+          "path": "crates/grep/src/lib.rs",
+          "startLine": 15,
+          "endLine": 21,
+          "excerpt": "pub extern crate grep_cli as cli;\npub extern crate grep_matcher as matcher;\n#[cfg(feature = \"pcre2\")]\npub extern crate grep_pcre2 as pcre2;\npub extern crate grep_printer as printer;\npub extern crate grep_regex as regex;\npub extern crate grep_searcher as searcher;",
+          "sha256": "de71633dfaa300e1d4eb518ca76d48dfb38ca80a178e43b6610d4ae3ddb068cc"
+        }
+      ]
+    },
+    {
+      "id": "q07",
+      "question": "For rg --threads 1 PATTERN FILE with an ordinary text file and no preprocessing/indexing, give the source-supported call/dispatch path to its outcome; identify dynamic or unresolved boundaries.",
+      "answer": "main -> flags::parse -> run -> search; HiArgs constructs walker/haystacks and matcher/searcher/printer. SearchWorker.search -> worker search_path -> generic search_path -> Searcher.search_path with printer sink. search folds SearchResult.has_match; run maps match/error state to exit 0/1/2. Filesystem content, generic Matcher/Sink dispatch and platform I/O are runtime boundaries; this is source reachability, not an observed execution.",
+      "requiredFacts": [
+        "main -> flags::parse -> run -> search; HiArgs constructs walker/haystacks and matcher/searcher/printer.",
+        "SearchWorker.search -> worker search_path -> generic search_path -> Searcher.search_path with printer sink.",
+        "search folds SearchResult.has_match; run maps match/error state to exit 0/1/2.",
+        "Filesystem content, generic Matcher/Sink dispatch and platform I/O are runtime boundaries; this is source reachability, not an observed execution."
+      ],
+      "evidence": [
+        {
+          "path": "crates/core/main.rs",
+          "startLine": 44,
+          "endLine": 46,
+          "excerpt": "fn main() -> ExitCode {\n    match run(flags::parse()) {\n        Ok(code) => code,",
+          "sha256": "21c10c3b35114543b90f38f27fd9102703a099bd504db950e1f10d2739b1444c"
+        },
+        {
+          "path": "crates/core/main.rs",
+          "startLine": 78,
+          "endLine": 106,
+          "excerpt": "fn run(result: crate::flags::ParseResult<HiArgs>) -> anyhow::Result<ExitCode> {\n    use crate::flags::{Mode, ParseResult};\n\n    let args = match result {\n        ParseResult::Err(err) => return Err(err),\n        ParseResult::Special(mode) => return special(mode),\n        ParseResult::Ok(args) => args,\n    };\n    let matched = match args.mode() {\n        Mode::Search(_) if !args.matches_possible() => false,\n        Mode::Search(mode) if args.index() > 0 => index::read(&args, mode)?,\n        Mode::Search(mode) if args.threads() == 1 => search(&args, mode)?,\n        Mode::Search(mode) => search_parallel(&args, mode)?,\n        Mode::Index(_) => {\n            index::write(&args)?;\n            return Ok(ExitCode::from(0));\n        }\n        Mode::Files if args.threads() == 1 => files(&args)?,\n        Mode::Files => files_parallel(&args)?,\n        Mode::Types => return types(&args),\n        Mode::Generate(mode) => return generate(mode),\n    };\n    Ok(if matched && (args.quiet() || !messages::errored()) {\n        ExitCode::from(0)\n    } else if messages::errored() {\n        ExitCode::from(2)\n    } else {\n        ExitCode::from(1)\n    })",
+          "sha256": "21c10c3b35114543b90f38f27fd9102703a099bd504db950e1f10d2739b1444c"
+        },
+        {
+          "path": "crates/core/main.rs",
+          "startLine": 113,
+          "endLine": 145,
+          "excerpt": "fn search(args: &HiArgs, mode: SearchMode) -> anyhow::Result<bool> {\n    let started_at = std::time::Instant::now();\n    let haystack_builder = args.haystack_builder();\n    let unsorted = args\n        .walk_builder()?\n        .build()\n        .filter_map(|result| haystack_builder.build_from_result(result));\n    let haystacks = args.sort(unsorted);\n\n    let mut matched = false;\n    let mut searched = false;\n    let mut stats = args.stats();\n    let mut searcher = args.search_worker(\n        args.matcher()?,\n        args.searcher()?,\n        args.printer(mode, args.stdout()),\n    )?;\n    for haystack in haystacks {\n        searched = true;\n        let search_result = match searcher.search(&haystack) {\n            Ok(search_result) => search_result,\n            // A broken pipe means graceful termination.\n            Err(err) if err.kind() == std::io::ErrorKind::BrokenPipe => break,\n            Err(err) => {\n                err_message!(\"{}: {}\", haystack.path().display(), err);\n                continue;\n            }\n        };\n        matched = matched || search_result.has_match();\n        if let Some(ref mut stats) = stats {\n            *stats += search_result.stats().unwrap();\n        }\n        if matched && args.quit_after_match() {",
+          "sha256": "21c10c3b35114543b90f38f27fd9102703a099bd504db950e1f10d2739b1444c"
+        },
+        {
+          "path": "crates/core/search.rs",
+          "startLine": 245,
+          "endLine": 266,
+          "excerpt": "    pub(crate) fn search(\n        &mut self,\n        haystack: &crate::haystack::Haystack,\n    ) -> io::Result<SearchResult> {\n        let bin = if haystack.is_explicit() {\n            self.config.binary_explicit.clone()\n        } else {\n            self.config.binary_implicit.clone()\n        };\n        let path = haystack.path();\n        log::trace!(\"{}: binary detection: {:?}\", path.display(), bin);\n\n        self.searcher.set_binary_detection(bin);\n        if haystack.is_stdin() {\n            self.search_reader(path, &mut io::stdin().lock())\n        } else if self.should_preprocess(path) {\n            self.search_preprocessor(path)\n        } else if self.should_decompress(path) {\n            self.search_decompress(path)\n        } else {\n            self.search_path(path)\n        }",
+          "sha256": "53627fe6d2216552d3919586cd8746da3f392ba44e3bf59ccdc432c7c14e82d1"
+        },
+        {
+          "path": "crates/core/search.rs",
+          "startLine": 342,
+          "endLine": 350,
+          "excerpt": "    fn search_path(&mut self, path: &Path) -> io::Result<SearchResult> {\n        use self::PatternMatcher::*;\n\n        let (searcher, printer) = (&mut self.searcher, &mut self.printer);\n        match self.matcher {\n            RustRegex(ref m) => search_path(m, searcher, printer, path),\n            #[cfg(feature = \"pcre2\")]\n            PCRE2(ref m) => search_path(m, searcher, printer, path),\n        }",
+          "sha256": "53627fe6d2216552d3919586cd8746da3f392ba44e3bf59ccdc432c7c14e82d1"
+        },
+        {
+          "path": "crates/core/search.rs",
+          "startLine": 380,
+          "endLine": 393,
+          "excerpt": "fn search_path<M: Matcher, W: WriteColor>(\n    matcher: M,\n    searcher: &mut grep::searcher::Searcher,\n    printer: &mut Printer<W>,\n    path: &Path,\n) -> io::Result<SearchResult> {\n    match *printer {\n        Printer::Standard(ref mut p) => {\n            let mut sink = p.sink_with_path(&matcher, path);\n            searcher.search_path(&matcher, path, &mut sink)?;\n            Ok(SearchResult {\n                has_match: sink.has_match(),\n                stats: sink.stats().cloned(),\n            })",
+          "sha256": "53627fe6d2216552d3919586cd8746da3f392ba44e3bf59ccdc432c7c14e82d1"
+        }
+      ]
+    },
+    {
+      "id": "q08",
+      "question": "If SearchWorker.search changes, which direct production consumers are evidenced? Separate dependency from speculative behavioral impact.",
+      "answer": "search and search_parallel in main.rs both call searcher.search(&haystack). HiArgs.search_worker constructs their SearchWorker. Direct call exposure is proved; exact output/performance impact depends on the change and inputs.",
+      "requiredFacts": [
+        "search and search_parallel in main.rs both call searcher.search(&haystack).",
+        "HiArgs.search_worker constructs their SearchWorker.",
+        "Direct call exposure is proved; exact output/performance impact depends on the change and inputs."
+      ],
+      "evidence": [
+        {
+          "path": "crates/core/main.rs",
+          "startLine": 125,
+          "endLine": 141,
+          "excerpt": "    let mut searcher = args.search_worker(\n        args.matcher()?,\n        args.searcher()?,\n        args.printer(mode, args.stdout()),\n    )?;\n    for haystack in haystacks {\n        searched = true;\n        let search_result = match searcher.search(&haystack) {\n            Ok(search_result) => search_result,\n            // A broken pipe means graceful termination.\n            Err(err) if err.kind() == std::io::ErrorKind::BrokenPipe => break,\n            Err(err) => {\n                err_message!(\"{}: {}\", haystack.path().display(), err);\n                continue;\n            }\n        };\n        matched = matched || search_result.has_match();",
+          "sha256": "21c10c3b35114543b90f38f27fd9102703a099bd504db950e1f10d2739b1444c"
+        },
+        {
+          "path": "crates/core/main.rs",
+          "startLine": 178,
+          "endLine": 202,
+          "excerpt": "        args.searcher()?,\n        args.printer(mode, bufwtr.buffer()),\n    )?;\n    args.walk_builder()?.build_parallel().run(|| {\n        let bufwtr = &bufwtr;\n        let stats = &stats;\n        let matched = &matched;\n        let searched = &searched;\n        let haystack_builder = &haystack_builder;\n        let mut searcher = searcher.clone();\n\n        Box::new(move |result| {\n            let haystack = match haystack_builder.build_from_result(result) {\n                Some(haystack) => haystack,\n                None => return WalkState::Continue,\n            };\n            searched.store(true, Ordering::SeqCst);\n            searcher.printer().get_mut().clear();\n            let search_result = match searcher.search(&haystack) {\n                Ok(search_result) => search_result,\n                Err(err) => {\n                    err_message!(\"{}: {}\", haystack.path().display(), err);\n                    return WalkState::Continue;\n                }\n            };",
+          "sha256": "21c10c3b35114543b90f38f27fd9102703a099bd504db950e1f10d2739b1444c"
+        },
+        {
+          "path": "crates/core/flags/hiargs.rs",
+          "startLine": 701,
+          "endLine": 718,
+          "excerpt": "    /// Build a worker for executing searches.\n    ///\n    /// Search results are found using the given matcher and written to the\n    /// given printer.\n    pub(crate) fn search_worker<W: termcolor::WriteColor>(\n        &self,\n        matcher: PatternMatcher,\n        searcher: grep::searcher::Searcher,\n        printer: Printer<W>,\n    ) -> anyhow::Result<SearchWorker<W>> {\n        let mut builder = SearchWorkerBuilder::new();\n        builder\n            .preprocessor(self.pre.clone())?\n            .preprocessor_globs(self.pre_globs.clone())\n            .search_zip(self.search_zip)\n            .binary_detection_explicit(self.binary.explicit.clone())\n            .binary_detection_implicit(self.binary.implicit.clone());\n        Ok(builder.build(matcher, searcher, printer))",
+          "sha256": "4269c0129575a379a725d4023382d33277e73bc9928e6c81f5e8fa4824019169"
+        }
+      ]
+    },
+    {
+      "id": "q09",
+      "question": "Which tests or documented example exercise sequential ordinary-file text searching, and how do they enter the implementation?",
+      "answer": "tests/misc.rs with_heading_default creates two ordinary text files and uses -j1 --heading Sherlock to force sequential searching. It asserts the matched lines with file headings; single_file separately exercises an explicit file argument. Dir.command/bin constructs an rg subprocess via CARGO_BIN_EXE_rg or fallback, entering main. These test sources were inspected, not executed.",
+      "requiredFacts": [
+        "tests/misc.rs with_heading_default creates two ordinary text files and uses -j1 --heading Sherlock to force sequential searching.",
+        "It asserts the matched lines with file headings; single_file separately exercises an explicit file argument.",
+        "Dir.command/bin constructs an rg subprocess via CARGO_BIN_EXE_rg or fallback, entering main.",
+        "These test sources were inspected, not executed."
+      ],
+      "evidence": [
+        {
+          "path": "tests/misc.rs",
+          "startLine": 82,
+          "endLine": 98,
+          "excerpt": "rgtest!(with_heading_default, |dir: Dir, mut cmd: TestCommand| {\n    // Search two or more and get --with-filename enabled by default.\n    // Use -j1 to get deterministic results.\n    dir.create(\"sherlock\", SHERLOCK);\n    dir.create(\"foo\", \"Sherlock Holmes lives on Baker Street.\");\n    cmd.arg(\"-j1\").arg(\"--heading\").arg(\"Sherlock\");\n\n    let expected = \"\\\nfoo\nSherlock Holmes lives on Baker Street.\n\nsherlock\nFor the Doctor Watsons of this world, as opposed to the Sherlock\nbe, to a very large extent, the result of luck. Sherlock Holmes\n\";\n    eqnice!(sort_lines(expected), sort_lines(&cmd.stdout()));\n});",
+          "sha256": "4fe2caae7e791339a154172b65a54905d1660a1d8869a790309076818264f335"
+        },
+        {
+          "path": "tests/misc.rs",
+          "startLine": 11,
+          "endLine": 19,
+          "excerpt": "rgtest!(single_file, |dir: Dir, mut cmd: TestCommand| {\n    dir.create(\"sherlock\", SHERLOCK);\n\n    let expected = \"\\\nFor the Doctor Watsons of this world, as opposed to the Sherlock\nbe, to a very large extent, the result of luck. Sherlock Holmes\n\";\n    eqnice!(expected, cmd.arg(\"Sherlock\").arg(\"sherlock\").stdout());\n});",
+          "sha256": "4fe2caae7e791339a154172b65a54905d1660a1d8869a790309076818264f335"
+        },
+        {
+          "path": "tests/util.rs",
+          "startLine": 162,
+          "endLine": 192,
+          "excerpt": "    ///\n    /// * Unsets the `RIPGREP_CONFIG_PATH` environment variable.\n    /// * Sets the `--path-separator` to `/` so that paths have the same output\n    ///   on all systems. Tests that need to check `--path-separator` itself\n    ///   can simply pass it again to override it.\n    pub fn command(&self) -> TestCommand {\n        let mut cmd = self.bin();\n        cmd.env_remove(\"RIPGREP_CONFIG_PATH\");\n        cmd.current_dir(&self.dir);\n        cmd.arg(\"--path-separator\").arg(\"/\");\n        if self.is_pcre2() {\n            cmd.arg(\"--pcre2\");\n        }\n        TestCommand { dir: self.clone(), cmd }\n    }\n\n    /// Returns the path to the ripgrep executable.\n    pub fn bin(&self) -> process::Command {\n        let rg = std::env::var_os(\"CARGO_BIN_EXE_rg\")\n            .map(PathBuf::from)\n            .unwrap_or_else(|| {\n                self.root.join(format!(\"../rg{}\", env::consts::EXE_SUFFIX))\n            });\n        match cross_runner() {\n            None => process::Command::new(rg),\n            Some(runner) => {\n                let mut cmd = process::Command::new(runner);\n                cmd.arg(rg);\n                cmd\n            }\n        }",
+          "sha256": "6862edaf5adad5eff8b7bf3c50ed28c221c0212fe733b22387d1f4f09909b447"
+        },
+        {
+          "path": "crates/core/main.rs",
+          "startLine": 86,
+          "endLine": 90,
+          "excerpt": "    let matched = match args.mode() {\n        Mode::Search(_) if !args.matches_possible() => false,\n        Mode::Search(mode) if args.index() > 0 => index::read(&args, mode)?,\n        Mode::Search(mode) if args.threads() == 1 => search(&args, mode)?,\n        Mode::Search(mode) => search_parallel(&args, mode)?,",
+          "sha256": "21c10c3b35114543b90f38f27fd9102703a099bd504db950e1f10d2739b1444c"
+        }
+      ]
+    },
+    {
+      "id": "q10",
+      "question": "Where does RIPGREP_CONFIG_PATH enter and get handled or transformed?",
+      "answer": "flags/config.rs args reads RIPGREP_CONFIG_PATH and parses the file, reporting read errors and returning no config arguments on failure. parse_reader trims lines, skips blanks/comments and converts remaining lines to OsString arguments. parse_low skips config for special modes or --no-config; otherwise config arguments precede CLI arguments in reparsing. parse converts LowArgs to HiArgs; filesystem reading is a runtime boundary.",
+      "requiredFacts": [
+        "flags/config.rs args reads RIPGREP_CONFIG_PATH and parses the file, reporting read errors and returning no config arguments on failure.",
+        "parse_reader trims lines, skips blanks/comments and converts remaining lines to OsString arguments.",
+        "parse_low skips config for special modes or --no-config; otherwise config arguments precede CLI arguments in reparsing.",
+        "parse converts LowArgs to HiArgs; filesystem reading is a runtime boundary."
+      ],
+      "evidence": [
+        {
+          "path": "crates/core/flags/config.rs",
+          "startLine": 15,
+          "endLine": 40,
+          "excerpt": "/// Return a sequence of arguments derived from ripgrep rc configuration files.\npub fn args() -> Vec<OsString> {\n    let config_path = match std::env::var_os(\"RIPGREP_CONFIG_PATH\") {\n        None => {\n            log::debug!(\n                \"RIPGREP_CONFIG_PATH environment variable is not set, \\\n                 therefore not reading any config file\"\n            );\n            return vec![];\n        }\n        Some(config_path) => {\n            if config_path.is_empty() {\n                return vec![];\n            }\n            PathBuf::from(config_path)\n        }\n    };\n    let (args, errs) = match parse(&config_path) {\n        Ok((args, errs)) => (args, errs),\n        Err(err) => {\n            message!(\n                \"failed to read the file specified in RIPGREP_CONFIG_PATH: {}\",\n                err\n            );\n            return vec![];\n        }",
+          "sha256": "adb0b126590521b981db9d913091f6d564f0b142b2d024861e84538a225cf23e"
+        },
+        {
+          "path": "crates/core/flags/config.rs",
+          "startLine": 63,
+          "endLine": 69,
+          "excerpt": "fn parse<P: AsRef<Path>>(\n    path: P,\n) -> anyhow::Result<(Vec<OsString>, Vec<anyhow::Error>)> {\n    let path = path.as_ref();\n    match std::fs::File::open(&path) {\n        Ok(file) => parse_reader(file),\n        Err(err) => anyhow::bail!(\"{}: {}\", path.display(), err),",
+          "sha256": "adb0b126590521b981db9d913091f6d564f0b142b2d024861e84538a225cf23e"
+        },
+        {
+          "path": "crates/core/flags/config.rs",
+          "startLine": 84,
+          "endLine": 107,
+          "excerpt": "fn parse_reader<R: std::io::Read>(\n    rdr: R,\n) -> anyhow::Result<(Vec<OsString>, Vec<anyhow::Error>)> {\n    let mut bufrdr = std::io::BufReader::new(rdr);\n    let (mut args, mut errs) = (vec![], vec![]);\n    let mut line_number = 0;\n    bufrdr.for_byte_line_with_terminator(|line| {\n        line_number += 1;\n\n        let line = line.trim();\n        if line.is_empty() || line[0] == b'#' {\n            return Ok(true);\n        }\n        match line.to_os_str() {\n            Ok(osstr) => {\n                args.push(osstr.to_os_string());\n            }\n            Err(err) => {\n                errs.push(anyhow::anyhow!(\"{line_number}: {err}\"));\n            }\n        }\n        Ok(true)\n    })?;\n    Ok((args, errs))",
+          "sha256": "adb0b126590521b981db9d913091f6d564f0b142b2d024861e84538a225cf23e"
+        },
+        {
+          "path": "crates/core/flags/parse.rs",
+          "startLine": 48,
+          "endLine": 53,
+          "excerpt": "/// Parse CLI arguments and convert then to their high level representation.\npub(crate) fn parse() -> ParseResult<HiArgs> {\n    parse_low().and_then(|low| match HiArgs::from_low_args(low) {\n        Ok(hi) => ParseResult::Ok(hi),\n        Err(err) => ParseResult::Err(err),\n    })",
+          "sha256": "c2a3375396800a6c8d8e00d98c321d5caf3c91f7938fd90eafb4e82ea95b5ca5"
+        },
+        {
+          "path": "crates/core/flags/parse.rs",
+          "startLine": 81,
+          "endLine": 113,
+          "excerpt": "    // Before we try to take configuration into account, we can bail early\n    // if a special mode was enabled. This is basically only for version and\n    // help output which shouldn't be impacted by extra configuration.\n    if let Some(special) = low.special.take() {\n        return ParseResult::Special(special);\n    }\n    // If the end user says no config, then respect it.\n    if low.no_config {\n        log::debug!(\"not reading config files because --no-config is present\");\n        return ParseResult::Ok(low);\n    }\n    // Look for arguments from a config file. If we got nothing (whether the\n    // file is empty or RIPGREP_CONFIG_PATH wasn't set), then we don't need\n    // to re-parse.\n    let config_args = crate::flags::config::args();\n    if config_args.is_empty() {\n        log::debug!(\"no extra arguments found from configuration file\");\n        return ParseResult::Ok(low);\n    }\n    // The final arguments are just the arguments from the CLI appending to\n    // the end of the config arguments.\n    let mut final_args = config_args;\n    final_args.extend(std::env::args_os().skip(1));\n\n    // Now do the CLI parsing dance again.\n    let mut low = LowArgs::default();\n    if let Err(err) = parser.parse(final_args.into_iter(), &mut low) {\n        return ParseResult::Err(err);\n    }\n    // Reset the message and logging levels, since they could have changed.\n    set_log_levels(&low);\n    ParseResult::Ok(low)\n}",
+          "sha256": "c2a3375396800a6c8d8e00d98c321d5caf3c91f7938fd90eafb4e82ea95b5ca5"
+        }
+      ]
+    }
+  ]
+}

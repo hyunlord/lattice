@@ -1,0 +1,365 @@
+{
+  "repository": "fzf",
+  "arm": "direct",
+  "commit": "c0a193e031f01fb50bf6f7be4381990a3753f7cf",
+  "answers": [
+    {
+      "id": "q01",
+      "answer": "fzf is a general-purpose command-line fuzzy finder and toolkit for interactive terminal workflows. Shell users and scripts pipe candidate text into it and consume selected stdout; without a pipe it can enumerate files. Bundled Bash, Zsh, Fish, Nushell and Vim/Neovim integrations expose it to shell and editor users. Noninteractive filtering is another CLI use.",
+      "citations": [
+        {
+          "url": "https://github.com/junegunn/fzf/blob/c0a193e031f01fb50bf6f7be4381990a3753f7cf/README.md#L27-L40",
+          "lines": "27-40"
+        },
+        {
+          "url": "https://github.com/junegunn/fzf/blob/c0a193e031f01fb50bf6f7be4381990a3753f7cf/README.md#L181-L239",
+          "lines": "181-239"
+        },
+        {
+          "url": "https://github.com/junegunn/fzf/blob/c0a193e031f01fb50bf6f7be4381990a3753f7cf/README.md#L265-L281",
+          "lines": "265-281"
+        },
+        {
+          "url": "https://github.com/junegunn/fzf/blob/c0a193e031f01fb50bf6f7be4381990a3753f7cf/test/test_filter.rb#L4-L33",
+          "lines": "4-33"
+        }
+      ]
+    },
+    {
+      "id": "q02",
+      "answer": "main.go is the executable adapter. src/options.go parses configuration; src/core.go Run coordinates execution. Reader ingests channels, commands, stdin or filesystem candidates. ChunkList stores transformed Items in chunks and creates snapshots. Pattern constructs query terms and matches Items through algo functions. Matcher scans chunks concurrently, sorts and merges results. Terminal handles interactive input/output, query state and displayed results; util.EventBox coordinates events. Shell/editor integrations supply user-facing entry points.",
+      "citations": [
+        {
+          "url": "https://github.com/junegunn/fzf/blob/c0a193e031f01fb50bf6f7be4381990a3753f7cf/main.go#L55-L110",
+          "lines": "55-110"
+        },
+        {
+          "url": "https://github.com/junegunn/fzf/blob/c0a193e031f01fb50bf6f7be4381990a3753f7cf/src/options.go#L3796-L3856",
+          "lines": "3796-3856"
+        },
+        {
+          "url": "https://github.com/junegunn/fzf/blob/c0a193e031f01fb50bf6f7be4381990a3753f7cf/src/core.go#L16-L21",
+          "lines": "16-21"
+        },
+        {
+          "url": "https://github.com/junegunn/fzf/blob/c0a193e031f01fb50bf6f7be4381990a3753f7cf/src/reader.go#L119-L145",
+          "lines": "119-145"
+        },
+        {
+          "url": "https://github.com/junegunn/fzf/blob/c0a193e031f01fb50bf6f7be4381990a3753f7cf/src/chunklist.go#L5-L27",
+          "lines": "5-27"
+        },
+        {
+          "url": "https://github.com/junegunn/fzf/blob/c0a193e031f01fb50bf6f7be4381990a3753f7cf/src/chunklist.go#L78-L88",
+          "lines": "78-88"
+        },
+        {
+          "url": "https://github.com/junegunn/fzf/blob/c0a193e031f01fb50bf6f7be4381990a3753f7cf/src/chunklist.go#L112-L161",
+          "lines": "112-161"
+        },
+        {
+          "url": "https://github.com/junegunn/fzf/blob/c0a193e031f01fb50bf6f7be4381990a3753f7cf/src/pattern.go#L75-L77",
+          "lines": "75-77"
+        },
+        {
+          "url": "https://github.com/junegunn/fzf/blob/c0a193e031f01fb50bf6f7be4381990a3753f7cf/src/pattern.go#L364-L389",
+          "lines": "364-389"
+        },
+        {
+          "url": "https://github.com/junegunn/fzf/blob/c0a193e031f01fb50bf6f7be4381990a3753f7cf/src/matcher.go#L150-L227",
+          "lines": "150-227"
+        },
+        {
+          "url": "https://github.com/junegunn/fzf/blob/c0a193e031f01fb50bf6f7be4381990a3753f7cf/src/terminal.go#L252-L253",
+          "lines": "252-253"
+        },
+        {
+          "url": "https://github.com/junegunn/fzf/blob/c0a193e031f01fb50bf6f7be4381990a3753f7cf/src/terminal.go#L1865-L1875",
+          "lines": "1865-1875"
+        },
+        {
+          "url": "https://github.com/junegunn/fzf/blob/c0a193e031f01fb50bf6f7be4381990a3753f7cf/src/terminal.go#L1953-L1960",
+          "lines": "1953-1960"
+        },
+        {
+          "url": "https://github.com/junegunn/fzf/blob/c0a193e031f01fb50bf6f7be4381990a3753f7cf/src/util/eventbox.go#L5-L43",
+          "lines": "5-43"
+        },
+        {
+          "url": "https://github.com/junegunn/fzf/blob/c0a193e031f01fb50bf6f7be4381990a3753f7cf/README.md#L181-L239",
+          "lines": "181-239"
+        }
+      ]
+    },
+    {
+      "id": "q03",
+      "answer": "The core executable is Go, one module github.com/junegunn/fzf declaring Go 1.23.0. Root package main imports package fzf at /src and /src/protector; internal subpackages include /src/algo, /src/tui and /src/util. Make drives go build, Go unit tests, formatting, Ruby/Minitest integration tests under tmux, and GoReleaser builds/releases. Shell integration scripts cover Bash, Zsh, Fish and Nushell; Vim integration is also shipped. Dependencies include fastwalk, tcell/v2, go-shellwords, go-isatty, uniseg and x/sys/x/term. This is a native terminal application, not a web framework project.",
+      "citations": [
+        {
+          "url": "https://github.com/junegunn/fzf/blob/c0a193e031f01fb50bf6f7be4381990a3753f7cf/go.mod#L1-L19",
+          "lines": "1-19"
+        },
+        {
+          "url": "https://github.com/junegunn/fzf/blob/c0a193e031f01fb50bf6f7be4381990a3753f7cf/main.go#L1-L40",
+          "lines": "1-40"
+        },
+        {
+          "url": "https://github.com/junegunn/fzf/blob/c0a193e031f01fb50bf6f7be4381990a3753f7cf/Makefile#L84-L122",
+          "lines": "84-122"
+        },
+        {
+          "url": "https://github.com/junegunn/fzf/blob/c0a193e031f01fb50bf6f7be4381990a3753f7cf/Makefile#L176-L180",
+          "lines": "176-180"
+        },
+        {
+          "url": "https://github.com/junegunn/fzf/blob/c0a193e031f01fb50bf6f7be4381990a3753f7cf/test/runner.rb#L1-L5",
+          "lines": "1-5"
+        },
+        {
+          "url": "https://github.com/junegunn/fzf/blob/c0a193e031f01fb50bf6f7be4381990a3753f7cf/README.md#L225-L239",
+          "lines": "225-239"
+        }
+      ]
+    },
+    {
+      "id": "q04",
+      "answer": "For the selected fzf executable, execution starts at root main.go: main() (line 55). It calls protector.Protect(), parses os.Args[1:] via fzf.ParseOptions(true, ...), handles help/version/man/script modes, then calls fzf.Run(options) and exit(code, err), which ultimately invokes os.Exit. Run is defined in src/core.go line 53.",
+      "citations": [
+        {
+          "url": "https://github.com/junegunn/fzf/blob/c0a193e031f01fb50bf6f7be4381990a3753f7cf/main.go#L48-L110",
+          "lines": "48-110"
+        },
+        {
+          "url": "https://github.com/junegunn/fzf/blob/c0a193e031f01fb50bf6f7be4381990a3753f7cf/src/core.go#L52-L53",
+          "lines": "52-53"
+        }
+      ]
+    },
+    {
+      "id": "q05",
+      "answer": "In package fzf, src/core.go Run(opts *Options), the opts.Filter branch dispatches streaming Pattern.MatchItem or buffered Matcher.scan filtering.",
+      "citations": [
+        {
+          "url": "https://github.com/junegunn/fzf/blob/c0a193e031f01fb50bf6f7be4381990a3753f7cf/src/core.go#L245-L332",
+          "lines": "245-332"
+        },
+        {
+          "url": "https://github.com/junegunn/fzf/blob/c0a193e031f01fb50bf6f7be4381990a3753f7cf/src/pattern.go#L364-L378",
+          "lines": "364-378"
+        },
+        {
+          "url": "https://github.com/junegunn/fzf/blob/c0a193e031f01fb50bf6f7be4381990a3753f7cf/src/matcher.go#L150-L227",
+          "lines": "150-227"
+        }
+      ]
+    },
+    {
+      "id": "q06",
+      "answer": "Direct internal package dependencies are main → github.com/junegunn/fzf/src (alias fzf) and main → /src/protector: imports prove the package edges; calls prove usage. main invokes protector.Protect, fzf.ParseOptions, fzf.WriteTemporaryFile (man mode), fzf.Run, and reads fzf.Usage/ExitError. Reader, Matcher, Pattern, Terminal, algo, tui and util are not directly imported/called by main.go. Its go:embed directives also directly consume bundled shell scripts and the man page as data. Protector's selected implementation is build-dependent: the inspected !openbsd implementation is a no-op.",
+      "citations": [
+        {
+          "url": "https://github.com/junegunn/fzf/blob/c0a193e031f01fb50bf6f7be4381990a3753f7cf/main.go#L3-L40",
+          "lines": "3-40"
+        },
+        {
+          "url": "https://github.com/junegunn/fzf/blob/c0a193e031f01fb50bf6f7be4381990a3753f7cf/main.go#L48-L110",
+          "lines": "48-110"
+        },
+        {
+          "url": "https://github.com/junegunn/fzf/blob/c0a193e031f01fb50bf6f7be4381990a3753f7cf/src/protector/protector.go#L1-L6",
+          "lines": "1-6"
+        }
+      ]
+    },
+    {
+      "id": "q07",
+      "answer": "Assuming no additional default options: main → ParseOptions → parseOptions stores Filter=\"foo\", Sort=0 → Run/postProcessOptions → streamingFilter (filter present, no sort/tac/sync/bench) → BuildPattern → NewReader(callback) → ReadSource → readFromStdin → feed(os.Stdin). feed splits newline records and calls pusher. The callback builds an Item, calls Pattern.MatchItem, then prints matching Items immediately; input order is preserved. MatchItem → extendedMatch → iter → procFun[termFuzzy], populated with default algo.FuzzyMatchV2. That algorithm may fall back to V1 for large inputs. Printer defaults to fmt.Println; Run returns ExitOk when anything matched, otherwise ExitNoMatch; main exits 0/1. No Terminal.Loop or Matcher.scan is used on this streaming branch. Dynamic calls (pusher, ItemBuilder, Printer and algo function values) are resolved by their construction/default assignments for these assumptions. Environment option files/strings, start reload bindings and flags can alter dispatch; actual producer bytes, OS pipe behavior and runtime output were not executed.",
+      "citations": [
+        {
+          "url": "https://github.com/junegunn/fzf/blob/c0a193e031f01fb50bf6f7be4381990a3753f7cf/main.go#L55-L110",
+          "lines": "55-110"
+        },
+        {
+          "url": "https://github.com/junegunn/fzf/blob/c0a193e031f01fb50bf6f7be4381990a3753f7cf/src/options.go#L2644-L2649",
+          "lines": "2644-2649"
+        },
+        {
+          "url": "https://github.com/junegunn/fzf/blob/c0a193e031f01fb50bf6f7be4381990a3753f7cf/src/options.go#L2764-L2769",
+          "lines": "2764-2769"
+        },
+        {
+          "url": "https://github.com/junegunn/fzf/blob/c0a193e031f01fb50bf6f7be4381990a3753f7cf/src/options.go#L696-L714",
+          "lines": "696-714"
+        },
+        {
+          "url": "https://github.com/junegunn/fzf/blob/c0a193e031f01fb50bf6f7be4381990a3753f7cf/src/options.go#L754-L756",
+          "lines": "754-756"
+        },
+        {
+          "url": "https://github.com/junegunn/fzf/blob/c0a193e031f01fb50bf6f7be4381990a3753f7cf/src/options.go#L3796-L3856",
+          "lines": "3796-3856"
+        },
+        {
+          "url": "https://github.com/junegunn/fzf/blob/c0a193e031f01fb50bf6f7be4381990a3753f7cf/src/core.go#L67-L78",
+          "lines": "67-78"
+        },
+        {
+          "url": "https://github.com/junegunn/fzf/blob/c0a193e031f01fb50bf6f7be4381990a3753f7cf/src/core.go#L147-L152",
+          "lines": "147-152"
+        },
+        {
+          "url": "https://github.com/junegunn/fzf/blob/c0a193e031f01fb50bf6f7be4381990a3753f7cf/src/core.go#L174-L198",
+          "lines": "174-198"
+        },
+        {
+          "url": "https://github.com/junegunn/fzf/blob/c0a193e031f01fb50bf6f7be4381990a3753f7cf/src/core.go#L236-L275",
+          "lines": "236-275"
+        },
+        {
+          "url": "https://github.com/junegunn/fzf/blob/c0a193e031f01fb50bf6f7be4381990a3753f7cf/src/core.go#L329-L352",
+          "lines": "329-352"
+        },
+        {
+          "url": "https://github.com/junegunn/fzf/blob/c0a193e031f01fb50bf6f7be4381990a3753f7cf/src/reader.go#L119-L145",
+          "lines": "119-145"
+        },
+        {
+          "url": "https://github.com/junegunn/fzf/blob/c0a193e031f01fb50bf6f7be4381990a3753f7cf/src/reader.go#L163-L234",
+          "lines": "163-234"
+        },
+        {
+          "url": "https://github.com/junegunn/fzf/blob/c0a193e031f01fb50bf6f7be4381990a3753f7cf/src/pattern.go#L147-L154",
+          "lines": "147-154"
+        },
+        {
+          "url": "https://github.com/junegunn/fzf/blob/c0a193e031f01fb50bf6f7be4381990a3753f7cf/src/pattern.go#L364-L410",
+          "lines": "364-410"
+        },
+        {
+          "url": "https://github.com/junegunn/fzf/blob/c0a193e031f01fb50bf6f7be4381990a3753f7cf/src/pattern.go#L460-L473",
+          "lines": "460-473"
+        },
+        {
+          "url": "https://github.com/junegunn/fzf/blob/c0a193e031f01fb50bf6f7be4381990a3753f7cf/src/algo/algo.go#L679-L707",
+          "lines": "679-707"
+        },
+        {
+          "url": "https://github.com/junegunn/fzf/blob/c0a193e031f01fb50bf6f7be4381990a3753f7cf/src/constants.go#L68-L74",
+          "lines": "68-74"
+        }
+      ]
+    },
+    {
+      "id": "q08",
+      "answer": "The evidenced direct production caller is Run in src/core.go, at two sites: asynchronous initial ingestion for nonstreaming operation (line 197), and synchronous streaming-filter ingestion (line 275). Thus both branches depend on ReadSource's signature/contract. Changed ingestion, readiness or completion behavior could affect them, but a specific regression is speculative without a concrete change. main is indirect through Run. Reader.restart calls readFromCommand directly, not ReadSource; shared-reader behavioral impact is not itself a direct ReadSource dependency. This inspection is not an exhaustive repository-wide caller proof.",
+      "citations": [
+        {
+          "url": "https://github.com/junegunn/fzf/blob/c0a193e031f01fb50bf6f7be4381990a3753f7cf/src/core.go#L187-L198",
+          "lines": "187-198"
+        },
+        {
+          "url": "https://github.com/junegunn/fzf/blob/c0a193e031f01fb50bf6f7be4381990a3753f7cf/src/core.go#L256-L275",
+          "lines": "256-275"
+        },
+        {
+          "url": "https://github.com/junegunn/fzf/blob/c0a193e031f01fb50bf6f7be4381990a3753f7cf/main.go#L109-L110",
+          "lines": "109-110"
+        },
+        {
+          "url": "https://github.com/junegunn/fzf/blob/c0a193e031f01fb50bf6f7be4381990a3753f7cf/src/reader.go#L97-L104",
+          "lines": "97-104"
+        },
+        {
+          "url": "https://github.com/junegunn/fzf/blob/c0a193e031f01fb50bf6f7be4381990a3753f7cf/src/reader.go#L119-L145",
+          "lines": "119-145"
+        }
+      ]
+    },
+    {
+      "id": "q09",
+      "answer": "test/test_filter.rb defines TestFilter, explicitly noninteractive. test_filter_exitstatus runs echo foo | bin/fzf -f foo with both ordinary and --no-sort filtering and asserts stdout plus status 0; the bar query asserts empty output/status 1. test_default_extended and test_exact cover extended syntax and fuzzy/exact differences. test/lib/common.rb defines FZF as the repository's bin/fzf plus environment defaults, so these Ruby backtick commands enter the real executable main → ParseOptions → Run, not a mocked matcher. test/runner.rb loads test_*.rb and minitest/autorun; make itest launches it in an isolated tmux server. These are inspected tests, not tests run during this trial.",
+      "citations": [
+        {
+          "url": "https://github.com/junegunn/fzf/blob/c0a193e031f01fb50bf6f7be4381990a3753f7cf/test/test_filter.rb#L3-L33",
+          "lines": "3-33"
+        },
+        {
+          "url": "https://github.com/junegunn/fzf/blob/c0a193e031f01fb50bf6f7be4381990a3753f7cf/test/lib/common.rb#L22-L26",
+          "lines": "22-26"
+        },
+        {
+          "url": "https://github.com/junegunn/fzf/blob/c0a193e031f01fb50bf6f7be4381990a3753f7cf/test/runner.rb#L1-L5",
+          "lines": "1-5"
+        },
+        {
+          "url": "https://github.com/junegunn/fzf/blob/c0a193e031f01fb50bf6f7be4381990a3753f7cf/Makefile#L90-L94",
+          "lines": "90-94"
+        },
+        {
+          "url": "https://github.com/junegunn/fzf/blob/c0a193e031f01fb50bf6f7be4381990a3753f7cf/main.go#L55-L57",
+          "lines": "55-57"
+        },
+        {
+          "url": "https://github.com/junegunn/fzf/blob/c0a193e031f01fb50bf6f7be4381990a3753f7cf/main.go#L109-L110",
+          "lines": "109-110"
+        },
+        {
+          "url": "https://github.com/junegunn/fzf/blob/c0a193e031f01fb50bf6f7be4381990a3753f7cf/src/core.go#L245-L275",
+          "lines": "245-275"
+        }
+      ]
+    },
+    {
+      "id": "q10",
+      "answer": "CLI argv enters ParseOptions(true, os.Args[1:]); defaults from FZF_DEFAULT_OPTS_FILE and FZF_DEFAULT_OPTS precede explicit arguments. parseOptions handles -f/--filter with nextString, errors if missing, and stores &filter in Options.Filter, distinct from Options.Query. Run optionally prints that original filter and converts it to []rune for patternBuilder/BuildPattern. BuildPattern trims unescaped edge spaces in extended mode, checks the pattern cache, and calls parseTerms. parseTerms preserves escaped spaces, splits terms, handles OR/inverse/exact/prefix/suffix operators, applies smart case and optional normalization, and stores rune terms. With defaults, foo becomes one case-insensitive normalized fuzzy term; MatchItem dispatches it through the fuzzy algorithm. Nonextended mode instead handles a single query and case/normalization directly.",
+      "citations": [
+        {
+          "url": "https://github.com/junegunn/fzf/blob/c0a193e031f01fb50bf6f7be4381990a3753f7cf/main.go#L55-L57",
+          "lines": "55-57"
+        },
+        {
+          "url": "https://github.com/junegunn/fzf/blob/c0a193e031f01fb50bf6f7be4381990a3753f7cf/src/options.go#L2640-L2649",
+          "lines": "2640-2649"
+        },
+        {
+          "url": "https://github.com/junegunn/fzf/blob/c0a193e031f01fb50bf6f7be4381990a3753f7cf/src/options.go#L3796-L3831",
+          "lines": "3796-3831"
+        },
+        {
+          "url": "https://github.com/junegunn/fzf/blob/c0a193e031f01fb50bf6f7be4381990a3753f7cf/src/options.go#L702-L709",
+          "lines": "702-709"
+        },
+        {
+          "url": "https://github.com/junegunn/fzf/blob/c0a193e031f01fb50bf6f7be4381990a3753f7cf/src/core.go#L236-L251",
+          "lines": "236-251"
+        },
+        {
+          "url": "https://github.com/junegunn/fzf/blob/c0a193e031f01fb50bf6f7be4381990a3753f7cf/src/pattern.go#L75-L156",
+          "lines": "75-156"
+        },
+        {
+          "url": "https://github.com/junegunn/fzf/blob/c0a193e031f01fb50bf6f7be4381990a3753f7cf/src/pattern.go#L159-L236",
+          "lines": "159-236"
+        },
+        {
+          "url": "https://github.com/junegunn/fzf/blob/c0a193e031f01fb50bf6f7be4381990a3753f7cf/src/pattern.go#L364-L410",
+          "lines": "364-410"
+        }
+      ]
+    }
+  ],
+  "toolErrors": [
+    {
+      "url": "https://github.com/junegunn/fzf/tree/c0a193e031f01fb50bf6f7be4381990a3753f7cf/test",
+      "error": "web open returned Internal Error; raw pinned source access succeeded."
+    }
+  ],
+  "limitations": [
+    "Static pinned-source inspection only; no build or runtime tests executed.",
+    "ReadSource caller evidence is bounded to inspected production code, not an exhaustive symbol search.",
+    "Pipeline explanation assumes no additional environment/default options; actual input bytes are unspecified.",
+    "Citation line ranges use GitHub's 1-based numbering; raw browser output displayed 0-based lines."
+  ],
+  "selfReportedStartedAt": "2026-10-13 06:45:10 UTC",
+  "selfReportedFinishedAt": "2026-10-13 06:48:39 UTC"
+}

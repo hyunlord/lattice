@@ -1,0 +1,355 @@
+{
+  "id": "unity-boatattack",
+  "repository": "Unity-Technologies/BoatAttack",
+  "commit": "6acf5f773a440030489cb5e2b3c009fb5fe1e8ce",
+  "trackedFiles": 1376,
+  "questions": [
+    {
+      "id": "unity-boatattack-q1",
+      "question": "What does BoatAttack do, and who runs it?",
+      "answer": "BoatAttack is a Unity Universal RP demonstration and learning/testing project: a vertical slice of a boat racing game with boats and an island. Developers open it in Unity; a player build runs the demo.",
+      "requiredFacts": [
+        "Unity Universal RP testing and learning demo",
+        "Boat racing vertical slice",
+        "Opened in Unity or built as a player"
+      ],
+      "evidence": [
+        {
+          "path": "README.md",
+          "startLine": 3,
+          "endLine": 23,
+          "excerpt": "# Boat Attack\n###### Demo Project using the Universal RP from Unity3D\n\n[![Click for Youtube Video](https://media.githubusercontent.com/media/Verasl/BoatAttack/release/2019.3/Assets/Textures/UI/welcome-title.png)](https://drive.google.com/file/d/1PTNdhnqbhzSWUCfAinIefP5cfr6Dezuw/view)\n\nThis Unity project has been created to aid the testing and development of Universal RP. The project is a small vertical slice of a boat racing game, complete with race-able boats and island environment.\n\nFeel free to post any issues, but know this is a 'as is' repo, it's meant more for discovery of how some of the Universal RP features work and a learning resource for some tricks.\n\n**Project Features**:\n  * Uses Universal RP from Unity\n  * Mobile optimized, low poly, LODs, no compute\n  * C# Jobs buoyancy system\n  * Cinemachine camera setups\n  * Shader Graph usage\n  * Post-processing v3 with Volume blending\n  * Addressables asset management package\n  * Custom Universal RP rendering for planar reflections via [SRP callbacks](https://docs.unity3d.com/ScriptReference/Rendering.RenderPipelineManager.html)\n  * Custom SciptableRenderPass usage for WaterFX and Caustics\n  * Gerstner based water system in local package(WIP)\n  * Much more..",
+          "sha256": "1f550d4b9803a5612dab9c23abbc45f13a37a3d7cc26a628fffd7d28385fc3f4"
+        },
+        {
+          "path": "README.md",
+          "startLine": 38,
+          "endLine": 52,
+          "excerpt": "#### Load the project:\nOnce you have the project files locally you can load the project, ideally in the Unity version that is noted in the `ProjectSettings/ProjectVersion.txt` for the best experience.\nUpon loading the project will display a small welcome screen with some buttons to load starting scenes.\n\nScenes worth noting:\n - `scenes/main_menu.unity` - Starting menu scene if you want to have a full play-through of the demo.\n - `scenes/demo_island.unity` - Setup to play in the editor and go straight into an AI based race.\n - `scenes/_levels/level_Island.unity` - The scene loaded when entering from the main menu.\n - `scenes/Testing/***.unity` - Assorted test scenes, these are in need of updating and come as is.\n\n#### Build the project:\nOne thing to make sure you do before building is make sure to build the addressable assets, this can be done via the addressables window, for more information please checkout the addressables [package documentation](https://docs.unity3d.com/Packages/com.unity.addressables@latest).\nOnce the addressable assets are built you can continue to build a player as usual.\n\nOne thing to mention is not all controls and platforms have been tested, especially for the menu work. if you want to just see the project running on a device you can add the `scenes/demo_island.unity` scene to the build list and disable/remove the others.",
+          "sha256": "1f550d4b9803a5612dab9c23abbc45f13a37a3d7cc26a628fffd7d28385fc3f4"
+        }
+      ]
+    },
+    {
+      "id": "unity-boatattack-q2",
+      "question": "Name the principal BoatAttack components and their responsibilities.",
+      "answer": "Boat gameplay scripts bind human or AI controllers to an Engine; the embedded WaterSystem package supplies URP water; scenes provide menu, island race and level entry; Cinemachine, Addressables and rendering features support cameras, assets and presentation.",
+      "requiredFacts": [
+        "Boat/controllers/Engine handle boat gameplay",
+        "WaterSystem is embedded URP water",
+        "Menu and island scenes organize play",
+        "Cinemachine and Addressables provide camera and asset support"
+      ],
+      "evidence": [
+        {
+          "path": "README.md",
+          "startLine": 12,
+          "endLine": 23,
+          "excerpt": "**Project Features**:\n  * Uses Universal RP from Unity\n  * Mobile optimized, low poly, LODs, no compute\n  * C# Jobs buoyancy system\n  * Cinemachine camera setups\n  * Shader Graph usage\n  * Post-processing v3 with Volume blending\n  * Addressables asset management package\n  * Custom Universal RP rendering for planar reflections via [SRP callbacks](https://docs.unity3d.com/ScriptReference/Rendering.RenderPipelineManager.html)\n  * Custom SciptableRenderPass usage for WaterFX and Caustics\n  * Gerstner based water system in local package(WIP)\n  * Much more..",
+          "sha256": "1f550d4b9803a5612dab9c23abbc45f13a37a3d7cc26a628fffd7d28385fc3f4"
+        },
+        {
+          "path": "README.md",
+          "startLine": 42,
+          "endLine": 50,
+          "excerpt": "Scenes worth noting:\n - `scenes/main_menu.unity` - Starting menu scene if you want to have a full play-through of the demo.\n - `scenes/demo_island.unity` - Setup to play in the editor and go straight into an AI based race.\n - `scenes/_levels/level_Island.unity` - The scene loaded when entering from the main menu.\n - `scenes/Testing/***.unity` - Assorted test scenes, these are in need of updating and come as is.\n\n#### Build the project:\nOne thing to make sure you do before building is make sure to build the addressable assets, this can be done via the addressables window, for more information please checkout the addressables [package documentation](https://docs.unity3d.com/Packages/com.unity.addressables@latest).\nOnce the addressable assets are built you can continue to build a player as usual.",
+          "sha256": "1f550d4b9803a5612dab9c23abbc45f13a37a3d7cc26a628fffd7d28385fc3f4"
+        },
+        {
+          "path": "Assets/Scripts/Boat/Boat.cs",
+          "startLine": 57,
+          "endLine": 78,
+          "excerpt": "        public void Setup(int player = 1, bool isHuman = true, BoatLivery livery = new BoatLivery())\n        {\n            _playerIndex = player - 1;\n            cam.gameObject.layer = LayerMask.NameToLayer(\"Player\" + player); // assign player layer\n            SetupController(isHuman); // create or change controller\n            Colorize(livery);\n        }\n\n        void SetupController(bool isHuman)\n        {\n            var controllerType = isHuman ? typeof(HumanController) : typeof(AiController);\n            // If controller exists then make sure it's teh right one, if not add it\n            if (_controller)\n            {\n                if (_controller.GetType() == controllerType) return;\n                Destroy(_controller);\n                _controller = gameObject.AddComponent(controllerType);\n            }\n            else\n            {\n                _controller = gameObject.AddComponent(controllerType);\n            }",
+          "sha256": "87daed17f35d26c5f001deef4dead7b7c0c97cdc16617e544fa4ed038c4a6507"
+        },
+        {
+          "path": "Packages/com.verasl.water-system/package.json",
+          "startLine": 1,
+          "endLine": 12,
+          "excerpt": "{\n  \"name\": \"com.verasl.water-system\",\n  \"description\": \"A water system for URP.\",\n  \"version\": \"1.4.0-preview.1\",\n  \"unity\": \"2019.4\",\n  \"displayName\": \"Boat Attack Water System\",\n  \"dependencies\": {\n    \"com.unity.mathematics\": \"1.1.0\",\n    \"com.unity.burst\": \"1.2.3\",\n    \"com.unity.render-pipelines.universal\": \"7.4.1\"\n  }\n}",
+          "sha256": "ab494bccaf2a9b75029d9781c4017a70080fc6aafa46891900089e6c8514b5e8"
+        }
+      ]
+    },
+    {
+      "id": "unity-boatattack-q3",
+      "question": "Which languages, framework and package boundaries organize BoatAttack?",
+      "answer": "Gameplay is C# MonoBehaviour code in Assets/Scripts, run by Unity with Universal RP and the Input System. Packages/manifest.json declares package dependencies. Packages/com.verasl.water-system is a local package with its own package.json and WaterSystem runtime assembly definition. Shader Graph is also a documented rendering feature.",
+      "requiredFacts": [
+        "C# and Unity MonoBehaviour gameplay",
+        "Universal RP and Input System manifest dependencies",
+        "Embedded com.verasl.water-system package and WaterSystem asmdef",
+        "Shader Graph rendering"
+      ],
+      "evidence": [
+        {
+          "path": "Assets/Scripts/Boat/Engine.cs",
+          "startLine": 1,
+          "endLine": 10,
+          "excerpt": "﻿using System;\nusing UnityEngine;\nusing Unity.Collections;\nusing Unity.Mathematics;\nusing WaterSystem;\n\nnamespace BoatAttack\n{\n    public class Engine : MonoBehaviour\n    {",
+          "sha256": "0358613708a3ab811cbdd898ae8117299cc4f11ddf75f118bf12f1c84133a384"
+        },
+        {
+          "path": "Packages/manifest.json",
+          "startLine": 1,
+          "endLine": 17,
+          "excerpt": "{\n  \"dependencies\": {\n    \"com.unity.2d.sprite\": \"1.0.0\",\n    \"com.unity.addressables\": \"1.19.11\",\n    \"com.unity.burst\": \"1.4.11\",\n    \"com.unity.cinemachine\": \"2.9.1\",\n    \"com.unity.ide.rider\": \"2.0.7\",\n    \"com.unity.inputsystem\": \"1.1.1\",\n    \"com.unity.mathematics\": \"1.2.5\",\n    \"com.unity.memoryprofiler\": \"0.4.2-preview.1\",\n    \"com.unity.render-pipelines.universal\": \"10.7.0\",\n    \"com.unity.test-framework\": \"1.1.30\",\n    \"com.unity.testframework.graphics\": \"7.8.17-exp.1\",\n    \"com.unity.textmeshpro\": \"3.0.6\",\n    \"com.unity.timeline\": \"1.4.8\",\n    \"com.unity.ugui\": \"1.0.0\",\n    \"net.peeweek.gameplay-ingredients\": \"2020.2.10\",",
+          "sha256": "7676398bb6f602c1ffa74e1de83bb8281bc41d7ba82ba8eb086986eb594e7f50"
+        },
+        {
+          "path": "Packages/com.verasl.water-system/package.json",
+          "startLine": 1,
+          "endLine": 12,
+          "excerpt": "{\n  \"name\": \"com.verasl.water-system\",\n  \"description\": \"A water system for URP.\",\n  \"version\": \"1.4.0-preview.1\",\n  \"unity\": \"2019.4\",\n  \"displayName\": \"Boat Attack Water System\",\n  \"dependencies\": {\n    \"com.unity.mathematics\": \"1.1.0\",\n    \"com.unity.burst\": \"1.2.3\",\n    \"com.unity.render-pipelines.universal\": \"7.4.1\"\n  }\n}",
+          "sha256": "ab494bccaf2a9b75029d9781c4017a70080fc6aafa46891900089e6c8514b5e8"
+        },
+        {
+          "path": "Packages/com.verasl.water-system/Scripts/WaterSystem.Runtime.asmdef",
+          "startLine": 1,
+          "endLine": 19,
+          "excerpt": "{\n    \"name\": \"WaterSystem\",\n    \"references\": [\n        \"GUID:d8b63aba1907145bea998dd612889d6b\",\n        \"GUID:15fc0a57446b3144c949da3e2b9737a9\",\n        \"GUID:df380645f10b7bc4b97d4f5eb6303d95\",\n        \"GUID:2665a8d13d1b3f18800f46e256720795\",\n        \"GUID:9e24947de15b9834991c9d8411ea37cf\"\n    ],\n    \"includePlatforms\": [],\n    \"excludePlatforms\": [],\n    \"allowUnsafeCode\": false,\n    \"overrideReferences\": false,\n    \"precompiledReferences\": [],\n    \"autoReferenced\": true,\n    \"defineConstraints\": [],\n    \"versionDefines\": [],\n    \"noEngineReferences\": false\n}",
+          "sha256": "9aedad00c64f52d19e8aca2ba3d2d4bb978926a02daa8779f79c2270b4a15ae5"
+        },
+        {
+          "path": "README.md",
+          "startLine": 12,
+          "endLine": 23,
+          "excerpt": "**Project Features**:\n  * Uses Universal RP from Unity\n  * Mobile optimized, low poly, LODs, no compute\n  * C# Jobs buoyancy system\n  * Cinemachine camera setups\n  * Shader Graph usage\n  * Post-processing v3 with Volume blending\n  * Addressables asset management package\n  * Custom Universal RP rendering for planar reflections via [SRP callbacks](https://docs.unity3d.com/ScriptReference/Rendering.RenderPipelineManager.html)\n  * Custom SciptableRenderPass usage for WaterFX and Caustics\n  * Gerstner based water system in local package(WIP)\n  * Much more..",
+          "sha256": "1f550d4b9803a5612dab9c23abbc45f13a37a3d7cc26a628fffd7d28385fc3f4"
+        }
+      ]
+    },
+    {
+      "id": "unity-boatattack-q4",
+      "question": "Where does the selected human-controlled boat use begin?",
+      "answer": "The documented full-demo entry is the main_menu scene. For the selected gameplay slice, Boat.Setup calls SetupController, which selects HumanController when isHuman is true and attaches the component. Unity invokes HumanController.Awake/OnEnable/FixedUpdate; these lifecycle callbacks are engine dispatch, not a repository main function.",
+      "requiredFacts": [
+        "main_menu is documented full-demo entry",
+        "Boat.Setup calls SetupController",
+        "isHuman selects HumanController",
+        "Unity lifecycle is an external dispatch boundary"
+      ],
+      "evidence": [
+        {
+          "path": "README.md",
+          "startLine": 38,
+          "endLine": 46,
+          "excerpt": "#### Load the project:\nOnce you have the project files locally you can load the project, ideally in the Unity version that is noted in the `ProjectSettings/ProjectVersion.txt` for the best experience.\nUpon loading the project will display a small welcome screen with some buttons to load starting scenes.\n\nScenes worth noting:\n - `scenes/main_menu.unity` - Starting menu scene if you want to have a full play-through of the demo.\n - `scenes/demo_island.unity` - Setup to play in the editor and go straight into an AI based race.\n - `scenes/_levels/level_Island.unity` - The scene loaded when entering from the main menu.\n - `scenes/Testing/***.unity` - Assorted test scenes, these are in need of updating and come as is.",
+          "sha256": "1f550d4b9803a5612dab9c23abbc45f13a37a3d7cc26a628fffd7d28385fc3f4"
+        },
+        {
+          "path": "Assets/Scripts/Boat/Boat.cs",
+          "startLine": 57,
+          "endLine": 78,
+          "excerpt": "        public void Setup(int player = 1, bool isHuman = true, BoatLivery livery = new BoatLivery())\n        {\n            _playerIndex = player - 1;\n            cam.gameObject.layer = LayerMask.NameToLayer(\"Player\" + player); // assign player layer\n            SetupController(isHuman); // create or change controller\n            Colorize(livery);\n        }\n\n        void SetupController(bool isHuman)\n        {\n            var controllerType = isHuman ? typeof(HumanController) : typeof(AiController);\n            // If controller exists then make sure it's teh right one, if not add it\n            if (_controller)\n            {\n                if (_controller.GetType() == controllerType) return;\n                Destroy(_controller);\n                _controller = gameObject.AddComponent(controllerType);\n            }\n            else\n            {\n                _controller = gameObject.AddComponent(controllerType);\n            }",
+          "sha256": "87daed17f35d26c5f001deef4dead7b7c0c97cdc16617e544fa4ed038c4a6507"
+        },
+        {
+          "path": "Assets/Scripts/Boat/HumanController.cs",
+          "startLine": 18,
+          "endLine": 38,
+          "excerpt": "        private void Awake()\n        {\n            _controls = new InputControls();\n            \n            _controls.BoatControls.Trottle.performed += context => _throttle = context.ReadValue<float>();\n            _controls.BoatControls.Trottle.canceled += context => _throttle = 0f;\n            \n            _controls.BoatControls.Steering.performed += context => _steering = context.ReadValue<float>();\n            _controls.BoatControls.Steering.canceled += context => _steering = 0f;\n\n            _controls.BoatControls.Reset.performed += ResetBoat;\n            _controls.BoatControls.Pause.performed += FreezeBoat;\n\n            _controls.DebugControls.TimeOfDay.performed += SelectTime;\n        }\n\n        public override void OnEnable()\n        {\n            base.OnEnable();\n            _controls.BoatControls.Enable();\n        }",
+          "sha256": "149b80b56e725e3d5deb6ec0ed19e973f9e911fb39c5dda7d571df02e7b8489a"
+        },
+        {
+          "path": "Assets/Scripts/Boat/HumanController.cs",
+          "startLine": 70,
+          "endLine": 74,
+          "excerpt": "        void FixedUpdate()\n        {\n            engine.Accelerate(_throttle);\n            engine.Turn(_steering);\n        }",
+          "sha256": "149b80b56e725e3d5deb6ec0ed19e973f9e911fb39c5dda7d571df02e7b8489a"
+        }
+      ]
+    },
+    {
+      "id": "unity-boatattack-q5",
+      "question": "Where is X, water-gated throttle acceleration, implemented?",
+      "answer": "Assets/Scripts/Boat/Engine.cs, Engine.Accelerate: when _yHeight > -0.1f it clamps modifier to [0,1], flattens and normalizes rigidbody forward, then applies horsePower-scaled acceleration and relative torque.",
+      "requiredFacts": [
+        "Engine.Accelerate is the definition",
+        "Requires _yHeight > -0.1f",
+        "Clamps throttle to 0..1",
+        "Applies forward force and relative torque"
+      ],
+      "evidence": [
+        {
+          "path": "Assets/Scripts/Boat/Engine.cs",
+          "startLine": 60,
+          "endLine": 75,
+          "excerpt": "        /// <summary>\n        /// Controls the acceleration of the boat\n        /// </summary>\n        /// <param name=\"modifier\">Acceleration modifier, adds force in the 0-1 range</param>\n        public void Accelerate(float modifier)\n        {\n            if (_yHeight > -0.1f) // if the engine is deeper than 0.1\n            {\n                modifier = Mathf.Clamp(modifier, 0f, 1f); // clamp for reasonable values\n                var forward = RB.transform.forward;\n                forward.y = 0f;\n                forward.Normalize();\n                RB.AddForce(horsePower * modifier * forward, ForceMode.Acceleration); // add force forward based on input and horsepower\n                RB.AddRelativeTorque(-Vector3.right * modifier, ForceMode.Acceleration);\n            }\n        }",
+          "sha256": "0358613708a3ab811cbdd898ae8117299cc4f11ddf75f118bf12f1c84133a384"
+        }
+      ]
+    },
+    {
+      "id": "unity-boatattack-q6",
+      "question": "Which internal components does A, HumanController, directly use, and what proves each direction?",
+      "answer": "HumanController constructs InputControls, calls Engine.Accelerate and Engine.Turn from FixedUpdate, calls Boat.ResetPosition for Reset, and DayNightController.SelectPreset for the debug time input. BaseController.OnEnable resolves the Boat component and its Engine. Input System and Unity lifecycle are external framework dependencies.",
+      "requiredFacts": [
+        "HumanController -> InputControls construction",
+        "HumanController -> Engine calls",
+        "HumanController -> Boat.ResetPosition",
+        "HumanController -> DayNightController.SelectPreset",
+        "BaseController resolves Boat.engine"
+      ],
+      "evidence": [
+        {
+          "path": "Assets/Scripts/Boat/HumanController.cs",
+          "startLine": 18,
+          "endLine": 38,
+          "excerpt": "        private void Awake()\n        {\n            _controls = new InputControls();\n            \n            _controls.BoatControls.Trottle.performed += context => _throttle = context.ReadValue<float>();\n            _controls.BoatControls.Trottle.canceled += context => _throttle = 0f;\n            \n            _controls.BoatControls.Steering.performed += context => _steering = context.ReadValue<float>();\n            _controls.BoatControls.Steering.canceled += context => _steering = 0f;\n\n            _controls.BoatControls.Reset.performed += ResetBoat;\n            _controls.BoatControls.Pause.performed += FreezeBoat;\n\n            _controls.DebugControls.TimeOfDay.performed += SelectTime;\n        }\n\n        public override void OnEnable()\n        {\n            base.OnEnable();\n            _controls.BoatControls.Enable();\n        }",
+          "sha256": "149b80b56e725e3d5deb6ec0ed19e973f9e911fb39c5dda7d571df02e7b8489a"
+        },
+        {
+          "path": "Assets/Scripts/Boat/HumanController.cs",
+          "startLine": 45,
+          "endLine": 74,
+          "excerpt": "        private void ResetBoat(InputAction.CallbackContext context)\n        {\n            controller.ResetPosition();\n        }\n\n        private void FreezeBoat(InputAction.CallbackContext context)\n        {\n            _paused = !_paused;\n            if(_paused)\n            {\n                Time.timeScale = 0f;\n            }\n            else\n            {\n                Time.timeScale = 1f;\n            }\n        }\n\n        private void SelectTime(InputAction.CallbackContext context)\n        {\n            var value = context.ReadValue<float>();\n            Debug.Log($\"changing day time, input:{value}\");\n            DayNightController.SelectPreset(value);\n        }\n\n        void FixedUpdate()\n        {\n            engine.Accelerate(_throttle);\n            engine.Turn(_steering);\n        }",
+          "sha256": "149b80b56e725e3d5deb6ec0ed19e973f9e911fb39c5dda7d571df02e7b8489a"
+        },
+        {
+          "path": "Assets/Scripts/Boat/BaseController.cs",
+          "startLine": 5,
+          "endLine": 14,
+          "excerpt": "{\n    public class BaseController : MonoBehaviour\n    {\n        [NonSerialized] protected Boat controller; // the boat controller\n        [NonSerialized] protected Engine engine; // the engine script\n\n        public virtual void OnEnable()\n        {\n            if(TryGetComponent(out controller)) // get the controller script\n                engine = controller.engine;",
+          "sha256": "c56a39f4c9f4fb17bda51a1742a1abddf2eeb9873fdae73156535f47a4da440b"
+        }
+      ]
+    },
+    {
+      "id": "unity-boatattack-q7",
+      "question": "For R, holding throttle on a human boat, give the supported path to acceleration and identify dispatch boundaries.",
+      "answer": "InputControls.BoatControls.Trottle.performed stores ReadValue<float>() in _throttle; canceled sets it to zero. Unity FixedUpdate calls engine.Accelerate(_throttle), whose water gate and clamp precede Rigidbody.AddForce and AddRelativeTorque. BaseController obtains engine from Boat. Input callbacks, fixed-step scheduling and physics integration are Unity boundaries; source does not prove a particular frame was executed.",
+      "requiredFacts": [
+        "Trottle.performed sets _throttle; canceled clears it",
+        "FixedUpdate invokes Engine.Accelerate",
+        "BaseController obtains Boat.engine",
+        "Water gate/clamp precede Rigidbody force",
+        "Input callbacks and physics are engine-dispatched"
+      ],
+      "evidence": [
+        {
+          "path": "Assets/Scripts/Boat/HumanController.cs",
+          "startLine": 18,
+          "endLine": 29,
+          "excerpt": "        private void Awake()\n        {\n            _controls = new InputControls();\n            \n            _controls.BoatControls.Trottle.performed += context => _throttle = context.ReadValue<float>();\n            _controls.BoatControls.Trottle.canceled += context => _throttle = 0f;\n            \n            _controls.BoatControls.Steering.performed += context => _steering = context.ReadValue<float>();\n            _controls.BoatControls.Steering.canceled += context => _steering = 0f;\n\n            _controls.BoatControls.Reset.performed += ResetBoat;\n            _controls.BoatControls.Pause.performed += FreezeBoat;",
+          "sha256": "149b80b56e725e3d5deb6ec0ed19e973f9e911fb39c5dda7d571df02e7b8489a"
+        },
+        {
+          "path": "Assets/Scripts/Boat/HumanController.cs",
+          "startLine": 70,
+          "endLine": 74,
+          "excerpt": "        void FixedUpdate()\n        {\n            engine.Accelerate(_throttle);\n            engine.Turn(_steering);\n        }",
+          "sha256": "149b80b56e725e3d5deb6ec0ed19e973f9e911fb39c5dda7d571df02e7b8489a"
+        },
+        {
+          "path": "Assets/Scripts/Boat/BaseController.cs",
+          "startLine": 10,
+          "endLine": 14,
+          "excerpt": "\n        public virtual void OnEnable()\n        {\n            if(TryGetComponent(out controller)) // get the controller script\n                engine = controller.engine;",
+          "sha256": "c56a39f4c9f4fb17bda51a1742a1abddf2eeb9873fdae73156535f47a4da440b"
+        },
+        {
+          "path": "Assets/Scripts/Boat/Engine.cs",
+          "startLine": 63,
+          "endLine": 75,
+          "excerpt": "        /// <param name=\"modifier\">Acceleration modifier, adds force in the 0-1 range</param>\n        public void Accelerate(float modifier)\n        {\n            if (_yHeight > -0.1f) // if the engine is deeper than 0.1\n            {\n                modifier = Mathf.Clamp(modifier, 0f, 1f); // clamp for reasonable values\n                var forward = RB.transform.forward;\n                forward.y = 0f;\n                forward.Normalize();\n                RB.AddForce(horsePower * modifier * forward, ForceMode.Acceleration); // add force forward based on input and horsepower\n                RB.AddRelativeTorque(-Vector3.right * modifier, ForceMode.Acceleration);\n            }\n        }",
+          "sha256": "0358613708a3ab811cbdd898ae8117299cc4f11ddf75f118bf12f1c84133a384"
+        }
+      ]
+    },
+    {
+      "id": "unity-boatattack-q8",
+      "question": "If Y, Engine.Accelerate throttle semantics, changes, which direct consumers are evidenced?",
+      "answer": "HumanController.FixedUpdate passes _throttle; AiController passes 1f or 0.25f according to dot > 0. These direct calls prove both controllers consume the method. Changed movement, balance or race results would require runtime validation, not merely these dependencies.",
+      "requiredFacts": [
+        "HumanController directly calls Accelerate",
+        "AiController directly calls Accelerate with 1f/0.25f",
+        "Behavioral race impact is not established by call evidence"
+      ],
+      "evidence": [
+        {
+          "path": "Assets/Scripts/Boat/HumanController.cs",
+          "startLine": 70,
+          "endLine": 74,
+          "excerpt": "        void FixedUpdate()\n        {\n            engine.Accelerate(_throttle);\n            engine.Turn(_steering);\n        }",
+          "sha256": "149b80b56e725e3d5deb6ec0ed19e973f9e911fb39c5dda7d571df02e7b8489a"
+        },
+        {
+          "path": "Assets/Scripts/Boat/AiController.cs",
+          "startLine": 78,
+          "endLine": 87,
+          "excerpt": "            //\\\\\\\\\\\\\\\\Get angle to the destination and the side\n            var normDir = _pathPoint[_curPoint] - transform.position;\n            normDir = normDir.normalized;\n            var dot = Vector3.Dot(normDir, transform.forward);\n            _targetSide = Vector3.Cross(transform.forward, normDir).y;//positive on right side, negative on left side\n\n            engine.Turn(Mathf.Clamp(_targetSide, -1.0f, 1.0f));\n            engine.Accelerate(dot > 0 ? 1f : 0.25f);\n        }\n",
+          "sha256": "3fab62b44cc36daba06eadfd786428dc6ef0c85b1721c72af4e47c8ae9d24de3"
+        }
+      ]
+    },
+    {
+      "id": "unity-boatattack-q9",
+      "question": "Which documented example exercises X, boat acceleration, and how does it enter the implementation?",
+      "answer": "README documents demo_island as a scene that goes straight into an AI race. The corresponding source path is Boat.SetupController selecting AiController for non-human boats, whose update logic calls Engine.Accelerate. This is a documented manual example and static connection, not an executed test or a claim that every scene reference was resolved.",
+      "requiredFacts": [
+        "demo_island is documented AI-race example",
+        "Non-human controller selection selects AiController",
+        "AiController calls Engine.Accelerate",
+        "No executed-test claim"
+      ],
+      "evidence": [
+        {
+          "path": "README.md",
+          "startLine": 42,
+          "endLine": 46,
+          "excerpt": "Scenes worth noting:\n - `scenes/main_menu.unity` - Starting menu scene if you want to have a full play-through of the demo.\n - `scenes/demo_island.unity` - Setup to play in the editor and go straight into an AI based race.\n - `scenes/_levels/level_Island.unity` - The scene loaded when entering from the main menu.\n - `scenes/Testing/***.unity` - Assorted test scenes, these are in need of updating and come as is.",
+          "sha256": "1f550d4b9803a5612dab9c23abbc45f13a37a3d7cc26a628fffd7d28385fc3f4"
+        },
+        {
+          "path": "Assets/Scripts/Boat/Boat.cs",
+          "startLine": 57,
+          "endLine": 78,
+          "excerpt": "        public void Setup(int player = 1, bool isHuman = true, BoatLivery livery = new BoatLivery())\n        {\n            _playerIndex = player - 1;\n            cam.gameObject.layer = LayerMask.NameToLayer(\"Player\" + player); // assign player layer\n            SetupController(isHuman); // create or change controller\n            Colorize(livery);\n        }\n\n        void SetupController(bool isHuman)\n        {\n            var controllerType = isHuman ? typeof(HumanController) : typeof(AiController);\n            // If controller exists then make sure it's teh right one, if not add it\n            if (_controller)\n            {\n                if (_controller.GetType() == controllerType) return;\n                Destroy(_controller);\n                _controller = gameObject.AddComponent(controllerType);\n            }\n            else\n            {\n                _controller = gameObject.AddComponent(controllerType);\n            }",
+          "sha256": "87daed17f35d26c5f001deef4dead7b7c0c97cdc16617e544fa4ed038c4a6507"
+        },
+        {
+          "path": "Assets/Scripts/Boat/AiController.cs",
+          "startLine": 78,
+          "endLine": 87,
+          "excerpt": "            //\\\\\\\\\\\\\\\\Get angle to the destination and the side\n            var normDir = _pathPoint[_curPoint] - transform.position;\n            normDir = normDir.normalized;\n            var dot = Vector3.Dot(normDir, transform.forward);\n            _targetSide = Vector3.Cross(transform.forward, normDir).y;//positive on right side, negative on left side\n\n            engine.Turn(Mathf.Clamp(_targetSide, -1.0f, 1.0f));\n            engine.Accelerate(dot > 0 ? 1f : 0.25f);\n        }\n",
+          "sha256": "3fab62b44cc36daba06eadfd786428dc6ef0c85b1721c72af4e47c8ae9d24de3"
+        }
+      ]
+    },
+    {
+      "id": "unity-boatattack-q10",
+      "question": "Where does Z, throttle input, enter and get transformed?",
+      "answer": "HumanController.Awake subscribes to the intentionally spelled Trottle action and reads a float into _throttle; cancel resets it. FixedUpdate passes it to Engine.Accelerate, where the water-depth gate and 0..1 clamp precede horsePower scaling and force application.",
+      "requiredFacts": [
+        "Trottle action callback reads float",
+        "Cancellation sets throttle zero",
+        "FixedUpdate passes throttle to Engine",
+        "Engine gates/clamps/scales input"
+      ],
+      "evidence": [
+        {
+          "path": "Assets/Scripts/Boat/HumanController.cs",
+          "startLine": 18,
+          "endLine": 25,
+          "excerpt": "        private void Awake()\n        {\n            _controls = new InputControls();\n            \n            _controls.BoatControls.Trottle.performed += context => _throttle = context.ReadValue<float>();\n            _controls.BoatControls.Trottle.canceled += context => _throttle = 0f;\n            \n            _controls.BoatControls.Steering.performed += context => _steering = context.ReadValue<float>();",
+          "sha256": "149b80b56e725e3d5deb6ec0ed19e973f9e911fb39c5dda7d571df02e7b8489a"
+        },
+        {
+          "path": "Assets/Scripts/Boat/HumanController.cs",
+          "startLine": 70,
+          "endLine": 74,
+          "excerpt": "        void FixedUpdate()\n        {\n            engine.Accelerate(_throttle);\n            engine.Turn(_steering);\n        }",
+          "sha256": "149b80b56e725e3d5deb6ec0ed19e973f9e911fb39c5dda7d571df02e7b8489a"
+        },
+        {
+          "path": "Assets/Scripts/Boat/Engine.cs",
+          "startLine": 63,
+          "endLine": 75,
+          "excerpt": "        /// <param name=\"modifier\">Acceleration modifier, adds force in the 0-1 range</param>\n        public void Accelerate(float modifier)\n        {\n            if (_yHeight > -0.1f) // if the engine is deeper than 0.1\n            {\n                modifier = Mathf.Clamp(modifier, 0f, 1f); // clamp for reasonable values\n                var forward = RB.transform.forward;\n                forward.y = 0f;\n                forward.Normalize();\n                RB.AddForce(horsePower * modifier * forward, ForceMode.Acceleration); // add force forward based on input and horsepower\n                RB.AddRelativeTorque(-Vector3.right * modifier, ForceMode.Acceleration);\n            }\n        }",
+          "sha256": "0358613708a3ab811cbdd898ae8117299cc4f11ddf75f118bf12f1c84133a384"
+        }
+      ]
+    }
+  ]
+}

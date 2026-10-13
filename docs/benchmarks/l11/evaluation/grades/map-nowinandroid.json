@@ -1,0 +1,135 @@
+{
+  "repository": "android/nowinandroid",
+  "commit": "a49ed253d75e61a2b6ab80a8da677b57437b08eb",
+  "arm": "map",
+  "gradedBy": "independent fresh grader map-first",
+  "answerSha256": "7ea7c26c520dc080973f2c2823360ff4fad9179a891de2eefa80123bf65d8240",
+  "questions": [
+    {
+      "id": "nowinandroid-q1",
+      "score": 2,
+      "reason": "Correct Android news/reference purpose, intended developer audience, topic/content behavior and demo versus unavailable public production backend.",
+      "sourceReferences": [
+        "README.md:10-25",
+        "README.md:71-81"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "nowinandroid-q2",
+      "score": 1,
+      "reason": "Correct app/core/network/persistence responsibilities, but does not state feature api navigation keys versus impl UI/ViewModel separation in this answer.",
+      "sourceReferences": [
+        "docs/ModularizationLearningJourney.md:68-85",
+        "docs/ModularizationLearningJourney.md:124-143",
+        "docs/ModularizationLearningJourney.md:173-207"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "nowinandroid-q3",
+      "score": 2,
+      "reason": "Correct Kotlin/Compose, Gradle Kotlin DSL multi-module/includes, build-logic, JDK17 and Hilt; API/implementation boundaries are also described here.",
+      "sourceReferences": [
+        "README.md:13-16",
+        "README.md:31-35",
+        "README.md:85-90",
+        "settings.gradle.kts:17-18",
+        "settings.gradle.kts:45-90"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "nowinandroid-q4",
+      "score": 2,
+      "reason": "Correct launcher/Application manifest declarations and lifecycle-to-Compose entry; framework dispatch is explicitly distinguished from a recorded trace.",
+      "sourceReferences": [
+        "app/src/main/AndroidManifest.xml:31-50",
+        "app/src/main/kotlin/com/google/samples/apps/nowinandroid/MainActivity.kt:78-80",
+        "app/src/main/kotlin/com/google/samples/apps/nowinandroid/MainActivity.kt:135-157"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "nowinandroid-q5",
+      "score": 2,
+      "reason": "Correct ViewModel coroutine, undo flag/remembered ID, false removal and compensating true undo; source also supports the screen/snackbar explanation.",
+      "sourceReferences": [
+        "feature/bookmarks/impl/src/main/kotlin/com/google/samples/apps/nowinandroid/feature/bookmarks/impl/BookmarksViewModel.kt:57-83"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "nowinandroid-q6",
+      "score": 2,
+      "reason": "Correct six direct production dependencies with api/implementation distinction and test-only exclusions; explicitly distinguishes declarations from transitive visibility.",
+      "sourceReferences": [
+        "core/data/build.gradle.kts:28-41"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "nowinandroid-q7",
+      "score": 1,
+      "reason": "Correct coroutine/interface/Hilt binding/repository/analytics/DataStore removal and IOException path with honest static boundaries, but omits the required concrete BookmarksScreen method-reference wiring in this answer.",
+      "sourceReferences": [
+        "feature/bookmarks/impl/src/main/kotlin/com/google/samples/apps/nowinandroid/feature/bookmarks/impl/BookmarksScreen.kt:79-97",
+        "feature/bookmarks/impl/src/main/kotlin/com/google/samples/apps/nowinandroid/feature/bookmarks/impl/BookmarksViewModel.kt:57-63",
+        "core/data/src/main/kotlin/com/google/samples/apps/nowinandroid/core/data/di/DataModule.kt:52-55",
+        "core/data/src/main/kotlin/com/google/samples/apps/nowinandroid/core/data/repository/OfflineFirstUserDataRepository.kt:45-51",
+        "core/datastore/src/main/kotlin/com/google/samples/apps/nowinandroid/core/datastore/NiaPreferencesDataSource.kt:123-137"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": true
+    },
+    {
+      "id": "nowinandroid-q8",
+      "score": 2,
+      "reason": "Correct screen method reference and both direct ViewModel tests; distinguishes callback-only screen tests and avoids claiming exhaustive reachability.",
+      "sourceReferences": [
+        "feature/bookmarks/impl/src/main/kotlin/com/google/samples/apps/nowinandroid/feature/bookmarks/impl/BookmarksScreen.kt:86-97",
+        "feature/bookmarks/impl/src/test/kotlin/com/google/samples/apps/nowinandroid/feature/bookmarks/impl/BookmarksViewModelTest.kt:79-93",
+        "feature/bookmarks/impl/src/test/kotlin/com/google/samples/apps/nowinandroid/feature/bookmarks/impl/BookmarksViewModelTest.kt:115-135"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": true
+    },
+    {
+      "id": "nowinandroid-q9",
+      "score": 2,
+      "reason": "Correct removal and undo tests, setup, direct entry and assertions; additional UI/lower-layer tests accurately distinguished from executed or end-to-end persistence evidence.",
+      "sourceReferences": [
+        "feature/bookmarks/impl/src/test/kotlin/com/google/samples/apps/nowinandroid/feature/bookmarks/impl/BookmarksViewModelTest.kt:79-93",
+        "feature/bookmarks/impl/src/test/kotlin/com/google/samples/apps/nowinandroid/feature/bookmarks/impl/BookmarksViewModelTest.kt:115-135"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "nowinandroid-q10",
+      "score": 1,
+      "reason": "Correct typed input, true insertion/false removal, preference copy, map-key readback, serializer and file configuration; omits the required IOException catch/log behavior in this answer.",
+      "sourceReferences": [
+        "core/datastore/src/main/kotlin/com/google/samples/apps/nowinandroid/core/datastore/NiaPreferencesDataSource.kt:29-37",
+        "core/datastore/src/main/kotlin/com/google/samples/apps/nowinandroid/core/datastore/NiaPreferencesDataSource.kt:123-137"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    }
+  ],
+  "total": 17,
+  "referenceIssues": [
+    "Oracle q2 cites docs/ModularizationLearningJourney.md:68-70 whose NiaNavHost example is stale relative to app/ui/NiaApp.kt:257-270 (entryProvider/NavDisplay). Required app scaffolding fact remains valid; evaluated answer explicitly recognizes the stale name."
+  ],
+  "limitations": [
+    "Read-only pinned Git source verification; no builds, tests, app execution or persistence experiment performed.",
+    "Each answer graded independently against frozen required facts; facts in other answers do not fill omissions.",
+    "All assigned oracle excerpts and full-file hashes matched pinned Git blobs. Analyzer reports are annotations, not independent proof of analyzer behavior."
+  ]
+}

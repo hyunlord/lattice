@@ -1,0 +1,209 @@
+{
+  "repository": "apple/swift-argument-parser",
+  "arm": "direct",
+  "commit": "efd239f0055b3d6b6cc122a786c46a0ea8d0235b",
+  "answers": [
+    {
+      "id": "q1",
+      "answer": "A Swift library for declaring command-line interfaces using property wrappers and command types: it parses arguments, instantiates commands, invokes run(), and supplies help/errors. Application developers import ArgumentParser; users run the resulting executables. Repository examples include repeat, roll and math; the README also identifies swift-format and Swift Package Manager as adopters (not independently inspected here).",
+      "citations": [
+        {
+          "url": "https://raw.githubusercontent.com/apple/swift-argument-parser/efd239f0055b3d6b6cc122a786c46a0ea8d0235b/README.md",
+          "lines": "4-10,38-43,74-84,102-119"
+        }
+      ]
+    },
+    {
+      "id": "q2",
+      "answer": "ArgumentParser supplies the command API and parsing/execution machinery. CommandParser builds/traverses command types, uses LenientParser and ArgumentDecoder, and validates decoded commands. SplitArguments tokenizes the vector. ArgumentParserToolInfo holds versioned Codable command/argument descriptions. ArgumentParserTestHelpers supplies test assertions and expectation-backed commands. The GenerateManual and GenerateDoccReference plugins invoke corresponding generator executables; generate-manual reads a tool's dumped help and renders manual pages. Examples and test targets exercise the library.",
+      "citations": [
+        {
+          "url": "https://raw.githubusercontent.com/apple/swift-argument-parser/efd239f0055b3d6b6cc122a786c46a0ea8d0235b/Sources/ArgumentParser/Parsable%20Types/ParsableCommand.swift",
+          "lines": "11-29,138-154"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/apple/swift-argument-parser/efd239f0055b3d6b6cc122a786c46a0ea8d0235b/Sources/ArgumentParser/Parsing/CommandParser.swift",
+          "lines": "20-25,187-225,230-268"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/apple/swift-argument-parser/efd239f0055b3d6b6cc122a786c46a0ea8d0235b/Sources/ArgumentParser/Parsing/SplitArguments.swift",
+          "lines": "79-90,643-669"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/apple/swift-argument-parser/efd239f0055b3d6b6cc122a786c46a0ea8d0235b/Sources/ArgumentParserToolInfo/ToolInfo.swift",
+          "lines": "16-59,104-105"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/apple/swift-argument-parser/efd239f0055b3d6b6cc122a786c46a0ea8d0235b/Sources/ArgumentParserTestHelpers/TestHelpers.swift",
+          "lines": "43-72,150-185"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/apple/swift-argument-parser/efd239f0055b3d6b6cc122a786c46a0ea8d0235b/Package.swift",
+          "lines": "41-59,61-120"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/apple/swift-argument-parser/efd239f0055b3d6b6cc122a786c46a0ea8d0235b/Tools/generate-manual/GenerateManual.swift",
+          "lines": "85-148"
+        }
+      ]
+    },
+    {
+      "id": "q3",
+      "answer": "Implementation/examples are Swift. SwiftPM's Package.swift declares tools-version 6.0, no external package dependencies, the ArgumentParser library product and two plugin products; internal library, executable and test targets form the module boundaries. An alternative CMake build requires 3.19 and enables C and Swift; its comment says C is enabled for a GNUInstallDirs workaround, not evidence of a C implementation. CMake includes Sources, optional Examples and Tests.",
+      "citations": [
+        {
+          "url": "https://raw.githubusercontent.com/apple/swift-argument-parser/efd239f0055b3d6b6cc122a786c46a0ea8d0235b/Package.swift",
+          "lines": "1-39,41-120"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/apple/swift-argument-parser/efd239f0055b3d6b6cc122a786c46a0ea8d0235b/CMakeLists.txt",
+          "lines": "1-7,17-35"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/apple/swift-argument-parser/efd239f0055b3d6b6cc122a786c46a0ea8d0235b/Examples/repeat/Repeat.swift",
+          "lines": "12-34"
+        }
+      ]
+    },
+    {
+      "id": "q4",
+      "answer": "Examples/repeat/Repeat.swift declares @main struct Repeat: ParsableCommand. Swift's generated entry invokes the inherited static main(); its source implementation calls self.main(nil). Repeat's application behavior begins in mutating run(). The generated executable entry itself is not checked-in source.",
+      "citations": [
+        {
+          "url": "https://raw.githubusercontent.com/apple/swift-argument-parser/efd239f0055b3d6b6cc122a786c46a0ea8d0235b/Examples/repeat/Repeat.swift",
+          "lines": "12-24"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/apple/swift-argument-parser/efd239f0055b3d6b6cc122a786c46a0ea8d0235b/Sources/ArgumentParser/Parsable%20Types/ParsableCommand.swift",
+          "lines": "156-167"
+        }
+      ]
+    },
+    {
+      "id": "q5",
+      "answer": "Sources/ArgumentParser/Parsable Types/ParsableCommand.swift, extension ParsableCommand, static main(_ arguments: [String]?): try parseAsRoot(arguments), then try command.run(), catching errors with exit(withError:). parseAsRoot creates CommandParser(self) and calls parse(arguments:). main() forwards nil. DEBUG builds additionally reject invalid async-command hierarchies.",
+      "citations": [
+        {
+          "url": "https://raw.githubusercontent.com/apple/swift-argument-parser/efd239f0055b3d6b6cc122a786c46a0ea8d0235b/Sources/ArgumentParser/Parsable%20Types/ParsableCommand.swift",
+          "lines": "58-63,139-167"
+        }
+      ]
+    },
+    {
+      "id": "q6",
+      "answer": "generate-manual directly depends on ArgumentParser and ArgumentParserToolInfo. Package.swift lists both in that executable target's dependencies; GenerateManual.swift imports both, conforms to ParsableCommand, and decodes ToolInfoHeader/ToolInfoV0. Thus edges run from generate-manual to the two libraries. The separate GenerateManual plugin depends on generate-manual, not conversely. Foundation is also imported but is not an internal package target.",
+      "citations": [
+        {
+          "url": "https://raw.githubusercontent.com/apple/swift-argument-parser/efd239f0055b3d6b6cc122a786c46a0ea8d0235b/Package.swift",
+          "lines": "54-59,88-90"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/apple/swift-argument-parser/efd239f0055b3d6b6cc122a786c46a0ea8d0235b/Tools/generate-manual/GenerateManual.swift",
+          "lines": "11-13,36-42,99-113"
+        }
+      ]
+    },
+    {
+      "id": "q7",
+      "answer": "Source-derived successful path: Repeat @main -> inherited main() -> main(nil) -> parseAsRoot -> CommandParser.parse -> parseBesidesCustomCompletion -> SplitArguments -> descendingParse -> parseCurrent (LenientParser, ArgumentDecoder, command-type init(from:)) -> validate -> extractLastParsedValue -> existential command.run(). The input becomes [\"hello\"]; phrase is hello, absent count stays nil and includeCounter false. Repeat.run uses count ?? 2 and prints hello twice. Repeat inherits an empty/default-subcommand-free configuration. Dispatch limits: @main entry and Decodable synthesis are compiler-generated; init(from:), validate and run use command/protocol dispatch. This traces source-supported intended behavior, not a captured runtime stack or exhaustive possible dispatch targets.",
+      "citations": [
+        {
+          "url": "https://raw.githubusercontent.com/apple/swift-argument-parser/efd239f0055b3d6b6cc122a786c46a0ea8d0235b/Examples/repeat/Repeat.swift",
+          "lines": "12-34"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/apple/swift-argument-parser/efd239f0055b3d6b6cc122a786c46a0ea8d0235b/Sources/ArgumentParser/Parsable%20Types/ParsableCommand.swift",
+          "lines": "38-40,58-63,149-167"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/apple/swift-argument-parser/efd239f0055b3d6b6cc122a786c46a0ea8d0235b/Sources/ArgumentParser/Parsing/CommandParser.swift",
+          "lines": "158-183,187-268,280-321,362-399"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/apple/swift-argument-parser/efd239f0055b3d6b6cc122a786c46a0ea8d0235b/Sources/ArgumentParser/Parsable%20Types/CommandConfiguration.swift",
+          "lines": "122-145"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/apple/swift-argument-parser/efd239f0055b3d6b6cc122a786c46a0ea8d0235b/Sources/ArgumentParser/Parsing/SplitArguments.swift",
+          "lines": "590-599,649-669"
+        }
+      ]
+    },
+    {
+      "id": "q8",
+      "answer": "Direct SwiftPM consumers of ArgumentParserToolInfo are ArgumentParser, ArgumentParserTestHelpers, generate-docc-reference, generate-manual, and ArgumentParserToolInfoTests. Each explicitly names it in dependencies. The other examples/tests/plugins may be transitively affected, but are not direct consumers according to this manifest.",
+      "citations": [
+        {
+          "url": "https://raw.githubusercontent.com/apple/swift-argument-parser/efd239f0055b3d6b6cc122a786c46a0ea8d0235b/Package.swift",
+          "lines": "29-39,83-90,114-116"
+        }
+      ]
+    },
+    {
+      "id": "q9",
+      "answer": "The Repeat example exercises X: its @main ParsableCommand enters inherited main(), which parses then calls run(); Repeat implements the synchronous printing behavior. This is a source-backed example, not a test execution claim. A guessed RepeatTests.swift URL failed, so no specific test from that path is asserted.",
+      "citations": [
+        {
+          "url": "https://raw.githubusercontent.com/apple/swift-argument-parser/efd239f0055b3d6b6cc122a786c46a0ea8d0235b/Examples/repeat/Repeat.swift",
+          "lines": "12-34"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/apple/swift-argument-parser/efd239f0055b3d6b6cc122a786c46a0ea8d0235b/Sources/ArgumentParser/Parsable%20Types/ParsableCommand.swift",
+          "lines": "139-167"
+        }
+      ]
+    },
+    {
+      "id": "q10",
+      "answer": "For process input, Platform.swift snapshots CommandLine.arguments into CommandLine._staticArguments. parseAsRoot uses Array(_staticArguments.dropFirst()) when no explicit vector is supplied; explicitly supplied [String] bypasses that removal. CommandParser.parse first handles custom-completion input, then parseBesidesCustomCompletion constructs SplitArguments. Its initializer preserves originalInput, tokenizes each string with parseIndividualArg, tracks origins, classifies values/options/--, expands possible short-option packs, and treats everything after -- as values. descendingParse then decodes commands. OS/Swift-runtime construction of CommandLine.arguments is outside these inspected repository sources.",
+      "citations": [
+        {
+          "url": "https://raw.githubusercontent.com/apple/swift-argument-parser/efd239f0055b3d6b6cc122a786c46a0ea8d0235b/Sources/ArgumentParser/Utilities/Platform.swift",
+          "lines": "11-15"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/apple/swift-argument-parser/efd239f0055b3d6b6cc122a786c46a0ea8d0235b/Sources/ArgumentParser/Parsable%20Types/ParsableCommand.swift",
+          "lines": "58-63"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/apple/swift-argument-parser/efd239f0055b3d6b6cc122a786c46a0ea8d0235b/Sources/ArgumentParser/Parsing/CommandParser.swift",
+          "lines": "301-321,362-376"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/apple/swift-argument-parser/efd239f0055b3d6b6cc122a786c46a0ea8d0235b/Sources/ArgumentParser/Parsing/SplitArguments.swift",
+          "lines": "590-669"
+        }
+      ]
+    }
+  ],
+  "toolErrors": [
+    {
+      "url": "https://github.com/apple/swift-argument-parser/tree/efd239f0055b3d6b6cc122a786c46a0ea8d0235b",
+      "error": "Web open failed: restricted URL."
+    },
+    {
+      "url": "https://raw.githubusercontent.com/apple/swift-argument-parser/efd239f0055b3d6b6cc122a786c46a0ea8d0235b/Tests/ArgumentParserExampleTests/RepeatTests.swift",
+      "error": "Web open returned Internal Error; no HTTP status exposed."
+    },
+    {
+      "url": "https://github.com/apple/swift-argument-parser/blob/efd239f0055b3d6b6cc122a786c46a0ea8d0235b/Tests/ArgumentParserExampleTests",
+      "error": "Web open returned Internal Error."
+    },
+    {
+      "url": "https://raw.githubusercontent.com/apple/swift-argument-parser/efd239f0055b3d6b6cc122a786c46a0ea8d0235b/Sources/ArgumentParser/Parsing/LenientParser.swift",
+      "error": "Web open returned Internal Error; definition not independently inspected."
+    },
+    {
+      "url": "https://raw.githubusercontent.com/apple/swift-argument-parser/efd239f0055b3d6b6cc122a786c46a0ea8d0235b/Plugins/GenerateManual/GenerateManual.swift",
+      "error": "Web open failed: HTTP 404 Not Found."
+    }
+  ],
+  "limitations": [
+    "Only pinned public source navigation was used after the permitted prompt read; no build or target execution.",
+    "Line ranges use conventional one-based source lines; web output numbered the same lines starting at zero.",
+    "Compiler-generated entry/Decodable code, protocol dispatch implementation and OS argument-vector creation were not inspected.",
+    "Authoritative token telemetry is unavailable; none estimated."
+  ],
+  "selfReportedStartedAt": "2026-10-13T07:53:35Z",
+  "selfReportedFinishedAt": "2026-10-13 07:56:03 UTC"
+}

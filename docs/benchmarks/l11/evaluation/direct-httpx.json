@@ -1,0 +1,242 @@
+{
+  "repository": "encode/httpx",
+  "arm": "direct",
+  "commit": "b5addb64f0161ff6bfe94c124ef76f6a1fba5254",
+  "answers": [
+    {
+      "id": "httpx-q1",
+      "answer": "HTTPX is a Python HTTP client library with synchronous/asynchronous APIs, HTTP/1.1 and HTTP/2, pooling, cookies, authentication and streaming. Python applications import and call it; terminal users run the optional httpx CLI (project script httpx:main). Its own pytest tests also call the public API. No specific external downstream application inventory was established.",
+      "citations": [
+        {
+          "url": "https://raw.githubusercontent.com/encode/httpx/b5addb64f0161ff6bfe94c124ef76f6a1fba5254/README.md",
+          "lines": "web-rendered L14-43,54-80"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/encode/httpx/b5addb64f0161ff6bfe94c124ef76f6a1fba5254/pyproject.toml",
+          "lines": "web-rendered L55-56"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/encode/httpx/b5addb64f0161ff6bfe94c124ef76f6a1fba5254/tests/client/test_redirects.py",
+          "lines": "web-rendered L104-109"
+        }
+      ]
+    },
+    {
+      "id": "httpx-q2",
+      "answer": "_api: convenience request functions. _client: shared configuration and synchronous/asynchronous request orchestration. _models: Request/Response, Headers/Cookies and body handling. _urls: URL/query representation and URL joining. _auth: authentication flows. _config: TLS, timeouts, connection limits and proxies. _transports: a pluggable request/response boundary; default transports adapt httpcore, ASGI/WSGI adapters call applications directly, and MockTransport calls a supplied handler. _main: optional terminal client.",
+      "citations": [
+        {
+          "url": "https://raw.githubusercontent.com/encode/httpx/b5addb64f0161ff6bfe94c124ef76f6a1fba5254/httpx/_api.py",
+          "lines": "web-rendered L36-113,163-195"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/encode/httpx/b5addb64f0161ff6bfe94c124ef76f6a1fba5254/httpx/_client.py",
+          "lines": "web-rendered L174-205,549-590,1484-1526"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/encode/httpx/b5addb64f0161ff6bfe94c124ef76f6a1fba5254/httpx/_models.py",
+          "lines": "web-rendered L11-48,131-153,354-409,477-527"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/encode/httpx/b5addb64f0161ff6bfe94c124ef76f6a1fba5254/httpx/_urls.py",
+          "lines": "web-rendered L11-37,326-337"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/encode/httpx/b5addb64f0161ff6bfe94c124ef76f6a1fba5254/httpx/_auth.py",
+          "lines": "web-rendered L20-78"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/encode/httpx/b5addb64f0161ff6bfe94c124ef76f6a1fba5254/httpx/_config.py",
+          "lines": "web-rendered L12-65,68-131,151-210"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/encode/httpx/b5addb64f0161ff6bfe94c124ef76f6a1fba5254/httpx/_transports/default.py",
+          "lines": "web-rendered L214-241"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/encode/httpx/b5addb64f0161ff6bfe94c124ef76f6a1fba5254/httpx/_transports/asgi.py",
+          "lines": "web-rendered L59-79,156-173"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/encode/httpx/b5addb64f0161ff6bfe94c124ef76f6a1fba5254/httpx/_transports/wsgi.py",
+          "lines": "web-rendered L41-70,124-138"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/encode/httpx/b5addb64f0161ff6bfe94c124ef76f6a1fba5254/httpx/_transports/mock.py",
+          "lines": "web-rendered L14-40"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/encode/httpx/b5addb64f0161ff6bfe94c124ef76f6a1fba5254/httpx/_main.py",
+          "lines": "web-rendered L7-32"
+        }
+      ]
+    },
+    {
+      "id": "httpx-q3",
+      "answer": "Runtime and tests are Python; package metadata requires Python >=3.9. pyproject.toml uses the PEP 517 hatchling.build backend with hatchling and hatch-fancy-pypi-readme. This is one httpx distribution/import package, with internal modules and a _transports subpackage; tests are separate test code included in the sdist. httpcore, anyio, certifi and idna are external dependencies; CLI/HTTP2/SOCKS/compression are extras, not separate HTTPX services. Shell scripts drive pytest/coverage and Ruff; TOML configures mypy/pytest/Ruff, and Markdown supplies README/changelog packaging content.",
+      "citations": [
+        {
+          "url": "https://raw.githubusercontent.com/encode/httpx/b5addb64f0161ff6bfe94c124ef76f6a1fba5254/pyproject.toml",
+          "lines": "web-rendered L0-56,63-90,92-123"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/encode/httpx/b5addb64f0161ff6bfe94c124ef76f6a1fba5254/httpx/__init__.py",
+          "lines": "web-rendered L0-24"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/encode/httpx/b5addb64f0161ff6bfe94c124ef76f6a1fba5254/httpx/_transports/__init__.py",
+          "lines": "web-rendered L0-14"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/encode/httpx/b5addb64f0161ff6bfe94c124ef76f6a1fba5254/scripts/test",
+          "lines": "web-rendered L0-17"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/encode/httpx/b5addb64f0161ff6bfe94c124ef76f6a1fba5254/scripts/lint",
+          "lines": "web-rendered L0-11"
+        }
+      ]
+    },
+    {
+      "id": "httpx-q4",
+      "answer": "Public httpx.get resolves through httpx/__init__.py's _api re-export and __all__. _api.get(url,...) calls _api.request('GET',url,...), which creates a context-managed Client and invokes client.request. The convenience call defaults follow_redirects=False; following must be requested explicitly.",
+      "citations": [
+        {
+          "url": "https://raw.githubusercontent.com/encode/httpx/b5addb64f0161ff6bfe94c124ef76f6a1fba5254/httpx/__init__.py",
+          "lines": "web-rendered L0-11,26-52"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/encode/httpx/b5addb64f0161ff6bfe94c124ef76f6a1fba5254/httpx/_api.py",
+          "lines": "web-rendered L24-34,36-53,95-113,163-195"
+        }
+      ]
+    },
+    {
+      "id": "httpx-q5",
+      "answer": "BaseClient._redirect_method: 303/302 become GET except HEAD; 301 changes POST only; otherwise preserve the method, including 307/308.",
+      "citations": [
+        {
+          "url": "https://raw.githubusercontent.com/encode/httpx/b5addb64f0161ff6bfe94c124ef76f6a1fba5254/httpx/_client.py",
+          "lines": "web-rendered L457-477"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/encode/httpx/b5addb64f0161ff6bfe94c124ef76f6a1fba5254/httpx/_models.py",
+          "lines": "web-rendered L715-735"
+        }
+      ]
+    },
+    {
+      "id": "httpx-q6",
+      "answer": "Direct imports: _auth (Auth, BasicAuth, FunctionAuth); _models (Cookies, Headers, Request, Response); _transports.base (BaseTransport/AsyncBaseTransport); _transports.default (HTTPTransport/AsyncHTTPTransport). _utils.URLPattern supports dispatch.",
+      "citations": [
+        {
+          "url": "https://raw.githubusercontent.com/encode/httpx/b5addb64f0161ff6bfe94c124ef76f6a1fba5254/httpx/_client.py",
+          "lines": "web-rendered L10-47,412-438,667-715,929-960"
+        }
+      ]
+    },
+    {
+      "id": "httpx-q7",
+      "answer": "Client.request→build_request→send→_build_request_auth→_send_handling_auth→_send_handling_redirects→_send_single_request→_transport_for_url→transport.handle_request. On has_redirect_location: _build_redirect_request→_redirect_method/_redirect_url/_redirect_headers/_redirect_stream→Request. Append history, read redirect response, repeat loop with rebuilt request; max_redirects bounds iteration. Dynamic boundaries: auth generators, request/response hooks, URL-dependent mounts and overridable transport.handle_request. Response.has_redirect_location requires status 301/302/303/307/308 plus Location, not merely any 3xx. Authentication can yield additional requests. The default HTTPTransport converts to httpcore.Request, invokes its pool, then wraps the returned response; the external networking implementation is outside this pinned repository. This is a static trace, not an observed network execution.",
+      "citations": [
+        {
+          "url": "https://raw.githubusercontent.com/encode/httpx/b5addb64f0161ff6bfe94c124ef76f6a1fba5254/httpx/_client.py",
+          "lines": "web-rendered L314-361,706-767,817-960,439-456"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/encode/httpx/b5addb64f0161ff6bfe94c124ef76f6a1fba5254/httpx/_models.py",
+          "lines": "web-rendered L715-735"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/encode/httpx/b5addb64f0161ff6bfe94c124ef76f6a1fba5254/httpx/_auth.py",
+          "lines": "web-rendered L20-78"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/encode/httpx/b5addb64f0161ff6bfe94c124ef76f6a1fba5254/httpx/_transports/base.py",
+          "lines": "web-rendered L24-54"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/encode/httpx/b5addb64f0161ff6bfe94c124ef76f6a1fba5254/httpx/_transports/default.py",
+          "lines": "web-rendered L214-241"
+        }
+      ]
+    },
+    {
+      "id": "httpx-q8",
+      "answer": "Direct consumer: BaseClient._build_redirect_request. Indirect effects: sync/async redirect loops, public methods, next_request, outgoing method and body/header preservation. Switching to GET drops the body and Content-Length/Transfer-Encoding. External subclass overrides remain dynamic. The POST/301 regression scenario enters through the public client API, not a direct call to _redirect_method.",
+      "citations": [
+        {
+          "url": "https://raw.githubusercontent.com/encode/httpx/b5addb64f0161ff6bfe94c124ef76f6a1fba5254/httpx/_client.py",
+          "lines": "web-rendered L439-477,505-538,895-924,1562-1592"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/encode/httpx/b5addb64f0161ff6bfe94c124ef76f6a1fba5254/tests/client/test_redirects.py",
+          "lines": "web-rendered L104-109"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/encode/httpx/b5addb64f0161ff6bfe94c124ef76f6a1fba5254/httpx/_api.py",
+          "lines": "web-rendered L95-113,163-195"
+        }
+      ]
+    },
+    {
+      "id": "httpx-q9",
+      "answer": "tests/client/test_redirects.py::test_redirect_301 constructs Client(transport=MockTransport(redirects)) and calls client.post('https://example.org/redirect_301', follow_redirects=True). The redirects handler returns a 301 and Location=https://example.org/ for that path, then a synthetic 200 for the destination. MockTransport.handle_request reads the request and calls the Python handler directly, so no real network is needed. Assertions cover final OK status, destination URL and one history entry; this test exercises the method-rewrite branch but does not explicitly assert GET. I inspected, but did not run, the test.",
+      "citations": [
+        {
+          "url": "https://raw.githubusercontent.com/encode/httpx/b5addb64f0161ff6bfe94c124ef76f6a1fba5254/tests/client/test_redirects.py",
+          "lines": "web-rendered L7-14,99-109"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/encode/httpx/b5addb64f0161ff6bfe94c124ef76f6a1fba5254/httpx/_transports/mock.py",
+          "lines": "web-rendered L14-25"
+        }
+      ]
+    },
+    {
+      "id": "httpx-q10",
+      "answer": "At the default transport boundary, response headers arrive from httpcore and become Response.headers (Headers); the mock test instead supplies them directly. Headers lookup is case-insensitive. _redirect_url reads response.headers['Location']→URL(location); invalid parsing raises RemoteProtocolError. Repair scheme-without-host using prior host; join relative URLs; inherit prior fragment when absent; _build_redirect_request assigns the resulting URL. URL.join delegates to urllib.parse.urljoin and wraps the result as URL. The resulting URL is normalized again by Request construction.",
+      "citations": [
+        {
+          "url": "https://raw.githubusercontent.com/encode/httpx/b5addb64f0161ff6bfe94c124ef76f6a1fba5254/httpx/_transports/default.py",
+          "lines": "web-rendered L232-241"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/encode/httpx/b5addb64f0161ff6bfe94c124ef76f6a1fba5254/httpx/_models.py",
+          "lines": "web-rendered L131-153,264-281,354-373,477-499"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/encode/httpx/b5addb64f0161ff6bfe94c124ef76f6a1fba5254/tests/client/test_redirects.py",
+          "lines": "web-rendered L10-14"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/encode/httpx/b5addb64f0161ff6bfe94c124ef76f6a1fba5254/httpx/_client.py",
+          "lines": "web-rendered L439-456,478-503"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/encode/httpx/b5addb64f0161ff6bfe94c124ef76f6a1fba5254/httpx/_urls.py",
+          "lines": "web-rendered L326-337"
+        }
+      ]
+    }
+  ],
+  "toolErrors": [
+    {
+      "url": "https://github.com/encode/httpx/tree/b5addb64f0161ff6bfe94c124ef76f6a1fba5254",
+      "error": "Initial web.open returned Internal Error. Later navigation from pinned blob returned Failed to fetch restricted URL."
+    },
+    {
+      "url": "https://raw.githubusercontent.com/encode/httpx/b5addb64f0161ff6bfe94c124ef76f6a1fba5254/httpx/__main__.py",
+      "error": "web.open returned Internal Error; existence or absence not established."
+    }
+  ],
+  "limitations": [
+    "Only pinned GitHub blob/raw source was inspected after the authorized prompt read. No local repository reads, Lattice, MCP, oracle, other answers, delegation, builds or tests.",
+    "Citation ranges explicitly use the web tool's zero-based rendered L labels. Its plain-text renderer collapses some blank lines: the client blob reports 2019 source lines while raw web extraction reports 1880. These are exact retrieved-text spans, not claimed canonical GitHub source line numbers.",
+    "Static Python calls do not prove concrete runtime targets where authentication, hooks, mounts, transport implementations or subclass overrides are supplied dynamically.",
+    "External httpcore internals and a complete downstream-consumer inventory were not inspected.",
+    "Authoritative token telemetry was unavailable; no measured token count is claimed."
+  ],
+  "selfReportedStartedAt": "2026-10-13 07:31:01 UTC",
+  "selfReportedFinishedAt": "2026-10-13 07:34:47 UTC"
+}

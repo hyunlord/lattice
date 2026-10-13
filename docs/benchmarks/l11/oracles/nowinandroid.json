@@ -1,0 +1,331 @@
+{
+  "id": "nowinandroid",
+  "repository": "android/nowinandroid",
+  "commit": "a49ed253d75e61a2b6ab80a8da677b57437b08eb",
+  "trackedFiles": 715,
+  "questions": [
+    {
+      "id": "nowinandroid-q1",
+      "question": "What does Now in Android do, and who runs or learns from it?",
+      "answer": "It is a Kotlin/Jetpack Compose Android news app and reference implementation for developers. Users browse Android-development videos/articles, follow topics and receive matching-content notifications. Developers can run the demo flavor using local data; the README says the prod backend is not publicly available.",
+      "requiredFacts": [
+        "Android development news app",
+        "Reference implementation for developers",
+        "Browse content and follow topics",
+        "Demo local data differs from unavailable public prod backend"
+      ],
+      "evidence": [
+        {
+          "path": "README.md",
+          "startLine": 10,
+          "endLine": 25,
+          "excerpt": "This is the repository for the [Now in Android](https://developer.android.com/series/now-in-android)\napp. It is a **work in progress** 🚧.\n\n**Now in Android** is a fully functional Android app built entirely with Kotlin and Jetpack Compose. It\nfollows Android design and development best practices and is intended to be a useful reference\nfor developers. As a running app, it's intended to help developers keep up-to-date with the world\nof Android development by providing regular news updates.\n\nThe app is currently in development. The `prodRelease` variant is [available on the Play Store](https://play.google.com/store/apps/details?id=com.google.samples.apps.nowinandroid).\n\n# Features\n\n**Now in Android** displays content from the\n[Now in Android](https://developer.android.com/series/now-in-android) series. Users can browse for\nlinks to recent videos, articles and other content. Users can also follow topics they are interested\nin, and be notified when new content is published which matches interests they are following.",
+          "sha256": "d6eeade4c74e4cb521987ac2fe88b43bf90dd16610c27019b337ff6e04bd5536"
+        },
+        {
+          "path": "README.md",
+          "startLine": 71,
+          "endLine": 81,
+          "excerpt": "The app also uses\n[product flavors](https://developer.android.com/studio/build/build-variants#product-flavors) to\ncontrol where content for the app should be loaded from.\n\nThe `demo` flavor uses static local data to allow immediate building and exploring of the UI.\n\nThe `prod` flavor makes real network calls to a backend server, providing up-to-date content. At \nthis time, there is not a public backend available.\n\nFor normal development use the `demoDebug` variant. For UI performance testing use the\n`demoRelease` variant. ",
+          "sha256": "d6eeade4c74e4cb521987ac2fe88b43bf90dd16610c27019b337ff6e04bd5536"
+        }
+      ]
+    },
+    {
+      "id": "nowinandroid-q2",
+      "question": "Name the principal Now in Android components and responsibilities.",
+      "answer": "app contains activity, app composition and navigation scaffolding; feature api modules publish navigation keys and impl modules hold feature UI/ViewModels; core:data coordinates data sources; core:datastore persists preferences; core:database stores Room data; core:network handles remote requests. Equivalent Gradle path notation is accepted; features are split api/impl modules, not a single implied module.",
+      "requiredFacts": [
+        "app provides app-level scaffolding/navigation",
+        "feature api keys and impl UI/ViewModels are separate",
+        "core:data coordinates sources",
+        "core:datastore persists data and core:database uses Room",
+        "core:network handles remote data"
+      ],
+      "evidence": [
+        {
+          "path": "docs/ModularizationLearningJourney.md",
+          "startLine": 68,
+          "endLine": 85,
+          "excerpt": "### The `app` module\nThis contains app level and scaffolding classes that bind the rest of the codebase, such as\n`MainActivity`, `NiaApp` and app-level controlled navigation. A good example of this is the navigation setup through `NiaNavHost` and the bottom navigation bar setup through `TopLevelDestination`. The `app` module depends on all `feature` modules and required `core` modules.\n\n### Feature modules \nThese are feature-specific modules that handle a single responsibility in the app. For example, the `ForYou` feature handles all content and UI state for the \"ForYou\" screen. Feature modules aren't Gradle modules themselves, they are split into two submodules: \n\n* `api` - contains navigation keys\n* `impl` - contains everything else\n\nThis approach allows features to navigate to other features by using the target feature's navigation keys. A feature's `api` and `impl` modules can be used by any app, including test or other flavoured apps. If a class is needed only by one feature module, it should remain within that module. If not, it should be placed into an appropriate `core` module. \n\nA feature's `api` module should not depend on another feature's `api` or `impl` module. A feature's `impl` should only depend on another feature's `api` module. Both submodules should only depend on the `core` modules that they require. \n\n### Core modules \nThese are common library modules containing auxiliary code and specific dependencies that\n  need to be shared between other modules in the app. These modules can depend on other core\n  modules, but they shouldn’t depend on feature nor app modules.",
+          "sha256": "1beb4673b2535ee5c8bb651b4410f8de91e59c6f476ab0447fabdb14ed6e2bc9"
+        },
+        {
+          "path": "docs/ModularizationLearningJourney.md",
+          "startLine": 124,
+          "endLine": 143,
+          "excerpt": "   <td><code>feature:1:impl,</code><br>\n   <code>feature:2:impl</code><br>\n   ...\n   </td>\n   <td>Functionality associated with a specific feature or user journey. Typically contains UI components and ViewModels which read data from other modules.<br>\n   Examples include:<br>\n   <ul>\n      <li><a href=\"https://github.com/android/nowinandroid/tree/main/feature/topic/impl\"><code>feature:topic:impl</code></a> displays information about a topic on the TopicScreen.</li>\n      <li><a href=\"https://github.com/android/nowinandroid/tree/main/feature/foryou/impl\"><code>feature:foryou:impl</code></a> which displays the user's news feed, and onboarding during first run, on the For You screen.</li>\n      </ul>\n   </td>\n   <td><code>TopicScreen</code><br>\n   <code>TopicViewModel</code>\n   </td>\n  </tr>\n  <tr>\n   <td><code>core:data</code>\n   </td>\n   <td>Fetching app data from multiple sources, shared by different features.\n   </td>",
+          "sha256": "1beb4673b2535ee5c8bb651b4410f8de91e59c6f476ab0447fabdb14ed6e2bc9"
+        },
+        {
+          "path": "docs/ModularizationLearningJourney.md",
+          "startLine": 173,
+          "endLine": 207,
+          "excerpt": "  <tr>\n   <td><code>core:network</code>\n   </td>\n   <td>Making network requests and handling responses from a remote data source.\n   </td>\n   <td><code>RetrofitNiaNetworkApi</code>\n   </td>\n  </tr>\n  <tr>\n   <td><code>core:testing</code>\n   </td>\n   <td>Testing dependencies, repositories and util classes.\n   </td>\n   <td><code>NiaTestRunner</code><br>\n   <code>TestDispatcherRule</code>\n   </td>\n  </tr>\n  <tr>\n   <td><code>core:datastore</code>\n   </td>\n   <td>Storing persistent data using DataStore.\n   </td>\n   <td><code>NiaPreferences</code><br>\n   <code>UserPreferencesSerializer</code>\n   </td>\n  </tr>\n  <tr>\n   <td><code>core:database</code>\n   </td>\n   <td>Local database storage using Room.\n   </td>\n   <td><code>NiaDatabase</code><br>\n   <code>DatabaseMigrations</code><br>\n   <code>Dao</code> classes\n   </td>",
+          "sha256": "1beb4673b2535ee5c8bb651b4410f8de91e59c6f476ab0447fabdb14ed6e2bc9"
+        }
+      ]
+    },
+    {
+      "id": "nowinandroid-q3",
+      "question": "Which languages, frameworks, build system and module boundaries organize Now in Android?",
+      "answer": "Kotlin and Jetpack Compose implement the Android app; Gradle Kotlin DSL declares app/core/feature/sync modules, including bookmark api and impl. settings.gradle.kts includes the build-logic composite build and requires JDK17+. Hilt is used for dependency injection. Source packages alone are not Gradle module boundaries.",
+      "requiredFacts": [
+        "Kotlin and Jetpack Compose",
+        "Gradle Kotlin DSL with explicitly included modules",
+        "build-logic included build",
+        "JDK17+ requirement",
+        "Hilt injection"
+      ],
+      "evidence": [
+        {
+          "path": "README.md",
+          "startLine": 13,
+          "endLine": 16,
+          "excerpt": "**Now in Android** is a fully functional Android app built entirely with Kotlin and Jetpack Compose. It\nfollows Android design and development best practices and is intended to be a useful reference\nfor developers. As a running app, it's intended to help developers keep up-to-date with the world\nof Android development by providing regular news updates.",
+          "sha256": "d6eeade4c74e4cb521987ac2fe88b43bf90dd16610c27019b337ff6e04bd5536"
+        },
+        {
+          "path": "README.md",
+          "startLine": 31,
+          "endLine": 35,
+          "excerpt": "# Development Environment\n\n**Now in Android** uses the Gradle build system and can be imported directly into Android Studio (make sure you are using the latest stable version available [here](https://developer.android.com/studio)). \n\nChange the run configuration to `app`.",
+          "sha256": "d6eeade4c74e4cb521987ac2fe88b43bf90dd16610c27019b337ff6e04bd5536"
+        },
+        {
+          "path": "README.md",
+          "startLine": 85,
+          "endLine": 90,
+          "excerpt": "To facilitate testing of components, **Now in Android** uses dependency injection with\n[Hilt](https://developer.android.com/training/dependency-injection/hilt-android).\n\nMost data layer components are defined as interfaces.\nThen, concrete implementations (with various dependencies) are bound to provide those interfaces to\nother components in the app.",
+          "sha256": "d6eeade4c74e4cb521987ac2fe88b43bf90dd16610c27019b337ff6e04bd5536"
+        },
+        {
+          "path": "settings.gradle.kts",
+          "startLine": 17,
+          "endLine": 18,
+          "excerpt": "pluginManagement {\n    includeBuild(\"build-logic\")",
+          "sha256": "4a6a375ab6ae98e9f794183a3f89f29017acd030f98b9c141e51ebc06754b1a7"
+        },
+        {
+          "path": "settings.gradle.kts",
+          "startLine": 45,
+          "endLine": 90,
+          "excerpt": "rootProject.name = \"nowinandroid\"\n\nenableFeaturePreview(\"TYPESAFE_PROJECT_ACCESSORS\")\ninclude(\":app\")\ninclude(\":app-nia-catalog\")\ninclude(\":benchmarks\")\ninclude(\":core:analytics\")\ninclude(\":core:common\")\ninclude(\":core:data\")\ninclude(\":core:data-test\")\ninclude(\":core:database\")\ninclude(\":core:datastore\")\ninclude(\":core:datastore-proto\")\ninclude(\":core:datastore-test\")\ninclude(\":core:designsystem\")\ninclude(\":core:domain\")\ninclude(\":core:model\")\ninclude(\":core:navigation\")\ninclude(\":core:network\")\ninclude(\":core:notifications\")\ninclude(\":core:screenshot-testing\")\ninclude(\":core:testing\")\ninclude(\":core:ui\")\n\ninclude(\":feature:foryou:api\")\ninclude(\":feature:foryou:impl\")\ninclude(\":feature:interests:api\")\ninclude(\":feature:interests:impl\")\ninclude(\":feature:bookmarks:api\")\ninclude(\":feature:bookmarks:impl\")\ninclude(\":feature:topic:api\")\ninclude(\":feature:topic:impl\")\ninclude(\":feature:search:api\")\ninclude(\":feature:search:impl\")\ninclude(\":feature:settings:impl\")\ninclude(\":lint\")\ninclude(\":sync:work\")\ninclude(\":sync:sync-test\")\ninclude(\":ui-test-hilt-manifest\")\n\ncheck(JavaVersion.current().isCompatibleWith(JavaVersion.VERSION_17)) {\n    \"\"\"\n    Now in Android requires JDK 17+ but it is currently using JDK ${JavaVersion.current()}.\n    Java Home: [${System.getProperty(\"java.home\")}]\n    https://developer.android.com/build/jdks#jdk-config-in-studio\n    \"\"\".trimIndent()",
+          "sha256": "4a6a375ab6ae98e9f794183a3f89f29017acd030f98b9c141e51ebc06754b1a7"
+        }
+      ]
+    },
+    {
+      "id": "nowinandroid-q4",
+      "question": "Where does the selected Android launcher execution begin?",
+      "answer": "app/src/main/AndroidManifest.xml declares .NiaApplication and .MainActivity with MAIN/LAUNCHER intent filter. Android invokes MainActivity.onCreate, which calls setContent and composes NiaApp within providers/theme. The framework lifecycle invocation is a declared entry boundary, not a statically called Kotlin main.",
+      "requiredFacts": [
+        "Manifest declares MainActivity MAIN/LAUNCHER",
+        "Manifest declares NiaApplication",
+        "MainActivity.onCreate sets Compose content",
+        "NiaApp is composed; Android lifecycle is external dispatch"
+      ],
+      "evidence": [
+        {
+          "path": "app/src/main/AndroidManifest.xml",
+          "startLine": 31,
+          "endLine": 50,
+          "excerpt": "    <application\n        android:name=\".NiaApplication\"\n        android:allowBackup=\"true\"\n        android:enableOnBackInvokedCallback=\"true\"\n        android:icon=\"@mipmap/ic_launcher\"\n        android:label=\"@string/app_name\"\n        android:roundIcon=\"@mipmap/ic_launcher_round\"\n        android:supportsRtl=\"true\"\n        android:theme=\"@style/Theme.Nia.Splash\"\n        tools:replace=\"android:theme\">\n        <profileable android:shell=\"true\" tools:targetApi=\"q\" />\n\n        <activity\n            android:name=\".MainActivity\"\n            android:configChanges=\"uiMode\"\n            android:exported=\"true\">\n            <intent-filter>\n                <action android:name=\"android.intent.action.MAIN\" />\n                <category android:name=\"android.intent.category.LAUNCHER\" />\n            </intent-filter>",
+          "sha256": "cd604e4458e33407f6731c08d37095d703300cfcb1ac10d8229feb171e801e40"
+        },
+        {
+          "path": "app/src/main/kotlin/com/google/samples/apps/nowinandroid/MainActivity.kt",
+          "startLine": 78,
+          "endLine": 80,
+          "excerpt": "    override fun onCreate(savedInstanceState: Bundle?) {\n        val splashScreen = installSplashScreen()\n        super.onCreate(savedInstanceState)",
+          "sha256": "1c26d2e91cbfa13039963645421eca8ccf18719611fa2bcb2674d38c8ef2cd00"
+        },
+        {
+          "path": "app/src/main/kotlin/com/google/samples/apps/nowinandroid/MainActivity.kt",
+          "startLine": 135,
+          "endLine": 157,
+          "excerpt": "        setContent {\n            val appState = rememberNiaAppState(\n                networkMonitor = networkMonitor,\n                userNewsResourceRepository = userNewsResourceRepository,\n                timeZoneMonitor = timeZoneMonitor,\n            )\n\n            val currentTimeZone by appState.currentTimeZone.collectAsStateWithLifecycle()\n\n            CompositionLocalProvider(\n                LocalAnalyticsHelper provides analyticsHelper,\n                LocalTimeZone provides currentTimeZone,\n            ) {\n                NiaTheme(\n                    darkTheme = themeSettings.darkTheme,\n                    androidTheme = themeSettings.androidTheme,\n                    disableDynamicTheming = themeSettings.disableDynamicTheming,\n                ) {\n                    NiaApp(appState)\n                }\n            }\n        }\n    }",
+          "sha256": "1c26d2e91cbfa13039963645421eca8ccf18719611fa2bcb2674d38c8ef2cd00"
+        }
+      ]
+    },
+    {
+      "id": "nowinandroid-q5",
+      "question": "Where is X = removing a saved news resource while offering undo implemented?",
+      "answer": "BookmarksViewModel.removeFromSavedResources in feature/bookmarks/impl launches in viewModelScope, enables shouldDisplayUndoBookmark, remembers lastRemovedBookmarkId and calls UserDataRepository.setNewsResourceBookmarked(id,false). undoBookmarkRemoval launches a true write for the remembered ID then clears undo state. Coroutine scheduling is not proven by static calls alone.",
+      "requiredFacts": [
+        "BookmarksViewModel.removeFromSavedResources owns the action",
+        "viewModelScope coroutine sets undo flag and remembered id",
+        "Repository gets bookmarked=false",
+        "undoBookmarkRemoval requests true and clears undo state"
+      ],
+      "evidence": [
+        {
+          "path": "feature/bookmarks/impl/src/main/kotlin/com/google/samples/apps/nowinandroid/feature/bookmarks/impl/BookmarksViewModel.kt",
+          "startLine": 57,
+          "endLine": 83,
+          "excerpt": "    fun removeFromSavedResources(newsResourceId: String) {\n        viewModelScope.launch {\n            shouldDisplayUndoBookmark = true\n            lastRemovedBookmarkId = newsResourceId\n            userDataRepository.setNewsResourceBookmarked(newsResourceId, false)\n        }\n    }\n\n    fun setNewsResourceViewed(newsResourceId: String, viewed: Boolean) {\n        viewModelScope.launch {\n            userDataRepository.setNewsResourceViewed(newsResourceId, viewed)\n        }\n    }\n\n    fun undoBookmarkRemoval() {\n        viewModelScope.launch {\n            lastRemovedBookmarkId?.let {\n                userDataRepository.setNewsResourceBookmarked(it, true)\n            }\n        }\n        clearUndoState()\n    }\n\n    fun clearUndoState() {\n        shouldDisplayUndoBookmark = false\n        lastRemovedBookmarkId = null\n    }",
+          "sha256": "ee7d43eedfb2b2c3a7c3505c5b808c7d9c941a99542012e013d7a3a37c2da1ba"
+        }
+      ]
+    },
+    {
+      "id": "nowinandroid-q6",
+      "question": "Which internal modules does A = core:data directly declare as production dependencies?",
+      "answer": "core/data/build.gradle.kts declares api edges to core:common, core:database, core:datastore and core:network, plus implementation edges to core:analytics and core:notifications. core:datastore-test and core:testing are testImplementation only. The direction is core:data -> these modules; it is not a claim that every repository executes them.",
+      "requiredFacts": [
+        "api to common/database/datastore/network",
+        "implementation to analytics/notifications",
+        "Test-only datastore-test/testing distinguished",
+        "Manifest directions do not imply every method executes dependencies"
+      ],
+      "evidence": [
+        {
+          "path": "core/data/build.gradle.kts",
+          "startLine": 28,
+          "endLine": 41,
+          "excerpt": "dependencies {\n    api(projects.core.common)\n    api(projects.core.database)\n    api(projects.core.datastore)\n    api(projects.core.network)\n\n    implementation(projects.core.analytics)\n    implementation(projects.core.notifications)\n\n    testImplementation(libs.kotlinx.coroutines.test)\n    testImplementation(libs.kotlinx.serialization.json)\n    testImplementation(projects.core.datastoreTest)\n    testImplementation(projects.core.testing)\n}",
+          "sha256": "e5853cc485e4358dcd396c221a8c7dd7a12c9dcb724b59f0516ca8b6fbb0c76f"
+        }
+      ]
+    },
+    {
+      "id": "nowinandroid-q7",
+      "question": "For R = removeFromSavedResources(id), trace the source-supported production path to preference removal and identify dispatch boundaries.",
+      "answer": "BookmarksScreen wires removeFromBookmarks to the ViewModel method. That method launches a coroutine and calls the UserDataRepository interface with false. DataModule binds that interface to OfflineFirstUserDataRepository, whose override delegates to NiaPreferencesDataSource and then logs analytics. The data source calls DataStore.updateData, copies preferences, and removes the ID from bookmarkedNewsResourceIds for false; IOException is caught/logged. Hilt provisioning, coroutine scheduling and DataStore execution are external framework boundaries; this static path is not a runtime trace or disk-write success proof.",
+      "requiredFacts": [
+        "Screen callback points to ViewModel method",
+        "ViewModel calls UserDataRepository with false in coroutine",
+        "DataModule binds interface to OfflineFirstUserDataRepository",
+        "Repository delegates to preferences and logs analytics",
+        "Preferences update removes map key and catches IOException",
+        "Hilt/coroutine/DataStore boundaries are explicit"
+      ],
+      "evidence": [
+        {
+          "path": "feature/bookmarks/impl/src/main/kotlin/com/google/samples/apps/nowinandroid/feature/bookmarks/impl/BookmarksScreen.kt",
+          "startLine": 79,
+          "endLine": 97,
+          "excerpt": "@Composable\ninternal fun BookmarksScreen(\n    onTopicClick: (String) -> Unit,\n    onShowSnackbar: suspend (String, String?) -> Boolean,\n    modifier: Modifier = Modifier,\n    viewModel: BookmarksViewModel = hiltViewModel(),\n) {\n    val feedState by viewModel.feedUiState.collectAsStateWithLifecycle()\n    BookmarksScreen(\n        feedState = feedState,\n        onShowSnackbar = onShowSnackbar,\n        removeFromBookmarks = viewModel::removeFromSavedResources,\n        onNewsResourceViewed = { viewModel.setNewsResourceViewed(it, true) },\n        onTopicClick = onTopicClick,\n        modifier = modifier,\n        shouldDisplayUndoBookmark = viewModel.shouldDisplayUndoBookmark,\n        undoBookmarkRemoval = viewModel::undoBookmarkRemoval,\n        clearUndoState = viewModel::clearUndoState,\n    )",
+          "sha256": "d8d1374fbcea4a9e2edfb4d66063ba5f886147cf3eceba4002b39cb7b2d7ff49"
+        },
+        {
+          "path": "feature/bookmarks/impl/src/main/kotlin/com/google/samples/apps/nowinandroid/feature/bookmarks/impl/BookmarksViewModel.kt",
+          "startLine": 57,
+          "endLine": 63,
+          "excerpt": "    fun removeFromSavedResources(newsResourceId: String) {\n        viewModelScope.launch {\n            shouldDisplayUndoBookmark = true\n            lastRemovedBookmarkId = newsResourceId\n            userDataRepository.setNewsResourceBookmarked(newsResourceId, false)\n        }\n    }",
+          "sha256": "ee7d43eedfb2b2c3a7c3505c5b808c7d9c941a99542012e013d7a3a37c2da1ba"
+        },
+        {
+          "path": "core/data/src/main/kotlin/com/google/samples/apps/nowinandroid/core/data/di/DataModule.kt",
+          "startLine": 52,
+          "endLine": 55,
+          "excerpt": "    @Binds\n    internal abstract fun bindsUserDataRepository(\n        userDataRepository: OfflineFirstUserDataRepository,\n    ): UserDataRepository",
+          "sha256": "f42f0875d1a864cca1eaf9419a57af63e002b76841c6d317df607d152d26f9dc"
+        },
+        {
+          "path": "core/data/src/main/kotlin/com/google/samples/apps/nowinandroid/core/data/repository/OfflineFirstUserDataRepository.kt",
+          "startLine": 45,
+          "endLine": 51,
+          "excerpt": "    override suspend fun setNewsResourceBookmarked(newsResourceId: String, bookmarked: Boolean) {\n        niaPreferencesDataSource.setNewsResourceBookmarked(newsResourceId, bookmarked)\n        analyticsHelper.logNewsResourceBookmarkToggled(\n            newsResourceId = newsResourceId,\n            isBookmarked = bookmarked,\n        )\n    }",
+          "sha256": "422c693720041c440e541405d0c2116d885e009b1a63e705bdd8acc7439c7e6e"
+        },
+        {
+          "path": "core/datastore/src/main/kotlin/com/google/samples/apps/nowinandroid/core/datastore/NiaPreferencesDataSource.kt",
+          "startLine": 123,
+          "endLine": 137,
+          "excerpt": "    suspend fun setNewsResourceBookmarked(newsResourceId: String, bookmarked: Boolean) {\n        try {\n            userPreferences.updateData {\n                it.copy {\n                    if (bookmarked) {\n                        bookmarkedNewsResourceIds.put(newsResourceId, true)\n                    } else {\n                        bookmarkedNewsResourceIds.remove(newsResourceId)\n                    }\n                }\n            }\n        } catch (ioException: IOException) {\n            Log.e(\"NiaPreferences\", \"Failed to update user preferences\", ioException)\n        }\n    }",
+          "sha256": "67633dbbccc11697ff931c3bbb103878634a44992c202a11d33736fce6953726"
+        }
+      ]
+    },
+    {
+      "id": "nowinandroid-q8",
+      "question": "If Y = BookmarksViewModel.removeFromSavedResources changes, which direct screen/test consumers are evidenced?",
+      "answer": "BookmarksScreen passes the method reference as removeFromBookmarks; BookmarksViewModelTest calls it in removal and undo scenarios. The method-reference dependency is direct, but actual user-click dispatch requires Compose callback execution. Changes may alter feed/undo observations; this does not prove unrelated feature screens depend on this ViewModel method.",
+      "requiredFacts": [
+        "BookmarksScreen binds method reference",
+        "Removal test directly calls it",
+        "Undo test directly calls it",
+        "Behavioral effects and user invocation are conditional, not inferred whole-app reachability"
+      ],
+      "evidence": [
+        {
+          "path": "feature/bookmarks/impl/src/main/kotlin/com/google/samples/apps/nowinandroid/feature/bookmarks/impl/BookmarksScreen.kt",
+          "startLine": 86,
+          "endLine": 97,
+          "excerpt": "    val feedState by viewModel.feedUiState.collectAsStateWithLifecycle()\n    BookmarksScreen(\n        feedState = feedState,\n        onShowSnackbar = onShowSnackbar,\n        removeFromBookmarks = viewModel::removeFromSavedResources,\n        onNewsResourceViewed = { viewModel.setNewsResourceViewed(it, true) },\n        onTopicClick = onTopicClick,\n        modifier = modifier,\n        shouldDisplayUndoBookmark = viewModel.shouldDisplayUndoBookmark,\n        undoBookmarkRemoval = viewModel::undoBookmarkRemoval,\n        clearUndoState = viewModel::clearUndoState,\n    )",
+          "sha256": "d8d1374fbcea4a9e2edfb4d66063ba5f886147cf3eceba4002b39cb7b2d7ff49"
+        },
+        {
+          "path": "feature/bookmarks/impl/src/test/kotlin/com/google/samples/apps/nowinandroid/feature/bookmarks/impl/BookmarksViewModelTest.kt",
+          "startLine": 79,
+          "endLine": 93,
+          "excerpt": "    @Test\n    fun oneBookmark_whenRemoving_removesFromFeed() = runTest {\n        backgroundScope.launch(UnconfinedTestDispatcher()) { viewModel.feedUiState.collect() }\n        // Set the news resources to be used by this test\n        newsRepository.sendNewsResources(newsResourcesTestData)\n        // Start with the resource saved\n        userDataRepository.setNewsResourceBookmarked(newsResourcesTestData[0].id, true)\n        // Use viewModel to remove saved resource\n        viewModel.removeFromSavedResources(newsResourcesTestData[0].id)\n        // Verify list of saved resources is now empty\n        val item = viewModel.feedUiState.value\n        assertIs<Success>(item)\n        assertEquals(item.feed.size, 0)\n        assertTrue(viewModel.shouldDisplayUndoBookmark)\n    }",
+          "sha256": "13db7eae8b6613adeb65bc404c563e4e3b630c5ee5815ef790f7ff394b82e317"
+        },
+        {
+          "path": "feature/bookmarks/impl/src/test/kotlin/com/google/samples/apps/nowinandroid/feature/bookmarks/impl/BookmarksViewModelTest.kt",
+          "startLine": 115,
+          "endLine": 135,
+          "excerpt": "    @Test\n    fun feedUiState_undoneBookmarkRemoval_bookmarkIsRestored() = runTest {\n        backgroundScope.launch(UnconfinedTestDispatcher()) { viewModel.feedUiState.collect() }\n\n        // Given\n        newsRepository.sendNewsResources(newsResourcesTestData)\n        userDataRepository.setNewsResourceBookmarked(newsResourcesTestData[0].id, true)\n        viewModel.removeFromSavedResources(newsResourcesTestData[0].id)\n        assertTrue(viewModel.shouldDisplayUndoBookmark)\n        val itemBeforeUndo = viewModel.feedUiState.value\n        assertIs<Success>(itemBeforeUndo)\n        assertEquals(0, itemBeforeUndo.feed.size)\n\n        // When\n        viewModel.undoBookmarkRemoval()\n\n        // Then\n        assertFalse(viewModel.shouldDisplayUndoBookmark)\n        val item = viewModel.feedUiState.value\n        assertIs<Success>(item)\n        assertEquals(1, item.feed.size)",
+          "sha256": "13db7eae8b6613adeb65bc404c563e4e3b630c5ee5815ef790f7ff394b82e317"
+        }
+      ]
+    },
+    {
+      "id": "nowinandroid-q9",
+      "question": "Which tests exercise X, and how do they enter its implementation?",
+      "answer": "BookmarksViewModelTest.oneBookmark_whenRemoving_removesFromFeed seeds a bookmark, subscribes to feedUiState, calls viewModel.removeFromSavedResources and asserts empty Success feed plus undo visibility. feedUiState_undoneBookmarkRemoval_bookmarkIsRestored calls removal then undo and checks one item plus hidden undo. These are source-inspected tests, not a claimed executed device or persistence test.",
+      "requiredFacts": [
+        "Removal test invokes ViewModel action",
+        "Asserts empty feed and undo flag",
+        "Undo test invokes undo and asserts restoration",
+        "No executed-device or real-persistence claim"
+      ],
+      "evidence": [
+        {
+          "path": "feature/bookmarks/impl/src/test/kotlin/com/google/samples/apps/nowinandroid/feature/bookmarks/impl/BookmarksViewModelTest.kt",
+          "startLine": 79,
+          "endLine": 93,
+          "excerpt": "    @Test\n    fun oneBookmark_whenRemoving_removesFromFeed() = runTest {\n        backgroundScope.launch(UnconfinedTestDispatcher()) { viewModel.feedUiState.collect() }\n        // Set the news resources to be used by this test\n        newsRepository.sendNewsResources(newsResourcesTestData)\n        // Start with the resource saved\n        userDataRepository.setNewsResourceBookmarked(newsResourcesTestData[0].id, true)\n        // Use viewModel to remove saved resource\n        viewModel.removeFromSavedResources(newsResourcesTestData[0].id)\n        // Verify list of saved resources is now empty\n        val item = viewModel.feedUiState.value\n        assertIs<Success>(item)\n        assertEquals(item.feed.size, 0)\n        assertTrue(viewModel.shouldDisplayUndoBookmark)\n    }",
+          "sha256": "13db7eae8b6613adeb65bc404c563e4e3b630c5ee5815ef790f7ff394b82e317"
+        },
+        {
+          "path": "feature/bookmarks/impl/src/test/kotlin/com/google/samples/apps/nowinandroid/feature/bookmarks/impl/BookmarksViewModelTest.kt",
+          "startLine": 115,
+          "endLine": 135,
+          "excerpt": "    @Test\n    fun feedUiState_undoneBookmarkRemoval_bookmarkIsRestored() = runTest {\n        backgroundScope.launch(UnconfinedTestDispatcher()) { viewModel.feedUiState.collect() }\n\n        // Given\n        newsRepository.sendNewsResources(newsResourcesTestData)\n        userDataRepository.setNewsResourceBookmarked(newsResourcesTestData[0].id, true)\n        viewModel.removeFromSavedResources(newsResourcesTestData[0].id)\n        assertTrue(viewModel.shouldDisplayUndoBookmark)\n        val itemBeforeUndo = viewModel.feedUiState.value\n        assertIs<Success>(itemBeforeUndo)\n        assertEquals(0, itemBeforeUndo.feed.size)\n\n        // When\n        viewModel.undoBookmarkRemoval()\n\n        // Then\n        assertFalse(viewModel.shouldDisplayUndoBookmark)\n        val item = viewModel.feedUiState.value\n        assertIs<Success>(item)\n        assertEquals(1, item.feed.size)",
+          "sha256": "13db7eae8b6613adeb65bc404c563e4e3b630c5ee5815ef790f7ff394b82e317"
+        }
+      ]
+    },
+    {
+      "id": "nowinandroid-q10",
+      "question": "Where does Z = newsResourceId plus bookmarked boolean enter and become persistent preference data?",
+      "answer": "NiaPreferencesDataSource.setNewsResourceBookmarked accepts ID/boolean. DataStore.updateData copies UserPreferences and puts id->true for true or removes the key for false, with IOException logged. The userData flow maps bookmarkedNewsResourceIdsMap.keys into UserData.bookmarkedNewsResources. This is an ID set represented by map keys, not a stored false-valued bookmark entry.",
+      "requiredFacts": [
+        "Data source accepts id and boolean",
+        "true puts id->true; false removes key",
+        "updateData wraps preference copy and catches IOException",
+        "Read flow uses map keys as bookmarked resource IDs"
+      ],
+      "evidence": [
+        {
+          "path": "core/datastore/src/main/kotlin/com/google/samples/apps/nowinandroid/core/datastore/NiaPreferencesDataSource.kt",
+          "startLine": 29,
+          "endLine": 37,
+          "excerpt": "class NiaPreferencesDataSource @Inject constructor(\n    private val userPreferences: DataStore<UserPreferences>,\n) {\n    val userData = userPreferences.data\n        .map {\n            UserData(\n                bookmarkedNewsResources = it.bookmarkedNewsResourceIdsMap.keys,\n                viewedNewsResources = it.viewedNewsResourceIdsMap.keys,\n                followedTopics = it.followedTopicIdsMap.keys,",
+          "sha256": "67633dbbccc11697ff931c3bbb103878634a44992c202a11d33736fce6953726"
+        },
+        {
+          "path": "core/datastore/src/main/kotlin/com/google/samples/apps/nowinandroid/core/datastore/NiaPreferencesDataSource.kt",
+          "startLine": 123,
+          "endLine": 137,
+          "excerpt": "    suspend fun setNewsResourceBookmarked(newsResourceId: String, bookmarked: Boolean) {\n        try {\n            userPreferences.updateData {\n                it.copy {\n                    if (bookmarked) {\n                        bookmarkedNewsResourceIds.put(newsResourceId, true)\n                    } else {\n                        bookmarkedNewsResourceIds.remove(newsResourceId)\n                    }\n                }\n            }\n        } catch (ioException: IOException) {\n            Log.e(\"NiaPreferences\", \"Failed to update user preferences\", ioException)\n        }\n    }",
+          "sha256": "67633dbbccc11697ff931c3bbb103878634a44992c202a11d33736fce6953726"
+        }
+      ]
+    }
+  ]
+}

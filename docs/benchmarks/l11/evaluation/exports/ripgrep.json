@@ -1,0 +1,18 @@
+{
+  "repository": "ripgrep",
+  "commit": "3fce3b5bb0236da2df6d99672afb8a719642eca7",
+  "candidate": "2b7c00f",
+  "startedAt": "2026-10-13T07:12:36.631Z",
+  "reused": true,
+  "seconds": 0.000334459,
+  "graphHash": "6b8d82c807c2a179c37dfed4e6e1c67637f1add0e00cdd3e64e88a2e87511bdd",
+  "source": {
+    "name": "ripgrep",
+    "dirty": false,
+    "sourceFingerprint": "f26b7d0298dc3faa82737df984e8d143e86928b745f8d5ad8d47308f39cf3e87",
+    "commit": "3fce3b5bb0236da2df6d99672afb8a719642eca7",
+    "remoteUrl": "https://github.com/BurntSushi/ripgrep"
+  },
+  "status": "ready",
+  "finishedAt": "2026-10-13T07:12:36.632Z"
+}

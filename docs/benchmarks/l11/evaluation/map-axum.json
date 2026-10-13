@@ -1,0 +1,264 @@
+{
+  "repository": "tokio-rs/axum",
+  "arm": "map",
+  "commit": "e57b547eb95de74b73b34719dd5926254a085634",
+  "answers": [
+    {
+      "id": "q1",
+      "answer": "axum is a Rust HTTP routing/request-handling library: applications register asynchronous handlers, extract typed request inputs, and convert outputs into responses. It uses Tower services/middleware. Application authors call its API; the documented Tokio main builds a Router, binds a TCP listener, and awaits axum::serve. HTTP clients supply requests; axum is not itself a standalone application executable. Library authors can consume axum-core's extractor/response traits.",
+      "citations": [
+        {
+          "url": "https://github.com/tokio-rs/axum/blob/e57b547eb95de74b73b34719dd5926254a085634/axum/README.md#L1-L65",
+          "lines": "1-65"
+        },
+        {
+          "url": "https://github.com/tokio-rs/axum/blob/e57b547eb95de74b73b34719dd5926254a085634/axum-core/src/lib.rs#L1-L8",
+          "lines": "1-8"
+        }
+      ]
+    },
+    {
+      "id": "q2",
+      "answer": "Principal packages: axum owns public routing, handlers, extractors, middleware integration and serving; axum-core holds reusable body/error/extractor/response types and traits; axum-extra supplies optional utilities such as cookies, typed headers/routing and additional bodies/responses; axum-macros is a procedural-macro crate. examples/ contains executable application examples. Within axum's routing implementation Router coordinates PathRouter, MethodRouter dispatches HTTP methods, and Route/RouteFuture adapts services and finalizes responses. Tests live beside implementations and under routing/tests; they are verification code, not production entrypoints.",
+      "citations": [
+        {
+          "url": "https://github.com/tokio-rs/axum/blob/e57b547eb95de74b73b34719dd5926254a085634/axum/src/routing/mod.rs#L1-L110",
+          "lines": "1-110"
+        },
+        {
+          "url": "https://github.com/tokio-rs/axum/blob/e57b547eb95de74b73b34719dd5926254a085634/axum-core/src/lib.rs#L1-L38",
+          "lines": "1-38"
+        },
+        {
+          "url": "https://github.com/tokio-rs/axum/blob/e57b547eb95de74b73b34719dd5926254a085634/axum-extra/src/lib.rs#L1-L60",
+          "lines": "1-60"
+        },
+        {
+          "url": "https://github.com/tokio-rs/axum/blob/e57b547eb95de74b73b34719dd5926254a085634/axum-macros/Cargo.toml#L1-L22",
+          "lines": "1-22"
+        },
+        {
+          "url": "https://github.com/tokio-rs/axum/blob/e57b547eb95de74b73b34719dd5926254a085634/examples/hello-world/Cargo.toml#L1-L10",
+          "lines": "1-10"
+        },
+        {
+          "url": "https://github.com/tokio-rs/axum/blob/e57b547eb95de74b73b34719dd5926254a085634/axum/src/routing/route.rs#L29-L58",
+          "lines": "29-58"
+        }
+      ]
+    },
+    {
+      "id": "q3",
+      "answer": "Rust/Cargo organizes the production libraries. The workspace lists axum and axum-* with resolver 2 and workspace rust-version 1.85; axum and axum-macros use edition 2021. Packages have separate Cargo.toml boundaries; axum depends on local axum-core and optionally axum-macros, whose lib is proc-macro=true. Tokio provides asynchronous runtime/network integration, Hyper/hyper-util HTTP serving, Tower Service/Layer composition, matchit path matching and Serde typed data conversion. Cargo features select optional functionality. Examples have their own package manifests and path-depend on axum. The map additionally reports JavaScript example/test assets; that is not evidence of a JavaScript production routing layer.",
+      "citations": [
+        {
+          "url": "https://github.com/tokio-rs/axum/blob/e57b547eb95de74b73b34719dd5926254a085634/Cargo.toml#L1-L7",
+          "lines": "1-7"
+        },
+        {
+          "url": "https://github.com/tokio-rs/axum/blob/e57b547eb95de74b73b34719dd5926254a085634/axum/Cargo.toml#L1-L145",
+          "lines": "1-145"
+        },
+        {
+          "url": "https://github.com/tokio-rs/axum/blob/e57b547eb95de74b73b34719dd5926254a085634/axum-macros/Cargo.toml#L1-L35",
+          "lines": "1-35"
+        },
+        {
+          "url": "https://github.com/tokio-rs/axum/blob/e57b547eb95de74b73b34719dd5926254a085634/examples/hello-world/Cargo.toml#L1-L10",
+          "lines": "1-10"
+        }
+      ]
+    },
+    {
+      "id": "q4",
+      "answer": "Per-request public use begins at impl<B> Service<Request<B>> for Router<()>: call maps the incoming body through Body::new and invokes self.call_with_state(req, ()). Router::call_with_state delegates to its PathRouter and uses catch_all_fallback only on the returned miss. This differs from constructing routes and from the IncomingStream make-service implementation used by serve. RouterAsService/RouterIntoService simply forward calls to Router.",
+      "citations": [
+        {
+          "url": "https://github.com/tokio-rs/axum/blob/e57b547eb95de74b73b34719dd5926254a085634/axum/src/routing/mod.rs#L594-L611",
+          "lines": "594-611"
+        },
+        {
+          "url": "https://github.com/tokio-rs/axum/blob/e57b547eb95de74b73b34719dd5926254a085634/axum/src/routing/mod.rs#L445-L455",
+          "lines": "445-455"
+        },
+        {
+          "url": "https://github.com/tokio-rs/axum/blob/e57b547eb95de74b73b34719dd5926254a085634/axum/src/routing/mod.rs#L569-L590",
+          "lines": "569-590"
+        },
+        {
+          "url": "https://github.com/tokio-rs/axum/blob/e57b547eb95de74b73b34719dd5926254a085634/axum/src/routing/mod.rs#L631-L638",
+          "lines": "631-638"
+        },
+        {
+          "url": "https://github.com/tokio-rs/axum/blob/e57b547eb95de74b73b34719dd5926254a085634/axum/src/routing/mod.rs#L682-L689",
+          "lines": "682-689"
+        }
+      ]
+    },
+    {
+      "id": "q5",
+      "answer": "The behavior is split across MethodRouter::call_with_state and RouteFuture::poll. The method-dispatch macro tries explicit HEAD first, then the GET endpoint for a HEAD request; the request method remains HEAD. Route::oneshot_inner_owned records that method in a top-level RouteFuture. On successful response completion, the top-level future sets Content-Length if possible before replacing a HEAD response's body with Body::empty(). It is not performed by PathRouter or by changing HEAD into GET.",
+      "citations": [
+        {
+          "url": "https://github.com/tokio-rs/axum/blob/e57b547eb95de74b73b34719dd5926254a085634/axum/src/routing/method_routing.rs#L1200-L1257",
+          "lines": "1200-1257"
+        },
+        {
+          "url": "https://github.com/tokio-rs/axum/blob/e57b547eb95de74b73b34719dd5926254a085634/axum/src/routing/route.rs#L55-L58",
+          "lines": "55-58"
+        },
+        {
+          "url": "https://github.com/tokio-rs/axum/blob/e57b547eb95de74b73b34719dd5926254a085634/axum/src/routing/route.rs#L120-L140",
+          "lines": "120-140"
+        },
+        {
+          "url": "https://github.com/tokio-rs/axum/blob/e57b547eb95de74b73b34719dd5926254a085634/axum/src/routing/route.rs#L147-L181",
+          "lines": "147-181"
+        }
+      ]
+    },
+    {
+      "id": "q6",
+      "answer": "Direct source-evidenced outgoing uses from PathRouter::call_with_state: OriginalUri is conditionally stored in request extensions (original-uri feature); Node::at receives parts.uri.path() and delegates to matchit; matched_path::set_matched_path_for_request receives route ID/map/extensions (matched-path feature); url_params::insert_url_params receives match captures/extensions; the routes collection resolves the matched RouteId to an Endpoint; MethodRouter endpoint calls method_router.call_with_state(req,state), while Route endpoint clones and calls call_owned(req). HTTP Request is split/reassembled; NotFound returns request/state to its caller. These directions are proved by the receiver/call expressions inside the function, not by imports. The map's exact calls query returned only the matched-path helper edge and no incoming calls, so it is incomplete for the other source-confirmed receiver/module calls.",
+      "citations": [
+        {
+          "url": "https://github.com/tokio-rs/axum/blob/e57b547eb95de74b73b34719dd5926254a085634/axum/src/routing/path_router.rs#L280-L327",
+          "lines": "280-327"
+        },
+        {
+          "url": "https://github.com/tokio-rs/axum/blob/e57b547eb95de74b73b34719dd5926254a085634/axum/src/routing/path_router.rs#L357-L390",
+          "lines": "357-390"
+        }
+      ]
+    },
+    {
+      "id": "q7",
+      "answer": "For a configured GET / handler and HEAD /: Router's Service::call -> Router::call_with_state -> PathRouter::call_with_state -> Node/matchit match of / -> Endpoint::MethodRouter -> MethodRouter::call_with_state. With no HEAD endpoint, its HEAD-to-GET branch selects GET. A stored Route is used directly, or BoxedIntoRoute converts the handler plus state to a Route/HandlerService. Route::oneshot_inner_owned creates a Tower oneshot future retaining HEAD; HandlerService invokes Handler::call; the handler produces its response. When polled, top-level RouteFuture computes content length then empties the body. Boundaries: network/runtime is outside this request-level chain; matchit and Tower are dependency calls; erased handler/service objects and user handlers are dynamic/application-selected; feature-gated metadata steps depend on build configuration. This is a source reconstruction, not an executed runtime trace.",
+      "citations": [
+        {
+          "url": "https://github.com/tokio-rs/axum/blob/e57b547eb95de74b73b34719dd5926254a085634/axum/src/routing/mod.rs#L607-L610",
+          "lines": "607-610"
+        },
+        {
+          "url": "https://github.com/tokio-rs/axum/blob/e57b547eb95de74b73b34719dd5926254a085634/axum/src/routing/mod.rs#L445-L455",
+          "lines": "445-455"
+        },
+        {
+          "url": "https://github.com/tokio-rs/axum/blob/e57b547eb95de74b73b34719dd5926254a085634/axum/src/routing/path_router.rs#L280-L327",
+          "lines": "280-327"
+        },
+        {
+          "url": "https://github.com/tokio-rs/axum/blob/e57b547eb95de74b73b34719dd5926254a085634/axum/src/routing/method_routing.rs#L1200-L1257",
+          "lines": "1200-1257"
+        },
+        {
+          "url": "https://github.com/tokio-rs/axum/blob/e57b547eb95de74b73b34719dd5926254a085634/axum/src/boxed.rs#L12-L47",
+          "lines": "12-47"
+        },
+        {
+          "url": "https://github.com/tokio-rs/axum/blob/e57b547eb95de74b73b34719dd5926254a085634/axum/src/handler/service.rs#L165-L175",
+          "lines": "165-175"
+        },
+        {
+          "url": "https://github.com/tokio-rs/axum/blob/e57b547eb95de74b73b34719dd5926254a085634/axum/src/routing/route.rs#L49-L58",
+          "lines": "49-58"
+        },
+        {
+          "url": "https://github.com/tokio-rs/axum/blob/e57b547eb95de74b73b34719dd5926254a085634/axum/src/routing/route.rs#L147-L181",
+          "lines": "147-181"
+        }
+      ]
+    },
+    {
+      "id": "q8",
+      "answer": "The direct consumer is Router<S>::call_with_state: self.inner.path_router.call_with_state(req,state) returns a future immediately on Ok, or supplies request/state for catch_all_fallback on Err. Changes to that result contract or dispatch semantics directly affect this consumer. Effects on particular application handlers, middleware, performance or all downstream users require the actual change and configuration; they are speculative. The map's empty incoming-call result does not negate the explicit source call.",
+      "citations": [
+        {
+          "url": "https://github.com/tokio-rs/axum/blob/e57b547eb95de74b73b34719dd5926254a085634/axum/src/routing/mod.rs#L445-L455",
+          "lines": "445-455"
+        },
+        {
+          "url": "https://github.com/tokio-rs/axum/blob/e57b547eb95de74b73b34719dd5926254a085634/axum/src/routing/path_router.rs#L280-L327",
+          "lines": "280-327"
+        }
+      ]
+    },
+    {
+      "id": "q9",
+      "answer": "Direct unit coverage: method_routing::tests::get_accepts_head registers get(ok), issues HEAD, asserts OK and empty body. Its local call helper creates HEAD /, uses ServiceExt::ready followed by Service::call, awaits, and collects the body; MethodRouter's Service implementation enters call_with_state. head_takes_precedence_over_get additionally checks explicit HEAD wins and body remains empty. Integration coverage: routing::tests::head_content_length_through_hyper_server registers GET handlers for / and /json and asserts HEAD preserves lengths 3/9 with empty text; head_with_middleware_applied covers nested/compressed routing. TestClient starts a local serve task and uses reqwest HEAD requests, thus entering Router over HTTP. route::tests::head_content_length_default and regression_3741 add header regressions; they are not standalone assertions of body suppression. No tests were executed in this trial.",
+      "citations": [
+        {
+          "url": "https://github.com/tokio-rs/axum/blob/e57b547eb95de74b73b34719dd5926254a085634/axum/src/routing/method_routing.rs#L1467-L1480",
+          "lines": "1467-1480"
+        },
+        {
+          "url": "https://github.com/tokio-rs/axum/blob/e57b547eb95de74b73b34719dd5926254a085634/axum/src/routing/method_routing.rs#L1739-L1761",
+          "lines": "1739-1761"
+        },
+        {
+          "url": "https://github.com/tokio-rs/axum/blob/e57b547eb95de74b73b34719dd5926254a085634/axum/src/routing/method_routing.rs#L1384-L1387",
+          "lines": "1384-1387"
+        },
+        {
+          "url": "https://github.com/tokio-rs/axum/blob/e57b547eb95de74b73b34719dd5926254a085634/axum/src/routing/tests/mod.rs#L824-L838",
+          "lines": "824-838"
+        },
+        {
+          "url": "https://github.com/tokio-rs/axum/blob/e57b547eb95de74b73b34719dd5926254a085634/axum/src/routing/tests/mod.rs#L851-L876",
+          "lines": "851-876"
+        },
+        {
+          "url": "https://github.com/tokio-rs/axum/blob/e57b547eb95de74b73b34719dd5926254a085634/axum/src/test_helpers/test_client.rs#L11-L61",
+          "lines": "11-61"
+        },
+        {
+          "url": "https://github.com/tokio-rs/axum/blob/e57b547eb95de74b73b34719dd5926254a085634/axum/src/routing/route.rs#L253-L294",
+          "lines": "253-294"
+        }
+      ]
+    },
+    {
+      "id": "q10",
+      "answer": "Captures originate in Node/matchit's URI-path match. PathRouter hands match_.params to url_params::insert_url_params before dispatch. The helper filters private nesting/fallback keys, stores names as Arc<str>, percent-decodes values through PercentDecodedStr::new, validates UTF-8, and stores UrlParams in request extensions. Existing captures are extended; an invalid-UTF8 marker preserves failure. Path<T>::from_request_parts calls get_params then serialize_path_params: extension values feed de::PathDeserializer and T::deserialize, yielding typed captures or PathRejection. RawPathParams reads the same extension values without typed Serde conversion. Initial inner_start is zero, and the helper exposes advance_inner_start for nested capture bookkeeping; no claim of exhaustive nesting behavior is made.",
+      "citations": [
+        {
+          "url": "https://github.com/tokio-rs/axum/blob/e57b547eb95de74b73b34719dd5926254a085634/axum/src/routing/path_router.rs#L280-L327",
+          "lines": "280-327"
+        },
+        {
+          "url": "https://github.com/tokio-rs/axum/blob/e57b547eb95de74b73b34719dd5926254a085634/axum/src/routing/url_params.rs#L17-L66",
+          "lines": "17-66"
+        },
+        {
+          "url": "https://github.com/tokio-rs/axum/blob/e57b547eb95de74b73b34719dd5926254a085634/axum/src/util.rs#L31-L43",
+          "lines": "31-43"
+        },
+        {
+          "url": "https://github.com/tokio-rs/axum/blob/e57b547eb95de74b73b34719dd5926254a085634/axum/src/extract/path/mod.rs#L174-L176",
+          "lines": "174-176"
+        },
+        {
+          "url": "https://github.com/tokio-rs/axum/blob/e57b547eb95de74b73b34719dd5926254a085634/axum/src/extract/path/mod.rs#L596-L624",
+          "lines": "596-624"
+        },
+        {
+          "url": "https://github.com/tokio-rs/axum/blob/e57b547eb95de74b73b34719dd5926254a085634/axum/src/extract/path/mod.rs#L501-L522",
+          "lines": "501-522"
+        }
+      ]
+    }
+  ],
+  "toolErrors": [
+    "Initial overview.json output and broad lattice_find(head) output were truncated by the tool output limit.",
+    "Parsing truncated lattice_find(head) output failed with SyntaxError: Unexpected token 'W', \"Warning: t\"... is not valid JSON. Continued with bounded queries and larger transport output budgets; no trial reset."
+  ],
+  "limitations": [
+    "Read-only static evaluation; no build, tests, or runtime trace executed.",
+    "Lattice exact static call graph omitted source-confirmed receiver calls and Router consumer; source navigation was needed. No inference of absent calls from absent edges.",
+    "Raw web rendering line labels omit some blank lines; citation line ranges use map source provenance for identified functions.",
+    "No authoritative token telemetry available.",
+    "Exact task-delivery start timestamp was not captured; selfReportedStartedAt is null. First map query freshness observation was 2026-10-13T07:49:35.304Z, after prompt read."
+  ],
+  "selfReportedStartedAt": null,
+  "selfReportedFinishedAt": "2026-10-13T07:53:33.376Z"
+}

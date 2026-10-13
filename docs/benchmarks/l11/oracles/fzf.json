@@ -1,0 +1,378 @@
+{
+  "id": "fzf",
+  "repository": "junegunn/fzf",
+  "commit": "c0a193e031f01fb50bf6f7be4381990a3753f7cf",
+  "trackedFiles": 162,
+  "questions": [
+    {
+      "id": "q01",
+      "question": "What does the repository do, and who calls or runs it?",
+      "answer": "fzf is a general-purpose command-line fuzzy finder and interactive terminal toolkit, run by shell users and scripts; bundled shell and editor integrations are clients.",
+      "requiredFacts": [
+        "Command-line fuzzy finding",
+        "Interactive terminal workflows",
+        "Shell users/scripts and shell/editor integrations are clients"
+      ],
+      "evidence": [
+        {
+          "path": "README.md",
+          "startLine": 28,
+          "endLine": 43,
+          "excerpt": "fzf is a general-purpose command-line fuzzy finder and an interactive terminal toolkit.\n\n<img src=\"https://raw.githubusercontent.com/junegunn/i/master/fzf-preview.png\" width=640>\n\nWhether you're selecting files, browsing command history, previewing data,\nnavigating complex datasets with fuzzy matching, or creating custom menus and\nworkflows, fzf provides the building blocks to turn shell scripts into rich\nterminal applications.\n\nHighlights\n----------\n\n- **Portable** // Distributed as a single binary for easy installation\n- **Fast** // Optimized to process millions of items in milliseconds\n- **Programmable** // Event-driven architecture for building custom terminal interfaces and workflows\n- **Batteries-included** // Comes with integrations for Bash, Zsh, Fish, Nushell, Vim, and Neovim",
+          "sha256": "cf04eefdc64236aeb99de2208e17fc43271bee9da798aa639f45baeae84f987c"
+        }
+      ]
+    },
+    {
+      "id": "q02",
+      "question": "Name the principal components and their responsibilities.",
+      "answer": "main.go dispatches CLI options; src coordinates Reader, Matcher and Terminal events; src/algo implements fuzzy scoring algorithms. These are source components within one Go module, not separate manifest packages.",
+      "requiredFacts": [
+        "main.go parses and dispatches CLI",
+        "Reader/Matcher/Terminal cooperate through events",
+        "src/algo implements fuzzy matching"
+      ],
+      "evidence": [
+        {
+          "path": "main.go",
+          "startLine": 57,
+          "endLine": 64,
+          "excerpt": "func main() {\n\tprotector.Protect()\n\n\toptions, err := fzf.ParseOptions(true, os.Args[1:])\n\tif err != nil {\n\t\texit(fzf.ExitError, err)\n\t\treturn\n\t}",
+          "sha256": "dfa587a659dbc3b54ffb95c95a5069fa260c1a1ef7f73fe5c278a4fff33014c5"
+        },
+        {
+          "path": "main.go",
+          "startLine": 113,
+          "endLine": 115,
+          "excerpt": "\tcode, err := fzf.Run(options)\n\texit(code, err)\n}",
+          "sha256": "dfa587a659dbc3b54ffb95c95a5069fa260c1a1ef7f73fe5c278a4fff33014c5"
+        },
+        {
+          "path": "src/core.go",
+          "startLine": 16,
+          "endLine": 22,
+          "excerpt": "/*\nReader   -> EvtReadFin\nReader   -> EvtReadNew        -> Matcher  (restart)\nTerminal -> EvtSearchNew:bool -> Matcher  (restart)\nMatcher  -> EvtSearchProgress -> Terminal (update info)\nMatcher  -> EvtSearchFin      -> Terminal (update list)\n*/",
+          "sha256": "11825c39271a445ead1b3132be6d990d46f945f1a96f59026c646359f3e0ddd9"
+        },
+        {
+          "path": "src/algo/algo.go",
+          "startLine": 1,
+          "endLine": 26,
+          "excerpt": "package algo\n\n/*\n\nAlgorithm\n---------\n\nFuzzyMatchV1 finds the first \"fuzzy\" occurrence of the pattern within the given\ntext in O(n) time where n is the length of the text. Once the position of the\nlast character is located, it traverses backwards to see if there's a shorter\nsubstring that matches the pattern.\n\n    a_____b___abc__  To find \"abc\"\n    *-----*-----*>   1. Forward scan\n             <***    2. Backward scan\n\nThe algorithm is simple and fast, but as it only sees the first occurrence,\nit is not guaranteed to find the occurrence with the highest score.\n\n    a_____b__c__abc\n    *-----*--*  ***\n\nFuzzyMatchV2 implements a modified version of Smith-Waterman algorithm to find\nthe optimal solution (highest score) according to the scoring criteria. Unlike\nthe original algorithm, omission or mismatch of a character in the pattern is\nnot allowed.",
+          "sha256": "461ca9f3b6d5bfbddaf59b3477f8f0b8cf87622420d4f422f94892ad40bd626a"
+        }
+      ]
+    },
+    {
+      "id": "q03",
+      "question": "Which languages, build/framework systems and package boundaries organize it?",
+      "answer": "The product is Go under module github.com/junegunn/fzf (go.mod declares Go 1.23.0). main imports the internal src package and src/protector; src imports tui/util subpackages. Ruby integration tests exercise the CLI. One Go module does not mean one Go package.",
+      "requiredFacts": [
+        "Go module github.com/junegunn/fzf",
+        "Go 1.23.0 manifest declaration",
+        "main/src and internal subpackages",
+        "Ruby CLI integration tests"
+      ],
+      "evidence": [
+        {
+          "path": "go.mod",
+          "startLine": 1,
+          "endLine": 20,
+          "excerpt": "module github.com/junegunn/fzf\n\nrequire (\n\tgithub.com/charlievieth/fastwalk v1.0.14\n\tgithub.com/gdamore/tcell/v2 v2.9.0\n\tgithub.com/junegunn/go-shellwords v0.0.0-20250127100254-2aa3b3277741\n\tgithub.com/mattn/go-isatty v0.0.24\n\tgithub.com/rivo/uniseg v0.4.7\n\tgolang.org/x/sys v0.35.0\n\tgolang.org/x/term v0.34.0\n)\n\nrequire (\n\tgithub.com/gdamore/encoding v1.0.1 // indirect\n\tgithub.com/lucasb-eyer/go-colorful v1.2.0 // indirect\n\tgithub.com/mattn/go-runewidth v0.0.16 // indirect\n\tgolang.org/x/text v0.28.0 // indirect\n)\n\ngo 1.23.0",
+          "sha256": "5b5ca4b57c52be23bf81e1f89b5baac602c28af4e251d849ae69fc2540125180"
+        },
+        {
+          "path": "main.go",
+          "startLine": 1,
+          "endLine": 12,
+          "excerpt": "package main\n\nimport (\n\t_ \"embed\"\n\t\"fmt\"\n\t\"os\"\n\t\"os/exec\"\n\t\"strings\"\n\n\tfzf \"github.com/junegunn/fzf/src\"\n\t\"github.com/junegunn/fzf/src/protector\"\n)",
+          "sha256": "dfa587a659dbc3b54ffb95c95a5069fa260c1a1ef7f73fe5c278a4fff33014c5"
+        },
+        {
+          "path": "src/core.go",
+          "startLine": 1,
+          "endLine": 14,
+          "excerpt": "// Package fzf implements fzf, a command-line fuzzy finder.\npackage fzf\n\nimport (\n\t\"fmt\"\n\t\"maps\"\n\t\"math\"\n\t\"os\"\n\t\"sync\"\n\t\"time\"\n\n\t\"github.com/junegunn/fzf/src/tui\"\n\t\"github.com/junegunn/fzf/src/util\"\n)",
+          "sha256": "11825c39271a445ead1b3132be6d990d46f945f1a96f59026c646359f3e0ddd9"
+        },
+        {
+          "path": "test/test_filter.rb",
+          "startLine": 1,
+          "endLine": 15,
+          "excerpt": "# frozen_string_literal: true\n\nrequire_relative 'lib/common'\n\n# Non-interactive tests\nclass TestFilter < TestBase\n  def test_default_extended\n    assert_equal '100', `seq 100 | #{FZF} -f \"1 00$\"`.chomp\n    assert_equal '', `seq 100 | #{FZF} -f \"1 00$\" +x`.chomp\n  end\n\n  def test_exact\n    assert_equal 4, `seq 123 | #{FZF} -f 13`.lines.length\n    assert_equal 2, `seq 123 | #{FZF} -f 13 -e`.lines.length\n    assert_equal 4, `seq 123 | #{FZF} -f 13 +e`.lines.length",
+          "sha256": "3f29adac86f55af587e2deb0ce0881150428767fefb8ac22376005b04c71b1e3"
+        }
+      ]
+    },
+    {
+      "id": "q04",
+      "question": "Where does the selected executable use begin?",
+      "answer": "The CLI starts at main.main in main.go, calls protector.Protect, parses os.Args[1:] with fzf.ParseOptions, handles special flags, then calls fzf.Run and exit.",
+      "requiredFacts": [
+        "main.main in main.go",
+        "ParseOptions receives os.Args[1:]",
+        "normal dispatch calls fzf.Run"
+      ],
+      "evidence": [
+        {
+          "path": "main.go",
+          "startLine": 57,
+          "endLine": 64,
+          "excerpt": "func main() {\n\tprotector.Protect()\n\n\toptions, err := fzf.ParseOptions(true, os.Args[1:])\n\tif err != nil {\n\t\texit(fzf.ExitError, err)\n\t\treturn\n\t}",
+          "sha256": "dfa587a659dbc3b54ffb95c95a5069fa260c1a1ef7f73fe5c278a4fff33014c5"
+        },
+        {
+          "path": "main.go",
+          "startLine": 113,
+          "endLine": 115,
+          "excerpt": "\tcode, err := fzf.Run(options)\n\texit(code, err)\n}",
+          "sha256": "dfa587a659dbc3b54ffb95c95a5069fa260c1a1ef7f73fe5c278a4fff33014c5"
+        }
+      ]
+    },
+    {
+      "id": "q05",
+      "question": "Where is noninteractive --filter matching implemented? Name its component and definition.",
+      "answer": "src/core.go Run implements the opts.Filter branch. It builds a Pattern and either streams items through MatchItem or scans a collected snapshot via matcher.scan, emits through opts.Printer, and returns success/no-match.",
+      "requiredFacts": [
+        "Run in src/core.go",
+        "opts.Filter selects noninteractive branch",
+        "streaming MatchItem or buffered matcher.scan",
+        "Printer output and success/no-match"
+      ],
+      "evidence": [
+        {
+          "path": "src/core.go",
+          "startLine": 260,
+          "endLine": 291,
+          "excerpt": "\t// Filtering mode\n\tif opts.Filter != nil {\n\t\tif opts.PrintQuery {\n\t\t\topts.Printer(*opts.Filter)\n\t\t}\n\n\t\tpattern := patternBuilder([]rune(*opts.Filter))\n\t\tmatcher.sort = pattern.sortable\n\n\t\ttransformer := buildItemTransformer(opts)\n\n\t\tfound := false\n\t\tif streamingFilter {\n\t\t\tslab := util.MakeSlab(slab16Size, slab32Size)\n\t\t\tmutex := sync.Mutex{}\n\t\t\treader := NewReader(\n\t\t\t\tfunc(runes []byte) bool {\n\t\t\t\t\titem := Item{}\n\t\t\t\t\tif chunkList.trans(&item, runes) {\n\t\t\t\t\t\tif item.Index() < headerLines {\n\t\t\t\t\t\t\treturn false\n\t\t\t\t\t\t}\n\t\t\t\t\t\tmutex.Lock()\n\t\t\t\t\t\tif result, _, _ := pattern.MatchItem(&item, false, slab); result.item != nil {\n\t\t\t\t\t\t\topts.Printer(transformer(&item))\n\t\t\t\t\t\t\tfound = true\n\t\t\t\t\t\t}\n\t\t\t\t\t\tmutex.Unlock()\n\t\t\t\t\t}\n\t\t\t\t\treturn false\n\t\t\t\t}, eventBox, executor, opts.ReadZero, false)\n\t\t\treader.ReadSource(opts.Input, opts.WalkerRoot, opts.WalkerOpts, opts.WalkerSkip, initialReload, initialEnv, nil)",
+          "sha256": "11825c39271a445ead1b3132be6d990d46f945f1a96f59026c646359f3e0ddd9"
+        },
+        {
+          "path": "src/core.go",
+          "startLine": 340,
+          "endLine": 351,
+          "excerpt": "\t\t\tresult := matcher.scan(MatchRequest{\n\t\t\t\tchunks:  snapshot,\n\t\t\t\tpattern: pattern})\n\t\t\tfor i := 0; i < result.merger.Length(); i++ {\n\t\t\t\topts.Printer(transformer(result.merger.Get(i).item))\n\t\t\t\tfound = true\n\t\t\t}\n\t\t}\n\t\tif found {\n\t\t\treturn ExitOk, nil\n\t\t}\n\t\treturn ExitNoMatch, nil",
+          "sha256": "11825c39271a445ead1b3132be6d990d46f945f1a96f59026c646359f3e0ddd9"
+        }
+      ]
+    },
+    {
+      "id": "q06",
+      "question": "Which internal components does main.go directly use, and what proves each direction?",
+      "answer": "main.go imports github.com/junegunn/fzf/src as fzf and src/protector. Calls to protector.Protect, fzf.ParseOptions and fzf.Run prove main-to-protector and main-to-fzf directions; these are not reverse dependencies.",
+      "requiredFacts": [
+        "main -> src through fzf import/calls",
+        "main -> src/protector through Protect"
+      ],
+      "evidence": [
+        {
+          "path": "main.go",
+          "startLine": 10,
+          "endLine": 12,
+          "excerpt": "\tfzf \"github.com/junegunn/fzf/src\"\n\t\"github.com/junegunn/fzf/src/protector\"\n)",
+          "sha256": "dfa587a659dbc3b54ffb95c95a5069fa260c1a1ef7f73fe5c278a4fff33014c5"
+        },
+        {
+          "path": "main.go",
+          "startLine": 57,
+          "endLine": 64,
+          "excerpt": "func main() {\n\tprotector.Protect()\n\n\toptions, err := fzf.ParseOptions(true, os.Args[1:])\n\tif err != nil {\n\t\texit(fzf.ExitError, err)\n\t\treturn\n\t}",
+          "sha256": "dfa587a659dbc3b54ffb95c95a5069fa260c1a1ef7f73fe5c278a4fff33014c5"
+        },
+        {
+          "path": "main.go",
+          "startLine": 113,
+          "endLine": 115,
+          "excerpt": "\tcode, err := fzf.Run(options)\n\texit(code, err)\n}",
+          "sha256": "dfa587a659dbc3b54ffb95c95a5069fa260c1a1ef7f73fe5c278a4fff33014c5"
+        }
+      ]
+    },
+    {
+      "id": "q07",
+      "question": "For piping text to fzf --filter foo --no-sort, give the source-supported call/dispatch path to its outcome; identify dynamic or unresolved boundaries.",
+      "answer": "With no tac/sync/bench and no initial reload or programmatic input, main -> ParseOptions -> Run selects streamingFilter. Run builds a Pattern and passes a callback to NewReader; NewReader stores this callback in Reader.pusher; ReadSource selects readFromStdin -> feed, whose delimited-line and trailing-fragment paths call r.pusher. The callback transforms an Item, calls pattern.MatchItem and opts.Printer on a match. Run returns ExitOk or ExitNoMatch. The pusher/Printer callbacks and input-dependent match are runtime boundaries; this is source reachability, not an executed trace.",
+      "requiredFacts": [
+        "main -> ParseOptions -> Run",
+        "streaming predicate includes no sort/tac/sync/bench",
+        "ReadSource -> readFromStdin -> feed",
+        "NewReader stores the callback as Reader.pusher; feed calls r.pusher for lines and a trailing fragment",
+        "reader callback MatchItem -> Printer",
+        "runtime callbacks/input-dependent result disclosed"
+      ],
+      "evidence": [
+        {
+          "path": "main.go",
+          "startLine": 57,
+          "endLine": 64,
+          "excerpt": "func main() {\n\tprotector.Protect()\n\n\toptions, err := fzf.ParseOptions(true, os.Args[1:])\n\tif err != nil {\n\t\texit(fzf.ExitError, err)\n\t\treturn\n\t}",
+          "sha256": "dfa587a659dbc3b54ffb95c95a5069fa260c1a1ef7f73fe5c278a4fff33014c5"
+        },
+        {
+          "path": "main.go",
+          "startLine": 113,
+          "endLine": 115,
+          "excerpt": "\tcode, err := fzf.Run(options)\n\texit(code, err)\n}",
+          "sha256": "dfa587a659dbc3b54ffb95c95a5069fa260c1a1ef7f73fe5c278a4fff33014c5"
+        },
+        {
+          "path": "src/core.go",
+          "startLine": 199,
+          "endLine": 206,
+          "excerpt": "\t// Reader\n\tstreamingFilter := opts.Filter != nil && !sort && !opts.Tac && !opts.Sync && opts.Bench == 0\n\tvar reader *Reader\n\tvar ingestionStart time.Time\n\tif !streamingFilter {\n\t\treader = NewReader(func(data []byte) bool {\n\t\t\treturn chunkList.Push(data)\n\t\t}, eventBox, executor, opts.ReadZero, opts.Filter == nil)",
+          "sha256": "11825c39271a445ead1b3132be6d990d46f945f1a96f59026c646359f3e0ddd9"
+        },
+        {
+          "path": "src/core.go",
+          "startLine": 266,
+          "endLine": 291,
+          "excerpt": "\t\tpattern := patternBuilder([]rune(*opts.Filter))\n\t\tmatcher.sort = pattern.sortable\n\n\t\ttransformer := buildItemTransformer(opts)\n\n\t\tfound := false\n\t\tif streamingFilter {\n\t\t\tslab := util.MakeSlab(slab16Size, slab32Size)\n\t\t\tmutex := sync.Mutex{}\n\t\t\treader := NewReader(\n\t\t\t\tfunc(runes []byte) bool {\n\t\t\t\t\titem := Item{}\n\t\t\t\t\tif chunkList.trans(&item, runes) {\n\t\t\t\t\t\tif item.Index() < headerLines {\n\t\t\t\t\t\t\treturn false\n\t\t\t\t\t\t}\n\t\t\t\t\t\tmutex.Lock()\n\t\t\t\t\t\tif result, _, _ := pattern.MatchItem(&item, false, slab); result.item != nil {\n\t\t\t\t\t\t\topts.Printer(transformer(&item))\n\t\t\t\t\t\t\tfound = true\n\t\t\t\t\t\t}\n\t\t\t\t\t\tmutex.Unlock()\n\t\t\t\t\t}\n\t\t\t\t\treturn false\n\t\t\t\t}, eventBox, executor, opts.ReadZero, false)\n\t\t\treader.ReadSource(opts.Input, opts.WalkerRoot, opts.WalkerOpts, opts.WalkerSkip, initialReload, initialEnv, nil)",
+          "sha256": "11825c39271a445ead1b3132be6d990d46f945f1a96f59026c646359f3e0ddd9"
+        },
+        {
+          "path": "src/reader.go",
+          "startLine": 125,
+          "endLine": 150,
+          "excerpt": "func (r *Reader) ReadSource(inputChan chan string, roots []string, opts walkerOpts, ignores []string, initCmd string, initEnv []string, readyChan chan bool) {\n\tr.startEventPoller()\n\tvar success bool\n\tsignalReady := func() {\n\t\tif readyChan != nil {\n\t\t\treadyChan <- true\n\t\t}\n\t}\n\tif inputChan != nil {\n\t\tsignalReady()\n\t\tsuccess = r.readChannel(inputChan)\n\t} else if len(initCmd) > 0 {\n\t\tsuccess = r.readFromCommand(initCmd, initEnv, signalReady)\n\t} else if util.IsTty(os.Stdin) {\n\t\tcmd := os.Getenv(\"FZF_DEFAULT_COMMAND\")\n\t\tif len(cmd) == 0 {\n\t\t\tsignalReady()\n\t\t\tsuccess = r.readFiles(roots, opts, ignores)\n\t\t} else {\n\t\t\tsuccess = r.readFromCommand(cmd, initEnv, signalReady)\n\t\t}\n\t} else {\n\t\tsignalReady()\n\t\tsuccess = r.readFromStdin()\n\t}\n\tr.fin(success)",
+          "sha256": "d404c5f4be199c40e73ac886255cbab69c6cf691c57591fb269d4cffea251b4c"
+        },
+        {
+          "path": "src/reader.go",
+          "startLine": 241,
+          "endLine": 244,
+          "excerpt": "func (r *Reader) readFromStdin() bool {\n\tr.feed(os.Stdin)\n\treturn true\n}",
+          "sha256": "d404c5f4be199c40e73ac886255cbab69c6cf691c57591fb269d4cffea251b4c"
+        },
+        {
+          "path": "src/core.go",
+          "startLine": 348,
+          "endLine": 351,
+          "excerpt": "\t\tif found {\n\t\t\treturn ExitOk, nil\n\t\t}\n\t\treturn ExitNoMatch, nil",
+          "sha256": "11825c39271a445ead1b3132be6d990d46f945f1a96f59026c646359f3e0ddd9"
+        },
+        {
+          "path": "src/reader.go",
+          "startLine": 20,
+          "endLine": 48,
+          "excerpt": "// Reader reads from command or standard input\ntype Reader struct {\n\tpusher   func([]byte) bool\n\texecutor *util.Executor\n\teventBox *util.EventBox\n\tdelimNil bool\n\tevent    int32\n\tfinChan  chan bool\n\tmutex    sync.Mutex\n\tkilled   bool\n\ttermFunc func()\n\tcommand  *string\n\twait     bool\n}\n\n// NewReader returns new Reader object\nfunc NewReader(pusher func([]byte) bool, eventBox *util.EventBox, executor *util.Executor, delimNil bool, wait bool) *Reader {\n\treturn &Reader{\n\t\tpusher,\n\t\texecutor,\n\t\teventBox,\n\t\tdelimNil,\n\t\tint32(EvtReady),\n\t\tmake(chan bool, 1),\n\t\tsync.Mutex{},\n\t\tfalse,\n\t\tfunc() { os.Stdin.Close() },\n\t\tnil,\n\t\twait}",
+          "sha256": "d404c5f4be199c40e73ac886255cbab69c6cf691c57591fb269d4cffea251b4c"
+        },
+        {
+          "path": "src/reader.go",
+          "startLine": 197,
+          "endLine": 214,
+          "excerpt": "\t\tfor len(buf) > 0 {\n\t\t\tif i := bytes.IndexByte(buf, delim); i >= 0 {\n\t\t\t\t// Found the delimiter\n\t\t\t\tslice := buf[:i+1]\n\t\t\t\tbuf = buf[i+1:]\n\t\t\t\tif trimCR && len(slice) >= 2 && slice[len(slice)-2] == byte('\\r') {\n\t\t\t\t\tslice = slice[:len(slice)-2]\n\t\t\t\t} else {\n\t\t\t\t\tslice = slice[:len(slice)-1]\n\t\t\t\t}\n\t\t\t\tif len(leftover) > 0 {\n\t\t\t\t\tslice = append(leftover, slice...)\n\t\t\t\t\tleftover = []byte{}\n\t\t\t\t}\n\t\t\t\tif (err == nil || len(slice) > 0) && r.pusher(slice) {\n\t\t\t\t\tatomic.StoreInt32(&r.event, int32(EvtReadNew))\n\t\t\t\t}\n\t\t\t} else {",
+          "sha256": "d404c5f4be199c40e73ac886255cbab69c6cf691c57591fb269d4cffea251b4c"
+        },
+        {
+          "path": "src/reader.go",
+          "startLine": 236,
+          "endLine": 238,
+          "excerpt": "\tif len(leftover) > 0 && r.pusher(leftover) {\n\t\tatomic.StoreInt32(&r.event, int32(EvtReadNew))\n\t}",
+          "sha256": "d404c5f4be199c40e73ac886255cbab69c6cf691c57591fb269d4cffea251b4c"
+        }
+      ]
+    },
+    {
+      "id": "q08",
+      "question": "If Reader.ReadSource changes, which direct production consumers are evidenced? Separate dependency from speculative behavioral impact.",
+      "answer": "Run in src/core.go contains both direct call sites: the goroutine for buffered/interactive ingestion and the synchronous streaming-filter reader. These calls establish dependency on ReadSource; effects on ordering, latency or output require the actual change and runtime inputs, not merely reachability.",
+      "requiredFacts": [
+        "Run calls ReadSource in ingestion goroutine",
+        "Run calls ReadSource synchronously for streaming filter",
+        "behavioral impact is conditional, not proved by calls"
+      ],
+      "evidence": [
+        {
+          "path": "src/core.go",
+          "startLine": 203,
+          "endLine": 211,
+          "excerpt": "\tif !streamingFilter {\n\t\treader = NewReader(func(data []byte) bool {\n\t\t\treturn chunkList.Push(data)\n\t\t}, eventBox, executor, opts.ReadZero, opts.Filter == nil)\n\n\t\tingestionStart = time.Now()\n\t\treadyChan := make(chan bool)\n\t\tgo reader.ReadSource(opts.Input, opts.WalkerRoot, opts.WalkerOpts, opts.WalkerSkip, initialReload, initialEnv, readyChan)\n\t\t<-readyChan",
+          "sha256": "11825c39271a445ead1b3132be6d990d46f945f1a96f59026c646359f3e0ddd9"
+        },
+        {
+          "path": "src/core.go",
+          "startLine": 275,
+          "endLine": 291,
+          "excerpt": "\t\t\treader := NewReader(\n\t\t\t\tfunc(runes []byte) bool {\n\t\t\t\t\titem := Item{}\n\t\t\t\t\tif chunkList.trans(&item, runes) {\n\t\t\t\t\t\tif item.Index() < headerLines {\n\t\t\t\t\t\t\treturn false\n\t\t\t\t\t\t}\n\t\t\t\t\t\tmutex.Lock()\n\t\t\t\t\t\tif result, _, _ := pattern.MatchItem(&item, false, slab); result.item != nil {\n\t\t\t\t\t\t\topts.Printer(transformer(&item))\n\t\t\t\t\t\t\tfound = true\n\t\t\t\t\t\t}\n\t\t\t\t\t\tmutex.Unlock()\n\t\t\t\t\t}\n\t\t\t\t\treturn false\n\t\t\t\t}, eventBox, executor, opts.ReadZero, false)\n\t\t\treader.ReadSource(opts.Input, opts.WalkerRoot, opts.WalkerOpts, opts.WalkerSkip, initialReload, initialEnv, nil)",
+          "sha256": "11825c39271a445ead1b3132be6d990d46f945f1a96f59026c646359f3e0ddd9"
+        }
+      ]
+    },
+    {
+      "id": "q09",
+      "question": "Which tests or documented example exercise noninteractive --filter matching, and how do they enter the implementation?",
+      "answer": "test/test_filter.rb TestFilter.test_filter_exitstatus invokes the FZF executable through a shell pipe for foo/bar patterns with default sorting and --no-sort. It asserts matched output/status 0 and absent output/status 1, entering main and Run filter branches. These are inspected tests, not tests executed for this oracle.",
+      "requiredFacts": [
+        "TestFilter.test_filter_exitstatus",
+        "shell launches FZF with -f and --no-sort variant",
+        "matching status 0 versus no-match status 1",
+        "not executed here"
+      ],
+      "evidence": [
+        {
+          "path": "test/test_filter.rb",
+          "startLine": 28,
+          "endLine": 37,
+          "excerpt": "  def test_filter_exitstatus\n    # filter / streaming filter\n    ['', '--no-sort'].each do |opts|\n      assert_includes `echo foo | #{FZF} -f foo #{opts}`, 'foo'\n      assert_equal 0, $CHILD_STATUS.exitstatus\n\n      assert_empty `echo foo | #{FZF} -f bar #{opts}`\n      assert_equal 1, $CHILD_STATUS.exitstatus\n    end\n  end",
+          "sha256": "3f29adac86f55af587e2deb0ce0881150428767fefb8ac22376005b04c71b1e3"
+        },
+        {
+          "path": "main.go",
+          "startLine": 57,
+          "endLine": 64,
+          "excerpt": "func main() {\n\tprotector.Protect()\n\n\toptions, err := fzf.ParseOptions(true, os.Args[1:])\n\tif err != nil {\n\t\texit(fzf.ExitError, err)\n\t\treturn\n\t}",
+          "sha256": "dfa587a659dbc3b54ffb95c95a5069fa260c1a1ef7f73fe5c278a4fff33014c5"
+        },
+        {
+          "path": "main.go",
+          "startLine": 113,
+          "endLine": 115,
+          "excerpt": "\tcode, err := fzf.Run(options)\n\texit(code, err)\n}",
+          "sha256": "dfa587a659dbc3b54ffb95c95a5069fa260c1a1ef7f73fe5c278a4fff33014c5"
+        },
+        {
+          "path": "test/lib/common.rb",
+          "startLine": 25,
+          "endLine": 28,
+          "excerpt": "FILE = File.expand_path(__FILE__)\nBASE = File.expand_path('../..', __dir__)\nDir.chdir(BASE)\nFZF = %(FZF_DEFAULT_OPTS=\"--no-scrollbar --gutter ' ' --pointer '>' --marker '>'\" FZF_DEFAULT_COMMAND= #{BASE}/bin/fzf).freeze",
+          "sha256": "c2782b4cf6f4dce7076af0e7cd7cc38bbc630c9157b9b69a9b0b0a594b9e6459"
+        }
+      ]
+    },
+    {
+      "id": "q10",
+      "question": "Where does the --filter query string enter and get handled or transformed?",
+      "answer": "main passes os.Args[1:] to ParseOptions. The -f/--filter option takes nextString and stores a pointer in opts.Filter. Run converts that string to runes for patternBuilder and matching; PrintQuery optionally emits the original string.",
+      "requiredFacts": [
+        "argv -> ParseOptions",
+        "-f/--filter -> opts.Filter",
+        "Run converts filter string to runes for patternBuilder"
+      ],
+      "evidence": [
+        {
+          "path": "main.go",
+          "startLine": 57,
+          "endLine": 64,
+          "excerpt": "func main() {\n\tprotector.Protect()\n\n\toptions, err := fzf.ParseOptions(true, os.Args[1:])\n\tif err != nil {\n\t\texit(fzf.ExitError, err)\n\t\treturn\n\t}",
+          "sha256": "dfa587a659dbc3b54ffb95c95a5069fa260c1a1ef7f73fe5c278a4fff33014c5"
+        },
+        {
+          "path": "src/options.go",
+          "startLine": 2728,
+          "endLine": 2733,
+          "excerpt": "\t\tcase \"-f\", \"--filter\":\n\t\t\tfilter, err := nextString(\"query string required\")\n\t\t\tif err != nil {\n\t\t\t\treturn err\n\t\t\t}\n\t\t\topts.Filter = &filter",
+          "sha256": "ffc17ccf3dd851c7fe95d71f8dea0a46885cc78c991979323b3477503dd27d2b"
+        },
+        {
+          "path": "src/core.go",
+          "startLine": 260,
+          "endLine": 267,
+          "excerpt": "\t// Filtering mode\n\tif opts.Filter != nil {\n\t\tif opts.PrintQuery {\n\t\t\topts.Printer(*opts.Filter)\n\t\t}\n\n\t\tpattern := patternBuilder([]rune(*opts.Filter))\n\t\tmatcher.sort = pattern.sortable",
+          "sha256": "11825c39271a445ead1b3132be6d990d46f945f1a96f59026c646359f3e0ddd9"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,298 @@
+{
+  "repository": "junegunn/fzf",
+  "arm": "map",
+  "commit": "c0a193e031f01fb50bf6f7be4381990a3753f7cf",
+  "answers": [
+    {
+      "id": "q01",
+      "answer": "fzf is a general-purpose command-line fuzzy finder and interactive terminal toolkit. It reads candidate text from stdin (or obtains file candidates without a pipe), lets users select matches, and writes selections to stdout. Shell users, pipelines/scripts, bundled shell key bindings/completion, and Vim/Neovim integrations run it. The noninteractive filter mode serves scripts. External integrations are consumers, not all part of this repository; fzf.vim is explicitly a separate project.",
+      "citations": [
+        {
+          "url": "https://github.com/junegunn/fzf/blob/c0a193e031f01fb50bf6f7be4381990a3753f7cf/README.md",
+          "lines": "25-45"
+        },
+        {
+          "url": "https://github.com/junegunn/fzf/blob/c0a193e031f01fb50bf6f7be4381990a3753f7cf/README.md",
+          "lines": "180-310"
+        },
+        {
+          "url": "https://github.com/junegunn/fzf/blob/c0a193e031f01fb50bf6f7be4381990a3753f7cf/src/options.go",
+          "lines": "190-210"
+        }
+      ]
+    },
+    {
+      "id": "q02",
+      "answer": "main.go owns CLI startup and special output modes. src/options.go parses configuration; src/core.go Run coordinates execution. Reader ingests channels, commands, files, or stdin. ChunkList holds items; Pattern builds queries and matches items; Matcher scans chunks and produces merged results. Terminal handles interactive input/output; src/tui supplies terminal event/color primitives. src/algo provides fuzzy/exact algorithms; src/util supplies shared infrastructure such as EventBox. src/protector provides OS-specific startup protection. shell/ supplies shell integration.",
+      "citations": [
+        {
+          "url": "https://github.com/junegunn/fzf/blob/c0a193e031f01fb50bf6f7be4381990a3753f7cf/main.go",
+          "lines": "1-115"
+        },
+        {
+          "url": "https://github.com/junegunn/fzf/blob/c0a193e031f01fb50bf6f7be4381990a3753f7cf/src/core.go",
+          "lines": "15-21"
+        },
+        {
+          "url": "https://github.com/junegunn/fzf/blob/c0a193e031f01fb50bf6f7be4381990a3753f7cf/src/reader.go",
+          "lines": "125-151"
+        },
+        {
+          "url": "https://github.com/junegunn/fzf/blob/c0a193e031f01fb50bf6f7be4381990a3753f7cf/src/pattern.go",
+          "lines": "79-166"
+        },
+        {
+          "url": "https://github.com/junegunn/fzf/blob/c0a193e031f01fb50bf6f7be4381990a3753f7cf/src/pattern.go",
+          "lines": "388-464"
+        },
+        {
+          "url": "https://github.com/junegunn/fzf/blob/c0a193e031f01fb50bf6f7be4381990a3753f7cf/src/matcher.go",
+          "lines": "12-80"
+        },
+        {
+          "url": "https://github.com/junegunn/fzf/blob/c0a193e031f01fb50bf6f7be4381990a3753f7cf/src/matcher.go",
+          "lines": "160-245"
+        },
+        {
+          "url": "https://github.com/junegunn/fzf/blob/c0a193e031f01fb50bf6f7be4381990a3753f7cf/src/terminal.go",
+          "lines": "266-280"
+        },
+        {
+          "url": "https://github.com/junegunn/fzf/blob/c0a193e031f01fb50bf6f7be4381990a3753f7cf/src/tui/tui.go",
+          "lines": "1-60"
+        },
+        {
+          "url": "https://github.com/junegunn/fzf/blob/c0a193e031f01fb50bf6f7be4381990a3753f7cf/src/util/eventbox.go",
+          "lines": "1-100"
+        },
+        {
+          "url": "https://github.com/junegunn/fzf/blob/c0a193e031f01fb50bf6f7be4381990a3753f7cf/src/protector/protector.go",
+          "lines": "1-6"
+        },
+        {
+          "url": "https://github.com/junegunn/fzf/blob/c0a193e031f01fb50bf6f7be4381990a3753f7cf/src/protector/protector_openbsd.go",
+          "lines": "1-10"
+        }
+      ]
+    },
+    {
+      "id": "q03",
+      "answer": "The executable and core are Go, organized by one module github.com/junegunn/fzf (go 1.23.0). Package main imports package fzf at /src plus /src/protector; /src/algo, /src/tui, and /src/util are distinct internal Go package boundaries, not separate services. Go modules pin dependencies including tcell/v2, fastwalk, go-shellwords and x/term. Make drives architecture-specific go build, Go tests, and GoReleaser builds/releases. Ruby/Bundler/Minitest supply executable integration tests, with tmux for interactive tests. Shell scripts supply integration; Vim integration is documented separately. The map reports limited language extraction for Ruby, shell and gomod, so it does not establish their full call graphs.",
+      "citations": [
+        {
+          "url": "https://github.com/junegunn/fzf/blob/c0a193e031f01fb50bf6f7be4381990a3753f7cf/go.mod",
+          "lines": "1-20"
+        },
+        {
+          "url": "https://github.com/junegunn/fzf/blob/c0a193e031f01fb50bf6f7be4381990a3753f7cf/main.go",
+          "lines": "1-12"
+        },
+        {
+          "url": "https://github.com/junegunn/fzf/blob/c0a193e031f01fb50bf6f7be4381990a3753f7cf/src/pattern.go",
+          "lines": "1-10"
+        },
+        {
+          "url": "https://github.com/junegunn/fzf/blob/c0a193e031f01fb50bf6f7be4381990a3753f7cf/Makefile",
+          "lines": "80-145"
+        },
+        {
+          "url": "https://github.com/junegunn/fzf/blob/c0a193e031f01fb50bf6f7be4381990a3753f7cf/Makefile",
+          "lines": "180-230"
+        },
+        {
+          "url": "https://github.com/junegunn/fzf/blob/c0a193e031f01fb50bf6f7be4381990a3753f7cf/test/lib/common.rb",
+          "lines": "1-28"
+        },
+        {
+          "url": "https://github.com/junegunn/fzf/blob/c0a193e031f01fb50bf6f7be4381990a3753f7cf/test/runner.rb",
+          "lines": "1-5"
+        },
+        {
+          "url": "https://github.com/junegunn/fzf/blob/c0a193e031f01fb50bf6f7be4381990a3753f7cf/README.md",
+          "lines": "180-265"
+        }
+      ]
+    },
+    {
+      "id": "q04",
+      "answer": "The selected executable begins at package main's main() in main.go:58. It invokes protector.Protect(), then fzf.ParseOptions(true, os.Args[1:]). After handling script/help/version/man branches, normal execution calls fzf.Run(options) at line 113 and passes its result to exit, which calls os.Exit. Run is defined in src/core.go:55.",
+      "citations": [
+        {
+          "url": "https://github.com/junegunn/fzf/blob/c0a193e031f01fb50bf6f7be4381990a3753f7cf/main.go",
+          "lines": "50-115"
+        },
+        {
+          "url": "https://github.com/junegunn/fzf/blob/c0a193e031f01fb50bf6f7be4381990a3753f7cf/src/core.go",
+          "lines": "54-73"
+        }
+      ]
+    },
+    {
+      "id": "q05",
+      "answer": "Noninteractive filtering is the opts.Filter != nil branch inside fzf.Run in src/core.go (Run definition at line 55; filtering around 259-352). Streaming mode calls Pattern.MatchItem; buffered mode calls Matcher.scan, which searches chunks through Pattern.Match. It is not a separate filter executable or Terminal method.",
+      "citations": [
+        {
+          "url": "https://github.com/junegunn/fzf/blob/c0a193e031f01fb50bf6f7be4381990a3753f7cf/src/core.go",
+          "lines": "250-355"
+        },
+        {
+          "url": "https://github.com/junegunn/fzf/blob/c0a193e031f01fb50bf6f7be4381990a3753f7cf/src/pattern.go",
+          "lines": "302-320"
+        },
+        {
+          "url": "https://github.com/junegunn/fzf/blob/c0a193e031f01fb50bf6f7be4381990a3753f7cf/src/pattern.go",
+          "lines": "388-401"
+        },
+        {
+          "url": "https://github.com/junegunn/fzf/blob/c0a193e031f01fb50bf6f7be4381990a3753f7cf/src/matcher.go",
+          "lines": "160-245"
+        }
+      ]
+    },
+    {
+      "id": "q06",
+      "answer": "main.go directly depends on github.com/junegunn/fzf/src (aliased fzf) and /src/protector: imports at lines 10-11 prove package direction. Uses include fzf.ParseOptions (60), Usage, ExitError, WriteTemporaryFile (98), and Run (113); protector.Protect is called at startup. The map independently resolves main→ParseOptions/Run/WriteTemporaryFile. Protect's implementation is build-tag selected: OpenBSD pledges; other platforms use a no-op. Reader, Matcher, Pattern, tui and util are not direct imports of main.go. Embedded shell scripts/manpage are direct resource dependencies (go:embed), not Go function calls.",
+      "citations": [
+        {
+          "url": "https://github.com/junegunn/fzf/blob/c0a193e031f01fb50bf6f7be4381990a3753f7cf/main.go",
+          "lines": "1-115"
+        },
+        {
+          "url": "https://github.com/junegunn/fzf/blob/c0a193e031f01fb50bf6f7be4381990a3753f7cf/src/protector/protector.go",
+          "lines": "1-6"
+        },
+        {
+          "url": "https://github.com/junegunn/fzf/blob/c0a193e031f01fb50bf6f7be4381990a3753f7cf/src/protector/protector_openbsd.go",
+          "lines": "1-10"
+        }
+      ]
+    },
+    {
+      "id": "q07",
+      "answer": "Assuming ordinary defaults: shell pipe → main → ParseOptions (--filter stores foo; --no-sort sets Sort=0) → Run. Filter/non-sort/non-tac/non-sync/non-benchmark selects streaming. Run builds a Pattern and installs a NewReader callback. Reader.ReadSource sees non-tty stdin → readFromStdin → feed(os.Stdin) → newline records → pusher callback → item transformation → Pattern.MatchItem. Default extended matching dispatches extendedMatch→iter→the term's algorithm function (default FuzzyMatchV2). Successful items go through transformer→Printer (default fmt.Println); Run returns success if any match, otherwise no-match; main exits with that code (0/1). Terminal.Loop and buffered Matcher.scan are bypassed. Input bytes, environment defaults, configured callbacks/algorithm selection and OS I/O are dynamic boundaries; this is source reconstruction, not a measured execution trace.",
+      "citations": [
+        {
+          "url": "https://github.com/junegunn/fzf/blob/c0a193e031f01fb50bf6f7be4381990a3753f7cf/main.go",
+          "lines": "58-115"
+        },
+        {
+          "url": "https://github.com/junegunn/fzf/blob/c0a193e031f01fb50bf6f7be4381990a3753f7cf/src/options.go",
+          "lines": "724-817"
+        },
+        {
+          "url": "https://github.com/junegunn/fzf/blob/c0a193e031f01fb50bf6f7be4381990a3753f7cf/src/options.go",
+          "lines": "2529-2900"
+        },
+        {
+          "url": "https://github.com/junegunn/fzf/blob/c0a193e031f01fb50bf6f7be4381990a3753f7cf/src/options.go",
+          "lines": "3905-3970"
+        },
+        {
+          "url": "https://github.com/junegunn/fzf/blob/c0a193e031f01fb50bf6f7be4381990a3753f7cf/src/core.go",
+          "lines": "185-355"
+        },
+        {
+          "url": "https://github.com/junegunn/fzf/blob/c0a193e031f01fb50bf6f7be4381990a3753f7cf/src/reader.go",
+          "lines": "125-244"
+        },
+        {
+          "url": "https://github.com/junegunn/fzf/blob/c0a193e031f01fb50bf6f7be4381990a3753f7cf/src/pattern.go",
+          "lines": "388-464"
+        },
+        {
+          "url": "https://github.com/junegunn/fzf/blob/c0a193e031f01fb50bf6f7be4381990a3753f7cf/src/pattern.go",
+          "lines": "487-501"
+        },
+        {
+          "url": "https://github.com/junegunn/fzf/blob/c0a193e031f01fb50bf6f7be4381990a3753f7cf/src/constants.go",
+          "lines": "68-80"
+        }
+      ]
+    },
+    {
+      "id": "q08",
+      "answer": "The evidenced direct production consumer is fzf.Run, with two call sites: asynchronous ingestion for non-streaming execution and synchronous streaming-filter ingestion. Thus both interactive/buffered-filter and streaming-filter paths depend on ReadSource. A change could affect ingestion/source selection/readiness/completion, but actual behavioral impact depends on the change; no regression was executed. main is only transitive. Lattice returned zero incoming calls even with includeEstimated=true, so that result is incomplete rather than evidence of no consumers.",
+      "citations": [
+        {
+          "url": "https://github.com/junegunn/fzf/blob/c0a193e031f01fb50bf6f7be4381990a3753f7cf/src/core.go",
+          "lines": "199-213"
+        },
+        {
+          "url": "https://github.com/junegunn/fzf/blob/c0a193e031f01fb50bf6f7be4381990a3753f7cf/src/core.go",
+          "lines": "272-292"
+        },
+        {
+          "url": "https://github.com/junegunn/fzf/blob/c0a193e031f01fb50bf6f7be4381990a3753f7cf/src/reader.go",
+          "lines": "125-151"
+        }
+      ]
+    },
+    {
+      "id": "q09",
+      "answer": "test/test_filter.rb defines noninteractive TestFilter tests. test_filter_exitstatus loops over ordinary filtering and --no-sort: echo foo filtered by foo must print foo and exit 0; filtering by bar must print nothing and exit 1. test_default_extended and test_exact exercise query semantics. These are Ruby subprocess tests: FZF in test/lib/common.rb points to repository bin/fzf with explicit environment options; shell backticks pipe data to that executable, entering main→ParseOptions→Run. test/runner.rb loads test_*.rb and Minitest autorun. Tests were inspected, not run; the Ruby-to-Go process edge is source-supported, not a resolved map call edge.",
+      "citations": [
+        {
+          "url": "https://github.com/junegunn/fzf/blob/c0a193e031f01fb50bf6f7be4381990a3753f7cf/test/test_filter.rb",
+          "lines": "1-40"
+        },
+        {
+          "url": "https://github.com/junegunn/fzf/blob/c0a193e031f01fb50bf6f7be4381990a3753f7cf/test/lib/common.rb",
+          "lines": "1-28"
+        },
+        {
+          "url": "https://github.com/junegunn/fzf/blob/c0a193e031f01fb50bf6f7be4381990a3753f7cf/test/runner.rb",
+          "lines": "1-5"
+        },
+        {
+          "url": "https://github.com/junegunn/fzf/blob/c0a193e031f01fb50bf6f7be4381990a3753f7cf/main.go",
+          "lines": "58-115"
+        }
+      ]
+    },
+    {
+      "id": "q10",
+      "answer": "The query arrives as CLI argv after the executable name. ParseOptions starts from defaults, optionally parses FZF_DEFAULT_OPTS_FILE and FZF_DEFAULT_OPTS, then CLI arguments. parseOptions handles -f/--filter via nextString and stores a *string in Options.Filter; missing text is an error. This is separate from Options.Query. Run converts *Filter to []rune for patternBuilder→BuildPattern and optionally prints the original filter. BuildPattern trims surrounding unescaped spaces in extended mode, consults its cache and parseTerms; terms receive case handling, normalization and extended operators. With default foo, this becomes a non-inverse fuzzy term. Matching consumes the resulting Pattern.",
+      "citations": [
+        {
+          "url": "https://github.com/junegunn/fzf/blob/c0a193e031f01fb50bf6f7be4381990a3753f7cf/main.go",
+          "lines": "58-64"
+        },
+        {
+          "url": "https://github.com/junegunn/fzf/blob/c0a193e031f01fb50bf6f7be4381990a3753f7cf/src/options.go",
+          "lines": "579-705"
+        },
+        {
+          "url": "https://github.com/junegunn/fzf/blob/c0a193e031f01fb50bf6f7be4381990a3753f7cf/src/options.go",
+          "lines": "2529-2800"
+        },
+        {
+          "url": "https://github.com/junegunn/fzf/blob/c0a193e031f01fb50bf6f7be4381990a3753f7cf/src/options.go",
+          "lines": "3905-3970"
+        },
+        {
+          "url": "https://github.com/junegunn/fzf/blob/c0a193e031f01fb50bf6f7be4381990a3753f7cf/src/core.go",
+          "lines": "248-270"
+        },
+        {
+          "url": "https://github.com/junegunn/fzf/blob/c0a193e031f01fb50bf6f7be4381990a3753f7cf/src/pattern.go",
+          "lines": "79-249"
+        }
+      ]
+    }
+  ],
+  "toolErrors": [
+    "map-fetch.mjs fzf overview.json /firstImpression failed: Error: JSON Pointer does not exist. Correct object was found at /layers/0/firstImpression.",
+    "Large overview/MCP responses were output-truncated. Parsing one truncated lattice_find options.go response failed with SyntaxError: Unexpected token 'W' (Warning: truncated output). Retried narrower queries successfully.",
+    "web.find for 'def test' in pinned test/test_filter.rb returned no matching text despite web.open displaying test definitions; used the displayed source."
+  ],
+  "limitations": [
+    "Static inspection only; no builds or tests executed.",
+    "Lattice reports limited extraction for Ruby (11 files), shell (4), and gomod (1); no complete cross-language call graph claimed.",
+    "Lattice exact/estimated incoming calls for Reader.ReadSource were empty despite two calls visible in pinned core.go. Function-valued callbacks and algorithm dispatch were verified from source, not inferred from missing map edges.",
+    "Web text rendering compresses some blank lines; citations use original source ranges from map provenance where available and enclosing ranges elsewhere.",
+    "Runtime input/environment options may alter the ordinary-default path. External callers and behavioral change impact are not exhaustively established.",
+    "Authoritative token telemetry was unavailable; no token estimate is reported."
+  ],
+  "selfReportedStartedAt": "2026-10-13T07:36:58Z",
+  "selfReportedFinishedAt": "2026-10-13T07:42:25Z"
+}

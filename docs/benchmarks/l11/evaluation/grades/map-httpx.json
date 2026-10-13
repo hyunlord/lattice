@@ -1,0 +1,136 @@
+{
+  "repository": "encode/httpx",
+  "commit": "b5addb64f0161ff6bfe94c124ef76f6a1fba5254",
+  "arm": "map",
+  "gradedBy": "independent fresh grader map-first",
+  "answerSha256": "0f04c0feccd606170ff2fabcba3d957bd9ac0b995d21f1d0d5d8001a7d7f69cb",
+  "questions": [
+    {
+      "id": "httpx-q1",
+      "score": 2,
+      "reason": "Correct client purpose, sync/async protocols, Python callers and optional console entry with pinned citations.",
+      "sourceReferences": [
+        "README.md:15-16",
+        "README.md:26-45",
+        "pyproject.toml:58-59"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "httpx-q2",
+      "score": 1,
+      "reason": "Correct principal modules and most responsibilities, but this answer only says request orchestration for _client; its authentication and redirect orchestration responsibilities required by the frozen reference are not stated.",
+      "sourceReferences": [
+        "httpx/_api.py:6-20",
+        "httpx/_api.py:102-115",
+        "httpx/_client.py:13-49",
+        "httpx/_client.py:930-946",
+        "httpx/_transports/mock.py:15-27"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "httpx-q3",
+      "score": 1,
+      "reason": "Correct Python version, Hatchling, distribution, dependencies and extras; omits the required httpx:main console entry in this question (provided elsewhere, not credited here).",
+      "sourceReferences": [
+        "pyproject.toml:1-9",
+        "pyproject.toml:30-59"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "httpx-q4",
+      "score": 2,
+      "reason": "Correct public re-export, GET delegation, context-managed Client and client.request path, distinguished from CLI.",
+      "sourceReferences": [
+        "httpx/__init__.py:1-4",
+        "httpx/__init__.py:51-55",
+        "httpx/_api.py:174-207",
+        "httpx/_api.py:102-121"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "httpx-q5",
+      "score": 1,
+      "reason": "All method rewrite rules and implementation location are correct; omits the required _build_redirect_request caller in this answer.",
+      "sourceReferences": [
+        "httpx/_client.py:475-515"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "httpx-q6",
+      "score": 1,
+      "reason": "Correct four direct module dependencies and symbols; omits the selected transport.handle_request dynamic dispatch qualification.",
+      "sourceReferences": [
+        "httpx/_client.py:13-32",
+        "httpx/_client.py:1001-1014"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "httpx-q7",
+      "score": 2,
+      "reason": "Complete request/auth/redirect/build/repeat path with history, maximum redirects and explicit auth/hooks/transport boundaries; pinned bodies support it.",
+      "sourceReferences": [
+        "httpx/_client.py:812-825",
+        "httpx/_client.py:903-919",
+        "httpx/_client.py:930-946",
+        "httpx/_client.py:964-1014"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": true
+    },
+    {
+      "id": "httpx-q8",
+      "score": 2,
+      "reason": "Correct direct builder consumer and indirect sync/async, method, header and body effects; framed as redirect effects with overridable dispatch.",
+      "sourceReferences": [
+        "httpx/_client.py:475-492",
+        "httpx/_client.py:985-995",
+        "httpx/_client.py:1699-1712"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": true
+    },
+    {
+      "id": "httpx-q9",
+      "score": 2,
+      "reason": "Correct exact test, local MockTransport/handler path and status/URL/history assertions; accurately notes rewritten method is not directly asserted.",
+      "sourceReferences": [
+        "tests/client/test_redirects.py:8-16",
+        "tests/client/test_redirects.py:116-121",
+        "httpx/_transports/mock.py:15-27"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "httpx-q10",
+      "score": 2,
+      "reason": "Correct Location read, parsing/error conversion, host repair, relative joining, fragment inheritance and next Request construction.",
+      "sourceReferences": [
+        "httpx/_client.py:475-491",
+        "httpx/_client.py:517-544"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    }
+  ],
+  "total": 16,
+  "referenceIssues": [],
+  "limitations": [
+    "Read-only pinned Git source verification; no builds, tests, app execution or persistence experiment performed.",
+    "Each answer graded independently against frozen required facts; facts in other answers do not fill omissions.",
+    "All assigned oracle excerpts and full-file hashes matched pinned Git blobs. Analyzer reports are annotations, not independent proof of analyzer behavior.",
+    "Citation end offsets exceed EOF by one line in q2 __init__.py (107 versus 106), _models.py (1278 versus 1277), _urls.py (642 versus 641), and _transports/__init__.py (16 versus 15, also q3). Definitions remain identifiable in the cited pinned files; these terminal offsets are not verified source lines."
+  ]
+}

@@ -1,0 +1,320 @@
+{
+  "repository": "spring-projects/spring-petclinic",
+  "arm": "map",
+  "commit": "500158f732419217507c7656904b8e6aa1bcc0d6",
+  "answers": [
+    {
+      "id": "q01",
+      "answer": "Spring PetClinic is a runnable Spring Boot sample web application for clinic records: owners, their pets and visits, and veterinarians. Developers run it through Maven, Gradle or an IDE; browser users access localhost:8080 and submit forms. HTTP clients can also request the veterinarian resource. The repository demonstrates the application; it does not establish any particular real clinic deployment.",
+      "citations": [
+        {
+          "url": "https://github.com/spring-projects/spring-petclinic/blob/500158f732419217507c7656904b8e6aa1bcc0d6/README.md#L1",
+          "lines": "1-50"
+        },
+        {
+          "url": "https://github.com/spring-projects/spring-petclinic/blob/500158f732419217507c7656904b8e6aa1bcc0d6/src/main/java/org/springframework/samples/petclinic/owner/PetController.java#L101",
+          "lines": "101-137"
+        },
+        {
+          "url": "https://github.com/spring-projects/spring-petclinic/blob/500158f732419217507c7656904b8e6aa1bcc0d6/src/main/java/org/springframework/samples/petclinic/owner/VisitController.java#L90",
+          "lines": "90-112"
+        },
+        {
+          "url": "https://github.com/spring-projects/spring-petclinic/blob/500158f732419217507c7656904b8e6aa1bcc0d6/src/main/java/org/springframework/samples/petclinic/vet/VetController.java#L35",
+          "lines": "35-84"
+        }
+      ]
+    },
+    {
+      "id": "q02",
+      "answer": "PetClinicApplication bootstraps the app. The owner package groups Owner/Pet/Visit entities, their MVC controllers and OwnerRepository/PetTypeRepository persistence interfaces; PetController manages pet creation/editing and VisitController books visits through the owner aggregate. The vet package provides veterinarian listings/resources through VetController and VetRepository. The model package supplies reusable entity/person properties. The system package supplies infrastructure such as the welcome route and cache configuration. Resource templates render forms/details; SQL and properties configure and initialize persistence.",
+      "citations": [
+        {
+          "url": "https://github.com/spring-projects/spring-petclinic/blob/500158f732419217507c7656904b8e6aa1bcc0d6/src/main/java/org/springframework/samples/petclinic/PetClinicApplication.java#L28",
+          "lines": "28-36"
+        },
+        {
+          "url": "https://github.com/spring-projects/spring-petclinic/blob/500158f732419217507c7656904b8e6aa1bcc0d6/src/main/java/org/springframework/samples/petclinic/owner/Owner.java#L47",
+          "lines": "47-69"
+        },
+        {
+          "url": "https://github.com/spring-projects/spring-petclinic/blob/500158f732419217507c7656904b8e6aa1bcc0d6/src/main/java/org/springframework/samples/petclinic/owner/OwnerRepository.java#L36",
+          "lines": "36-60"
+        },
+        {
+          "url": "https://github.com/spring-projects/spring-petclinic/blob/500158f732419217507c7656904b8e6aa1bcc0d6/src/main/java/org/springframework/samples/petclinic/owner/PetController.java#L49",
+          "lines": "49-137"
+        },
+        {
+          "url": "https://github.com/spring-projects/spring-petclinic/blob/500158f732419217507c7656904b8e6aa1bcc0d6/src/main/java/org/springframework/samples/petclinic/owner/VisitController.java#L43",
+          "lines": "43-112"
+        },
+        {
+          "url": "https://github.com/spring-projects/spring-petclinic/blob/500158f732419217507c7656904b8e6aa1bcc0d6/src/main/java/org/springframework/samples/petclinic/vet/VetController.java#L35",
+          "lines": "35-84"
+        },
+        {
+          "url": "https://github.com/spring-projects/spring-petclinic/blob/500158f732419217507c7656904b8e6aa1bcc0d6/src/main/java/org/springframework/samples/petclinic/model/Person.java#L29",
+          "lines": "29-55"
+        },
+        {
+          "url": "https://github.com/spring-projects/spring-petclinic/blob/500158f732419217507c7656904b8e6aa1bcc0d6/src/main/java/org/springframework/samples/petclinic/system/WelcomeController.java#L17",
+          "lines": "17-30"
+        },
+        {
+          "url": "https://github.com/spring-projects/spring-petclinic/blob/500158f732419217507c7656904b8e6aa1bcc0d6/src/main/java/org/springframework/samples/petclinic/system/CacheConfiguration.java#L17",
+          "lines": "17-50"
+        },
+        {
+          "url": "https://github.com/spring-projects/spring-petclinic/blob/500158f732419217507c7656904b8e6aa1bcc0d6/src/main/resources/templates/owners/findOwners.html#L1",
+          "lines": "1-33"
+        },
+        {
+          "url": "https://github.com/spring-projects/spring-petclinic/blob/500158f732419217507c7656904b8e6aa1bcc0d6/src/main/resources/application.properties#L1",
+          "lines": "1-15"
+        }
+      ]
+    },
+    {
+      "id": "q03",
+      "answer": "One application/build artifact, org.springframework.samples:spring-petclinic, rather than separate deployable owner/vet services. Java 17 application/test sources use org.springframework.samples.petclinic with owner, vet, model and system packages. Maven pom.xml and alternative Groovy Gradle build use Spring Boot 4.1.0, Spring MVC, Spring Data JPA, Thymeleaf and Jakarta validation. Supporting languages/formats include HTML/Thymeleaf with embedded JavaScript, SQL, properties, XML and SCSS/CSS. Resources live under src/main/resources; tests under src/test/java use JUnit/MockMvc/DataJpaTest. H2 is the default database; MySQL/PostgreSQL are supported profiles.",
+      "citations": [
+        {
+          "url": "https://github.com/spring-projects/spring-petclinic/blob/500158f732419217507c7656904b8e6aa1bcc0d6/pom.xml#L1",
+          "lines": "1-110"
+        },
+        {
+          "url": "https://github.com/spring-projects/spring-petclinic/blob/500158f732419217507c7656904b8e6aa1bcc0d6/build.gradle#L1",
+          "lines": "1-70"
+        },
+        {
+          "url": "https://github.com/spring-projects/spring-petclinic/blob/500158f732419217507c7656904b8e6aa1bcc0d6/README.md#L52",
+          "lines": "52-110"
+        },
+        {
+          "url": "https://github.com/spring-projects/spring-petclinic/blob/500158f732419217507c7656904b8e6aa1bcc0d6/src/main/java/org/springframework/samples/petclinic/owner/Owner.java#L16",
+          "lines": "16-49"
+        },
+        {
+          "url": "https://github.com/spring-projects/spring-petclinic/blob/500158f732419217507c7656904b8e6aa1bcc0d6/src/main/java/org/springframework/samples/petclinic/model/Person.java#L16",
+          "lines": "16-29"
+        },
+        {
+          "url": "https://github.com/spring-projects/spring-petclinic/blob/500158f732419217507c7656904b8e6aa1bcc0d6/src/main/java/org/springframework/samples/petclinic/vet/VetController.java#L16",
+          "lines": "16-40"
+        },
+        {
+          "url": "https://github.com/spring-projects/spring-petclinic/blob/500158f732419217507c7656904b8e6aa1bcc0d6/src/main/java/org/springframework/samples/petclinic/system/WelcomeController.java#L17",
+          "lines": "17-30"
+        },
+        {
+          "url": "https://github.com/spring-projects/spring-petclinic/blob/500158f732419217507c7656904b8e6aa1bcc0d6/src/test/java/org/springframework/samples/petclinic/owner/OwnerControllerTests.java#L17",
+          "lines": "17-71"
+        },
+        {
+          "url": "https://github.com/spring-projects/spring-petclinic/blob/500158f732419217507c7656904b8e6aa1bcc0d6/src/test/java/org/springframework/samples/petclinic/service/ClinicServiceTests.java#L72",
+          "lines": "72-96"
+        },
+        {
+          "url": "https://github.com/spring-projects/spring-petclinic/blob/500158f732419217507c7656904b8e6aa1bcc0d6/src/main/resources/templates/owners/ownerDetails.html#L1",
+          "lines": "1-92"
+        }
+      ]
+    },
+    {
+      "id": "q04",
+      "answer": "The selected production executable starts in PetClinicApplication.main(String[] args), lines 32-34, calling SpringApplication.run(PetClinicApplication.class, args). Its class carries @SpringBootApplication and @ImportRuntimeHints. README documents ./mvnw spring-boot:run and ./gradlew bootRun. This is an executable/framework bootstrap boundary, not a direct Java call from main to each controller; the welcome HTTP entry is WelcomeController.welcome(), mapped to GET /.",
+      "citations": [
+        {
+          "url": "https://github.com/spring-projects/spring-petclinic/blob/500158f732419217507c7656904b8e6aa1bcc0d6/src/main/java/org/springframework/samples/petclinic/PetClinicApplication.java#L28",
+          "lines": "28-36"
+        },
+        {
+          "url": "https://github.com/spring-projects/spring-petclinic/blob/500158f732419217507c7656904b8e6aa1bcc0d6/README.md#L16",
+          "lines": "16-41"
+        },
+        {
+          "url": "https://github.com/spring-projects/spring-petclinic/blob/500158f732419217507c7656904b8e6aa1bcc0d6/src/main/java/org/springframework/samples/petclinic/system/WelcomeController.java#L20",
+          "lines": "20-30"
+        }
+      ]
+    },
+    {
+      "id": "q05",
+      "answer": "The persistence definition is owner.OwnerRepository.findByLastNameStartingWith(String lastName, Pageable pageable), returning Page<Owner> at line 45. Its documentation explicitly specifies last-name prefix matching. OwnerRepository extends JpaRepository<Owner,Integer>; this is a Spring Data derived-query declaration, with runtime implementation supplied by the framework rather than a handwritten SQL/body in this repository.",
+      "citations": [
+        {
+          "url": "https://github.com/spring-projects/spring-petclinic/blob/500158f732419217507c7656904b8e6aa1bcc0d6/src/main/java/org/springframework/samples/petclinic/owner/OwnerRepository.java#L23",
+          "lines": "23-45"
+        }
+      ]
+    },
+    {
+      "id": "q06",
+      "answer": "OwnerController → OwnerRepository: constructor injection and the helper's findByLastNameStartingWith call. OwnerController → Owner/model: model creation, getLastName and inherited getId. Its processFindForm directly calls findPaginatedForOwnersLastName and addPaginationModel. Page/PageRequest, binding/model and redirect APIs are external framework dependencies.",
+      "citations": [
+        {
+          "url": "https://github.com/spring-projects/spring-petclinic/blob/500158f732419217507c7656904b8e6aa1bcc0d6/src/main/java/org/springframework/samples/petclinic/owner/OwnerController.java#L53",
+          "lines": "53-70"
+        },
+        {
+          "url": "https://github.com/spring-projects/spring-petclinic/blob/500158f732419217507c7656904b8e6aa1bcc0d6/src/main/java/org/springframework/samples/petclinic/owner/OwnerController.java#L94",
+          "lines": "94-146"
+        },
+        {
+          "url": "https://github.com/spring-projects/spring-petclinic/blob/500158f732419217507c7656904b8e6aa1bcc0d6/src/main/java/org/springframework/samples/petclinic/owner/Owner.java#L47",
+          "lines": "47-49"
+        },
+        {
+          "url": "https://github.com/spring-projects/spring-petclinic/blob/500158f732419217507c7656904b8e6aa1bcc0d6/src/main/java/org/springframework/samples/petclinic/model/Person.java#L49",
+          "lines": "49-55"
+        }
+      ]
+    },
+    {
+      "id": "q07",
+      "answer": "Spring MVC dispatch/binding → processFindForm; the model factory creates Owner without ownerId. Franklin remains unchanged after stripping. findPaginatedForOwnersLastName(1,\"Franklin\") → PageRequest.of(0,5) → repository prefix query. Empty results return owners/findOwners with a field error; one match redirects /owners/{id}; multiple matches return owners/ownersList with pagination. Default seeded H2 has George Franklin; the fixture/test supports /owners/1. Following that redirect invokes showOwner, loads by ID and renders owners/ownerDetails. Dispatch, generated repository/SQL execution, actual database contents and view resolution are runtime boundaries; this was not executed.",
+      "citations": [
+        {
+          "url": "https://github.com/spring-projects/spring-petclinic/blob/500158f732419217507c7656904b8e6aa1bcc0d6/src/main/java/org/springframework/samples/petclinic/owner/OwnerController.java#L64",
+          "lines": "64-70"
+        },
+        {
+          "url": "https://github.com/spring-projects/spring-petclinic/blob/500158f732419217507c7656904b8e6aa1bcc0d6/src/main/java/org/springframework/samples/petclinic/owner/OwnerController.java#L94",
+          "lines": "94-146"
+        },
+        {
+          "url": "https://github.com/spring-projects/spring-petclinic/blob/500158f732419217507c7656904b8e6aa1bcc0d6/src/main/java/org/springframework/samples/petclinic/owner/OwnerController.java#L178",
+          "lines": "178-186"
+        },
+        {
+          "url": "https://github.com/spring-projects/spring-petclinic/blob/500158f732419217507c7656904b8e6aa1bcc0d6/src/main/java/org/springframework/samples/petclinic/owner/OwnerRepository.java#L36",
+          "lines": "36-60"
+        },
+        {
+          "url": "https://github.com/spring-projects/spring-petclinic/blob/500158f732419217507c7656904b8e6aa1bcc0d6/src/main/resources/application.properties#L1",
+          "lines": "1-12"
+        },
+        {
+          "url": "https://github.com/spring-projects/spring-petclinic/blob/500158f732419217507c7656904b8e6aa1bcc0d6/src/main/resources/db/h2/data.sql#L1",
+          "lines": "1-40"
+        },
+        {
+          "url": "https://github.com/spring-projects/spring-petclinic/blob/500158f732419217507c7656904b8e6aa1bcc0d6/src/test/java/org/springframework/samples/petclinic/owner/OwnerControllerTests.java#L73",
+          "lines": "73-104"
+        },
+        {
+          "url": "https://github.com/spring-projects/spring-petclinic/blob/500158f732419217507c7656904b8e6aa1bcc0d6/src/test/java/org/springframework/samples/petclinic/owner/OwnerControllerTests.java#L191",
+          "lines": "191-197"
+        },
+        {
+          "url": "https://github.com/spring-projects/spring-petclinic/blob/500158f732419217507c7656904b8e6aa1bcc0d6/src/main/resources/templates/owners/ownerDetails.html#L1",
+          "lines": "1-74"
+        }
+      ]
+    },
+    {
+      "id": "q08",
+      "answer": "Evidenced direct production consumers: OwnerController (search/findById/save); PetController (constructor-injected owners, findById and saveAndFlush); VisitController (constructor-injected owners, findById and save). These are source-level dependencies, including same-package references that need no imports. A changed repository contract may affect them, but actual behavior depends on the method/semantics changed: changing only prefix search does not prove pet editing or visit booking changes. Tests are additional non-production consumers. No dependency from VetController to OwnerRepository is evidenced; it uses VetRepository.",
+      "citations": [
+        {
+          "url": "https://github.com/spring-projects/spring-petclinic/blob/500158f732419217507c7656904b8e6aa1bcc0d6/src/main/java/org/springframework/samples/petclinic/owner/OwnerController.java#L53",
+          "lines": "53-85"
+        },
+        {
+          "url": "https://github.com/spring-projects/spring-petclinic/blob/500158f732419217507c7656904b8e6aa1bcc0d6/src/main/java/org/springframework/samples/petclinic/owner/OwnerController.java#L141",
+          "lines": "141-186"
+        },
+        {
+          "url": "https://github.com/spring-projects/spring-petclinic/blob/500158f732419217507c7656904b8e6aa1bcc0d6/src/main/java/org/springframework/samples/petclinic/owner/PetController.java#L53",
+          "lines": "53-87"
+        },
+        {
+          "url": "https://github.com/spring-projects/spring-petclinic/blob/500158f732419217507c7656904b8e6aa1bcc0d6/src/main/java/org/springframework/samples/petclinic/owner/PetController.java#L108",
+          "lines": "108-137"
+        },
+        {
+          "url": "https://github.com/spring-projects/spring-petclinic/blob/500158f732419217507c7656904b8e6aa1bcc0d6/src/main/java/org/springframework/samples/petclinic/owner/PetController.java#L186",
+          "lines": "186-200"
+        },
+        {
+          "url": "https://github.com/spring-projects/spring-petclinic/blob/500158f732419217507c7656904b8e6aa1bcc0d6/src/main/java/org/springframework/samples/petclinic/owner/VisitController.java#L43",
+          "lines": "43-81"
+        },
+        {
+          "url": "https://github.com/spring-projects/spring-petclinic/blob/500158f732419217507c7656904b8e6aa1bcc0d6/src/main/java/org/springframework/samples/petclinic/owner/VisitController.java#L98",
+          "lines": "98-112"
+        },
+        {
+          "url": "https://github.com/spring-projects/spring-petclinic/blob/500158f732419217507c7656904b8e6aa1bcc0d6/src/main/java/org/springframework/samples/petclinic/vet/VetController.java#L35",
+          "lines": "35-84"
+        }
+      ]
+    },
+    {
+      "id": "q09",
+      "answer": "ClinicServiceTests.shouldFindOwnersByLastName enters the injected repository directly under @DataJpaTest: Davis yields two owners, Daviss none, using Pageable.unpaged(). shouldInsertOwner also searches Schultz before/after saving. OwnerControllerTests is @WebMvcTest(OwnerController.class) with a mocked OwnerRepository: processFindFormByLastName sends GET /owners?page=1 with lastName=Franklin and expects the owner redirect. Neighboring tests cover surrounding whitespace, whitespace-only, no results, multiple results and out-of-range pages. These MVC tests exercise binding/controller dispatch but mock database semantics. The inspected repository test uses full names, not a shorter-prefix assertion. The findOwners template provides the browser GET form entry. Tests were read, not run.",
+      "citations": [
+        {
+          "url": "https://github.com/spring-projects/spring-petclinic/blob/500158f732419217507c7656904b8e6aa1bcc0d6/src/test/java/org/springframework/samples/petclinic/service/ClinicServiceTests.java#L72",
+          "lines": "72-126"
+        },
+        {
+          "url": "https://github.com/spring-projects/spring-petclinic/blob/500158f732419217507c7656904b8e6aa1bcc0d6/src/test/java/org/springframework/samples/petclinic/owner/OwnerControllerTests.java#L60",
+          "lines": "60-104"
+        },
+        {
+          "url": "https://github.com/spring-projects/spring-petclinic/blob/500158f732419217507c7656904b8e6aa1bcc0d6/src/test/java/org/springframework/samples/petclinic/owner/OwnerControllerTests.java#L175",
+          "lines": "175-235"
+        },
+        {
+          "url": "https://github.com/spring-projects/spring-petclinic/blob/500158f732419217507c7656904b8e6aa1bcc0d6/src/main/resources/templates/owners/findOwners.html#L1",
+          "lines": "1-33"
+        }
+      ]
+    },
+    {
+      "id": "q10",
+      "answer": "The GET form binds lastName to owner. MVC binds that property through inherited Person.setLastName; its setter stores the value. processFindForm reads it, substitutes empty for null, otherwise strip(), then passes the local value to the repository. It does not rewrite owner.lastName. Invalid-page redirects preserve nonempty normalized lastName.",
+      "citations": [
+        {
+          "url": "https://github.com/spring-projects/spring-petclinic/blob/500158f732419217507c7656904b8e6aa1bcc0d6/src/main/resources/templates/owners/findOwners.html#L7",
+          "lines": "7-25"
+        },
+        {
+          "url": "https://github.com/spring-projects/spring-petclinic/blob/500158f732419217507c7656904b8e6aa1bcc0d6/src/main/java/org/springframework/samples/petclinic/owner/Owner.java#L47",
+          "lines": "47-49"
+        },
+        {
+          "url": "https://github.com/spring-projects/spring-petclinic/blob/500158f732419217507c7656904b8e6aa1bcc0d6/src/main/java/org/springframework/samples/petclinic/model/Person.java#L35",
+          "lines": "35-55"
+        },
+        {
+          "url": "https://github.com/spring-projects/spring-petclinic/blob/500158f732419217507c7656904b8e6aa1bcc0d6/src/main/java/org/springframework/samples/petclinic/owner/OwnerController.java#L59",
+          "lines": "59-70"
+        },
+        {
+          "url": "https://github.com/spring-projects/spring-petclinic/blob/500158f732419217507c7656904b8e6aa1bcc0d6/src/main/java/org/springframework/samples/petclinic/owner/OwnerController.java#L94",
+          "lines": "94-115"
+        },
+        {
+          "url": "https://github.com/spring-projects/spring-petclinic/blob/500158f732419217507c7656904b8e6aa1bcc0d6/src/main/java/org/springframework/samples/petclinic/owner/OwnerController.java#L141",
+          "lines": "141-146"
+        }
+      ]
+    }
+  ],
+  "toolErrors": [
+    "lattice_calls rejected an unsupported compact=true argument: 'compact: unknown argument', isError=true. Continued with valid arguments.",
+    "Initial full lattice_node response for OwnerController exceeded the shell output token cap and was truncated. Narrower map requests and pinned source were used subsequently."
+  ],
+  "limitations": [
+    "Read-only static evaluation; no application, tests or target builds executed.",
+    "Map freshness reported fresh at the pinned commit. Its exact static flow showed only processFindForm -> addPaginationModel and findPaginatedForOwnersLastName. Incoming calls to OwnerRepository.findByLastNameStartingWith were empty despite source-proven calls; empty map edges are not proof of no consumers.",
+    "Java framework dispatch, dependency injection, derived JPA queries and template rendering cannot be established as executed by this static map. No generated SQL or external framework implementation was inspected.",
+    "Map overview primarily indexed Java/Maven; Gradle and HTML/SQL/property behavior were checked in pinned web source. Browser-normalized raw line numbering differs from repository lines; Java citation spans use map source provenance.",
+    "Authoritative token telemetry unavailable; no measured token estimate claimed."
+  ],
+  "selfReportedStartedAt": "2026-10-13T07:42:57Z",
+  "selfReportedFinishedAt": "2026-10-13T07:46:20Z"
+}

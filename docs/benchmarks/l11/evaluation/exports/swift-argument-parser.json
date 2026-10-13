@@ -1,0 +1,70 @@
+{
+  "repository": "swift-argument-parser",
+  "commit": "efd239f0055b3d6b6cc122a786c46a0ea8d0235b",
+  "candidate": "2b7c00f",
+  "startedAt": "2026-10-13T07:13:13.866Z",
+  "reused": false,
+  "priorSetupFailure": {
+    "repository": "swift-argument-parser",
+    "commit": "efd239f0055b3d6b6cc122a786c46a0ea8d0235b",
+    "candidate": "2b7c00f",
+    "startedAt": "2026-10-13T07:11:30.461Z",
+    "reused": false,
+    "command": [
+      "node",
+      "/tmp/lattice-l11-first-impression/bin/lattice.mjs",
+      "export",
+      "/tmp/l11-visual/swift-argument-parser",
+      "--root",
+      "/tmp/l11-sources/swift-argument-parser",
+      "--no-lens",
+      "--cache-dir",
+      "/tmp/l11-visual-cache/swift-argument-parser",
+      "--force",
+      "--json"
+    ],
+    "exitCode": 2,
+    "timedOut": false,
+    "seconds": 0.225828708,
+    "status": "failed",
+    "finishedAt": "2026-10-13T07:11:30.687Z"
+  },
+  "buildCommand": [
+    "node",
+    "/tmp/lattice-l11-first-impression/bin/lattice.mjs",
+    "build",
+    "--root",
+    "/tmp/l11-sources/swift-argument-parser",
+    "--no-lens",
+    "--cache-dir",
+    "/tmp/l11-visual-cache/swift-argument-parser",
+    "--json"
+  ],
+  "buildExitCode": 0,
+  "command": [
+    "node",
+    "/tmp/lattice-l11-first-impression/bin/lattice.mjs",
+    "export",
+    "/tmp/l11-visual/swift-argument-parser",
+    "--root",
+    "/tmp/l11-sources/swift-argument-parser",
+    "--no-lens",
+    "--cache-dir",
+    "/tmp/l11-visual-cache/swift-argument-parser",
+    "--force",
+    "--json"
+  ],
+  "exitCode": 0,
+  "timedOut": false,
+  "seconds": 2.676456083,
+  "graphHash": "a261f22d4cf99a826cbb3626246340ec30723d72141f68fc1aa36a2cd75af939",
+  "source": {
+    "name": "swift-argument-parser",
+    "dirty": false,
+    "sourceFingerprint": "9bf125964f6895efa42247b474679c7aa25403d435e0fe8487f04b7684cf212d",
+    "commit": "efd239f0055b3d6b6cc122a786c46a0ea8d0235b",
+    "remoteUrl": "https://github.com/apple/swift-argument-parser"
+  },
+  "status": "ready",
+  "finishedAt": "2026-10-13T07:13:16.543Z"
+}

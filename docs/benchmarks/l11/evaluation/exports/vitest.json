@@ -1,0 +1,70 @@
+{
+  "repository": "vitest",
+  "commit": "f15bdac4f05d2838855d4bd4f47e4076036ea18b",
+  "candidate": "2b7c00f",
+  "startedAt": "2026-10-13T07:13:20.078Z",
+  "reused": false,
+  "priorSetupFailure": {
+    "repository": "vitest",
+    "commit": "f15bdac4f05d2838855d4bd4f47e4076036ea18b",
+    "candidate": "2b7c00f",
+    "startedAt": "2026-10-13T07:11:30.936Z",
+    "reused": false,
+    "command": [
+      "node",
+      "/tmp/lattice-l11-first-impression/bin/lattice.mjs",
+      "export",
+      "/tmp/l11-visual/vitest",
+      "--root",
+      "/tmp/l11-sources/vitest",
+      "--no-lens",
+      "--cache-dir",
+      "/tmp/l11-visual-cache/vitest",
+      "--force",
+      "--json"
+    ],
+    "exitCode": 2,
+    "timedOut": false,
+    "seconds": 0.185976917,
+    "status": "failed",
+    "finishedAt": "2026-10-13T07:11:31.122Z"
+  },
+  "buildCommand": [
+    "node",
+    "/tmp/lattice-l11-first-impression/bin/lattice.mjs",
+    "build",
+    "--root",
+    "/tmp/l11-sources/vitest",
+    "--no-lens",
+    "--cache-dir",
+    "/tmp/l11-visual-cache/vitest",
+    "--json"
+  ],
+  "buildExitCode": 0,
+  "command": [
+    "node",
+    "/tmp/lattice-l11-first-impression/bin/lattice.mjs",
+    "export",
+    "/tmp/l11-visual/vitest",
+    "--root",
+    "/tmp/l11-sources/vitest",
+    "--no-lens",
+    "--cache-dir",
+    "/tmp/l11-visual-cache/vitest",
+    "--force",
+    "--json"
+  ],
+  "exitCode": 0,
+  "timedOut": false,
+  "seconds": 38.064992375,
+  "graphHash": "a559d43a4d2fe27e9746b732bb3ea088b1e3e6a7f9b81c6be19d68ec9aaa68a1",
+  "source": {
+    "name": "vitest",
+    "dirty": false,
+    "sourceFingerprint": "218ba2d1c266374325140330881cf1b7ab543e58bc98dfb26b917cece93b79f4",
+    "commit": "f15bdac4f05d2838855d4bd4f47e4076036ea18b",
+    "remoteUrl": "https://github.com/vitest-dev/vitest"
+  },
+  "status": "ready",
+  "finishedAt": "2026-10-13T07:13:58.144Z"
+}

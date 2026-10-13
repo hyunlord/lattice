@@ -1,0 +1,274 @@
+{
+  "repository": "ripgrep",
+  "arm": "direct",
+  "commit": "3fce3b5bb0236da2df6d99672afb8a719642eca7",
+  "answers": [
+    {
+      "id": "q01",
+      "answer": "ripgrep supplies rg, a cross-platform command-line regex text searcher, normally recursive and respecting ignore rules while skipping hidden and binary files. Shell users and scripts run rg; the repository integration harness also starts the executable. Rust applications can consume the grep library facade. These are evidenced usage surfaces, not a claim to enumerate external adopters.",
+      "citations": [
+        {
+          "url": "https://github.com/BurntSushi/ripgrep/blob/3fce3b5bb0236da2df6d99672afb8a719642eca7/README.md",
+          "lines": "3-8, 201-206"
+        },
+        {
+          "url": "https://github.com/BurntSushi/ripgrep/blob/3fce3b5bb0236da2df6d99672afb8a719642eca7/crates/grep/src/lib.rs",
+          "lines": "1-20"
+        },
+        {
+          "url": "https://github.com/BurntSushi/ripgrep/blob/3fce3b5bb0236da2df6d99672afb8a719642eca7/tests/util.rs",
+          "lines": "145-175"
+        }
+      ]
+    },
+    {
+      "id": "q02",
+      "answer": "Principal components: crates/core is the rg application: flags parse/configure execution, haystack adapts directory entries, SearchWorker connects matcher, searcher and printer. grep is the facade. grep-matcher defines the Matcher contract; grep-regex and optional grep-pcre2 implement it. grep-searcher reads/searches haystacks and invokes sinks; grep-printer supplies standard, summary and JSON output. grep-cli supplies I/O, argument conversion and subprocess/decompression helpers. ignore traverses and filters paths; globset matches glob sets. Optional grep-index exposes index construction/discovery; at this pin its CLI read path still delegates to exhaustive ordinary/parallel search.",
+      "citations": [
+        {
+          "url": "https://github.com/BurntSushi/ripgrep/blob/3fce3b5bb0236da2df6d99672afb8a719642eca7/crates/core/main.rs",
+          "lines": "9-17"
+        },
+        {
+          "url": "https://github.com/BurntSushi/ripgrep/blob/3fce3b5bb0236da2df6d99672afb8a719642eca7/crates/core/search.rs",
+          "lines": "1-7"
+        },
+        {
+          "url": "https://github.com/BurntSushi/ripgrep/blob/3fce3b5bb0236da2df6d99672afb8a719642eca7/crates/core/haystack.rs",
+          "lines": "1-9"
+        },
+        {
+          "url": "https://github.com/BurntSushi/ripgrep/blob/3fce3b5bb0236da2df6d99672afb8a719642eca7/crates/matcher/src/lib.rs",
+          "lines": "1-10"
+        },
+        {
+          "url": "https://github.com/BurntSushi/ripgrep/blob/3fce3b5bb0236da2df6d99672afb8a719642eca7/crates/regex/src/lib.rs",
+          "lines": "1-8"
+        },
+        {
+          "url": "https://github.com/BurntSushi/ripgrep/blob/3fce3b5bb0236da2df6d99672afb8a719642eca7/crates/pcre2/src/lib.rs",
+          "lines": "1-12"
+        },
+        {
+          "url": "https://github.com/BurntSushi/ripgrep/blob/3fce3b5bb0236da2df6d99672afb8a719642eca7/crates/searcher/src/searcher/mod.rs",
+          "lines": "552-556"
+        },
+        {
+          "url": "https://github.com/BurntSushi/ripgrep/blob/3fce3b5bb0236da2df6d99672afb8a719642eca7/crates/printer/src/lib.rs",
+          "lines": "1-18"
+        },
+        {
+          "url": "https://github.com/BurntSushi/ripgrep/blob/3fce3b5bb0236da2df6d99672afb8a719642eca7/crates/cli/src/lib.rs",
+          "lines": "1-30, 65-95"
+        },
+        {
+          "url": "https://github.com/BurntSushi/ripgrep/blob/3fce3b5bb0236da2df6d99672afb8a719642eca7/crates/ignore/src/lib.rs",
+          "lines": "1-8"
+        },
+        {
+          "url": "https://github.com/BurntSushi/ripgrep/blob/3fce3b5bb0236da2df6d99672afb8a719642eca7/crates/globset/src/lib.rs",
+          "lines": "1-12"
+        },
+        {
+          "url": "https://github.com/BurntSushi/ripgrep/blob/3fce3b5bb0236da2df6d99672afb8a719642eca7/crates/index/src/lib.rs",
+          "lines": "1-6"
+        },
+        {
+          "url": "https://github.com/BurntSushi/ripgrep/blob/3fce3b5bb0236da2df6d99672afb8a719642eca7/crates/core/index/enabled.rs",
+          "lines": "3-16"
+        }
+      ]
+    },
+    {
+      "id": "q03",
+      "answer": "Rust implementation, organized as a Cargo workspace with TOML manifests, Rust edition 2024 and minimum Rust 1.96. Root package ripgrep owns binary rg (crates/core/main.rs) and explicit integration target tests/tests.rs. Workspace packages live in globset, grep, cli, index, matcher, pcre2, printer, regex, searcher and ignore. Root depends directly on local grep, ignore and optional grep-index; pcre2 and unstable-index are opt-in features. Cargo builds/tests it, with build.rs as the root build script. PCRE2 may link a system library or compile its C source; this is an optional native-library boundary.",
+      "citations": [
+        {
+          "url": "https://github.com/BurntSushi/ripgrep/blob/3fce3b5bb0236da2df6d99672afb8a719642eca7/Cargo.toml",
+          "lines": "25-77"
+        },
+        {
+          "url": "https://github.com/BurntSushi/ripgrep/blob/3fce3b5bb0236da2df6d99672afb8a719642eca7/README.md",
+          "lines": "402-436, 450-459"
+        }
+      ]
+    },
+    {
+      "id": "q04",
+      "answer": "Cargo declares rg at crates/core/main.rs. Execution starts at fn main() -> ExitCode, calling run(flags::parse()); flags::parse builds LowArgs then HiArgs. run selects the operational mode.",
+      "citations": [
+        {
+          "url": "https://github.com/BurntSushi/ripgrep/blob/3fce3b5bb0236da2df6d99672afb8a719642eca7/Cargo.toml",
+          "lines": "29-32"
+        },
+        {
+          "url": "https://github.com/BurntSushi/ripgrep/blob/3fce3b5bb0236da2df6d99672afb8a719642eca7/crates/core/main.rs",
+          "lines": "40-42, 74-101"
+        },
+        {
+          "url": "https://github.com/BurntSushi/ripgrep/blob/3fce3b5bb0236da2df6d99672afb8a719642eca7/crates/core/flags/parse.rs",
+          "lines": "45-50"
+        }
+      ]
+    },
+    {
+      "id": "q05",
+      "answer": "The application-level sequential loop is fn search(args: &HiArgs, mode: SearchMode) in crates/core/main.rs. Its per-haystack component is SearchWorker::search in crates/core/search.rs; ordinary files dispatch to SearchWorker::search_path and the generic search_path helper. Actual file reading/searching is grep_searcher::Searcher::search_path in crates/searcher/src/searcher/mod.rs.",
+      "citations": [
+        {
+          "url": "https://github.com/BurntSushi/ripgrep/blob/3fce3b5bb0236da2df6d99672afb8a719642eca7/crates/core/main.rs",
+          "lines": "103-149"
+        },
+        {
+          "url": "https://github.com/BurntSushi/ripgrep/blob/3fce3b5bb0236da2df6d99672afb8a719642eca7/crates/core/search.rs",
+          "lines": "226-248, 317-326, 353-384"
+        },
+        {
+          "url": "https://github.com/BurntSushi/ripgrep/blob/3fce3b5bb0236da2df6d99672afb8a719642eca7/crates/searcher/src/searcher/mod.rs",
+          "lines": "597-618"
+        }
+      ]
+    },
+    {
+      "id": "q06",
+      "answer": "grep directly depends on grep-cli (../cli), grep-matcher (../matcher), optional grep-pcre2 (../pcre2), grep-printer (../printer), grep-regex (../regex), and grep-searcher (../searcher). Each direction is proved by a dependencies entry in grep/Cargo.toml and its corresponding pub extern crate re-export in grep/src/lib.rs, renamed respectively cli, matcher, pcre2, printer, regex, searcher. PCRE2 is feature-gated in both manifest and code. ignore, globset and grep-index are not direct grep-facade dependencies in this manifest.",
+      "citations": [
+        {
+          "url": "https://github.com/BurntSushi/ripgrep/blob/3fce3b5bb0236da2df6d99672afb8a719642eca7/crates/grep/Cargo.toml",
+          "lines": "16-29"
+        },
+        {
+          "url": "https://github.com/BurntSushi/ripgrep/blob/3fce3b5bb0236da2df6d99672afb8a719642eca7/crates/grep/src/lib.rs",
+          "lines": "14-20"
+        }
+      ]
+    },
+    {
+      "id": "q07",
+      "answer": "Assuming no configuration file adds behavior beyond the stated command: main -> flags::parse -> parse_low (args_os, parser) -> HiArgs::from_low_args -> run. Default mode is Search(Standard), default engine Rust regex. HiArgs identifies the single FILE, chooses one thread, builds the matcher/searcher/standard stdout printer. run selects search because index is off and threads==1. search builds ignore::Walk, adapts entries with HaystackBuilder, and invokes SearchWorker::search for each haystack. The explicit-file haystack gets explicit binary detection; with no stdin, preprocessor or decompressor branch, search_path dispatches RustRegex to generic search_path. It creates the printer's path-aware sink and calls grep_searcher::Searcher::search_path. That opens FILE and calls search_file_maybe_path: a successful mmap goes to search_slice; otherwise ordinary line-mode uses search_reader, decoder and ReadByLine. SliceByLine or ReadByLine runs Core::match_by_line, which selects fast/slow matching, and Core::sink_matched calls the sink. StandardSink::matched updates counts and invokes StandardImpl printing. The resulting sink.has_match becomes SearchResult, then search aggregates it; run ordinarily returns 0 for a match, 1 for none, 2 on errors. Dynamic boundaries: environment/config can alter flags; terminal state affects formatting; mmap availability and transcoding choose the actual reader strategy; pattern/file contents determine regex decisions and matches; OS open/read/write can fail. No concrete output or executed runtime trace was established.",
+      "citations": [
+        {
+          "url": "https://github.com/BurntSushi/ripgrep/blob/3fce3b5bb0236da2df6d99672afb8a719642eca7/crates/core/main.rs",
+          "lines": "40-61, 74-149"
+        },
+        {
+          "url": "https://github.com/BurntSushi/ripgrep/blob/3fce3b5bb0236da2df6d99672afb8a719642eca7/crates/core/flags/parse.rs",
+          "lines": "45-106"
+        },
+        {
+          "url": "https://github.com/BurntSushi/ripgrep/blob/3fce3b5bb0236da2df6d99672afb8a719642eca7/crates/core/flags/lowargs.rs",
+          "lines": "167-170, 511-528"
+        },
+        {
+          "url": "https://github.com/BurntSushi/ripgrep/blob/3fce3b5bb0236da2df6d99672afb8a719642eca7/crates/core/flags/hiargs.rs",
+          "lines": "147-176, 199-247, 364-396, 550-580, 677-729, 848-891, 1059-1093"
+        },
+        {
+          "url": "https://github.com/BurntSushi/ripgrep/blob/3fce3b5bb0236da2df6d99672afb8a719642eca7/crates/core/haystack.rs",
+          "lines": "29-60"
+        },
+        {
+          "url": "https://github.com/BurntSushi/ripgrep/blob/3fce3b5bb0236da2df6d99672afb8a719642eca7/crates/core/search.rs",
+          "lines": "227-248, 317-326, 353-366"
+        },
+        {
+          "url": "https://github.com/BurntSushi/ripgrep/blob/3fce3b5bb0236da2df6d99672afb8a719642eca7/crates/searcher/src/searcher/mod.rs",
+          "lines": "604-618, 637-748"
+        },
+        {
+          "url": "https://github.com/BurntSushi/ripgrep/blob/3fce3b5bb0236da2df6d99672afb8a719642eca7/crates/searcher/src/searcher/glue.rs",
+          "lines": "35-47, 109-122"
+        },
+        {
+          "url": "https://github.com/BurntSushi/ripgrep/blob/3fce3b5bb0236da2df6d99672afb8a719642eca7/crates/searcher/src/searcher/core.rs",
+          "lines": "161-173, 496-528"
+        },
+        {
+          "url": "https://github.com/BurntSushi/ripgrep/blob/3fce3b5bb0236da2df6d99672afb8a719642eca7/crates/printer/src/standard.rs",
+          "lines": "719-745"
+        }
+      ]
+    },
+    {
+      "id": "q08",
+      "answer": "Two direct production call sites are evidenced: sequential search at main.rs calls searcher.search(&haystack), and search_parallel's walker callback calls it on a cloned worker. These callers depend on its Result<SearchResult> and match/statistics behavior. HiArgs::search_worker constructs workers but does not call search. The optional index read wrapper calls search/search_parallel, so it is indirect. Changed matches, errors, output or timing are possible impacts, not established consequences without a specific change and validation. The bounded browser inspection does not prove repository-wide caller exhaustiveness.",
+      "citations": [
+        {
+          "url": "https://github.com/BurntSushi/ripgrep/blob/3fce3b5bb0236da2df6d99672afb8a719642eca7/crates/core/main.rs",
+          "lines": "118-139, 166-210"
+        },
+        {
+          "url": "https://github.com/BurntSushi/ripgrep/blob/3fce3b5bb0236da2df6d99672afb8a719642eca7/crates/core/flags/hiargs.rs",
+          "lines": "677-690"
+        },
+        {
+          "url": "https://github.com/BurntSushi/ripgrep/blob/3fce3b5bb0236da2df6d99672afb8a719642eca7/crates/core/index/enabled.rs",
+          "lines": "8-16"
+        }
+      ]
+    },
+    {
+      "id": "q09",
+      "answer": "tests/misc.rs single_file creates sherlock from SHERLOCK, runs rg Sherlock sherlock and compares the two expected matching lines; line_numbers adds -n. with_heading_default explicitly uses -j1 across ordinary files. rgtest! generates Rust tests, obtains util::setup, and optionally repeats with PCRE2. Dir::command removes RIPGREP_CONFIG_PATH and targets rg through CARGO_BIN_EXE_rg or the build-tree fallback; stdout -> output -> raw_output executes Command::output. Thus these are process-level entries into main, not direct calls to SearchWorker. Single-file HiArgs forces threads=1, establishing the sequential path even without -j1. These tests were read, not run.",
+      "citations": [
+        {
+          "url": "https://github.com/BurntSushi/ripgrep/blob/3fce3b5bb0236da2df6d99672afb8a719642eca7/tests/misc.rs",
+          "lines": "10-35, 74-88"
+        },
+        {
+          "url": "https://github.com/BurntSushi/ripgrep/blob/3fce3b5bb0236da2df6d99672afb8a719642eca7/tests/macros.rs",
+          "lines": "1-15"
+        },
+        {
+          "url": "https://github.com/BurntSushi/ripgrep/blob/3fce3b5bb0236da2df6d99672afb8a719642eca7/tests/util.rs",
+          "lines": "21-31, 145-175, 280-314"
+        },
+        {
+          "url": "https://github.com/BurntSushi/ripgrep/blob/3fce3b5bb0236da2df6d99672afb8a719642eca7/crates/core/flags/hiargs.rs",
+          "lines": "170-176, 1082-1093"
+        },
+        {
+          "url": "https://github.com/BurntSushi/ripgrep/blob/3fce3b5bb0236da2df6d99672afb8a719642eca7/Cargo.toml",
+          "lines": "34-36"
+        }
+      ]
+    },
+    {
+      "id": "q10",
+      "answer": "flags::parse_low first parses process CLI arguments and sets logging. Help/version and --no-config return before configuration loading. Otherwise it calls flags::config::args. That reads std::env::var_os(\"RIPGREP_CONFIG_PATH\"); missing or empty values yield no arguments, otherwise the OsString becomes PathBuf. parse opens the file; parse_reader buffers byte lines, trims whitespace, ignores empty lines and # comments, and converts each remaining complete line into one OsString argument (no shell tokenization). Read failure emits a message and returns empty arguments; individual conversion errors are reported alongside accepted arguments. parse_low prepends these config arguments to CLI arguments, reparses a fresh LowArgs, resets logging/message settings, then parse converts to HiArgs. Config therefore enters before high-level execution configuration, not inside SearchWorker.",
+      "citations": [
+        {
+          "url": "https://github.com/BurntSushi/ripgrep/blob/3fce3b5bb0236da2df6d99672afb8a719642eca7/crates/core/flags/config.rs",
+          "lines": "14-103"
+        },
+        {
+          "url": "https://github.com/BurntSushi/ripgrep/blob/3fce3b5bb0236da2df6d99672afb8a719642eca7/crates/core/flags/parse.rs",
+          "lines": "45-106"
+        }
+      ]
+    }
+  ],
+  "toolErrors": [
+    {
+      "url": "https://github.com/BurntSushi/ripgrep/tree/3fce3b5bb0236da2df6d99672afb8a719642eca7",
+      "error": "Browser open failed: restricted URL / Internal Error."
+    },
+    {
+      "url": "https://raw.githubusercontent.com/BurntSushi/ripgrep/3fce3b5bb0236da2df6d99672afb8a719642eca7/crates/core/index.rs",
+      "error": "Browser open returned Internal Error; navigation recovered through crates/core/index/mod.rs."
+    },
+    {
+      "url": "https://raw.githubusercontent.com/BurntSushi/ripgrep/3fce3b5bb0236da2df6d99672afb8a719642eca7/crates/grep/examples/grep.rs",
+      "error": "Browser open returned Internal Error; did not use this guessed example."
+    }
+  ],
+  "limitations": [
+    "Source inspection only; no target builds, tests or runtime execution.",
+    "Pinned raw GitHub source was accessible; initial pinned GitHub tree access failed.",
+    "Citations use one-based source lines (browser raw source listings began at L0).",
+    "Direct caller evidence is bounded to inspected production files; no claim of exhaustive global call-graph enumeration.",
+    "Invocation outcome depends on config, pattern, actual file bytes, terminal state, platform and I/O; these were not supplied or executed."
+  ],
+  "selfReportedStartedAt": "2026-10-13 06:45:23 UTC",
+  "selfReportedFinishedAt": "2026-10-13 06:49:50 UTC"
+}

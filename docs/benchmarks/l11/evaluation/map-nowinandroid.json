@@ -1,0 +1,301 @@
+{
+  "repository": "android/nowinandroid",
+  "arm": "map",
+  "commit": "a49ed253d75e61a2b6ab80a8da677b57437b08eb",
+  "answers": [
+    {
+      "id": "nowinandroid-q1",
+      "answer": "Now in Android is an Android news/reference app for Android developers. Users browse videos, articles and other Android-development content, follow topics, receive relevant updates and save articles. Developers also study its implementation as an example of Android design, architecture, modularization and development practices. At this pin, the README describes a work in progress: prodRelease is distributed through Play, while contributors can run demo variants using local data because the production backend is not public. It is hosted by the android organization; these sources do not establish an individual operator roster.",
+      "citations": [
+        {
+          "url": "https://github.com/android/nowinandroid/blob/a49ed253d75e61a2b6ab80a8da677b57437b08eb/README.md#L8",
+          "lines": "8-37"
+        },
+        {
+          "url": "https://github.com/android/nowinandroid/blob/a49ed253d75e61a2b6ab80a8da677b57437b08eb/README.md#L52",
+          "lines": "52-80"
+        },
+        {
+          "url": "https://github.com/android/nowinandroid/blob/a49ed253d75e61a2b6ab80a8da677b57437b08eb/feature/bookmarks/impl/src/main/kotlin/com/google/samples/apps/nowinandroid/feature/bookmarks/impl/BookmarksScreen.kt#L79",
+          "lines": "79-150"
+        }
+      ]
+    },
+    {
+      "id": "nowinandroid-q2",
+      "answer": "Principal components: :app assembles MainActivity, NiaApp, navigation and screen scaffolding; feature modules implement For You/onboarding, saved bookmarks, interests, topic details, search and settings. :core:data supplies repositories; :core:database stores relational content with Room; :core:datastore and :core:datastore-proto store user preferences; :core:network accesses remote content. :core:domain houses shared use cases, :core:model shared models, :core:ui reusable content UI, :core:designsystem themes/widgets, and :core:navigation navigation infrastructure. :sync:work performs background synchronization. :app-nia-catalog showcases design components; benchmarks, lint, testing and screenshot-testing modules support verification. Current app navigation uses Navigation 3 entries; older NiaNavHost names in the learning document are not treated as current implementation.",
+      "citations": [
+        {
+          "url": "https://github.com/android/nowinandroid/blob/a49ed253d75e61a2b6ab80a8da677b57437b08eb/docs/ModularizationLearningJourney.md#L59",
+          "lines": "59-177"
+        },
+        {
+          "url": "https://github.com/android/nowinandroid/blob/a49ed253d75e61a2b6ab80a8da677b57437b08eb/docs/ArchitectureLearningJourney.md#L149",
+          "lines": "149-240"
+        },
+        {
+          "url": "https://github.com/android/nowinandroid/blob/a49ed253d75e61a2b6ab80a8da677b57437b08eb/settings.gradle.kts#L44",
+          "lines": "44-85"
+        },
+        {
+          "url": "https://github.com/android/nowinandroid/blob/a49ed253d75e61a2b6ab80a8da677b57437b08eb/app/src/main/kotlin/com/google/samples/apps/nowinandroid/ui/NiaApp.kt#L240",
+          "lines": "240-275"
+        }
+      ]
+    },
+    {
+      "id": "nowinandroid-q3",
+      "answer": "Application and build logic are Kotlin, with Jetpack Compose/Material 3 UI, Android ViewModels, coroutines/Flow, Hilt DI, Room, Proto DataStore and Retrofit; the current app imports Navigation 3. Gradle Kotlin DSL defines the multi-module build and includes build-logic convention plugins. Android manifests/resources use XML and preferences use protobuf syntax. Modules separate app composition, feature APIs/implementations, shared core libraries and synchronization/testing infrastructure. Feature APIs contain navigation contracts; implementations may use another feature's API, while core modules should not depend on features or app. Settings explicitly require JDK 17+.",
+      "citations": [
+        {
+          "url": "https://github.com/android/nowinandroid/blob/a49ed253d75e61a2b6ab80a8da677b57437b08eb/README.md#L10",
+          "lines": "10-28"
+        },
+        {
+          "url": "https://github.com/android/nowinandroid/blob/a49ed253d75e61a2b6ab80a8da677b57437b08eb/README.md#L71",
+          "lines": "71-92"
+        },
+        {
+          "url": "https://github.com/android/nowinandroid/blob/a49ed253d75e61a2b6ab80a8da677b57437b08eb/docs/ArchitectureLearningJourney.md#L176",
+          "lines": "176-236"
+        },
+        {
+          "url": "https://github.com/android/nowinandroid/blob/a49ed253d75e61a2b6ab80a8da677b57437b08eb/docs/ModularizationLearningJourney.md#L60",
+          "lines": "60-76"
+        },
+        {
+          "url": "https://github.com/android/nowinandroid/blob/a49ed253d75e61a2b6ab80a8da677b57437b08eb/settings.gradle.kts#L15",
+          "lines": "15-88"
+        },
+        {
+          "url": "https://github.com/android/nowinandroid/blob/a49ed253d75e61a2b6ab80a8da677b57437b08eb/app/src/main/kotlin/com/google/samples/apps/nowinandroid/ui/NiaApp.kt#L60",
+          "lines": "60-85"
+        },
+        {
+          "url": "https://github.com/android/nowinandroid/blob/a49ed253d75e61a2b6ab80a8da677b57437b08eb/core/datastore-proto/src/main/proto/com/google/samples/apps/nowinandroid/data/user_preferences.proto#L15",
+          "lines": "15-49"
+        }
+      ]
+    },
+    {
+      "id": "nowinandroid-q4",
+      "answer": "For the selected :app launcher, app/src/main/AndroidManifest.xml declares .MainActivity exported with MAIN and LAUNCHER, and .NiaApplication as the Application. Android framework lifecycle dispatch enters NiaApplication.onCreate for process setup (strict-mode policy, Sync.initialize, profile verification), then MainActivity.onCreate for the activity. MainActivity installs the splash screen, invokes super, observes theme/UI state and calls setContent, rememberNiaAppState, NiaTheme and NiaApp. These are source-supported framework entrypoints, not a recorded runtime trace or a Kotlin main() chain. The separate catalog app is not this selected launcher.",
+      "citations": [
+        {
+          "url": "https://github.com/android/nowinandroid/blob/a49ed253d75e61a2b6ab80a8da677b57437b08eb/app/src/main/AndroidManifest.xml#L25",
+          "lines": "25-58"
+        },
+        {
+          "url": "https://github.com/android/nowinandroid/blob/a49ed253d75e61a2b6ab80a8da677b57437b08eb/app/src/main/kotlin/com/google/samples/apps/nowinandroid/NiaApplication.kt#L30",
+          "lines": "30-51"
+        },
+        {
+          "url": "https://github.com/android/nowinandroid/blob/a49ed253d75e61a2b6ab80a8da677b57437b08eb/app/src/main/kotlin/com/google/samples/apps/nowinandroid/MainActivity.kt#L56",
+          "lines": "56-157"
+        }
+      ]
+    },
+    {
+      "id": "nowinandroid-q5",
+      "answer": "The feature spans BookmarksViewModel.kt and BookmarksScreen.kt in :feature:bookmarks:impl. removeFromSavedResources launches in viewModelScope, enables undo, remembers the removed ID and writes bookmarked=false. undoBookmarkRemoval writes true for that remembered ID and clears undo state. The screen passes the method reference into its removal callback; BookmarksGrid forwards the news-feed event. A LaunchedEffect displays the removed/Undo snackbar and either undoes or clears state; ON_STOP also clears it. BookmarksEntryProvider supplies the actual short snackbar and converts ActionPerformed to true. Thus removal is immediate; undo is a compensating bookmark write, not delayed deletion.",
+      "citations": [
+        {
+          "url": "https://github.com/android/nowinandroid/blob/a49ed253d75e61a2b6ab80a8da677b57437b08eb/feature/bookmarks/impl/src/main/kotlin/com/google/samples/apps/nowinandroid/feature/bookmarks/impl/BookmarksViewModel.kt#L39",
+          "lines": "39-83"
+        },
+        {
+          "url": "https://github.com/android/nowinandroid/blob/a49ed253d75e61a2b6ab80a8da677b57437b08eb/feature/bookmarks/impl/src/main/kotlin/com/google/samples/apps/nowinandroid/feature/bookmarks/impl/BookmarksScreen.kt#L79",
+          "lines": "79-150"
+        },
+        {
+          "url": "https://github.com/android/nowinandroid/blob/a49ed253d75e61a2b6ab80a8da677b57437b08eb/feature/bookmarks/impl/src/main/kotlin/com/google/samples/apps/nowinandroid/feature/bookmarks/impl/BookmarksScreen.kt#L163",
+          "lines": "163-217"
+        },
+        {
+          "url": "https://github.com/android/nowinandroid/blob/a49ed253d75e61a2b6ab80a8da677b57437b08eb/feature/bookmarks/impl/src/main/kotlin/com/google/samples/apps/nowinandroid/feature/bookmarks/impl/navigation/BookmarksEntryProvider.kt#L30",
+          "lines": "30-44"
+        }
+      ]
+    },
+    {
+      "id": "nowinandroid-q6",
+      "answer": ":core:data directly declares six production project dependencies: api(:core:common), api(:core:database), api(:core:datastore), api(:core:network), implementation(:core:analytics), implementation(:core:notifications). :core:datastore-test and :core:testing are testImplementation, so excluded. :core:model is not directly declared here; do not substitute transitive visibility or imports for a direct Gradle declaration.",
+      "citations": [
+        {
+          "url": "https://github.com/android/nowinandroid/blob/a49ed253d75e61a2b6ab80a8da677b57437b08eb/core/data/build.gradle.kts#L28",
+          "lines": "28-40"
+        }
+      ]
+    },
+    {
+      "id": "nowinandroid-q7",
+      "answer": "Production path: removeFromSavedResources(id) schedules its body with viewModelScope.launch, then invokes the suspend UserDataRepository.setNewsResourceBookmarked(id,false) interface method. DataModule's @Binds in SingletonComponent selects OfflineFirstUserDataRepository, whose override delegates to NiaPreferencesDataSource.setNewsResourceBookmarked and subsequently logs the bookmark-toggle analytics event. The data source invokes DataStore<UserPreferences>.updateData; its protobuf copy callback removes id from bookmarkedNewsResourceIds on the false branch, catching/logging IOException. Boundaries are Compose callback dispatch, coroutine scheduling, Hilt/interface dispatch, and external DataStore/generated-protobuf execution. DataStoreModule configures its scope with the injected IO dispatcher, provided as Dispatchers.IO; source does not prove exact runtime scheduling. Feedback is preferences data -> UserData bookmarked IDs -> CompositeUserNewsResourceRepository.observeAllBookmarked -> ViewModel feed StateFlow. The map returned zero exact incoming/outgoing call edges for R, so the chain above was established by pinned declarations and binding/source bodies, not invented graph edges.",
+      "citations": [
+        {
+          "url": "https://github.com/android/nowinandroid/blob/a49ed253d75e61a2b6ab80a8da677b57437b08eb/feature/bookmarks/impl/src/main/kotlin/com/google/samples/apps/nowinandroid/feature/bookmarks/impl/BookmarksViewModel.kt#L39",
+          "lines": "39-63"
+        },
+        {
+          "url": "https://github.com/android/nowinandroid/blob/a49ed253d75e61a2b6ab80a8da677b57437b08eb/core/data/src/main/kotlin/com/google/samples/apps/nowinandroid/core/data/repository/UserDataRepository.kt#L40",
+          "lines": "40-44"
+        },
+        {
+          "url": "https://github.com/android/nowinandroid/blob/a49ed253d75e61a2b6ab80a8da677b57437b08eb/core/data/src/main/kotlin/com/google/samples/apps/nowinandroid/core/data/di/DataModule.kt#L38",
+          "lines": "38-55"
+        },
+        {
+          "url": "https://github.com/android/nowinandroid/blob/a49ed253d75e61a2b6ab80a8da677b57437b08eb/core/data/src/main/kotlin/com/google/samples/apps/nowinandroid/core/data/repository/OfflineFirstUserDataRepository.kt#L27",
+          "lines": "27-51"
+        },
+        {
+          "url": "https://github.com/android/nowinandroid/blob/a49ed253d75e61a2b6ab80a8da677b57437b08eb/core/datastore/src/main/kotlin/com/google/samples/apps/nowinandroid/core/datastore/NiaPreferencesDataSource.kt#L29",
+          "lines": "29-62"
+        },
+        {
+          "url": "https://github.com/android/nowinandroid/blob/a49ed253d75e61a2b6ab80a8da677b57437b08eb/core/datastore/src/main/kotlin/com/google/samples/apps/nowinandroid/core/datastore/NiaPreferencesDataSource.kt#L123",
+          "lines": "123-137"
+        },
+        {
+          "url": "https://github.com/android/nowinandroid/blob/a49ed253d75e61a2b6ab80a8da677b57437b08eb/core/datastore/src/main/kotlin/com/google/samples/apps/nowinandroid/core/datastore/di/DataStoreModule.kt#L38",
+          "lines": "38-59"
+        },
+        {
+          "url": "https://github.com/android/nowinandroid/blob/a49ed253d75e61a2b6ab80a8da677b57437b08eb/core/common/src/main/kotlin/com/google/samples/apps/nowinandroid/core/common/network/di/DispatchersModule.kt#L25",
+          "lines": "25-39"
+        },
+        {
+          "url": "https://github.com/android/nowinandroid/blob/a49ed253d75e61a2b6ab80a8da677b57437b08eb/core/data/src/main/kotlin/com/google/samples/apps/nowinandroid/core/data/repository/CompositeUserNewsResourceRepository.kt#L33",
+          "lines": "33-69"
+        }
+      ]
+    },
+    {
+      "id": "nowinandroid-q8",
+      "answer": "Evidenced direct production consumer: the ViewModel-backed BookmarksScreen passes viewModel::removeFromSavedResources as removeFromBookmarks. Direct unit-test consumers are BookmarksViewModelTest.oneBookmark_whenRemoving_removesFromFeed and feedUiState_undoneBookmarkRemoval_bookmarkIsRestored, both calling the method on their constructed ViewModel. BookmarksGrid/newsFeed are downstream callback consumers. BookmarksScreenTest exercises the stateless screen overload with an injected callback, so it is not a direct caller of Y. This is the evidenced set, not a claim that the map's empty call list proves there are no other consumers.",
+      "citations": [
+        {
+          "url": "https://github.com/android/nowinandroid/blob/a49ed253d75e61a2b6ab80a8da677b57437b08eb/feature/bookmarks/impl/src/main/kotlin/com/google/samples/apps/nowinandroid/feature/bookmarks/impl/BookmarksScreen.kt#L79",
+          "lines": "79-98"
+        },
+        {
+          "url": "https://github.com/android/nowinandroid/blob/a49ed253d75e61a2b6ab80a8da677b57437b08eb/feature/bookmarks/impl/src/main/kotlin/com/google/samples/apps/nowinandroid/feature/bookmarks/impl/BookmarksScreen.kt#L163",
+          "lines": "163-217"
+        },
+        {
+          "url": "https://github.com/android/nowinandroid/blob/a49ed253d75e61a2b6ab80a8da677b57437b08eb/feature/bookmarks/impl/src/test/kotlin/com/google/samples/apps/nowinandroid/feature/bookmarks/impl/BookmarksViewModelTest.kt#L55",
+          "lines": "55-61"
+        },
+        {
+          "url": "https://github.com/android/nowinandroid/blob/a49ed253d75e61a2b6ab80a8da677b57437b08eb/feature/bookmarks/impl/src/test/kotlin/com/google/samples/apps/nowinandroid/feature/bookmarks/impl/BookmarksViewModelTest.kt#L79",
+          "lines": "79-93"
+        },
+        {
+          "url": "https://github.com/android/nowinandroid/blob/a49ed253d75e61a2b6ab80a8da677b57437b08eb/feature/bookmarks/impl/src/test/kotlin/com/google/samples/apps/nowinandroid/feature/bookmarks/impl/BookmarksViewModelTest.kt#L115",
+          "lines": "115-136"
+        },
+        {
+          "url": "https://github.com/android/nowinandroid/blob/a49ed253d75e61a2b6ab80a8da677b57437b08eb/feature/bookmarks/impl/src/androidTest/kotlin/com/google/samples/apps/nowinandroid/feature/bookmarks/impl/BookmarksScreenTest.kt#L112",
+          "lines": "112-149"
+        }
+      ]
+    },
+    {
+      "id": "nowinandroid-q9",
+      "answer": "BookmarksViewModelTest constructs the real ViewModel with TestUserDataRepository, TestNewsRepository and CompositeUserNewsResourceRepository, using MainDispatcherRule/runTest and active feed collection. oneBookmark_whenRemoving_removesFromFeed directly removes a seeded bookmark and asserts empty feed plus undo offered; feedUiState_undoneBookmarkRemoval_bookmarkIsRestored directly removes then undoes and asserts restoration/undo cleared. BookmarksScreenTest.feed_whenRemovingBookmark_removesBookmark enters through Compose setContent, clicks the unbookmark control and verifies callback ID/invocation, without the ViewModel. feed_whenLifecycleStops_undoBookmarkedStateIsCleared dispatches ON_STOP and verifies its injected clear callback. Related lower-layer OfflineFirstUserDataRepositoryTest.offlineFirstUserDataRepository_bookmark_news_resource_logic_delegates_to_nia_preferences enters via the real repository and NiaPreferencesDataSource backed by InMemoryDataStore, but its bookmark assertions set true only: it is not an end-to-end removal/undo persistence test. No tests were executed in this trial.",
+      "citations": [
+        {
+          "url": "https://github.com/android/nowinandroid/blob/a49ed253d75e61a2b6ab80a8da677b57437b08eb/feature/bookmarks/impl/src/test/kotlin/com/google/samples/apps/nowinandroid/feature/bookmarks/impl/BookmarksViewModelTest.kt#L42",
+          "lines": "42-61"
+        },
+        {
+          "url": "https://github.com/android/nowinandroid/blob/a49ed253d75e61a2b6ab80a8da677b57437b08eb/feature/bookmarks/impl/src/test/kotlin/com/google/samples/apps/nowinandroid/feature/bookmarks/impl/BookmarksViewModelTest.kt#L79",
+          "lines": "79-93"
+        },
+        {
+          "url": "https://github.com/android/nowinandroid/blob/a49ed253d75e61a2b6ab80a8da677b57437b08eb/feature/bookmarks/impl/src/test/kotlin/com/google/samples/apps/nowinandroid/feature/bookmarks/impl/BookmarksViewModelTest.kt#L115",
+          "lines": "115-136"
+        },
+        {
+          "url": "https://github.com/android/nowinandroid/blob/a49ed253d75e61a2b6ab80a8da677b57437b08eb/core/testing/src/main/kotlin/com/google/samples/apps/nowinandroid/core/testing/repository/TestUserDataRepository.kt#L64",
+          "lines": "64-74"
+        },
+        {
+          "url": "https://github.com/android/nowinandroid/blob/a49ed253d75e61a2b6ab80a8da677b57437b08eb/feature/bookmarks/impl/src/androidTest/kotlin/com/google/samples/apps/nowinandroid/feature/bookmarks/impl/BookmarksScreenTest.kt#L112",
+          "lines": "112-149"
+        },
+        {
+          "url": "https://github.com/android/nowinandroid/blob/a49ed253d75e61a2b6ab80a8da677b57437b08eb/feature/bookmarks/impl/src/androidTest/kotlin/com/google/samples/apps/nowinandroid/feature/bookmarks/impl/BookmarksScreenTest.kt#L176",
+          "lines": "176-199"
+        },
+        {
+          "url": "https://github.com/android/nowinandroid/blob/a49ed253d75e61a2b6ab80a8da677b57437b08eb/core/data/src/test/kotlin/com/google/samples/apps/nowinandroid/core/data/repository/OfflineFirstUserDataRepositoryTest.kt#L48",
+          "lines": "48-55"
+        },
+        {
+          "url": "https://github.com/android/nowinandroid/blob/a49ed253d75e61a2b6ab80a8da677b57437b08eb/core/data/src/test/kotlin/com/google/samples/apps/nowinandroid/core/data/repository/OfflineFirstUserDataRepositoryTest.kt#L127",
+          "lines": "127-157"
+        }
+      ]
+    },
+    {
+      "id": "nowinandroid-q10",
+      "answer": "The typed data-layer entry is suspend UserDataRepository.setNewsResourceBookmarked(newsResourceId:String, bookmarked:Boolean). At UI level newsFeed emits the resource ID and inverse of isSaved; the bookmarks screen intentionally ignores that supplied Boolean and its ViewModel sends false for removal, true for undo. Production forwards the pair through OfflineFirstUserDataRepository to NiaPreferencesDataSource. Inside updateData/copy, true inserts id->true into bookmarkedNewsResourceIds; false removes the key rather than persisting false. The proto defines bookmarked_news_resource_ids as map<string,bool>, field 15, with membership representing a set. DataStoreModule creates DataStore using UserPreferencesSerializer and context.dataStoreFile(\"user_preferences.pb\"); serializer.writeTo calls the generated message's writeTo(OutputStream). DataStore and generated protobuf perform the external persistence work; successful disk completion was not run or observed. Reads expose map keys as UserData.bookmarkedNewsResources.",
+      "citations": [
+        {
+          "url": "https://github.com/android/nowinandroid/blob/a49ed253d75e61a2b6ab80a8da677b57437b08eb/core/ui/src/main/kotlin/com/google/samples/apps/nowinandroid/core/ui/NewsFeed.kt#L47",
+          "lines": "47-93"
+        },
+        {
+          "url": "https://github.com/android/nowinandroid/blob/a49ed253d75e61a2b6ab80a8da677b57437b08eb/feature/bookmarks/impl/src/main/kotlin/com/google/samples/apps/nowinandroid/feature/bookmarks/impl/BookmarksScreen.kt#L163",
+          "lines": "163-217"
+        },
+        {
+          "url": "https://github.com/android/nowinandroid/blob/a49ed253d75e61a2b6ab80a8da677b57437b08eb/feature/bookmarks/impl/src/main/kotlin/com/google/samples/apps/nowinandroid/feature/bookmarks/impl/BookmarksViewModel.kt#L57",
+          "lines": "57-83"
+        },
+        {
+          "url": "https://github.com/android/nowinandroid/blob/a49ed253d75e61a2b6ab80a8da677b57437b08eb/core/data/src/main/kotlin/com/google/samples/apps/nowinandroid/core/data/repository/UserDataRepository.kt#L40",
+          "lines": "40-44"
+        },
+        {
+          "url": "https://github.com/android/nowinandroid/blob/a49ed253d75e61a2b6ab80a8da677b57437b08eb/core/data/src/main/kotlin/com/google/samples/apps/nowinandroid/core/data/repository/OfflineFirstUserDataRepository.kt#L45",
+          "lines": "45-51"
+        },
+        {
+          "url": "https://github.com/android/nowinandroid/blob/a49ed253d75e61a2b6ab80a8da677b57437b08eb/core/datastore/src/main/kotlin/com/google/samples/apps/nowinandroid/core/datastore/NiaPreferencesDataSource.kt#L29",
+          "lines": "29-62"
+        },
+        {
+          "url": "https://github.com/android/nowinandroid/blob/a49ed253d75e61a2b6ab80a8da677b57437b08eb/core/datastore/src/main/kotlin/com/google/samples/apps/nowinandroid/core/datastore/NiaPreferencesDataSource.kt#L123",
+          "lines": "123-137"
+        },
+        {
+          "url": "https://github.com/android/nowinandroid/blob/a49ed253d75e61a2b6ab80a8da677b57437b08eb/core/datastore-proto/src/main/proto/com/google/samples/apps/nowinandroid/data/user_preferences.proto#L22",
+          "lines": "22-49"
+        },
+        {
+          "url": "https://github.com/android/nowinandroid/blob/a49ed253d75e61a2b6ab80a8da677b57437b08eb/core/datastore/src/main/kotlin/com/google/samples/apps/nowinandroid/core/datastore/di/DataStoreModule.kt#L42",
+          "lines": "42-58"
+        },
+        {
+          "url": "https://github.com/android/nowinandroid/blob/a49ed253d75e61a2b6ab80a8da677b57437b08eb/core/datastore/src/main/kotlin/com/google/samples/apps/nowinandroid/core/datastore/UserPreferencesSerializer.kt#L29",
+          "lines": "29-44"
+        }
+      ]
+    }
+  ],
+  "toolErrors": [],
+  "limitations": [
+    "Read-only source/map evaluation; no target build, test execution, device run or persistence experiment.",
+    "Lattice exact static calls returned no incoming or outgoing edges for removeFromSavedResources despite source-evidenced method references and suspend/interface calls. Hilt bindings, callbacks, coroutines, external libraries and generated protobuf require explicit source/manual boundary reasoning.",
+    "Map overview reports shell extraction limitations for four shell files; Kotlin static graph coverage is not a runtime or exhaustive consumer guarantee.",
+    "Initial unbounded overview and some combined outputs were truncated by output limits; focused map and pinned source queries recovered the evidence used.",
+    "Browser-rendered raw text collapses some blank lines. Kotlin/Gradle source ranges were anchored using map provenance; broader document/XML/proto ranges identify their relevant source sections.",
+    "Some architecture-learning names lag current code at this pin; current Navigation 3 source was preferred over historical NiaNavHost wording.",
+    "No HTTP or MCP access failure occurred. MCP catalog/list, map export overview and read-only queries were accessible.",
+    "Authoritative token telemetry unavailable; no estimated token use is presented as measured.",
+    "selfReportedStartedAt is the first recorded clock reading immediately after the permitted prompt-file read; budget was not reset."
+  ],
+  "selfReportedStartedAt": "2026-10-13 07:12:53 UTC",
+  "selfReportedFinishedAt": "2026-10-13 07:18:18 UTC"
+}

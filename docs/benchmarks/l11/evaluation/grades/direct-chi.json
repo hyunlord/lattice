@@ -1,0 +1,139 @@
+{
+  "repository": "go-chi/chi",
+  "commit": "7f9b7448f51d28804fac98c0a17bc2a7cec1079f",
+  "arm": "direct",
+  "gradedBy": "independent fresh grader batch2",
+  "answerSha256": "ee7d65e2e294bf4f42ea4b6be538adf5c4f15dc1b401217d4e8147b8c0580294",
+  "questions": [
+    {
+      "id": "q1",
+      "score": 2,
+      "reason": "Correct Go HTTP/REST router, developer registration and net/http serving consumers.",
+      "sourceReferences": [
+        "README.md:6-19",
+        "README.md:48-65",
+        "mux.go:60-63"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "q2",
+      "score": 2,
+      "reason": "Names the principal public API, Mux, radix tree, Context, chain and middleware components with their responsibilities, and correctly classifies render/docgen as external repositories.",
+      "sourceReferences": [
+        "mux.go:13-47",
+        "tree.go:383-405",
+        "context.go:40-78",
+        "README.md:15-19",
+        "middleware/logger.go:23-40",
+        "middleware/recoverer.go:17-22",
+        "mux.go:521-527"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "q3",
+      "score": 2,
+      "reason": "Correct go.mod module/version, Go/stdlib net/http and separate middleware package. Unknown CI is reported separately and does not remove the established build/package facts.",
+      "sourceReferences": [
+        "go.mod:1-5",
+        "chi.go:57-68",
+        "README.md:32-38",
+        "README.md:51-55"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": true
+    },
+    {
+      "id": "q4",
+      "score": 1,
+      "reason": "Correct NewRouter/NewMux, registration and ServeHTTP entry, but omits ServeHTTP arranging the route context and invoking the computed handler in this answer.",
+      "sourceReferences": [
+        "chi.go:61-64",
+        "README.md:58-65",
+        "mux.go:63-91"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "q5",
+      "score": 2,
+      "reason": "Correct method/path dispatch definition, FindRoute/findRoute handoff, handler call and 404/405 fallbacks.",
+      "sourceReferences": [
+        "mux.go:453-498"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "q6",
+      "score": 2,
+      "reason": "Correct outward Context/FindRoute/RoutePattern/URLParams and fallback/dynamic-handler dependencies. Listed numeric call lines drift from actual source; pinned definitions were independently verified.",
+      "sourceReferences": [
+        "mux.go:455-498"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "q7",
+      "score": 2,
+      "reason": "Supported route registration/tree storage, HTTP test boundary, computed chain, routeHTTP/tree lookup and callback response with explicit dynamic boundaries.",
+      "sourceReferences": [
+        "mux.go:153-157",
+        "mux.go:430-450",
+        "mux.go:63-91",
+        "mux.go:521-527",
+        "mux.go:482-498",
+        "mux_test.go:245-260"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "q8",
+      "score": 2,
+      "reason": "Correct direct Find and routeHTTP consumers and indirect Match relation; no specific runtime outcome is asserted.",
+      "sourceReferences": [
+        "mux.go:373-388",
+        "mux.go:482-491"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "q9",
+      "score": 2,
+      "reason": "Correct TestMuxPlain HTTP dispatch and missing-path test, and testRequest/ServeHTTP entry. No passing-run claim.",
+      "sourceReferences": [
+        "mux_test.go:245-264",
+        "mux.go:60-63"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "q10",
+      "score": 2,
+      "reason": "Correct path precedence, route-local captures, lifecycle parameters, Request exports and parameter reads; additional mount/pattern handling agrees with the source.",
+      "sourceReferences": [
+        "mux.go:459-470",
+        "tree.go:383-405",
+        "mux.go:482-491",
+        "context.go:10-28"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    }
+  ],
+  "total": 19,
+  "referenceIssues": [],
+  "limitations": [
+    "Read-only source grading; no target builds, tests or scripts executed. All oracle evidence excerpts checked against pinned Git objects; Dapper line endings normalized according to frozen errata.",
+    "Answer citation line spans commonly reflect browser-rendered offsets and do not consistently match physical source lines. Explicit named definitions in the cited pinned files were verified; sourceReferences contain verified physical spans.",
+    "Required factual coverage and selected-path definitions were verified; this is not an exhaustive audit of every ancillary claim or every possible runtime caller."
+  ]
+}

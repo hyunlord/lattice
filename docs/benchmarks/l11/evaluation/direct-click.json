@@ -1,0 +1,135 @@
+{
+  "arm": "github-direct",
+  "repository": "pallets/click",
+  "commit": "2247b35ea1c47c727d7a06e51fa280e12a863ff6",
+  "startedAt": "2026-10-13T06:20:28Z",
+  "finishedAt": "2026-10-13T06:25:28Z",
+  "answers": [
+    {
+      "id": "q01",
+      "answer": "Click is a composable Python command-line-interface toolkit for developers writing CLI applications. It offers configurable defaults, nested commands, generated help, and lazy subcommand loading.",
+      "citations": [
+        "https://github.com/pallets/click/blob/2247b35ea1c47c727d7a06e51fa280e12a863ff6/README.md#L1-L20",
+        "https://github.com/pallets/click/blob/2247b35ea1c47c727d7a06e51fa280e12a863ff6/pyproject.toml#L1-L20"
+      ]
+    },
+    {
+      "id": "q02",
+      "answer": "The public click package re-exports core command/context/parameter objects, declaration decorators, types, exceptions, formatting, terminal UI, and utility functions. decorators.command constructs commands around client callbacks. parser._OptionParser handles low-level token parsing, leaving types/defaults to higher layers. testing.CliRunner supplies isolated invocation and captured results.",
+      "citations": [
+        "https://github.com/pallets/click/blob/2247b35ea1c47c727d7a06e51fa280e12a863ff6/src/click/__init__.py#L1-L100",
+        "https://github.com/pallets/click/blob/2247b35ea1c47c727d7a06e51fa280e12a863ff6/src/click/decorators.py#L150-L260",
+        "https://github.com/pallets/click/blob/2247b35ea1c47c727d7a06e51fa280e12a863ff6/src/click/parser.py#L205-L350",
+        "https://github.com/pallets/click/blob/2247b35ea1c47c727d7a06e51fa280e12a863ff6/src/click/testing.py#L550-L780"
+      ]
+    },
+    {
+      "id": "q03",
+      "answer": "The library is typed Python, requires Python >=3.10, and is packaged as click (8.6.0.dev here) from src/click. pyproject.toml selects flit_core>=3.11,<4 and flit_core.buildapi. Tests use pytest; documentation uses Sphinx/MyST; tox coordinates environments. docs and tests are separate source-distribution inclusions, not separate production libraries evidenced here.",
+      "citations": [
+        "https://github.com/pallets/click/blob/2247b35ea1c47c727d7a06e51fa280e12a863ff6/pyproject.toml#L1-L100",
+        "https://github.com/pallets/click/blob/2247b35ea1c47c727d7a06e51fa280e12a863ff6/src/click/__init__.py#L1-L100"
+      ]
+    },
+    {
+      "id": "q04",
+      "answer": "Calling a click.Command instance enters click.core.Command.__call__, which forwards to self.main. click.__init__ re-exports Command.",
+      "citations": [
+        "https://github.com/pallets/click/blob/2247b35ea1c47c727d7a06e51fa280e12a863ff6/src/click/__init__.py#L7-L18",
+        "https://github.com/pallets/click/blob/2247b35ea1c47c727d7a06e51fa280e12a863ff6/src/click/core.py#L1546-L1876",
+        "https://raw.githubusercontent.com/pallets/click/2247b35ea1c47c727d7a06e51fa280e12a863ff6/src/click/core.py"
+      ],
+      "evidenceSpans": [
+        "Raw browser rendering core.py L1546-L1548: Command.__call__."
+      ]
+    },
+    {
+      "id": "q05",
+      "answer": "click.core.Command.invoke passes self.callback and ctx.params to Context.invoke; Context.invoke executes the callable using positional/keyword arguments.",
+      "citations": [
+        "https://github.com/pallets/click/blob/2247b35ea1c47c727d7a06e51fa280e12a863ff6/src/click/core.py#L820-L1000",
+        "https://github.com/pallets/click/blob/2247b35ea1c47c727d7a06e51fa280e12a863ff6/src/click/core.py#L1316-L1657",
+        "https://raw.githubusercontent.com/pallets/click/2247b35ea1c47c727d7a06e51fa280e12a863ff6/src/click/core.py"
+      ],
+      "evidenceSpans": [
+        "Raw browser rendering core.py L1316-L1329; L820-L868."
+      ]
+    },
+    {
+      "id": "q06",
+      "answer": "Outbound core imports prove dependencies on types, _utils, exceptions, formatting, globals, parser, termui, utils. Local imports additionally prove core→decorators and core→shell_completion. Import direction alone does not establish reverse consumers or execution order.",
+      "citations": [
+        "https://github.com/pallets/click/blob/2247b35ea1c47c727d7a06e51fa280e12a863ff6/src/click/core.py#L1-L65",
+        "https://github.com/pallets/click/blob/2247b35ea1c47c727d7a06e51fa280e12a863ff6/src/click/core.py#L1126-L1485",
+        "https://github.com/pallets/click/blob/2247b35ea1c47c727d7a06e51fa280e12a863ff6/src/click/core.py#L1517-L1872",
+        "https://raw.githubusercontent.com/pallets/click/2247b35ea1c47c727d7a06e51fa280e12a863ff6/src/click/core.py"
+      ],
+      "evidenceSpans": [
+        "Raw browser rendering core.py L21-L50, L1148-L1152, L1542-L1544."
+      ]
+    },
+    {
+      "id": "q07",
+      "answer": "Normal path: main→make_context→parse_args→make_parser/_OptionParser.parse_args→parameter.handle_parse_result; then main→invoke→Context.invoke→callback. Dynamic boundaries include overridable methods/context_class, parameter implementations, and client callback; Group overrides dispatch. Completion/help/errors can bypass normal callback execution. This is source reasoning, not a measured runtime trace.",
+      "citations": [
+        "https://github.com/pallets/click/blob/2247b35ea1c47c727d7a06e51fa280e12a863ff6/src/click/core.py#L820-L1000",
+        "https://github.com/pallets/click/blob/2247b35ea1c47c727d7a06e51fa280e12a863ff6/src/click/core.py#L1156-L1660",
+        "https://github.com/pallets/click/blob/2247b35ea1c47c727d7a06e51fa280e12a863ff6/src/click/core.py#L1884-L2251",
+        "https://raw.githubusercontent.com/pallets/click/2247b35ea1c47c727d7a06e51fa280e12a863ff6/src/click/core.py"
+      ],
+      "evidenceSpans": [
+        "Raw browser rendering core.py L1249-L1329, L1439-L1472, L1884-L1915."
+      ]
+    },
+    {
+      "id": "q08",
+      "answer": "Direct consumers: core.Command.make_parser constructs it; Command.parse_args consumes parsing results/prefixes; Option.add_to_parser calls add_option; Argument.add_to_parser calls add_argument. Parameter.add_to_parser declares the contract. Downstream breakage is speculative; exhaustive coverage is unproven.",
+      "citations": [
+        "https://github.com/pallets/click/blob/2247b35ea1c47c727d7a06e51fa280e12a863ff6/src/click/core.py#L1156-L1644",
+        "https://github.com/pallets/click/blob/2247b35ea1c47c727d7a06e51fa280e12a863ff6/src/click/core.py#L2461-L2792",
+        "https://github.com/pallets/click/blob/2247b35ea1c47c727d7a06e51fa280e12a863ff6/src/click/core.py#L3227-L3596",
+        "https://github.com/pallets/click/blob/2247b35ea1c47c727d7a06e51fa280e12a863ff6/src/click/core.py#L3686-L4017",
+        "https://raw.githubusercontent.com/pallets/click/2247b35ea1c47c727d7a06e51fa280e12a863ff6/src/click/core.py"
+      ],
+      "evidenceSpans": [
+        "Raw browser rendering core.py L1156-L1161, L1283-L1315, L2461-L2462, L3227-L3266, L3686-L3687."
+      ]
+    },
+    {
+      "id": "q09",
+      "answer": "tests/test_basic.py::test_param_named_help constructs Command with a kwargs callback and parameterized Argument/Option values; runner.invoke(cli,args) must produce the expected value and exit 0. CliRunner.invoke enters cli.main(args=...). README's hello(count,name) example decorates options and calls hello(); decorators.command binds callback=f and collected params. These are source examples/test assertions, not tests run in this evaluation.",
+      "citations": [
+        "https://github.com/pallets/click/blob/2247b35ea1c47c727d7a06e51fa280e12a863ff6/tests/test_basic.py#L28-L85",
+        "https://github.com/pallets/click/blob/2247b35ea1c47c727d7a06e51fa280e12a863ff6/src/click/testing.py#L550-L780",
+        "https://github.com/pallets/click/blob/2247b35ea1c47c727d7a06e51fa280e12a863ff6/README.md#L20-L47",
+        "https://github.com/pallets/click/blob/2247b35ea1c47c727d7a06e51fa280e12a863ff6/src/click/decorators.py#L150-L260"
+      ],
+      "evidenceSpans": [
+        "Raw browser rendering test_basic.py L28-L65; testing.py L626-L634; decorators.py L196-L226."
+      ]
+    },
+    {
+      "id": "q10",
+      "answer": "Command.main accepts args, copies supplied sequences, or takes sys.argv[1:] with optional Windows expansion. _OptionParser.parse_args creates parsing state, processes options then positional arguments, and returns values, leftovers, and parameter order; '--' stops option processing. High-level parameter handling converts values and populates ctx.params. CliRunner additionally shell-splits string args before main.",
+      "citations": [
+        "https://github.com/pallets/click/blob/2247b35ea1c47c727d7a06e51fa280e12a863ff6/src/click/core.py#L1391-L1800",
+        "https://github.com/pallets/click/blob/2247b35ea1c47c727d7a06e51fa280e12a863ff6/src/click/core.py#L2691-L3097",
+        "https://github.com/pallets/click/blob/2247b35ea1c47c727d7a06e51fa280e12a863ff6/src/click/parser.py#L272-L380",
+        "https://github.com/pallets/click/blob/2247b35ea1c47c727d7a06e51fa280e12a863ff6/src/click/testing.py#L600-L780",
+        "https://raw.githubusercontent.com/pallets/click/2247b35ea1c47c727d7a06e51fa280e12a863ff6/src/click/core.py"
+      ],
+      "evidenceSpans": [
+        "Raw browser rendering core.py L1439-L1444, L2691-L2769; parser.py L272-L313; testing.py L626-L634."
+      ]
+    }
+  ],
+  "limitations": [
+    "Only pinned GitHub blob/raw sources inspected; no local repository, source execution, reference answers, map, or MCP used.",
+    "Pinned tree and blame failed; core.py blob rendering exposes only first 1000 source lines. Pinned raw source supplied remaining definitions.",
+    "Browser raw-source rendering collapses some blank lines. evidenceSpans explicitly identify rendering offsets; GitHub #L links use wider source ranges, not falsely precise original-file line numbers.",
+    "No exhaustive repository search proved absence of other _OptionParser consumers. Dependency evidence does not prove runtime breakage.",
+    "No tests executed. Timing is wall clock from first clock reading after receipt through artifact preparation; token counts unmeasured.",
+    "Initial artifact write failed with a writer serialization TypeError; corrected without any source reads or execution."
+  ],
+  "elapsedSeconds": 300
+}

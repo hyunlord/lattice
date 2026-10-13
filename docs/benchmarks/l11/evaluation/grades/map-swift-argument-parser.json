@@ -1,0 +1,138 @@
+{
+  "repository": "apple/swift-argument-parser",
+  "commit": "efd239f0055b3d6b6cc122a786c46a0ea8d0235b",
+  "arm": "map",
+  "gradedBy": "independent fresh grader map-axum-swift",
+  "answerSha256": "42afc6a4cf48edf45b2e7cd5d1b8ad6e7d96de311331f6d9fb9cba0dccb579ea",
+  "questions": [
+    {
+      "id": "q1",
+      "score": 2,
+      "reason": "Correct purpose, property-wrapper/ParsableCommand author interface, parsed command execution, and concrete executable consumers, supported by README examples.",
+      "sourceReferences": [
+        "README.md:5-49 @ efd239f0055b3d6b6cc122a786c46a0ea8d0235b",
+        "README.md:84-100 @ efd239f0055b3d6b6cc122a786c46a0ea8d0235b"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "q2",
+      "score": 2,
+      "reason": "Correctly separates core parsing, ToolInfo metadata, documentation generators/plugins, executable examples and test-helper responsibilities with manifest and definition citations.",
+      "sourceReferences": [
+        "Sources/ArgumentParser/Parsing/CommandParser.swift:201-293 @ efd239f0055b3d6b6cc122a786c46a0ea8d0235b",
+        "Sources/ArgumentParserToolInfo/ToolInfo.swift:15-110 @ efd239f0055b3d6b6cc122a786c46a0ea8d0235b",
+        "Package.swift:15-130 @ efd239f0055b3d6b6cc122a786c46a0ea8d0235b",
+        "Tools/generate-manual/GenerateManual.swift:90-166 @ efd239f0055b3d6b6cc122a786c46a0ea8d0235b"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "q3",
+      "score": 2,
+      "reason": "Correct Swift tools 6.0/SwiftPM library, plugin, executable and test package boundaries; also accurately describes CMake and shell tooling. Manifest establishes the internal ToolInfo boundary.",
+      "sourceReferences": [
+        "Package.swift:1-144 @ efd239f0055b3d6b6cc122a786c46a0ea8d0235b",
+        "CMakeLists.txt:1-38 @ efd239f0055b3d6b6cc122a786c46a0ea8d0235b",
+        "Scripts/format.sh:1-20 @ efd239f0055b3d6b6cc122a786c46a0ea8d0235b"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "q4",
+      "score": 2,
+      "reason": "Correctly identifies Repeat @main and ParsableCommand conformance, inherited main() forwarding to main(nil), and Repeat.run as command body, with exact source definitions.",
+      "sourceReferences": [
+        "Examples/repeat/Repeat.swift:12-36 @ efd239f0055b3d6b6cc122a786c46a0ea8d0235b",
+        "Sources/ArgumentParser/Parsable Types/ParsableCommand.swift:177-179 @ efd239f0055b3d6b6cc122a786c46a0ea8d0235b",
+        "Package.swift:65-80 @ efd239f0055b3d6b6cc122a786c46a0ea8d0235b"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "q5",
+      "score": 2,
+      "reason": "Correct synchronous main(_:) location and parseAsRoot -> command.run -> exit(withError:) behavior, including the forwarding overload.",
+      "sourceReferences": [
+        "Sources/ArgumentParser/Parsable Types/ParsableCommand.swift:148-179 @ efd239f0055b3d6b6cc122a786c46a0ea8d0235b",
+        "Sources/ArgumentParser/Parsable Types/ParsableCommand.swift:63-69 @ efd239f0055b3d6b6cc122a786c46a0ea8d0235b"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "q6",
+      "score": 2,
+      "reason": "Correctly identifies both internal dependencies of generate-manual from manifest and imports, and distinguishes the reverse plugin-to-executable dependency.",
+      "sourceReferences": [
+        "Package.swift:54-98 @ efd239f0055b3d6b6cc122a786c46a0ea8d0235b",
+        "Tools/generate-manual/GenerateManual.swift:11-44 @ efd239f0055b3d6b6cc122a786c46a0ea8d0235b",
+        "Tools/generate-manual/GenerateManual.swift:90-135 @ efd239f0055b3d6b6cc122a786c46a0ea8d0235b"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "q7",
+      "score": 2,
+      "reason": "Complete source-supported normal Repeat hello path, default count two, no counter, parser/decode/validation stages, and explicit protocol/compiler dispatch and non-execution limitations.",
+      "sourceReferences": [
+        "Examples/repeat/Repeat.swift:14-36 @ efd239f0055b3d6b6cc122a786c46a0ea8d0235b",
+        "Sources/ArgumentParser/Parsable Types/ParsableCommand.swift:63-69 @ efd239f0055b3d6b6cc122a786c46a0ea8d0235b",
+        "Sources/ArgumentParser/Parsable Types/ParsableCommand.swift:148-179 @ efd239f0055b3d6b6cc122a786c46a0ea8d0235b",
+        "Sources/ArgumentParser/Parsing/CommandParser.swift:201-430 @ efd239f0055b3d6b6cc122a786c46a0ea8d0235b",
+        "Tests/ArgumentParserExampleTests/RepeatExampleTests.swift:24-32 @ efd239f0055b3d6b6cc122a786c46a0ea8d0235b"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": true
+    },
+    {
+      "id": "q8",
+      "score": 2,
+      "reason": "All five direct ToolInfo target consumers are accurately enumerated from their dependencies arrays; transitive and speculative runtime effects are distinguished.",
+      "sourceReferences": [
+        "Package.swift:29-42 @ efd239f0055b3d6b6cc122a786c46a0ea8d0235b",
+        "Package.swift:87-125 @ efd239f0055b3d6b6cc122a786c46a0ea8d0235b"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "q9",
+      "score": 2,
+      "reason": "Correct repeatBasic test, expected output, subprocess helper entry through Repeat @main and synchronous command execution, with accurate platform limitations and no test-execution claim.",
+      "sourceReferences": [
+        "Tests/ArgumentParserExampleTests/RepeatExampleTests.swift:24-32 @ efd239f0055b3d6b6cc122a786c46a0ea8d0235b",
+        "Sources/ArgumentParserTestHelpers/TestHelpers+SwiftTesting.swift:217-297 @ efd239f0055b3d6b6cc122a786c46a0ea8d0235b",
+        "Examples/repeat/Repeat.swift:14-36 @ efd239f0055b3d6b6cc122a786c46a0ea8d0235b",
+        "Sources/ArgumentParser/Parsable Types/ParsableCommand.swift:148-179 @ efd239f0055b3d6b6cc122a786c46a0ea8d0235b"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "q10",
+      "score": 2,
+      "reason": "Correct raw argv cache, optional explicit vector versus fallback, executable-name removal, CommandParser entry and SplitArguments token/origin handling including --.",
+      "sourceReferences": [
+        "Sources/ArgumentParser/Utilities/Platform.swift:11-18 @ efd239f0055b3d6b6cc122a786c46a0ea8d0235b",
+        "Sources/ArgumentParser/Parsable Types/ParsableCommand.swift:63-69 @ efd239f0055b3d6b6cc122a786c46a0ea8d0235b",
+        "Sources/ArgumentParser/Parsing/CommandParser.swift:295-430 @ efd239f0055b3d6b6cc122a786c46a0ea8d0235b",
+        "Sources/ArgumentParser/Parsing/SplitArguments.swift:634-720 @ efd239f0055b3d6b6cc122a786c46a0ea8d0235b"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    }
+  ],
+  "total": 20,
+  "referenceIssues": [],
+  "limitations": [
+    "Read-only grading against pinned local sources; no target builds, scripts, tests or runtime traces executed. Analyzer limitations are annotations and did not supply missing factual credit.",
+    "q3: answer citation Package.swift:1-145 extends past EOF (144); the existing portion was verified and supports the relevant claim.",
+    "q3: answer citation Scripts/format.sh:1-21 extends past EOF (20); the existing portion was verified and supports the relevant claim."
+  ]
+}

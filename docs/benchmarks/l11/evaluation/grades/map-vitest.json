@@ -1,0 +1,153 @@
+{
+  "repository": "vitest-dev/vitest",
+  "commit": "f15bdac4f05d2838855d4bd4f47e4076036ea18b",
+  "arm": "map",
+  "gradedBy": "independent fresh grader map-vitest-ripgrep",
+  "answerSha256": "93842a3ab40b76799b3d7f8f8e5b3cac71726e10a27a38f880d09cffae3d1592",
+  "questions": [
+    {
+      "id": "q1",
+      "score": 2,
+      "reason": "Correctly identifies Vite-powered testing, imported APIs, CLI users and programmatic consumers, with pinned README and executable-entry citations.",
+      "sourceReferences": [
+        "README.md:39-88 @ f15bdac4f05d2838855d4bd4f47e4076036ea18b",
+        "package.json:11-37 @ f15bdac4f05d2838855d4bd4f47e4076036ea18b",
+        "packages/vitest/package.json:67-103 @ f15bdac4f05d2838855d4bd4f47e4076036ea18b",
+        "packages/vitest/vitest.mjs:1-2 @ f15bdac4f05d2838855d4bd4f47e4076036ea18b",
+        "packages/vitest/src/node/cli.ts:1-3 @ f15bdac4f05d2838855d4bd4f47e4076036ea18b"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "q2",
+      "score": 1,
+      "reason": "Substantial correct package inventory, but omits the frozen core coordination/runtime-runner responsibility and its location inside vitest; describes browser only generically rather than its provider-utilities boundary.",
+      "sourceReferences": [
+        "packages/vitest/package.json:1-119 @ f15bdac4f05d2838855d4bd4f47e4076036ea18b",
+        "packages/expect/package.json:1-12 @ f15bdac4f05d2838855d4bd4f47e4076036ea18b",
+        "packages/snapshot/package.json:1-12 @ f15bdac4f05d2838855d4bd4f47e4076036ea18b",
+        "packages/spy/package.json:1-12 @ f15bdac4f05d2838855d4bd4f47e4076036ea18b",
+        "packages/mocker/package.json:1-12 @ f15bdac4f05d2838855d4bd4f47e4076036ea18b",
+        "packages/utils/package.json:1-12 @ f15bdac4f05d2838855d4bd4f47e4076036ea18b",
+        "packages/pretty-format/package.json:1-12 @ f15bdac4f05d2838855d4bd4f47e4076036ea18b",
+        "packages/browser/package.json:1-12 @ f15bdac4f05d2838855d4bd4f47e4076036ea18b",
+        "packages/browser-playwright/package.json:1-12 @ f15bdac4f05d2838855d4bd4f47e4076036ea18b",
+        "packages/browser-preview/package.json:1-12 @ f15bdac4f05d2838855d4bd4f47e4076036ea18b",
+        "packages/coverage-v8/package.json:1-12 @ f15bdac4f05d2838855d4bd4f47e4076036ea18b",
+        "packages/coverage-istanbul/package.json:1-12 @ f15bdac4f05d2838855d4bd4f47e4076036ea18b",
+        "packages/ui/package.json:1-12 @ f15bdac4f05d2838855d4bd4f47e4076036ea18b",
+        "packages/web-worker/package.json:1-12 @ f15bdac4f05d2838855d4bd4f47e4076036ea18b"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "q3",
+      "score": 2,
+      "reason": "Covers TypeScript/ESM, pnpm workspace boundaries, recursive build/typecheck, Rollup and public subpath exports with source citations.",
+      "sourceReferences": [
+        "pnpm-workspace.yaml:24-45 @ f15bdac4f05d2838855d4bd4f47e4076036ea18b",
+        "package.json:1-43 @ f15bdac4f05d2838855d4bd4f47e4076036ea18b",
+        "packages/vitest/rollup.config.js:1-165 @ f15bdac4f05d2838855d4bd4f47e4076036ea18b",
+        "packages/vitest/package.json:32-97 @ f15bdac4f05d2838855d4bd4f47e4076036ea18b",
+        "packages/browser/package.json:65-76 @ f15bdac4f05d2838855d4bd4f47e4076036ea18b",
+        "packages/ui/package.json:43-55 @ f15bdac4f05d2838855d4bd4f47e4076036ea18b",
+        "packages/vitest/src/node/cli/cac.ts:224-255 @ f15bdac4f05d2838855d4bd4f47e4076036ea18b"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "q4",
+      "score": 2,
+      "reason": "Correct source-condition/runtime export mapping and public barrel-to-cac implementation connection.",
+      "sourceReferences": [
+        "docs/guide/advanced/index.md:148-173 @ f15bdac4f05d2838855d4bd4f47e4076036ea18b",
+        "packages/vitest/package.json:67-71 @ f15bdac4f05d2838855d4bd4f47e4076036ea18b",
+        "packages/vitest/src/public/node.ts:1-12 @ f15bdac4f05d2838855d4bd4f47e4076036ea18b",
+        "packages/vitest/rollup.config.js:16-30 @ f15bdac4f05d2838855d4bd4f47e4076036ea18b",
+        "packages/vitest/src/node/cli/cac.ts:224-255 @ f15bdac4f05d2838855d4bd4f47e4076036ea18b"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "q5",
+      "score": 2,
+      "reason": "Correct parseCLI definition, run:false parser call, watch guard, run-option mutation and returned filters/options.",
+      "sourceReferences": [
+        "packages/vitest/src/node/cli/cac.ts:224-255 @ f15bdac4f05d2838855d4bd4f47e4076036ea18b"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "q6",
+      "score": 2,
+      "reason": "Correctly enumerates the internal runtime-import modules and separates type-only/external imports; dynamic-import additions are source supported.",
+      "sourceReferences": [
+        "packages/vitest/src/node/cli/cac.ts:1-11 @ f15bdac4f05d2838855d4bd4f47e4076036ea18b",
+        "packages/vitest/src/node/cli/cac.ts:302-401 @ f15bdac4f05d2838855d4bd4f47e4076036ea18b",
+        "packages/utils/package.json:38-42 @ f15bdac4f05d2838855d4bd4f47e4076036ea18b"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "q7",
+      "score": 1,
+      "reason": "Correct call skeleton, disabled execution, expected result and external boundaries, but omits required leading-token validation and node/index.js argument rewriting in this path answer.",
+      "sourceReferences": [
+        "packages/vitest/src/public/node.ts:9-12 @ f15bdac4f05d2838855d4bd4f47e4076036ea18b",
+        "packages/vitest/src/node/cli/cac.ts:74-255 @ f15bdac4f05d2838855d4bd4f47e4076036ea18b",
+        "test/unit/test/cli-test.test.ts:406-567 @ f15bdac4f05d2838855d4bd4f47e4076036ea18b",
+        "packages/vitest/src/node/cli/completions.ts:1-56 @ f15bdac4f05d2838855d4bd4f47e4076036ea18b"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": true
+    },
+    {
+      "id": "q8",
+      "score": 2,
+      "reason": "Correctly identifies executable, wrapper and test direct calls plus the public reexport; acknowledges the map omission without treating it as absence.",
+      "sourceReferences": [
+        "packages/vitest/src/node/cli.ts:1-3 @ f15bdac4f05d2838855d4bd4f47e4076036ea18b",
+        "packages/vitest/src/node/cli/cac.ts:237-239 @ f15bdac4f05d2838855d4bd4f47e4076036ea18b",
+        "test/unit/test/cli-test.test.ts:1-18 @ f15bdac4f05d2838855d4bd4f47e4076036ea18b",
+        "packages/vitest/src/public/node.ts:9-10 @ f15bdac4f05d2838855d4bd4f47e4076036ea18b",
+        "docs/guide/advanced/index.md:174-188 @ f15bdac4f05d2838855d4bd4f47e4076036ea18b"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": true
+    },
+    {
+      "id": "q9",
+      "score": 2,
+      "reason": "Names and cites the public wrapper test, its vitest/node import, run and run--watch expectations, and inspected-only status.",
+      "sourceReferences": [
+        "test/unit/test/cli-test.test.ts:1-23 @ f15bdac4f05d2838855d4bd4f47e4076036ea18b",
+        "test/unit/test/cli-test.test.ts:406-567 @ f15bdac4f05d2838855d4bd4f47e4076036ea18b",
+        "test/unit/package.json:1-14 @ f15bdac4f05d2838855d4bd4f47e4076036ea18b"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "q10",
+      "score": 1,
+      "reason": "Correct string splitting, quote handling, validation and prefix rewriting, but does not state that the final CAC handoff disables execution, an explicit frozen fact for this input path.",
+      "sourceReferences": [
+        "packages/vitest/src/node/cli/cac.ts:199-255 @ f15bdac4f05d2838855d4bd4f47e4076036ea18b"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    }
+  ],
+  "total": 17,
+  "referenceIssues": [],
+  "limitations": [
+    "Read-only grading against pinned local source; no target builds, scripts or tests executed.",
+    "All oracle excerpt text and whole-file hashes verified against pinned git objects; no source contradictions found."
+  ]
+}

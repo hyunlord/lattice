@@ -1,0 +1,317 @@
+{
+  "repository": "DapperLib/Dapper",
+  "arm": "direct",
+  "commit": "eb47546a408bbf6c178bda4f04dc205bc51ffbfe",
+  "answers": [
+    {
+      "id": "q1",
+      "answer": "Dapper is a .NET micro-ORM/library that adds SQL execution and object mapping to application-owned ADO.NET connections, supporting synchronous/asynchronous access and buffered/unbuffered queries. Callers are client applications using connection extension methods such as Execute and Query; the README gives concrete examples. Repository consumers include Rainbow, EntityFramework handlers, SqlBuilder, tests and benchmarks (see q8). The README records Stack Overflow origins; it does not establish an exhaustive current deployment/customer list.",
+      "citations": [
+        {
+          "url": "https://github.com/DapperLib/Dapper/blob/eb47546a408bbf6c178bda4f04dc205bc51ffbfe/Readme.md#L19-L28",
+          "lines": "19-28"
+        },
+        {
+          "url": "https://github.com/DapperLib/Dapper/blob/eb47546a408bbf6c178bda4f04dc205bc51ffbfe/Readme.md#L32-L60",
+          "lines": "32-60"
+        }
+      ]
+    },
+    {
+      "id": "q2",
+      "answer": "Dapper core supplies SQL execution/query mapping. CommandDefinition carries command text, parameters, transaction, timeout and flags, and creates/configures provider commands; DynamicParameters manages parameter bags. SqlBuilder assembles clauses/templates and their parameters. Rainbow adds CRUD helpers; EntityFramework packages provide EF handlers. ProviderTools offers provider-independent ADO.NET utilities and is currently non-packable. StrongName builds signed variants. Dapper.Tests is the functional suite; Dapper.Tests.Performance is the BenchmarkDotNet comparison executable.",
+      "citations": [
+        {
+          "url": "https://github.com/DapperLib/Dapper/blob/eb47546a408bbf6c178bda4f04dc205bc51ffbfe/Readme.md#L19-L28",
+          "lines": "19-28"
+        },
+        {
+          "url": "https://github.com/DapperLib/Dapper/blob/eb47546a408bbf6c178bda4f04dc205bc51ffbfe/Dapper/CommandDefinition.cs#L11-L69",
+          "lines": "11-69"
+        },
+        {
+          "url": "https://github.com/DapperLib/Dapper/blob/eb47546a408bbf6c178bda4f04dc205bc51ffbfe/Dapper/CommandDefinition.cs#L119-L137",
+          "lines": "119-137"
+        },
+        {
+          "url": "https://github.com/DapperLib/Dapper/blob/eb47546a408bbf6c178bda4f04dc205bc51ffbfe/Dapper/DynamicParameters.cs#L11-L39",
+          "lines": "11-39"
+        },
+        {
+          "url": "https://github.com/DapperLib/Dapper/blob/eb47546a408bbf6c178bda4f04dc205bc51ffbfe/Dapper.SqlBuilder/SqlBuilder.cs#L71-L102",
+          "lines": "71-102"
+        },
+        {
+          "url": "https://github.com/DapperLib/Dapper/blob/eb47546a408bbf6c178bda4f04dc205bc51ffbfe/Dapper.ProviderTools/Dapper.ProviderTools.csproj#L1-L15",
+          "lines": "1-15"
+        },
+        {
+          "url": "https://github.com/DapperLib/Dapper/blob/eb47546a408bbf6c178bda4f04dc205bc51ffbfe/Dapper.StrongName/Dapper.StrongName.csproj#L1-L16",
+          "lines": "1-16"
+        },
+        {
+          "url": "https://github.com/DapperLib/Dapper/blob/eb47546a408bbf6c178bda4f04dc205bc51ffbfe/Dapper.EntityFramework.StrongName/Dapper.EntityFramework.StrongName.csproj#L1-L19",
+          "lines": "1-19"
+        },
+        {
+          "url": "https://github.com/DapperLib/Dapper/blob/eb47546a408bbf6c178bda4f04dc205bc51ffbfe/tests/Dapper.Tests/Dapper.Tests.csproj#L1-L9",
+          "lines": "1-9"
+        },
+        {
+          "url": "https://github.com/DapperLib/Dapper/blob/eb47546a408bbf6c178bda4f04dc205bc51ffbfe/benchmarks/Dapper.Tests.Performance/Dapper.Tests.Performance.csproj#L1-L14",
+          "lines": "1-14"
+        }
+      ]
+    },
+    {
+      "id": "q3",
+      "answer": "Primary implementation is C# (shared LangVersion 13), with SQL supplied as strings. SDK-style .csproj files use MSBuild/.NET; Dapper.slnx organizes libraries, docs, tests and benchmarks, while Build.csproj uses Microsoft.Build.Traversal. build.ps1 provides PowerShell build/test/pack commands; YAML configures GitHub Actions. NuGet package identity follows assembly identity, with centrally managed versions in Directory.Packages.props. Core targets net461, netstandard2.0, net8.0 and net10.0; individual companion projects define their own targets. Dapper, SqlBuilder, Rainbow, EF and signed variants are separate project/package boundaries; tests and benchmarks are non-packable, as is ProviderTools at this pin. Markdown supplies documentation. This is an evidenced inventory, not an exhaustive language census.",
+      "citations": [
+        {
+          "url": "https://github.com/DapperLib/Dapper/blob/eb47546a408bbf6c178bda4f04dc205bc51ffbfe/Directory.Build.props#L7-L25",
+          "lines": "7-25"
+        },
+        {
+          "url": "https://github.com/DapperLib/Dapper/blob/eb47546a408bbf6c178bda4f04dc205bc51ffbfe/Directory.Packages.props#L1-L18",
+          "lines": "1-18"
+        },
+        {
+          "url": "https://github.com/DapperLib/Dapper/blob/eb47546a408bbf6c178bda4f04dc205bc51ffbfe/Dapper/Dapper.csproj#L1-L10",
+          "lines": "1-10"
+        },
+        {
+          "url": "https://github.com/DapperLib/Dapper/blob/eb47546a408bbf6c178bda4f04dc205bc51ffbfe/Dapper.slnx#L1-L38",
+          "lines": "1-38"
+        },
+        {
+          "url": "https://github.com/DapperLib/Dapper/blob/eb47546a408bbf6c178bda4f04dc205bc51ffbfe/Build.csproj#L1-L7",
+          "lines": "1-7"
+        },
+        {
+          "url": "https://github.com/DapperLib/Dapper/blob/eb47546a408bbf6c178bda4f04dc205bc51ffbfe/build.ps1#L19-L38",
+          "lines": "19-38"
+        },
+        {
+          "url": "https://github.com/DapperLib/Dapper/blob/eb47546a408bbf6c178bda4f04dc205bc51ffbfe/.github/workflows/main.yml#L76-L87",
+          "lines": "76-87"
+        },
+        {
+          "url": "https://github.com/DapperLib/Dapper/blob/eb47546a408bbf6c178bda4f04dc205bc51ffbfe/tests/Directory.Build.props#L1-L18",
+          "lines": "1-18"
+        },
+        {
+          "url": "https://github.com/DapperLib/Dapper/blob/eb47546a408bbf6c178bda4f04dc205bc51ffbfe/benchmarks/Directory.Build.props#L1-L13",
+          "lines": "1-13"
+        },
+        {
+          "url": "https://github.com/DapperLib/Dapper/blob/eb47546a408bbf6c178bda4f04dc205bc51ffbfe/Dapper.ProviderTools/Dapper.ProviderTools.csproj#L8-L14",
+          "lines": "8-14"
+        },
+        {
+          "url": "https://github.com/DapperLib/Dapper/blob/eb47546a408bbf6c178bda4f04dc205bc51ffbfe/Readme.md#L103-L112",
+          "lines": "103-112"
+        }
+      ]
+    },
+    {
+      "id": "q4",
+      "answer": "The public entry is Dapper.SqlMapper.Execute(this IDbConnection cnn, string sql, ...), in Dapper/SqlMapper.cs:554. Optional param defaults to null. It constructs CommandDefinition with Buffered flags and calls ExecuteImpl.",
+      "citations": [
+        {
+          "url": "https://github.com/DapperLib/Dapper/blob/eb47546a408bbf6c178bda4f04dc205bc51ffbfe/Dapper/SqlMapper.cs#L544-L557",
+          "lines": "544-557"
+        }
+      ]
+    },
+    {
+      "id": "q5",
+      "answer": "SqlMapper.ExecuteImpl selects the single-command route; SqlMapper.ExecuteCommand implements its synchronous non-query execution, invoking the provider's IDbCommand.ExecuteNonQuery and returning that integer.",
+      "citations": [
+        {
+          "url": "https://github.com/DapperLib/Dapper/blob/eb47546a408bbf6c178bda4f04dc205bc51ffbfe/Dapper/SqlMapper.cs#L630-L685",
+          "lines": "630-685"
+        },
+        {
+          "url": "https://github.com/DapperLib/Dapper/blob/eb47546a408bbf6c178bda4f04dc205bc51ffbfe/Dapper/SqlMapper.cs#L2965-L2982",
+          "lines": "2965-2982"
+        }
+      ]
+    },
+    {
+      "id": "q6",
+      "answer": "Dapper.SqlBuilder directly depends on the Dapper core project: its own csproj has ProjectReference Include=\"..\\Dapper\\Dapper.csproj\". Direction is SqlBuilder -> Dapper, not the reverse. Source confirms concrete use of core DynamicParameters: ResolveSql constructs it; ResolveClauses calls AddDynamicParams to aggregate clause parameters. DynamicParameters is defined under Dapper/.",
+      "citations": [
+        {
+          "url": "https://github.com/DapperLib/Dapper/blob/eb47546a408bbf6c178bda4f04dc205bc51ffbfe/Dapper.SqlBuilder/Dapper.SqlBuilder.csproj#L12-L19",
+          "lines": "12-19"
+        },
+        {
+          "url": "https://github.com/DapperLib/Dapper/blob/eb47546a408bbf6c178bda4f04dc205bc51ffbfe/Dapper.SqlBuilder/SqlBuilder.cs#L37-L39",
+          "lines": "37-39"
+        },
+        {
+          "url": "https://github.com/DapperLib/Dapper/blob/eb47546a408bbf6c178bda4f04dc205bc51ffbfe/Dapper.SqlBuilder/SqlBuilder.cs#L71-L83",
+          "lines": "71-83"
+        },
+        {
+          "url": "https://github.com/DapperLib/Dapper/blob/eb47546a408bbf6c178bda4f04dc205bc51ffbfe/Dapper/DynamicParameters.cs#L9-L14",
+          "lines": "9-14"
+        }
+      ]
+    },
+    {
+      "id": "q7",
+      "answer": "Normal-success path: Execute -> CommandDefinition -> ExecuteImpl. Null parameters make GetMultiExec return null, skip cache/parameter-reader construction, and reach ExecuteCommand with null reader. SetupCommand creates/configures the provider command. ExecuteCommand opens only an initially closed connection, calls ExecuteNonQuery, invokes OnCompleted, and returns the provider integer through ExecuteImpl/Execute. OnCompleted does nothing for null parameters. Finally it closes an initially closed connection, clears parameters and disposes the command. Dynamic boundaries: concrete IDbConnection/IDbCommand methods, provider-specific initialization and database execution are runtime-dependent; actual SQL, provider, server result and exceptions are unknown. No database execution was performed.",
+      "citations": [
+        {
+          "url": "https://github.com/DapperLib/Dapper/blob/eb47546a408bbf6c178bda4f04dc205bc51ffbfe/Dapper/SqlMapper.cs#L554-L557",
+          "lines": "554-557"
+        },
+        {
+          "url": "https://github.com/DapperLib/Dapper/blob/eb47546a408bbf6c178bda4f04dc205bc51ffbfe/Dapper/SqlMapper.cs#L619-L640",
+          "lines": "619-640"
+        },
+        {
+          "url": "https://github.com/DapperLib/Dapper/blob/eb47546a408bbf6c178bda4f04dc205bc51ffbfe/Dapper/SqlMapper.cs#L679-L685",
+          "lines": "679-685"
+        },
+        {
+          "url": "https://github.com/DapperLib/Dapper/blob/eb47546a408bbf6c178bda4f04dc205bc51ffbfe/Dapper/CommandDefinition.cs#L18-L20",
+          "lines": "18-20"
+        },
+        {
+          "url": "https://github.com/DapperLib/Dapper/blob/eb47546a408bbf6c178bda4f04dc205bc51ffbfe/Dapper/CommandDefinition.cs#L119-L137",
+          "lines": "119-137"
+        },
+        {
+          "url": "https://github.com/DapperLib/Dapper/blob/eb47546a408bbf6c178bda4f04dc205bc51ffbfe/Dapper/CommandDefinition.cs#L144-L194",
+          "lines": "144-194"
+        },
+        {
+          "url": "https://github.com/DapperLib/Dapper/blob/eb47546a408bbf6c178bda4f04dc205bc51ffbfe/Dapper/SqlMapper.cs#L2965-L2982",
+          "lines": "2965-2982"
+        }
+      ]
+    },
+    {
+      "id": "q8",
+      "answer": "Direct project-reference consumers evidenced: Dapper.SqlBuilder, Dapper.Rainbow and Dapper.EntityFramework. Dapper.Tests also references core through tests/Directory.Build.props; Dapper.Tests.Performance through benchmarks/Directory.Build.props. Build.csproj includes core via its Dapper*/*.csproj traversal glob (build aggregation, not application consumption). Separately, Dapper.StrongName compiles Dapper/**/*.cs directly, so core source changes affect that signed build without a ProjectReference edge. EF.StrongName references Dapper.StrongName, not Dapper.csproj. ProviderTools has no core ProjectReference in its inspected csproj. This describes inspected project/build edges, not all downstream NuGet consumers or a proven runtime blast radius.",
+      "citations": [
+        {
+          "url": "https://github.com/DapperLib/Dapper/blob/eb47546a408bbf6c178bda4f04dc205bc51ffbfe/Dapper.SqlBuilder/Dapper.SqlBuilder.csproj#L12-L19",
+          "lines": "12-19"
+        },
+        {
+          "url": "https://github.com/DapperLib/Dapper/blob/eb47546a408bbf6c178bda4f04dc205bc51ffbfe/Dapper.Rainbow/Dapper.Rainbow.csproj#L12-L14",
+          "lines": "12-14"
+        },
+        {
+          "url": "https://github.com/DapperLib/Dapper/blob/eb47546a408bbf6c178bda4f04dc205bc51ffbfe/Dapper.EntityFramework/Dapper.EntityFramework.csproj#L12-L15",
+          "lines": "12-15"
+        },
+        {
+          "url": "https://github.com/DapperLib/Dapper/blob/eb47546a408bbf6c178bda4f04dc205bc51ffbfe/tests/Directory.Build.props#L13-L19",
+          "lines": "13-19"
+        },
+        {
+          "url": "https://github.com/DapperLib/Dapper/blob/eb47546a408bbf6c178bda4f04dc205bc51ffbfe/benchmarks/Directory.Build.props#L10-L13",
+          "lines": "10-13"
+        },
+        {
+          "url": "https://github.com/DapperLib/Dapper/blob/eb47546a408bbf6c178bda4f04dc205bc51ffbfe/Dapper.slnx#L31-L36",
+          "lines": "31-36"
+        },
+        {
+          "url": "https://github.com/DapperLib/Dapper/blob/eb47546a408bbf6c178bda4f04dc205bc51ffbfe/Build.csproj#L1-L7",
+          "lines": "1-7"
+        },
+        {
+          "url": "https://github.com/DapperLib/Dapper/blob/eb47546a408bbf6c178bda4f04dc205bc51ffbfe/Dapper.StrongName/Dapper.StrongName.csproj#L14-L16",
+          "lines": "14-16"
+        },
+        {
+          "url": "https://github.com/DapperLib/Dapper/blob/eb47546a408bbf6c178bda4f04dc205bc51ffbfe/Dapper.EntityFramework.StrongName/Dapper.EntityFramework.StrongName.csproj#L14-L19",
+          "lines": "14-19"
+        },
+        {
+          "url": "https://github.com/DapperLib/Dapper/blob/eb47546a408bbf6c178bda4f04dc205bc51ffbfe/Dapper.ProviderTools/Dapper.ProviderTools.csproj#L1-L29",
+          "lines": "1-29"
+        }
+      ]
+    },
+    {
+      "id": "q9",
+      "answer": "The README's non-result command example calls connection.Execute with a SQL batch that creates #t, inserts @a and @b with row counts enabled, then drops the table; anonymous parameters contain a=1 and b=2, and the example asserts count=2. It enters the public string Execute overload, then the single-command path (one parameter object, not a parameter sequence). This documented example is parameterized, unlike q7's null case; its assertion is documentation, not a trial execution.",
+      "citations": [
+        {
+          "url": "https://github.com/DapperLib/Dapper/blob/eb47546a408bbf6c178bda4f04dc205bc51ffbfe/Readme.md#L98-L112",
+          "lines": "98-112"
+        },
+        {
+          "url": "https://github.com/DapperLib/Dapper/blob/eb47546a408bbf6c178bda4f04dc205bc51ffbfe/Dapper/SqlMapper.cs#L554-L557",
+          "lines": "554-557"
+        },
+        {
+          "url": "https://github.com/DapperLib/Dapper/blob/eb47546a408bbf6c178bda4f04dc205bc51ffbfe/Dapper/SqlMapper.cs#L619-L685",
+          "lines": "619-685"
+        }
+      ]
+    },
+    {
+      "id": "q10",
+      "answer": "Z enters as Execute's sql argument and becomes CommandDefinition.commandText, stored as CommandText. Without an explicit commandType, InferCommandType uses a regex: whitespace/reserved syntax (or null) yields Text; otherwise a simple name yields StoredProcedure. SetupCommand assigns CommandText and the inferred/explicit CommandType onto the provider command before parameter binding. In the null-parameter route no parameter reader rewrites the text; the provider receives it for ExecuteNonQuery. With non-null parameters, SQL also contributes to cache identity and parameter processing. For DynamicParameters, that processing can expand lists and replace literal tokens. SQL parsing/execution by the database remains outside this repository trace.",
+      "citations": [
+        {
+          "url": "https://github.com/DapperLib/Dapper/blob/eb47546a408bbf6c178bda4f04dc205bc51ffbfe/Dapper/SqlMapper.cs#L554-L557",
+          "lines": "554-557"
+        },
+        {
+          "url": "https://github.com/DapperLib/Dapper/blob/eb47546a408bbf6c178bda4f04dc205bc51ffbfe/Dapper/CommandDefinition.cs#L82-L104",
+          "lines": "82-104"
+        },
+        {
+          "url": "https://github.com/DapperLib/Dapper/blob/eb47546a408bbf6c178bda4f04dc205bc51ffbfe/Dapper/CommandDefinition.cs#L119-L137",
+          "lines": "119-137"
+        },
+        {
+          "url": "https://github.com/DapperLib/Dapper/blob/eb47546a408bbf6c178bda4f04dc205bc51ffbfe/Dapper/SqlMapper.cs#L679-L685",
+          "lines": "679-685"
+        },
+        {
+          "url": "https://github.com/DapperLib/Dapper/blob/eb47546a408bbf6c178bda4f04dc205bc51ffbfe/Dapper/DynamicParameters.cs#L180-L200",
+          "lines": "180-200"
+        },
+        {
+          "url": "https://github.com/DapperLib/Dapper/blob/eb47546a408bbf6c178bda4f04dc205bc51ffbfe/Dapper/DynamicParameters.cs#L250-L254",
+          "lines": "250-254"
+        },
+        {
+          "url": "https://github.com/DapperLib/Dapper/blob/eb47546a408bbf6c178bda4f04dc205bc51ffbfe/Dapper/DynamicParameters.cs#L306-L307",
+          "lines": "306-307"
+        },
+        {
+          "url": "https://github.com/DapperLib/Dapper/blob/eb47546a408bbf6c178bda4f04dc205bc51ffbfe/Dapper/SqlMapper.cs#L2965-L2975",
+          "lines": "2965-2975"
+        }
+      ]
+    }
+  ],
+  "toolErrors": [
+    {
+      "url": "https://github.com/DapperLib/Dapper/tree/eb47546a408bbf6c178bda4f04dc205bc51ffbfe",
+      "error": "web.open: Internal Error; Failed to fetch restricted URL."
+    },
+    {
+      "url": "https://raw.githubusercontent.com/DapperLib/Dapper/eb47546a408bbf6c178bda4f04dc205bc51ffbfe/Dapper.sln",
+      "error": "web.open: Internal Error; no source returned. Dapper.slnx was subsequently accessible."
+    }
+  ],
+  "limitations": [
+    "Only pinned remote raw sources were inspected after the permitted prompt read. GitHub tree access failed; discovery used pinned file paths and the solution manifest.",
+    "No builds, tests, provider calls or database commands were executed. Runtime provider/database behavior and external application callers remain unresolved.",
+    "Source citations use one-based file line ranges; the browser's raw-text display began at L0.",
+    "No authoritative token telemetry was exposed; no measured token count is claimed."
+  ],
+  "selfReportedStartedAt": "2026-10-13 06:51:16 UTC",
+  "selfReportedFinishedAt": "2026-10-13 06:54:25 UTC"
+}

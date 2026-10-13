@@ -1,4 +1,4 @@
-import { markdownDescription } from "./markdown-description.js";
+import { markdownDescription, markdownParagraph } from "./markdown-description.js";
 import { label, plain, maskCode, bracketMatches, destination, inlineEnd } from "./markdown-inline.js";
 import type { Edge, NodeDraft, Source } from "../core/model.js";
 import { DataInputError, makeSource, validateSourceInput } from "./types.js";
@@ -113,7 +113,8 @@ export function extractMarkdown(input: SourceInput): MarkdownDocument {
         }
     }
     if (!documentDescription && isReadme) documentDescription = markdownDescription(visible, 0, visible.length, preferredName);
-    const nodes: NodeDraft[] = [{ id: documentId, kind: "document", name: title, attributes: { ...metadata, ...(documentDescription ? { sourceDescription: documentDescription } : {}) }, sources: [makeSource(input, "", 1, lines.length)] }];
+    const introduction = isReadme && documentDescription && typeof documentDescription['line'] === 'number' && typeof documentDescription['endLine'] === 'number' ? markdownParagraph(visible, documentDescription['line'] - 1, documentDescription['endLine']) : undefined;
+    const nodes: NodeDraft[] = [{ id: documentId, kind: "document", name: title, attributes: { ...metadata, ...(documentDescription ? { sourceDescription: documentDescription } : {}), ...(introduction ? { sourceIntroduction: introduction } : {}) }, sources: [makeSource(input, "", 1, lines.length)] }];
     const edges: Edge[] = [];
     const usedAnchors = new Set<string>();
     const suffixes = new Map<string, number>();

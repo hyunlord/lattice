@@ -1,0 +1,135 @@
+{
+  "repository": "vitest-dev/vitest",
+  "commit": "f15bdac4f05d2838855d4bd4f47e4076036ea18b",
+  "arm": "direct",
+  "gradedBy": "independent fresh grader direct-vitest",
+  "answerSha256": "60c5f26eb5e15d77a302140bf08c51742e3444ca522566fb8111cef2d8f1877d",
+  "questions": [
+    {
+      "id": "q1",
+      "score": 2,
+      "reason": "Correctly identifies the Vite-powered test framework, developer test API imports, CLI use, and programmatic Node use; pinned source supports the claims.",
+      "sourceReferences": [
+        "README.md:19-20,65-86",
+        "package.json:11-33",
+        "packages/vitest/src/public/node.ts:10-24"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "q2",
+      "score": 1,
+      "reason": "Correct package-level overview of vitest, expect, snapshot, spy, mocker, UI, and coverage providers. Omits the core coordinator/internal runner responsibilities and conflates the broad browser package description with the browser-provider package split documented at this pin. Does not invent a separate runner package.",
+      "sourceReferences": [
+        "packages/vitest/package.json:1-5",
+        "packages/expect/package.json:1-5",
+        "packages/snapshot/package.json:1-5",
+        "packages/spy/package.json:1-5",
+        "packages/browser/README.md:5-9",
+        "packages/vitest/src/node/core.ts:835-858",
+        "packages/vitest/src/runtime/runner/run.ts:1010-1014,1040-1055"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "q3",
+      "score": 2,
+      "reason": "Source-grounded overview covers the pnpm workspace, TS/JS, ESM export/declaration boundaries, root build/typecheck/style orchestration, Rollup/Oxc, and Vite client builds. Equivalent package-boundary terminology is sufficient for this overview.",
+      "sourceReferences": [
+        "pnpm-workspace.yaml:25-31",
+        "package.json:11-15,24-38",
+        "packages/vitest/package.json:33-87,99-119",
+        "packages/vitest/rollup.config.js:18-48,84-103,106-159"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "q4",
+      "score": 2,
+      "reason": "Correctly connects vitest/node conditional export to the public barrel and its parseCLI re-export from node/cli/cac. Pinned URLs identify the definitions despite an inaccurate Rollup entry line range.",
+      "sourceReferences": [
+        "packages/vitest/package.json:68-72",
+        "packages/vitest/src/public/node.ts:10-11",
+        "packages/vitest/rollup.config.js:18-23",
+        "packages/vitest/src/node/cli/cac.ts:224-230"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": true
+    },
+    {
+      "id": "q5",
+      "score": 2,
+      "reason": "Correctly locates parseCLI and explains execution-disabled CAC parsing, run-subcommand/watch guard, and returned filter/options. The cited pinned file contains the explicit definition, but the stated range ends before the relevant branch and return.",
+      "sourceReferences": [
+        "packages/vitest/src/node/cli/cac.ts:224-254"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "q6",
+      "score": 2,
+      "reason": "Correctly enumerates the static internal runtime imports and dynamic internal imports, separates external imports, and excludes type-only imports. All listed edges exist in the pinned file; some dynamic-import line spans are inaccurate.",
+      "sourceReferences": [
+        "packages/vitest/src/node/cli/cac.ts:1-11,302-330,340-356"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "q7",
+      "score": 1,
+      "reason": "Provides the correct high-level token rewrite, execution-disabled parsing, run:true and empty-filter outcome, and explicitly leaves CAC internals unresolved. Incomplete compared with the frozen path: does not describe leading-token validation or createCLI constructing CAC and registering run; it does not locate the source fixture supporting the expected result. This is factual partial credit, separate from its honest boundary limitation.",
+      "sourceReferences": [
+        "packages/vitest/src/node/cli/cac.ts:74-83,170-174,215-254",
+        "test/unit/test/cli-test.test.ts:423-430"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": true
+    },
+    {
+      "id": "q8",
+      "score": 1,
+      "reason": "Correctly identifies parseCLI and node/cli.ts as direct callers and public/node.ts as a re-export. Omits the unit-test consumer importing createCLI through vitest/node; admits the consumer inventory is incomplete.",
+      "sourceReferences": [
+        "packages/vitest/src/node/cli.ts:1-3",
+        "packages/vitest/src/node/cli/cac.ts:235-239",
+        "packages/vitest/src/public/node.ts:10-11",
+        "test/unit/test/cli-test.test.ts:1-3"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": true
+    },
+    {
+      "id": "q9",
+      "score": 0,
+      "reason": "Explicitly unknown: no test name, test file, or entry path is supplied. General unit-package scripts do not establish run-option coverage. The reported navigation failure is an analyzer limitation, not factual credit.",
+      "sourceReferences": [
+        "test/unit/test/cli-test.test.ts:1-3,406-439",
+        "packages/vitest/src/public/node.ts:10-13"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": true
+    },
+    {
+      "id": "q10",
+      "score": 2,
+      "reason": "Correctly describes string input, quote-protected token splitting/restoration, quote removal, leading vitest validation, prefix rewriting and CAC handoff. The explicit named definitions in the pinned file support the account, although the supplied range stops before parseCLI.",
+      "sourceReferences": [
+        "packages/vitest/src/node/cli/cac.ts:199-239"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    }
+  ],
+  "total": 15,
+  "referenceIssues": [],
+  "limitations": [
+    "Read-only local verification at the exact pinned commit; no target builds or scripts executed. All oracle excerpt text and full-file SHA256 values matched pinned local files.",
+    "Several answer line ranges are inaccurate: q4 Rollup node entry is line 23, not 16-21; q5 run handling/return are 238-254 beyond its cited 207-237; q7/q8 public re-export is line 10, not 9; q8 createCLI call is 237 rather than 220-222; q10 parseCLI starts 224 after its cited 184-222. q6 browser-creator dynamic import is 350, outside cited ranges. Explicit definitions at pinned file URLs were accepted as source citations; incorrect spans were not treated as verified.",
+    "No answer facts were supplied from oracle-only evidence to fill omissions. Source references include grading counterevidence and do not imply the answer cited those locations."
+  ]
+}

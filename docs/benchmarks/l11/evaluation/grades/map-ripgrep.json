@@ -1,0 +1,150 @@
+{
+  "repository": "BurntSushi/ripgrep",
+  "commit": "3fce3b5bb0236da2df6d99672afb8a719642eca7",
+  "arm": "map",
+  "gradedBy": "independent fresh grader map-vitest-ripgrep",
+  "answerSha256": "b7d480ed843620ecf47993ff53c783f97a6093ab3549b4d01ea88e21e55ac347",
+  "questions": [
+    {
+      "id": "q01",
+      "score": 1,
+      "reason": "Correct purpose, shell/library consumers and ignore-rule behavior; omits the frozen default hidden/binary-input filtering fact.",
+      "sourceReferences": [
+        "Cargo.toml:1-36 @ 3fce3b5bb0236da2df6d99672afb8a719642eca7",
+        "crates/grep/src/lib.rs:1-21 @ 3fce3b5bb0236da2df6d99672afb8a719642eca7",
+        "tests/util.rs:155-195 @ 3fce3b5bb0236da2df6d99672afb8a719642eca7"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "q02",
+      "score": 1,
+      "reason": "Correct principal crate inventory and responsibilities, but omits SearchWorker coordination of matcher/searcher/printer and preprocessing/decompression.",
+      "sourceReferences": [
+        "crates/core/main.rs:78-157 @ 3fce3b5bb0236da2df6d99672afb8a719642eca7",
+        "crates/ignore/src/lib.rs:1-44 @ 3fce3b5bb0236da2df6d99672afb8a719642eca7",
+        "crates/globset/src/lib.rs:1-30 @ 3fce3b5bb0236da2df6d99672afb8a719642eca7",
+        "crates/searcher/src/lib.rs:1-35 @ 3fce3b5bb0236da2df6d99672afb8a719642eca7",
+        "crates/pcre2/src/lib.rs:1-16 @ 3fce3b5bb0236da2df6d99672afb8a719642eca7",
+        "crates/grep/examples/simplegrep.rs:1-43 @ 3fce3b5bb0236da2df6d99672afb8a719642eca7",
+        "Cargo.toml:54-81 @ 3fce3b5bb0236da2df6d99672afb8a719642eca7"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "q03",
+      "score": 2,
+      "reason": "Correct Rust/Cargo workspace, binary and test targets, member crates, manifest edition/MSRV declarations and optional features; supporting-language limits are explicitly bounded.",
+      "sourceReferences": [
+        "Cargo.toml:24-81 @ 3fce3b5bb0236da2df6d99672afb8a719642eca7",
+        "ci/utils.sh:1-107 @ 3fce3b5bb0236da2df6d99672afb8a719642eca7",
+        "crates/core/flags/complete/encodings.sh:1-29 @ 3fce3b5bb0236da2df6d99672afb8a719642eca7",
+        "pkg/brew/ripgrep-bin.rb:1-23 @ 3fce3b5bb0236da2df6d99672afb8a719642eca7"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": true
+    },
+    {
+      "id": "q04",
+      "score": 1,
+      "reason": "Correct binary entry, flags parsing and run handoff; omits the frozen run mode dispatch and threads()==1 selection.",
+      "sourceReferences": [
+        "Cargo.toml:28-36 @ 3fce3b5bb0236da2df6d99672afb8a719642eca7",
+        "crates/core/main.rs:44-107 @ 3fce3b5bb0236da2df6d99672afb8a719642eca7",
+        "crates/core/flags/parse.rs:49-113 @ 3fce3b5bb0236da2df6d99672afb8a719642eca7"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "q05",
+      "score": 1,
+      "reason": "Correct implementation locations and worker-to-library path, but does not describe ordinary-input dispatch guards or matcher/printer-sink selection required by the frozen implementation answer.",
+      "sourceReferences": [
+        "crates/core/main.rs:113-157 @ 3fce3b5bb0236da2df6d99672afb8a719642eca7",
+        "crates/core/search.rs:245-267 @ 3fce3b5bb0236da2df6d99672afb8a719642eca7",
+        "crates/core/search.rs:342-412 @ 3fce3b5bb0236da2df6d99672afb8a719642eca7",
+        "crates/searcher/src/searcher/mod.rs:643-657 @ 3fce3b5bb0236da2df6d99672afb8a719642eca7"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "q06",
+      "score": 2,
+      "reason": "Complete direct facade dependency list including optional PCRE2, relative manifest edges and public reexport evidence.",
+      "sourceReferences": [
+        "crates/grep/Cargo.toml:15-32 @ 3fce3b5bb0236da2df6d99672afb8a719642eca7",
+        "crates/grep/src/lib.rs:14-21 @ 3fce3b5bb0236da2df6d99672afb8a719642eca7"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "q07",
+      "score": 2,
+      "reason": "Complete source-supported ordinary sequential path through parsing, worker, sink and file search to match aggregation and exit status; runtime uncertainty is identified. The mmap detail is conditional and does not invent an execution observation.",
+      "sourceReferences": [
+        "crates/core/main.rs:44-157 @ 3fce3b5bb0236da2df6d99672afb8a719642eca7",
+        "crates/core/flags/parse.rs:49-113 @ 3fce3b5bb0236da2df6d99672afb8a719642eca7",
+        "crates/core/flags/hiargs.rs:114-333 @ 3fce3b5bb0236da2df6d99672afb8a719642eca7",
+        "crates/core/search.rs:245-267 @ 3fce3b5bb0236da2df6d99672afb8a719642eca7",
+        "crates/core/search.rs:342-412 @ 3fce3b5bb0236da2df6d99672afb8a719642eca7",
+        "crates/searcher/src/searcher/mod.rs:643-794 @ 3fce3b5bb0236da2df6d99672afb8a719642eca7"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": true
+    },
+    {
+      "id": "q08",
+      "score": 2,
+      "reason": "Both sequential and parallel direct consumers and worker construction are identified; indirect indexing and speculative impact are distinguished from direct calls.",
+      "sourceReferences": [
+        "crates/core/main.rs:113-157 @ 3fce3b5bb0236da2df6d99672afb8a719642eca7",
+        "crates/core/main.rs:166-235 @ 3fce3b5bb0236da2df6d99672afb8a719642eca7",
+        "crates/core/index/enabled.rs:1-16 @ 3fce3b5bb0236da2df6d99672afb8a719642eca7"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": true
+    },
+    {
+      "id": "q09",
+      "score": 2,
+      "reason": "The alternative r99 regression is verified at the pin and forces -j1 over ordinary files with an output assertion; harness entry and separate library example are correctly explained. The question allows tests or examples, so the oracle example is not exclusive.",
+      "sourceReferences": [
+        "tests/regression.rs:100-140 @ 3fce3b5bb0236da2df6d99672afb8a719642eca7",
+        "tests/util.rs:155-195 @ 3fce3b5bb0236da2df6d99672afb8a719642eca7",
+        "crates/core/main.rs:78-157 @ 3fce3b5bb0236da2df6d99672afb8a719642eca7",
+        "crates/grep/examples/simplegrep.rs:14-69 @ 3fce3b5bb0236da2df6d99672afb8a719642eca7"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    },
+    {
+      "id": "q10",
+      "score": 1,
+      "reason": "Correct config entry, line transformations, skip cases and prepend/reparse ordering; omits the frozen no-config-arguments fallback after a file read failure.",
+      "sourceReferences": [
+        "crates/core/flags/config.rs:16-108 @ 3fce3b5bb0236da2df6d99672afb8a719642eca7",
+        "crates/core/flags/parse.rs:49-113 @ 3fce3b5bb0236da2df6d99672afb8a719642eca7"
+      ],
+      "inventedConnection": false,
+      "analyzerLimitation": false
+    }
+  ],
+  "total": 15,
+  "referenceIssues": [],
+  "limitations": [
+    "Read-only grading against pinned local source; no target builds, scripts or tests executed.",
+    "All oracle excerpt text and whole-file hashes verified against pinned git objects; no source contradictions found.",
+    "q01: supplied citation crates/grep/src/lib.rs:1-22 exceeds EOF 21; existing source span verified, extra lines unavailable.",
+    "q02: supplied citation crates/pcre2/src/lib.rs:1-20 exceeds EOF 16; existing source span verified, extra lines unavailable.",
+    "q03: supplied citation ci/utils.sh:1-108 exceeds EOF 107; existing source span verified, extra lines unavailable.",
+    "q03: supplied citation crates/core/flags/complete/encodings.sh:1-30 exceeds EOF 29; existing source span verified, extra lines unavailable.",
+    "q03: supplied citation pkg/brew/ripgrep-bin.rb:1-24 exceeds EOF 23; existing source span verified, extra lines unavailable.",
+    "q06: supplied citation crates/grep/src/lib.rs:14-22 exceeds EOF 21; existing source span verified, extra lines unavailable.",
+    "q08: supplied citation crates/core/index/enabled.rs:1-17 exceeds EOF 16; existing source span verified, extra lines unavailable."
+  ]
+}

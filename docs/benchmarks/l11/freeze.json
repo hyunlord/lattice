@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "files": {
+    "oracles/axum.json": "de8ea1725bf541d320ce78820c05c43be0b01030b04197ba695ec72c29113972",
+    "oracles/chi.json": "a49d1f4a3b27f6ddfdd921653fe3411beb3d88762af75231ee094eb7018fcf0c",
+    "oracles/click.json": "27698852aad0291af99257829330cf9a02bf37804e4a951bece03d262b7671a9",
+    "oracles/dapper.json": "5eae6ca813b558c8718633879cce93435bb432d82ce00b64de3fe41d149af040",
+    "oracles/excalidraw.json": "ce1f526c46f50779706101cd9421f766686b3401c56841e4494af884deaa0abf",
+    "oracles/fastify.json": "adbf3638239f58baed43a31771367b43c7fda3b72c3c0a9e25c61c25e3666462",
+    "oracles/fzf.json": "a9431e6f0875db47609be942d99f50c754d6715c2a493f7a63089d15395baf38",
+    "oracles/godot-demos.json": "f56f6561f8d8b90f793a19da7774f3561c23b5f52323514228e3df65146b2065",
+    "oracles/httpx.json": "0363e55fc67e16b31aeaae9db9e01f694d3fa1383ed2a92c9640901107b96d22",
+    "oracles/nowinandroid.json": "6e5ee9d6aef39c6f54961f8de1abd880a4994b14c7e7344990f7013d5ee1fb85",
+    "oracles/ripgrep.json": "00ba196adcc37a1c736e3a329556005f00617c06126d367487d56c0fe105d526",
+    "oracles/runtime.json": "6fc0e9724e710d51607340b3003942ed063d19412fcd220b938ab46f2fcefb25",
+    "oracles/spring-petclinic.json": "b867171a78fe5adeb76d119c8d6835ca6011cf23bcbad497732904bd61e80428",
+    "oracles/sqlite.json": "1cc5a9dc577ea2960c2c18f187b88fa12dae09c76c121a2b573c86a00cf70571",
+    "oracles/starlette.json": "7bb31bb4b79b4062bc229e0a218f1f7784534c9d4d9d4da593320d2fa311e0fa",
+    "oracles/swift-argument-parser.json": "f0f9c7eb498760a09c2307529fe86cbf513f59a48a6e47b17046e3776c09e0b1",
+    "oracles/unity-boatattack.json": "128530500249ab5c3c9e39cea01c0c43fa05a75365d9b6801d585b4c40b458a6",
+    "oracles/vitest.json": "b3018640f7e56d59fdfc2755a6ca0cb0c9129707967196f860f416d227b78e46",
+    "protocol.md": "3a801efb063749226f30981a40fea76f177928b57f5a3c7e6cdab863de8227de",
+    "question-template.md": "11909d98ecdec9f9bb64c32abae342f290b155fe2dc12ecbf39bc23ec79179df",
+    "questions.json": "05ac854ea6c22a4de2b18ee007d5085346e6afd7e5a2af95907a37164ab83acc",
+    "repositories.json": "c621674810282ff3e11253da48e31fd2a91077f44b929ddcb44501a8c1b89959"
+  }
+}

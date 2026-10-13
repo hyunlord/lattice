@@ -1,0 +1,289 @@
+{
+  "repository": "unity-boatattack",
+  "arm": "map",
+  "commit": "6acf5f773a440030489cb5e2b3c009fb5fe1e8ce",
+  "answers": [
+    {
+      "id": "unity-boatattack-q1",
+      "answer": "BoatAttack is Unity-Technologies' Unity/Universal RP demo: a small boat-racing game slice with boats and an island, intended for render-pipeline development, testing and learning. It runs in the Unity Editor or a built Unity player; it is not presented as a hosted service. The README credits Andre McGrail for design, programming, modeling, textures and SFX, Alex Best for modeling/textures and Stintah for music. The pin does not establish a current operational maintainer.",
+      "citations": [
+        {
+          "url": "https://github.com/Unity-Technologies/BoatAttack/blob/6acf5f773a440030489cb5e2b3c009fb5fe1e8ce/README.md#L1",
+          "lines": "1-23"
+        },
+        {
+          "url": "https://github.com/Unity-Technologies/BoatAttack/blob/6acf5f773a440030489cb5e2b3c009fb5fe1e8ce/README.md#L31",
+          "lines": "31-46"
+        },
+        {
+          "url": "https://github.com/Unity-Technologies/BoatAttack/blob/6acf5f773a440030489cb5e2b3c009fb5fe1e8ce/README.md#L60",
+          "lines": "60-83"
+        }
+      ]
+    },
+    {
+      "id": "unity-boatattack-q2",
+      "answer": "Principal runtime pieces: Boat owns per-boat setup, controller selection, lap progress, appearance and reset; HumanController translates player input, while AiController navigates waypoints/NavMesh; Engine applies propulsion/turning and samples water depth. RaceManager owns race data, spawning, countdown, standings and player UI/camera setup. MainMenuHelper configures a race; CameraManager switches Cinemachine camera modes. The local WaterSystem package supplies water/buoyancy/rendering, with separate editor tools. NavMeshComponents support navigation, and UnityGFXTests supplies graphics-test assemblies.",
+      "citations": [
+        {
+          "url": "https://github.com/Unity-Technologies/BoatAttack/blob/6acf5f773a440030489cb5e2b3c009fb5fe1e8ce/Assets/Scripts/Boat/Boat.cs#L15",
+          "lines": "15-226"
+        },
+        {
+          "url": "https://github.com/Unity-Technologies/BoatAttack/blob/6acf5f773a440030489cb5e2b3c009fb5fe1e8ce/Assets/Scripts/Boat/AiController.cs#L29",
+          "lines": "29-113"
+        },
+        {
+          "url": "https://github.com/Unity-Technologies/BoatAttack/blob/6acf5f773a440030489cb5e2b3c009fb5fe1e8ce/Assets/Scripts/Boat/Engine.cs#L31",
+          "lines": "31-96"
+        },
+        {
+          "url": "https://github.com/Unity-Technologies/BoatAttack/blob/6acf5f773a440030489cb5e2b3c009fb5fe1e8ce/Assets/Scripts/GameSystem/RaceManager.cs#L116",
+          "lines": "116-370"
+        },
+        {
+          "url": "https://github.com/Unity-Technologies/BoatAttack/blob/6acf5f773a440030489cb5e2b3c009fb5fe1e8ce/Assets/Scripts/UI/MainMenuHelper.cs#L18",
+          "lines": "18-99"
+        },
+        {
+          "url": "https://github.com/Unity-Technologies/BoatAttack/blob/6acf5f773a440030489cb5e2b3c009fb5fe1e8ce/Assets/Scripts/Camera/CameraManager.cs#L1",
+          "lines": "1-153"
+        },
+        {
+          "url": "https://github.com/Unity-Technologies/BoatAttack/blob/6acf5f773a440030489cb5e2b3c009fb5fe1e8ce/README.md#L10",
+          "lines": "10-23"
+        },
+        {
+          "url": "https://github.com/Unity-Technologies/BoatAttack/blob/6acf5f773a440030489cb5e2b3c009fb5fe1e8ce/Assets/NavMeshComponents/Editor/NavMeshComponentsEditor.asmdef#L1",
+          "lines": "1-16"
+        },
+        {
+          "url": "https://github.com/Unity-Technologies/BoatAttack/blob/6acf5f773a440030489cb5e2b3c009fb5fe1e8ce/Assets/Scripts/UnityGFXTests/Runtime/UnityGFXTests.BoatAttack.asmdef#L1",
+          "lines": "1-21"
+        }
+      ]
+    },
+    {
+      "id": "unity-boatattack-q3",
+      "answer": "C# MonoBehaviours organize gameplay (BoatAttack and BoatAttack.UI); generated C# InputControls wraps an Input System JSON action asset. Rendering also uses ShaderLab/HLSL and Shader Graph. This pin specifies Unity 2020.3.23f1; Packages/manifest.json pins URP 10.7.0, Input System 1.1.1, Cinemachine 2.9.1 and Addressables 1.19.11. Embedded com.verasl.water-system is a Unity package, not evidence of a Node runtime despite the map's npm label: it has WaterSystem runtime and Editor-only WaterSystem.Editor asmdefs. NavMeshComponents likewise separates runtime/editor; graphics tests have their own test-constrained assembly. The map indexes 89 C# files; it is not exhaustive language coverage.",
+      "citations": [
+        {
+          "url": "https://github.com/Unity-Technologies/BoatAttack/blob/6acf5f773a440030489cb5e2b3c009fb5fe1e8ce/Assets/Scripts/Boat/HumanController.cs#L1",
+          "lines": "1-9"
+        },
+        {
+          "url": "https://github.com/Unity-Technologies/BoatAttack/blob/6acf5f773a440030489cb5e2b3c009fb5fe1e8ce/Assets/Scripts/UI/MainMenuHelper.cs#L1",
+          "lines": "1-6"
+        },
+        {
+          "url": "https://github.com/Unity-Technologies/BoatAttack/blob/6acf5f773a440030489cb5e2b3c009fb5fe1e8ce/Assets/Scripts/GameSystem/InputControls.cs#L1",
+          "lines": "1-40"
+        },
+        {
+          "url": "https://github.com/Unity-Technologies/BoatAttack/blob/6acf5f773a440030489cb5e2b3c009fb5fe1e8ce/ProjectSettings/ProjectVersion.txt#L1",
+          "lines": "1-2"
+        },
+        {
+          "url": "https://github.com/Unity-Technologies/BoatAttack/blob/6acf5f773a440030489cb5e2b3c009fb5fe1e8ce/Packages/manifest.json#L1",
+          "lines": "1-18"
+        },
+        {
+          "url": "https://github.com/Unity-Technologies/BoatAttack/blob/6acf5f773a440030489cb5e2b3c009fb5fe1e8ce/Packages/com.verasl.water-system/package.json#L1",
+          "lines": "1-12"
+        },
+        {
+          "url": "https://github.com/Unity-Technologies/BoatAttack/blob/6acf5f773a440030489cb5e2b3c009fb5fe1e8ce/Packages/com.verasl.water-system/Scripts/WaterSystem.Runtime.asmdef#L1",
+          "lines": "1-19"
+        },
+        {
+          "url": "https://github.com/Unity-Technologies/BoatAttack/blob/6acf5f773a440030489cb5e2b3c009fb5fe1e8ce/Packages/com.verasl.water-system/Editor/WaterSystem.editor.asmdef#L1",
+          "lines": "1-19"
+        },
+        {
+          "url": "https://github.com/Unity-Technologies/BoatAttack/blob/6acf5f773a440030489cb5e2b3c009fb5fe1e8ce/Packages/com.verasl.water-system/Shaders/Water.shader#L1",
+          "lines": "1-49"
+        },
+        {
+          "url": "https://github.com/Unity-Technologies/BoatAttack/blob/6acf5f773a440030489cb5e2b3c009fb5fe1e8ce/Assets/NavMeshComponents/Editor/NavMeshComponentsEditor.asmdef#L1",
+          "lines": "1-16"
+        },
+        {
+          "url": "https://github.com/Unity-Technologies/BoatAttack/blob/6acf5f773a440030489cb5e2b3c009fb5fe1e8ce/Assets/Scripts/UnityGFXTests/Runtime/UnityGFXTests.BoatAttack.asmdef#L1",
+          "lines": "1-21"
+        }
+      ]
+    },
+    {
+      "id": "unity-boatattack-q4",
+      "answer": "The documented full-play entry is scenes/main_menu.unity. MainMenuHelper.SetupSingleplayerGame calls SetGameType(Singleplayer); RaceManager marks the first BoatData human, and the menu's hull selection calls SetHull. StartRace calls LoadGame, whose sceneLoaded callback starts SetupRace/CreateBoats. Addressables instantiates the selected prefab, then Boat.Setup receives boat.human. Boat.SetupController selects typeof(HumanController) and adds it dynamically. Its Awake/OnEnable initialize input. Serialized UI event wiring and Unity lifecycle dispatch are runtime boundaries, not a proven uninterrupted static call chain.",
+      "citations": [
+        {
+          "url": "https://github.com/Unity-Technologies/BoatAttack/blob/6acf5f773a440030489cb5e2b3c009fb5fe1e8ce/README.md#L31",
+          "lines": "31-46"
+        },
+        {
+          "url": "https://github.com/Unity-Technologies/BoatAttack/blob/6acf5f773a440030489cb5e2b3c009fb5fe1e8ce/Assets/Scripts/UI/MainMenuHelper.cs#L30",
+          "lines": "30-72"
+        },
+        {
+          "url": "https://github.com/Unity-Technologies/BoatAttack/blob/6acf5f773a440030489cb5e2b3c009fb5fe1e8ce/Assets/Scripts/GameSystem/RaceManager.cs#L111",
+          "lines": "111-181"
+        },
+        {
+          "url": "https://github.com/Unity-Technologies/BoatAttack/blob/6acf5f773a440030489cb5e2b3c009fb5fe1e8ce/Assets/Scripts/GameSystem/RaceManager.cs#L274",
+          "lines": "274-314"
+        },
+        {
+          "url": "https://github.com/Unity-Technologies/BoatAttack/blob/6acf5f773a440030489cb5e2b3c009fb5fe1e8ce/Assets/Scripts/Boat/Boat.cs#L57",
+          "lines": "57-79"
+        },
+        {
+          "url": "https://github.com/Unity-Technologies/BoatAttack/blob/6acf5f773a440030489cb5e2b3c009fb5fe1e8ce/Assets/Scripts/Boat/HumanController.cs#L18",
+          "lines": "18-38"
+        }
+      ]
+    },
+    {
+      "id": "unity-boatattack-q5",
+      "answer": "Assets/Scripts/Boat/Engine.cs, Engine.Accelerate(float), lines 64-75. Only when _yHeight > -0.1f does it clamp modifier to [0,1], flatten and normalize Rigidbody forward, apply horsePower × modifier × forward using ForceMode.Acceleration, and add relative pitch torque. Engine.FixedUpdate computes _yHeight as sampled water height minus the transformed engine sample-point height, using GerstnerWavesJobs. Equality at -0.1 fails the gate; negative throttle is clamped to zero, not reverse thrust.",
+      "citations": [
+        {
+          "url": "https://github.com/Unity-Technologies/BoatAttack/blob/6acf5f773a440030489cb5e2b3c009fb5fe1e8ce/Assets/Scripts/Boat/Engine.cs#L43",
+          "lines": "43-75"
+        }
+      ]
+    },
+    {
+      "id": "unity-boatattack-q6",
+      "answer": "HumanController → BaseController: inheritance and base.OnEnable call. → InputControls: constructs it, subscribes action callbacks and enables/disables BoatControls. → Boat: inherited controller.ResetPosition call. → Engine: inherited engine.Accelerate/Turn calls. → DayNightController: static SelectPreset call. BaseController resolves the Boat component and obtains controller.engine. These directions are proven by source expressions/types; the map's empty outgoing call list does not prove no dependencies.",
+      "citations": [
+        {
+          "url": "https://github.com/Unity-Technologies/BoatAttack/blob/6acf5f773a440030489cb5e2b3c009fb5fe1e8ce/Assets/Scripts/Boat/HumanController.cs#L9",
+          "lines": "9-74"
+        },
+        {
+          "url": "https://github.com/Unity-Technologies/BoatAttack/blob/6acf5f773a440030489cb5e2b3c009fb5fe1e8ce/Assets/Scripts/Boat/BaseController.cs#L6",
+          "lines": "6-15"
+        }
+      ]
+    },
+    {
+      "id": "unity-boatattack-q7",
+      "answer": "Held positive throttle follows the Trottle input action through Input System callback dispatch to stored _throttle, then Unity's recurring HumanController.FixedUpdate calls Engine.Accelerate. The engine's independently scheduled FixedUpdate samples water; Accelerate gates on that stored depth and applies Rigidbody acceleration. Holding retains the last value; canceled resets it. Dynamic boundaries are input-event dispatch, Unity lifecycle/FixedUpdate scheduling, component creation/reference wiring, water-job sampling and native physics integration. Source inspection establishes this supported path, not callback ordering or observed motion.",
+      "citations": [
+        {
+          "url": "https://github.com/Unity-Technologies/BoatAttack/blob/6acf5f773a440030489cb5e2b3c009fb5fe1e8ce/Assets/Data/InputControls.inputactions#L1",
+          "lines": "1-173"
+        },
+        {
+          "url": "https://github.com/Unity-Technologies/BoatAttack/blob/6acf5f773a440030489cb5e2b3c009fb5fe1e8ce/Assets/Scripts/Boat/HumanController.cs#L18",
+          "lines": "18-43"
+        },
+        {
+          "url": "https://github.com/Unity-Technologies/BoatAttack/blob/6acf5f773a440030489cb5e2b3c009fb5fe1e8ce/Assets/Scripts/Boat/HumanController.cs#L70",
+          "lines": "70-74"
+        },
+        {
+          "url": "https://github.com/Unity-Technologies/BoatAttack/blob/6acf5f773a440030489cb5e2b3c009fb5fe1e8ce/Assets/Scripts/Boat/BaseController.cs#L6",
+          "lines": "6-15"
+        },
+        {
+          "url": "https://github.com/Unity-Technologies/BoatAttack/blob/6acf5f773a440030489cb5e2b3c009fb5fe1e8ce/Assets/Scripts/Boat/Engine.cs#L43",
+          "lines": "43-75"
+        }
+      ]
+    },
+    {
+      "id": "unity-boatattack-q8",
+      "answer": "Two evidenced direct consumers are HumanController.FixedUpdate, passing _throttle, and AiController.FixedUpdate, passing dot > 0 ? 1f : 0.25f after its path guard. Changes to Engine.Accelerate semantics therefore affect both player and AI propulsion. Boat/RaceManager are upstream setup components, not evidenced direct Accelerate callers. This is a source-confirmed consumer set, not a completeness guarantee from the map: even includeEstimated=true returned zero incoming edges.",
+      "citations": [
+        {
+          "url": "https://github.com/Unity-Technologies/BoatAttack/blob/6acf5f773a440030489cb5e2b3c009fb5fe1e8ce/Assets/Scripts/Boat/HumanController.cs#L70",
+          "lines": "70-74"
+        },
+        {
+          "url": "https://github.com/Unity-Technologies/BoatAttack/blob/6acf5f773a440030489cb5e2b3c009fb5fe1e8ce/Assets/Scripts/Boat/AiController.cs#L75",
+          "lines": "75-86"
+        },
+        {
+          "url": "https://github.com/Unity-Technologies/BoatAttack/blob/6acf5f773a440030489cb5e2b3c009fb5fe1e8ce/Assets/Scripts/Boat/Engine.cs#L64",
+          "lines": "64-75"
+        }
+      ]
+    },
+    {
+      "id": "unity-boatattack-q9",
+      "answer": "README documents scenes/demo_island.unity as the editor-ready AI race example; this exercises acceleration via AiController.FixedUpdate → Engine.Accelerate. For human acceleration it documents scenes/main_menu.unity for a full play-through and scenes/_levels/level_Island.unity as the loaded level. The supported code entry is menu singleplayer setup/load → RaceManager.SetupRace/CreateBoats → Boat.Setup/SetupController → HumanController. The README does not supply an isolated throttle unit-test example. Scene/prefab serialized wiring and actual execution were not verified.",
+      "citations": [
+        {
+          "url": "https://github.com/Unity-Technologies/BoatAttack/blob/6acf5f773a440030489cb5e2b3c009fb5fe1e8ce/README.md#L31",
+          "lines": "31-46"
+        },
+        {
+          "url": "https://github.com/Unity-Technologies/BoatAttack/blob/6acf5f773a440030489cb5e2b3c009fb5fe1e8ce/Assets/Scripts/Boat/AiController.cs#L75",
+          "lines": "75-86"
+        },
+        {
+          "url": "https://github.com/Unity-Technologies/BoatAttack/blob/6acf5f773a440030489cb5e2b3c009fb5fe1e8ce/Assets/Scripts/UI/MainMenuHelper.cs#L52",
+          "lines": "52-70"
+        },
+        {
+          "url": "https://github.com/Unity-Technologies/BoatAttack/blob/6acf5f773a440030489cb5e2b3c009fb5fe1e8ce/Assets/Scripts/GameSystem/RaceManager.cs#L111",
+          "lines": "111-146"
+        },
+        {
+          "url": "https://github.com/Unity-Technologies/BoatAttack/blob/6acf5f773a440030489cb5e2b3c009fb5fe1e8ce/Assets/Scripts/GameSystem/RaceManager.cs#L294",
+          "lines": "294-314"
+        },
+        {
+          "url": "https://github.com/Unity-Technologies/BoatAttack/blob/6acf5f773a440030489cb5e2b3c009fb5fe1e8ce/Assets/Scripts/Boat/Boat.cs#L57",
+          "lines": "57-79"
+        }
+      ]
+    },
+    {
+      "id": "unity-boatattack-q10",
+      "answer": "Z enters in Assets/Data/InputControls.inputactions as BoatControls/Trottle (spelling preserved), an Axis Value action with AxisDeadzone(min=0.1,max=1). Its 1DAxis composite combines negative left-trigger/buttonEast/down/S/Z and positive right-trigger/buttonSouth/up/W/space bindings; touch-position Y has Clamp(-1,1). Generated InputControls constructs the action asset. HumanController reads a float on performed, stores it, and clears it on canceled; FixedUpdate forwards it. Engine clamps again to [0,1], scales by horsepower and the horizontal forward direction, subject to the water gate. Device dispatch/processor internals belong to the external Input System.",
+      "citations": [
+        {
+          "url": "https://github.com/Unity-Technologies/BoatAttack/blob/6acf5f773a440030489cb5e2b3c009fb5fe1e8ce/Assets/Data/InputControls.inputactions#L1",
+          "lines": "1-173"
+        },
+        {
+          "url": "https://github.com/Unity-Technologies/BoatAttack/blob/6acf5f773a440030489cb5e2b3c009fb5fe1e8ce/Assets/Scripts/GameSystem/InputControls.cs#L1",
+          "lines": "1-40"
+        },
+        {
+          "url": "https://github.com/Unity-Technologies/BoatAttack/blob/6acf5f773a440030489cb5e2b3c009fb5fe1e8ce/Assets/Scripts/Boat/HumanController.cs#L18",
+          "lines": "18-32"
+        },
+        {
+          "url": "https://github.com/Unity-Technologies/BoatAttack/blob/6acf5f773a440030489cb5e2b3c009fb5fe1e8ce/Assets/Scripts/Boat/HumanController.cs#L70",
+          "lines": "70-74"
+        },
+        {
+          "url": "https://github.com/Unity-Technologies/BoatAttack/blob/6acf5f773a440030489cb5e2b3c009fb5fe1e8ce/Assets/Scripts/Boat/Engine.cs#L64",
+          "lines": "64-75"
+        }
+      ]
+    }
+  ],
+  "toolErrors": [
+    {
+      "tool": "web.open",
+      "url": "https://github.com/Unity-Technologies/BoatAttack/tree/6acf5f773a440030489cb5e2b3c009fb5fe1e8ce/Packages/com.verasl.water-system/Shaders",
+      "error": "Failed to fetch restricted URL; pinned raw Water.shader succeeded."
+    }
+  ],
+  "limitations": [
+    "No runtime/build execution; static source and documentation only.",
+    "Lattice C# call queries returned empty edges for HumanController.FixedUpdate and Engine.Accelerate despite explicit call sites; lattice_entrypoints returned zero. These are extraction limits, not proof of absent calls or callbacks.",
+    "Map first-impression labels and grouped components were treated as navigation aids, not semantic proof; package.json's npm classification was not taken as a Node runtime.",
+    "Initial overview/MCP output hit display token truncation; subsequent targeted requests supplied relevant definitions and source spans.",
+    "Pinned GitHub raw text rendering collapses some blank lines; C# citation ranges use map source-definition spans.",
+    "Exact task-delivery timestamp was not captured; selfReportedStartedAt is null. First timestamped map observation was 2026-10-13T07:59:47.081Z.",
+    "No authoritative token telemetry was available."
+  ],
+  "selfReportedStartedAt": null,
+  "selfReportedFinishedAt": "2026-10-13T08:03:16.353Z"
+}

@@ -1,0 +1,70 @@
+{
+  "repository": "spring-petclinic",
+  "commit": "500158f732419217507c7656904b8e6aa1bcc0d6",
+  "candidate": "2b7c00f",
+  "startedAt": "2026-10-13T07:12:36.657Z",
+  "reused": false,
+  "priorSetupFailure": {
+    "repository": "spring-petclinic",
+    "commit": "500158f732419217507c7656904b8e6aa1bcc0d6",
+    "candidate": "2b7c00f",
+    "startedAt": "2026-10-13T07:11:28.550Z",
+    "reused": false,
+    "command": [
+      "node",
+      "/tmp/lattice-l11-first-impression/bin/lattice.mjs",
+      "export",
+      "/tmp/l11-visual/spring-petclinic",
+      "--root",
+      "/tmp/l9-benchmark-core/repos/spring-petclinic",
+      "--no-lens",
+      "--cache-dir",
+      "/tmp/l11-visual-cache/spring-petclinic",
+      "--force",
+      "--json"
+    ],
+    "exitCode": 2,
+    "timedOut": false,
+    "seconds": 0.20660325,
+    "status": "failed",
+    "finishedAt": "2026-10-13T07:11:28.756Z"
+  },
+  "buildCommand": [
+    "node",
+    "/tmp/lattice-l11-first-impression/bin/lattice.mjs",
+    "build",
+    "--root",
+    "/tmp/l9-benchmark-core/repos/spring-petclinic",
+    "--no-lens",
+    "--cache-dir",
+    "/tmp/l11-visual-cache/spring-petclinic",
+    "--json"
+  ],
+  "buildExitCode": 0,
+  "command": [
+    "node",
+    "/tmp/lattice-l11-first-impression/bin/lattice.mjs",
+    "export",
+    "/tmp/l11-visual/spring-petclinic",
+    "--root",
+    "/tmp/l9-benchmark-core/repos/spring-petclinic",
+    "--no-lens",
+    "--cache-dir",
+    "/tmp/l11-visual-cache/spring-petclinic",
+    "--force",
+    "--json"
+  ],
+  "exitCode": 0,
+  "timedOut": false,
+  "seconds": 1.538939042,
+  "graphHash": "829d9cd7b8c06fdf6c9680f2f823cfecee0a4b055e8b7096d3db0f60049becf2",
+  "source": {
+    "name": "spring-petclinic",
+    "dirty": false,
+    "sourceFingerprint": "4f0480b29105b3123df45e19456d0d43d7ec4d349f008d45a04e1d9756282627",
+    "commit": "500158f732419217507c7656904b8e6aa1bcc0d6",
+    "remoteUrl": "https://github.com/spring-projects/spring-petclinic"
+  },
+  "status": "ready",
+  "finishedAt": "2026-10-13T07:12:38.197Z"
+}
