@@ -7,7 +7,7 @@ export function placeDiagramLabels(labels: readonly RoutedLabel[], boxes: readon
     for (const { element, points } of labels) {
         const measured = typeof element.getBBox === 'function' ? element.getBBox() : undefined;
         const width = measured?.width || (element.textContent?.length ?? 0) * 8, height = measured?.height || 16;
-        const segments = points.slice(1).map((b, index) => ({ a: points[index] ?? b, b })).sort((a, b) => Math.hypot(b.b.x - b.a.x, b.b.y - b.a.y) - Math.hypot(a.b.x - a.a.x, a.b.y - a.a.y));
+        const segments = points.slice(1).map((b, index) => ({ a: points[index] ?? b, b })).sort((a, b) => Number(a.a.x === a.b.x) - Number(b.a.x === b.b.x) || Math.hypot(b.b.x - b.a.x, b.b.y - b.a.y) - Math.hypot(a.b.x - a.a.x, a.b.y - a.a.y));
         let placed = false;
         for (const { a, b } of segments) {
             const length = Math.hypot(b.x - a.x, b.y - a.y), vertical = a.x === b.x;

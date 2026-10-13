@@ -75,6 +75,27 @@ test('diagram rejects executable and non-web source URLs while retaining local e
     const host = new Element('main');
     renderFirstImpression(host, { ...model, components: [{ ...component, titleClaim: claim, claims: [claim] }, { ...component, id: 'local', sources: [{ ...source, path: 'local.ts', url: 'file:///private/local.ts' }] }] }, { overview: { repository: { name: 'Example' }, layers: [], limitations: [] }, sources: () => new Element('evidence'), params: new URLSearchParams('lang=en') });
     assert.ok(elements(host, 'a').every(item => !/^(?:javascript|file|data):/u.test(item.href)));
-    assert.ok(host.textContent.includes('claim.ts:2'));
-    assert.ok(host.textContent.includes('local.ts:1'));
+    assert.ok(elements(host, 'button').some(item => item.title?.includes('claim.ts:2')));
+    assert.ok(elements(host, 'button').some(item => item.title?.includes('local.ts:1')));
+});
+
+test('diagram folds auxiliary parts below the product drawing and keeps one evidence control per box', t => {
+    const previous = globalThis.document; globalThis.document = { createElement: tag => new Element(tag), createElementNS: (_ns, tag) => new Element(tag) };
+    t.after(() => { if (previous === undefined) delete globalThis.document; else globalThis.document = previous; });
+    const claim = { text: 'Parse input', citations: [{ path: 'src/parse.ts', startLine: 4, endLine: 9, contentHash: hash }] };
+    const seen = [], host = new Element('main');
+    renderFirstImpression(host, { ...model, components: [{ ...component, titleClaim: claim, claims: [claim] }, { ...component, id: 'tools', title: 'Release tasks', category: 'auxiliary' }], dependencies: [{ source: 'tools', target: 'part', importingFileCount: 3, declarationCount: 0, sources: [source] }] }, { overview: { repository: { name: 'Example' }, layers: [], limitations: [] }, sources: items => { seen.push(...items); return new Element('evidence'); }, params: new URLSearchParams('lang=en') });
+    const boxes = elements(host, 'article').filter(item => item.className === 'fi-diagram-box');
+    assert.equal(boxes.length, 1);
+    assert.equal(elements(host, 'polyline').length, 0);
+    const icon = elements(boxes[0], 'button').filter(item => item.className === 'fi-evidence-icon');
+    assert.equal(icon.length, 1);
+    assert.match(icon[0].attributes.get('aria-label'), /AI evidence/);
+    assert.ok(!boxes[0].textContent.includes('AI name source'));
+    assert.ok(seen.some(item => item.path === 'src/parse.ts' && item.line === 4 && item.endLine === 9));
+    const folded = elements(host, 'details').find(item => item.className === 'fi-auxiliary');
+    assert.ok(folded);
+    assert.ok(!folded.open);
+    assert.match(folded.textContent, /Tools & configuration/);
+    assert.match(folded.textContent, /Release tasks/);
 });

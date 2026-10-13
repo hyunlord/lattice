@@ -4,6 +4,7 @@ import type { Source } from '../core/model.js';
 export type FirstImpressionClaim = { readonly text: string; readonly citations: readonly Omit<InterpretationCitation, 'excerpt'>[]; };
 export type FirstImpressionMember = { readonly id: string; readonly name: string; readonly path: string; };
 export type FirstImpressionComponent = {
+    readonly category?: 'auxiliary';
     readonly id: string;
     readonly title: string;
     readonly description: string;
