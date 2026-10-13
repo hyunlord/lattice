@@ -1,3 +1,5 @@
+> **실험 종료(2026-10-13), 유지보수 없음.** Experiment ended; no maintenance. [회고 / Retrospective](docs/retrospective.md)
+
 # Lattice
 
 Understand an unfamiliar repository through its components, dependencies, entrypoints and source-backed call paths.
@@ -26,13 +28,13 @@ Descriptions come from repository documentation, manifests and clearly labelled 
 
 [GitDiagram](https://github.com/ahmedkhaleel2004/gitdiagram) also offers source navigation and MCP. Those capabilities are not unique to Lattice. Lattice's specific choice is a deterministic, inspectable graph and conservative static analysis before optional generated prose; no model is required to open a repository. See the [evaluation protocol](docs/benchmarks/l11/protocol.md) for the comparison method and its limits.
 
-## Explore and contribute
+## Historical documentation
 
 - [Usage, lenses, MCP and automation](docs/guide.md)
 - [Architecture](docs/design/lattice-v0.md), [design system](DESIGN.md) and [contributor contract](AGENTS.md)
 - [L11 frozen public corpus and questions](docs/benchmarks/l11/questions.json), [evaluation and unmet targets](docs/benchmarks/l11/evaluation/evaluation-report.md), and [public delivery](docs/benchmarks/l11/publication/README.md)
 - [L12 diagram delivery and limits](docs/benchmarks/l12/delivery.md)
-- [L12 five-minute human test](docs/benchmarks/l12/worksheet.ko.md) — Lattice first, then a qualitative comparison; user verdict pending. Reference answers are withheld until completion.
+- [L12 five-minute human test](docs/benchmarks/l12/worksheet.ko.md) — cancelled by the final user decision; no five-minute test was conducted.
 - [Earlier acceptance evidence](docs/review/acceptance.md) and accepted [L10 performance residuals](docs/benchmarks/l10/closure-display.md)
 - [Domain lens example: bs-mobile](https://hyunlord.github.io/bs-mobile/) — a configured example, separate from the generic product gallery
 
