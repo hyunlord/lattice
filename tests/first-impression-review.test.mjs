@@ -66,3 +66,21 @@ test('all legal layers round-trip their own membership through actual packed HTT
     const loader = createPackedLoader(`http://127.0.0.1:${server.address().port}/`, '?generation=7');
     for (const [index, path] of paths.entries()) { const page = await loader.json(path); assert.equal(page.graphHash, overview.hash); assert.equal(page.members[0].id, nodes[index].id); }
 });
+test('narrowed description links retain the pinned encoded path and match the displayed source range', () => {
+    const base = 'https://github.com/example/repo/blob/012345/docs%20reader/README.md';
+    const extracted = extractMarkdown(input('README.md', '# Reader\n\nReader presents daily science news.\nIt saves reading lists.\n'));
+    const nodes = extracted.nodes.map(node => ({ ...node, contentHash: 'a'.repeat(64), sources: node.sources.map(source => ({ ...source, url: `${base}#L1` })) }));
+    const purpose = buildFirstImpression(graph(nodes), () => {}).purpose.sources[0];
+    assert.equal(purpose.line, 3);
+    assert.equal(purpose.endLine, 4);
+    assert.equal(purpose.url, `${base}#L3-L4`);
+    const node = module('src/reader.ts', { sourceDescription: { text: 'Reader presents daily science news.', line: 28, endLine: 28 } });
+    const component = buildFirstImpression(graph([{ ...node, sources: [{ ...node.sources[0], url: `${base}#L1-L99` }] }]), () => {}).components[0];
+    assert.equal(component.sources[0].url, `${base}#L28`);
+    assert.equal(component.sources[0].line, 28);
+    assert.equal(component.sources[0].endLine, 28);
+    assert.equal(node.sources[0].line, 1, 'canonical source is unchanged');
+    const withoutUrl = buildFirstImpression(graph([node]), () => {}).components[0].sources[0];
+    assert.equal(withoutUrl.url, undefined);
+    assert.equal(withoutUrl.line, 28);
+});

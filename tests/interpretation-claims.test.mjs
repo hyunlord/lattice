@@ -26,6 +26,18 @@ test('individually cited claims are exposed separately from legacy prose', t => 
     assert.deepEqual(readInterpretations(root, graph)[0].validatedClaims, record.claims);
     assert.equal(saved.label, 'AI 요약');
 });
+test('validated AI citations rewrite the original source fragment to the exact cited range', t => {
+    const { root, graph, record, citation } = fixture(t);
+    const base = 'https://github.com/example/repo/blob/012345/src/a.ts';
+    const linked = { ...graph, nodes: graph.nodes.map(node => ({ ...node, sources: node.sources.map(source => ({ ...source, url: `${base}#L1` })) })) };
+    const narrowed = { ...citation, startLine: 2, endLine: 2, excerpt: '    return 1;' };
+    writeInterpretation(root, linked, { ...record, claims: [{ text: 'Returns one.', citations: [narrowed] }] });
+    const [saved] = readInterpretations(root, linked);
+    const result = saved.validatedClaims[0].citations[0];
+    assert.equal(result.startLine, 2);
+    assert.equal(result.endLine, 2);
+    assert.equal(result.url, `${base}#L2-L2`);
+});
 test('legacy summaries and uncited claims never become validated first-screen claims', t => {
     const { root, graph, record } = fixture(t);
     const { claims, ...legacy } = record;

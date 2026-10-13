@@ -15,7 +15,9 @@ function description(node: Node): { readonly text: string; readonly sources: rea
     if (!object(value) || typeof value['text'] !== 'string' || !value['text'].trim() || !descriptiveProse(value['text']) || /^(?:unless required by applicable law|distributed under the licen[cs]e|without warranties or conditions|see the licen[cs]e for the specific language)/iu.test(value['text'].trim())) return undefined;
     const source = node.sources[0];
     if (!source) return undefined;
-    return { text: value['text'].replace(/\s+/gu, ' ').trim().slice(0, 500), sources: [{ ...source, ...(typeof value['line'] === 'number' ? { line: value['line'] } : {}), ...(typeof value['endLine'] === 'number' ? { endLine: value['endLine'] } : {}) }] };
+    const narrowed = { ...source, ...(typeof value['line'] === 'number' ? { line: value['line'] } : {}), ...(typeof value['endLine'] === 'number' ? { endLine: value['endLine'] } : {}) };
+    const fragment = `#L${narrowed.line}${narrowed.endLine !== undefined && narrowed.endLine > narrowed.line ? `-L${narrowed.endLine}` : ''}`;
+    return { text: value['text'].replace(/\s+/gu, ' ').trim().slice(0, 500), sources: [{ ...narrowed, ...(source.url ? { url: source.url.replace(/#L\d+(?:-L\d+)?$/u, fragment) } : {}) }] };
 }
 export function firstImpressionPurpose(nodes: readonly Node[], count: number): FirstImpression['purpose'] {
     const documents = nodes.filter(node => node.kind === 'document').sort((a, b) => pathOf(a).localeCompare(pathOf(b)));
