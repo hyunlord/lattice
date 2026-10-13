@@ -35,3 +35,6 @@ export { extractTypeScriptConfig, typeScriptConfigPaths } from "./adapters/types
 export { discoverBuildPackages, resolveBuildPackageImports, buildManifestPath } from "./adapters/build-manifests.js";
 export { analyzeLogic } from "./adapters/logic-analysis.js";
 export type { LogicFacts, LogicDefinition, LogicCall } from "./adapters/logic-types.js";
+export { buildFirstImpression } from './query/first-impression-model.js';
+export type { FirstImpressionGraph, FirstImpressionWrite } from './query/first-impression-model.js';
+export type { FirstImpressionClaim, FirstImpression, FirstImpressionComponent, FirstImpressionDependency, FirstImpressionEntrypoint, FirstImpressionFlow, FirstImpressionMember, FirstImpressionMembershipPage, FirstImpressionComponentsPage } from './query/first-impression-types.js';

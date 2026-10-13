@@ -1,6 +1,7 @@
 import type { LensKind, Source, SourceInput } from '../dist/index.js';
 export interface Options {
     root: string;
+    readOnlySource?: boolean;
     lens?: string | undefined;
     output?: string | undefined;
     cacheDir?: string | undefined;

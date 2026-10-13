@@ -1,8 +1,9 @@
+import { readOnlyMetadata } from './open-reader.mjs';
 import type { SourceObservationCache } from './source-observation-cache.mjs';
 import { errorCode, errorStatus } from './types.mjs';
 import type { RepositoryReader } from './types.mjs';
 import { execFile, execFileSync } from 'node:child_process';
-import { readFileSync, realpathSync, statSync } from 'node:fs';
+import { readFileSync, realpathSync, statSync, readdirSync } from 'node:fs';
 import { basename, join, posix, relative, sep } from 'node:path';
 import { promisify } from 'node:util';
 import { inside } from './inputs.mjs';
@@ -15,7 +16,7 @@ export class InputSizeError extends Error {
 }
 
 export function git(root: string, args: readonly string[]) {
-    return execFileSync('git', ['--no-optional-locks', '-C', root, ...args], { encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'], maxBuffer: 32 * 1024 * 1024 });
+    return execFileSync('git', ['--no-optional-locks', '-c', 'core.fsmonitor=false', '-C', root, ...args], { encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'], maxBuffer: 32 * 1024 * 1024 });
 }
 function optionalGit(root: string, args: readonly string[]) {
     try { return git(root, args).trimEnd(); }
@@ -70,17 +71,39 @@ function workingReader(root: string, cachePath: string | undefined, statusText: 
     };
     return cache ? withWorkingCache(repository, cache) : repository;
 }
-export function workingRepository(root: string, cacheDir?: string): RepositoryReader {
+function plainRepository(root: string, cacheDir?: string): RepositoryReader | undefined {
+    try { git(root, ['rev-parse', '--is-inside-work-tree']); return undefined; }
+    catch (error) { if (errorStatus(error) !== 128) throw error; }
+    const paths: string[] = [];
+    const visit = (directory: string, prefix: string) => {
+        for (const entry of readdirSync(directory, { withFileTypes: true })) {
+            const path = prefix + entry.name;
+            const absolute = join(directory, entry.name);
+            if (absolute === cacheDir || ['.git', '.lattice', '.omx', '.omo', 'node_modules'].includes(entry.name)) continue;
+            if (entry.isDirectory()) visit(absolute, path + '/');
+            else if (entry.isFile()) paths.push(path);
+        }
+    };
+    visit(root, '');
+    return workingReader(root, undefined, '1 plain\0', paths.sort().join('\0'), '');
+}
+export function workingRepository(root: string, cacheDir?: string, readOnlySource: boolean | 'inventory' = false): RepositoryReader {
+    const plain = plainRepository(root, cacheDir);
+    if (plain) return plain;
     const commands = workingCommands(root, cacheDir);
+    if (readOnlySource) { const metadata = readOnlyMetadata(root, args => git(root, args), readOnlySource !== 'inventory'); return workingReader(root, commands.cachePath, metadata.status, metadata.paths, optionalGit(root, commands.origin)); }
     return workingReader(root, commands.cachePath, git(root, commands.status), git(root, commands.paths) + git(root, commands.generatedPaths), optionalGit(root, commands.origin));
 }
 const executeGit = promisify(execFile);
 async function gitAsync(root: string, args: readonly string[]) {
-    const { stdout } = await executeGit('git', ['--no-optional-locks', '-C', root, ...args], { encoding: 'utf8', maxBuffer: 32 * 1024 * 1024 });
+    const { stdout } = await executeGit('git', ['--no-optional-locks', '-c', 'core.fsmonitor=false', '-C', root, ...args], { encoding: 'utf8', maxBuffer: 32 * 1024 * 1024 });
     return stdout;
 }
-export async function workingRepositoryAsync(root: string, cacheDir?: string, cache?: SourceObservationCache): Promise<RepositoryReader> {
+export async function workingRepositoryAsync(root: string, cacheDir?: string, cache?: SourceObservationCache, readOnlySource = false): Promise<RepositoryReader> {
+    const plain = plainRepository(root, cacheDir);
+    if (plain) return cache ? withWorkingCache(plain, cache) : plain;
     const commands = workingCommands(root, cacheDir);
+    if (readOnlySource) { const repository = workingRepository(root, cacheDir, true); return cache ? withWorkingCache(repository, cache) : repository; }
     const origin = gitAsync(root, commands.origin).then(value => value.trimEnd(), (error: unknown) => {
         if (errorCode(error) === 1 || errorCode(error) === 128) return '';
         throw error;
@@ -137,7 +160,7 @@ export function historicalRepository(root: string, ref?: string): RepositoryRead
             }
             if (!selected.size) return;
             const input = [...selected.keys()].join('\n') + '\n';
-            const run = (args: readonly string[], maxBuffer: number) => execFileSync('git', ['--no-optional-locks', '-C', root, ...args], { input, maxBuffer, stdio: ['pipe', 'pipe', 'pipe'] });
+            const run = (args: readonly string[], maxBuffer: number) => execFileSync('git', ['--no-optional-locks', '-c', 'core.fsmonitor=false', '-C', root, ...args], { input, maxBuffer, stdio: ['pipe', 'pipe', 'pipe'] });
             const sizes = new Map<string, number>();
             for (const line of run(['cat-file', '--batch-check'], selected.size * 128).toString('utf8').trimEnd().split('\n')) {
                 const match = /^([a-f0-9]+) blob (\d+)$/u.exec(line);

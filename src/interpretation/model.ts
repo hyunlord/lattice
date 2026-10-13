@@ -2,14 +2,21 @@ import type { Graph, Source } from '../core/model.js';
 import { overviewDependencyGroups } from '../query/structural-dependency-groups.js';
 import { buildStructuralOverview } from '../query/structural-map-model.js';
 
+export type InterpretationCitation = {
+    readonly path: string; readonly contentHash: string; readonly startLine: number; readonly endLine: number;
+    readonly excerpt: string; readonly nodeId?: string; readonly edgeId?: string; readonly url?: string;
+};
+export type InterpretationClaim = { readonly text: string; readonly citations: readonly InterpretationCitation[]; };
+export type ClaimInterpretation = { readonly targetId: string; readonly sources: Interpretation['sources']; readonly validatedClaims: readonly InterpretationClaim[]; };
 export type Interpretation = {
     readonly schemaVersion: 1;
     readonly targetId: string;
     readonly summary: string;
     readonly author: string;
+    readonly claims?: readonly InterpretationClaim[];
     readonly sources: readonly { readonly path: string; readonly contentHash: string; readonly line: number; }[];
 };
-export type VisibleInterpretation = Omit<Interpretation, 'sources'> & { readonly sources: readonly (Interpretation['sources'][number] & { readonly url?: string; })[]; } & { readonly label: 'AI 요약'; readonly status: 'fresh' | 'stale'; readonly notePath: string; };
+export type VisibleInterpretation = Omit<Interpretation, 'sources'> & { readonly sources: readonly (Interpretation['sources'][number] & { readonly url?: string; })[]; } & { readonly label: 'AI 요약'; readonly status: 'fresh' | 'stale'; readonly notePath: string; readonly validatedClaims?: readonly InterpretationClaim[]; };
 export type InterpretationTarget = { readonly id: string; readonly name: string; readonly kind: 'module' | 'cluster'; readonly sources: readonly Source[]; readonly visibleFileIds?: readonly string[]; readonly group?: { readonly relation: 'folder-imports' | 'projected-folder-imports'; readonly stageIds: readonly string[]; readonly memberTargetIds: readonly string[]; readonly memberNames: readonly string[]; }; };
 export class InterpretationError extends Error {
     constructor(message: string) { super(message); this.name = 'InterpretationError'; }
@@ -18,6 +25,44 @@ const object = (value: unknown): value is Record<string, unknown> => value !== n
 function string(value: unknown, field: string, maximum: number): string {
     if (typeof value !== 'string' || !value.trim() || value.length > maximum) throw new InterpretationError(`Invalid ${field}`);
     return value;
+}
+function parseCitation(value: unknown): InterpretationCitation {
+    if (!object(value)) throw new InterpretationError('Invalid claim citation');
+    const path = string(value['path'], 'citation path', 4096), contentHash = string(value['contentHash'], 'citation hash', 64);
+    if (path.startsWith('/') || path.includes('\\') || path.split('/').some(part => !part || part === '.' || part === '..') || !/^[a-f0-9]{64}$/u.test(contentHash)) throw new InterpretationError('Invalid citation path or hash');
+    const startLine = value['startLine'], endLine = value['endLine'];
+    if (typeof startLine !== 'number' || !Number.isSafeInteger(startLine) || startLine < 1 || typeof endLine !== 'number' || !Number.isSafeInteger(endLine) || endLine < startLine) throw new InterpretationError('Invalid citation range');
+    return { path, contentHash, startLine, endLine, excerpt: string(value['excerpt'], 'citation excerpt', 16000), ...(value['nodeId'] === undefined ? {} : { nodeId: string(value['nodeId'], 'citation node', 4096) }), ...(value['edgeId'] === undefined ? {} : { edgeId: string(value['edgeId'], 'citation edge', 4096) }) };
+}
+function parseClaims(value: unknown): readonly InterpretationClaim[] {
+    if (!Array.isArray(value) || value.length > 8) throw new InterpretationError('Invalid claim citations');
+    return value.map((claim: unknown) => {
+        if (!object(claim) || !Array.isArray(claim['citations']) || !claim['citations'].length || claim['citations'].length > 16) throw new InterpretationError('Each claim requires citations');
+        return { text: string(claim['text'], 'claim text', 1000), citations: claim['citations'].map(parseCitation) };
+    });
+}
+export function parseClaimInterpretations(value: unknown): readonly ClaimInterpretation[] {
+    if (!Array.isArray(value)) return [];
+    return value.flatMap((entry: unknown) => {
+        if (!object(entry) || entry['status'] !== 'fresh' || entry['label'] !== 'AI 요약' || !Array.isArray(entry['validatedClaims'])) return [];
+        try {
+            const note = parseInterpretation(entry), claims = parseClaims(entry['validatedClaims']);
+            const urls = new Map<string, string>();
+            for (const claim of entry['validatedClaims']) {
+                if (!object(claim) || !Array.isArray(claim['citations'])) continue;
+                for (const citation of claim['citations']) if (object(citation) && typeof citation['url'] === 'string' && /^https?:\/\//u.test(citation['url'])) {
+                    const parsed = parseCitation(citation);
+                    urls.set(JSON.stringify(parsed), citation['url']);
+                }
+            }
+            return [{ targetId: note.targetId, sources: note.sources, validatedClaims: claims.map(claim => ({ ...claim, citations: claim.citations.map(citation => { const url = urls.get(JSON.stringify(citation)); return { ...citation, ...(url ? { url } : {}) }; }) })) }];
+        } catch (error) { if (!(error instanceof InterpretationError)) throw error; return []; }
+    });
+}
+export function interpretationEvidence(source: Pick<Source, 'path' | 'contentHash' | 'line'>, text: string, maximum = 16000) {
+    const lines = text.split('\n').slice(source.line - 1, source.line + 39), selected: string[] = [];
+    for (const line of lines) { if ([...selected, line].join('\n').length > maximum) break; selected.push(line); }
+    return { path: source.path, contentHash: source.contentHash, line: source.line, startLine: source.line, endLine: source.line + Math.max(0, selected.length - 1), excerpt: selected.join('\n') };
 }
 export function parseInterpretation(value: unknown): Interpretation {
     if (!object(value) || value['schemaVersion'] !== 1 || !Array.isArray(value['sources']) || !value['sources'].length || value['sources'].length > 10000) throw new InterpretationError('Invalid interpretation record');
@@ -30,7 +75,30 @@ export function parseInterpretation(value: unknown): Interpretation {
         return { path, contentHash, line };
     });
     if (new Set(sources.map(source => source.path)).size !== sources.length) throw new InterpretationError('Duplicate interpretation source');
-    return { schemaVersion: 1, targetId: string(value['targetId'], 'targetId', 4096), summary: string(value['summary'], 'summary (one or two sentences)', 1000), author: string(value['author'], 'AI author', 200), sources };
+    return { schemaVersion: 1, targetId: string(value['targetId'], 'targetId', 4096), summary: string(value['summary'], 'summary (one or two sentences)', 1000), author: string(value['author'], 'AI author', 200), sources, ...(value['claims'] === undefined ? {} : { claims: parseClaims(value['claims']) }) };
+}
+/** Verifies source locations and exact excerpts, never semantic entailment of AI prose. */
+export function validatedInterpretationClaims(note: Interpretation, graph: Graph, readText: (path: string) => string | undefined, hash: (text: string) => string, targets?: readonly InterpretationTarget[]): readonly InterpretationClaim[] {
+    if (!note.claims?.length || interpretationStatus(note, graph, targets) !== 'fresh') return [];
+    const texts = new Map<string, string>();
+    for (const source of note.sources) {
+        const text = readText(source.path);
+        if (text === undefined || hash(text) !== source.contentHash) return [];
+        texts.set(source.path, text);
+    }
+    const matches = (citation: InterpretationCitation, sources: readonly Source[]): boolean => sources.some(source => source.path === citation.path && source.contentHash === citation.contentHash && source.line <= citation.startLine && (source.endLine === undefined || source.endLine >= citation.endLine));
+    return note.claims.filter(claim => claim.citations.every(citation => {
+        const source = note.sources.find(entry => entry.path === citation.path && entry.contentHash === citation.contentHash);
+        const text = texts.get(citation.path);
+        if (!source || text === undefined) return false;
+        const lines = text.split('\n');
+        const supplied = interpretationEvidence(source, text);
+        if (!supplied.excerpt || citation.startLine < supplied.startLine || citation.endLine > supplied.endLine) return false;
+        if (citation.endLine > lines.length || lines.slice(citation.startLine - 1, citation.endLine).join('\n') !== citation.excerpt) return false;
+        if (citation.nodeId && !matches(citation, graph.nodes.find(node => node.id === citation.nodeId)?.sources ?? [])) return false;
+        if (citation.edgeId && !matches(citation, graph.edges.find(edge => edge.id === citation.edgeId)?.sources ?? [])) return false;
+        return true;
+    }));
 }
 export function interpretationTargets(graph: Graph, includeOverview = false): readonly InterpretationTarget[] {
     const modules = graph.nodes.filter(node => node.kind === 'module');

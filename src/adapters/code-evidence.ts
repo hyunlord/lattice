@@ -39,7 +39,8 @@ export function javascriptEvidence(text: string): { readonly exports: readonly J
                 if (defaultBinding && ["ava", "node:test"].includes(module)) bindings.set(defaultBinding, { name: defaultBinding, kind: "test-registration" });
                 const open = segment.findIndex(value => value.value === "{"), close = segment.findIndex(value => value.value === "}");
                 for (const entry of namedBindings(open < 0 ? [] : segment.slice(open + 1, close))) {
-                    if (["node:test", "vitest", "@jest/globals"].includes(module) && ["test", "it"].includes(entry.imported)) bindings.set(entry.local, { name: entry.imported, kind: "test-registration" });
+                    if (["node:test", "@jest/globals"].includes(module) && ["test", "it"].includes(entry.imported)) bindings.set(entry.local, { name: entry.imported, kind: "test-registration" });
+                    else if (!module.startsWith(".") && ["test", "it"].includes(entry.imported)) bindings.set(entry.local, { name: entry.imported, kind: "test-registration-candidate" });
                     if (module === "tsd" && /^expect(?:Type|Error|Assignable|NotAssignable|NotType|Deprecated|NotDeprecated|Never)$/u.test(entry.imported)) bindings.set(entry.local, { name: entry.imported, kind: "type-assertion" });
                 }
             }
@@ -61,6 +62,10 @@ export function javascriptEvidence(text: string): { readonly exports: readonly J
                     while (++cursor < tokens.length && nesting) { if (tokens[cursor]?.value === "<") nesting++; if (tokens[cursor]?.value === ">") nesting--; }
                 }
                 const argument = tokens[cursor + 1];
+                if (binding.kind === "test-registration-candidate") {
+                    const callback = tokens.slice(cursor + 3, cursor + 14);
+                    if (tokens[cursor + 2]?.value !== "," || !callback.some((value, offset) => value.value === "function" || (value.value === "=" && callback[offset + 1]?.value === ">"))) continue;
+                }
                 if (tokens[cursor]?.value === "(" && (binding.kind === "type-assertion" || argument?.kind === "string")) verificationNames.push({ name: binding.kind === "type-assertion" ? binding.name : argument?.value ?? "", line: token.line, kind: binding.kind });
             }
         }

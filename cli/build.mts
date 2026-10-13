@@ -20,7 +20,7 @@ import { analyzeLogic } from '../dist/adapters/logic-analysis.js';
 import { logicParserVersion, parseLogicFacts } from './logic-parser.mjs';
 import { decodeLogicFacts } from './logic-facts-decode.mjs';
 
-export function buildRepository(options: Options, historical?: RepositoryReader, observed?: ReturnType<typeof observeRepository>) {
+export function buildRepository(options: Options, historical?: RepositoryReader, observed?: ReturnType<typeof observeRepository>, progress?: (phase: 'extract' | 'resolve') => void) {
     if (options.output !== undefined) throw new Error('build takes --root and --lens, not an output directory');
     const { root } = options;
     const { repository, lens, lensInput, coverage, selected, codeInputs, fingerprint, inputDiagnostics, graft: graftObservation } = observed ?? observeRepository(options, historical);
@@ -32,6 +32,7 @@ export function buildRepository(options: Options, historical?: RepositoryReader,
         return { ...source, revision: repository.commit, url: `${url}#L${source.line}` };
     };
     const cache = extractionCache(root, options.cacheDir);
+    progress?.('extract');
     const { records, documents, modules: extractedModules, files, inputs: recordInputs, diagnostics } = collectInputs({ selected, lens, sourceLink, cache });
     const modules = publicTypeUsage(extractedModules, selected.filter(input => input.format === 'code').map(input => input.input));
     const metadata = selected.map(selection => selection.input);
@@ -43,6 +44,7 @@ export function buildRepository(options: Options, historical?: RepositoryReader,
         const module = moduleByPath.get(selection.path);
         return module ? [logicCache.extract(selection.input, { format: 'logic', selector: logicParserVersion }, () => parseLogicFacts(selection.input, module.language), decodeLogicFacts)] : [];
     });
+    progress?.('resolve');
     const rawLogic = analyzeLogic(logicFacts, modules, packageNodes, metadata);
     const rawGraft = buildGraft(graftObservation, selected, sourceLink);
     const reconciled = reconcileLogicGraft(rawLogic, rawGraft);
@@ -94,5 +96,5 @@ export function buildRepository(options: Options, historical?: RepositoryReader,
     const constructGraph = ownsDraft ? createGraphFromOwnedDraft : createGraph;
     const graph = constructGraph({ repository: { name: repository.name, ...(repository.remoteUrl ? { remoteUrl: repository.remoteUrl } : {}), ...(repository.commit ? { commit: repository.commit } : {}), dirty: repository.dirty, sourceFingerprint: digest(canonicalJson(inputs)) }, nodes: interpreted.nodes, edges: interpreted.edges, facets: interpreted.facets, findings, views: interpreted.views ?? [], snapshots: [], lensDigest: lensInput?.contentHash ?? null, adapterVersions: { buildManifests: '0.1', logic: logicParserVersion, automaticFindings: '0.1', json: '0.1', ...(inputs.some(input => /\.ya?ml$/iu.test(input.path)) ? { yaml: '0.1' } : {}), ...(inputs.some(input => /\.csv$/iu.test(input.path)) ? { csv: '0.1' } : {}), ...(documents.length ? { markdown: '0.1' } : {}), ...(modules.length ? { code: '0.2' } : {}), ...(lens?.codeLinks.length ? { codeSupport: '0.1' } : {}), ...(lens ? { lens: '0.1' } : {}), ...(graftObservation ? { graft: graftAdapterVersion } : {}), references: '0.1' }, inputs }, digest);
     const media = resolveMediaAssets(root, graph.nodes, parseMediaConfig(interpreted.presentation?.['media']));
-    return { fingerprint, media, extraction: { stats: cache.stats, logicStats: logicCache.stats, manifest: [...cache.manifest, ...logicCache.manifest] }, graph, presentation: { ...outputs.presentation, inputDiagnostics: visibleInputDiagnostics, logicStats: logic.stats, interpretations: readInterpretations(root, graph, historical), draftInterpretation: readDraftStatus(root, graph, historical) ?? null, mediaManifest: media.manifest }, diagnostics: ownsDraft ? [...visibleInputDiagnostics, ...outputs.diagnostics] : outputs.diagnostics, coverage };
+    return { fingerprint, media, extraction: { stats: cache.stats, logicStats: logicCache.stats, manifest: [...cache.manifest, ...logicCache.manifest] }, graph, presentation: { ...outputs.presentation, inputDiagnostics: visibleInputDiagnostics, logicStats: logic.stats, interpretations: readInterpretations(root, graph, historical, options.readOnlySource ? repository : undefined), draftInterpretation: readDraftStatus(root, graph, historical) ?? null, mediaManifest: media.manifest }, diagnostics: ownsDraft ? [...visibleInputDiagnostics, ...outputs.diagnostics] : outputs.diagnostics, coverage };
 }

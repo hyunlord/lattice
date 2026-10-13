@@ -118,9 +118,9 @@ function verifyObservation(before: WorkingMetadata, after: WorkingMetadata) {
     if (!sameRepository(before, after)) throw new Error('Repository changed while reading inputs; retry the build');
 }
 export function observeRepository(options: Options, historical?: RepositoryReader) {
-    const repository = historical ?? workingRepository(options.root, options.cacheDir);
+    const repository = historical ?? workingRepository(options.root, options.cacheDir, options.readOnlySource);
     const observed = observeInputs(options, repository, historical);
-    if (!historical) verifyObservation(repository, workingRepository(options.root, options.cacheDir));
+    if (!historical) verifyObservation(repository, workingRepository(options.root, options.cacheDir, options.readOnlySource));
     return observed;
 }
 export async function observeRepositoryAsync(options: Options) {
@@ -128,7 +128,7 @@ export async function observeRepositoryAsync(options: Options) {
     if (!base) { base = new SourceObservationCache(options.root); sourceCaches.set(options, base); }
     let cache = base.fork();
     const previous = verifiedRepositories.get(options);
-    const pending = workingRepositoryAsync(options.root, options.cacheDir);
+    const pending = workingRepositoryAsync(options.root, options.cacheDir, undefined, options.readOnlySource);
     let speculative: { readonly value: ReturnType<typeof observeInputs>; } | { readonly error: unknown; } | undefined;
     if (previous) {
         try { cache.prune(previous.paths); speculative = { value: observeInputs(options, withWorkingCache(previous, cache)) }; }
@@ -143,7 +143,7 @@ export async function observeRepositoryAsync(options: Options) {
         cache = base.fork(); cache.prune(repository.paths);
         observed = observeInputs(options, withWorkingCache(repository, cache));
     }
-    verifyObservation(repository, await workingRepositoryAsync(options.root, options.cacheDir));
+    verifyObservation(repository, await workingRepositoryAsync(options.root, options.cacheDir, undefined, options.readOnlySource));
     cache.verify();
     const { name, remoteUrl, commit, dirty, paths } = repository;
     verifiedRepositories.set(options, { name, ...(remoteUrl === undefined ? {} : { remoteUrl }), ...(commit === undefined ? {} : { commit }), dirty, paths });

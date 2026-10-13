@@ -1,3 +1,6 @@
+import { openShell } from './open-shell.mjs';
+import { launchBrowser } from './open.mjs';
+import type { OpenProgress } from './open-progress.mjs';
 import type { Options } from './types.mjs';
 import { errorCode } from './types.mjs';
 import type { ServerResponse } from 'node:http';
@@ -11,7 +14,8 @@ import { fileURLToPath } from 'node:url';
 import { cacheDirectory } from './storage.mjs';
 
 const packageRoot = fileURLToPath(new URL('..', import.meta.url));
-export async function serve(options: Options) {
+export interface OpenSession { readonly browser: boolean; prepare(report: (progress: OpenProgress) => void, signal: AbortSignal): Promise<void>; }
+export async function serve(options: Options, opening?: OpenSession) {
     const port = options.port === undefined ? 4173 : Number(options.port);
     if (!Number.isInteger(port) || port < 0 || port > 65535) throw new Error('Port must be an integer from 0 to 65535');
     if (options.output !== undefined || options.force) throw new Error('serve accepts --root, --lens, --cache-dir, --port and --json');
@@ -25,16 +29,20 @@ export async function serve(options: Options) {
     mkdirSync(cache, { recursive: true });
     const liveDirectory = mkdtempSync(join(cache, 'serve-'));
     const producer = new Worker(new URL('./serve-worker.mjs', import.meta.url));
+    const abort = new AbortController();
+    let progress: OpenProgress = { phase: 'starting' };
     let ready = false, generation = 0, checks = 0, builds = 0, closing = false;
     let graphHash: string | null = null, error: string | null = null;
     let latestBuild: ServeUpdate['build'];
     let failure: Error | undefined;
-    const emit = (event: string, extra: object = {}) => { if (options.json && ready) console.log(JSON.stringify({ schemaVersion: 1, command: 'serve', event, generation: String(generation), hash: graphHash, ...extra })); };
-    const status = () => ({ generation: String(generation), checks, builds, error, mode: 'strict-content-polling' });
+    const emit = (event: string, extra: object = {}) => { if (options.json && ready) console.log(JSON.stringify({ schemaVersion: 1, command: opening ? 'open' : 'serve', event, generation: String(generation), hash: graphHash, ...extra })); };
+    const status = () => ({ generation: String(generation), checks, builds, error, mode: 'strict-content-polling', ...(opening ? { progress } : {}) });
     const publish = () => { for (const client of clients) client.write(`event: status\ndata: ${JSON.stringify(status())}\n\n`); };
+    const report = (update: OpenProgress) => { progress = { ...update, ...(update.inventory ?? progress.inventory ? { inventory: update.inventory ?? progress.inventory } : {}) }; publish(); emit('progress', { progress }); };
     let initialize: (() => void) | undefined;
     const initialized = new Promise<void>(resolve => { initialize = resolve; });
-    producer.on('message', (update: ServeUpdate) => {
+    producer.on('message', (update: ServeUpdate | { readonly progress: OpenProgress; }) => {
+        if ('progress' in update) { report(update.progress); return; }
         const previousError = error;
         generation = update.generation; checks = update.checks; builds = update.builds; error = update.error; graphHash = update.hash;
         const retained = new Set(update.generations.map(([, directory]) => directory));
@@ -42,7 +50,7 @@ export async function serve(options: Options) {
         generations.clear(); for (const [version, directory] of update.generations) generations.set(version, directory);
         if (retire.length) producer.postMessage({ retire } satisfies ServeCommand);
         for (const file of update.media) mediaFiles.set('/' + file.path, { bytes: Buffer.from(file.bytes), mimeType: file.mimeType });
-        if (update.build) { latestBuild = update.build; publish(); emit('rebuilt', latestBuild); }
+        if (update.build) { if (opening) report({ phase: 'complete' }); latestBuild = update.build; publish(); emit('rebuilt', latestBuild); }
         if (error !== previousError) {
             if (error) { if (!options.json) console.error(`lattice serve: ${error}`); emit('error', { ok: false, error: { message: error } }); }
             else emit('recovered');
@@ -66,7 +74,7 @@ export async function serve(options: Options) {
         if (url.pathname === '/' || url.pathname === '/index.html') {
             if (!files && url.searchParams.has('generation')) { send(503, 'text/plain', 'Generation expired; reload the page'); return; }
             let generationTemplate: string;
-            try { generationTemplate = files ? readFileSync(join(files, 'index.html'), 'utf8') : template; }
+            try { generationTemplate = files ? readFileSync(join(files, 'index.html'), 'utf8') : opening ? openShell() : template; }
             catch { send(500, 'text/plain', 'Viewer artifact unavailable'); return; }
             const config = `<meta name="lattice-generation" content="${version}"><script type="module" src="/__lattice/live-client.js"></script>`;
             send(200, 'text/html; charset=utf-8', generationTemplate.replace('</head>', `${config}</head>`)); return;
@@ -96,9 +104,10 @@ export async function serve(options: Options) {
     const close = () => {
         if (closing) return;
         closing = true;
+        abort.abort();
         for (const client of clients) client.end();
         server.close(); server.closeAllConnections();
-        producer.postMessage('stop');
+        if (opening) void producer.terminate(); else producer.postMessage('stop');
     };
     const exited = new Promise<void>(resolve => {
         producer.once('error', cause => { failure = cause; error = cause.message; publish(); close(); });
@@ -109,19 +118,28 @@ export async function serve(options: Options) {
     });
     process.once('SIGINT', close); process.once('SIGTERM', close);
     try {
-        producer.postMessage({ options, liveDirectory });
+        const listen = async () => {
+            await new Promise<void>((resolve, reject) => { server.once('error', reject); server.listen(port, '127.0.0.1', resolve); });
+            const address = server.address();
+            if (address === null || typeof address === 'string') throw new Error('Server did not bind a TCP address');
+            ready = true;
+            const url = `http://127.0.0.1:${address.port}/`;
+            if (options.json) emit(opening ? 'listening' : 'ready', { url, ...latestBuild });
+            else console.log(`Lattice serving ${url}`);
+            if (opening?.browser) void launchBrowser(url).catch(cause => { console.error(`Browser unavailable; open ${url}: ${cause instanceof Error ? cause.message : String(cause)}`); });
+        };
+        if (opening) { await listen(); await opening.prepare(report, abort.signal); }
+        if (closing) return;
+        producer.postMessage({ options, liveDirectory, progressive: Boolean(opening) });
         await initialized;
         if (failure) throw failure;
         if (closing) return;
         if (error !== null) throw new Error(error);
-        await new Promise<void>((resolve, reject) => { server.once('error', reject); server.listen(port, '127.0.0.1', resolve); });
-        const address = server.address();
-        if (address === null || typeof address === 'string') throw new Error('Server did not bind a TCP address');
-        ready = true;
-        if (options.json) emit('ready', { url: `http://127.0.0.1:${address.port}/`, ...latestBuild });
-        else console.log(`Lattice serving http://127.0.0.1:${address.port}/`);
+        if (!opening) await listen();
         await exited;
         if (failure) throw failure;
+    } catch (cause) {
+        if (!opening || failure || !abort.signal.aborted) { error = cause instanceof Error ? cause.message : String(cause); publish(); throw cause; }
     } finally {
         close(); await exited;
         process.removeListener('SIGINT', close); process.removeListener('SIGTERM', close);

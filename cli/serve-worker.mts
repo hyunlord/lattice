@@ -1,3 +1,5 @@
+import { openInventory } from './open-progress.mjs';
+import type { OpenProgress } from './open-progress.mjs';
 import { writeViewerAssets } from './export-assets.mjs';
 import { parentPort } from 'node:worker_threads';
 import { mkdirSync, rmSync, writeFileSync } from 'node:fs';
@@ -12,7 +14,7 @@ import { observeRepository } from './observation.mjs';
 import { cacheDirectory, persistBuild, prepareSnapshots, withCacheLock } from './storage.mjs';
 import type { Options } from './types.mjs';
 
-export interface ServeStart { readonly options: Options; readonly liveDirectory: string; }
+export interface ServeStart { readonly options: Options; readonly liveDirectory: string; readonly progressive?: boolean; }
 export type ServeCommand = 'stop' | { readonly retire: readonly string[]; };
 export interface ServeUpdate {
     readonly generation: number;
@@ -26,18 +28,23 @@ export interface ServeUpdate {
 }
 const port = parentPort;
 if (!port) throw new Error('Live producer requires a worker message port');
-port.once('message', ({ options, liveDirectory }: ServeStart) => {
+port.once('message', ({ options, liveDirectory, progressive }: ServeStart) => {
     const cache = cacheDirectory(options.root, options.cacheDir);
     const generations = new Map<string, string>();
     const retired = new Set<string>();
     let fingerprint: string | undefined, generation = 0, checks = 0, builds = 0;
     let error: string | null = null, hash: string | null = null;
     let timer: ReturnType<typeof setTimeout> | undefined;
+    const progress = (update: OpenProgress) => { if (progressive) port.postMessage({ progress: update }); };
     const refresh = () => {
         checks++;
         let media: ServeUpdate['media'] = [];
         let build: ServeUpdate['build'];
         try {
+            if (generation === 0) {
+                if (progressive) progress({ phase: 'inventory', inventory: openInventory(options) });
+                progress({ phase: 'observe' });
+            }
             const observedFingerprint = observeRepository(options).fingerprint;
             if (observedFingerprint !== fingerprint) {
                 const startedAt = performance.now();
@@ -53,7 +60,8 @@ port.once('message', ({ options, liveDirectory }: ServeStart) => {
                         const preparedIds = new Set<string>();
                         const preparedSnapshots = prepareSnapshots(cache, { onGraph: (snapshot, graph) => { for (const records of [graph.nodes, graph.edges, graph.facets, graph.findings, graph.views]) packs.identifiers(records); writeNodeDetails(graph, write, `details/snapshots/${snapshot.id}`, {}, { json: packs.json, reference: packs.reference }); packedGraph(snapshot.artifactPath, graph); preparedIds.add(snapshot.id); } });
                         const buildArtifacts = () => {
-                            const result = buildRepository(options);
+                            const result = buildRepository(options, undefined, undefined, phase => progress({ phase }));
+                            progress({ phase: 'export' });
                             const graph = persistBuild(options.root, result, options.cacheDir, { memoize: false, preparedSnapshots });
                             for (const records of [graph.nodes, graph.edges, graph.facets, graph.findings, graph.views]) packs.identifiers(records);
                             for (const snapshot of graph.snapshots) {

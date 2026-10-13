@@ -357,6 +357,14 @@ async function route(): Promise<void> {
         if (path === '/home' && firstOverview) {
             const data = firstOverview, layer = data.layers.find(item => item.id === (params.get('layer') ?? data.defaultLayer)) ?? data.layers[0];
             if (!layer) throw new Error('지도 층이 없습니다.');
+            if (layer.firstImpression && !['view', 'layer', 'stage', 'item', 'parent', 'page', 'scope'].some(key => params.has(key))) {
+                const { renderFirstImpression } = await import('./first-impression.js');
+                if (request !== routeRequest) return;
+                ++renderVersion; disposeScreen?.(); disposeScreen = undefined; main.replaceChildren(); activeLayer = ''; homeDeferred = false;
+                document.body.classList.add('picture-home');
+                renderFirstImpression(main, layer.firstImpression, { overview: data, sources, params });
+                document.title = `${data.repository.name} · Lattice`; return;
+            }
             const hydrate = layer.deferred && needsModel(params);
             const model = hydrate ? await overviewLoader.model(data, layer, params) : layer.model;
             if (request !== routeRequest) return;

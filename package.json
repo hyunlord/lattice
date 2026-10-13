@@ -1,7 +1,7 @@
 {
   "name": "@hyunlord/lattice",
-  "version": "0.0.0",
-  "description": "Deterministic repository system maps with declarative lenses",
+  "version": "0.1.0-l11",
+  "description": "Source-backed maps of repository components, dependencies and call paths",
   "type": "module",
   "private": true,
   "license": "MIT",

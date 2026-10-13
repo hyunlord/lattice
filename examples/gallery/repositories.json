@@ -1,0 +1,59 @@
+{
+  "version": 1,
+  "repositories": [
+    {
+      "id": "fzf",
+      "name": "fzf",
+      "description": "Command-line fuzzy finder.",
+      "stack": "Go",
+      "repository": "junegunn/fzf",
+      "commit": "c0a193e031f01fb50bf6f7be4381990a3753f7cf"
+    },
+    {
+      "id": "httpx",
+      "name": "HTTPX",
+      "description": "HTTP client for Python.",
+      "stack": "Python",
+      "repository": "encode/httpx",
+      "commit": "b5addb64f0161ff6bfe94c124ef76f6a1fba5254"
+    },
+    {
+      "id": "ripgrep",
+      "name": "ripgrep",
+      "description": "Line-oriented recursive search tool.",
+      "stack": "Rust",
+      "repository": "BurntSushi/ripgrep",
+      "commit": "3fce3b5bb0236da2df6d99672afb8a719642eca7"
+    },
+    {
+      "id": "nowinandroid",
+      "name": "Now in Android",
+      "description": "Android application with modular architecture.",
+      "stack": "Kotlin · Gradle",
+      "repository": "android/nowinandroid",
+      "commit": "a49ed253d75e61a2b6ab80a8da677b57437b08eb"
+    },
+    {
+      "id": "spring-petclinic",
+      "name": "Spring Petclinic",
+      "description": "Sample application built with Spring.",
+      "stack": "Java · Maven",
+      "repository": "spring-projects/spring-petclinic",
+      "commit": "500158f732419217507c7656904b8e6aa1bcc0d6"
+    },
+    {
+      "id": "excalidraw",
+      "name": "Excalidraw",
+      "description": "Collaborative virtual whiteboard.",
+      "stack": "TypeScript",
+      "repository": "excalidraw/excalidraw",
+      "commit": "e65eca999e071503efb893d3379a29fb96ff37c4"
+    }
+  ],
+  "lensExamples": [
+    {
+      "name": "Sow & Siege · configured game lens",
+      "url": "https://hyunlord.github.io/bs-mobile/"
+    }
+  ]
+}

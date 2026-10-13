@@ -7,6 +7,7 @@ import { performance } from 'node:perf_hooks';
 import { basename, dirname, join, resolve } from 'node:path';
 import { exportSite } from './export.mjs';
 import { initialize } from './init.mjs';
+import { openRepository } from './open.mjs';
 import { serve } from './serve.mjs';
 import { buildRepository } from './build.mjs';
 import { compareRepository } from './history.mjs';
@@ -117,7 +118,7 @@ try {
     if (command !== 'serve' && args.includes('--port')) throw new Error('--port is supported by serve');
     if (command !== 'export' && args.includes('--force')) throw new Error('--force is supported by export');
     if (!command || command === '--help' || command === 'help') {
-        const help = 'Lattice\n  lattice init --root <repository> [--no-global] [--json]\n  lattice build --root <repository> [--lens <lens.yaml|lens.json> | --no-lens] [--cache-dir <directory>] [--json]\n  lattice check --root <repository> [--lens <lens.yaml|lens.json> | --no-lens] [--cache-dir <directory>] [--json]\n  lattice diff <ref> --root <repository> [--lens <lens.yaml|lens.json> | --no-lens] [--cache-dir <directory>] [--json]\n  lattice export <directory> --root <repository> [--force] [--cache-dir <directory>] [--json]\n  lattice serve --root <repository> [--lens <lens.yaml|lens.json> | --no-lens] [--port <number>] [--cache-dir <directory>] [--json]\n  lattice summarize --root <repository> [--json] -- <external-command> [args...]\n  lattice mcp --root <repository> [--lens <lens>] [--cache-dir <directory>] [--viewer-url <URL>]\n\nJSON/YAML/CSV/Markdown/code build; optional declarative YAML/JSON lens; static home/list/detail.';
+        const help = 'Lattice\n  lattice open <public-GitHub-HTTPS-URL|local-directory> [--no-browser] [--json]\n  lattice init --root <repository> [--no-global] [--json]\n  lattice build --root <repository> [--lens <lens.yaml|lens.json> | --no-lens] [--cache-dir <directory>] [--json]\n  lattice check --root <repository> [--lens <lens.yaml|lens.json> | --no-lens] [--cache-dir <directory>] [--json]\n  lattice diff <ref> --root <repository> [--lens <lens.yaml|lens.json> | --no-lens] [--cache-dir <directory>] [--json]\n  lattice export <directory> --root <repository> [--force] [--cache-dir <directory>] [--json]\n  lattice serve --root <repository> [--lens <lens.yaml|lens.json> | --no-lens] [--port <number>] [--cache-dir <directory>] [--json]\n  lattice summarize --root <repository> [--json] -- <external-command> [args...]\n  lattice mcp --root <repository> [--lens <lens>] [--cache-dir <directory>] [--viewer-url <URL>]\n\nJSON/YAML/CSV/Markdown/code build; optional declarative YAML/JSON lens; static home/list/detail.';
         if (jsonRequested) output('help', { text: help });
         else console.log(help);
     } else if (command === 'init') { const opts = options(args); const result = initialize(opts); if (opts.json) output(command, result); }
@@ -136,6 +137,7 @@ try {
     else if (command === 'check') check(options(args));
     else if (command === 'diff') diff(options(args));
     else if (command === 'mcp') await mcp(options(args));
+    else if (command === 'open') await openRepository(args);
     else if (command === 'serve') await serve(options(args));
     else if (command === 'export') { const opts = options(args); withCacheLock(opts.root, () => { const result = exportSite(opts); if (opts.json) output(command, result); }, opts.cacheDir); }
     else throw new Error(`Unknown command: ${command}`);
