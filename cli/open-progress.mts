@@ -1,4 +1,4 @@
-import { extractPackageDescription } from '../dist/index.js';
+import { extractMarkdown, extractPackageDescription } from '../dist/index.js';
 import { workingRepository, InputSizeError } from './repository.mjs';
 import { inInputScope } from './inputs.mjs';
 import { digest } from './storage.mjs';
@@ -36,7 +36,15 @@ export function openInventory(options: Options): OpenInventory {
     if (!description) {
         const path = paths.find(path => /^readme(?:\.md|\.rst|\.markdown)?$/iu.test(path));
         if (path) {
-            try { const text = repository.readText(path); if (text) description = { path, text: text.slice(0, 1200), contentHash: digest(text) }; }
+            try {
+                const text = repository.readText(path);
+                if (text) {
+                    const contentHash = digest(text);
+                    const attributes = extractMarkdown({ path, text, contentHash }).nodes[0]?.attributes;
+                    const source = attributes?.['sourceIntroduction'] ?? attributes?.['sourceDescription'];
+                    if (object(source) && typeof source['text'] === 'string') description = { path, text: source['text'], contentHash };
+                }
+            }
             catch (error) { if (!(error instanceof InputSizeError)) throw error; }
         }
     }

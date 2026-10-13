@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { spawn, spawnSync } from 'node:child_process';
-import { mkdtempSync, writeFileSync, existsSync, rmSync, mkdirSync } from 'node:fs';
+import { mkdtempSync, writeFileSync, existsSync, rmSync, mkdirSync, realpathSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 import { once } from 'node:events';
@@ -99,4 +99,38 @@ test('read-only source mode detects modified bytes without executing Git clean/p
         assert.equal(existsSync(join(root, 'FILTER_RAN')), false);
         assert.equal(existsSync(join(root, 'PROCESS_RAN')), false);
     } finally { rmSync(root, { recursive: true, force: true }); }
+});
+
+test('partial inventory uses README prose instead of badges, headings or fenced examples', async () => {
+    const { openInventory } = await import('../bin/open-progress.mjs');
+    const { createHash } = await import('node:crypto');
+    const root = realpathSync(mkdtempSync(join(tmpdir(), 'lattice-open-prose-')));
+    const readme = '# Orchard\n\n[![Build](https://example.invalid/badge.svg)](https://example.invalid/build)\n\n```sh\nrun-example --not-a-description\n```\n\nOrchard is a **small library** for [harvesting](https://example.invalid/docs) fruit. It groups ripe crops by season.\n\n## Installation\n\nRun the setup command.\n';
+    writeFileSync(join(root, 'README.md'), readme);
+    try {
+        const inventory = openInventory({ root, readOnlySource: true });
+        assert.equal(inventory.description?.text, 'Orchard is a small library for harvesting fruit. It groups ripe crops by season.');
+        assert.equal(inventory.description?.path, 'README.md');
+        assert.equal(inventory.description?.contentHash, createHash('sha256').update(readme).digest('hex'));
+        assert.equal(inventory.files, 1);
+    } finally { rmSync(root, { recursive: true, force: true }); }
+});
+
+test('partial inventory retains file evidence when README has no descriptive prose', async () => {
+    const { openInventory } = await import('../bin/open-progress.mjs');
+    const root = realpathSync(mkdtempSync(join(tmpdir(), 'lattice-open-no-prose-')));
+    writeFileSync(join(root, 'README.md'), '# Orchard\n\n[![Build](https://example.invalid/badge.svg)](https://example.invalid/build)\n\n```sh\nrun-example\n```\n');
+    try {
+        const inventory = openInventory({ root, readOnlySource: true });
+        assert.equal(inventory.description, undefined);
+        assert.equal(inventory.files, 1);
+        assert.deepEqual(inventory.paths, ['README.md']);
+    } finally { rmSync(root, { recursive: true, force: true }); }
+});
+
+test('partial shell provides its own favicon and keeps source metadata behind evidence disclosure', async () => {
+    const { openShell } = await import('../bin/open-shell.mjs');
+    const html = openShell();
+    assert.match(html, /<link rel="icon" href="data:,">/u);
+    assert.match(html, /<details[^>]*><summary>[^<]+<\/summary><p id="open-description-source"[^>]*><\/p><\/details>/u);
 });
