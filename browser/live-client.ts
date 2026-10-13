@@ -37,7 +37,12 @@ function renderProgress(status: Record<string, unknown>) {
     const manifests = document.getElementById('open-manifests');
     if (manifests && Array.isArray(inventory['manifests'])) manifests.replaceChildren(...inventory['manifests'].filter(object).map(manifest => {
         const details = document.createElement('details'), summary = document.createElement('summary'), excerpt = document.createElement('pre');
-        summary.textContent = typeof manifest['path'] === 'string' ? manifest['path'] : '';
+        const path = typeof manifest['path'] === 'string' ? manifest['path'] : '';
+        const segments = path.split('/');
+        segments.forEach((segment, index) => {
+            summary.append(document.createTextNode(segment + (index < segments.length - 1 ? '/' : '')));
+            if (index < segments.length - 1) summary.append(document.createElement('wbr'));
+        });
         excerpt.textContent = typeof manifest['excerpt'] === 'string' ? manifest['excerpt'] : '';
         details.append(summary, excerpt); return details;
     }));
