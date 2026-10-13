@@ -22,4 +22,6 @@ The unscoped npm package `lattice` is owned by another project. This delivery us
 
 The public gallery is Lattice's own site with six non-game repository examples. The configured game map remains a separately labelled lens example. Consumer sources and Charter & Kin were not modified. GitDiagram's public documentation was accessible, but matching diagrams for the frozen source revisions were not verified; the optional comparative arm is N/A, not zero.
 
-Comparative scores, launch measurements and publication verification are recorded separately after their actual runs; no pending result in this document is a pass.
+Installed-package timings and preserved failures are recorded in [startup.md](startup.md) with [machine-readable observations](startup.json). Comparative scores and publication verification remain separate; no pending result in this document is a pass.
+
+The actual six-map gallery passed twelve first-screen checks for language, pinned source links, browser errors, overflow and deferred graph loading. QA found and fixed local-clone source URLs, gallery hash-route language selection, long partial-inventory manifest paths, and expanded mobile evidence hashes. After the one-rule evidence wrapping fix, all twelve expanded views had zero overflow/errors and retained exact source text. These failures remain in the local QA artifacts; corrected views do not erase the initial observations.
