@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import ts from 'typescript';
 import { bfsRoute } from './fixtures/dependency-bfs-oracle.mjs';
-import { orthogonalRoute, reserveDependencyRoute, dependencyRouteIntersects } from '../viewer/dependency-layout.js';
+import { orthogonalRoute, reserveDependencyRoute, dependencyRouteIntersects, createOwnedDependencyRouter } from '../viewer/dependency-layout.js';
 
 const source = readFileSync(new URL('../viewer/dependency-layout.ts', import.meta.url), 'utf8');
 const file = ts.createSourceFile('routing.ts', source, ts.ScriptTarget.Latest, true);
@@ -101,16 +101,24 @@ test('dense geometry preserves all twelve frozen BFS routes with bounded specula
     const fixture = JSON.parse(readFileSync(new URL('./fixtures/dependency-dense-geometry.json', import.meta.url), 'utf8'));
     const packageSource = readFileSync(new URL('../viewer/dependency-package-arrows.js', import.meta.url), 'utf8').replace(/^import .*$/gm, '').replace(/export /g, '');
     let attempts = 0, fallbacks = 0;
-    const route = new Function('orthogonalRoute', 'reserveDependencyRoute', 'dependencyRouteIntersects', packageSource + ';return routePackageDependencies;')((start, end, space) => {
-        attempts++;
-        const stats = { probe: 0, bfs: [] }, baseline = [];
-        const actual = measured(start, end, space, stats);
-        assert.deepEqual(actual, bfsRoute(start, end, space, baseline));
-        const distance = Math.abs(Math.round(start.x / 8) - Math.round(end.x / 8)) + Math.abs(Math.round(start.y / 8) - Math.round(end.y / 8));
-        assert.ok(stats.probe <= distance);
-        if (stats.bfs.length) { fallbacks++; assert.deepEqual(stats.bfs, baseline); }
-        return actual;
-    }, reserveDependencyRoute, dependencyRouteIntersects);
+    const checkedFactory = (width, height) => {
+        const router = createOwnedDependencyRouter(width, height), occupied = new Set();
+        return {
+            reserve(points) { router.reserve(points); reserveDependencyRoute(points, width, occupied); }, route(start, end, obstacles) {
+                const space = { width, height, obstacles, occupied };
+                attempts++;
+                const stats = { probe: 0, bfs: [] }, baseline = [];
+                const actual = measured(start, end, space, stats);
+                assert.deepEqual(actual, bfsRoute(start, end, space, baseline));
+                const distance = Math.abs(Math.round(start.x / 8) - Math.round(end.x / 8)) + Math.abs(Math.round(start.y / 8) - Math.round(end.y / 8));
+                assert.ok(stats.probe <= distance);
+                if (stats.bfs.length) { fallbacks++; assert.deepEqual(stats.bfs, baseline); }
+                assert.deepEqual(router.route(start, end, obstacles), actual, 'owned reservations preserve the instrumented public path');
+                return actual;
+            }
+        };
+    };
+    const route = new Function('createOwnedDependencyRouter', 'dependencyRouteIntersects', packageSource + ';return routePackageDependencies;')(checkedFactory, dependencyRouteIntersects);
     const actual = route(fixture.flows, new Map(fixture.boxes), fixture.width, fixture.height, flow => flow.labelWidth);
     assert.equal(actual.length, 12);
     assert.deepEqual(actual, fixture.expected);

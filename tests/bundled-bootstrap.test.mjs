@@ -26,16 +26,18 @@ async function start(modules, transform = bytes => bytes) {
         querySelector(selector) { return selector.includes('lattice-generation') ? { content: 'generation-a' } : { nonce: 'approved' }; },
         getElementById: () => ({ replaceChildren(message) { messages.push(message.textContent); finish(); } }),
         createElement: () => new Element(),
-        head: { append(script) {
-            events.push('append');
-            assert.equal(script.nonce, 'approved');
-            objects.get(script.src).text().then(source => {
-                document.currentScript = script;
-                new Script(source).runInContext(context);
-                script.dispatchEvent(new Event('load'));
-                setImmediate(finish);
-            }).catch(error => { messages.push(error.message); script.dispatchEvent(new Event('error')); });
-        } },
+        head: {
+            append(script) {
+                events.push('append');
+                assert.equal(script.nonce, 'approved');
+                objects.get(script.src).text().then(source => {
+                    document.currentScript = script;
+                    new Script(source).runInContext(context);
+                    script.dispatchEvent(new Event('load'));
+                    setImmediate(finish);
+                }).catch(error => { messages.push(error.message); script.dispatchEvent(new Event('error')); });
+            }
+        },
     };
     context = createContext({
         document, crypto: webcrypto, TextDecoder, Uint8Array, Blob, AbortSignal, DecompressionStream,

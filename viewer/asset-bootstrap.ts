@@ -57,7 +57,7 @@ async function publishBundle(chunks: readonly Uint8Array<ArrayBuffer>[], entry: 
     const script = document.createElement('script'); script.dataset['latticeEntry'] = entry;
     const bootstrap = document.querySelector<HTMLScriptElement>('script[src$="asset-bootstrap.js"]'); if (bootstrap?.nonce) script.nonce = bootstrap.nonce;
     const url = URL.createObjectURL(new Blob([...chunks], { type: 'text/javascript' })); script.src = url;
-    let detach = (): void => {};
+    let detach = (): void => { };
     try {
         await new Promise<void>((resolve, reject) => {
             let started = false;

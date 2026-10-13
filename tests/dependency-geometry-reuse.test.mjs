@@ -20,8 +20,8 @@ test('shared snapshot preserves exact relative obstacles and measures every sele
     const item = fixture(), result = item.read();
     assert.deepEqual(JSON.parse(JSON.stringify(result.rectangles.get('a'))), { x: 10, y: 20, width: 120, height: 80 });
     assert.deepEqual(JSON.parse(JSON.stringify(result.rectangles.get('caption:0'))), { x: 15, y: 5, width: 100, height: 15 });
-    assert.deepEqual(item.state.measured, ['3', '3+1']);
-    assert.equal(result.labelWidths.get(item.scene.flows[0]), 7); assert.equal(result.labelWidths.get(item.scene.flows[1]), 21);
+    assert.deepEqual(item.state.measured, ['3', '4']);
+    assert.equal(result.labelWidths.get(item.scene.flows[0]), 7); assert.equal(result.labelWidths.get(item.scene.flows[1]), 7);
     assert.equal(item.state.children.length, 0); assert.equal(typeof result.key, 'string'); assert.equal(item.read().key, result.key);
 });
 for (const [name, change] of [

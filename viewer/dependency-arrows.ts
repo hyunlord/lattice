@@ -14,7 +14,7 @@ export function drawDependencyArrows(scene: ArrowScene): readonly DependencyPair
     graph.replaceChildren(); graph.dataset['unrouted'] = '0'; graph.dataset['unplacedLabels'] = '0'; graph.dataset['sharedFallbacks'] = '0'; graph.dataset['unroutedPairs'] = ''; graph.setAttribute('viewBox', `0 0 ${bounds.width} ${bounds.height}`); graph.setAttribute('width', String(bounds.width)); graph.setAttribute('height', String(bounds.height));
     const markerId = `dependency-arrow-${crypto.randomUUID()}`; const defs = svg('defs'), marker = svg('marker'); marker.id = markerId;
     for (const [key, value] of Object.entries({ viewBox: '0 0 10 10', refX: '9', refY: '5', markerWidth: '5', markerHeight: '5', orient: 'auto-start-reverse' })) marker.setAttribute(key, value);
-    const head = svg('path'); head.setAttribute('d', 'M0 0L10 5L0 10Z'); head.classList.add('lm-arrow-normal'); marker.append(head); defs.append(marker); graph.append(defs);
+    const head = svg('path'); head.setAttribute('d', 'M0 0L10 5L0 10Z'); head.setAttribute('fill', 'context-stroke'); marker.append(head); defs.append(marker); graph.append(defs);
     const rectangles = new Map<string, Obstacle>();
     for (const [id, box] of boxes) { const rect = box.getBoundingClientRect(); rectangles.set(id, { x: rect.left - bounds.left, y: rect.top - bounds.top, width: rect.width, height: rect.height }); }
     const obstacleByElement = new Map<HTMLElement, Obstacle>(); const cardObstacles = new Map<string, Obstacle>();

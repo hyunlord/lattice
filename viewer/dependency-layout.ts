@@ -112,6 +112,66 @@ export function orthogonalRoute(start: Point, end: Point, space: RouteSpace): re
     return route.filter((p, index) => { const before = route[index - 1], after = route[index + 1]; return !before || !after || (before.x !== p.x || p.x !== after.x) && (before.y !== p.y || p.y !== after.y); });
 }
 
+function routeOwnedGrid(start: Point, end: Point, space: RouteSpace, edges: Uint8Array): readonly Point[] {
+    const step = 8; const columns = Math.ceil(space.width / step) + 1, rows = Math.ceil(space.height / step) + 1;
+    const cell = (p: Point) => Math.round(p.y / step) * columns + Math.round(p.x / step);
+    const point = (index: number): Point => ({ x: index % columns * step, y: Math.floor(index / columns) * step });
+    const from = cell(start), to = cell(end); const blocked = new Uint8Array(columns * rows);
+    for (const box of space.obstacles) for (let y = Math.max(0, Math.ceil(box.y / step)); y <= Math.min(rows - 1, Math.floor((box.y + box.height) / step)); y++) for (let x = Math.max(0, Math.ceil(box.x / step)); x <= Math.min(columns - 1, Math.floor((box.x + box.width) / step)); x++) blocked[y * columns + x] = 1;
+    blocked[from] = 0; blocked[to] = 0;
+    const probe = [from]; let probeCurrent = from;
+    while (probeCurrent !== to) {
+        const x = probeCurrent % columns, y = Math.floor(probeCurrent / columns);
+        let probeNext: number | undefined;
+        for (let direction = 0; direction < 4; direction++) {
+            const decreasing = direction === 0 ? x > to % columns : direction === 1 ? x < to % columns : direction === 2 ? y > Math.floor(to / columns) : y < Math.floor(to / columns);
+            if (!decreasing) continue;
+            const next = direction === 0 ? probeCurrent - 1 : direction === 1 ? probeCurrent + 1 : direction === 2 ? probeCurrent - columns : probeCurrent + columns;
+            if (!blocked[next] && !((edges[probeCurrent] ?? 0) & (1 << direction))) { probeNext = next; break; }
+        }
+        if (probeNext === undefined) break;
+        probeCurrent = probeNext; probe.push(probeCurrent);
+    }
+    // Parent+1 leaves zero unseen; cap per-call scratch at 4 MiB without limiting the search.
+    const indexed = probeCurrent !== to && Number.isSafeInteger(columns) && columns > 0 && Number.isSafeInteger(rows) && rows > 0 && blocked.length <= 1048576 && Number.isInteger(from) && from >= 0 && from < blocked.length && Number.isInteger(to) && to >= 0 && to < blocked.length ? new Int32Array(blocked.length) : undefined;
+    const queue = [from], previous = indexed ? {
+        has: (index: number): boolean => (indexed[index] ?? 0) !== 0,
+        set: (index: number, prior: number): void => { indexed[index] = prior + 1; },
+        get: (index: number): number | undefined => { const prior = indexed[index] ?? 0; return prior === 0 ? undefined : prior - 1; },
+    } : new Map<number, number>();
+    previous.set(from, from);
+    if (probeCurrent === to) for (let index = 1; index < probe.length; index++) { const current = probe[index], prior = probe[index - 1]; if (current !== undefined && prior !== undefined) previous.set(current, prior); }
+    for (let index = 0; index < queue.length && !previous.has(to); index++) {
+        const current = queue[index];
+        if (current === undefined)
+            continue;
+        const x = current % columns, y = Math.floor(current / columns);
+        // Grid-aligned Manhattan neighbors differ by one; stable ties stay left/right/up/down.
+        for (let pass = 0; pass < 2; pass++) for (let direction = 0; direction < 4; direction++) {
+            const decreasing = direction === 0 ? x > to % columns : direction === 1 ? x < to % columns : direction === 2 ? y > Math.floor(to / columns) : y < Math.floor(to / columns);
+            if (decreasing !== (pass === 0)) continue;
+            const next = direction === 0 ? (x > 0 ? current - 1 : -1) : direction === 1 ? (x < columns - 1 ? current + 1 : -1) : direction === 2 ? (y > 0 ? current - columns : -1) : (y < rows - 1 ? current + columns : -1);
+            if (next < 0 || blocked[next] || previous.has(next) || ((edges[current] ?? 0) & (1 << direction))) continue;
+            previous.set(next, current);
+            queue.push(next);
+        }
+    }
+    if (!previous.has(to))
+        return [];
+    const reversed: Point[] = [];
+    let current = to;
+    while (current !== from) {
+        reversed.push(point(current));
+        const prior = previous.get(current);
+        if (prior === undefined)
+            return [];
+        current = prior;
+    }
+    reversed.push(point(from));
+    const route = [start, ...reversed.reverse(), end];
+    return route.filter((p, index) => { const before = route[index - 1], after = route[index + 1]; return !before || !after || (before.x !== p.x || p.x !== after.x) && (before.y !== p.y || p.y !== after.y); });
+}
+
 export const dependencyLevels = dependencyComponents;
 
 /** Unconnected sources remain visible after the connected architecture. */
@@ -209,12 +269,40 @@ export function clearDependencyPort(box: Obstacle, preferred: number, above: boo
     return [preferred, ...candidates].find(x => obstacles.every(r => r === ownObstacle || x <= r.x || x >= r.x + r.width || Math.max(edge, outer) <= r.y || Math.min(edge, outer) >= r.y + r.height)) ?? preferred;
 }
 export function reserveDependencyRoute(points: readonly Point[], width: number, occupied: Set<string>): void {
+    visitReservedEdges(points, width, (before, after) => { occupied.add(before < after ? `${before}:${after}` : `${after}:${before}`); });
+}
+function visitReservedEdges(points: readonly Point[], width: number, visit: (before: number, after: number, x: number, y: number, nextX: number, nextY: number) => void): void {
     const columns = Math.ceil(width / 8) + 1;
     for (let i = 1; i < points.length; i++) {
         const a = points[i - 1], b = points[i]; if (!a || !b) continue;
         let x = Math.round(a.x / 8), y = Math.round(a.y / 8); const tx = Math.round(b.x / 8), ty = Math.round(b.y / 8);
-        while (x !== tx || y !== ty) { const before = y * columns + x; if (x !== tx) x += Math.sign(tx - x); else y += Math.sign(ty - y); const after = y * columns + x; occupied.add(before < after ? `${before}:${after}` : `${after}:${before}`); }
+        while (x !== tx || y !== ty) { const before = y * columns + x, oldX = x, oldY = y; if (x !== tx) x += Math.sign(tx - x); else y += Math.sign(ty - y); const after = y * columns + x; visit(before, after, oldX, oldY, x, y); }
     }
+}
+
+/** Reservations are private to one package drawing; numeric scratch adds at most one MiB. */
+export function createOwnedDependencyRouter(width: number, height: number) {
+    const columns = Math.ceil(width / 8) + 1, rows = Math.ceil(height / 8) + 1, count = columns * rows;
+    const occupied = new Set<string>();
+    let edges = Number.isSafeInteger(columns) && columns > 0 && Number.isSafeInteger(rows) && rows > 0 && Number.isSafeInteger(count) && count <= 1048576 ? new Uint8Array(count) : undefined;
+    const inside = (x: number, y: number): boolean => Number.isInteger(x) && x >= 0 && x < columns && Number.isInteger(y) && y >= 0 && y < rows;
+    return {
+        route(start: Point, end: Point, obstacles: readonly Obstacle[]): readonly Point[] {
+            const buffer = edges;
+            const fast = buffer !== undefined && inside(start.x / 8, start.y / 8) && inside(end.x / 8, end.y / 8);
+            return fast ? routeOwnedGrid(start, end, { width, height, obstacles }, buffer) : orthogonalRoute(start, end, { width, height, obstacles, occupied });
+        },
+        reserve(points: readonly Point[]): void {
+            visitReservedEdges(points, width, (before, after, x, y, nextX, nextY) => {
+                occupied.add(before < after ? `${before}:${after}` : `${after}:${before}`);
+                if (!edges) return;
+                if (!inside(x, y) || !inside(nextX, nextY)) { edges = undefined; return; }
+                const forward = nextY < y ? 4 : nextY > y ? 8 : nextX < x ? 1 : 2;
+                const reverse = nextY < y ? 8 : nextY > y ? 4 : nextX < x ? 2 : 1;
+                edges[before] = (edges[before] ?? 0) | forward; edges[after] = (edges[after] ?? 0) | reverse;
+            });
+        },
+    };
 }
 
 export function dependencyLabelLines(view: DependencyView): ReadonlyMap<string, readonly string[]> {
