@@ -1,0 +1,283 @@
+{
+  "id": "swift-argument-parser",
+  "repository": "apple/swift-argument-parser",
+  "commit": "efd239f0055b3d6b6cc122a786c46a0ea8d0235b",
+  "trackedFiles": 283,
+  "questions": [
+    {
+      "id": "q1",
+      "question": "What does swift-argument-parser do, and who calls or runs it?",
+      "answer": "The ArgumentParser library parses command-line arguments into command types and invokes run() or exits with a message. Swift command-line authors use property wrappers and ParsableCommand; Repeat is a concrete executable consumer. Equivalent terminology for the named source definitions is accepted; unsupported runtime claims are not.",
+      "requiredFacts": [
+        "The ArgumentParser library parses command-line arguments into command types and invokes run() or exits with a message.",
+        "Swift command-line authors use property wrappers and ParsableCommand; Repeat is a concrete executable consumer."
+      ],
+      "evidence": [
+        {
+          "path": "README.md",
+          "startLine": 5,
+          "endLine": 11,
+          "excerpt": "Begin by declaring a type that defines the information\nthat you need to collect from the command line.\nDecorate each stored property with one of `ArgumentParser`'s property wrappers,\nand then declare conformance to `ParsableCommand` and add the `@main` attribute.\n(Note, for `async` renditions of `run`, conform to `AsyncParsableCommand` rather\nthan `ParsableCommand`.)\nFinally, implement your command's logic in the `run()` method.",
+          "sha256": "9e5228fd51758b7a5f7328bb29ff3c6527655b074b3a986eb078f322116736bb"
+        },
+        {
+          "path": "README.md",
+          "startLine": 41,
+          "endLine": 47,
+          "excerpt": "The `ArgumentParser` library parses the command-line arguments,\ninstantiates your command type, and then either executes your `run()` method\nor exits with a useful message.\n\n`ArgumentParser` uses your properties' names and type information,\nalong with the details you provide using property wrappers,\nto supply useful error messages and detailed help:",
+          "sha256": "9e5228fd51758b7a5f7328bb29ff3c6527655b074b3a986eb078f322116736bb"
+        },
+        {
+          "path": "Examples/repeat/Repeat.swift",
+          "startLine": 12,
+          "endLine": 25,
+          "excerpt": "import ArgumentParser\n\n@main\nstruct Repeat: ParsableCommand {\n  @Option(help: \"How many times to repeat 'phrase'.\")\n  var count: Int? = nil\n\n  @Flag(help: \"Include a counter with each repetition.\")\n  var includeCounter = false\n\n  @Argument(help: \"The phrase to repeat.\")\n  var phrase: String\n\n  mutating func run() throws {",
+          "sha256": "5882114ba0cbd7c68a4de88c0a80c114c4f8975c8a0cb258c846743a979c2174"
+        }
+      ]
+    },
+    {
+      "id": "q2",
+      "question": "Name the principal components and their responsibilities.",
+      "answer": "ArgumentParser is the core library consumed by commands. ArgumentParserToolInfo is a separate target used by ArgumentParser and documentation generators. GenerateDoccReference and GenerateManual are command plugins backed by generator executables; Examples contains executable consumers and test targets verify them. Equivalent terminology for the named source definitions is accepted; unsupported runtime claims are not.",
+      "requiredFacts": [
+        "ArgumentParser is the core library consumed by commands.",
+        "ArgumentParserToolInfo is a separate target used by ArgumentParser and documentation generators.",
+        "GenerateDoccReference and GenerateManual are command plugins backed by generator executables; Examples contains executable consumers and test targets verify them."
+      ],
+      "evidence": [
+        {
+          "path": "Package.swift",
+          "startLine": 17,
+          "endLine": 41,
+          "excerpt": "  products: [\n    .library(\n      name: \"ArgumentParser\",\n      targets: [\"ArgumentParser\"]),\n    .plugin(\n      name: \"GenerateDoccReference\",\n      targets: [\"GenerateDoccReference\"]),\n    .plugin(\n      name: \"GenerateManual\",\n      targets: [\"GenerateManual\"]),\n  ],\n  dependencies: [],\n  targets: [\n    // Core Library\n    .target(\n      name: \"ArgumentParser\",\n      dependencies: [\"ArgumentParserToolInfo\"],\n      exclude: [\"CMakeLists.txt\"]),\n    .target(\n      name: \"ArgumentParserTestHelpers\",\n      dependencies: [\"ArgumentParser\", \"ArgumentParserToolInfo\"],\n      exclude: [\"CMakeLists.txt\"]),\n    .target(\n      name: \"ArgumentParserToolInfo\",\n      exclude: [\"CMakeLists.txt\"]),",
+          "sha256": "4eae0e28d24671d6ab75c2c7a0dd0326e6d48f8785510a3e403886fe8cf17d88"
+        },
+        {
+          "path": "Package.swift",
+          "startLine": 43,
+          "endLine": 76,
+          "excerpt": "    // Plugins\n    .plugin(\n      name: \"GenerateDoccReference\",\n      capability: .command(\n        intent: .custom(\n          verb: \"generate-docc-reference\",\n          description:\n            \"Generate a documentation reference for a specified target.\"),\n        permissions: [\n          .writeToPackageDirectory(\n            reason: \"This command generates documentation.\")\n        ]),\n      dependencies: [\"generate-docc-reference\"]),\n    .plugin(\n      name: \"GenerateManual\",\n      capability: .command(\n        intent: .custom(\n          verb: \"generate-manual\",\n          description: \"Generate a manual entry for a specified target.\")),\n      dependencies: [\"generate-manual\"]),\n\n    // Examples\n    .executableTarget(\n      name: \"roll\",\n      dependencies: [\"ArgumentParser\"],\n      path: \"Examples/roll\"),\n    .executableTarget(\n      name: \"math\",\n      dependencies: [\"ArgumentParser\"],\n      path: \"Examples/math\"),\n    .executableTarget(\n      name: \"repeat\",\n      dependencies: [\"ArgumentParser\"],\n      path: \"Examples/repeat\"),",
+          "sha256": "4eae0e28d24671d6ab75c2c7a0dd0326e6d48f8785510a3e403886fe8cf17d88"
+        },
+        {
+          "path": "Package.swift",
+          "startLine": 87,
+          "endLine": 106,
+          "excerpt": "    // Tools\n    .executableTarget(\n      name: \"generate-docc-reference\",\n      dependencies: [\"ArgumentParser\", \"ArgumentParserToolInfo\"],\n      path: \"Tools/generate-docc-reference\"),\n    .executableTarget(\n      name: \"generate-manual\",\n      dependencies: [\"ArgumentParser\", \"ArgumentParserToolInfo\"],\n      path: \"Tools/generate-manual\"),\n\n    // Tests\n    .testTarget(\n      name: \"ArgumentParserEndToEndTests\",\n      dependencies: [\"ArgumentParser\", \"ArgumentParserTestHelpers\"],\n      exclude: [\"CMakeLists.txt\"]),\n    .testTarget(\n      name: \"ArgumentParserExampleTests\",\n      dependencies: [\"ArgumentParserTestHelpers\"],\n      exclude: [\"Snapshots\"],\n      resources: [.copy(\"CountLinesTest.txt\")]),",
+          "sha256": "4eae0e28d24671d6ab75c2c7a0dd0326e6d48f8785510a3e403886fe8cf17d88"
+        }
+      ]
+    },
+    {
+      "id": "q3",
+      "question": "Which languages, build systems and package boundaries organize it?",
+      "answer": "Swift Package Manager declares swift-tools-version 6.0. ArgumentParser is the exported library target with a dependency on ArgumentParserToolInfo; plugins, executable examples and test targets are separately declared. Equivalent terminology for the named source definitions is accepted; unsupported runtime claims are not.",
+      "requiredFacts": [
+        "Swift Package Manager declares swift-tools-version 6.0.",
+        "ArgumentParser is the exported library target with a dependency on ArgumentParserToolInfo; plugins, executable examples and test targets are separately declared."
+      ],
+      "evidence": [
+        {
+          "path": "Package.swift",
+          "startLine": 1,
+          "endLine": 1,
+          "excerpt": "// swift-tools-version:6.0",
+          "sha256": "4eae0e28d24671d6ab75c2c7a0dd0326e6d48f8785510a3e403886fe8cf17d88"
+        },
+        {
+          "path": "Package.swift",
+          "startLine": 13,
+          "endLine": 41,
+          "excerpt": "import PackageDescription\n\nvar package = Package(\n  name: \"swift-argument-parser\",\n  products: [\n    .library(\n      name: \"ArgumentParser\",\n      targets: [\"ArgumentParser\"]),\n    .plugin(\n      name: \"GenerateDoccReference\",\n      targets: [\"GenerateDoccReference\"]),\n    .plugin(\n      name: \"GenerateManual\",\n      targets: [\"GenerateManual\"]),\n  ],\n  dependencies: [],\n  targets: [\n    // Core Library\n    .target(\n      name: \"ArgumentParser\",\n      dependencies: [\"ArgumentParserToolInfo\"],\n      exclude: [\"CMakeLists.txt\"]),\n    .target(\n      name: \"ArgumentParserTestHelpers\",\n      dependencies: [\"ArgumentParser\", \"ArgumentParserToolInfo\"],\n      exclude: [\"CMakeLists.txt\"]),\n    .target(\n      name: \"ArgumentParserToolInfo\",\n      exclude: [\"CMakeLists.txt\"]),",
+          "sha256": "4eae0e28d24671d6ab75c2c7a0dd0326e6d48f8785510a3e403886fe8cf17d88"
+        },
+        {
+          "path": "Package.swift",
+          "startLine": 64,
+          "endLine": 106,
+          "excerpt": "    // Examples\n    .executableTarget(\n      name: \"roll\",\n      dependencies: [\"ArgumentParser\"],\n      path: \"Examples/roll\"),\n    .executableTarget(\n      name: \"math\",\n      dependencies: [\"ArgumentParser\"],\n      path: \"Examples/math\"),\n    .executableTarget(\n      name: \"repeat\",\n      dependencies: [\"ArgumentParser\"],\n      path: \"Examples/repeat\"),\n    .executableTarget(\n      name: \"color\",\n      dependencies: [\"ArgumentParser\"],\n      path: \"Examples/color\"),\n    .executableTarget(\n      name: \"default-as-flag\",\n      dependencies: [\"ArgumentParser\"],\n      path: \"Examples/default-as-flag\"\n    ),\n\n    // Tools\n    .executableTarget(\n      name: \"generate-docc-reference\",\n      dependencies: [\"ArgumentParser\", \"ArgumentParserToolInfo\"],\n      path: \"Tools/generate-docc-reference\"),\n    .executableTarget(\n      name: \"generate-manual\",\n      dependencies: [\"ArgumentParser\", \"ArgumentParserToolInfo\"],\n      path: \"Tools/generate-manual\"),\n\n    // Tests\n    .testTarget(\n      name: \"ArgumentParserEndToEndTests\",\n      dependencies: [\"ArgumentParser\", \"ArgumentParserTestHelpers\"],\n      exclude: [\"CMakeLists.txt\"]),\n    .testTarget(\n      name: \"ArgumentParserExampleTests\",\n      dependencies: [\"ArgumentParserTestHelpers\"],\n      exclude: [\"Snapshots\"],\n      resources: [.copy(\"CountLinesTest.txt\")]),",
+          "sha256": "4eae0e28d24671d6ab75c2c7a0dd0326e6d48f8785510a3e403886fe8cf17d88"
+        }
+      ]
+    },
+    {
+      "id": "q4",
+      "question": "Where does the Repeat executable begin?",
+      "answer": "Examples/repeat/Repeat.swift declares @main struct Repeat: ParsableCommand. The inherited synchronous main() calls main(nil), which parses and calls command.run(). Equivalent terminology for the named source definitions is accepted; unsupported runtime claims are not.",
+      "requiredFacts": [
+        "Examples/repeat/Repeat.swift declares @main struct Repeat: ParsableCommand.",
+        "The inherited synchronous main() calls main(nil), which parses and calls command.run()."
+      ],
+      "evidence": [
+        {
+          "path": "Examples/repeat/Repeat.swift",
+          "startLine": 12,
+          "endLine": 25,
+          "excerpt": "import ArgumentParser\n\n@main\nstruct Repeat: ParsableCommand {\n  @Option(help: \"How many times to repeat 'phrase'.\")\n  var count: Int? = nil\n\n  @Flag(help: \"Include a counter with each repetition.\")\n  var includeCounter = false\n\n  @Argument(help: \"The phrase to repeat.\")\n  var phrase: String\n\n  mutating func run() throws {",
+          "sha256": "5882114ba0cbd7c68a4de88c0a80c114c4f8975c8a0cb258c846743a979c2174"
+        },
+        {
+          "path": "Sources/ArgumentParser/Parsable Types/ParsableCommand.swift",
+          "startLine": 159,
+          "endLine": 179,
+          "excerpt": "    do {\n      var command = try parseAsRoot(arguments)\n      try command.run()\n    } catch {\n      exit(withError: error)\n    }\n  }\n\n  /// Executes this command, or one of its subcommands, with the program's\n  /// command-line arguments.\n  ///\n  /// Instead of calling this method directly, you can add `@main` to the root\n  /// command for your command-line tool.\n  ///\n  /// This method parses an instance of this type, one of its subcommands, or\n  /// another built-in `ParsableCommand` type, from command-line arguments,\n  /// and then calls its `run()` method, exiting with a relevant error message\n  /// if necessary.\n  public static func main() {\n    self.main(nil)\n  }",
+          "sha256": "018ebcb67e439854f55256c92aecc155dfa8add50752d658ac47c29b36045444"
+        }
+      ]
+    },
+    {
+      "id": "q5",
+      "question": "Where is X, synchronous parse-then-run command execution, implemented?",
+      "answer": "ArgumentParser implements ParsableCommand.main(_:) in Sources/ArgumentParser/Parsable Types/ParsableCommand.swift. It calls parseAsRoot(arguments), invokes run(), and catches errors through exit(withError:). Equivalent terminology for the named source definitions is accepted; unsupported runtime claims are not.",
+      "requiredFacts": [
+        "ArgumentParser implements ParsableCommand.main(_:) in Sources/ArgumentParser/Parsable Types/ParsableCommand.swift.",
+        "It calls parseAsRoot(arguments), invokes run(), and catches errors through exit(withError:)."
+      ],
+      "evidence": [
+        {
+          "path": "Sources/ArgumentParser/Parsable Types/ParsableCommand.swift",
+          "startLine": 148,
+          "endLine": 165,
+          "excerpt": "  public static func main(_ arguments: [String]?) {\n    #if DEBUG\n    if #available(macOS 10.15, macCatalyst 13, iOS 13, tvOS 13, watchOS 6, *) {\n      if Self() is AsyncParsableCommand {\n        failAsyncPlatform(rootCommand: self)\n      } else if let asyncCommand = firstAsyncSubcommand(self) {\n        failAsyncHierarchy(rootCommand: self, subCommand: asyncCommand)\n      }\n    }\n    #endif\n\n    do {\n      var command = try parseAsRoot(arguments)\n      try command.run()\n    } catch {\n      exit(withError: error)\n    }\n  }",
+          "sha256": "018ebcb67e439854f55256c92aecc155dfa8add50752d658ac47c29b36045444"
+        }
+      ]
+    },
+    {
+      "id": "q6",
+      "question": "Which internal targets does A, generate-manual, directly use, and what proves the directions?",
+      "answer": "The generate-manual executable target directly depends on ArgumentParser and ArgumentParserToolInfo. Package.swift explicitly names both dependencies; this is declared target dependency evidence rather than proof of every runtime call. Equivalent terminology for the named source definitions is accepted; unsupported runtime claims are not.",
+      "requiredFacts": [
+        "The generate-manual executable target directly depends on ArgumentParser and ArgumentParserToolInfo.",
+        "Package.swift explicitly names both dependencies; this is declared target dependency evidence rather than proof of every runtime call."
+      ],
+      "evidence": [
+        {
+          "path": "Package.swift",
+          "startLine": 87,
+          "endLine": 95,
+          "excerpt": "    // Tools\n    .executableTarget(\n      name: \"generate-docc-reference\",\n      dependencies: [\"ArgumentParser\", \"ArgumentParserToolInfo\"],\n      path: \"Tools/generate-docc-reference\"),\n    .executableTarget(\n      name: \"generate-manual\",\n      dependencies: [\"ArgumentParser\", \"ArgumentParserToolInfo\"],\n      path: \"Tools/generate-manual\"),",
+          "sha256": "4eae0e28d24671d6ab75c2c7a0dd0326e6d48f8785510a3e403886fe8cf17d88"
+        }
+      ]
+    },
+    {
+      "id": "q7",
+      "question": "For R, starting Repeat with hello and no count, give the source-supported path and identify dispatch limits.",
+      "answer": "Repeat is the @main ParsableCommand. ParsableCommand.main() forwards to main(nil); main(_:) calls parseAsRoot, which constructs CommandParser and calls parse(arguments:), then dispatches command.run(). Repeat.run() defaults count to 2 and prints phrase twice when includeCounter is false. The returned ParsableCommand existential makes run() protocol dispatch; this is the source-supported normal path, not a measured run or a complete parser trace. Equivalent terminology for the named source definitions is accepted; unsupported runtime claims are not.",
+      "requiredFacts": [
+        "Repeat is the @main ParsableCommand.",
+        "ParsableCommand.main() forwards to main(nil); main(_:) calls parseAsRoot, which constructs CommandParser and calls parse(arguments:), then dispatches command.run().",
+        "Repeat.run() defaults count to 2 and prints phrase twice when includeCounter is false.",
+        "The returned ParsableCommand existential makes run() protocol dispatch; this is the source-supported normal path, not a measured run or a complete parser trace."
+      ],
+      "evidence": [
+        {
+          "path": "Examples/repeat/Repeat.swift",
+          "startLine": 14,
+          "endLine": 35,
+          "excerpt": "@main\nstruct Repeat: ParsableCommand {\n  @Option(help: \"How many times to repeat 'phrase'.\")\n  var count: Int? = nil\n\n  @Flag(help: \"Include a counter with each repetition.\")\n  var includeCounter = false\n\n  @Argument(help: \"The phrase to repeat.\")\n  var phrase: String\n\n  mutating func run() throws {\n    let repeatCount = count ?? 2\n\n    for i in 1...repeatCount {\n      if includeCounter {\n        print(\"\\(i): \\(phrase)\")\n      } else {\n        print(phrase)\n      }\n    }\n  }",
+          "sha256": "5882114ba0cbd7c68a4de88c0a80c114c4f8975c8a0cb258c846743a979c2174"
+        },
+        {
+          "path": "Sources/ArgumentParser/Parsable Types/ParsableCommand.swift",
+          "startLine": 63,
+          "endLine": 69,
+          "excerpt": "  public static func parseAsRoot(\n    _ arguments: [String]? = nil\n  ) throws -> ParsableCommand {\n    var parser = CommandParser(self)\n    let arguments = arguments ?? Array(CommandLine._staticArguments.dropFirst())\n    return try parser.parse(arguments: arguments)\n  }",
+          "sha256": "018ebcb67e439854f55256c92aecc155dfa8add50752d658ac47c29b36045444"
+        },
+        {
+          "path": "Sources/ArgumentParser/Parsable Types/ParsableCommand.swift",
+          "startLine": 159,
+          "endLine": 179,
+          "excerpt": "    do {\n      var command = try parseAsRoot(arguments)\n      try command.run()\n    } catch {\n      exit(withError: error)\n    }\n  }\n\n  /// Executes this command, or one of its subcommands, with the program's\n  /// command-line arguments.\n  ///\n  /// Instead of calling this method directly, you can add `@main` to the root\n  /// command for your command-line tool.\n  ///\n  /// This method parses an instance of this type, one of its subcommands, or\n  /// another built-in `ParsableCommand` type, from command-line arguments,\n  /// and then calls its `run()` method, exiting with a relevant error message\n  /// if necessary.\n  public static func main() {\n    self.main(nil)\n  }",
+          "sha256": "018ebcb67e439854f55256c92aecc155dfa8add50752d658ac47c29b36045444"
+        }
+      ]
+    },
+    {
+      "id": "q8",
+      "question": "If Y, ArgumentParserToolInfo target, changes, which direct target consumers are evidenced?",
+      "answer": "Package.swift declares ArgumentParser, ArgumentParserTestHelpers, generate-docc-reference, generate-manual and ArgumentParserToolInfoTests as direct target consumers. These are dependency edges, not proof that any given change changes their runtime behavior. Equivalent terminology for the named source definitions is accepted; unsupported runtime claims are not.",
+      "requiredFacts": [
+        "Package.swift declares ArgumentParser, ArgumentParserTestHelpers, generate-docc-reference, generate-manual and ArgumentParserToolInfoTests as direct target consumers.",
+        "These are dependency edges, not proof that any given change changes their runtime behavior."
+      ],
+      "evidence": [
+        {
+          "path": "Package.swift",
+          "startLine": 30,
+          "endLine": 41,
+          "excerpt": "    // Core Library\n    .target(\n      name: \"ArgumentParser\",\n      dependencies: [\"ArgumentParserToolInfo\"],\n      exclude: [\"CMakeLists.txt\"]),\n    .target(\n      name: \"ArgumentParserTestHelpers\",\n      dependencies: [\"ArgumentParser\", \"ArgumentParserToolInfo\"],\n      exclude: [\"CMakeLists.txt\"]),\n    .target(\n      name: \"ArgumentParserToolInfo\",\n      exclude: [\"CMakeLists.txt\"]),",
+          "sha256": "4eae0e28d24671d6ab75c2c7a0dd0326e6d48f8785510a3e403886fe8cf17d88"
+        },
+        {
+          "path": "Package.swift",
+          "startLine": 87,
+          "endLine": 95,
+          "excerpt": "    // Tools\n    .executableTarget(\n      name: \"generate-docc-reference\",\n      dependencies: [\"ArgumentParser\", \"ArgumentParserToolInfo\"],\n      path: \"Tools/generate-docc-reference\"),\n    .executableTarget(\n      name: \"generate-manual\",\n      dependencies: [\"ArgumentParser\", \"ArgumentParserToolInfo\"],\n      path: \"Tools/generate-manual\"),",
+          "sha256": "4eae0e28d24671d6ab75c2c7a0dd0326e6d48f8785510a3e403886fe8cf17d88"
+        },
+        {
+          "path": "Package.swift",
+          "startLine": 119,
+          "endLine": 125,
+          "excerpt": "    .testTarget(\n      name: \"ArgumentParserToolInfoTests\",\n      dependencies: [\"ArgumentParserToolInfo\"],\n      exclude: [\"Examples\"]),\n    .testTarget(\n      name: \"ArgumentParserUnitTests\",\n      dependencies: [\"ArgumentParser\", \"ArgumentParserTestHelpers\"],",
+          "sha256": "4eae0e28d24671d6ab75c2c7a0dd0326e6d48f8785510a3e403886fe8cf17d88"
+        }
+      ]
+    },
+    {
+      "id": "q9",
+      "question": "Which test or example exercises X, synchronous parse-then-run execution, and how does it enter?",
+      "answer": "RepeatExampleTests.repeatBasic invokes requireExecuteCommand with repeat hello and expects hello twice. Repeat is @main and adopts ParsableCommand, whose synchronous main parses then dispatches run; Repeat.run prints the phrase. This is source evidence of the test design, not a claim that the test was executed. Equivalent terminology for the named source definitions is accepted; unsupported runtime claims are not.",
+      "requiredFacts": [
+        "RepeatExampleTests.repeatBasic invokes requireExecuteCommand with repeat hello and expects hello twice.",
+        "Repeat is @main and adopts ParsableCommand, whose synchronous main parses then dispatches run; Repeat.run prints the phrase.",
+        "This is source evidence of the test design, not a claim that the test was executed."
+      ],
+      "evidence": [
+        {
+          "path": "Tests/ArgumentParserExampleTests/RepeatExampleTests.swift",
+          "startLine": 24,
+          "endLine": 32,
+          "excerpt": "  @Test func repeatBasic() throws {\n    try requireExecuteCommand(\n      command: \"repeat hello\",\n      expected: \"\"\"\n        hello\n        hello\n\n        \"\"\")\n  }",
+          "sha256": "0c40a1d3b5b56920c1d626c9658cf837bbb06f86b7cf2b5ee2fe44198436e1aa"
+        },
+        {
+          "path": "Examples/repeat/Repeat.swift",
+          "startLine": 14,
+          "endLine": 35,
+          "excerpt": "@main\nstruct Repeat: ParsableCommand {\n  @Option(help: \"How many times to repeat 'phrase'.\")\n  var count: Int? = nil\n\n  @Flag(help: \"Include a counter with each repetition.\")\n  var includeCounter = false\n\n  @Argument(help: \"The phrase to repeat.\")\n  var phrase: String\n\n  mutating func run() throws {\n    let repeatCount = count ?? 2\n\n    for i in 1...repeatCount {\n      if includeCounter {\n        print(\"\\(i): \\(phrase)\")\n      } else {\n        print(phrase)\n      }\n    }\n  }",
+          "sha256": "5882114ba0cbd7c68a4de88c0a80c114c4f8975c8a0cb258c846743a979c2174"
+        },
+        {
+          "path": "Sources/ArgumentParser/Parsable Types/ParsableCommand.swift",
+          "startLine": 159,
+          "endLine": 179,
+          "excerpt": "    do {\n      var command = try parseAsRoot(arguments)\n      try command.run()\n    } catch {\n      exit(withError: error)\n    }\n  }\n\n  /// Executes this command, or one of its subcommands, with the program's\n  /// command-line arguments.\n  ///\n  /// Instead of calling this method directly, you can add `@main` to the root\n  /// command for your command-line tool.\n  ///\n  /// This method parses an instance of this type, one of its subcommands, or\n  /// another built-in `ParsableCommand` type, from command-line arguments,\n  /// and then calls its `run()` method, exiting with a relevant error message\n  /// if necessary.\n  public static func main() {\n    self.main(nil)\n  }",
+          "sha256": "018ebcb67e439854f55256c92aecc155dfa8add50752d658ac47c29b36045444"
+        }
+      ]
+    },
+    {
+      "id": "q10",
+      "question": "Where does Z, the raw argument vector, enter and get transformed before command parsing?",
+      "answer": "ParsableCommand.parseAsRoot accepts an optional [String]. If nil it takes CommandLine._staticArguments and drops the executable name; it passes the resulting array to CommandParser.parse(arguments:). Equivalent terminology for the named source definitions is accepted; unsupported runtime claims are not.",
+      "requiredFacts": [
+        "ParsableCommand.parseAsRoot accepts an optional [String].",
+        "If nil it takes CommandLine._staticArguments and drops the executable name; it passes the resulting array to CommandParser.parse(arguments:)."
+      ],
+      "evidence": [
+        {
+          "path": "Sources/ArgumentParser/Parsable Types/ParsableCommand.swift",
+          "startLine": 54,
+          "endLine": 69,
+          "excerpt": "extension ParsableCommand {\n  /// Parses an instance of this type, or one of its subcommands, from\n  /// command-line arguments.\n  ///\n  /// - Parameter arguments: An array of arguments to use for parsing. If\n  ///   `arguments` is `nil`, this uses the program's command-line arguments.\n  /// - Returns: A new instance of this type, one of its subcommands, or a\n  ///   command type internal to the `ArgumentParser` library.\n  /// - Throws: If parsing fails.\n  public static func parseAsRoot(\n    _ arguments: [String]? = nil\n  ) throws -> ParsableCommand {\n    var parser = CommandParser(self)\n    let arguments = arguments ?? Array(CommandLine._staticArguments.dropFirst())\n    return try parser.parse(arguments: arguments)\n  }",
+          "sha256": "018ebcb67e439854f55256c92aecc155dfa8add50752d658ac47c29b36045444"
+        }
+      ]
+    }
+  ]
+}

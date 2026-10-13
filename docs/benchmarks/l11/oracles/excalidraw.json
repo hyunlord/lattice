@@ -1,0 +1,315 @@
+{
+  "id": "excalidraw",
+  "repository": "excalidraw/excalidraw",
+  "commit": "e65eca999e071503efb893d3379a29fb96ff37c4",
+  "trackedFiles": 1312,
+  "questions": [
+    {
+      "id": "excalidraw-q1",
+      "question": "What does Excalidraw do, and who runs or embeds it?",
+      "answer": "It is a virtual hand-drawn-style whiteboard. Browser users run excalidraw.com; application developers embed the React editor npm package. The hosted app adds collaboration, encryption and local-first storage; those app features must not all be attributed to the editor package.",
+      "requiredFacts": [
+        "Hand-drawn-style whiteboard",
+        "Browser users run the hosted app",
+        "Developers embed the React npm editor",
+        "Hosted-app features are distinguished from package capabilities"
+      ],
+      "evidence": [
+        {
+          "path": "README.md",
+          "startLine": 15,
+          "endLine": 19,
+          "excerpt": "<div align=\"center\">\n  <h2>\n    An open source virtual hand-drawn style whiteboard. </br>\n    Collaborative and end-to-end encrypted. </br>\n  <br />",
+          "sha256": "011eea74cbbf38fd263ec93a221f379466c557dc7587acfe93797201193a7e7a"
+        },
+        {
+          "path": "README.md",
+          "startLine": 54,
+          "endLine": 82,
+          "excerpt": "The Excalidraw editor (npm package) supports:\n\n- 💯&nbsp;Free & open-source.\n- 🎨&nbsp;Infinite, canvas-based whiteboard.\n- ✍️&nbsp;Hand-drawn like style.\n- 🌓&nbsp;Dark mode.\n- 🏗️&nbsp;Customizable.\n- 📷&nbsp;Image support.\n- 😀&nbsp;Shape libraries support.\n- 🌐&nbsp;Localization (i18n) support.\n- 🖼️&nbsp;Export to PNG, SVG & clipboard.\n- 💾&nbsp;Open format - export drawings as an `.excalidraw` json file.\n- ⚒️&nbsp;Wide range of tools - rectangle, circle, diamond, arrow, line, free-draw, eraser...\n- ➡️&nbsp;Arrow-binding & labeled arrows.\n- 🔙&nbsp;Undo / Redo.\n- 🔍&nbsp;Zoom and panning support.\n\n## Excalidraw.com\n\nThe app hosted at [excalidraw.com](https://excalidraw.com) is a minimal showcase of what you can build with Excalidraw. Its [source code](https://github.com/excalidraw/excalidraw/tree/master/excalidraw-app) is part of this repository as well, and the app features:\n\n- 📡&nbsp;PWA support (works offline).\n- 🤼&nbsp;Real-time collaboration.\n- 🔒&nbsp;End-to-end encryption.\n- 💾&nbsp;Local-first support (autosaves to the browser).\n- 🔗&nbsp;Shareable links (export to a readonly link you can share with others).\n\nWe'll be adding these features as drop-in plugins for the npm package in the future.\n",
+          "sha256": "011eea74cbbf38fd263ec93a221f379466c557dc7587acfe93797201193a7e7a"
+        },
+        {
+          "path": "README.md",
+          "startLine": 84,
+          "endLine": 95,
+          "excerpt": "\n**Note:** following instructions are for installing the Excalidraw [npm package](https://www.npmjs.com/package/@excalidraw/excalidraw) when integrating Excalidraw into your own app. To run the repository locally for development, please refer to our [Development Guide](https://docs.excalidraw.com/docs/introduction/development).\n\nUse `npm` or `yarn` to install the package.\n\n```bash\nnpm install react react-dom @excalidraw/excalidraw\n# or\nyarn add react react-dom @excalidraw/excalidraw\n```\n\nCheck out our [documentation](https://docs.excalidraw.com/docs/@excalidraw/excalidraw/installation) for more details!",
+          "sha256": "011eea74cbbf38fd263ec93a221f379466c557dc7587acfe93797201193a7e7a"
+        }
+      ]
+    },
+    {
+      "id": "excalidraw-q2",
+      "question": "Name the principal Excalidraw components and their responsibilities.",
+      "answer": "excalidraw-app is the hosted showcase application; packages/excalidraw exposes the embeddable React editor; packages/element holds element-related logic; packages/math supplies math functions. Equivalent package names are accepted. These are concrete components, not an inferred runtime hierarchy.",
+      "requiredFacts": [
+        "excalidraw-app is the hosted application",
+        "packages/excalidraw exposes the React editor",
+        "packages/element provides element logic",
+        "packages/math provides math functions"
+      ],
+      "evidence": [
+        {
+          "path": "README.md",
+          "startLine": 54,
+          "endLine": 82,
+          "excerpt": "The Excalidraw editor (npm package) supports:\n\n- 💯&nbsp;Free & open-source.\n- 🎨&nbsp;Infinite, canvas-based whiteboard.\n- ✍️&nbsp;Hand-drawn like style.\n- 🌓&nbsp;Dark mode.\n- 🏗️&nbsp;Customizable.\n- 📷&nbsp;Image support.\n- 😀&nbsp;Shape libraries support.\n- 🌐&nbsp;Localization (i18n) support.\n- 🖼️&nbsp;Export to PNG, SVG & clipboard.\n- 💾&nbsp;Open format - export drawings as an `.excalidraw` json file.\n- ⚒️&nbsp;Wide range of tools - rectangle, circle, diamond, arrow, line, free-draw, eraser...\n- ➡️&nbsp;Arrow-binding & labeled arrows.\n- 🔙&nbsp;Undo / Redo.\n- 🔍&nbsp;Zoom and panning support.\n\n## Excalidraw.com\n\nThe app hosted at [excalidraw.com](https://excalidraw.com) is a minimal showcase of what you can build with Excalidraw. Its [source code](https://github.com/excalidraw/excalidraw/tree/master/excalidraw-app) is part of this repository as well, and the app features:\n\n- 📡&nbsp;PWA support (works offline).\n- 🤼&nbsp;Real-time collaboration.\n- 🔒&nbsp;End-to-end encryption.\n- 💾&nbsp;Local-first support (autosaves to the browser).\n- 🔗&nbsp;Shareable links (export to a readonly link you can share with others).\n\nWe'll be adding these features as drop-in plugins for the npm package in the future.\n",
+          "sha256": "011eea74cbbf38fd263ec93a221f379466c557dc7587acfe93797201193a7e7a"
+        },
+        {
+          "path": "packages/excalidraw/index.tsx",
+          "startLine": 401,
+          "endLine": 420,
+          "excerpt": "export const Excalidraw = React.memo(ExcalidrawBase, areEqual);\nExcalidraw.displayName = \"Excalidraw\";\n\nexport {\n  getSceneVersion,\n  hashElementsVersion,\n  hashString,\n  getNonDeletedElements,\n} from \"@excalidraw/element\";\n\nexport { getTextFromElements } from \"@excalidraw/element\";\nexport { isInvisiblySmallElement } from \"@excalidraw/element\";\n\nexport { defaultLang, useI18n, languages } from \"./i18n\";\nexport {\n  restoreAppState,\n  restoreElement,\n  restoreElements,\n  restoreLibraryItems,\n} from \"./data/restore\";",
+          "sha256": "b021fd1c3e3dc7fdca1d8a719eeac7694ab097b4c12dde27dffc9ee6a6b766c9"
+        },
+        {
+          "path": "packages/element/package.json",
+          "startLine": 28,
+          "endLine": 34,
+          "excerpt": "  \"files\": [\n    \"dist/*\"\n  ],\n  \"description\": \"Excalidraw elements-related logic\",\n  \"publishConfig\": {\n    \"access\": \"public\"\n  },",
+          "sha256": "2a311cd155062319578a31d106019301fbd2ed31c55950987a460d88bb513158"
+        },
+        {
+          "path": "packages/math/package.json",
+          "startLine": 22,
+          "endLine": 27,
+          "excerpt": "  \"files\": [\n    \"dist/*\"\n  ],\n  \"description\": \"Excalidraw math functions\",\n  \"publishConfig\": {\n    \"access\": \"public\"",
+          "sha256": "284217291672975d9da9c0e47d1a3c9f7ff5a61ee6eac0872056a34fb21f8c19"
+        }
+      ]
+    },
+    {
+      "id": "excalidraw-q3",
+      "question": "Which languages, framework/build systems and package boundaries organize Excalidraw?",
+      "answer": "TypeScript/TSX and React organize editor source. A private Yarn 1 workspace spans excalidraw-app, packages/* and examples/*; package-local build scripts are orchestrated at the root. Vite and Vitest are declared for app tooling/testing and tsc for typechecking. Workspace manifests, not arbitrary directories, define package boundaries.",
+      "requiredFacts": [
+        "TypeScript/TSX with React",
+        "Yarn workspaces include app, packages and examples",
+        "Vite/Vitest and TypeScript tools are declared",
+        "Separate package build scripts exist"
+      ],
+      "evidence": [
+        {
+          "path": "package.json",
+          "startLine": 1,
+          "endLine": 9,
+          "excerpt": "{\n  \"private\": true,\n  \"name\": \"excalidraw-monorepo\",\n  \"packageManager\": \"yarn@1.22.22\",\n  \"workspaces\": [\n    \"excalidraw-app\",\n    \"packages/*\",\n    \"examples/*\"\n  ],",
+          "sha256": "7b7a3a1ac12b2a3d15ee280c02abce3fb4beafdd7156a05b4e9c5446aa66bb1c"
+        },
+        {
+          "path": "package.json",
+          "startLine": 36,
+          "endLine": 44,
+          "excerpt": "    \"rimraf\": \"^5.0.0\",\n    \"typescript\": \"5.9.3\",\n    \"vite\": \"5.0.12\",\n    \"vite-plugin-checker\": \"0.7.2\",\n    \"vite-plugin-ejs\": \"1.7.0\",\n    \"vite-plugin-pwa\": \"0.21.1\",\n    \"vite-plugin-svgr\": \"4.2.0\",\n    \"vitest\": \"3.0.6\",\n    \"vitest-canvas-mock\": \"0.3.3\"",
+          "sha256": "7b7a3a1ac12b2a3d15ee280c02abce3fb4beafdd7156a05b4e9c5446aa66bb1c"
+        },
+        {
+          "path": "package.json",
+          "startLine": 51,
+          "endLine": 73,
+          "excerpt": "  \"scripts\": {\n    \"build-node\": \"node ./scripts/build-node.js\",\n    \"build:app:docker\": \"yarn --cwd ./excalidraw-app build:app:docker\",\n    \"build:app\": \"yarn --cwd ./excalidraw-app build:app\",\n    \"build:common\": \"yarn --cwd ./packages/common build:esm\",\n    \"build:element\": \"yarn --cwd ./packages/element build:esm\",\n    \"build:excalidraw\": \"yarn --cwd ./packages/excalidraw build:esm\",\n    \"build:math\": \"yarn --cwd ./packages/math build:esm\",\n    \"build:fractional-indexing\": \"yarn --cwd ./packages/fractional-indexing build:esm\",\n    \"build:laser-pointer\": \"yarn --cwd ./packages/laser-pointer build:esm\",\n    \"build:packages\": \"yarn build:common && yarn build:fractional-indexing && yarn build:laser-pointer && yarn build:math && yarn build:element && yarn build:excalidraw\",\n    \"build:version\": \"yarn --cwd ./excalidraw-app build:version\",\n    \"build\": \"yarn --cwd ./excalidraw-app build\",\n    \"build:preview\": \"yarn --cwd ./excalidraw-app build:preview\",\n    \"start\": \"yarn --cwd ./excalidraw-app start\",\n    \"start:production\": \"yarn --cwd ./excalidraw-app start:production\",\n    \"start:example\": \"yarn build:packages && yarn --cwd ./examples/with-script-in-browser start\",\n    \"test:all\": \"yarn test:typecheck && yarn test:code && yarn test:other && yarn test:app --watch=false\",\n    \"test:app\": \"vitest\",\n    \"test:code\": \"eslint --max-warnings=0 --ext .js,.ts,.tsx .\",\n    \"test:other\": \"yarn prettier --list-different\",\n    \"test:typecheck\": \"tsc\",\n    \"test:update\": \"yarn test:app --update --watch=false\",",
+          "sha256": "7b7a3a1ac12b2a3d15ee280c02abce3fb4beafdd7156a05b4e9c5446aa66bb1c"
+        },
+        {
+          "path": "packages/excalidraw/index.tsx",
+          "startLine": 401,
+          "endLine": 402,
+          "excerpt": "export const Excalidraw = React.memo(ExcalidrawBase, areEqual);\nExcalidraw.displayName = \"Excalidraw\";",
+          "sha256": "b021fd1c3e3dc7fdca1d8a719eeac7694ab097b4c12dde27dffc9ee6a6b766c9"
+        },
+        {
+          "path": "packages/excalidraw/package.json",
+          "startLine": 76,
+          "endLine": 79,
+          "excerpt": "  \"peerDependencies\": {\n    \"react\": \"^17.0.2 || ^18.2.0 || ^19.0.0\",\n    \"react-dom\": \"^17.0.2 || ^18.2.0 || ^19.0.0\"\n  },",
+          "sha256": "160dabbd052e579a5b7b0e341d653e0739d17d44d68f16be8c1cf893e1e4236d"
+        }
+      ]
+    },
+    {
+      "id": "excalidraw-q4",
+      "question": "Where does public-library use of restoreElements begin?",
+      "answer": "The editor public entry packages/excalidraw/index.tsx reexports restoreElements from ./data/restore. Its implementation is the exported generic restoreElements in packages/excalidraw/data/restore.ts, receiving target elements, optional existing context, and restoration options. This is a library API entry, not a browser executable main.",
+      "requiredFacts": [
+        "Public index reexports restoreElements",
+        "Definition is in data/restore.ts",
+        "Inputs are target elements, existing context and options",
+        "Library entry is not executable startup"
+      ],
+      "evidence": [
+        {
+          "path": "packages/excalidraw/index.tsx",
+          "startLine": 415,
+          "endLine": 420,
+          "excerpt": "export {\n  restoreAppState,\n  restoreElement,\n  restoreElements,\n  restoreLibraryItems,\n} from \"./data/restore\";",
+          "sha256": "b021fd1c3e3dc7fdca1d8a719eeac7694ab097b4c12dde27dffc9ee6a6b766c9"
+        },
+        {
+          "path": "packages/excalidraw/data/restore.ts",
+          "startLine": 946,
+          "endLine": 957,
+          "excerpt": "export const restoreElements = <T extends ExcalidrawElement>(\n  targetElements: readonly T[] | undefined | null,\n  /** used for additional context (e.g. repairing arrow bindings) */\n  existingElements: Readonly<ElementsMapOrArray> | null | undefined,\n  opts?:\n    | {\n        refreshDimensions?: boolean;\n        repairBindings?: boolean;\n        deleteInvisibleElements?: boolean;\n      }\n    | undefined,\n): CombineBrandsIfNeeded<T, OrderedExcalidrawElement> => {",
+          "sha256": "0da843833ddafc18962a5ef2c1c18801a296a8818f2b4753cc9c7ce63caa0808"
+        }
+      ]
+    },
+    {
+      "id": "excalidraw-q5",
+      "question": "Where is X = detecting invisibly small elements implemented, and what qualifies?",
+      "answer": "packages/element/src/sizeHelpers.ts defines isInvisiblySmallElement. Linear/free-draw elements are small with fewer than two points, or with exactly two points when an arrow has endpoints equal within the 0.1 threshold passed to pointsEqual. Other element kinds require both width and height equal to zero. It is not a general area threshold.",
+      "requiredFacts": [
+        "Definition is isInvisiblySmallElement in packages/element/src/sizeHelpers.ts",
+        "Linear/free-draw fewer than two points qualifies",
+        "Two-point arrows compare endpoints using threshold 0.1",
+        "Other kinds require width and height both zero"
+      ],
+      "evidence": [
+        {
+          "path": "packages/element/src/sizeHelpers.ts",
+          "startLine": 56,
+          "endLine": 78,
+          "excerpt": "export const INVISIBLY_SMALL_ELEMENT_SIZE = 0.1;\n\n// TODO:  remove invisible elements consistently actions, so that invisible elements are not recorded by the store, exported, broadcasted or persisted\n//        - perhaps could be as part of a standalone 'cleanup' action, in addition to 'finalize'\n//        - could also be part of `_clearElements`\nexport const isInvisiblySmallElement = (\n  element: ExcalidrawElement,\n): boolean => {\n  if (isLinearElement(element) || isFreeDrawElement(element)) {\n    return (\n      element.points.length < 2 ||\n      (element.points.length === 2 &&\n        isArrowElement(element) &&\n        pointsEqual(\n          element.points[0],\n          element.points[element.points.length - 1],\n          INVISIBLY_SMALL_ELEMENT_SIZE,\n        ))\n    );\n  }\n\n  return element.width === 0 && element.height === 0;\n};",
+          "sha256": "41522fd29ede43035294d8f29057ad5e6b49e6b7120f66e579088b2a341d40df"
+        }
+      ]
+    },
+    {
+      "id": "excalidraw-q6",
+      "question": "Which internal packages does A = @excalidraw/element directly declare as dependencies, and what proves the direction?",
+      "answer": "packages/element/package.json declares dependencies on @excalidraw/common, @excalidraw/math and @excalidraw/fractional-indexing. Each edge is element -> named dependency. This is manifest dependency evidence, not proof that every element function calls all three.",
+      "requiredFacts": [
+        "element -> common",
+        "element -> math",
+        "element -> fractional-indexing",
+        "dependencies entries prove package direction, not universal execution"
+      ],
+      "evidence": [
+        {
+          "path": "packages/element/package.json",
+          "startLine": 65,
+          "endLine": 70,
+          "excerpt": "  \"dependencies\": {\n    \"@excalidraw/common\": \"0.18.0\",\n    \"@excalidraw/math\": \"0.18.0\",\n    \"@excalidraw/fractional-indexing\": \"3.3.0\"\n  }\n}",
+          "sha256": "2a311cd155062319578a31d106019301fbd2ed31c55950987a460d88bb513158"
+        }
+      ]
+    },
+    {
+      "id": "excalidraw-q7",
+      "question": "For R = restore a supported invisible rectangle with deleteInvisibleElements=true, trace the source path to its outcome and identify boundaries.",
+      "answer": "restoreElements reduces targetElements, skips legacy selection elements, calls restoreElement, and for a successfully migrated element calls isInvisiblySmallElement on the original element. A true result causes bumpVersion and a copy with isDeleted:true, then pushes it into the result and syncInvalidIndices normalizes indices. With repairBindings absent it returns that result. It marks a tombstone rather than filtering the item out. Invalid/failed restoreElement results are omitted; element-type migration and optional binding repair are separate branches, not universal steps.",
+      "requiredFacts": [
+        "restoreElements calls restoreElement before the invisibility check",
+        "Check is gated by deleteInvisibleElements and successful migration",
+        "True causes bumpVersion and isDeleted:true",
+        "Marked element remains in array; syncInvalidIndices runs",
+        "Optional repairBindings and failed migration are distinguished"
+      ],
+      "evidence": [
+        {
+          "path": "packages/excalidraw/data/restore.ts",
+          "startLine": 965,
+          "endLine": 1017,
+          "excerpt": "  const restoredElements = syncInvalidIndices(\n    (targetElements || []).reduce((elements, element) => {\n      // filtering out selection, which is legacy, no longer kept in elements,\n      // and causing issues if retained\n      if (element.type === \"selection\") {\n        return elements;\n      }\n      let migratedElement: ExcalidrawElement | null;\n      try {\n        migratedElement = restoreElement(\n          element,\n          targetElementsMap,\n          existingElementsMap,\n          {\n            deleteInvisibleElements: opts?.deleteInvisibleElements,\n          },\n        );\n      } catch (error) {\n        console.error(\"Error restoring element:\", error);\n        migratedElement = null;\n      }\n      if (migratedElement) {\n        const localElement = existingElementsMap?.get(element.id);\n\n        const shouldMarkAsDeleted =\n          opts?.deleteInvisibleElements && isInvisiblySmallElement(element);\n\n        if (shouldMarkAsDeleted) {\n          migratedElement = bumpVersion(migratedElement, localElement?.version);\n        }\n\n        if (shouldMarkAsDeleted) {\n          migratedElement = { ...migratedElement, isDeleted: true };\n        }\n\n        if (existingIds.has(migratedElement.id)) {\n          migratedElement = { ...migratedElement, id: randomId() };\n        }\n        existingIds.add(migratedElement.id);\n\n        elements.push(migratedElement);\n      }\n\n      return elements;\n    }, [] as ExcalidrawElement[]),\n  );\n\n  if (!opts?.repairBindings) {\n    return restoredElements as CombineBrandsIfNeeded<\n      T,\n      OrderedExcalidrawElement\n    >;\n  }",
+          "sha256": "0da843833ddafc18962a5ef2c1c18801a296a8818f2b4753cc9c7ce63caa0808"
+        },
+        {
+          "path": "packages/element/src/sizeHelpers.ts",
+          "startLine": 61,
+          "endLine": 78,
+          "excerpt": "export const isInvisiblySmallElement = (\n  element: ExcalidrawElement,\n): boolean => {\n  if (isLinearElement(element) || isFreeDrawElement(element)) {\n    return (\n      element.points.length < 2 ||\n      (element.points.length === 2 &&\n        isArrowElement(element) &&\n        pointsEqual(\n          element.points[0],\n          element.points[element.points.length - 1],\n          INVISIBLY_SMALL_ELEMENT_SIZE,\n        ))\n    );\n  }\n\n  return element.width === 0 && element.height === 0;\n};",
+          "sha256": "41522fd29ede43035294d8f29057ad5e6b49e6b7120f66e579088b2a341d40df"
+        }
+      ]
+    },
+    {
+      "id": "excalidraw-q8",
+      "question": "If Y = isInvisiblySmallElement changes, which direct consumers in restore.ts and element/index.ts are evidenced, and what impact is only inferred?",
+      "answer": "restoreElements directly calls the helper when deleteInvisibleElements is enabled; getVisibleElements directly calls it in a filter after isNonDeletedElement. The editor public index also reexports the helper, which is exposure rather than invocation. Restoration tombstone decisions and visible-element filtering may change, but this does not prove every UI/render/export path executes either consumer.",
+      "requiredFacts": [
+        "restoreElements directly invokes the helper conditionally",
+        "getVisibleElements directly invokes the helper while filtering",
+        "Public reexport is not a call",
+        "Wider runtime impact remains conditional"
+      ],
+      "evidence": [
+        {
+          "path": "packages/excalidraw/data/restore.ts",
+          "startLine": 986,
+          "endLine": 998,
+          "excerpt": "      if (migratedElement) {\n        const localElement = existingElementsMap?.get(element.id);\n\n        const shouldMarkAsDeleted =\n          opts?.deleteInvisibleElements && isInvisiblySmallElement(element);\n\n        if (shouldMarkAsDeleted) {\n          migratedElement = bumpVersion(migratedElement, localElement?.version);\n        }\n\n        if (shouldMarkAsDeleted) {\n          migratedElement = { ...migratedElement, isDeleted: true };\n        }",
+          "sha256": "0da843833ddafc18962a5ef2c1c18801a296a8818f2b4753cc9c7ce63caa0808"
+        },
+        {
+          "path": "packages/element/src/index.ts",
+          "startLine": 43,
+          "endLine": 53,
+          "excerpt": "export const isNonDeletedElement = <T extends ExcalidrawElement>(\n  element: T,\n): element is NonDeleted<T> => !element.isDeleted;\n\nexport const getVisibleElements = (\n  elements: readonly ExcalidrawElement[],\n): readonly NonDeletedExcalidrawElement[] =>\n  elements.filter(\n    (el): el is NonDeletedExcalidrawElement =>\n      isNonDeletedElement(el) && !isInvisiblySmallElement(el),\n  );",
+          "sha256": "9f1484cf6e511fd9d2899721733d155d37c33322ef4e3097068e8b1f92f53b4e"
+        },
+        {
+          "path": "packages/excalidraw/index.tsx",
+          "startLine": 411,
+          "endLine": 412,
+          "excerpt": "export { getTextFromElements } from \"@excalidraw/element\";\nexport { isInvisiblySmallElement } from \"@excalidraw/element\";",
+          "sha256": "b021fd1c3e3dc7fdca1d8a719eeac7694ab097b4c12dde27dffc9ee6a6b766c9"
+        }
+      ]
+    },
+    {
+      "id": "excalidraw-q9",
+      "question": "Which test exercises X through restoration, and what does its mocking limit?",
+      "answer": "packages/excalidraw/tests/data/restore.test.ts spies on the package helper. The test named should return empty array when isInvisiblySmallElement is true actually mocks true, invokes restore.restoreElements with deleteInvisibleElements:true, and expects an element with isDeleted:true. Despite the stale test title, it proves intended tombstone wiring, not the real geometric predicate because that predicate is mocked.",
+      "requiredFacts": [
+        "Test file is tests/data/restore.test.ts",
+        "Helper is spied on and mocked true",
+        "restoreElements receives deleteInvisibleElements:true",
+        "Assertion retains an isDeleted:true element",
+        "Mocked predicate does not test real geometry"
+      ],
+      "evidence": [
+        {
+          "path": "packages/excalidraw/tests/data/restore.test.ts",
+          "startLine": 33,
+          "endLine": 49,
+          "excerpt": "import { API } from \"../helpers/api\";\nimport * as restore from \"../../data/restore\";\nimport { getDefaultAppState } from \"../../appState\";\nimport { serializeAsJSON } from \"../../data/json\";\n\nimport type { ImportedDataState } from \"../../data/types\";\nimport type { LibraryItem, LibraryItem_v1, LibraryItems } from \"../../types\";\n\ndescribe(\"restoreElements\", () => {\n  const mockSizeHelper = vi.spyOn(sizeHelpers, \"isInvisiblySmallElement\");\n\n  beforeEach(() => {\n    mockSizeHelper.mockReset();\n  });\n\n  afterAll(() => {\n    mockSizeHelper.mockRestore();",
+          "sha256": "53a6c264a14351916e403a99aec159d3ebffebd21487d00e149880349b5c9d26"
+        },
+        {
+          "path": "packages/excalidraw/tests/data/restore.test.ts",
+          "startLine": 143,
+          "endLine": 152,
+          "excerpt": "  it(\"should return empty array when isInvisiblySmallElement is true\", () => {\n    const rectElement = API.createElement({ type: \"rectangle\" });\n    mockSizeHelper.mockImplementation(() => true);\n\n    expect(\n      restore.restoreElements([rectElement], null, {\n        deleteInvisibleElements: true,\n      }),\n    ).toEqual([expect.objectContaining({ isDeleted: true })]);\n  });",
+          "sha256": "53a6c264a14351916e403a99aec159d3ebffebd21487d00e149880349b5c9d26"
+        }
+      ]
+    },
+    {
+      "id": "excalidraw-q10",
+      "question": "Where does Z = deleteInvisibleElements restoration option enter and get transformed into deletion state?",
+      "answer": "It enters the opts parameter of restoreElements. It is forwarded to restoreElement and separately gates isInvisiblySmallElement; a successful match bumps version then creates a migrated-element copy with isDeleted:true. Absent/false does not activate that caller-side deletion branch. The original element is used for the smallness predicate.",
+      "requiredFacts": [
+        "Option declared on restoreElements opts",
+        "Forwarded into restoreElement",
+        "Gates predicate on original element",
+        "Result becomes bumped-version isDeleted:true migrated element"
+      ],
+      "evidence": [
+        {
+          "path": "packages/excalidraw/data/restore.ts",
+          "startLine": 946,
+          "endLine": 957,
+          "excerpt": "export const restoreElements = <T extends ExcalidrawElement>(\n  targetElements: readonly T[] | undefined | null,\n  /** used for additional context (e.g. repairing arrow bindings) */\n  existingElements: Readonly<ElementsMapOrArray> | null | undefined,\n  opts?:\n    | {\n        refreshDimensions?: boolean;\n        repairBindings?: boolean;\n        deleteInvisibleElements?: boolean;\n      }\n    | undefined,\n): CombineBrandsIfNeeded<T, OrderedExcalidrawElement> => {",
+          "sha256": "0da843833ddafc18962a5ef2c1c18801a296a8818f2b4753cc9c7ce63caa0808"
+        },
+        {
+          "path": "packages/excalidraw/data/restore.ts",
+          "startLine": 974,
+          "endLine": 998,
+          "excerpt": "        migratedElement = restoreElement(\n          element,\n          targetElementsMap,\n          existingElementsMap,\n          {\n            deleteInvisibleElements: opts?.deleteInvisibleElements,\n          },\n        );\n      } catch (error) {\n        console.error(\"Error restoring element:\", error);\n        migratedElement = null;\n      }\n      if (migratedElement) {\n        const localElement = existingElementsMap?.get(element.id);\n\n        const shouldMarkAsDeleted =\n          opts?.deleteInvisibleElements && isInvisiblySmallElement(element);\n\n        if (shouldMarkAsDeleted) {\n          migratedElement = bumpVersion(migratedElement, localElement?.version);\n        }\n\n        if (shouldMarkAsDeleted) {\n          migratedElement = { ...migratedElement, isDeleted: true };\n        }",
+          "sha256": "0da843833ddafc18962a5ef2c1c18801a296a8818f2b4753cc9c7ce63caa0808"
+        }
+      ]
+    }
+  ]
+}

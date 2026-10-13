@@ -1,0 +1,347 @@
+{
+  "id": "runtime",
+  "repository": "dotnet/runtime",
+  "commit": "8630d8988107478d249e2fdb8162f8c7dcbd3dbb",
+  "trackedFiles": 58427,
+  "questions": [
+    {
+      "id": "runtime-q1",
+      "question": "What does dotnet/runtime do, and who calls or runs it?",
+      "answer": "The repository builds .NET runtime engines, libraries and shared dotnet host/installers across platforms. Managed applications run on these engines and call library APIs; the host launches applications. System.Net.Http is only the selected library slice.",
+      "requiredFacts": [
+        "Runtime plus libraries",
+        "Shared host/installers",
+        "Managed applications are consumers",
+        "Http is only selected slice"
+      ],
+      "evidence": [
+        {
+          "path": "README.md",
+          "startLine": 16,
+          "endLine": 26,
+          "excerpt": "This repo contains the code to build the .NET runtime, libraries and shared host (`dotnet`) installers for\nall supported platforms, as well as the sources to .NET runtime and libraries.\n\n## What is .NET?\n\nOfficial Starting Page: <https://dotnet.microsoft.com>\n\n* [How to use .NET](https://learn.microsoft.com/dotnet/core/get-started) (with VS, VS Code, command-line CLI)\n  * [Install official releases](https://dotnet.microsoft.com/download)\n  * [Documentation](https://learn.microsoft.com/dotnet/core) (Get Started, Tutorials, Porting from .NET Framework, API reference, ...)\n    * [Deploying apps](https://learn.microsoft.com/dotnet/core/deploying)",
+          "sha256": "bcd0ca8841408b85528eb4f91a610c072eb46df2a0e89ba5ab38a60270286057"
+        },
+        {
+          "path": "docs/workflow/README.md",
+          "startLine": 62,
+          "endLine": 74,
+          "excerpt": "### Build Components\n\n- **Runtime**: The execution engine for managed code. There are two different implementations, both written in C or C++:\n  - *CoreCLR*: The comprehensive execution engine originally born from .NET Framework. Its source code lives under the [src/coreclr](/src/coreclr) subtree.\n  - *Mono*: A slimmer runtime than CoreCLR, originally born open-source to bring .NET and C# support to non-Windows platforms. Due to its lightweight nature, it is less affected in terms of speed when working with the *Debug* configuration. Its source code lives under the [src/mono](/src/mono) subtree.\n\n- **CoreLib** *(also known as System.Private.CoreLib)*: The lowest level managed library. It is directly related to the runtime, which means it must be built in the matching configuration (e.g. Building a *Debug* runtime means *CoreLib* must also be in *Debug*). The `clr` subset includes both, the *Runtime* and the *CoreLib* components, so you usually don't have to worry about that. There are, however, some special cases where you might need to build the components separately. The runtime agnostic code for this library can be found at [src/libraries/System.Private.CoreLib/src](/src/libraries/System.Private.CoreLib/src/README.md).\n\n- **Libraries**: The bulk of dll's providing the rest of the functionality to the runtime. The libraries can be built in their own configuration, regardless of which one the runtime is using. Their source code lives under the [src/libraries](/src/libraries) subtree.\n\n## Building the Repo\n\nThe main script that will be in charge of most of the building you might want to do is the `build.sh`, or `build.cmd` on Windows, located at the root of the repo. This script receives as arguments the subset(s) you might want to build, as well as multiple parameters to configure your build, such as the configuration, target operating system, target architecture, and so on.",
+          "sha256": "5c53db21ac63e60b2ba9143c5fadc20f047347247534ce89c686beeb0ac83e7d"
+        },
+        {
+          "path": "docs/workflow/README.md",
+          "startLine": 86,
+          "endLine": 92,
+          "excerpt": "The main subset values are:\n\n- `Clr`: The full CoreCLR runtime, which consists of the runtime itself and the CoreLib components.\n- `Libs`: All the libraries components, excluding their tests. This includes the libraries' native parts, refs, source assemblies, and their packages and test infrastructure.\n- `Packs`: The shared framework packs, archives, bundles, installers, and the framework pack tests.\n- `Host`: The .NET hosts, packages, hosting libraries, and their tests.\n- `Mono`: The Mono runtime and its CoreLib.",
+          "sha256": "5c53db21ac63e60b2ba9143c5fadc20f047347247534ce89c686beeb0ac83e7d"
+        }
+      ]
+    },
+    {
+      "id": "runtime-q2",
+      "question": "Name the principal repository components and responsibilities beyond HTTP.",
+      "answer": "CoreCLR and Mono are execution engines; System.Private.CoreLib is the lowest-level managed library; src/libraries holds wider APIs. Host supplies hosts and hosting libraries, Packs supplies framework packs/archives/installers. System.Net.Http is under libraries.",
+      "requiredFacts": [
+        "CoreCLR and Mono engines",
+        "CoreLib lowest managed library",
+        "Libraries APIs",
+        "Host and Packs",
+        "Http belongs to libraries"
+      ],
+      "evidence": [
+        {
+          "path": "docs/workflow/README.md",
+          "startLine": 62,
+          "endLine": 74,
+          "excerpt": "### Build Components\n\n- **Runtime**: The execution engine for managed code. There are two different implementations, both written in C or C++:\n  - *CoreCLR*: The comprehensive execution engine originally born from .NET Framework. Its source code lives under the [src/coreclr](/src/coreclr) subtree.\n  - *Mono*: A slimmer runtime than CoreCLR, originally born open-source to bring .NET and C# support to non-Windows platforms. Due to its lightweight nature, it is less affected in terms of speed when working with the *Debug* configuration. Its source code lives under the [src/mono](/src/mono) subtree.\n\n- **CoreLib** *(also known as System.Private.CoreLib)*: The lowest level managed library. It is directly related to the runtime, which means it must be built in the matching configuration (e.g. Building a *Debug* runtime means *CoreLib* must also be in *Debug*). The `clr` subset includes both, the *Runtime* and the *CoreLib* components, so you usually don't have to worry about that. There are, however, some special cases where you might need to build the components separately. The runtime agnostic code for this library can be found at [src/libraries/System.Private.CoreLib/src](/src/libraries/System.Private.CoreLib/src/README.md).\n\n- **Libraries**: The bulk of dll's providing the rest of the functionality to the runtime. The libraries can be built in their own configuration, regardless of which one the runtime is using. Their source code lives under the [src/libraries](/src/libraries) subtree.\n\n## Building the Repo\n\nThe main script that will be in charge of most of the building you might want to do is the `build.sh`, or `build.cmd` on Windows, located at the root of the repo. This script receives as arguments the subset(s) you might want to build, as well as multiple parameters to configure your build, such as the configuration, target operating system, target architecture, and so on.",
+          "sha256": "5c53db21ac63e60b2ba9143c5fadc20f047347247534ce89c686beeb0ac83e7d"
+        },
+        {
+          "path": "docs/workflow/README.md",
+          "startLine": 86,
+          "endLine": 92,
+          "excerpt": "The main subset values are:\n\n- `Clr`: The full CoreCLR runtime, which consists of the runtime itself and the CoreLib components.\n- `Libs`: All the libraries components, excluding their tests. This includes the libraries' native parts, refs, source assemblies, and their packages and test infrastructure.\n- `Packs`: The shared framework packs, archives, bundles, installers, and the framework pack tests.\n- `Host`: The .NET hosts, packages, hosting libraries, and their tests.\n- `Mono`: The Mono runtime and its CoreLib.",
+          "sha256": "5c53db21ac63e60b2ba9143c5fadc20f047347247534ce89c686beeb0ac83e7d"
+        },
+        {
+          "path": "src/libraries/System.Net.Http/src/System.Net.Http.csproj",
+          "startLine": 1,
+          "endLine": 8,
+          "excerpt": "﻿<Project Sdk=\"Microsoft.NET.Sdk\">\n\n  <PropertyGroup>\n    <TargetFrameworks>$(NetCoreAppCurrent)-windows;$(NetCoreAppCurrent)-unix;$(NetCoreAppCurrent)-osx;$(NetCoreAppCurrent)-maccatalyst;$(NetCoreAppCurrent)-ios;$(NetCoreAppCurrent)-tvos;$(NetCoreAppCurrent)-browser;$(NetCoreAppCurrent)-wasi;$(NetCoreAppCurrent)-android;$(NetCoreAppCurrent)</TargetFrameworks>\n    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>\n    <!-- SocketsHttpHandler connection eviction control and HttpRequestMessage.ConnectionId (SYSLIB5008) APIs are experimental and consumed internally. -->\n    <NoWarn>$(NoWarn);SYSLIB5008</NoWarn>\n    <UseCompilerGeneratedDocXmlFile>false</UseCompilerGeneratedDocXmlFile>",
+          "sha256": "bbc77d770d0a6d60e8890393d5ed0bf8acacfe3929e3258dee97ea17522848ba"
+        }
+      ]
+    },
+    {
+      "id": "runtime-q3",
+      "question": "Which languages, build systems and boundaries organize dotnet/runtime?",
+      "answer": "Engines use C/C++; managed libraries such as System.Net.Http use C# and SDK-style MSBuild csproj platform targets. CoreCLR has CMake. Root build.sh/build.cmd coordinate clr, mono, libs, host and packs subsets, not one HTTP package.",
+      "requiredFacts": [
+        "C/C++ and C#",
+        "MSBuild projects/platform targets",
+        "CoreCLR CMake",
+        "Root scripts/component subsets"
+      ],
+      "evidence": [
+        {
+          "path": "docs/workflow/README.md",
+          "startLine": 62,
+          "endLine": 92,
+          "excerpt": "### Build Components\n\n- **Runtime**: The execution engine for managed code. There are two different implementations, both written in C or C++:\n  - *CoreCLR*: The comprehensive execution engine originally born from .NET Framework. Its source code lives under the [src/coreclr](/src/coreclr) subtree.\n  - *Mono*: A slimmer runtime than CoreCLR, originally born open-source to bring .NET and C# support to non-Windows platforms. Due to its lightweight nature, it is less affected in terms of speed when working with the *Debug* configuration. Its source code lives under the [src/mono](/src/mono) subtree.\n\n- **CoreLib** *(also known as System.Private.CoreLib)*: The lowest level managed library. It is directly related to the runtime, which means it must be built in the matching configuration (e.g. Building a *Debug* runtime means *CoreLib* must also be in *Debug*). The `clr` subset includes both, the *Runtime* and the *CoreLib* components, so you usually don't have to worry about that. There are, however, some special cases where you might need to build the components separately. The runtime agnostic code for this library can be found at [src/libraries/System.Private.CoreLib/src](/src/libraries/System.Private.CoreLib/src/README.md).\n\n- **Libraries**: The bulk of dll's providing the rest of the functionality to the runtime. The libraries can be built in their own configuration, regardless of which one the runtime is using. Their source code lives under the [src/libraries](/src/libraries) subtree.\n\n## Building the Repo\n\nThe main script that will be in charge of most of the building you might want to do is the `build.sh`, or `build.cmd` on Windows, located at the root of the repo. This script receives as arguments the subset(s) you might want to build, as well as multiple parameters to configure your build, such as the configuration, target operating system, target architecture, and so on.\n\n**NOTE:** If you plan on using Docker to work on the runtime repo, read [this doc](/docs/workflow/using-docker.md) first. It explains how to set up, as well as the images and containers to prepare you to follow the building and testing instructions in the next sections.\n\n### General Overview\n\nRunning the script (`build.sh`/`build.cmd`) with no arguments will build the whole repo in *Debug* configuration, for the OS and architecture of your machine. A typical dev workflow only one or two components at a time, so it is more efficient to just build those. This is done by means of the `-subset` flag. For example, for CoreCLR, it would be:\n\n```bash\n./build.sh -subset clr\n```\n\nThe main subset values are:\n\n- `Clr`: The full CoreCLR runtime, which consists of the runtime itself and the CoreLib components.\n- `Libs`: All the libraries components, excluding their tests. This includes the libraries' native parts, refs, source assemblies, and their packages and test infrastructure.\n- `Packs`: The shared framework packs, archives, bundles, installers, and the framework pack tests.\n- `Host`: The .NET hosts, packages, hosting libraries, and their tests.\n- `Mono`: The Mono runtime and its CoreLib.",
+          "sha256": "5c53db21ac63e60b2ba9143c5fadc20f047347247534ce89c686beeb0ac83e7d"
+        },
+        {
+          "path": "src/coreclr/CMakeLists.txt",
+          "startLine": 1,
+          "endLine": 12,
+          "excerpt": "cmake_minimum_required(VERSION 3.26)\n\n# Set the project name\nproject(CoreCLR)\n\ninclude(../../eng/native/configurepaths.cmake)\ninclude(${CLR_ENG_NATIVE_DIR}/configurecompiler.cmake)\n\ninclude_directories(\"${CLR_SRC_NATIVE_DIR}\")\ninclude_directories(\"${CLR_SRC_NATIVE_DIR}/inc\")\n\nif(MSVC)",
+          "sha256": "c90be2b6cf652e7d584c3e50168d245f9fc3c76e86e742fb7c770142cee68f84"
+        },
+        {
+          "path": "src/libraries/System.Net.Http/src/System.Net.Http.csproj",
+          "startLine": 1,
+          "endLine": 20,
+          "excerpt": "﻿<Project Sdk=\"Microsoft.NET.Sdk\">\n\n  <PropertyGroup>\n    <TargetFrameworks>$(NetCoreAppCurrent)-windows;$(NetCoreAppCurrent)-unix;$(NetCoreAppCurrent)-osx;$(NetCoreAppCurrent)-maccatalyst;$(NetCoreAppCurrent)-ios;$(NetCoreAppCurrent)-tvos;$(NetCoreAppCurrent)-browser;$(NetCoreAppCurrent)-wasi;$(NetCoreAppCurrent)-android;$(NetCoreAppCurrent)</TargetFrameworks>\n    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>\n    <!-- SocketsHttpHandler connection eviction control and HttpRequestMessage.ConnectionId (SYSLIB5008) APIs are experimental and consumed internally. -->\n    <NoWarn>$(NoWarn);SYSLIB5008</NoWarn>\n    <UseCompilerGeneratedDocXmlFile>false</UseCompilerGeneratedDocXmlFile>\n  </PropertyGroup>\n\n  <!-- DesignTimeBuild requires all the TargetFramework Derived Properties to not be present in the first property group. -->\n  <PropertyGroup>\n    <TargetPlatformIdentifier>$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)'))</TargetPlatformIdentifier>\n    <GeneratePlatformNotSupportedAssemblyMessage Condition=\"'$(TargetPlatformIdentifier)' == ''\">SR.PlatformNotSupported_NetHttp</GeneratePlatformNotSupportedAssemblyMessage>\n    <DefineConstants Condition=\"'$(TargetPlatformIdentifier)' == 'android'\">$(DefineConstants);TARGET_ANDROID</DefineConstants>\n    <DefineConstants Condition=\"'$(TargetPlatformIdentifier)' == 'ios'\">$(DefineConstants);TARGET_IOS</DefineConstants>\n    <DefineConstants Condition=\"'$(TargetPlatformIdentifier)' == 'maccatalyst'\">$(DefineConstants);TARGET_MACCATALYST</DefineConstants>\n    <DefineConstants Condition=\"'$(TargetPlatformIdentifier)' == 'tvos'\">$(DefineConstants);TARGET_TVOS</DefineConstants>\n    <DefineConstants Condition=\"'$(TargetPlatformIdentifier)' == 'browser'\">$(DefineConstants);TARGET_BROWSER</DefineConstants>\n    <DefineConstants Condition=\"'$(TargetPlatformIdentifier)' == 'wasi'\">$(DefineConstants);TARGET_WASI</DefineConstants>",
+          "sha256": "bbc77d770d0a6d60e8890393d5ed0bf8acacfe3929e3258dee97ea17522848ba"
+        },
+        {
+          "path": "src/libraries/System.Net.Http/src/System/Net/Http/HttpClient.cs",
+          "startLine": 143,
+          "endLine": 157,
+          "excerpt": "        public HttpClient() : this(new HttpClientHandler())\n        {\n        }\n\n        public HttpClient(HttpMessageHandler handler) : this(handler, true)\n        {\n        }\n\n        public HttpClient(HttpMessageHandler handler, bool disposeHandler) : base(handler, disposeHandler)\n        {\n            _timeout = s_defaultTimeout;\n            _maxResponseContentBufferSize = HttpContent.MaxBufferSize;\n            _pendingRequestsCts = new CancellationTokenSource();\n        }\n",
+          "sha256": "b50c12603c536776684824ac7abb89db39cf615436b3b91e2484eb7565e53700"
+        }
+      ]
+    },
+    {
+      "id": "runtime-q4",
+      "question": "Where does the selected public HTTP GET use begin on the sockets path?",
+      "answer": "Applications construct HttpClient, optionally injecting a handler. GetAsync overloads converge on SendAsync(CreateRequestMessage(HttpMethod.Get,...)); default construction chooses HttpClientHandler. The selected sockets path can differ from other platform/injected handler paths.",
+      "requiredFacts": [
+        "HttpClient public entry",
+        "GetAsync creates GET request then SendAsync",
+        "Default HttpClientHandler",
+        "Platform/injected dispatch differs"
+      ],
+      "evidence": [
+        {
+          "path": "src/libraries/System.Net.Http/src/System/Net/Http/HttpClient.cs",
+          "startLine": 143,
+          "endLine": 157,
+          "excerpt": "        public HttpClient() : this(new HttpClientHandler())\n        {\n        }\n\n        public HttpClient(HttpMessageHandler handler) : this(handler, true)\n        {\n        }\n\n        public HttpClient(HttpMessageHandler handler, bool disposeHandler) : base(handler, disposeHandler)\n        {\n            _timeout = s_defaultTimeout;\n            _maxResponseContentBufferSize = HttpContent.MaxBufferSize;\n            _pendingRequestsCts = new CancellationTokenSource();\n        }\n",
+          "sha256": "b50c12603c536776684824ac7abb89db39cf615436b3b91e2484eb7565e53700"
+        },
+        {
+          "path": "src/libraries/System.Net.Http/src/System/Net/Http/HttpClient.cs",
+          "startLine": 365,
+          "endLine": 387,
+          "excerpt": "        public Task<HttpResponseMessage> GetAsync([StringSyntax(StringSyntaxAttribute.Uri)] string? requestUri) =>\n            GetAsync(CreateUri(requestUri));\n\n        public Task<HttpResponseMessage> GetAsync(Uri? requestUri) =>\n            GetAsync(requestUri, DefaultCompletionOption);\n\n        public Task<HttpResponseMessage> GetAsync([StringSyntax(StringSyntaxAttribute.Uri)] string? requestUri, HttpCompletionOption completionOption) =>\n            GetAsync(CreateUri(requestUri), completionOption);\n\n        public Task<HttpResponseMessage> GetAsync(Uri? requestUri, HttpCompletionOption completionOption) =>\n            GetAsync(requestUri, completionOption, CancellationToken.None);\n\n        public Task<HttpResponseMessage> GetAsync([StringSyntax(StringSyntaxAttribute.Uri)] string? requestUri, CancellationToken cancellationToken) =>\n            GetAsync(CreateUri(requestUri), cancellationToken);\n\n        public Task<HttpResponseMessage> GetAsync(Uri? requestUri, CancellationToken cancellationToken) =>\n            GetAsync(requestUri, DefaultCompletionOption, cancellationToken);\n\n        public Task<HttpResponseMessage> GetAsync([StringSyntax(StringSyntaxAttribute.Uri)] string? requestUri, HttpCompletionOption completionOption, CancellationToken cancellationToken) =>\n            GetAsync(CreateUri(requestUri), completionOption, cancellationToken);\n\n        public Task<HttpResponseMessage> GetAsync(Uri? requestUri, HttpCompletionOption completionOption, CancellationToken cancellationToken) =>\n            SendAsync(CreateRequestMessage(HttpMethod.Get, requestUri), completionOption, cancellationToken);",
+          "sha256": "b50c12603c536776684824ac7abb89db39cf615436b3b91e2484eb7565e53700"
+        },
+        {
+          "path": "src/libraries/System.Net.Http/src/System/Net/Http/HttpClientHandler.cs",
+          "startLine": 10,
+          "endLine": 29,
+          "excerpt": "using System.Threading;\nusing System.Threading.Tasks;\nusing System.Diagnostics.Metrics;\n#if TARGET_WASI\nusing System.Diagnostics;\nusing System.Net.Http.Metrics;\nusing HttpHandlerType = System.Net.Http.WasiHttpHandler;\n#elif TARGET_BROWSER\nusing System.Diagnostics;\nusing System.Net.Http.Metrics;\nusing HttpHandlerType = System.Net.Http.BrowserHttpHandler;\n#else\nusing HttpHandlerType = System.Net.Http.SocketsHttpHandler;\n#endif\n\nnamespace System.Net.Http\n{\n    public partial class HttpClientHandler : HttpMessageHandler\n    {\n        private readonly HttpHandlerType _underlyingHandler;",
+          "sha256": "ef1222c1264c7304cd18e5f9601dbbdadc6d79585075d076c08e4d614cb0e7e7"
+        }
+      ]
+    },
+    {
+      "id": "runtime-q5",
+      "question": "Where is X, HTTP redirect method rewriting, implemented?",
+      "answer": "RedirectHandler.SendAsync and RequestRequiresForceGet implement it. POST becomes GET for 300/301/302; 303 rewrites all methods except GET/HEAD. Rewrite clears content and chunked encoding; the helper does not force GET for 307/308.",
+      "requiredFacts": [
+        "RedirectHandler definitions",
+        "300/301/302 POST -> GET",
+        "303 except GET/HEAD",
+        "Clears content and chunked encoding",
+        "307/308 unchanged by helper"
+      ],
+      "evidence": [
+        {
+          "path": "src/libraries/System.Net.Http/src/System/Net/Http/SocketsHttpHandler/RedirectHandler.cs",
+          "startLine": 62,
+          "endLine": 88,
+          "excerpt": "                }\n\n                // Set up for the redirect\n                request.RequestUri = redirectUri;\n                if (RequestRequiresForceGet(response.StatusCode, request.Method))\n                {\n                    if (NetEventSource.Log.IsEnabled())\n                    {\n                        Trace($\"Modified request from {request.Method} to {HttpMethod.Get} in response to status code {(int)response.StatusCode} '{response.StatusCode}'.\", request.GetHashCode());\n                    }\n\n                    request.Method = HttpMethod.Get;\n                    request.Content = null;\n                    if (request.Headers.TransferEncodingChunked == true)\n                    {\n                        request.Headers.TransferEncodingChunked = false;\n                    }\n                }\n\n                if (_disableAuthOnRedirect)\n                {\n                    request.DisableAuth();\n                }\n\n                // Issue the redirected request.\n                response = await _innerHandler.SendAsync(request, async, cancellationToken).ConfigureAwait(false);\n            }",
+          "sha256": "be75bf16dcbd0d5734e35b3945df3fb3069943c568817cb746b432d38e159058"
+        },
+        {
+          "path": "src/libraries/System.Net.Http/src/System/Net/Http/SocketsHttpHandler/RedirectHandler.cs",
+          "startLine": 158,
+          "endLine": 171,
+          "excerpt": "        private static bool RequestRequiresForceGet(HttpStatusCode statusCode, HttpMethod requestMethod)\n        {\n            switch (statusCode)\n            {\n                case HttpStatusCode.Moved:\n                case HttpStatusCode.Found:\n                case HttpStatusCode.MultipleChoices:\n                    return requestMethod == HttpMethod.Post;\n                case HttpStatusCode.SeeOther:\n                    return requestMethod != HttpMethod.Get && requestMethod != HttpMethod.Head;\n                default:\n                    return false;\n            }\n        }",
+          "sha256": "be75bf16dcbd0d5734e35b3945df3fb3069943c568817cb746b432d38e159058"
+        }
+      ]
+    },
+    {
+      "id": "runtime-q6",
+      "question": "Which internal components does A, SocketsHttpHandler.SetupHandlerChain, directly use?",
+      "answer": "It clones settings, creates HttpConnectionPoolManager and HttpConnectionHandler, conditionally wraps metrics, diagnostics and redirect handlers and invokes a decompression factory. Interlocked.CompareExchange publishes one chain. Constructors prove dependencies, but optional stages are configuration dependent.",
+      "requiredFacts": [
+        "Settings clone and pool/connection handler",
+        "Metrics/diagnostics conditional",
+        "Redirect conditional",
+        "Decompression factory conditional",
+        "One chain publication"
+      ],
+      "evidence": [
+        {
+          "path": "src/libraries/System.Net.Http/src/System/Net/Http/SocketsHttpHandler/SocketsHttpHandler.cs",
+          "startLine": 589,
+          "endLine": 633,
+          "excerpt": "        private HttpMessageHandlerStage SetupHandlerChain()\n        {\n            // Clone the settings to get a relatively consistent view that won't change after this point.\n            // (This isn't entirely complete, as some of the collections it contains aren't currently deeply cloned.)\n            HttpConnectionSettings settings = _settings.CloneAndNormalize();\n\n            HttpConnectionPoolManager poolManager = new HttpConnectionPoolManager(settings);\n            HttpMessageHandlerStage handler = new HttpConnectionHandler(poolManager, doRequestAuth: settings._credentials is { });\n\n            // MetricsHandler should be descendant of DiagnosticsHandler in the handler chain to make sure the 'http.request.duration'\n            // metric is recorded before stopping the request Activity. This is needed to make sure that our telemetry supports Exemplars.\n            if (GlobalHttpSettings.MetricsHandler.IsGloballyEnabled)\n            {\n                handler = new MetricsHandler(handler, settings._meterFactory, settings._proxy, out Meter meter);\n                settings._metrics = new SocketsHttpHandlerMetrics(meter);\n            }\n\n            // DiagnosticsHandler is inserted before RedirectHandler so that trace propagation is done on redirects as well\n            if (GlobalHttpSettings.DiagnosticsHandler.EnableActivityPropagation && settings._activityHeadersPropagator is DistributedContextPropagator propagator)\n            {\n                handler = new DiagnosticsHandler(handler, propagator, settings._proxy, settings._allowAutoRedirect);\n            }\n\n            if (settings._allowAutoRedirect)\n            {\n                // Just as with WinHttpHandler, for security reasons, we do not support authentication on redirects\n                // if the credential is anything other than a CredentialCache.\n                // We allow credentials in a CredentialCache since they are specifically tied to URIs.\n                handler = new RedirectHandler(settings._maxAutomaticRedirections, handler, disableAuthOnRedirect: settings._credentials is not CredentialCache);\n            }\n\n            if ((settings._automaticDecompression & SupportedDecompressionMethods) != DecompressionMethods.None)\n            {\n                Debug.Assert(_decompressionHandlerFactory is not null);\n                handler = _decompressionHandlerFactory(settings, handler);\n            }\n\n            // Ensure a single handler is used for all requests.\n            if (Interlocked.CompareExchange(ref _handler, handler, null) != null)\n            {\n                handler.Dispose();\n            }\n\n            return _handler;\n        }",
+          "sha256": "14b0307b6f339e1beafeb1f3d705a84eab8446eed423d7bfb353e628b7068fb5"
+        }
+      ]
+    },
+    {
+      "id": "runtime-q7",
+      "question": "For R, sockets-based POST receiving an allowed 302 redirect, give the supported path and outcome.",
+      "answer": "HttpClient.SendAsync calls HttpMessageInvoker.SendAsync, dispatching to its handler. HttpClientHandler on the sockets path forwards to SocketsHttpHandler and its chain. RedirectHandler accepts Location, changes RequestUri and rewrites POST to GET without content, then resends via inner handler. Injected/platform dispatch and network response are runtime boundaries; wrappers depend on settings.",
+      "requiredFacts": [
+        "Client -> invoker -> handler",
+        "HttpClientHandler sockets forwarding",
+        "Sockets handler chain",
+        "Redirect URI and POST -> GET rewrite",
+        "Inner resend with dynamic/network boundaries"
+      ],
+      "evidence": [
+        {
+          "path": "src/libraries/System.Net.Http/src/System/Net/Http/HttpClient.cs",
+          "startLine": 526,
+          "endLine": 561,
+          "excerpt": "        public Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, HttpCompletionOption completionOption, CancellationToken cancellationToken)\n        {\n            // Called outside of async state machine to propagate certain exception even without awaiting the returned task.\n            CheckRequestBeforeSend(request);\n            (CancellationTokenSource cts, bool disposeCts, CancellationTokenSource pendingRequestsCts) = PrepareCancellationTokenSource(cancellationToken);\n\n            return Core(request, completionOption, cts, disposeCts, pendingRequestsCts, cancellationToken);\n\n            async Task<HttpResponseMessage> Core(\n                HttpRequestMessage request, HttpCompletionOption completionOption,\n                CancellationTokenSource cts, bool disposeCts, CancellationTokenSource pendingRequestsCts, CancellationToken originalCancellationToken)\n            {\n                bool telemetryStarted = StartSend(request);\n                bool responseContentTelemetryStarted = false;\n                HttpResponseMessage? response = null;\n                try\n                {\n                    // Wait for the send request to complete, getting back the response.\n                    response = await base.SendAsync(request, cts.Token).ConfigureAwait(false);\n                    ThrowForNullResponse(response);\n\n                    // Buffer the response content if we've been asked to.\n                    if (ShouldBufferResponse(completionOption, request))\n                    {\n                        if (HttpTelemetry.Log.IsEnabled() && telemetryStarted)\n                        {\n                            HttpTelemetry.Log.ResponseContentStart();\n                            responseContentTelemetryStarted = true;\n                        }\n\n                        await response.Content.LoadIntoBufferAsync(_maxResponseContentBufferSize, cts.Token).ConfigureAwait(false);\n                    }\n\n                    return response;\n                }\n                catch (Exception e)",
+          "sha256": "b50c12603c536776684824ac7abb89db39cf615436b3b91e2484eb7565e53700"
+        },
+        {
+          "path": "src/libraries/System.Net.Http/src/System/Net/Http/HttpMessageInvoker.cs",
+          "startLine": 67,
+          "endLine": 90,
+          "excerpt": "        public virtual Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)\n        {\n            ArgumentNullException.ThrowIfNull(request);\n\n            ObjectDisposedException.ThrowIf(_disposed, this);\n\n            if (ShouldSendWithTelemetry(request))\n            {\n                return SendAsyncWithTelemetry(_handler, request, cancellationToken);\n            }\n\n            return _handler.SendAsync(request, cancellationToken);\n\n            static async Task<HttpResponseMessage> SendAsyncWithTelemetry(HttpMessageHandler handler, HttpRequestMessage request, CancellationToken cancellationToken)\n            {\n                HttpTelemetry.Log.RequestStart(request);\n\n                HttpResponseMessage? response = null;\n                try\n                {\n                    response = await handler.SendAsync(request, cancellationToken).ConfigureAwait(false);\n                    return response;\n                }\n                catch (Exception ex) when (LogRequestFailed(ex, telemetryStarted: true))",
+          "sha256": "81472eb4f08f82b82459410255d2e6d996f9ad8a8b3bcc2b4309c6326f66f226"
+        },
+        {
+          "path": "src/libraries/System.Net.Http/src/System/Net/Http/HttpClientHandler.cs",
+          "startLine": 10,
+          "endLine": 29,
+          "excerpt": "using System.Threading;\nusing System.Threading.Tasks;\nusing System.Diagnostics.Metrics;\n#if TARGET_WASI\nusing System.Diagnostics;\nusing System.Net.Http.Metrics;\nusing HttpHandlerType = System.Net.Http.WasiHttpHandler;\n#elif TARGET_BROWSER\nusing System.Diagnostics;\nusing System.Net.Http.Metrics;\nusing HttpHandlerType = System.Net.Http.BrowserHttpHandler;\n#else\nusing HttpHandlerType = System.Net.Http.SocketsHttpHandler;\n#endif\n\nnamespace System.Net.Http\n{\n    public partial class HttpClientHandler : HttpMessageHandler\n    {\n        private readonly HttpHandlerType _underlyingHandler;",
+          "sha256": "ef1222c1264c7304cd18e5f9601dbbdadc6d79585075d076c08e4d614cb0e7e7"
+        },
+        {
+          "path": "src/libraries/System.Net.Http/src/System/Net/Http/HttpClientHandler.cs",
+          "startLine": 358,
+          "endLine": 368,
+          "excerpt": "#else\n            ArgumentNullException.ThrowIfNull(request);\n            return Handler.Send(request, cancellationToken);\n#endif\n        }\n\n        protected internal override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)\n        {\n            ArgumentNullException.ThrowIfNull(request);\n            return Handler.SendAsync(request, cancellationToken);\n        }",
+          "sha256": "ef1222c1264c7304cd18e5f9601dbbdadc6d79585075d076c08e4d614cb0e7e7"
+        },
+        {
+          "path": "src/libraries/System.Net.Http/src/System/Net/Http/SocketsHttpHandler/SocketsHttpHandler.cs",
+          "startLine": 676,
+          "endLine": 705,
+          "excerpt": "        protected internal override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)\n        {\n            ArgumentNullException.ThrowIfNull(request);\n\n            ObjectDisposedException.ThrowIf(_disposed, this);\n\n            if (cancellationToken.IsCancellationRequested)\n            {\n                return Task.FromCanceled<HttpResponseMessage>(cancellationToken);\n            }\n\n            Exception? error = ValidateAndNormalizeRequest(request);\n            if (error != null)\n            {\n                return Task.FromException<HttpResponseMessage>(error);\n            }\n\n            return _handler is { } handler\n                ? handler.SendAsync(request, cancellationToken)\n                : CreateHandlerAndSendAsync(request, cancellationToken);\n\n            // SetupHandlerChain may block for a few seconds in some environments.\n            // E.g. during the first access of HttpClient.DefaultProxy - https://github.com/dotnet/runtime/issues/115301.\n            // The setup procedure is enqueued to thread pool to prevent the caller from blocking.\n            async Task<HttpResponseMessage> CreateHandlerAndSendAsync(HttpRequestMessage request, CancellationToken cancellationToken)\n            {\n                _handlerChainSetupTask ??= Task.Run(SetupHandlerChain);\n                HttpMessageHandlerStage handler = await _handlerChainSetupTask.ConfigureAwait(false);\n                return await handler.SendAsync(request, cancellationToken).ConfigureAwait(false);\n            }",
+          "sha256": "14b0307b6f339e1beafeb1f3d705a84eab8446eed423d7bfb353e628b7068fb5"
+        },
+        {
+          "path": "src/libraries/System.Net.Http/src/System/Net/Http/SocketsHttpHandler/SocketsHttpHandler.cs",
+          "startLine": 609,
+          "endLine": 624,
+          "excerpt": "                handler = new DiagnosticsHandler(handler, propagator, settings._proxy, settings._allowAutoRedirect);\n            }\n\n            if (settings._allowAutoRedirect)\n            {\n                // Just as with WinHttpHandler, for security reasons, we do not support authentication on redirects\n                // if the credential is anything other than a CredentialCache.\n                // We allow credentials in a CredentialCache since they are specifically tied to URIs.\n                handler = new RedirectHandler(settings._maxAutomaticRedirections, handler, disableAuthOnRedirect: settings._credentials is not CredentialCache);\n            }\n\n            if ((settings._automaticDecompression & SupportedDecompressionMethods) != DecompressionMethods.None)\n            {\n                Debug.Assert(_decompressionHandlerFactory is not null);\n                handler = _decompressionHandlerFactory(settings, handler);\n            }",
+          "sha256": "14b0307b6f339e1beafeb1f3d705a84eab8446eed423d7bfb353e628b7068fb5"
+        },
+        {
+          "path": "src/libraries/System.Net.Http/src/System/Net/Http/SocketsHttpHandler/RedirectHandler.cs",
+          "startLine": 26,
+          "endLine": 90,
+          "excerpt": "\n        internal override async ValueTask<HttpResponseMessage> SendAsync(HttpRequestMessage request, bool async, CancellationToken cancellationToken)\n        {\n            HttpResponseMessage response = await _innerHandler.SendAsync(request, async, cancellationToken).ConfigureAwait(false);\n\n            uint redirectCount = 0;\n            Uri? redirectUri;\n            Debug.Assert(request.RequestUri != null);\n            while ((redirectUri = GetUriForRedirect(request.RequestUri, response)) != null)\n            {\n                redirectCount++;\n\n                if (redirectCount > _maxAutomaticRedirections)\n                {\n                    // If we exceed the maximum number of redirects\n                    // then just return the 3xx response.\n                    if (NetEventSource.Log.IsEnabled())\n                    {\n                        TraceError($\"Exceeded max number of redirects. Redirect from {request.RequestUri} to {redirectUri} blocked.\", request.GetHashCode());\n                    }\n\n                    break;\n                }\n\n                response.Dispose();\n\n                // Clear the authorization header.\n                request.Headers.Authorization = null;\n\n                if (HttpTelemetry.Log.IsEnabled())\n                {\n                    HttpTelemetry.Log.Redirect(redirectUri);\n                }\n                if (NetEventSource.Log.IsEnabled())\n                {\n                    Trace($\"Redirecting from {request.RequestUri} to {redirectUri} in response to status code {(int)response.StatusCode} '{response.StatusCode}'.\", request.GetHashCode());\n                }\n\n                // Set up for the redirect\n                request.RequestUri = redirectUri;\n                if (RequestRequiresForceGet(response.StatusCode, request.Method))\n                {\n                    if (NetEventSource.Log.IsEnabled())\n                    {\n                        Trace($\"Modified request from {request.Method} to {HttpMethod.Get} in response to status code {(int)response.StatusCode} '{response.StatusCode}'.\", request.GetHashCode());\n                    }\n\n                    request.Method = HttpMethod.Get;\n                    request.Content = null;\n                    if (request.Headers.TransferEncodingChunked == true)\n                    {\n                        request.Headers.TransferEncodingChunked = false;\n                    }\n                }\n\n                if (_disableAuthOnRedirect)\n                {\n                    request.DisableAuth();\n                }\n\n                // Issue the redirected request.\n                response = await _innerHandler.SendAsync(request, async, cancellationToken).ConfigureAwait(false);\n            }\n\n            return response;",
+          "sha256": "be75bf16dcbd0d5734e35b3945df3fb3069943c568817cb746b432d38e159058"
+        },
+        {
+          "path": "src/libraries/System.Net.Http/src/System/Net/Http/SocketsHttpHandler/RedirectHandler.cs",
+          "startLine": 158,
+          "endLine": 171,
+          "excerpt": "        private static bool RequestRequiresForceGet(HttpStatusCode statusCode, HttpMethod requestMethod)\n        {\n            switch (statusCode)\n            {\n                case HttpStatusCode.Moved:\n                case HttpStatusCode.Found:\n                case HttpStatusCode.MultipleChoices:\n                    return requestMethod == HttpMethod.Post;\n                case HttpStatusCode.SeeOther:\n                    return requestMethod != HttpMethod.Get && requestMethod != HttpMethod.Head;\n                default:\n                    return false;\n            }\n        }",
+          "sha256": "be75bf16dcbd0d5734e35b3945df3fb3069943c568817cb746b432d38e159058"
+        },
+        {
+          "path": "src/libraries/System.Net.Http/src/System/Net/Http/HttpClientHandler.cs",
+          "startLine": 66,
+          "endLine": 78,
+          "excerpt": "        }\n#else\n        private HttpHandlerType Handler => _underlyingHandler;\n#endif\n\n        private volatile bool _disposed;\n\n        public HttpClientHandler()\n        {\n            _underlyingHandler = new HttpHandlerType();\n\n            ClientCertificateOptions = ClientCertificateOption.Manual;\n        }",
+          "sha256": "ef1222c1264c7304cd18e5f9601dbbdadc6d79585075d076c08e4d614cb0e7e7"
+        }
+      ]
+    },
+    {
+      "id": "runtime-q8",
+      "question": "If Y, RedirectHandler construction/semantics, changes, which direct consumer is evidenced?",
+      "answer": "SocketsHttpHandler.SetupHandlerChain constructs RedirectHandler when _allowAutoRedirect is true, supplying redirect limit and credential-dependent disableAuthOnRedirect. This proves a consumer; user-visible effects depend on settings and server responses.",
+      "requiredFacts": [
+        "SetupHandlerChain constructs RedirectHandler",
+        "Auto-redirect gate",
+        "Limit and auth-policy parameters",
+        "Behavioral effects conditional"
+      ],
+      "evidence": [
+        {
+          "path": "src/libraries/System.Net.Http/src/System/Net/Http/SocketsHttpHandler/SocketsHttpHandler.cs",
+          "startLine": 609,
+          "endLine": 624,
+          "excerpt": "                handler = new DiagnosticsHandler(handler, propagator, settings._proxy, settings._allowAutoRedirect);\n            }\n\n            if (settings._allowAutoRedirect)\n            {\n                // Just as with WinHttpHandler, for security reasons, we do not support authentication on redirects\n                // if the credential is anything other than a CredentialCache.\n                // We allow credentials in a CredentialCache since they are specifically tied to URIs.\n                handler = new RedirectHandler(settings._maxAutomaticRedirections, handler, disableAuthOnRedirect: settings._credentials is not CredentialCache);\n            }\n\n            if ((settings._automaticDecompression & SupportedDecompressionMethods) != DecompressionMethods.None)\n            {\n                Debug.Assert(_decompressionHandlerFactory is not null);\n                handler = _decompressionHandlerFactory(settings, handler);\n            }",
+          "sha256": "14b0307b6f339e1beafeb1f3d705a84eab8446eed423d7bfb353e628b7068fb5"
+        }
+      ]
+    },
+    {
+      "id": "runtime-q9",
+      "question": "Which tests exercise X, redirect method rewriting, and how do they enter implementation?",
+      "answer": "Common/tests/System/Net/Http/HttpClientHandlerTest.AutoRedirect.cs provides RedirectStatusCodesOldMethodsNewMethods and AllowAutoRedirect_True_ValidateNewMethodUsedOnRedirection. It creates client/handler, sends to a loopback redirect origin and asserts redirected method and final 200. Shared handler configuration selects the implementation; no execution is claimed.",
+      "requiredFacts": [
+        "Named method matrix/theory",
+        "Client/handler entry",
+        "Loopback response Location",
+        "Redirected method and 200 assertions",
+        "Configuration boundary; not executed"
+      ],
+      "evidence": [
+        {
+          "path": "src/libraries/Common/tests/System/Net/Http/HttpClientHandlerTest.AutoRedirect.cs",
+          "startLine": 22,
+          "endLine": 82,
+          "excerpt": "        public static IEnumerable<object[]> RedirectStatusCodesOldMethodsNewMethods()\n        {\n            foreach (int statusCode in new[] { 300, 301, 302, 303, 307, 308 })\n            {\n                yield return new object[] { statusCode, \"GET\", \"GET\" };\n                yield return new object[] { statusCode, \"HEAD\", \"HEAD\" };\n\n                yield return new object[] { statusCode, \"POST\", statusCode <= 303 ? \"GET\" : \"POST\" };\n\n                yield return new object[] { statusCode, \"DELETE\", statusCode == 303 ? \"GET\" : \"DELETE\" };\n                yield return new object[] { statusCode, \"OPTIONS\", statusCode == 303 ? \"GET\" : \"OPTIONS\" };\n                yield return new object[] { statusCode, \"PATCH\", statusCode == 303 ? \"GET\" : \"PATCH\" };\n                yield return new object[] { statusCode, \"PUT\", statusCode == 303 ? \"GET\" : \"PUT\" };\n                yield return new object[] { statusCode, \"MYCUSTOMMETHOD\", statusCode == 303 ? \"GET\" : \"MYCUSTOMMETHOD\" };\n            }\n        }\n\n        [Theory, MemberData(nameof(RedirectStatusCodesOldMethodsNewMethods))]\n        public async Task AllowAutoRedirect_True_ValidateNewMethodUsedOnRedirection(\n            int statusCode, string oldMethod, string newMethod)\n        {\n            if (statusCode == 308 && (IsWinHttpHandler && PlatformDetection.WindowsVersion < 10))\n            {\n                // 308 redirects are not supported on old versions of WinHttp, or on .NET Framework.\n                return;\n            }\n\n            HttpClientHandler handler = CreateHttpClientHandler();\n            using (HttpClient client = CreateHttpClient(handler))\n            {\n                await LoopbackServer.CreateServerAsync(async (origServer, origUrl) =>\n                {\n                    var request = new HttpRequestMessage(new HttpMethod(oldMethod), origUrl) { Version = UseVersion };\n\n                    Task<HttpResponseMessage> getResponseTask = client.SendAsync(TestAsync, request);\n\n                    await LoopbackServer.CreateServerAsync(async (redirServer, redirUrl) =>\n                    {\n                        // Original URL will redirect to a different URL\n                        Task<List<string>> serverTask = origServer.AcceptConnectionSendResponseAndCloseAsync((HttpStatusCode)statusCode, $\"Location: {redirUrl}\\r\\n\");\n\n                        await Task.WhenAny(getResponseTask, serverTask);\n                        Assert.False(getResponseTask.IsCompleted, $\"{getResponseTask.Status}: {getResponseTask.Exception}\");\n                        await serverTask;\n\n                        // Redirected URL answers with success\n                        serverTask = redirServer.AcceptConnectionSendResponseAndCloseAsync();\n                        await TestHelper.WhenAllCompletedOrAnyFailed(getResponseTask, serverTask);\n\n                        List<string> receivedRequest = await serverTask;\n\n                        string[] statusLineParts = receivedRequest[0].Split(' ');\n\n                        using (HttpResponseMessage response = await getResponseTask)\n                        {\n                            Assert.Equal(200, (int)response.StatusCode);\n                            Assert.Equal(newMethod, statusLineParts[0]);\n                        }\n                    });\n                });\n            }",
+          "sha256": "4d6804757b99439a2099b35164f8c7da02b82a5d62e8218685de0b96b5edd706"
+        }
+      ]
+    },
+    {
+      "id": "runtime-q10",
+      "question": "Where does Z, redirect Location, enter and get transformed?",
+      "answer": "GetUriForRedirect checks status then response.Headers.Location. Missing Location stops redirects; relative values resolve against request URI and omitted fragments inherit the original. Secure-to-insecure and unsupported schemes are blocked. SendAsync assigns accepted RequestUri before resending.",
+      "requiredFacts": [
+        "Reads Location after status gate",
+        "Resolves relative URI",
+        "Inherits fragment",
+        "Blocks downgrade/unsupported scheme",
+        "Assigns accepted URI"
+      ],
+      "evidence": [
+        {
+          "path": "src/libraries/System.Net.Http/src/System/Net/Http/SocketsHttpHandler/RedirectHandler.cs",
+          "startLine": 93,
+          "endLine": 156,
+          "excerpt": "        private Uri? GetUriForRedirect(Uri requestUri, HttpResponseMessage response)\n        {\n            switch (response.StatusCode)\n            {\n                case HttpStatusCode.Moved:\n                case HttpStatusCode.Found:\n                case HttpStatusCode.SeeOther:\n                case HttpStatusCode.TemporaryRedirect:\n                case HttpStatusCode.MultipleChoices:\n                case HttpStatusCode.PermanentRedirect:\n                    break;\n\n                default:\n                    return null;\n            }\n\n            Uri? location = response.Headers.Location;\n            if (location == null)\n            {\n                return null;\n            }\n\n            // Ensure the redirect location is an absolute URI.\n            if (!location.IsAbsoluteUri)\n            {\n                location = new Uri(requestUri, location);\n            }\n\n            // Per https://tools.ietf.org/html/rfc7231#section-7.1.2, a redirect location without a\n            // fragment should inherit the fragment from the original URI.\n            string requestFragment = requestUri.Fragment;\n            if (!string.IsNullOrEmpty(requestFragment))\n            {\n                string redirectFragment = location.Fragment;\n                if (string.IsNullOrEmpty(redirectFragment))\n                {\n                    location = new UriBuilder(location) { Fragment = requestFragment }.Uri;\n                }\n            }\n\n            // Disallow automatic redirection from secure to non-secure schemes\n            if (HttpUtilities.IsSupportedSecureScheme(requestUri.Scheme) && !HttpUtilities.IsSupportedSecureScheme(location.Scheme))\n            {\n                if (NetEventSource.Log.IsEnabled())\n                {\n                    TraceError($\"Insecure https to http redirect from '{requestUri}' to '{location}' blocked.\", response.RequestMessage!.GetHashCode());\n                }\n\n                return null;\n            }\n\n            // Disallow automatic redirection to unsupported schemes\n            if (!HttpUtilities.IsSupportedScheme(location.Scheme))\n            {\n                if (NetEventSource.Log.IsEnabled())\n                {\n                    TraceError($\"Redirect from '{requestUri}' to '{location}' blocked due to unsupported scheme '{location.Scheme}'.\", response.RequestMessage!.GetHashCode());\n                }\n\n                return null;\n            }\n\n            return location;\n        }",
+          "sha256": "be75bf16dcbd0d5734e35b3945df3fb3069943c568817cb746b432d38e159058"
+        },
+        {
+          "path": "src/libraries/System.Net.Http/src/System/Net/Http/SocketsHttpHandler/RedirectHandler.cs",
+          "startLine": 62,
+          "endLine": 88,
+          "excerpt": "                }\n\n                // Set up for the redirect\n                request.RequestUri = redirectUri;\n                if (RequestRequiresForceGet(response.StatusCode, request.Method))\n                {\n                    if (NetEventSource.Log.IsEnabled())\n                    {\n                        Trace($\"Modified request from {request.Method} to {HttpMethod.Get} in response to status code {(int)response.StatusCode} '{response.StatusCode}'.\", request.GetHashCode());\n                    }\n\n                    request.Method = HttpMethod.Get;\n                    request.Content = null;\n                    if (request.Headers.TransferEncodingChunked == true)\n                    {\n                        request.Headers.TransferEncodingChunked = false;\n                    }\n                }\n\n                if (_disableAuthOnRedirect)\n                {\n                    request.DisableAuth();\n                }\n\n                // Issue the redirected request.\n                response = await _innerHandler.SendAsync(request, async, cancellationToken).ConfigureAwait(false);\n            }",
+          "sha256": "be75bf16dcbd0d5734e35b3945df3fb3069943c568817cb746b432d38e159058"
+        }
+      ]
+    }
+  ]
+}

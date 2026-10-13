@@ -1,0 +1,851 @@
+{
+  "version": 1,
+  "repositories": [
+    {
+      "id": "click",
+      "repository": "pallets/click",
+      "commit": "2247b35ea1c47c727d7a06e51fa280e12a863ff6",
+      "questions": [
+        {
+          "id": "q01",
+          "question": "What does the repository do, and who calls or runs it?"
+        },
+        {
+          "id": "q02",
+          "question": "Name the principal components and their responsibilities."
+        },
+        {
+          "id": "q03",
+          "question": "Which languages, build/framework systems and package boundaries organize it?"
+        },
+        {
+          "id": "q04",
+          "question": "Where does public-library use begin when a client invokes a click.Command instance?"
+        },
+        {
+          "id": "q05",
+          "question": "Where is invoking a command callback with parsed parameters implemented? Name its component and definition."
+        },
+        {
+          "id": "q06",
+          "question": "Which internal components does click.core directly use, and what proves each direction?"
+        },
+        {
+          "id": "q07",
+          "question": "For Command.main executing a normal client callback, give the source-supported call/dispatch path to its outcome; identify dynamic or unresolved boundaries."
+        },
+        {
+          "id": "q08",
+          "question": "If click.parser._OptionParser changes, which direct production consumers are evidenced? Separate dependency from speculative behavioral impact."
+        },
+        {
+          "id": "q09",
+          "question": "Which tests or documented example exercise invoking a command callback with parsed parameters, and how do they enter the implementation?"
+        },
+        {
+          "id": "q10",
+          "question": "Where does a client CLI argv list enter and get handled or transformed?"
+        }
+      ]
+    },
+    {
+      "id": "excalidraw",
+      "repository": "excalidraw/excalidraw",
+      "commit": "e65eca999e071503efb893d3379a29fb96ff37c4",
+      "questions": [
+        {
+          "id": "excalidraw-q1",
+          "question": "What does Excalidraw do, and who runs or embeds it?"
+        },
+        {
+          "id": "excalidraw-q2",
+          "question": "Name the principal Excalidraw components and their responsibilities."
+        },
+        {
+          "id": "excalidraw-q3",
+          "question": "Which languages, framework/build systems and package boundaries organize Excalidraw?"
+        },
+        {
+          "id": "excalidraw-q4",
+          "question": "Where does public-library use of restoreElements begin?"
+        },
+        {
+          "id": "excalidraw-q5",
+          "question": "Where is X = detecting invisibly small elements implemented, and what qualifies?"
+        },
+        {
+          "id": "excalidraw-q6",
+          "question": "Which internal packages does A = @excalidraw/element directly declare as dependencies, and what proves the direction?"
+        },
+        {
+          "id": "excalidraw-q7",
+          "question": "For R = restore a supported invisible rectangle with deleteInvisibleElements=true, trace the source path to its outcome and identify boundaries."
+        },
+        {
+          "id": "excalidraw-q8",
+          "question": "If Y = isInvisiblySmallElement changes, which direct consumers in restore.ts and element/index.ts are evidenced, and what impact is only inferred?"
+        },
+        {
+          "id": "excalidraw-q9",
+          "question": "Which test exercises X through restoration, and what does its mocking limit?"
+        },
+        {
+          "id": "excalidraw-q10",
+          "question": "Where does Z = deleteInvisibleElements restoration option enter and get transformed into deletion state?"
+        }
+      ]
+    },
+    {
+      "id": "fzf",
+      "repository": "junegunn/fzf",
+      "commit": "c0a193e031f01fb50bf6f7be4381990a3753f7cf",
+      "questions": [
+        {
+          "id": "q01",
+          "question": "What does the repository do, and who calls or runs it?"
+        },
+        {
+          "id": "q02",
+          "question": "Name the principal components and their responsibilities."
+        },
+        {
+          "id": "q03",
+          "question": "Which languages, build/framework systems and package boundaries organize it?"
+        },
+        {
+          "id": "q04",
+          "question": "Where does the selected executable use begin?"
+        },
+        {
+          "id": "q05",
+          "question": "Where is noninteractive --filter matching implemented? Name its component and definition."
+        },
+        {
+          "id": "q06",
+          "question": "Which internal components does main.go directly use, and what proves each direction?"
+        },
+        {
+          "id": "q07",
+          "question": "For piping text to fzf --filter foo --no-sort, give the source-supported call/dispatch path to its outcome; identify dynamic or unresolved boundaries."
+        },
+        {
+          "id": "q08",
+          "question": "If Reader.ReadSource changes, which direct production consumers are evidenced? Separate dependency from speculative behavioral impact."
+        },
+        {
+          "id": "q09",
+          "question": "Which tests or documented example exercise noninteractive --filter matching, and how do they enter the implementation?"
+        },
+        {
+          "id": "q10",
+          "question": "Where does the --filter query string enter and get handled or transformed?"
+        }
+      ]
+    },
+    {
+      "id": "nowinandroid",
+      "repository": "android/nowinandroid",
+      "commit": "a49ed253d75e61a2b6ab80a8da677b57437b08eb",
+      "questions": [
+        {
+          "id": "nowinandroid-q1",
+          "question": "What does Now in Android do, and who runs or learns from it?"
+        },
+        {
+          "id": "nowinandroid-q2",
+          "question": "Name the principal Now in Android components and responsibilities."
+        },
+        {
+          "id": "nowinandroid-q3",
+          "question": "Which languages, frameworks, build system and module boundaries organize Now in Android?"
+        },
+        {
+          "id": "nowinandroid-q4",
+          "question": "Where does the selected Android launcher execution begin?"
+        },
+        {
+          "id": "nowinandroid-q5",
+          "question": "Where is X = removing a saved news resource while offering undo implemented?"
+        },
+        {
+          "id": "nowinandroid-q6",
+          "question": "Which internal modules does A = core:data directly declare as production dependencies?"
+        },
+        {
+          "id": "nowinandroid-q7",
+          "question": "For R = removeFromSavedResources(id), trace the source-supported production path to preference removal and identify dispatch boundaries."
+        },
+        {
+          "id": "nowinandroid-q8",
+          "question": "If Y = BookmarksViewModel.removeFromSavedResources changes, which direct screen/test consumers are evidenced?"
+        },
+        {
+          "id": "nowinandroid-q9",
+          "question": "Which tests exercise X, and how do they enter its implementation?"
+        },
+        {
+          "id": "nowinandroid-q10",
+          "question": "Where does Z = newsResourceId plus bookmarked boolean enter and become persistent preference data?"
+        }
+      ]
+    },
+    {
+      "id": "ripgrep",
+      "repository": "BurntSushi/ripgrep",
+      "commit": "3fce3b5bb0236da2df6d99672afb8a719642eca7",
+      "questions": [
+        {
+          "id": "q01",
+          "question": "What does the repository do, and who calls or runs it?"
+        },
+        {
+          "id": "q02",
+          "question": "Name the principal components and their responsibilities."
+        },
+        {
+          "id": "q03",
+          "question": "Which languages, build/framework systems and package boundaries organize it?"
+        },
+        {
+          "id": "q04",
+          "question": "Where does the selected executable use begin?"
+        },
+        {
+          "id": "q05",
+          "question": "Where is sequential ordinary-file text searching implemented? Name its component and definition."
+        },
+        {
+          "id": "q06",
+          "question": "Which internal packages does the grep facade directly use, and what proves each direction?"
+        },
+        {
+          "id": "q07",
+          "question": "For rg --threads 1 PATTERN FILE with an ordinary text file and no preprocessing/indexing, give the source-supported call/dispatch path to its outcome; identify dynamic or unresolved boundaries."
+        },
+        {
+          "id": "q08",
+          "question": "If SearchWorker.search changes, which direct production consumers are evidenced? Separate dependency from speculative behavioral impact."
+        },
+        {
+          "id": "q09",
+          "question": "Which tests or documented example exercise sequential ordinary-file text searching, and how do they enter the implementation?"
+        },
+        {
+          "id": "q10",
+          "question": "Where does RIPGREP_CONFIG_PATH enter and get handled or transformed?"
+        }
+      ]
+    },
+    {
+      "id": "spring-petclinic",
+      "repository": "spring-projects/spring-petclinic",
+      "commit": "500158f732419217507c7656904b8e6aa1bcc0d6",
+      "questions": [
+        {
+          "id": "q01",
+          "question": "What does the repository do, and who calls or runs it?"
+        },
+        {
+          "id": "q02",
+          "question": "Name the principal components and their responsibilities."
+        },
+        {
+          "id": "q03",
+          "question": "Which languages, build/framework systems and package boundaries organize it?"
+        },
+        {
+          "id": "q04",
+          "question": "Where does the selected executable use begin?"
+        },
+        {
+          "id": "q05",
+          "question": "Where is searching owners by last-name prefix implemented? Name its component and definition."
+        },
+        {
+          "id": "q06",
+          "question": "Which internal components does OwnerController directly use in owner search, and what proves each direction?"
+        },
+        {
+          "id": "q07",
+          "question": "For GET /owners?lastName=Franklin&page=1, give the source-supported call/dispatch path to its outcome; identify dynamic or unresolved boundaries."
+        },
+        {
+          "id": "q08",
+          "question": "If OwnerRepository changes, which direct production consumers are evidenced? Separate dependency from speculative behavioral impact."
+        },
+        {
+          "id": "q09",
+          "question": "Which tests or documented example exercise searching owners by last-name prefix, and how do they enter the implementation?"
+        },
+        {
+          "id": "q10",
+          "question": "Where does the lastName HTTP query value enter and get handled or transformed?"
+        }
+      ]
+    },
+    {
+      "id": "fastify",
+      "repository": "fastify/fastify",
+      "commit": "86368086171305df4e235f6d6bec892c67ec2ae2",
+      "questions": [
+        {
+          "id": "fastify-q1",
+          "question": "What does Fastify do, and who calls or runs it?"
+        },
+        {
+          "id": "fastify-q2",
+          "question": "Name the principal Fastify components and their responsibilities."
+        },
+        {
+          "id": "fastify-q3",
+          "question": "Which languages, runtime/build tools and package boundaries organize Fastify?"
+        },
+        {
+          "id": "fastify-q4",
+          "question": "Where does public-library use to create a Fastify server begin?"
+        },
+        {
+          "id": "fastify-q5",
+          "question": "Where is X = sending the resolved value returned by an async route handler implemented?"
+        },
+        {
+          "id": "fastify-q6",
+          "question": "Which internal modules does A = lib/handle-request.js directly use, and what proves each direction?"
+        },
+        {
+          "id": "fastify-q7",
+          "question": "For R = a bodyless request reaching handleRequest whose configured handler returns a fulfilled promise, trace the path to reply.send and identify dynamic boundaries."
+        },
+        {
+          "id": "fastify-q8",
+          "question": "If Y = lib/handle-request.js exports change, which production modules directly consume them?"
+        },
+        {
+          "id": "fastify-q9",
+          "question": "Which test exercises X through public server use, and how does it enter?"
+        },
+        {
+          "id": "fastify-q10",
+          "question": "Where does Z = a QUERY request lacking Content-Type enter and get handled?"
+        }
+      ]
+    },
+    {
+      "id": "httpx",
+      "repository": "encode/httpx",
+      "commit": "b5addb64f0161ff6bfe94c124ef76f6a1fba5254",
+      "questions": [
+        {
+          "id": "httpx-q1",
+          "question": "What does HTTPX do, and who calls or runs it?"
+        },
+        {
+          "id": "httpx-q2",
+          "question": "Name the principal HTTPX components and their responsibilities."
+        },
+        {
+          "id": "httpx-q3",
+          "question": "Which languages, build system and package boundaries organize HTTPX?"
+        },
+        {
+          "id": "httpx-q4",
+          "question": "Where does selected public-library use httpx.get(url) begin?"
+        },
+        {
+          "id": "httpx-q5",
+          "question": "Where is X = rewriting the HTTP method when following a redirect implemented, and what rules apply?"
+        },
+        {
+          "id": "httpx-q6",
+          "question": "Which internal modules does A = httpx/_client.py directly use for authentication, models and transport dispatch?"
+        },
+        {
+          "id": "httpx-q7",
+          "question": "For R = synchronous Client.request with follow_redirects=True receiving a redirect, trace the source path to the next request and identify dynamic boundaries."
+        },
+        {
+          "id": "httpx-q8",
+          "question": "If Y = BaseClient._redirect_method changes, which direct consumer is evidenced and which broader effects are indirect?"
+        },
+        {
+          "id": "httpx-q9",
+          "question": "Which test exercises X for a POST receiving 301, and how does it enter without a real network?"
+        },
+        {
+          "id": "httpx-q10",
+          "question": "Where does Z = a redirect response Location header enter and get transformed into the next URL?"
+        }
+      ]
+    },
+    {
+      "id": "unity-boatattack",
+      "repository": "Unity-Technologies/BoatAttack",
+      "commit": "6acf5f773a440030489cb5e2b3c009fb5fe1e8ce",
+      "questions": [
+        {
+          "id": "unity-boatattack-q1",
+          "question": "What does BoatAttack do, and who runs it?"
+        },
+        {
+          "id": "unity-boatattack-q2",
+          "question": "Name the principal BoatAttack components and their responsibilities."
+        },
+        {
+          "id": "unity-boatattack-q3",
+          "question": "Which languages, framework and package boundaries organize BoatAttack?"
+        },
+        {
+          "id": "unity-boatattack-q4",
+          "question": "Where does the selected human-controlled boat use begin?"
+        },
+        {
+          "id": "unity-boatattack-q5",
+          "question": "Where is X, water-gated throttle acceleration, implemented?"
+        },
+        {
+          "id": "unity-boatattack-q6",
+          "question": "Which internal components does A, HumanController, directly use, and what proves each direction?"
+        },
+        {
+          "id": "unity-boatattack-q7",
+          "question": "For R, holding throttle on a human boat, give the supported path to acceleration and identify dispatch boundaries."
+        },
+        {
+          "id": "unity-boatattack-q8",
+          "question": "If Y, Engine.Accelerate throttle semantics, changes, which direct consumers are evidenced?"
+        },
+        {
+          "id": "unity-boatattack-q9",
+          "question": "Which documented example exercises X, boat acceleration, and how does it enter the implementation?"
+        },
+        {
+          "id": "unity-boatattack-q10",
+          "question": "Where does Z, throttle input, enter and get transformed?"
+        }
+      ]
+    },
+    {
+      "id": "godot-demos",
+      "repository": "godotengine/godot-demo-projects",
+      "commit": "b761b4cd5718a7118f2c95eb55f181d0a5f004f1",
+      "questions": [
+        {
+          "id": "godot-demos-q1",
+          "question": "What does godot-demo-projects do, and who runs it?"
+        },
+        {
+          "id": "godot-demos-q2",
+          "question": "Name the principal components and responsibilities, distinguishing the repository from Pong."
+        },
+        {
+          "id": "godot-demos-q3",
+          "question": "Which languages, framework systems and project boundaries organize the repository and selected Pong demo?"
+        },
+        {
+          "id": "godot-demos-q4",
+          "question": "Where does selected GDScript Pong execution begin?"
+        },
+        {
+          "id": "godot-demos-q5",
+          "question": "Where is X, resetting the ball after crossing a side wall, implemented?"
+        },
+        {
+          "id": "godot-demos-q6",
+          "question": "Which internal components does A, pong.tscn, directly bind and use?"
+        },
+        {
+          "id": "godot-demos-q7",
+          "question": "For R, the ball entering a side wall, give the supported reset path and dynamic boundary."
+        },
+        {
+          "id": "godot-demos-q8",
+          "question": "If Y, ball.gd.reset semantics, changes, which direct consumer is evidenced?"
+        },
+        {
+          "id": "godot-demos-q9",
+          "question": "Which documented example exercises X, side-wall ball reset, and how does it enter implementation?"
+        },
+        {
+          "id": "godot-demos-q10",
+          "question": "Where does Z, paddle movement input, enter and get transformed?"
+        }
+      ]
+    },
+    {
+      "id": "sqlite",
+      "repository": "sqlite/sqlite",
+      "commit": "6e35c19f170958b1e846e01c55318988f2d192e0",
+      "questions": [
+        {
+          "id": "sqlite-q1",
+          "question": "What does SQLite do, and who calls or runs it?"
+        },
+        {
+          "id": "sqlite-q2",
+          "question": "Name the principal SQLite components and responsibilities."
+        },
+        {
+          "id": "sqlite-q3",
+          "question": "Which languages, build systems and boundaries organize SQLite?"
+        },
+        {
+          "id": "sqlite-q4",
+          "question": "Where does the selected public-library SQL execution begin?"
+        },
+        {
+          "id": "sqlite-q5",
+          "question": "Where is X, executing SQL statements with result-row callbacks, implemented?"
+        },
+        {
+          "id": "sqlite-q6",
+          "question": "Which internal components does A, sqlite3_exec, directly use?"
+        },
+        {
+          "id": "sqlite-q7",
+          "question": "For R, SELECT through sqlite3_exec with a callback, give the supported path and dynamic boundary."
+        },
+        {
+          "id": "sqlite-q8",
+          "question": "If Y, sqlite3_exec row-callback semantics, changes, which direct consumer is evidenced?"
+        },
+        {
+          "id": "sqlite-q9",
+          "question": "Which tests exercise X, SQL execution with result-row callbacks, and how do they enter implementation?"
+        },
+        {
+          "id": "sqlite-q10",
+          "question": "Where does Z, SQL text and its unconsumed tail, enter and get transformed?"
+        }
+      ]
+    },
+    {
+      "id": "runtime",
+      "repository": "dotnet/runtime",
+      "commit": "8630d8988107478d249e2fdb8162f8c7dcbd3dbb",
+      "questions": [
+        {
+          "id": "runtime-q1",
+          "question": "What does dotnet/runtime do, and who calls or runs it?"
+        },
+        {
+          "id": "runtime-q2",
+          "question": "Name the principal repository components and responsibilities beyond HTTP."
+        },
+        {
+          "id": "runtime-q3",
+          "question": "Which languages, build systems and boundaries organize dotnet/runtime?"
+        },
+        {
+          "id": "runtime-q4",
+          "question": "Where does the selected public HTTP GET use begin on the sockets path?"
+        },
+        {
+          "id": "runtime-q5",
+          "question": "Where is X, HTTP redirect method rewriting, implemented?"
+        },
+        {
+          "id": "runtime-q6",
+          "question": "Which internal components does A, SocketsHttpHandler.SetupHandlerChain, directly use?"
+        },
+        {
+          "id": "runtime-q7",
+          "question": "For R, sockets-based POST receiving an allowed 302 redirect, give the supported path and outcome."
+        },
+        {
+          "id": "runtime-q8",
+          "question": "If Y, RedirectHandler construction/semantics, changes, which direct consumer is evidenced?"
+        },
+        {
+          "id": "runtime-q9",
+          "question": "Which tests exercise X, redirect method rewriting, and how do they enter implementation?"
+        },
+        {
+          "id": "runtime-q10",
+          "question": "Where does Z, redirect Location, enter and get transformed?"
+        }
+      ]
+    },
+    {
+      "id": "starlette",
+      "repository": "encode/starlette",
+      "commit": "96d5023c55b29224edb8d684868c49f681d079a9",
+      "questions": [
+        {
+          "id": "q1",
+          "question": "What does Starlette do, and who calls or runs it?"
+        },
+        {
+          "id": "q2",
+          "question": "Name the principal repository components and their responsibilities."
+        },
+        {
+          "id": "q3",
+          "question": "Which languages, build/framework systems and package boundaries organize Starlette?"
+        },
+        {
+          "id": "q4",
+          "question": "Where does public-library HTTP use begin for a Starlette application passed to an ASGI server?"
+        },
+        {
+          "id": "q5",
+          "question": "Where is X, matching and converting an integer URL segment such as /int/{param:int}, implemented?"
+        },
+        {
+          "id": "q6",
+          "question": "Which internal components does A = Starlette.build_middleware_stack directly use, and what proves each direction?"
+        },
+        {
+          "id": "q7",
+          "question": "For R = an HTTP GET /int/5 with Route(/int/{param:int}, int_convertor), give the dispatch path and dynamic boundaries."
+        },
+        {
+          "id": "q8",
+          "question": "If Y = Route.matches changes, which direct consumers are evidenced, and what impact remains speculative?"
+        },
+        {
+          "id": "q9",
+          "question": "Which test exercises X = integer path conversion, and how does it enter the implementation?"
+        },
+        {
+          "id": "q10",
+          "question": "Where does Z = the raw value 5 in GET /int/5 enter and become the endpoint integer parameter?"
+        }
+      ]
+    },
+    {
+      "id": "axum",
+      "repository": "tokio-rs/axum",
+      "commit": "e57b547eb95de74b73b34719dd5926254a085634",
+      "questions": [
+        {
+          "id": "q1",
+          "question": "What does axum do, and who calls or runs it?"
+        },
+        {
+          "id": "q2",
+          "question": "Name the principal repository components and their responsibilities."
+        },
+        {
+          "id": "q3",
+          "question": "Which languages, build/framework systems and package boundaries organize axum?"
+        },
+        {
+          "id": "q4",
+          "question": "Where does public-library request use begin for an axum Router<()>?"
+        },
+        {
+          "id": "q5",
+          "question": "Where is X = serving HEAD via a GET handler while removing the response body implemented?"
+        },
+        {
+          "id": "q6",
+          "question": "Which internal components does A = PathRouter::call_with_state directly use, and what proves each direction?"
+        },
+        {
+          "id": "q7",
+          "question": "For R = HEAD / with only a GET handler registered, give the dispatch path through axum to an empty response body and identify boundaries."
+        },
+        {
+          "id": "q8",
+          "question": "If Y = PathRouter::call_with_state changes, which direct Router consumer is evidenced, and what impact is speculative?"
+        },
+        {
+          "id": "q9",
+          "question": "Which tests exercise X = GET serving HEAD with body suppression, and how do they enter the implementation?"
+        },
+        {
+          "id": "q10",
+          "question": "Where does Z = URI path captures enter and get transformed before axum extractors use them?"
+        }
+      ]
+    },
+    {
+      "id": "chi",
+      "repository": "go-chi/chi",
+      "commit": "7f9b7448f51d28804fac98c0a17bc2a7cec1079f",
+      "questions": [
+        {
+          "id": "q1",
+          "question": "What does chi do, and who calls or runs it?"
+        },
+        {
+          "id": "q2",
+          "question": "Name the principal repository components and their responsibilities."
+        },
+        {
+          "id": "q3",
+          "question": "Which languages, build/framework systems and package boundaries organize chi?"
+        },
+        {
+          "id": "q4",
+          "question": "Where does public-library use begin for a chi router serving HTTP?"
+        },
+        {
+          "id": "q5",
+          "question": "Where is X = dispatching an HTTP method/path to the matching chi handler implemented?"
+        },
+        {
+          "id": "q6",
+          "question": "Which internal components does A = Mux.routeHTTP directly use, and what proves each direction?"
+        },
+        {
+          "id": "q7",
+          "question": "For R = GET /hi registered by TestMuxPlain, give the source-supported path to the bye response and dynamic boundaries."
+        },
+        {
+          "id": "q8",
+          "question": "If Y = node.FindRoute changes, which direct production consumers in Mux are evidenced?"
+        },
+        {
+          "id": "q9",
+          "question": "Which test exercises X = method/path dispatch, and how does it enter the implementation?"
+        },
+        {
+          "id": "q10",
+          "question": "Where does Z = URL path and captured path parameters enter and get transformed during chi routing?"
+        }
+      ]
+    },
+    {
+      "id": "swift-argument-parser",
+      "repository": "apple/swift-argument-parser",
+      "commit": "efd239f0055b3d6b6cc122a786c46a0ea8d0235b",
+      "questions": [
+        {
+          "id": "q1",
+          "question": "What does swift-argument-parser do, and who calls or runs it?"
+        },
+        {
+          "id": "q2",
+          "question": "Name the principal components and their responsibilities."
+        },
+        {
+          "id": "q3",
+          "question": "Which languages, build systems and package boundaries organize it?"
+        },
+        {
+          "id": "q4",
+          "question": "Where does the Repeat executable begin?"
+        },
+        {
+          "id": "q5",
+          "question": "Where is X, synchronous parse-then-run command execution, implemented?"
+        },
+        {
+          "id": "q6",
+          "question": "Which internal targets does A, generate-manual, directly use, and what proves the directions?"
+        },
+        {
+          "id": "q7",
+          "question": "For R, starting Repeat with hello and no count, give the source-supported path and identify dispatch limits."
+        },
+        {
+          "id": "q8",
+          "question": "If Y, ArgumentParserToolInfo target, changes, which direct target consumers are evidenced?"
+        },
+        {
+          "id": "q9",
+          "question": "Which test or example exercises X, synchronous parse-then-run execution, and how does it enter?"
+        },
+        {
+          "id": "q10",
+          "question": "Where does Z, the raw argument vector, enter and get transformed before command parsing?"
+        }
+      ]
+    },
+    {
+      "id": "dapper",
+      "repository": "DapperLib/Dapper",
+      "commit": "eb47546a408bbf6c178bda4f04dc205bc51ffbfe",
+      "questions": [
+        {
+          "id": "q1",
+          "question": "What does Dapper do, and who calls it?"
+        },
+        {
+          "id": "q2",
+          "question": "Name the principal components and their responsibilities."
+        },
+        {
+          "id": "q3",
+          "question": "Which languages, build systems and package boundaries organize it?"
+        },
+        {
+          "id": "q4",
+          "question": "Where does selected public-library use, connection.Execute(sql), begin?"
+        },
+        {
+          "id": "q5",
+          "question": "Where is X, synchronous single-command non-query execution, implemented?"
+        },
+        {
+          "id": "q6",
+          "question": "Which internal component does A, the Dapper.SqlBuilder project, directly use, and what proves the direction?"
+        },
+        {
+          "id": "q7",
+          "question": "For R, connection.Execute(sql) with null parameters, give the source-supported path to the affected-row result and its unresolved boundaries."
+        },
+        {
+          "id": "q8",
+          "question": "If Y, the Dapper core project, changes, which direct project consumers are evidenced?"
+        },
+        {
+          "id": "q9",
+          "question": "Which documented example exercises X, synchronous non-query execution, and how does it enter?"
+        },
+        {
+          "id": "q10",
+          "question": "Where does Z, the SQL string supplied to Execute, enter and get handled?"
+        }
+      ]
+    },
+    {
+      "id": "vitest",
+      "repository": "vitest-dev/vitest",
+      "commit": "f15bdac4f05d2838855d4bd4f47e4076036ea18b",
+      "questions": [
+        {
+          "id": "q1",
+          "question": "What does Vitest do, and who calls or runs it?"
+        },
+        {
+          "id": "q2",
+          "question": "Name principal package components and their responsibilities."
+        },
+        {
+          "id": "q3",
+          "question": "Which languages, build systems and package boundaries organize it?"
+        },
+        {
+          "id": "q4",
+          "question": "Where does selected public-library use, parseCLI from vitest/node, begin?"
+        },
+        {
+          "id": "q5",
+          "question": "Where is X, parsing vitest run into options.run without executing tests, implemented?"
+        },
+        {
+          "id": "q6",
+          "question": "Which internal modules does A, packages/vitest/src/node/cli/cac.ts, directly use through runtime imports?"
+        },
+        {
+          "id": "q7",
+          "question": "For R, parseCLI(\"vitest run\"), give the source-supported path and outcome, including unresolved boundaries."
+        },
+        {
+          "id": "q8",
+          "question": "If Y, createCLI in cac.ts, changes, which direct consumers are evidenced?"
+        },
+        {
+          "id": "q9",
+          "question": "Which tests exercise X, parseCLI run-option handling, and how do they enter?"
+        },
+        {
+          "id": "q10",
+          "question": "Where does Z, a string argv supplied to parseCLI, enter and get transformed?"
+        }
+      ]
+    }
+  ]
+}

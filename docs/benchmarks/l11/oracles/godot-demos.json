@@ -1,0 +1,387 @@
+{
+  "id": "godot-demos",
+  "repository": "godotengine/godot-demo-projects",
+  "commit": "b761b4cd5718a7118f2c95eb55f181d0a5f004f1",
+  "trackedFiles": 4071,
+  "questions": [
+    {
+      "id": "godot-demos-q1",
+      "question": "What does godot-demo-projects do, and who runs it?",
+      "answer": "It collects independent Godot Engine demo projects. Each project.godot folder is an importable project; developers scan the repository in Godot project manager or obtain individual demos. Demos can run natively or as published browser exports.",
+      "requiredFacts": [
+        "Independent Godot demos",
+        "project.godot identifies a project",
+        "Developers import through Godot project manager"
+      ],
+      "evidence": [
+        {
+          "path": "README.md",
+          "startLine": 1,
+          "endLine": 5,
+          "excerpt": "# Godot demo projects\n\nEach folder containing a `project.godot` file is a demo project meant to\nbe used with [Godot Engine](https://godotengine.org), the open source\n2D and 3D game engine.",
+          "sha256": "4c121fc88a1412b8e381263146ac67937c485386e79641569117a6516dd64ba3"
+        },
+        {
+          "path": "README.md",
+          "startLine": 16,
+          "endLine": 38,
+          "excerpt": "## Importing demos\n\nTo import all demos at once in the project manager:\n\n- Clone this repository or [download a ZIP archive](https://github.com/godotengine/godot-demo-projects/archive/master.zip).\n  - If you've downloaded a ZIP archive, extract it somewhere.\n- Open the Godot project manager and click the **Scan** button on the right.\n- Choose the path to the folder containing all demos.\n- All demos should now appear in the project manager.\n\nAlternatively, you can download individual demos from the\n[Asset Store](https://store.godotengine.org/publisher/godot-foundation/),\neither from the website or within Godot's project manager.\n\n## Try the demos in your browser\n\nMost of the demos are exported to GitHub Pages. They can be viewed\n[here](https://godotengine.github.io/godot-demo-projects/).\n\n> [!NOTE]\n>\n> The performance of Godot in a browser is lower than natively on\n> desktop or mobile. For the best performance, consider downloading",
+          "sha256": "4c121fc88a1412b8e381263146ac67937c485386e79641569117a6516dd64ba3"
+        }
+      ]
+    },
+    {
+      "id": "godot-demos-q2",
+      "question": "Name the principal components and responsibilities, distinguishing the repository from Pong.",
+      "answer": "The repository collects independent demos, not one game. Selected Pong uses project.godot to load pong.tscn; the scene assembles ball, paddles and boundaries. ball.gd moves/resets; paddle.gd handles movement and collision direction; wall.gd resets; ceiling_floor.gd bounces.",
+      "requiredFacts": [
+        "Independent project collection",
+        "Pong project/scene assemble example",
+        "Ball moves/resets and paddle handles movement",
+        "Wall resets; ceiling/floor bounce"
+      ],
+      "evidence": [
+        {
+          "path": "README.md",
+          "startLine": 1,
+          "endLine": 5,
+          "excerpt": "# Godot demo projects\n\nEach folder containing a `project.godot` file is a demo project meant to\nbe used with [Godot Engine](https://godotengine.org), the open source\n2D and 3D game engine.",
+          "sha256": "4c121fc88a1412b8e381263146ac67937c485386e79641569117a6516dd64ba3"
+        },
+        {
+          "path": "2d/pong/project.godot",
+          "startLine": 11,
+          "endLine": 19,
+          "excerpt": "[application]\n\nconfig/name=\"Pong with GDScript\"\nconfig/description=\"A simple Pong game. This demo shows best practices\nfor game development in Godot, including signals.\"\nconfig/tags=PackedStringArray(\"2d\", \"demo\", \"official\")\nrun/main_scene=\"res://pong.tscn\"\nconfig/features=PackedStringArray(\"4.7\")\nconfig/icon=\"res://icon.webp\"",
+          "sha256": "f2f3ae7226bef25762b089736353f67b59941e29d32ebccd34b7f637c3dd9731"
+        },
+        {
+          "path": "2d/pong/logic/ball.gd",
+          "startLine": 1,
+          "endLine": 18,
+          "excerpt": "extends Area2D\n\nconst DEFAULT_SPEED = 100.0\n\nvar _speed := DEFAULT_SPEED\nvar direction := Vector2.LEFT\n\n@onready var _initial_pos := position\n\nfunc _process(delta: float) -> void:\n\t_speed += delta * 2\n\tposition += _speed * delta * direction\n\n\nfunc reset() -> void:\n\tdirection = Vector2.LEFT\n\tposition = _initial_pos\n\t_speed = DEFAULT_SPEED",
+          "sha256": "6815f48538b422961a7547d2d3bce74ecd07dda04419cd212f110170707e387f"
+        },
+        {
+          "path": "2d/pong/logic/paddle.gd",
+          "startLine": 11,
+          "endLine": 30,
+          "excerpt": "func _ready() -> void:\n\tvar n := String(name).to_lower()\n\t_up = n + \"_move_up\"\n\t_down = n + \"_move_down\"\n\tif n == \"left\":\n\t\t_ball_dir = 1\n\telse:\n\t\t_ball_dir = -1\n\n\nfunc _process(delta: float) -> void:\n\t# Move up and down based on input.\n\tvar input := Input.get_action_strength(_down) - Input.get_action_strength(_up)\n\tposition.y = clamp(position.y + input * MOVE_SPEED * delta, 16, _screen_size_y - 16)\n\n\nfunc _on_area_entered(area: Area2D) -> void:\n\tif area.name == \"Ball\":\n\t\t# Assign new direction.\n\t\tarea.direction = Vector2(_ball_dir, randf() * 2 - 1).normalized()",
+          "sha256": "e7f7914e05276891c646f3b2f39c4e22c37690491fc6369e61d3e49b6ebe4341"
+        },
+        {
+          "path": "2d/pong/logic/wall.gd",
+          "startLine": 1,
+          "endLine": 6,
+          "excerpt": "extends Area2D\n\nfunc _on_wall_area_entered(area: Area2D) -> void:\n\tif area.name == \"Ball\":\n\t\t# Ball went out of bounds, reset.\n\t\tarea.reset()",
+          "sha256": "a847193f770058755a2c283b1ab1b93bd2dce9f719ee32d61852a784f39614bd"
+        },
+        {
+          "path": "2d/pong/logic/ceiling_floor.gd",
+          "startLine": 1,
+          "endLine": 7,
+          "excerpt": "extends Area2D\n\n@export var _bounce_direction := 1\n\nfunc _on_area_entered(area: Area2D) -> void:\n\tif area.name == \"Ball\":\n\t\tarea.direction = (area.direction + Vector2(0, _bounce_direction)).normalized()",
+          "sha256": "dac87afad82236b87d04283fa9676ad154a9220fc8143811d5b917a72d8356d3"
+        }
+      ]
+    },
+    {
+      "id": "godot-demos-q3",
+      "question": "Which languages, framework systems and project boundaries organize the repository and selected Pong demo?",
+      "answer": "project.godot folders define separate Godot projects. Selected Pong uses GDScript, a .tscn scene and Compatibility renderer; README points to a separate C# Pong variant under mono/pong. Engine compatibility varies by branch.",
+      "requiredFacts": [
+        "Per-folder Godot projects",
+        "GDScript and tscn for selected Pong",
+        "Compatibility renderer",
+        "Separate C# variant"
+      ],
+      "evidence": [
+        {
+          "path": "README.md",
+          "startLine": 1,
+          "endLine": 14,
+          "excerpt": "# Godot demo projects\n\nEach folder containing a `project.godot` file is a demo project meant to\nbe used with [Godot Engine](https://godotengine.org), the open source\n2D and 3D game engine.\n\n## Godot versions\n\n- The [`master`](https://github.com/godotengine/godot-demo-projects) branch is compatible with Godot's `master` development branch (next 4.x release).\n- The [`3.x`](https://github.com/godotengine/godot-demo-projects/tree/3.x) branch is compatible with Godot's `3.x` development branch (next 3.x release).\n- The other branches are compatible with the matching stable versions of Godot.\n  - [Click here](https://github.com/godotengine/godot-demo-projects/branches) to see all branches.\n  - For example, the [`2.1`](https://github.com/godotengine/godot-demo-projects/tree/2.1)\n    branch is for demos compatible with Godot 2.1.x.",
+          "sha256": "4c121fc88a1412b8e381263146ac67937c485386e79641569117a6516dd64ba3"
+        },
+        {
+          "path": "2d/pong/README.md",
+          "startLine": 1,
+          "endLine": 15,
+          "excerpt": "# Pong with GDScript\n\nA simple Pong game. This demo shows best practices\nfor game development in Godot, including\n[signals](https://docs.godotengine.org/en/latest/getting_started/step_by_step/signals.html).\n\nLanguage: GDScript\n\nRenderer: Compatibility\n\nCheck out this demo on the Asset Store: https://store.godotengine.org/asset/godot-foundation/pong-with-gdscript-demo/\n\n> [!NOTE]\n>\n> There is a C# version available [here](https://github.com/godotengine/godot-demo-projects/tree/master/mono/pong).",
+          "sha256": "ccdff6c1ad255ddf1e694e5e411dc875a0f1dbccb6f430704c02eeac124413d1"
+        },
+        {
+          "path": "2d/pong/project.godot",
+          "startLine": 11,
+          "endLine": 19,
+          "excerpt": "[application]\n\nconfig/name=\"Pong with GDScript\"\nconfig/description=\"A simple Pong game. This demo shows best practices\nfor game development in Godot, including signals.\"\nconfig/tags=PackedStringArray(\"2d\", \"demo\", \"official\")\nrun/main_scene=\"res://pong.tscn\"\nconfig/features=PackedStringArray(\"4.7\")\nconfig/icon=\"res://icon.webp\"",
+          "sha256": "f2f3ae7226bef25762b089736353f67b59941e29d32ebccd34b7f637c3dd9731"
+        }
+      ]
+    },
+    {
+      "id": "godot-demos-q4",
+      "question": "Where does selected GDScript Pong execution begin?",
+      "answer": "project.godot sets run/main_scene to res://pong.tscn, whose script resources attach gameplay logic and whose signal connections route collisions. Godot drives lifecycle callbacks and Area2D signals, not a repository main function.",
+      "requiredFacts": [
+        "run/main_scene loads pong.tscn",
+        "Scene binds scripts",
+        "Engine dispatches signals/lifecycle"
+      ],
+      "evidence": [
+        {
+          "path": "2d/pong/project.godot",
+          "startLine": 11,
+          "endLine": 19,
+          "excerpt": "[application]\n\nconfig/name=\"Pong with GDScript\"\nconfig/description=\"A simple Pong game. This demo shows best practices\nfor game development in Godot, including signals.\"\nconfig/tags=PackedStringArray(\"2d\", \"demo\", \"official\")\nrun/main_scene=\"res://pong.tscn\"\nconfig/features=PackedStringArray(\"4.7\")\nconfig/icon=\"res://icon.webp\"",
+          "sha256": "f2f3ae7226bef25762b089736353f67b59941e29d32ebccd34b7f637c3dd9731"
+        },
+        {
+          "path": "2d/pong/pong.tscn",
+          "startLine": 1,
+          "endLine": 9,
+          "excerpt": "[gd_scene format=3 uid=\"uid://1edquvuh4xlu\"]\n\n[ext_resource type=\"Script\" uid=\"uid://bbiup6xhh6s17\" path=\"res://logic/paddle.gd\" id=\"1\"]\n[ext_resource type=\"Texture2D\" uid=\"uid://ybn78qkuq21d\" path=\"res://paddle.png\" id=\"2\"]\n[ext_resource type=\"Script\" uid=\"uid://c2ofwebuaqwtq\" path=\"res://logic/ball.gd\" id=\"4\"]\n[ext_resource type=\"Texture2D\" uid=\"uid://bcir5xteju0j5\" path=\"res://ball.png\" id=\"5\"]\n[ext_resource type=\"Texture2D\" uid=\"uid://7rr8ipvil66w\" path=\"res://separator.png\" id=\"6\"]\n[ext_resource type=\"Script\" uid=\"uid://d0ctwatj03r3b\" path=\"res://logic/wall.gd\" id=\"7\"]\n[ext_resource type=\"Script\" uid=\"uid://dwret7sdyc33d\" path=\"res://logic/ceiling_floor.gd\" id=\"8\"]",
+          "sha256": "19797feb58a3ffd182c70df6f8a9c991ee7affbb7d391253c19fbd70fa721877"
+        },
+        {
+          "path": "2d/pong/pong.tscn",
+          "startLine": 98,
+          "endLine": 103,
+          "excerpt": "[connection signal=\"area_entered\" from=\"Left\" to=\"Left\" method=\"_on_area_entered\"]\n[connection signal=\"area_entered\" from=\"Right\" to=\"Right\" method=\"_on_area_entered\"]\n[connection signal=\"area_entered\" from=\"LeftWall\" to=\"LeftWall\" method=\"_on_wall_area_entered\"]\n[connection signal=\"area_entered\" from=\"RightWall\" to=\"RightWall\" method=\"_on_wall_area_entered\"]\n[connection signal=\"area_entered\" from=\"Ceiling\" to=\"Ceiling\" method=\"_on_area_entered\"]\n[connection signal=\"area_entered\" from=\"Floor\" to=\"Floor\" method=\"_on_area_entered\"]",
+          "sha256": "19797feb58a3ffd182c70df6f8a9c991ee7affbb7d391253c19fbd70fa721877"
+        }
+      ]
+    },
+    {
+      "id": "godot-demos-q5",
+      "question": "Where is X, resetting the ball after crossing a side wall, implemented?",
+      "answer": "wall.gd._on_wall_area_entered checks area.name == Ball and calls area.reset(). ball.gd.reset restores Vector2.LEFT, captured initial position, and DEFAULT_SPEED 100.0.",
+      "requiredFacts": [
+        "Wall callback guards Ball name",
+        "Calls area.reset",
+        "Ball reset restores direction/position/speed"
+      ],
+      "evidence": [
+        {
+          "path": "2d/pong/logic/wall.gd",
+          "startLine": 1,
+          "endLine": 6,
+          "excerpt": "extends Area2D\n\nfunc _on_wall_area_entered(area: Area2D) -> void:\n\tif area.name == \"Ball\":\n\t\t# Ball went out of bounds, reset.\n\t\tarea.reset()",
+          "sha256": "a847193f770058755a2c283b1ab1b93bd2dce9f719ee32d61852a784f39614bd"
+        },
+        {
+          "path": "2d/pong/logic/ball.gd",
+          "startLine": 1,
+          "endLine": 18,
+          "excerpt": "extends Area2D\n\nconst DEFAULT_SPEED = 100.0\n\nvar _speed := DEFAULT_SPEED\nvar direction := Vector2.LEFT\n\n@onready var _initial_pos := position\n\nfunc _process(delta: float) -> void:\n\t_speed += delta * 2\n\tposition += _speed * delta * direction\n\n\nfunc reset() -> void:\n\tdirection = Vector2.LEFT\n\tposition = _initial_pos\n\t_speed = DEFAULT_SPEED",
+          "sha256": "6815f48538b422961a7547d2d3bce74ecd07dda04419cd212f110170707e387f"
+        }
+      ]
+    },
+    {
+      "id": "godot-demos-q6",
+      "question": "Which internal components does A, pong.tscn, directly bind and use?",
+      "answer": "Scene resources bind paddle.gd, ball.gd, wall.gd and ceiling_floor.gd to matching Area2D nodes and connect area_entered to their handlers. This proves scene/resource dependencies and engine signal dispatch, not ordinary direct function-call edges.",
+      "requiredFacts": [
+        "Four gameplay script resources",
+        "Assigned to matching scene nodes",
+        "area_entered connections",
+        "Resource binding distinct from direct call"
+      ],
+      "evidence": [
+        {
+          "path": "2d/pong/pong.tscn",
+          "startLine": 1,
+          "endLine": 9,
+          "excerpt": "[gd_scene format=3 uid=\"uid://1edquvuh4xlu\"]\n\n[ext_resource type=\"Script\" uid=\"uid://bbiup6xhh6s17\" path=\"res://logic/paddle.gd\" id=\"1\"]\n[ext_resource type=\"Texture2D\" uid=\"uid://ybn78qkuq21d\" path=\"res://paddle.png\" id=\"2\"]\n[ext_resource type=\"Script\" uid=\"uid://c2ofwebuaqwtq\" path=\"res://logic/ball.gd\" id=\"4\"]\n[ext_resource type=\"Texture2D\" uid=\"uid://bcir5xteju0j5\" path=\"res://ball.png\" id=\"5\"]\n[ext_resource type=\"Texture2D\" uid=\"uid://7rr8ipvil66w\" path=\"res://separator.png\" id=\"6\"]\n[ext_resource type=\"Script\" uid=\"uid://d0ctwatj03r3b\" path=\"res://logic/wall.gd\" id=\"7\"]\n[ext_resource type=\"Script\" uid=\"uid://dwret7sdyc33d\" path=\"res://logic/ceiling_floor.gd\" id=\"8\"]",
+          "sha256": "19797feb58a3ffd182c70df6f8a9c991ee7affbb7d391253c19fbd70fa721877"
+        },
+        {
+          "path": "2d/pong/pong.tscn",
+          "startLine": 30,
+          "endLine": 54,
+          "excerpt": "[node name=\"Left\" type=\"Area2D\" parent=\".\" unique_id=1813648679]\nmodulate = Color(0, 1, 1, 1)\nposition = Vector2(67.6285, 192.594)\nscript = ExtResource(\"1\")\n\n[node name=\"Sprite2D\" type=\"Sprite2D\" parent=\"Left\" unique_id=63896141]\ntexture = ExtResource(\"2\")\n\n[node name=\"Collision\" type=\"CollisionShape2D\" parent=\"Left\" unique_id=425901789]\nshape = SubResource(\"1\")\n\n[node name=\"Right\" type=\"Area2D\" parent=\".\" unique_id=1762219232]\nmodulate = Color(1, 0, 1, 1)\nposition = Vector2(563.815, 188.919)\nscript = ExtResource(\"1\")\n\n[node name=\"Sprite2D\" type=\"Sprite2D\" parent=\"Right\" unique_id=510026471]\ntexture = ExtResource(\"2\")\n\n[node name=\"Collision\" type=\"CollisionShape2D\" parent=\"Right\" unique_id=1439229462]\nshape = SubResource(\"1\")\n\n[node name=\"Ball\" type=\"Area2D\" parent=\".\" unique_id=548893558]\nposition = Vector2(320.5, 191.124)\nscript = ExtResource(\"4\")",
+          "sha256": "19797feb58a3ffd182c70df6f8a9c991ee7affbb7d391253c19fbd70fa721877"
+        },
+        {
+          "path": "2d/pong/pong.tscn",
+          "startLine": 65,
+          "endLine": 93,
+          "excerpt": "\n[node name=\"LeftWall\" type=\"Area2D\" parent=\".\" unique_id=2003719181]\nposition = Vector2(-10, 200)\nscript = ExtResource(\"7\")\n\n[node name=\"Collision\" type=\"CollisionShape2D\" parent=\"LeftWall\" unique_id=130228766]\nshape = SubResource(\"3\")\n\n[node name=\"RightWall\" type=\"Area2D\" parent=\".\" unique_id=1028647402]\nposition = Vector2(650, 200)\nscript = ExtResource(\"7\")\n\n[node name=\"Collision\" type=\"CollisionShape2D\" parent=\"RightWall\" unique_id=246191491]\nshape = SubResource(\"3\")\n\n[node name=\"Ceiling\" type=\"Area2D\" parent=\".\" unique_id=725670398]\nposition = Vector2(320, -10)\nscript = ExtResource(\"8\")\n\n[node name=\"Collision\" type=\"CollisionShape2D\" parent=\"Ceiling\" unique_id=768251525]\nshape = SubResource(\"4\")\n\n[node name=\"Floor\" type=\"Area2D\" parent=\".\" unique_id=4813690]\nposition = Vector2(320, 410)\nscript = ExtResource(\"8\")\n_bounce_direction = -1\n\n[node name=\"Collision\" type=\"CollisionShape2D\" parent=\"Floor\" unique_id=1735079208]\nshape = SubResource(\"4\")",
+          "sha256": "19797feb58a3ffd182c70df6f8a9c991ee7affbb7d391253c19fbd70fa721877"
+        },
+        {
+          "path": "2d/pong/pong.tscn",
+          "startLine": 98,
+          "endLine": 103,
+          "excerpt": "[connection signal=\"area_entered\" from=\"Left\" to=\"Left\" method=\"_on_area_entered\"]\n[connection signal=\"area_entered\" from=\"Right\" to=\"Right\" method=\"_on_area_entered\"]\n[connection signal=\"area_entered\" from=\"LeftWall\" to=\"LeftWall\" method=\"_on_wall_area_entered\"]\n[connection signal=\"area_entered\" from=\"RightWall\" to=\"RightWall\" method=\"_on_wall_area_entered\"]\n[connection signal=\"area_entered\" from=\"Ceiling\" to=\"Ceiling\" method=\"_on_area_entered\"]\n[connection signal=\"area_entered\" from=\"Floor\" to=\"Floor\" method=\"_on_area_entered\"]",
+          "sha256": "19797feb58a3ffd182c70df6f8a9c991ee7affbb7d391253c19fbd70fa721877"
+        }
+      ]
+    },
+    {
+      "id": "godot-demos-q7",
+      "question": "For R, the ball entering a side wall, give the supported reset path and dynamic boundary.",
+      "answer": "LeftWall/RightWall area_entered connections invoke _on_wall_area_entered. Godot supplies an Area2D; the callback checks its name then dynamically calls reset. Ball is bound to ball.gd, whose reset restores direction, position and speed. Collision detection and the delivered instance are engine runtime boundaries.",
+      "requiredFacts": [
+        "Both walls connect area_entered",
+        "Callback name-checks and calls reset",
+        "Ball scene node binds ball.gd",
+        "Reset restores three values",
+        "Godot collision dispatch boundary"
+      ],
+      "evidence": [
+        {
+          "path": "2d/pong/pong.tscn",
+          "startLine": 51,
+          "endLine": 54,
+          "excerpt": "\n[node name=\"Ball\" type=\"Area2D\" parent=\".\" unique_id=548893558]\nposition = Vector2(320.5, 191.124)\nscript = ExtResource(\"4\")",
+          "sha256": "19797feb58a3ffd182c70df6f8a9c991ee7affbb7d391253c19fbd70fa721877"
+        },
+        {
+          "path": "2d/pong/pong.tscn",
+          "startLine": 98,
+          "endLine": 103,
+          "excerpt": "[connection signal=\"area_entered\" from=\"Left\" to=\"Left\" method=\"_on_area_entered\"]\n[connection signal=\"area_entered\" from=\"Right\" to=\"Right\" method=\"_on_area_entered\"]\n[connection signal=\"area_entered\" from=\"LeftWall\" to=\"LeftWall\" method=\"_on_wall_area_entered\"]\n[connection signal=\"area_entered\" from=\"RightWall\" to=\"RightWall\" method=\"_on_wall_area_entered\"]\n[connection signal=\"area_entered\" from=\"Ceiling\" to=\"Ceiling\" method=\"_on_area_entered\"]\n[connection signal=\"area_entered\" from=\"Floor\" to=\"Floor\" method=\"_on_area_entered\"]",
+          "sha256": "19797feb58a3ffd182c70df6f8a9c991ee7affbb7d391253c19fbd70fa721877"
+        },
+        {
+          "path": "2d/pong/logic/wall.gd",
+          "startLine": 1,
+          "endLine": 6,
+          "excerpt": "extends Area2D\n\nfunc _on_wall_area_entered(area: Area2D) -> void:\n\tif area.name == \"Ball\":\n\t\t# Ball went out of bounds, reset.\n\t\tarea.reset()",
+          "sha256": "a847193f770058755a2c283b1ab1b93bd2dce9f719ee32d61852a784f39614bd"
+        },
+        {
+          "path": "2d/pong/logic/ball.gd",
+          "startLine": 15,
+          "endLine": 18,
+          "excerpt": "func reset() -> void:\n\tdirection = Vector2.LEFT\n\tposition = _initial_pos\n\t_speed = DEFAULT_SPEED",
+          "sha256": "6815f48538b422961a7547d2d3bce74ecd07dda04419cd212f110170707e387f"
+        },
+        {
+          "path": "2d/pong/pong.tscn",
+          "startLine": 1,
+          "endLine": 9,
+          "excerpt": "[gd_scene format=3 uid=\"uid://1edquvuh4xlu\"]\n\n[ext_resource type=\"Script\" uid=\"uid://bbiup6xhh6s17\" path=\"res://logic/paddle.gd\" id=\"1\"]\n[ext_resource type=\"Texture2D\" uid=\"uid://ybn78qkuq21d\" path=\"res://paddle.png\" id=\"2\"]\n[ext_resource type=\"Script\" uid=\"uid://c2ofwebuaqwtq\" path=\"res://logic/ball.gd\" id=\"4\"]\n[ext_resource type=\"Texture2D\" uid=\"uid://bcir5xteju0j5\" path=\"res://ball.png\" id=\"5\"]\n[ext_resource type=\"Texture2D\" uid=\"uid://7rr8ipvil66w\" path=\"res://separator.png\" id=\"6\"]\n[ext_resource type=\"Script\" uid=\"uid://d0ctwatj03r3b\" path=\"res://logic/wall.gd\" id=\"7\"]\n[ext_resource type=\"Script\" uid=\"uid://dwret7sdyc33d\" path=\"res://logic/ceiling_floor.gd\" id=\"8\"]",
+          "sha256": "19797feb58a3ffd182c70df6f8a9c991ee7affbb7d391253c19fbd70fa721877"
+        }
+      ]
+    },
+    {
+      "id": "godot-demos-q8",
+      "question": "If Y, ball.gd.reset semantics, changes, which direct consumer is evidenced?",
+      "answer": "wall.gd._on_wall_area_entered directly invokes area.reset after checking Ball. Scene bindings identify Ball script and both side-wall dispatches. This proves the wall callback consumer; difficulty or scoring consequences are not established.",
+      "requiredFacts": [
+        "Wall callback directly invokes reset",
+        "Scene identifies Ball and wall dispatch",
+        "Behavioral impact beyond reset is speculative"
+      ],
+      "evidence": [
+        {
+          "path": "2d/pong/logic/wall.gd",
+          "startLine": 1,
+          "endLine": 6,
+          "excerpt": "extends Area2D\n\nfunc _on_wall_area_entered(area: Area2D) -> void:\n\tif area.name == \"Ball\":\n\t\t# Ball went out of bounds, reset.\n\t\tarea.reset()",
+          "sha256": "a847193f770058755a2c283b1ab1b93bd2dce9f719ee32d61852a784f39614bd"
+        },
+        {
+          "path": "2d/pong/pong.tscn",
+          "startLine": 51,
+          "endLine": 54,
+          "excerpt": "\n[node name=\"Ball\" type=\"Area2D\" parent=\".\" unique_id=548893558]\nposition = Vector2(320.5, 191.124)\nscript = ExtResource(\"4\")",
+          "sha256": "19797feb58a3ffd182c70df6f8a9c991ee7affbb7d391253c19fbd70fa721877"
+        },
+        {
+          "path": "2d/pong/pong.tscn",
+          "startLine": 98,
+          "endLine": 103,
+          "excerpt": "[connection signal=\"area_entered\" from=\"Left\" to=\"Left\" method=\"_on_area_entered\"]\n[connection signal=\"area_entered\" from=\"Right\" to=\"Right\" method=\"_on_area_entered\"]\n[connection signal=\"area_entered\" from=\"LeftWall\" to=\"LeftWall\" method=\"_on_wall_area_entered\"]\n[connection signal=\"area_entered\" from=\"RightWall\" to=\"RightWall\" method=\"_on_wall_area_entered\"]\n[connection signal=\"area_entered\" from=\"Ceiling\" to=\"Ceiling\" method=\"_on_area_entered\"]\n[connection signal=\"area_entered\" from=\"Floor\" to=\"Floor\" method=\"_on_area_entered\"]",
+          "sha256": "19797feb58a3ffd182c70df6f8a9c991ee7affbb7d391253c19fbd70fa721877"
+        },
+        {
+          "path": "2d/pong/pong.tscn",
+          "startLine": 1,
+          "endLine": 9,
+          "excerpt": "[gd_scene format=3 uid=\"uid://1edquvuh4xlu\"]\n\n[ext_resource type=\"Script\" uid=\"uid://bbiup6xhh6s17\" path=\"res://logic/paddle.gd\" id=\"1\"]\n[ext_resource type=\"Texture2D\" uid=\"uid://ybn78qkuq21d\" path=\"res://paddle.png\" id=\"2\"]\n[ext_resource type=\"Script\" uid=\"uid://c2ofwebuaqwtq\" path=\"res://logic/ball.gd\" id=\"4\"]\n[ext_resource type=\"Texture2D\" uid=\"uid://bcir5xteju0j5\" path=\"res://ball.png\" id=\"5\"]\n[ext_resource type=\"Texture2D\" uid=\"uid://7rr8ipvil66w\" path=\"res://separator.png\" id=\"6\"]\n[ext_resource type=\"Script\" uid=\"uid://d0ctwatj03r3b\" path=\"res://logic/wall.gd\" id=\"7\"]\n[ext_resource type=\"Script\" uid=\"uid://dwret7sdyc33d\" path=\"res://logic/ceiling_floor.gd\" id=\"8\"]",
+          "sha256": "19797feb58a3ffd182c70df6f8a9c991ee7affbb7d391253c19fbd70fa721877"
+        }
+      ]
+    },
+    {
+      "id": "godot-demos-q9",
+      "question": "Which documented example exercises X, side-wall ball reset, and how does it enter implementation?",
+      "answer": "2d/pong README documents Area2D walls, paddles and ball communicating through signals. Its project loads pong.tscn, which routes side-wall signals to wall.gd and ball.gd.reset. This is a documented runnable example, not an automated test execution claim.",
+      "requiredFacts": [
+        "2d/pong documented example",
+        "README describes Area2D signals",
+        "Project/scene routes wall callback",
+        "No executed test claim"
+      ],
+      "evidence": [
+        {
+          "path": "2d/pong/README.md",
+          "startLine": 1,
+          "endLine": 22,
+          "excerpt": "# Pong with GDScript\n\nA simple Pong game. This demo shows best practices\nfor game development in Godot, including\n[signals](https://docs.godotengine.org/en/latest/getting_started/step_by_step/signals.html).\n\nLanguage: GDScript\n\nRenderer: Compatibility\n\nCheck out this demo on the Asset Store: https://store.godotengine.org/asset/godot-foundation/pong-with-gdscript-demo/\n\n> [!NOTE]\n>\n> There is a C# version available [here](https://github.com/godotengine/godot-demo-projects/tree/master/mono/pong).\n\n## How does it work?\n\nThe walls, paddle, and ball are all\n[`Area2D`](https://docs.godotengine.org/en/latest/classes/class_area2d.html)\nnodes. When the ball touches the walls or the paddles,\nthey emit signals and modify the ball.",
+          "sha256": "ccdff6c1ad255ddf1e694e5e411dc875a0f1dbccb6f430704c02eeac124413d1"
+        },
+        {
+          "path": "2d/pong/project.godot",
+          "startLine": 11,
+          "endLine": 19,
+          "excerpt": "[application]\n\nconfig/name=\"Pong with GDScript\"\nconfig/description=\"A simple Pong game. This demo shows best practices\nfor game development in Godot, including signals.\"\nconfig/tags=PackedStringArray(\"2d\", \"demo\", \"official\")\nrun/main_scene=\"res://pong.tscn\"\nconfig/features=PackedStringArray(\"4.7\")\nconfig/icon=\"res://icon.webp\"",
+          "sha256": "f2f3ae7226bef25762b089736353f67b59941e29d32ebccd34b7f637c3dd9731"
+        },
+        {
+          "path": "2d/pong/pong.tscn",
+          "startLine": 98,
+          "endLine": 103,
+          "excerpt": "[connection signal=\"area_entered\" from=\"Left\" to=\"Left\" method=\"_on_area_entered\"]\n[connection signal=\"area_entered\" from=\"Right\" to=\"Right\" method=\"_on_area_entered\"]\n[connection signal=\"area_entered\" from=\"LeftWall\" to=\"LeftWall\" method=\"_on_wall_area_entered\"]\n[connection signal=\"area_entered\" from=\"RightWall\" to=\"RightWall\" method=\"_on_wall_area_entered\"]\n[connection signal=\"area_entered\" from=\"Ceiling\" to=\"Ceiling\" method=\"_on_area_entered\"]\n[connection signal=\"area_entered\" from=\"Floor\" to=\"Floor\" method=\"_on_area_entered\"]",
+          "sha256": "19797feb58a3ffd182c70df6f8a9c991ee7affbb7d391253c19fbd70fa721877"
+        },
+        {
+          "path": "2d/pong/logic/wall.gd",
+          "startLine": 1,
+          "endLine": 6,
+          "excerpt": "extends Area2D\n\nfunc _on_wall_area_entered(area: Area2D) -> void:\n\tif area.name == \"Ball\":\n\t\t# Ball went out of bounds, reset.\n\t\tarea.reset()",
+          "sha256": "a847193f770058755a2c283b1ab1b93bd2dce9f719ee32d61852a784f39614bd"
+        },
+        {
+          "path": "2d/pong/pong.tscn",
+          "startLine": 1,
+          "endLine": 9,
+          "excerpt": "[gd_scene format=3 uid=\"uid://1edquvuh4xlu\"]\n\n[ext_resource type=\"Script\" uid=\"uid://bbiup6xhh6s17\" path=\"res://logic/paddle.gd\" id=\"1\"]\n[ext_resource type=\"Texture2D\" uid=\"uid://ybn78qkuq21d\" path=\"res://paddle.png\" id=\"2\"]\n[ext_resource type=\"Script\" uid=\"uid://c2ofwebuaqwtq\" path=\"res://logic/ball.gd\" id=\"4\"]\n[ext_resource type=\"Texture2D\" uid=\"uid://bcir5xteju0j5\" path=\"res://ball.png\" id=\"5\"]\n[ext_resource type=\"Texture2D\" uid=\"uid://7rr8ipvil66w\" path=\"res://separator.png\" id=\"6\"]\n[ext_resource type=\"Script\" uid=\"uid://d0ctwatj03r3b\" path=\"res://logic/wall.gd\" id=\"7\"]\n[ext_resource type=\"Script\" uid=\"uid://dwret7sdyc33d\" path=\"res://logic/ceiling_floor.gd\" id=\"8\"]",
+          "sha256": "19797feb58a3ffd182c70df6f8a9c991ee7affbb7d391253c19fbd70fa721877"
+        }
+      ]
+    },
+    {
+      "id": "godot-demos-q10",
+      "question": "Where does Z, paddle movement input, enter and get transformed?",
+      "answer": "project.godot defines left/right move-up/down actions. paddle.gd._ready derives action names from the lowercase node name; _process subtracts up strength from down, scales by MOVE_SPEED and delta and clamps y between 16 and viewport height minus 16.",
+      "requiredFacts": [
+        "Movement actions in project config",
+        "Node name selects action prefix",
+        "Down minus up input strength",
+        "Speed/delta scaling and vertical clamp"
+      ],
+      "evidence": [
+        {
+          "path": "2d/pong/project.godot",
+          "startLine": 33,
+          "endLine": 62,
+          "excerpt": "[input]\n\nleft_move_down={\n\"deadzone\": 0.2,\n\"events\": [Object(InputEventJoypadButton,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":0,\"button_index\":13,\"pressure\":0.0,\"pressed\":false,\"script\":null)\n, Object(InputEventJoypadMotion,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":0,\"axis\":1,\"axis_value\":1.0,\"script\":null)\n, Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":0,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":83,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)\n]\n}\nleft_move_up={\n\"deadzone\": 0.2,\n\"events\": [Object(InputEventJoypadButton,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":0,\"button_index\":12,\"pressure\":0.0,\"pressed\":false,\"script\":null)\n, Object(InputEventJoypadMotion,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":0,\"axis\":1,\"axis_value\":-1.0,\"script\":null)\n, Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":0,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":87,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)\n]\n}\nright_move_down={\n\"deadzone\": 0.2,\n\"events\": [Object(InputEventJoypadButton,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":1,\"button_index\":13,\"pressure\":0.0,\"pressed\":false,\"script\":null)\n, Object(InputEventJoypadMotion,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":1,\"axis\":1,\"axis_value\":1.0,\"script\":null)\n, Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":0,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":4194322,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)\n]\n}\nright_move_up={\n\"deadzone\": 0.2,\n\"events\": [Object(InputEventJoypadButton,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":1,\"button_index\":12,\"pressure\":0.0,\"pressed\":false,\"script\":null)\n, Object(InputEventJoypadMotion,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":1,\"axis\":1,\"axis_value\":-1.0,\"script\":null)\n, Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":0,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":4194320,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)\n]\n}",
+          "sha256": "f2f3ae7226bef25762b089736353f67b59941e29d32ebccd34b7f637c3dd9731"
+        },
+        {
+          "path": "2d/pong/logic/paddle.gd",
+          "startLine": 1,
+          "endLine": 24,
+          "excerpt": "extends Area2D\n\nconst MOVE_SPEED = 100.0\n\nvar _ball_dir: int\nvar _up: String\nvar _down: String\n\n@onready var _screen_size_y := get_viewport_rect().size.y\n\nfunc _ready() -> void:\n\tvar n := String(name).to_lower()\n\t_up = n + \"_move_up\"\n\t_down = n + \"_move_down\"\n\tif n == \"left\":\n\t\t_ball_dir = 1\n\telse:\n\t\t_ball_dir = -1\n\n\nfunc _process(delta: float) -> void:\n\t# Move up and down based on input.\n\tvar input := Input.get_action_strength(_down) - Input.get_action_strength(_up)\n\tposition.y = clamp(position.y + input * MOVE_SPEED * delta, 16, _screen_size_y - 16)",
+          "sha256": "e7f7914e05276891c646f3b2f39c4e22c37690491fc6369e61d3e49b6ebe4341"
+        }
+      ]
+    }
+  ]
+}

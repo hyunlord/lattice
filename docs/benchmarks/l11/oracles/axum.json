@@ -1,0 +1,394 @@
+{
+  "id": "axum",
+  "repository": "tokio-rs/axum",
+  "commit": "e57b547eb95de74b73b34719dd5926254a085634",
+  "trackedFiles": 505,
+  "questions": [
+    {
+      "id": "q1",
+      "question": "What does axum do, and who calls or runs it?",
+      "answer": "axum is a Rust HTTP routing and request-handling library with extractors and response conversion. Application developers compose Router and handlers, then serve it with axum::serve and a Tokio listener. Its middleware integration uses tower::Service. Equivalent terminology for the cited definitions is accepted; unsupported runtime claims are not.",
+      "requiredFacts": [
+        "axum is a Rust HTTP routing and request-handling library with extractors and response conversion.",
+        "Application developers compose Router and handlers, then serve it with axum::serve and a Tokio listener.",
+        "Its middleware integration uses tower::Service."
+      ],
+      "evidence": [
+        {
+          "path": "axum/README.md",
+          "startLine": 3,
+          "endLine": 24,
+          "excerpt": "`axum` is an HTTP routing and request-handling library that focuses on ergonomics and modularity.\n\n[![Build status](https://github.com/tokio-rs/axum/actions/workflows/CI.yml/badge.svg?branch=main)](https://github.com/tokio-rs/axum/actions/workflows/CI.yml)\n[![Crates.io](https://img.shields.io/crates/v/axum)](https://crates.io/crates/axum)\n[![Documentation](https://docs.rs/axum/badge.svg)][docs]\n\nMore information about this crate can be found in the [crate documentation][docs].\n\n## High level features\n\n- Route requests to handlers with a macro free API.\n- Declaratively parse requests using extractors.\n- Simple and predictable error handling model.\n- Generate responses with minimal boilerplate.\n- Take full advantage of the [`tower`] and [`tower-http`] ecosystem of\n  middleware, services, and utilities.\n\nIn particular the last point is what sets `axum` apart from other libraries / frameworks.\n`axum` doesn't have its own middleware system but instead uses\n[`tower::Service`]. This means `axum` gets timeouts, tracing, compression,\nauthorization, and more, for free. It also enables you to share middleware with\napplications written using [`hyper`] or [`tonic`].",
+          "sha256": "716076bd3d662fb1a65fbd5587e415d7e800dfcdb696bc6de1fee8ff1f440f08"
+        },
+        {
+          "path": "axum/README.md",
+          "startLine": 43,
+          "endLine": 63,
+          "excerpt": "#[tokio::main]\nasync fn main() {\n    // initialize tracing\n    tracing_subscriber::fmt::init();\n\n    // build our application with a route\n    let app = Router::new()\n        // `GET /` goes to `root`\n        .route(\"/\", get(root))\n        // `POST /users` goes to `create_user`\n        .route(\"/users\", post(create_user));\n\n    // run our app with hyper, listening globally on port 3000\n    let listener = tokio::net::TcpListener::bind(\"0.0.0.0:3000\").await.unwrap();\n    axum::serve(listener, app).await;\n}\n\n// basic handler that responds with a static string\nasync fn root() -> &'static str {\n    \"Hello, World!\"\n}",
+          "sha256": "716076bd3d662fb1a65fbd5587e415d7e800dfcdb696bc6de1fee8ff1f440f08"
+        }
+      ]
+    },
+    {
+      "id": "q2",
+      "question": "Name the principal repository components and their responsibilities.",
+      "answer": "The axum crate provides HTTP routing and request handling, with Router composing handlers/services and dispatching through path and method routing. Within axum, extractors implementing FromRequest or FromRequestParts obtain the request data handlers need; IntoResponse supports returning handler values as responses. The axum-core crate supplies core types and traits, and recommends that library authors implementing FromRequest or IntoResponse depend on it when possible. The axum-extra crate provides feature-gated extra utilities including cookie extractors, attachment responses, and typed routing. The axum-macros crate supplies macros, including deriving FromRequest implementations. Tower Service supplies the middleware integration rather than a separate axum-specific middleware system. Equivalent terminology for the cited components is accepted; this is not an exhaustive inventory of every utility.",
+      "requiredFacts": [
+        "The axum crate provides HTTP routing and request handling, with Router composing handlers/services and dispatching through path and method routing.",
+        "Within axum, extractors implementing FromRequest or FromRequestParts obtain the request data handlers need; IntoResponse supports returning handler values as responses.",
+        "The axum-core crate supplies core types and traits, and recommends that library authors implementing FromRequest or IntoResponse depend on it when possible.",
+        "The axum-extra crate provides feature-gated extra utilities including cookie extractors, attachment responses, and typed routing.",
+        "The axum-macros crate supplies macros, including deriving FromRequest implementations.",
+        "Tower Service supplies the middleware integration rather than a separate axum-specific middleware system."
+      ],
+      "evidence": [
+        {
+          "path": "axum/README.md",
+          "startLine": 3,
+          "endLine": 24,
+          "excerpt": "`axum` is an HTTP routing and request-handling library that focuses on ergonomics and modularity.\n\n[![Build status](https://github.com/tokio-rs/axum/actions/workflows/CI.yml/badge.svg?branch=main)](https://github.com/tokio-rs/axum/actions/workflows/CI.yml)\n[![Crates.io](https://img.shields.io/crates/v/axum)](https://crates.io/crates/axum)\n[![Documentation](https://docs.rs/axum/badge.svg)][docs]\n\nMore information about this crate can be found in the [crate documentation][docs].\n\n## High level features\n\n- Route requests to handlers with a macro free API.\n- Declaratively parse requests using extractors.\n- Simple and predictable error handling model.\n- Generate responses with minimal boilerplate.\n- Take full advantage of the [`tower`] and [`tower-http`] ecosystem of\n  middleware, services, and utilities.\n\nIn particular the last point is what sets `axum` apart from other libraries / frameworks.\n`axum` doesn't have its own middleware system but instead uses\n[`tower::Service`]. This means `axum` gets timeouts, tracing, compression,\nauthorization, and more, for free. It also enables you to share middleware with\napplications written using [`hyper`] or [`tonic`].",
+          "sha256": "716076bd3d662fb1a65fbd5587e415d7e800dfcdb696bc6de1fee8ff1f440f08"
+        },
+        {
+          "path": "axum/src/routing/mod.rs",
+          "startLine": 78,
+          "endLine": 88,
+          "excerpt": "/// The router type for composing handlers and services.\n///\n/// `Router<S>` means a router that is _missing_ a state of type `S` to be able\n/// to handle requests. Thus, only `Router<()>` (i.e. without missing state) can\n/// be passed to [`serve`]. See [`Router::with_state`] for more details.\n///\n/// [`serve`]: crate::serve()\n#[must_use]\npub struct Router<S = ()> {\n    inner: Arc<RouterInner<S>>,\n}",
+          "sha256": "f46df9f07b0d3e7be279479b7a9ba6144feee470d5873f4b95c3749db6515f04"
+        },
+        {
+          "path": "axum/src/routing/mod.rs",
+          "startLine": 445,
+          "endLine": 455,
+          "excerpt": "    pub(crate) fn call_with_state(&self, req: Request, state: S) -> RouteFuture<Infallible> {\n        let (req, state) = match self.inner.path_router.call_with_state(req, state) {\n            Ok(future) => return future,\n            Err((req, state)) => (req, state),\n        };\n\n        self.inner\n            .catch_all_fallback\n            .clone()\n            .call_with_state(req, state)\n    }",
+          "sha256": "f46df9f07b0d3e7be279479b7a9ba6144feee470d5873f4b95c3749db6515f04"
+        },
+        {
+          "path": "axum/src/routing/path_router.rs",
+          "startLine": 295,
+          "endLine": 325,
+          "excerpt": "        let (mut parts, body) = req.into_parts();\n\n        match self.node.at(parts.uri.path()) {\n            Ok(match_) => {\n                let id = *match_.value;\n\n                #[cfg(feature = \"matched-path\")]\n                crate::extract::matched_path::set_matched_path_for_request(\n                    id,\n                    &self.node.route_id_to_path,\n                    &mut parts.extensions,\n                );\n\n                url_params::insert_url_params(&mut parts.extensions, &match_.params);\n\n                let endpoint = self\n                    .routes\n                    .get(id.0)\n                    .expect(\"no route for id. This is a bug in axum. Please file an issue\");\n\n                let req = Request::from_parts(parts, body);\n                match endpoint {\n                    Endpoint::MethodRouter(method_router) => {\n                        Ok(method_router.call_with_state(req, state))\n                    }\n                    Endpoint::Route(route) => Ok(route.clone().call_owned(req)),\n                }\n            }\n            // explicitly handle all variants in case matchit adds\n            // new ones we need to handle differently\n            Err(MatchError::NotFound) => Err((Request::from_parts(parts, body), state)),",
+          "sha256": "ce6d7ba3c44ff47d09b2f20235a02e010b094295eafdf40ef8c34e3f39d0edc7"
+        },
+        {
+          "path": "axum/src/lib.rs",
+          "startLine": 76,
+          "endLine": 101,
+          "excerpt": "//! # Extractors\n//!\n//! An extractor is a type that implements [`FromRequest`] or [`FromRequestParts`]. Extractors are\n//! how you pick apart the incoming request to get the parts your handler needs.\n//!\n//! ```rust\n//! use axum::extract::{Path, Query, Json};\n//! use std::collections::HashMap;\n//!\n//! // `Path` gives you the path parameters and deserializes them.\n//! async fn path(Path(user_id): Path<u32>) {}\n//!\n//! // `Query` gives you the query parameters and deserializes them.\n//! async fn query(Query(params): Query<HashMap<String, String>>) {}\n//!\n//! // Buffer the request body and deserialize it as JSON into a\n//! // `serde_json::Value`. `Json` supports any type that implements\n//! // `serde::Deserialize`.\n//! async fn json(Json(payload): Json<serde_json::Value>) {}\n//! ```\n//!\n//! See [`extract`] for more details on extractors.\n//!\n//! # Responses\n//!\n//! Anything that implements [`IntoResponse`] can be returned from handlers.",
+          "sha256": "8cb7c1910bafea4dc5e9d313ab522b88cdebdae3ae22b1a01afb044afb74b137"
+        },
+        {
+          "path": "axum-core/src/lib.rs",
+          "startLine": 1,
+          "endLine": 9,
+          "excerpt": "//! Core types and traits for [`axum`].\n//!\n//! Libraries authors that want to provide [`FromRequest`] or [`IntoResponse`] implementations\n//! should depend on the [`axum-core`] crate, instead of `axum` if possible.\n//!\n//! [`FromRequest`]: crate::extract::FromRequest\n//! [`IntoResponse`]: crate::response::IntoResponse\n//! [`axum`]: https://crates.io/crates/axum\n//! [`axum-core`]: http://crates.io/crates/axum-core",
+          "sha256": "45b6a88a33f61a5a82add60e6fe0a448609b6f78d599f814e9158540f7f215a3"
+        },
+        {
+          "path": "axum-extra/src/lib.rs",
+          "startLine": 1,
+          "endLine": 34,
+          "excerpt": "//! Extra utilities for [`axum`].\n//!\n//! # Feature flags\n//!\n//! axum-extra uses a set of [feature flags] to reduce the amount of compiled and\n//! optional dependencies.\n//!\n//! The following optional features are available:\n//!\n//! Name | Description | Default?\n//! ---|---|---\n//! `async-read-body` | Enables the [`AsyncReadBody`](crate::body::AsyncReadBody) body |\n//! `attachment` | Enables the [`Attachment`](crate::response::Attachment) response |\n//! `cached` | Enables the [`Cached`](crate::extract::Cached) extractor |\n//! `cookie` | Enables the [`CookieJar`](crate::extract::CookieJar) extractor |\n//! `cookie-private` | Enables the [`PrivateCookieJar`](crate::extract::PrivateCookieJar) extractor |\n//! `cookie-signed` | Enables the [`SignedCookieJar`](crate::extract::SignedCookieJar) extractor |\n//! `cookie-key-expansion` | Enables the [`Key::derive_from`](crate::extract::cookie::Key::derive_from) method |\n//! `erased-json` | Enables the [`ErasedJson`](crate::response::ErasedJson) response |\n//! `error-response` | Enables the [`InternalServerError`](crate::response::InternalServerError) response |\n//! `form` (deprecated) | Enables the [`Form`](crate::extract::Form) extractor |\n//! `handler` | Enables the [handler] utilities |\n//! `json-deserializer` | Enables the [`JsonDeserializer`](crate::extract::JsonDeserializer) extractor |\n//! `json-lines` | Enables the [`JsonLines`](crate::extract::JsonLines) extractor and response |\n//! `middleware` | Enables the [middleware] utilities |\n//! `multipart` | Enables the [`Multipart`](crate::extract::Multipart) extractor |\n//! `protobuf` | Enables the [`Protobuf`](crate::protobuf::Protobuf) extractor and response |\n//! `query` (deprecated) | Enables the [`Query`](crate::extract::Query) extractor |\n//! `routing` | Enables the [routing] utilities |\n//! `tracing` | Log rejections from built-in extractors | <span role=\"img\" aria-label=\"Default feature\">✔</span>\n//! `typed-routing` | Enables the [`TypedPath`](crate::routing::TypedPath) routing utilities and the `routing` feature. |\n//! `typed-header` | Enables the [`TypedHeader`] extractor and response |\n//! `file-stream` | Enables the [`FileStream`](crate::response::FileStream) response |\n//! `with-rejection` | Enables the [`WithRejection`](crate::extract::WithRejection) extractor |",
+          "sha256": "0f4beb9044dd876e584fe635beae6c6fb9fa9e38717de038b3d1270dfb12c8fe"
+        },
+        {
+          "path": "axum-macros/src/lib.rs",
+          "startLine": 1,
+          "endLine": 3,
+          "excerpt": "//! Macros for [`axum`].\n//!\n//! [`axum`]: https://crates.io/crates/axum",
+          "sha256": "8fd199991715999577eab2bb06046f84e3347a68a18ac3c2566473961436164b"
+        },
+        {
+          "path": "axum-macros/src/lib.rs",
+          "startLine": 25,
+          "endLine": 33,
+          "excerpt": "/// Derive an implementation of [`FromRequest`].\n///\n/// Supports generating two kinds of implementations:\n/// 1. One that extracts each field individually.\n/// 2. Another that extracts the whole type at once via another extractor.\n///\n/// # Each field individually\n///\n/// By default `#[derive(FromRequest)]` will call `FromRequest::from_request` for each field:",
+          "sha256": "8fd199991715999577eab2bb06046f84e3347a68a18ac3c2566473961436164b"
+        }
+      ]
+    },
+    {
+      "id": "q3",
+      "question": "Which languages, build/framework systems and package boundaries organize axum?",
+      "answer": "The Cargo workspace includes axum and axum-* crates and declares Rust 1.85. The axum crate uses Rust edition 2021 and depends on internal axum-core with optional axum-macros. Tower is a declared service dependency; Tokio and HTTP features appear in the default feature set. Equivalent terminology for the cited definitions is accepted; unsupported runtime claims are not.",
+      "requiredFacts": [
+        "The Cargo workspace includes axum and axum-* crates and declares Rust 1.85.",
+        "The axum crate uses Rust edition 2021 and depends on internal axum-core with optional axum-macros.",
+        "Tower is a declared service dependency; Tokio and HTTP features appear in the default feature set."
+      ],
+      "evidence": [
+        {
+          "path": "Cargo.toml",
+          "startLine": 1,
+          "endLine": 6,
+          "excerpt": "[workspace]\nmembers = [\"axum\", \"axum-*\"]\nresolver = \"2\"\n\n[workspace.package]\nrust-version = \"1.85\"",
+          "sha256": "9f3db2a3fa254788aa0ea9f11fc18c83375120cb6dbe0dda2e34be6ac1d19e54"
+        },
+        {
+          "path": "axum/Cargo.toml",
+          "startLine": 1,
+          "endLine": 7,
+          "excerpt": "[package]\nname = \"axum\"\nversion = \"0.8.9\" # remember to bump the version that axum-extra depends on\ncategories = [\"asynchronous\", \"network-programming\", \"web-programming::http-server\"]\ndescription = \"HTTP routing and request handling library that focuses on ergonomics and modularity\"\nedition = \"2021\"\nrust-version = { workspace = true }",
+          "sha256": "7b653f34222b75257eb35b7edafb14308547fe79ac568527346c4b22cd2b83c2"
+        },
+        {
+          "path": "axum/Cargo.toml",
+          "startLine": 40,
+          "endLine": 50,
+          "excerpt": "[features]\ndefault = [\n    \"form\",\n    \"http1\",\n    \"json\",\n    \"matched-path\",\n    \"original-uri\",\n    \"query\",\n    \"tokio\",\n    \"tracing\",\n]",
+          "sha256": "7b653f34222b75257eb35b7edafb14308547fe79ac568527346c4b22cd2b83c2"
+        },
+        {
+          "path": "axum/Cargo.toml",
+          "startLine": 108,
+          "endLine": 128,
+          "excerpt": "axum-core = { path = \"../axum-core\", version = \"0.5.6\" }\nbytes = \"1.7\"\nfutures-core = \"0.3\"\nfutures-util = { version = \"0.3\", default-features = false, features = [\"alloc\"] }\nhttp = \"1.5.0\"\nhttp-body = \"1.0.0\"\nhttp-body-util = \"0.1.0\"\nitoa = \"1.0.5\"\nmatchit = \"=0.9.2\"\nmemchr = \"2.4.1\"\nmime = \"0.3.16\"\npercent-encoding = \"2.1\"\npin-project-lite = \"0.2.7\"\nserde_core = \"1.0.221\"\nsync_wrapper = \"1.0.0\"\ntower = { version = \"0.5.2\", default-features = false, features = [\"util\"] }\ntower-layer = \"0.3.2\"\ntower-service = \"0.3\"\n\n# optional dependencies\naxum-macros = { path = \"../axum-macros\", version = \"0.5.1\", optional = true }",
+          "sha256": "7b653f34222b75257eb35b7edafb14308547fe79ac568527346c4b22cd2b83c2"
+        }
+      ]
+    },
+    {
+      "id": "q4",
+      "question": "Where does public-library request use begin for an axum Router<()>?",
+      "answer": "The documented application creates Router routes and passes the router to axum::serve. The Service<Request<B>> implementation for Router<()> exposes call, maps the request body with Body::new and delegates to call_with_state(req, ()). Equivalent terminology for the cited definitions is accepted; unsupported runtime claims are not.",
+      "requiredFacts": [
+        "The documented application creates Router routes and passes the router to axum::serve.",
+        "The Service<Request<B>> implementation for Router<()> exposes call, maps the request body with Body::new and delegates to call_with_state(req, ())."
+      ],
+      "evidence": [
+        {
+          "path": "axum/README.md",
+          "startLine": 43,
+          "endLine": 57,
+          "excerpt": "#[tokio::main]\nasync fn main() {\n    // initialize tracing\n    tracing_subscriber::fmt::init();\n\n    // build our application with a route\n    let app = Router::new()\n        // `GET /` goes to `root`\n        .route(\"/\", get(root))\n        // `POST /users` goes to `create_user`\n        .route(\"/users\", post(create_user));\n\n    // run our app with hyper, listening globally on port 3000\n    let listener = tokio::net::TcpListener::bind(\"0.0.0.0:3000\").await.unwrap();\n    axum::serve(listener, app).await;",
+          "sha256": "716076bd3d662fb1a65fbd5587e415d7e800dfcdb696bc6de1fee8ff1f440f08"
+        },
+        {
+          "path": "axum/src/routing/mod.rs",
+          "startLine": 592,
+          "endLine": 610,
+          "excerpt": "impl<B> Service<Request<B>> for Router<()>\nwhere\n    B: HttpBody<Data = bytes::Bytes> + Send + 'static,\n    B::Error: Into<axum_core::BoxError>,\n{\n    type Response = Response;\n    type Error = Infallible;\n    type Future = RouteFuture<Infallible>;\n\n    #[inline]\n    fn poll_ready(&mut self, _: &mut Context<'_>) -> Poll<Result<(), Self::Error>> {\n        Poll::Ready(Ok(()))\n    }\n\n    #[inline]\n    fn call(&mut self, req: Request<B>) -> Self::Future {\n        let req = req.map(Body::new);\n        self.call_with_state(req, ())\n    }",
+          "sha256": "f46df9f07b0d3e7be279479b7a9ba6144feee470d5873f4b95c3749db6515f04"
+        }
+      ]
+    },
+    {
+      "id": "q5",
+      "question": "Where is X = serving HEAD via a GET handler while removing the response body implemented?",
+      "answer": "MethodRouter::call_with_state tries HEAD-specific routing first, then the GET endpoint for HEAD. RouteFuture response processing sets content length before replacing a top-level HEAD response body with Body::empty(). Equivalent terminology for the cited definitions is accepted; unsupported runtime claims are not.",
+      "requiredFacts": [
+        "MethodRouter::call_with_state tries HEAD-specific routing first, then the GET endpoint for HEAD.",
+        "RouteFuture response processing sets content length before replacing a top-level HEAD response body with Body::empty()."
+      ],
+      "evidence": [
+        {
+          "path": "axum/src/routing/method_routing.rs",
+          "startLine": 1200,
+          "endLine": 1218,
+          "excerpt": "    pub(crate) fn call_with_state(&self, req: Request, state: S) -> RouteFuture<E> {\n        macro_rules! call {\n            (\n                $req:expr,\n                $method_variant:ident,\n                $svc:expr\n            ) => {\n                if *req.method() == Method::$method_variant {\n                    match $svc {\n                        MethodEndpoint::None => {}\n                        MethodEndpoint::Route(route) => {\n                            return route.clone().oneshot_inner_owned($req);\n                        }\n                        MethodEndpoint::BoxedHandler(handler) => {\n                            let route = handler.clone().into_route(state);\n                            return route.oneshot_inner_owned($req);\n                        }\n                    }\n                }",
+          "sha256": "d91b8dc73b3a584c57055a6fcf2aa88241c0ee7875663e6c103844741c4c9119"
+        },
+        {
+          "path": "axum/src/routing/method_routing.rs",
+          "startLine": 1238,
+          "endLine": 1240,
+          "excerpt": "        call!(req, HEAD, head);\n        call!(req, HEAD, get);\n        call!(req, GET, get);",
+          "sha256": "d91b8dc73b3a584c57055a6fcf2aa88241c0ee7875663e6c103844741c4c9119"
+        },
+        {
+          "path": "axum/src/routing/route.rs",
+          "startLine": 165,
+          "endLine": 178,
+          "excerpt": "        } else if *this.top_level {\n            if res.status() == http::StatusCode::METHOD_NOT_ALLOWED {\n                // From https://httpwg.org/specs/rfc9110.html#field.allow:\n                // An origin server MUST generate an `Allow` header field in a 405 (Method Not Allowed) response and MAY do so in any other response.\n                set_allow_header(res.headers_mut(), this.allow_header);\n            }\n\n            // make sure to set content-length before removing the body\n            set_content_length(&res.size_hint(), res.headers_mut());\n\n            if *this.method == Method::HEAD {\n                *res.body_mut() = Body::empty();\n            }\n        }",
+          "sha256": "c6a1b61a67b29b73b0a22ec19f98cbba0fa49698d0c0dd03d74997991e4081cb"
+        }
+      ]
+    },
+    {
+      "id": "q6",
+      "question": "Which internal components does A = PathRouter::call_with_state directly use, and what proves each direction?",
+      "answer": "It calls Node::at on parts.uri.path() and url_params::insert_url_params on captured match parameters. It dispatches Endpoint::MethodRouter through method_router.call_with_state or Endpoint::Route through route.clone().call_owned. The Node wrapper delegates at to external matchit::Router; matchit internals are outside this repository proof. Equivalent terminology for the cited definitions is accepted; unsupported runtime claims are not.",
+      "requiredFacts": [
+        "It calls Node::at on parts.uri.path() and url_params::insert_url_params on captured match parameters.",
+        "It dispatches Endpoint::MethodRouter through method_router.call_with_state or Endpoint::Route through route.clone().call_owned.",
+        "The Node wrapper delegates at to external matchit::Router; matchit internals are outside this repository proof."
+      ],
+      "evidence": [
+        {
+          "path": "axum/src/routing/path_router.rs",
+          "startLine": 295,
+          "endLine": 325,
+          "excerpt": "        let (mut parts, body) = req.into_parts();\n\n        match self.node.at(parts.uri.path()) {\n            Ok(match_) => {\n                let id = *match_.value;\n\n                #[cfg(feature = \"matched-path\")]\n                crate::extract::matched_path::set_matched_path_for_request(\n                    id,\n                    &self.node.route_id_to_path,\n                    &mut parts.extensions,\n                );\n\n                url_params::insert_url_params(&mut parts.extensions, &match_.params);\n\n                let endpoint = self\n                    .routes\n                    .get(id.0)\n                    .expect(\"no route for id. This is a bug in axum. Please file an issue\");\n\n                let req = Request::from_parts(parts, body);\n                match endpoint {\n                    Endpoint::MethodRouter(method_router) => {\n                        Ok(method_router.call_with_state(req, state))\n                    }\n                    Endpoint::Route(route) => Ok(route.clone().call_owned(req)),\n                }\n            }\n            // explicitly handle all variants in case matchit adds\n            // new ones we need to handle differently\n            Err(MatchError::NotFound) => Err((Request::from_parts(parts, body), state)),",
+          "sha256": "ce6d7ba3c44ff47d09b2f20235a02e010b094295eafdf40ef8c34e3f39d0edc7"
+        },
+        {
+          "path": "axum/src/routing/path_router.rs",
+          "startLine": 357,
+          "endLine": 362,
+          "excerpt": "/// Wrapper around `matchit::Router` that supports merging two `Router`s.\n#[derive(Clone, Default)]\nstruct Node {\n    inner: matchit::Router<RouteId>,\n    route_id_to_path: HashMap<RouteId, Arc<str>>,\n    path_to_route_id: HashMap<Arc<str>, RouteId>,",
+          "sha256": "ce6d7ba3c44ff47d09b2f20235a02e010b094295eafdf40ef8c34e3f39d0edc7"
+        },
+        {
+          "path": "axum/src/routing/path_router.rs",
+          "startLine": 382,
+          "endLine": 386,
+          "excerpt": "    fn at<'n, 'p>(\n        &'n self,\n        path: &'p str,\n    ) -> Result<matchit::Match<'n, 'p, &'n RouteId>, MatchError> {\n        self.inner.at(path)",
+          "sha256": "ce6d7ba3c44ff47d09b2f20235a02e010b094295eafdf40ef8c34e3f39d0edc7"
+        }
+      ]
+    },
+    {
+      "id": "q7",
+      "question": "For R = HEAD / with only a GET handler registered, give the dispatch path through axum to an empty response body and identify boundaries.",
+      "answer": "Router Service::call maps Body and invokes Router::call_with_state, which first calls PathRouter::call_with_state. PathRouter uses Node::at to match the URI and dispatches the MethodRouter endpoint. MethodRouter tries HEAD then GET for HEAD and turns a boxed handler into a Route when needed. Route::oneshot_inner_owned captures the request method and constructs RouteFuture around the service future. RouteFuture polls that future and removes the top-level HEAD response body. The user handler, Tower service dispatch, and external matchit lookup are boundaries; source reachability does not show an observed run. Equivalent terminology for the cited definitions is accepted; unsupported runtime claims are not.",
+      "requiredFacts": [
+        "Router Service::call maps Body and invokes Router::call_with_state, which first calls PathRouter::call_with_state.",
+        "PathRouter uses Node::at to match the URI and dispatches the MethodRouter endpoint.",
+        "MethodRouter tries HEAD then GET for HEAD and turns a boxed handler into a Route when needed.",
+        "Route::oneshot_inner_owned captures the request method and constructs RouteFuture around the service future.",
+        "RouteFuture polls that future and removes the top-level HEAD response body.",
+        "The user handler, Tower service dispatch, and external matchit lookup are boundaries; source reachability does not show an observed run."
+      ],
+      "evidence": [
+        {
+          "path": "axum/src/routing/mod.rs",
+          "startLine": 607,
+          "endLine": 610,
+          "excerpt": "    fn call(&mut self, req: Request<B>) -> Self::Future {\n        let req = req.map(Body::new);\n        self.call_with_state(req, ())\n    }",
+          "sha256": "f46df9f07b0d3e7be279479b7a9ba6144feee470d5873f4b95c3749db6515f04"
+        },
+        {
+          "path": "axum/src/routing/mod.rs",
+          "startLine": 445,
+          "endLine": 455,
+          "excerpt": "    pub(crate) fn call_with_state(&self, req: Request, state: S) -> RouteFuture<Infallible> {\n        let (req, state) = match self.inner.path_router.call_with_state(req, state) {\n            Ok(future) => return future,\n            Err((req, state)) => (req, state),\n        };\n\n        self.inner\n            .catch_all_fallback\n            .clone()\n            .call_with_state(req, state)\n    }",
+          "sha256": "f46df9f07b0d3e7be279479b7a9ba6144feee470d5873f4b95c3749db6515f04"
+        },
+        {
+          "path": "axum/src/routing/path_router.rs",
+          "startLine": 295,
+          "endLine": 325,
+          "excerpt": "        let (mut parts, body) = req.into_parts();\n\n        match self.node.at(parts.uri.path()) {\n            Ok(match_) => {\n                let id = *match_.value;\n\n                #[cfg(feature = \"matched-path\")]\n                crate::extract::matched_path::set_matched_path_for_request(\n                    id,\n                    &self.node.route_id_to_path,\n                    &mut parts.extensions,\n                );\n\n                url_params::insert_url_params(&mut parts.extensions, &match_.params);\n\n                let endpoint = self\n                    .routes\n                    .get(id.0)\n                    .expect(\"no route for id. This is a bug in axum. Please file an issue\");\n\n                let req = Request::from_parts(parts, body);\n                match endpoint {\n                    Endpoint::MethodRouter(method_router) => {\n                        Ok(method_router.call_with_state(req, state))\n                    }\n                    Endpoint::Route(route) => Ok(route.clone().call_owned(req)),\n                }\n            }\n            // explicitly handle all variants in case matchit adds\n            // new ones we need to handle differently\n            Err(MatchError::NotFound) => Err((Request::from_parts(parts, body), state)),",
+          "sha256": "ce6d7ba3c44ff47d09b2f20235a02e010b094295eafdf40ef8c34e3f39d0edc7"
+        },
+        {
+          "path": "axum/src/routing/method_routing.rs",
+          "startLine": 1200,
+          "endLine": 1218,
+          "excerpt": "    pub(crate) fn call_with_state(&self, req: Request, state: S) -> RouteFuture<E> {\n        macro_rules! call {\n            (\n                $req:expr,\n                $method_variant:ident,\n                $svc:expr\n            ) => {\n                if *req.method() == Method::$method_variant {\n                    match $svc {\n                        MethodEndpoint::None => {}\n                        MethodEndpoint::Route(route) => {\n                            return route.clone().oneshot_inner_owned($req);\n                        }\n                        MethodEndpoint::BoxedHandler(handler) => {\n                            let route = handler.clone().into_route(state);\n                            return route.oneshot_inner_owned($req);\n                        }\n                    }\n                }",
+          "sha256": "d91b8dc73b3a584c57055a6fcf2aa88241c0ee7875663e6c103844741c4c9119"
+        },
+        {
+          "path": "axum/src/routing/method_routing.rs",
+          "startLine": 1238,
+          "endLine": 1240,
+          "excerpt": "        call!(req, HEAD, head);\n        call!(req, HEAD, get);\n        call!(req, GET, get);",
+          "sha256": "d91b8dc73b3a584c57055a6fcf2aa88241c0ee7875663e6c103844741c4c9119"
+        },
+        {
+          "path": "axum/src/routing/route.rs",
+          "startLine": 54,
+          "endLine": 58,
+          "excerpt": "    /// Variant of [`Route::oneshot_inner`] that takes ownership of the route to avoid cloning.\n    pub(crate) fn oneshot_inner_owned(self, req: Request) -> RouteFuture<E> {\n        let method = req.method().clone();\n        RouteFuture::new(method, self.0.oneshot(req))\n    }",
+          "sha256": "c6a1b61a67b29b73b0a22ec19f98cbba0fa49698d0c0dd03d74997991e4081cb"
+        },
+        {
+          "path": "axum/src/routing/route.rs",
+          "startLine": 148,
+          "endLine": 178,
+          "excerpt": "        let this = self.project();\n        let mut res = ready!(this.inner.poll(cx))?;\n\n        if *this.method == Method::CONNECT && res.status().is_success() {\n            // From https://httpwg.org/specs/rfc9110.html#CONNECT:\n            // > A server MUST NOT send any Transfer-Encoding or\n            // > Content-Length header fields in a 2xx (Successful)\n            // > response to CONNECT.\n            if res.headers().contains_key(&CONTENT_LENGTH)\n                || res.headers().contains_key(&header::TRANSFER_ENCODING)\n                || res.size_hint().lower() != 0\n            {\n                error!(\"response to CONNECT with nonempty body\");\n                res = res.map(|_| Body::empty());\n                res.headers_mut().remove(&CONTENT_LENGTH);\n                res.headers_mut().remove(&header::TRANSFER_ENCODING);\n            }\n        } else if *this.top_level {\n            if res.status() == http::StatusCode::METHOD_NOT_ALLOWED {\n                // From https://httpwg.org/specs/rfc9110.html#field.allow:\n                // An origin server MUST generate an `Allow` header field in a 405 (Method Not Allowed) response and MAY do so in any other response.\n                set_allow_header(res.headers_mut(), this.allow_header);\n            }\n\n            // make sure to set content-length before removing the body\n            set_content_length(&res.size_hint(), res.headers_mut());\n\n            if *this.method == Method::HEAD {\n                *res.body_mut() = Body::empty();\n            }\n        }",
+          "sha256": "c6a1b61a67b29b73b0a22ec19f98cbba0fa49698d0c0dd03d74997991e4081cb"
+        }
+      ]
+    },
+    {
+      "id": "q8",
+      "question": "If Y = PathRouter::call_with_state changes, which direct Router consumer is evidenced, and what impact is speculative?",
+      "answer": "Router::call_with_state directly calls self.inner.path_router.call_with_state and returns its successful future. On an unmatched request it uses catch_all_fallback instead. Router Service::call reaches PathRouter indirectly through Router::call_with_state. A changed implementation may affect routing, but exact handler or response differences require request and route configuration. Equivalent terminology for the cited definitions is accepted; unsupported runtime claims are not.",
+      "requiredFacts": [
+        "Router::call_with_state directly calls self.inner.path_router.call_with_state and returns its successful future.",
+        "On an unmatched request it uses catch_all_fallback instead.",
+        "Router Service::call reaches PathRouter indirectly through Router::call_with_state.",
+        "A changed implementation may affect routing, but exact handler or response differences require request and route configuration."
+      ],
+      "evidence": [
+        {
+          "path": "axum/src/routing/mod.rs",
+          "startLine": 445,
+          "endLine": 455,
+          "excerpt": "    pub(crate) fn call_with_state(&self, req: Request, state: S) -> RouteFuture<Infallible> {\n        let (req, state) = match self.inner.path_router.call_with_state(req, state) {\n            Ok(future) => return future,\n            Err((req, state)) => (req, state),\n        };\n\n        self.inner\n            .catch_all_fallback\n            .clone()\n            .call_with_state(req, state)\n    }",
+          "sha256": "f46df9f07b0d3e7be279479b7a9ba6144feee470d5873f4b95c3749db6515f04"
+        },
+        {
+          "path": "axum/src/routing/mod.rs",
+          "startLine": 607,
+          "endLine": 610,
+          "excerpt": "    fn call(&mut self, req: Request<B>) -> Self::Future {\n        let req = req.map(Body::new);\n        self.call_with_state(req, ())\n    }",
+          "sha256": "f46df9f07b0d3e7be279479b7a9ba6144feee470d5873f4b95c3749db6515f04"
+        }
+      ]
+    },
+    {
+      "id": "q9",
+      "question": "Which tests exercise X = GET serving HEAD with body suppression, and how do they enter the implementation?",
+      "answer": "routing/tests/get_to_head.rs for_handlers::get_handles_head registers get on / and uses Router.oneshot with a HEAD request. It asserts OK, preservation of x-some-header and a zero-length response body. The for_services test repeats the behavior using get_service(service_fn(...)), covering the service variant. These are source test assertions; no target tests were executed for this oracle. Equivalent terminology for the cited definitions is accepted; unsupported runtime claims are not.",
+      "requiredFacts": [
+        "routing/tests/get_to_head.rs for_handlers::get_handles_head registers get on / and uses Router.oneshot with a HEAD request.",
+        "It asserts OK, preservation of x-some-header and a zero-length response body.",
+        "The for_services test repeats the behavior using get_service(service_fn(...)), covering the service variant.",
+        "These are source test assertions; no target tests were executed for this oracle."
+      ],
+      "evidence": [
+        {
+          "path": "axum/src/routing/tests/get_to_head.rs",
+          "startLine": 4,
+          "endLine": 35,
+          "excerpt": "mod for_handlers {\n    use super::*;\n\n    #[crate::test]\n    async fn get_handles_head() {\n        let app = Router::new().route(\n            \"/\",\n            get(|| async {\n                let mut headers = HeaderMap::new();\n                headers.insert(\"x-some-header\", \"foobar\".parse().unwrap());\n                (headers, \"you shouldn't see this\")\n            }),\n        );\n\n        // don't use reqwest because it always strips bodies from HEAD responses\n        let res = app\n            .oneshot(\n                Request::builder()\n                    .uri(\"/\")\n                    .method(Method::HEAD)\n                    .body(Body::empty())\n                    .unwrap(),\n            )\n            .await\n            .unwrap();\n\n        assert_eq!(res.status(), StatusCode::OK);\n        assert_eq!(res.headers()[\"x-some-header\"], \"foobar\");\n\n        let body = BodyExt::collect(res.into_body()).await.unwrap().to_bytes();\n        assert_eq!(body.len(), 0);\n    }",
+          "sha256": "feadb1c617ccdd9f7f0508d439c80ad605f891a3986eec27e202f988ce85e361"
+        },
+        {
+          "path": "axum/src/routing/tests/get_to_head.rs",
+          "startLine": 38,
+          "endLine": 69,
+          "excerpt": "mod for_services {\n    use super::*;\n\n    #[crate::test]\n    async fn get_handles_head() {\n        let app = Router::new().route(\n            \"/\",\n            get_service(service_fn(|_req: Request| async move {\n                Ok::<_, Infallible>(\n                    ([(\"x-some-header\", \"foobar\")], \"you shouldn't see this\").into_response(),\n                )\n            })),\n        );\n\n        // don't use reqwest because it always strips bodies from HEAD responses\n        let res = app\n            .oneshot(\n                Request::builder()\n                    .uri(\"/\")\n                    .method(Method::HEAD)\n                    .body(Body::empty())\n                    .unwrap(),\n            )\n            .await\n            .unwrap();\n\n        assert_eq!(res.status(), StatusCode::OK);\n        assert_eq!(res.headers()[\"x-some-header\"], \"foobar\");\n\n        let body = BodyExt::collect(res.into_body()).await.unwrap().to_bytes();\n        assert_eq!(body.len(), 0);\n    }",
+          "sha256": "feadb1c617ccdd9f7f0508d439c80ad605f891a3986eec27e202f988ce85e361"
+        }
+      ]
+    },
+    {
+      "id": "q10",
+      "question": "Where does Z = URI path captures enter and get transformed before axum extractors use them?",
+      "answer": "PathRouter matches parts.uri.path() and passes match_.params to insert_url_params. insert_url_params filters internal nesting/fallback keys and percent-decodes each value through PercentDecodedStr::new. It stores decoded UrlParams in request extensions, appends existing parameters, or records InvalidUtf8InPathParam for invalid input. Path<T>::from_request_parts obtains parameters and applies serialize_path_params to produce the typed extractor. Equivalent terminology for the cited definitions is accepted; unsupported runtime claims are not.",
+      "requiredFacts": [
+        "PathRouter matches parts.uri.path() and passes match_.params to insert_url_params.",
+        "insert_url_params filters internal nesting/fallback keys and percent-decodes each value through PercentDecodedStr::new.",
+        "It stores decoded UrlParams in request extensions, appends existing parameters, or records InvalidUtf8InPathParam for invalid input.",
+        "Path<T>::from_request_parts obtains parameters and applies serialize_path_params to produce the typed extractor."
+      ],
+      "evidence": [
+        {
+          "path": "axum/src/routing/path_router.rs",
+          "startLine": 295,
+          "endLine": 308,
+          "excerpt": "        let (mut parts, body) = req.into_parts();\n\n        match self.node.at(parts.uri.path()) {\n            Ok(match_) => {\n                let id = *match_.value;\n\n                #[cfg(feature = \"matched-path\")]\n                crate::extract::matched_path::set_matched_path_for_request(\n                    id,\n                    &self.node.route_id_to_path,\n                    &mut parts.extensions,\n                );\n\n                url_params::insert_url_params(&mut parts.extensions, &match_.params);",
+          "sha256": "ce6d7ba3c44ff47d09b2f20235a02e010b094295eafdf40ef8c34e3f39d0edc7"
+        },
+        {
+          "path": "axum/src/routing/url_params.rs",
+          "startLine": 17,
+          "endLine": 59,
+          "excerpt": "pub(super) fn insert_url_params(extensions: &mut Extensions, params: &Params<'_, '_>) {\n    let current_params = extensions.get_mut();\n\n    if let Some(UrlParams::InvalidUtf8InPathParam { .. }) = current_params {\n        // nothing to do here since an error was stored earlier\n        return;\n    }\n\n    let params = params\n        .iter()\n        .filter(|(key, _)| !key.starts_with(super::NEST_TAIL_PARAM))\n        .filter(|(key, _)| !key.starts_with(super::FALLBACK_PARAM))\n        .map(|(k, v)| {\n            if let Some(decoded) = PercentDecodedStr::new(v) {\n                Ok((Arc::from(k), decoded))\n            } else {\n                Err(Arc::from(k))\n            }\n        })\n        .collect::<Result<Vec<_>, _>>();\n\n    match (current_params, params) {\n        (Some(UrlParams::InvalidUtf8InPathParam { .. }), _) => {\n            unreachable!(\"we check for this state earlier in this method\")\n        }\n        (_, Err(invalid_key)) => {\n            extensions.insert(UrlParams::InvalidUtf8InPathParam { key: invalid_key });\n        }\n        (\n            Some(UrlParams::Params {\n                params: current, ..\n            }),\n            Ok(params),\n        ) => {\n            current.extend(params);\n        }\n        (None, Ok(params)) => {\n            extensions.insert(UrlParams::Params {\n                params,\n                inner_start: 0,\n            });\n        }\n    }",
+          "sha256": "159347027b2e18d052ab1fa05dc7406125571802113833ffe689df7b527db1ed"
+        },
+        {
+          "path": "axum/src/extract/path/mod.rs",
+          "startLine": 163,
+          "endLine": 176,
+          "excerpt": "pub struct Path<T>(pub T);\n\naxum_core::__impl_deref!(Path);\n\nimpl<T, S> FromRequestParts<S> for Path<T>\nwhere\n    T: DeserializeOwned + Send,\n    S: Send + Sync,\n{\n    type Rejection = PathRejection;\n\n    async fn from_request_parts(parts: &mut Parts, _state: &S) -> Result<Self, Self::Rejection> {\n        get_params(parts).and_then(serialize_path_params).map(Self)\n    }",
+          "sha256": "8310db8e626c45a148207f0b63c795703a488aef5b3e7a4c8885246e3450a36f"
+        }
+      ]
+    }
+  ]
+}

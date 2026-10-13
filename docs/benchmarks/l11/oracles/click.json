@@ -1,0 +1,375 @@
+{
+  "id": "click",
+  "repository": "pallets/click",
+  "commit": "2247b35ea1c47c727d7a06e51fa280e12a863ff6",
+  "trackedFiles": 178,
+  "questions": [
+    {
+      "id": "q01",
+      "question": "What does the repository do, and who calls or runs it?",
+      "answer": "Click is a Python library for composable command-line interfaces. Application authors import click and decorate callbacks; end users run those applications, such as the README hello CLI.",
+      "requiredFacts": [
+        "Python CLI toolkit",
+        "application authors import/decorate callbacks",
+        "users run client CLIs"
+      ],
+      "evidence": [
+        {
+          "path": "README.md",
+          "startLine": 5,
+          "endLine": 18,
+          "excerpt": "Click is a Python package for creating beautiful command line interfaces\nin a composable way with as little code as necessary. It's the \"Command\nLine Interface Creation Kit\". It's highly configurable but comes with\nsensible defaults out of the box.\n\nIt aims to make the process of writing command line tools quick and fun\nwhile also preventing any frustration caused by the inability to\nimplement an intended CLI API.\n\nClick in three points:\n\n-   Arbitrary nesting of commands\n-   Automatic help page generation\n-   Supports lazy loading of subcommands at runtime",
+          "sha256": "4c3de4aa0918deac2f712facacd1dc30a8cc4627d0118dd290292ab0af65ca0b"
+        },
+        {
+          "path": "README.md",
+          "startLine": 21,
+          "endLine": 43,
+          "excerpt": "## A Simple Example\n\n```python\nimport click\n\n@click.command()\n@click.option(\"--count\", default=1, help=\"Number of greetings.\")\n@click.option(\"--name\", prompt=\"Your name\", help=\"The person to greet.\")\ndef hello(count, name):\n    \"\"\"Simple program that greets NAME for a total of COUNT times.\"\"\"\n    for _ in range(count):\n        click.echo(f\"Hello, {name}!\")\n\nif __name__ == '__main__':\n    hello()\n```\n\n```\n$ python hello.py --count=3\nYour name: Click\nHello, Click!\nHello, Click!\nHello, Click!",
+          "sha256": "4c3de4aa0918deac2f712facacd1dc30a8cc4627d0118dd290292ab0af65ca0b"
+        }
+      ]
+    },
+    {
+      "id": "q02",
+      "question": "Name the principal components and their responsibilities.",
+      "answer": "core provides Command/Context and invocation/parsing coordination; decorators converts functions to commands; parser supplies low-level option parsing; types supports conversion; testing supplies CliRunner invocation of client commands.",
+      "requiredFacts": [
+        "core owns Command/Context invocation",
+        "decorators constructs commands from callbacks",
+        "parser performs option parsing",
+        "types/parameter processing converts values",
+        "testing invokes CLI main"
+      ],
+      "evidence": [
+        {
+          "path": "src/click/decorators.py",
+          "startLine": 168,
+          "endLine": 175,
+          "excerpt": "def command(\n    name: str | _AnyCallable | None = None,\n    cls: type[CmdType] | None = None,\n    **attrs: t.Any,\n) -> Command | t.Callable[[_AnyCallable], Command | CmdType]:\n    r\"\"\"Creates a new :class:`Command` and uses the decorated function as\n    callback.  This will also automatically attach all decorated\n    :func:`option`\\s and :func:`argument`\\s as parameters to the command.",
+          "sha256": "16069357615691fcdfc9c794bb515f6009eb35aad6f7a76c017bdce06dae8d55"
+        },
+        {
+          "path": "src/click/core.py",
+          "startLine": 1396,
+          "endLine": 1404,
+          "excerpt": "    def parse_args(self, ctx: Context, args: list[str]) -> list[str]:\n        if not args and self.no_args_is_help and not ctx.resilient_parsing:\n            raise NoArgsIsHelpError(ctx)\n\n        parser = self.make_parser(ctx)\n        opts, args, param_order = parser.parse_args(args=args)\n\n        for param in iter_params_for_processing(param_order, self.get_params(ctx)):\n            _, args = param.handle_parse_result(ctx, opts, args)",
+          "sha256": "26307e89b7b23e512d3a696b820197b6fd27bbbee9f6b9822f479d851523fcd9"
+        },
+        {
+          "path": "src/click/core.py",
+          "startLine": 1432,
+          "endLine": 1446,
+          "excerpt": "    def invoke(self, ctx: Context) -> t.Any:\n        \"\"\"Given a context, this invokes the attached callback (if it exists)\n        in the right way.\n        \"\"\"\n        if self.deprecated:\n            message = _(\n                \"DeprecationWarning: The command {name!r} is deprecated.{extra_message}\"\n            ).format(\n                name=self.name,\n                extra_message=_format_deprecated_suffix(self.deprecated),\n            )\n            echo(style(message, fg=\"red\"), err=True)\n\n        if self.callback is not None:\n            return ctx.invoke(self.callback, **ctx.params)",
+          "sha256": "26307e89b7b23e512d3a696b820197b6fd27bbbee9f6b9822f479d851523fcd9"
+        },
+        {
+          "path": "src/click/core.py",
+          "startLine": 2802,
+          "endLine": 2811,
+          "excerpt": "    def process_value(self, ctx: Context, value: t.Any) -> t.Any:\n        \"\"\"Process the value of this parameter:\n\n        1. Type cast the value using :meth:`type_cast_value`.\n        2. Check if the value is missing (see: :meth:`value_is_missing`), and raise\n           :exc:`MissingParameter` if it is required.\n        3. If a :attr:`callback` is set, call it to have the value replaced by the\n           result of the callback. If the value was not set, the callback receive\n           ``None``. This keep the legacy behavior as it was before the introduction of\n           the :attr:`UNSET` sentinel.",
+          "sha256": "26307e89b7b23e512d3a696b820197b6fd27bbbee9f6b9822f479d851523fcd9"
+        },
+        {
+          "path": "src/click/testing.py",
+          "startLine": 681,
+          "endLine": 690,
+          "excerpt": "            try:\n                prog_name = extra.pop(\"prog_name\")\n            except KeyError:\n                prog_name = self.get_default_prog_name(cli)\n\n            try:\n                return_value = cli.main(args=args or (), prog_name=prog_name, **extra)\n            except SystemExit as e:\n                exc_info = sys.exc_info()\n                e_code = t.cast(\"int | t.Any | None\", e.code)",
+          "sha256": "76f4e649bc53000d667c8c0deff1591970fa034b0f085a207165839b2301019a"
+        }
+      ]
+    },
+    {
+      "id": "q03",
+      "question": "Which languages, build/framework systems and package boundaries organize it?",
+      "answer": "Click is one Python distribution named click, with src/click modules and a Flit build backend. pyproject requires Python >=3.10 and configures pytest tests; core, decorators and parser are internal Python modules rather than independent distributions.",
+      "requiredFacts": [
+        "Python >=3.10",
+        "single click distribution",
+        "flit_core.buildapi backend",
+        "pytest tests"
+      ],
+      "evidence": [
+        {
+          "path": "pyproject.toml",
+          "startLine": 1,
+          "endLine": 16,
+          "excerpt": "[project]\nname = \"click\"\nversion = \"8.6.0.dev\"\ndescription = \"Composable command line interface toolkit\"\nreadme = \"README.md\"\nlicense = \"BSD-3-Clause\"\nlicense-files = [\"LICENSE.txt\"]\nmaintainers = [{name = \"Pallets\", email = \"contact@palletsprojects.com\"}]\nclassifiers = [\n    \"Development Status :: 5 - Production/Stable\",\n    \"Intended Audience :: Developers\",\n    \"Operating System :: OS Independent\",\n    \"Programming Language :: Python\",\n    \"Typing :: Typed\",\n]\nrequires-python = \">=3.10\"",
+          "sha256": "327b296ab1fc9280c106c71efea961f71dffa5d8f69d85a88eba758e0f440636"
+        },
+        {
+          "path": "pyproject.toml",
+          "startLine": 62,
+          "endLine": 69,
+          "excerpt": "[build-system]\nrequires = [\"flit_core>=3.11,<4\"]\nbuild-backend = \"flit_core.buildapi\"\n\n[tool.flit.module]\nname = \"click\"\n\n[tool.flit.sdist]",
+          "sha256": "327b296ab1fc9280c106c71efea961f71dffa5d8f69d85a88eba758e0f440636"
+        },
+        {
+          "path": "pyproject.toml",
+          "startLine": 84,
+          "endLine": 89,
+          "excerpt": "testpaths = [\"tests\"]\nfilterwarnings = [\n    \"error\",\n]\nmarkers = [\n    \"stress: high-iteration stress tests for race conditions (deselect with '-m \\\"not stress\\\"')\",",
+          "sha256": "327b296ab1fc9280c106c71efea961f71dffa5d8f69d85a88eba758e0f440636"
+        },
+        {
+          "path": "src/click/decorators.py",
+          "startLine": 8,
+          "endLine": 14,
+          "excerpt": "from .core import Argument\nfrom .core import Command\nfrom .core import Context\nfrom .core import Group\nfrom .core import Option\nfrom .core import Parameter\nfrom .globals import get_current_context",
+          "sha256": "16069357615691fcdfc9c794bb515f6009eb35aad6f7a76c017bdce06dae8d55"
+        }
+      ]
+    },
+    {
+      "id": "q04",
+      "question": "Where does public-library use begin when a client invokes a click.Command instance?",
+      "answer": "Import click.Command (reexported from core) or create one through @click.command. Calling a Command uses __call__ -> main; main accepts explicit args or sys.argv[1:]. There is no universal application callback until the client supplies it.",
+      "requiredFacts": [
+        "click.Command is core reexport",
+        "decorator creates Command around client callback",
+        "Command.__call__ delegates to main",
+        "callback supplied by client"
+      ],
+      "evidence": [
+        {
+          "path": "src/click/__init__.py",
+          "startLine": 10,
+          "endLine": 17,
+          "excerpt": "from .core import Argument as Argument\nfrom .core import Command as Command\nfrom .core import CommandCollection as CommandCollection\nfrom .core import Context as Context\nfrom .core import Group as Group\nfrom .core import Option as Option\nfrom .core import Parameter as Parameter\nfrom .core import ParameterSource as ParameterSource",
+          "sha256": "5abfc54d37d47cc788b7e7a05e9514787f8c5a0b7db429d0f24d748ac89964ca"
+        },
+        {
+          "path": "src/click/decorators.py",
+          "startLine": 168,
+          "endLine": 175,
+          "excerpt": "def command(\n    name: str | _AnyCallable | None = None,\n    cls: type[CmdType] | None = None,\n    **attrs: t.Any,\n) -> Command | t.Callable[[_AnyCallable], Command | CmdType]:\n    r\"\"\"Creates a new :class:`Command` and uses the decorated function as\n    callback.  This will also automatically attach all decorated\n    :func:`option`\\s and :func:`argument`\\s as parameters to the command.",
+          "sha256": "16069357615691fcdfc9c794bb515f6009eb35aad6f7a76c017bdce06dae8d55"
+        },
+        {
+          "path": "src/click/decorators.py",
+          "startLine": 248,
+          "endLine": 250,
+          "excerpt": "        cmd = cls(name=cmd_name, callback=f, params=params, **attrs)\n        cmd.__doc__ = f.__doc__\n        return cmd",
+          "sha256": "16069357615691fcdfc9c794bb515f6009eb35aad6f7a76c017bdce06dae8d55"
+        },
+        {
+          "path": "src/click/core.py",
+          "startLine": 1683,
+          "endLine": 1685,
+          "excerpt": "    def __call__(self, *args: t.Any, **kwargs: t.Any) -> t.Any:\n        \"\"\"Alias for :meth:`main`.\"\"\"\n        return self.main(*args, **kwargs)",
+          "sha256": "26307e89b7b23e512d3a696b820197b6fd27bbbee9f6b9822f479d851523fcd9"
+        },
+        {
+          "path": "src/click/core.py",
+          "startLine": 1566,
+          "endLine": 1572,
+          "excerpt": "        if args is None:\n            args = sys.argv[1:]\n\n            if os.name == \"nt\" and windows_expand_args:\n                args = _expand_args(args)\n        else:\n            args = list(args)",
+          "sha256": "26307e89b7b23e512d3a696b820197b6fd27bbbee9f6b9822f479d851523fcd9"
+        }
+      ]
+    },
+    {
+      "id": "q05",
+      "question": "Where is invoking a command callback with parsed parameters implemented? Name its component and definition.",
+      "answer": "core.Command.invoke calls ctx.invoke(self.callback, **ctx.params) when a callback exists. core.Context.invoke ultimately calls callback(*args, **kwargs) inside the context/error wrapper.",
+      "requiredFacts": [
+        "Command.invoke in core.py",
+        "passes callback and ctx.params to Context.invoke",
+        "Context.invoke executes callback"
+      ],
+      "evidence": [
+        {
+          "path": "src/click/core.py",
+          "startLine": 1432,
+          "endLine": 1446,
+          "excerpt": "    def invoke(self, ctx: Context) -> t.Any:\n        \"\"\"Given a context, this invokes the attached callback (if it exists)\n        in the right way.\n        \"\"\"\n        if self.deprecated:\n            message = _(\n                \"DeprecationWarning: The command {name!r} is deprecated.{extra_message}\"\n            ).format(\n                name=self.name,\n                extra_message=_format_deprecated_suffix(self.deprecated),\n            )\n            echo(style(message, fg=\"red\"), err=True)\n\n        if self.callback is not None:\n            return ctx.invoke(self.callback, **ctx.params)",
+          "sha256": "26307e89b7b23e512d3a696b820197b6fd27bbbee9f6b9822f479d851523fcd9"
+        },
+        {
+          "path": "src/click/core.py",
+          "startLine": 937,
+          "endLine": 940,
+          "excerpt": "            ctx = self\n\n        with augment_usage_errors(self), ctx:\n            return callback(*args, **kwargs)",
+          "sha256": "26307e89b7b23e512d3a696b820197b6fd27bbbee9f6b9822f479d851523fcd9"
+        }
+      ]
+    },
+    {
+      "id": "q06",
+      "question": "Which internal components does click.core directly use, and what proves each direction?",
+      "answer": "Its imports show core -> types and _utils; exceptions; formatting; globals; parser; termui; utils. These are direct internal module dependencies. For example _OptionParser is constructed by Command.make_parser; imports alone do not prove every imported helper executes in every invocation.",
+      "requiredFacts": [
+        "core -> types/_utils/exceptions",
+        "core -> formatting/globals/parser",
+        "core -> termui/utils",
+        "imports establish dependency, not unconditional execution"
+      ],
+      "evidence": [
+        {
+          "path": "src/click/core.py",
+          "startLine": 24,
+          "endLine": 49,
+          "excerpt": "from . import types\nfrom ._utils import FLAG_NEEDS_VALUE\nfrom ._utils import UNSET\nfrom .exceptions import Abort\nfrom .exceptions import BadParameter\nfrom .exceptions import ClickException\nfrom .exceptions import Exit\nfrom .exceptions import MissingParameter\nfrom .exceptions import NoArgsIsHelpError\nfrom .exceptions import NoSuchCommand\nfrom .exceptions import UsageError\nfrom .formatting import HelpFormatter\nfrom .formatting import join_options\nfrom .globals import pop_context\nfrom .globals import push_context\nfrom .parser import _OptionParser\nfrom .parser import _split_opt\nfrom .termui import confirm\nfrom .termui import prompt\nfrom .termui import style\nfrom .utils import _detect_program_name\nfrom .utils import _expand_args\nfrom .utils import _make_default_short_help\nfrom .utils import _PacifyFlushWrapper\nfrom .utils import echo\nfrom .utils import make_str",
+          "sha256": "26307e89b7b23e512d3a696b820197b6fd27bbbee9f6b9822f479d851523fcd9"
+        },
+        {
+          "path": "src/click/core.py",
+          "startLine": 1256,
+          "endLine": 1261,
+          "excerpt": "    def make_parser(self, ctx: Context) -> _OptionParser:\n        \"\"\"Creates the underlying option parser for this command.\"\"\"\n        parser = _OptionParser(ctx)\n        for param in self.get_params(ctx):\n            param.add_to_parser(parser, ctx)\n        return parser",
+          "sha256": "26307e89b7b23e512d3a696b820197b6fd27bbbee9f6b9822f479d851523fcd9"
+        }
+      ]
+    },
+    {
+      "id": "q07",
+      "question": "For Command.main executing a normal client callback, give the source-supported call/dispatch path to its outcome; identify dynamic or unresolved boundaries.",
+      "answer": "Command.main -> make_context -> parse_args, then Command.invoke -> Context.invoke -> client callback. make_context constructs context_class and parses args; invoke forwards ctx.params. With standalone_mode=False main returns the callback result. Command/context subclasses, parameter callbacks and the client callback remain dynamic; shell completion/help/error branches can bypass normal invocation.",
+      "requiredFacts": [
+        "main -> make_context -> parse_args",
+        "main -> Command.invoke -> Context.invoke",
+        "client callback receives parsed kwargs",
+        "standalone_mode=False returns rv",
+        "subclass/client dispatch and early branches are conditional"
+      ],
+      "evidence": [
+        {
+          "path": "src/click/core.py",
+          "startLine": 1386,
+          "endLine": 1404,
+          "excerpt": "        for key, value in self.context_settings.items():\n            if key not in extra:\n                extra[key] = value\n\n        ctx = self.context_class(self, info_name=info_name, parent=parent, **extra)\n\n        with ctx.scope(cleanup=False):\n            self.parse_args(ctx, args)\n        return ctx\n\n    def parse_args(self, ctx: Context, args: list[str]) -> list[str]:\n        if not args and self.no_args_is_help and not ctx.resilient_parsing:\n            raise NoArgsIsHelpError(ctx)\n\n        parser = self.make_parser(ctx)\n        opts, args, param_order = parser.parse_args(args=args)\n\n        for param in iter_params_for_processing(param_order, self.get_params(ctx)):\n            _, args = param.handle_parse_result(ctx, opts, args)",
+          "sha256": "26307e89b7b23e512d3a696b820197b6fd27bbbee9f6b9822f479d851523fcd9"
+        },
+        {
+          "path": "src/click/core.py",
+          "startLine": 1432,
+          "endLine": 1446,
+          "excerpt": "    def invoke(self, ctx: Context) -> t.Any:\n        \"\"\"Given a context, this invokes the attached callback (if it exists)\n        in the right way.\n        \"\"\"\n        if self.deprecated:\n            message = _(\n                \"DeprecationWarning: The command {name!r} is deprecated.{extra_message}\"\n            ).format(\n                name=self.name,\n                extra_message=_format_deprecated_suffix(self.deprecated),\n            )\n            echo(style(message, fg=\"red\"), err=True)\n\n        if self.callback is not None:\n            return ctx.invoke(self.callback, **ctx.params)",
+          "sha256": "26307e89b7b23e512d3a696b820197b6fd27bbbee9f6b9822f479d851523fcd9"
+        },
+        {
+          "path": "src/click/core.py",
+          "startLine": 937,
+          "endLine": 940,
+          "excerpt": "            ctx = self\n\n        with augment_usage_errors(self), ctx:\n            return callback(*args, **kwargs)",
+          "sha256": "26307e89b7b23e512d3a696b820197b6fd27bbbee9f6b9822f479d851523fcd9"
+        },
+        {
+          "path": "src/click/core.py",
+          "startLine": 1577,
+          "endLine": 1594,
+          "excerpt": "        # Process shell completion requests and exit early.\n        self._main_shell_completion(extra, prog_name, complete_var)\n\n        # Every handler below takes the same two steps: propagate when\n        # standalone mode is disabled, otherwise collect the message and the\n        # exit code, and leave both to the teardown after the ``try``. The\n        # teardown writes the message and exits, and the outermost handler\n        # holds one policy for every interrupt arriving that late: the\n        # message may be lost, the intended exit code still wins.\n        report: cabc.Callable[[], None] | None = None\n        exit_code = 1\n\n        try:\n            try:\n                with self.make_context(prog_name, args, **extra) as ctx:\n                    rv = self.invoke(ctx)\n                    if not standalone_mode:\n                        return rv",
+          "sha256": "26307e89b7b23e512d3a696b820197b6fd27bbbee9f6b9822f479d851523fcd9"
+        }
+      ]
+    },
+    {
+      "id": "q08",
+      "question": "If click.parser._OptionParser changes, which direct production consumers are evidenced? Separate dependency from speculative behavioral impact.",
+      "answer": "core imports _OptionParser and Command.make_parser constructs it, registering command parameters. click.__init__.__getattr__ also imports and returns it for the deprecated OptionParser export. These dependencies are evidenced; behavior changes to arbitrary client commands cannot be inferred without a specific parser change and input.",
+      "requiredFacts": [
+        "core imports and constructs _OptionParser",
+        "__init__ lazy deprecated OptionParser reexport",
+        "downstream behavior is conditional"
+      ],
+      "evidence": [
+        {
+          "path": "src/click/core.py",
+          "startLine": 39,
+          "endLine": 40,
+          "excerpt": "from .parser import _OptionParser\nfrom .parser import _split_opt",
+          "sha256": "26307e89b7b23e512d3a696b820197b6fd27bbbee9f6b9822f479d851523fcd9"
+        },
+        {
+          "path": "src/click/core.py",
+          "startLine": 1256,
+          "endLine": 1261,
+          "excerpt": "    def make_parser(self, ctx: Context) -> _OptionParser:\n        \"\"\"Creates the underlying option parser for this command.\"\"\"\n        parser = _OptionParser(ctx)\n        for param in self.get_params(ctx):\n            param.add_to_parser(parser, ctx)\n        return parser",
+          "sha256": "26307e89b7b23e512d3a696b820197b6fd27bbbee9f6b9822f479d851523fcd9"
+        },
+        {
+          "path": "src/click/__init__.py",
+          "startLine": 101,
+          "endLine": 110,
+          "excerpt": "    if name == \"OptionParser\":\n        from .parser import _OptionParser\n\n        warnings.warn(\n            \"'OptionParser' is deprecated and will be removed in Click 9.0. The\"\n            \" old parser is available in 'optparse'.\",\n            DeprecationWarning,\n            stacklevel=2,\n        )\n        return _OptionParser",
+          "sha256": "5abfc54d37d47cc788b7e7a05e9514787f8c5a0b7db429d0f24d748ac89964ca"
+        }
+      ]
+    },
+    {
+      "id": "q09",
+      "question": "Which tests or documented example exercise invoking a command callback with parsed parameters, and how do they enter the implementation?",
+      "answer": "tests/test_basic.py test_basic_functionality decorates cli, invokes it via runner.invoke, and checks I EXECUTED for normal invocation but not --help. CliRunner invokes cli.main. The README hello example adds count/name options and exercises callback kwargs. These sources were inspected, not executed.",
+      "requiredFacts": [
+        "test_basic_functionality compares normal invocation and help",
+        "CliRunner calls cli.main",
+        "README hello uses count/name callback parameters",
+        "not executed here"
+      ],
+      "evidence": [
+        {
+          "path": "tests/test_basic.py",
+          "startLine": 12,
+          "endLine": 28,
+          "excerpt": "def test_basic_functionality(runner):\n    @click.command()\n    def cli():\n        \"\"\"Hello World!\"\"\"\n        click.echo(\"I EXECUTED\")\n\n    result = runner.invoke(cli, [\"--help\"])\n    assert not result.exception\n    assert \"Hello World!\" in result.output\n    assert \"Show this message and exit.\" in result.output\n    assert result.exit_code == 0\n    assert \"I EXECUTED\" not in result.output\n\n    result = runner.invoke(cli, [])\n    assert not result.exception\n    assert \"I EXECUTED\" in result.output\n    assert result.exit_code == 0",
+          "sha256": "05316a9035ed30c84287606df9378736c0d592282da50f8cbef7045ee5769e9f"
+        },
+        {
+          "path": "src/click/testing.py",
+          "startLine": 681,
+          "endLine": 690,
+          "excerpt": "            try:\n                prog_name = extra.pop(\"prog_name\")\n            except KeyError:\n                prog_name = self.get_default_prog_name(cli)\n\n            try:\n                return_value = cli.main(args=args or (), prog_name=prog_name, **extra)\n            except SystemExit as e:\n                exc_info = sys.exc_info()\n                e_code = t.cast(\"int | t.Any | None\", e.code)",
+          "sha256": "76f4e649bc53000d667c8c0deff1591970fa034b0f085a207165839b2301019a"
+        },
+        {
+          "path": "README.md",
+          "startLine": 23,
+          "endLine": 35,
+          "excerpt": "```python\nimport click\n\n@click.command()\n@click.option(\"--count\", default=1, help=\"Number of greetings.\")\n@click.option(\"--name\", prompt=\"Your name\", help=\"The person to greet.\")\ndef hello(count, name):\n    \"\"\"Simple program that greets NAME for a total of COUNT times.\"\"\"\n    for _ in range(count):\n        click.echo(f\"Hello, {name}!\")\n\nif __name__ == '__main__':\n    hello()",
+          "sha256": "4c3de4aa0918deac2f712facacd1dc30a8cc4627d0118dd290292ab0af65ca0b"
+        }
+      ]
+    },
+    {
+      "id": "q10",
+      "question": "Where does a client CLI argv list enter and get handled or transformed?",
+      "answer": "Command.main takes explicit args (copies to a list) or sys.argv[1:], passes them to make_context, which calls parse_args. Command.parse_args invokes the option parser and each parameter handle_parse_result; ctx.params is then passed as kwargs to callback invocation. Windows argv expansion is conditional.",
+      "requiredFacts": [
+        "main accepts explicit args or sys.argv[1:]",
+        "make_context -> parse_args",
+        "parser and parameter handling populate ctx.params",
+        "callback receives ctx.params kwargs"
+      ],
+      "evidence": [
+        {
+          "path": "src/click/core.py",
+          "startLine": 1566,
+          "endLine": 1572,
+          "excerpt": "        if args is None:\n            args = sys.argv[1:]\n\n            if os.name == \"nt\" and windows_expand_args:\n                args = _expand_args(args)\n        else:\n            args = list(args)",
+          "sha256": "26307e89b7b23e512d3a696b820197b6fd27bbbee9f6b9822f479d851523fcd9"
+        },
+        {
+          "path": "src/click/core.py",
+          "startLine": 1591,
+          "endLine": 1594,
+          "excerpt": "                with self.make_context(prog_name, args, **extra) as ctx:\n                    rv = self.invoke(ctx)\n                    if not standalone_mode:\n                        return rv",
+          "sha256": "26307e89b7b23e512d3a696b820197b6fd27bbbee9f6b9822f479d851523fcd9"
+        },
+        {
+          "path": "src/click/core.py",
+          "startLine": 1390,
+          "endLine": 1407,
+          "excerpt": "        ctx = self.context_class(self, info_name=info_name, parent=parent, **extra)\n\n        with ctx.scope(cleanup=False):\n            self.parse_args(ctx, args)\n        return ctx\n\n    def parse_args(self, ctx: Context, args: list[str]) -> list[str]:\n        if not args and self.no_args_is_help and not ctx.resilient_parsing:\n            raise NoArgsIsHelpError(ctx)\n\n        parser = self.make_parser(ctx)\n        opts, args, param_order = parser.parse_args(args=args)\n\n        for param in iter_params_for_processing(param_order, self.get_params(ctx)):\n            _, args = param.handle_parse_result(ctx, opts, args)\n\n        # We now have all parameters' values into `ctx.params`, but the data may contain\n        # the `UNSET` sentinel.",
+          "sha256": "26307e89b7b23e512d3a696b820197b6fd27bbbee9f6b9822f479d851523fcd9"
+        },
+        {
+          "path": "src/click/core.py",
+          "startLine": 1445,
+          "endLine": 1446,
+          "excerpt": "        if self.callback is not None:\n            return ctx.invoke(self.callback, **ctx.params)",
+          "sha256": "26307e89b7b23e512d3a696b820197b6fd27bbbee9f6b9822f479d851523fcd9"
+        }
+      ]
+    }
+  ]
+}

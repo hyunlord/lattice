@@ -1,0 +1,352 @@
+{
+  "id": "spring-petclinic",
+  "repository": "spring-projects/spring-petclinic",
+  "commit": "500158f732419217507c7656904b8e6aa1bcc0d6",
+  "trackedFiles": 132,
+  "questions": [
+    {
+      "id": "q01",
+      "question": "What does the repository do, and who calls or runs it?",
+      "answer": "Spring Petclinic is a Spring Boot sample web application for owner/pet and vet workflows. Developers run it with Maven or Gradle; browser clients access localhost:8080 and HTTP routes.",
+      "requiredFacts": [
+        "Spring Petclinic is a Spring Boot sample web application for owner/pet and vet workflows.",
+        "Developers run it with Maven or Gradle; browser clients access localhost:8080 and HTTP routes."
+      ],
+      "evidence": [
+        {
+          "path": "README.md",
+          "startLine": 14,
+          "endLine": 36,
+          "excerpt": "## Run Petclinic locally\n\nSpring Petclinic is a [Spring Boot](https://spring.io/guides/gs/spring-boot) application built using [Maven](https://spring.io/guides/gs/maven/) or [Gradle](https://spring.io/guides/gs/gradle/).\nJava 17 or later is required for the build, and the application can run with Java 17 or newer.\n\nYou first need to clone the project locally:\n\n```bash\ngit clone https://github.com/spring-projects/spring-petclinic.git\ncd spring-petclinic\n```\nIf you are using Maven, you can start the application on the command-line as follows:\n\n```bash\n./mvnw spring-boot:run\n```\nWith Gradle, the command is as follows:\n\n```bash\n./gradlew bootRun\n```\n\nYou can then access the Petclinic at <http://localhost:8080/>.",
+          "sha256": "b53440fdf1a73969b7dcf3b3f1801dda2de31d5935439a739971b42f27e4f5bc"
+        },
+        {
+          "path": "src/main/java/org/springframework/samples/petclinic/owner/OwnerController.java",
+          "startLine": 89,
+          "endLine": 107,
+          "excerpt": "\t@GetMapping(\"/owners/find\")\n\tpublic String initFindForm() {\n\t\treturn \"owners/findOwners\";\n\t}\n\n\t@GetMapping(\"/owners\")\n\tpublic String processFindForm(@RequestParam(defaultValue = \"1\") int page, Owner owner, BindingResult result,\n\t\t\tModel model, RedirectAttributes redirectAttributes) {\n\t\t// allow parameterless GET request for /owners to return all records\n\t\tString lastName = owner.getLastName();\n\t\tif (lastName == null) {\n\t\t\tlastName = \"\"; // empty string signifies broadest possible search\n\t\t}\n\t\telse {\n\t\t\tlastName = lastName.strip();\n\t\t}\n\n\t\t// find owners by last name\n\t\tPage<Owner> ownersResults = findPaginatedForOwnersLastName(page, lastName);",
+          "sha256": "611115841f671065ca2796fbb096102d56ce6aafd20bfe9a264f0a6968cca3ff"
+        },
+        {
+          "path": "src/main/java/org/springframework/samples/petclinic/vet/VetController.java",
+          "startLine": 45,
+          "endLine": 54,
+          "excerpt": "\t@GetMapping(\"/vets.html\")\n\tpublic String showVetList(@RequestParam(defaultValue = \"1\") int page, Model model,\n\t\t\tRedirectAttributes redirectAttributes) {\n\t\tPage<Vet> paginated = findPaginated(page);\n\t\tif (page < 1 || page > Math.max(paginated.getTotalPages(), 1)) {\n\t\t\tredirectAttributes.addAttribute(\"page\", 1);\n\t\t\treturn \"redirect:/vets.html\";\n\t\t}\n\t\treturn addPaginationModel(page, paginated, model);\n\t}",
+          "sha256": "8fb67351a3d4b28c220a870178cb72998ef6dfaa303dd65f2e8c242eb2ddbbfa"
+        },
+        {
+          "path": "src/main/java/org/springframework/samples/petclinic/owner/PetController.java",
+          "startLine": 48,
+          "endLine": 59,
+          "excerpt": "@RequestMapping(\"/owners/{ownerId}\")\nclass PetController {\n\n\tprivate static final String VIEWS_PETS_CREATE_OR_UPDATE_FORM = \"pets/createOrUpdatePetForm\";\n\n\tprivate final OwnerRepository owners;\n\n\tprivate final PetTypeRepository types;\n\n\tpublic PetController(OwnerRepository owners, PetTypeRepository types) {\n\t\tthis.owners = owners;\n\t\tthis.types = types;",
+          "sha256": "1a8a8097ff334b85d3a62c4df79ec52c2dbee8777925970e140081cff7e7c25e"
+        }
+      ]
+    },
+    {
+      "id": "q02",
+      "question": "Name the principal components and their responsibilities.",
+      "answer": "owner contains owner/pet/visit controllers and OwnerRepository persistence contract. vet serves vet listings; model provides domain utilities; system includes the welcome route. These are packages within one application, not independent services.",
+      "requiredFacts": [
+        "owner contains owner/pet/visit controllers and OwnerRepository persistence contract.",
+        "vet serves vet listings; model provides domain utilities; system includes the welcome route.",
+        "These are packages within one application, not independent services."
+      ],
+      "evidence": [
+        {
+          "path": "src/main/java/org/springframework/samples/petclinic/owner/OwnerController.java",
+          "startLine": 48,
+          "endLine": 57,
+          "excerpt": "@Controller\nclass OwnerController {\n\n\tprivate static final String VIEWS_OWNER_CREATE_OR_UPDATE_FORM = \"owners/createOrUpdateOwnerForm\";\n\n\tprivate final OwnerRepository owners;\n\n\tpublic OwnerController(OwnerRepository owners) {\n\t\tthis.owners = owners;\n\t}",
+          "sha256": "611115841f671065ca2796fbb096102d56ce6aafd20bfe9a264f0a6968cca3ff"
+        },
+        {
+          "path": "src/main/java/org/springframework/samples/petclinic/owner/PetController.java",
+          "startLine": 48,
+          "endLine": 59,
+          "excerpt": "@RequestMapping(\"/owners/{ownerId}\")\nclass PetController {\n\n\tprivate static final String VIEWS_PETS_CREATE_OR_UPDATE_FORM = \"pets/createOrUpdatePetForm\";\n\n\tprivate final OwnerRepository owners;\n\n\tprivate final PetTypeRepository types;\n\n\tpublic PetController(OwnerRepository owners, PetTypeRepository types) {\n\t\tthis.owners = owners;\n\t\tthis.types = types;",
+          "sha256": "1a8a8097ff334b85d3a62c4df79ec52c2dbee8777925970e140081cff7e7c25e"
+        },
+        {
+          "path": "src/main/java/org/springframework/samples/petclinic/owner/VisitController.java",
+          "startLine": 42,
+          "endLine": 49,
+          "excerpt": "@Controller\nclass VisitController {\n\n\tprivate final OwnerRepository owners;\n\n\tpublic VisitController(OwnerRepository owners) {\n\t\tthis.owners = owners;\n\t}",
+          "sha256": "b7c8f9cb7b2b2b5827d85787d1f18c95762a0213760013cef9d0a9e1c2c0f8d8"
+        },
+        {
+          "path": "src/main/java/org/springframework/samples/petclinic/owner/OwnerRepository.java",
+          "startLine": 36,
+          "endLine": 45,
+          "excerpt": "public interface OwnerRepository extends JpaRepository<Owner, Integer> {\n\n\t/**\n\t * Retrieve {@link Owner}s from the data store by last name, returning all owners\n\t * whose last name <i>starts</i> with the given name.\n\t * @param lastName Value to search for\n\t * @return a Collection of matching {@link Owner}s (or an empty Collection if none\n\t * found)\n\t */\n\tPage<Owner> findByLastNameStartingWith(String lastName, Pageable pageable);",
+          "sha256": "654cc5a38b2806748116caf4fbd6a99010a35605db32a12707078c34ccec2cd9"
+        },
+        {
+          "path": "src/main/java/org/springframework/samples/petclinic/vet/VetController.java",
+          "startLine": 45,
+          "endLine": 62,
+          "excerpt": "\t@GetMapping(\"/vets.html\")\n\tpublic String showVetList(@RequestParam(defaultValue = \"1\") int page, Model model,\n\t\t\tRedirectAttributes redirectAttributes) {\n\t\tPage<Vet> paginated = findPaginated(page);\n\t\tif (page < 1 || page > Math.max(paginated.getTotalPages(), 1)) {\n\t\t\tredirectAttributes.addAttribute(\"page\", 1);\n\t\t\treturn \"redirect:/vets.html\";\n\t\t}\n\t\treturn addPaginationModel(page, paginated, model);\n\t}\n\n\tprivate String addPaginationModel(int page, Page<Vet> paginated, Model model) {\n\t\tList<Vet> listVets = paginated.getContent();\n\t\tmodel.addAttribute(\"currentPage\", page);\n\t\tmodel.addAttribute(\"totalPages\", paginated.getTotalPages());\n\t\tmodel.addAttribute(\"totalItems\", paginated.getTotalElements());\n\t\tmodel.addAttribute(\"listVets\", listVets);\n\t\treturn \"vets/vetList\";",
+          "sha256": "8fb67351a3d4b28c220a870178cb72998ef6dfaa303dd65f2e8c242eb2ddbbfa"
+        },
+        {
+          "path": "src/main/java/org/springframework/samples/petclinic/model/package-info.java",
+          "startLine": 17,
+          "endLine": 20,
+          "excerpt": "/**\n * The classes in this package represent utilities used by the domain.\n */\npackage org.springframework.samples.petclinic.model;",
+          "sha256": "60ad8255055c10e2af03b3b456527ba28f8def8d520037eb7230f647a634b387"
+        },
+        {
+          "path": "src/main/java/org/springframework/samples/petclinic/system/WelcomeController.java",
+          "startLine": 22,
+          "endLine": 28,
+          "excerpt": "@Controller\nclass WelcomeController {\n\n\t@GetMapping(\"/\")\n\tpublic String welcome() {\n\t\treturn \"welcome\";\n\t}",
+          "sha256": "cfdffa794c8ec7a0c634a7d39d39f9abc1dd2ddc4b4d7a591b341136015a6f66"
+        }
+      ]
+    },
+    {
+      "id": "q03",
+      "question": "Which languages, build/framework systems and package boundaries organize it?",
+      "answer": "Java 17 Spring Boot application artifact spring-petclinic is built with Maven or Gradle. Spring Web MVC handles routes, Data JPA persistence, and Thymeleaf templates. owner/vet/model/system are Java packages within the app, not separate Maven modules.",
+      "requiredFacts": [
+        "Java 17 Spring Boot application artifact spring-petclinic is built with Maven or Gradle.",
+        "Spring Web MVC handles routes, Data JPA persistence, and Thymeleaf templates.",
+        "owner/vet/model/system are Java packages within the app, not separate Maven modules."
+      ],
+      "evidence": [
+        {
+          "path": "pom.xml",
+          "startLine": 5,
+          "endLine": 20,
+          "excerpt": "  <parent>\n    <groupId>org.springframework.boot</groupId>\n    <artifactId>spring-boot-starter-parent</artifactId>\n    <version>4.1.0</version>\n  </parent>\n\n  <groupId>org.springframework.samples</groupId>\n  <artifactId>spring-petclinic</artifactId>\n  <version>4.0.0-SNAPSHOT</version>\n\n  <name>petclinic</name>\n\n  <properties>\n    <!-- Generic properties -->\n    <java.version>17</java.version>\n    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>",
+          "sha256": "7e61df0a43d538a5404e8130a55b8085541ec8e841fcf39f81bb6d3d81dcd2f4"
+        },
+        {
+          "path": "pom.xml",
+          "startLine": 50,
+          "endLine": 64,
+          "excerpt": "    <dependency>\n      <groupId>org.springframework.boot</groupId>\n      <artifactId>spring-boot-starter-data-jpa</artifactId>\n    </dependency>\n    <dependency>\n      <groupId>org.springframework.boot</groupId>\n      <artifactId>spring-boot-starter-thymeleaf</artifactId>\n    </dependency>\n    <dependency>\n      <groupId>org.springframework.boot</groupId>\n      <artifactId>spring-boot-starter-validation</artifactId>\n    </dependency>\n    <dependency>\n      <groupId>org.springframework.boot</groupId>\n      <artifactId>spring-boot-starter-webmvc</artifactId>",
+          "sha256": "7e61df0a43d538a5404e8130a55b8085541ec8e841fcf39f81bb6d3d81dcd2f4"
+        },
+        {
+          "path": "README.md",
+          "startLine": 14,
+          "endLine": 33,
+          "excerpt": "## Run Petclinic locally\n\nSpring Petclinic is a [Spring Boot](https://spring.io/guides/gs/spring-boot) application built using [Maven](https://spring.io/guides/gs/maven/) or [Gradle](https://spring.io/guides/gs/gradle/).\nJava 17 or later is required for the build, and the application can run with Java 17 or newer.\n\nYou first need to clone the project locally:\n\n```bash\ngit clone https://github.com/spring-projects/spring-petclinic.git\ncd spring-petclinic\n```\nIf you are using Maven, you can start the application on the command-line as follows:\n\n```bash\n./mvnw spring-boot:run\n```\nWith Gradle, the command is as follows:\n\n```bash\n./gradlew bootRun",
+          "sha256": "b53440fdf1a73969b7dcf3b3f1801dda2de31d5935439a739971b42f27e4f5bc"
+        },
+        {
+          "path": "src/main/java/org/springframework/samples/petclinic/owner/OwnerController.java",
+          "startLine": 94,
+          "endLine": 96,
+          "excerpt": "\t@GetMapping(\"/owners\")\n\tpublic String processFindForm(@RequestParam(defaultValue = \"1\") int page, Owner owner, BindingResult result,\n\t\t\tModel model, RedirectAttributes redirectAttributes) {",
+          "sha256": "611115841f671065ca2796fbb096102d56ce6aafd20bfe9a264f0a6968cca3ff"
+        }
+      ]
+    },
+    {
+      "id": "q04",
+      "question": "Where does the selected executable use begin?",
+      "answer": "PetClinicApplication.main calls SpringApplication.run(PetClinicApplication.class,args). @SpringBootApplication bootstraps the framework. Spring MVC maps /owners to OwnerController.processFindForm; main does not directly invoke the handler.",
+      "requiredFacts": [
+        "PetClinicApplication.main calls SpringApplication.run(PetClinicApplication.class,args).",
+        "@SpringBootApplication bootstraps the framework.",
+        "Spring MVC maps /owners to OwnerController.processFindForm; main does not directly invoke the handler."
+      ],
+      "evidence": [
+        {
+          "path": "src/main/java/org/springframework/samples/petclinic/PetClinicApplication.java",
+          "startLine": 28,
+          "endLine": 34,
+          "excerpt": "@SpringBootApplication\n@ImportRuntimeHints(PetClinicRuntimeHints.class)\npublic class PetClinicApplication {\n\n\tpublic static void main(String[] args) {\n\t\tSpringApplication.run(PetClinicApplication.class, args);\n\t}",
+          "sha256": "9d99b4b59cc6e185e9a27964b24ede04180ca34211a7e19f968249ee3dac9df3"
+        },
+        {
+          "path": "src/main/java/org/springframework/samples/petclinic/owner/OwnerController.java",
+          "startLine": 94,
+          "endLine": 96,
+          "excerpt": "\t@GetMapping(\"/owners\")\n\tpublic String processFindForm(@RequestParam(defaultValue = \"1\") int page, Owner owner, BindingResult result,\n\t\t\tModel model, RedirectAttributes redirectAttributes) {",
+          "sha256": "611115841f671065ca2796fbb096102d56ce6aafd20bfe9a264f0a6968cca3ff"
+        }
+      ]
+    },
+    {
+      "id": "q05",
+      "question": "Where is searching owners by last-name prefix implemented? Name its component and definition.",
+      "answer": "OwnerController.processFindForm normalizes the surname and calls findPaginatedForOwnersLastName. The helper requests a five-entry page from OwnerRepository.findByLastNameStartingWith. The interface documents prefix semantics; actual query implementation is a Spring Data runtime boundary.",
+      "requiredFacts": [
+        "OwnerController.processFindForm normalizes the surname and calls findPaginatedForOwnersLastName.",
+        "The helper requests a five-entry page from OwnerRepository.findByLastNameStartingWith.",
+        "The interface documents prefix semantics; actual query implementation is a Spring Data runtime boundary."
+      ],
+      "evidence": [
+        {
+          "path": "src/main/java/org/springframework/samples/petclinic/owner/OwnerController.java",
+          "startLine": 94,
+          "endLine": 107,
+          "excerpt": "\t@GetMapping(\"/owners\")\n\tpublic String processFindForm(@RequestParam(defaultValue = \"1\") int page, Owner owner, BindingResult result,\n\t\t\tModel model, RedirectAttributes redirectAttributes) {\n\t\t// allow parameterless GET request for /owners to return all records\n\t\tString lastName = owner.getLastName();\n\t\tif (lastName == null) {\n\t\t\tlastName = \"\"; // empty string signifies broadest possible search\n\t\t}\n\t\telse {\n\t\t\tlastName = lastName.strip();\n\t\t}\n\n\t\t// find owners by last name\n\t\tPage<Owner> ownersResults = findPaginatedForOwnersLastName(page, lastName);",
+          "sha256": "611115841f671065ca2796fbb096102d56ce6aafd20bfe9a264f0a6968cca3ff"
+        },
+        {
+          "path": "src/main/java/org/springframework/samples/petclinic/owner/OwnerController.java",
+          "startLine": 141,
+          "endLine": 145,
+          "excerpt": "\tprivate Page<Owner> findPaginatedForOwnersLastName(int page, String lastname) {\n\t\tint pageSize = 5;\n\t\tint validatedPage = Math.max(page, 1);\n\t\tPageable pageable = PageRequest.of(validatedPage - 1, pageSize);\n\t\treturn owners.findByLastNameStartingWith(lastname, pageable);",
+          "sha256": "611115841f671065ca2796fbb096102d56ce6aafd20bfe9a264f0a6968cca3ff"
+        },
+        {
+          "path": "src/main/java/org/springframework/samples/petclinic/owner/OwnerRepository.java",
+          "startLine": 24,
+          "endLine": 45,
+          "excerpt": "/**\n * Repository class for <code>Owner</code> domain objects. All method names are compliant\n * with Spring Data naming conventions so this interface can easily be extended for Spring\n * Data. See:\n * https://docs.spring.io/spring-data/jpa/docs/current/reference/html/#repositories.query-methods.query-creation\n *\n * @author Ken Krebs\n * @author Juergen Hoeller\n * @author Sam Brannen\n * @author Michael Isvy\n * @author Wick Dynex\n */\npublic interface OwnerRepository extends JpaRepository<Owner, Integer> {\n\n\t/**\n\t * Retrieve {@link Owner}s from the data store by last name, returning all owners\n\t * whose last name <i>starts</i> with the given name.\n\t * @param lastName Value to search for\n\t * @return a Collection of matching {@link Owner}s (or an empty Collection if none\n\t * found)\n\t */\n\tPage<Owner> findByLastNameStartingWith(String lastName, Pageable pageable);",
+          "sha256": "654cc5a38b2806748116caf4fbd6a99010a35605db32a12707078c34ccec2cd9"
+        }
+      ]
+    },
+    {
+      "id": "q06",
+      "question": "Which internal components does OwnerController directly use in owner search, and what proves each direction?",
+      "answer": "OwnerController receives OwnerRepository in its constructor and calls the repository prefix query. It calls Owner.getLastName and, for a single result, Owner.getId. View-name strings select findOwners/ownersList through framework dispatch, not direct Java method calls.",
+      "requiredFacts": [
+        "OwnerController receives OwnerRepository in its constructor and calls the repository prefix query.",
+        "It calls Owner.getLastName and, for a single result, Owner.getId.",
+        "View-name strings select findOwners/ownersList through framework dispatch, not direct Java method calls."
+      ],
+      "evidence": [
+        {
+          "path": "src/main/java/org/springframework/samples/petclinic/owner/OwnerController.java",
+          "startLine": 53,
+          "endLine": 57,
+          "excerpt": "\tprivate final OwnerRepository owners;\n\n\tpublic OwnerController(OwnerRepository owners) {\n\t\tthis.owners = owners;\n\t}",
+          "sha256": "611115841f671065ca2796fbb096102d56ce6aafd20bfe9a264f0a6968cca3ff"
+        },
+        {
+          "path": "src/main/java/org/springframework/samples/petclinic/owner/OwnerController.java",
+          "startLine": 94,
+          "endLine": 145,
+          "excerpt": "\t@GetMapping(\"/owners\")\n\tpublic String processFindForm(@RequestParam(defaultValue = \"1\") int page, Owner owner, BindingResult result,\n\t\t\tModel model, RedirectAttributes redirectAttributes) {\n\t\t// allow parameterless GET request for /owners to return all records\n\t\tString lastName = owner.getLastName();\n\t\tif (lastName == null) {\n\t\t\tlastName = \"\"; // empty string signifies broadest possible search\n\t\t}\n\t\telse {\n\t\t\tlastName = lastName.strip();\n\t\t}\n\n\t\t// find owners by last name\n\t\tPage<Owner> ownersResults = findPaginatedForOwnersLastName(page, lastName);\n\t\tif (page < 1 || page > Math.max(ownersResults.getTotalPages(), 1)) {\n\t\t\tredirectAttributes.addAttribute(\"page\", 1);\n\t\t\tif (!lastName.isEmpty()) {\n\t\t\t\tredirectAttributes.addAttribute(\"lastName\", lastName);\n\t\t\t}\n\t\t\treturn \"redirect:/owners\";\n\t\t}\n\n\t\tif (ownersResults.isEmpty()) {\n\t\t\t// no owners found\n\t\t\tresult.rejectValue(\"lastName\", \"notFound\", \"not found\");\n\t\t\treturn \"owners/findOwners\";\n\t\t}\n\n\t\tif (ownersResults.getTotalElements() == 1) {\n\t\t\t// 1 owner found\n\t\t\towner = ownersResults.iterator().next();\n\t\t\treturn \"redirect:/owners/\" + owner.getId();\n\t\t}\n\n\t\t// multiple owners found\n\t\treturn addPaginationModel(page, model, ownersResults);\n\t}\n\n\tprivate String addPaginationModel(int page, Model model, Page<Owner> paginated) {\n\t\tList<Owner> listOwners = paginated.getContent();\n\t\tmodel.addAttribute(\"currentPage\", page);\n\t\tmodel.addAttribute(\"totalPages\", paginated.getTotalPages());\n\t\tmodel.addAttribute(\"totalItems\", paginated.getTotalElements());\n\t\tmodel.addAttribute(\"listOwners\", listOwners);\n\t\treturn \"owners/ownersList\";\n\t}\n\n\tprivate Page<Owner> findPaginatedForOwnersLastName(int page, String lastname) {\n\t\tint pageSize = 5;\n\t\tint validatedPage = Math.max(page, 1);\n\t\tPageable pageable = PageRequest.of(validatedPage - 1, pageSize);\n\t\treturn owners.findByLastNameStartingWith(lastname, pageable);",
+          "sha256": "611115841f671065ca2796fbb096102d56ce6aafd20bfe9a264f0a6968cca3ff"
+        }
+      ]
+    },
+    {
+      "id": "q07",
+      "question": "For GET /owners?lastName=Franklin&page=1, give the source-supported call/dispatch path to its outcome; identify dynamic or unresolved boundaries.",
+      "answer": "MVC mapping/binding -> processFindForm -> findPaginatedForOwnersLastName -> OwnerRepository.findByLastNameStartingWith. The name is stripped and the helper uses PageRequest.of(0,5). Zero results return findOwners with notFound; one redirects to owner ID; multiple populate pagination and return ownersList. MVC binding, generated JPA query, database result count and rendering are runtime boundaries; this is not an executed request trace.",
+      "requiredFacts": [
+        "MVC mapping/binding -> processFindForm -> findPaginatedForOwnersLastName -> OwnerRepository.findByLastNameStartingWith.",
+        "The name is stripped and the helper uses PageRequest.of(0,5).",
+        "Zero results return findOwners with notFound; one redirects to owner ID; multiple populate pagination and return ownersList.",
+        "MVC binding, generated JPA query, database result count and rendering are runtime boundaries; this is not an executed request trace."
+      ],
+      "evidence": [
+        {
+          "path": "src/main/java/org/springframework/samples/petclinic/owner/OwnerController.java",
+          "startLine": 94,
+          "endLine": 145,
+          "excerpt": "\t@GetMapping(\"/owners\")\n\tpublic String processFindForm(@RequestParam(defaultValue = \"1\") int page, Owner owner, BindingResult result,\n\t\t\tModel model, RedirectAttributes redirectAttributes) {\n\t\t// allow parameterless GET request for /owners to return all records\n\t\tString lastName = owner.getLastName();\n\t\tif (lastName == null) {\n\t\t\tlastName = \"\"; // empty string signifies broadest possible search\n\t\t}\n\t\telse {\n\t\t\tlastName = lastName.strip();\n\t\t}\n\n\t\t// find owners by last name\n\t\tPage<Owner> ownersResults = findPaginatedForOwnersLastName(page, lastName);\n\t\tif (page < 1 || page > Math.max(ownersResults.getTotalPages(), 1)) {\n\t\t\tredirectAttributes.addAttribute(\"page\", 1);\n\t\t\tif (!lastName.isEmpty()) {\n\t\t\t\tredirectAttributes.addAttribute(\"lastName\", lastName);\n\t\t\t}\n\t\t\treturn \"redirect:/owners\";\n\t\t}\n\n\t\tif (ownersResults.isEmpty()) {\n\t\t\t// no owners found\n\t\t\tresult.rejectValue(\"lastName\", \"notFound\", \"not found\");\n\t\t\treturn \"owners/findOwners\";\n\t\t}\n\n\t\tif (ownersResults.getTotalElements() == 1) {\n\t\t\t// 1 owner found\n\t\t\towner = ownersResults.iterator().next();\n\t\t\treturn \"redirect:/owners/\" + owner.getId();\n\t\t}\n\n\t\t// multiple owners found\n\t\treturn addPaginationModel(page, model, ownersResults);\n\t}\n\n\tprivate String addPaginationModel(int page, Model model, Page<Owner> paginated) {\n\t\tList<Owner> listOwners = paginated.getContent();\n\t\tmodel.addAttribute(\"currentPage\", page);\n\t\tmodel.addAttribute(\"totalPages\", paginated.getTotalPages());\n\t\tmodel.addAttribute(\"totalItems\", paginated.getTotalElements());\n\t\tmodel.addAttribute(\"listOwners\", listOwners);\n\t\treturn \"owners/ownersList\";\n\t}\n\n\tprivate Page<Owner> findPaginatedForOwnersLastName(int page, String lastname) {\n\t\tint pageSize = 5;\n\t\tint validatedPage = Math.max(page, 1);\n\t\tPageable pageable = PageRequest.of(validatedPage - 1, pageSize);\n\t\treturn owners.findByLastNameStartingWith(lastname, pageable);",
+          "sha256": "611115841f671065ca2796fbb096102d56ce6aafd20bfe9a264f0a6968cca3ff"
+        },
+        {
+          "path": "src/main/java/org/springframework/samples/petclinic/owner/OwnerRepository.java",
+          "startLine": 36,
+          "endLine": 45,
+          "excerpt": "public interface OwnerRepository extends JpaRepository<Owner, Integer> {\n\n\t/**\n\t * Retrieve {@link Owner}s from the data store by last name, returning all owners\n\t * whose last name <i>starts</i> with the given name.\n\t * @param lastName Value to search for\n\t * @return a Collection of matching {@link Owner}s (or an empty Collection if none\n\t * found)\n\t */\n\tPage<Owner> findByLastNameStartingWith(String lastName, Pageable pageable);",
+          "sha256": "654cc5a38b2806748116caf4fbd6a99010a35605db32a12707078c34ccec2cd9"
+        }
+      ]
+    },
+    {
+      "id": "q08",
+      "question": "If OwnerRepository changes, which direct production consumers are evidenced? Separate dependency from speculative behavioral impact.",
+      "answer": "OwnerController, PetController and VisitController each inject and store OwnerRepository. This proves direct contract dependency; a particular query change need not affect every workflow or produce any specific runtime result.",
+      "requiredFacts": [
+        "OwnerController, PetController and VisitController each inject and store OwnerRepository.",
+        "This proves direct contract dependency; a particular query change need not affect every workflow or produce any specific runtime result."
+      ],
+      "evidence": [
+        {
+          "path": "src/main/java/org/springframework/samples/petclinic/owner/OwnerController.java",
+          "startLine": 53,
+          "endLine": 57,
+          "excerpt": "\tprivate final OwnerRepository owners;\n\n\tpublic OwnerController(OwnerRepository owners) {\n\t\tthis.owners = owners;\n\t}",
+          "sha256": "611115841f671065ca2796fbb096102d56ce6aafd20bfe9a264f0a6968cca3ff"
+        },
+        {
+          "path": "src/main/java/org/springframework/samples/petclinic/owner/PetController.java",
+          "startLine": 53,
+          "endLine": 59,
+          "excerpt": "\tprivate final OwnerRepository owners;\n\n\tprivate final PetTypeRepository types;\n\n\tpublic PetController(OwnerRepository owners, PetTypeRepository types) {\n\t\tthis.owners = owners;\n\t\tthis.types = types;",
+          "sha256": "1a8a8097ff334b85d3a62c4df79ec52c2dbee8777925970e140081cff7e7c25e"
+        },
+        {
+          "path": "src/main/java/org/springframework/samples/petclinic/owner/VisitController.java",
+          "startLine": 45,
+          "endLine": 49,
+          "excerpt": "\tprivate final OwnerRepository owners;\n\n\tpublic VisitController(OwnerRepository owners) {\n\t\tthis.owners = owners;\n\t}",
+          "sha256": "b7c8f9cb7b2b2b5827d85787d1f18c95762a0213760013cef9d0a9e1c2c0f8d8"
+        }
+      ]
+    },
+    {
+      "id": "q09",
+      "question": "Which tests or documented example exercise searching owners by last-name prefix, and how do they enter the implementation?",
+      "answer": "OwnerControllerTests is @WebMvcTest(OwnerController.class). processFindFormByLastName issues MockMvc GET /owners with Franklin and a stubbed single-result repository, asserting a redirect. Whitespace tests verify stripping and blank-name broad search. These are inspected MVC tests with mocked persistence, not live database or executed-audit evidence.",
+      "requiredFacts": [
+        "OwnerControllerTests is @WebMvcTest(OwnerController.class).",
+        "processFindFormByLastName issues MockMvc GET /owners with Franklin and a stubbed single-result repository, asserting a redirect.",
+        "Whitespace tests verify stripping and blank-name broad search.",
+        "These are inspected MVC tests with mocked persistence, not live database or executed-audit evidence."
+      ],
+      "evidence": [
+        {
+          "path": "src/test/java/org/springframework/samples/petclinic/owner/OwnerControllerTests.java",
+          "startLine": 60,
+          "endLine": 63,
+          "excerpt": "@WebMvcTest(OwnerController.class)\n@DisabledInNativeImage\n@DisabledInAotMode\nclass OwnerControllerTests {",
+          "sha256": "f9fe569fcfcb91c6bb78e0df52050f95932eb6fd1ac64f909df24a95ce5c9be9"
+        },
+        {
+          "path": "src/test/java/org/springframework/samples/petclinic/owner/OwnerControllerTests.java",
+          "startLine": 190,
+          "endLine": 222,
+          "excerpt": "\t@Test\n\tvoid processFindFormByLastName() throws Exception {\n\t\tPage<Owner> tasks = new PageImpl<>(List.of(george()));\n\t\twhen(this.owners.findByLastNameStartingWith(eq(\"Franklin\"), any(Pageable.class))).thenReturn(tasks);\n\t\tmockMvc.perform(get(\"/owners?page=1\").param(\"lastName\", \"Franklin\"))\n\t\t\t.andExpect(status().is3xxRedirection())\n\t\t\t.andExpect(view().name(\"redirect:/owners/\" + TEST_OWNER_ID));\n\t}\n\n\t@Test\n\tvoid processFindFormIgnoresSurroundingWhitespace() throws Exception {\n\t\tPage<Owner> tasks = new PageImpl<>(List.of(george()));\n\t\twhen(this.owners.findByLastNameStartingWith(eq(\"Franklin\"), any(Pageable.class))).thenReturn(tasks);\n\n\t\tfor (String lastName : List.of(\" Franklin\", \"Franklin \", \" Franklin \")) {\n\t\t\tmockMvc.perform(get(\"/owners?page=1\").param(\"lastName\", lastName))\n\t\t\t\t.andExpect(status().is3xxRedirection())\n\t\t\t\t.andExpect(view().name(\"redirect:/owners/\" + TEST_OWNER_ID));\n\t\t}\n\n\t\tverify(this.owners, times(3)).findByLastNameStartingWith(eq(\"Franklin\"), any(Pageable.class));\n\t}\n\n\t@Test\n\tvoid processFindFormWithWhitespaceOnlyLastNameReturnsAllOwners() throws Exception {\n\t\tPage<Owner> tasks = new PageImpl<>(List.of(george(), new Owner()));\n\t\twhen(this.owners.findByLastNameStartingWith(eq(\"\"), any(Pageable.class))).thenReturn(tasks);\n\n\t\tmockMvc.perform(get(\"/owners?page=1\").param(\"lastName\", \"   \"))\n\t\t\t.andExpect(status().isOk())\n\t\t\t.andExpect(view().name(\"owners/ownersList\"));\n\n\t\tverify(this.owners).findByLastNameStartingWith(eq(\"\"), any(Pageable.class));",
+          "sha256": "f9fe569fcfcb91c6bb78e0df52050f95932eb6fd1ac64f909df24a95ce5c9be9"
+        }
+      ]
+    },
+    {
+      "id": "q10",
+      "question": "Where does the lastName HTTP query value enter and get handled or transformed?",
+      "answer": "MVC binds request data to the Owner parameter of processFindForm. The handler reads getLastName, maps null to empty string and otherwise strips whitespace. It passes the normalized surname to the paginated prefix repository query; framework binding is not an explicit repository-local call.",
+      "requiredFacts": [
+        "MVC binds request data to the Owner parameter of processFindForm.",
+        "The handler reads getLastName, maps null to empty string and otherwise strips whitespace.",
+        "It passes the normalized surname to the paginated prefix repository query; framework binding is not an explicit repository-local call."
+      ],
+      "evidence": [
+        {
+          "path": "src/main/java/org/springframework/samples/petclinic/owner/OwnerController.java",
+          "startLine": 94,
+          "endLine": 107,
+          "excerpt": "\t@GetMapping(\"/owners\")\n\tpublic String processFindForm(@RequestParam(defaultValue = \"1\") int page, Owner owner, BindingResult result,\n\t\t\tModel model, RedirectAttributes redirectAttributes) {\n\t\t// allow parameterless GET request for /owners to return all records\n\t\tString lastName = owner.getLastName();\n\t\tif (lastName == null) {\n\t\t\tlastName = \"\"; // empty string signifies broadest possible search\n\t\t}\n\t\telse {\n\t\t\tlastName = lastName.strip();\n\t\t}\n\n\t\t// find owners by last name\n\t\tPage<Owner> ownersResults = findPaginatedForOwnersLastName(page, lastName);",
+          "sha256": "611115841f671065ca2796fbb096102d56ce6aafd20bfe9a264f0a6968cca3ff"
+        },
+        {
+          "path": "src/main/java/org/springframework/samples/petclinic/owner/OwnerController.java",
+          "startLine": 141,
+          "endLine": 145,
+          "excerpt": "\tprivate Page<Owner> findPaginatedForOwnersLastName(int page, String lastname) {\n\t\tint pageSize = 5;\n\t\tint validatedPage = Math.max(page, 1);\n\t\tPageable pageable = PageRequest.of(validatedPage - 1, pageSize);\n\t\treturn owners.findByLastNameStartingWith(lastname, pageable);",
+          "sha256": "611115841f671065ca2796fbb096102d56ce6aafd20bfe9a264f0a6968cca3ff"
+        },
+        {
+          "path": "src/test/java/org/springframework/samples/petclinic/owner/OwnerControllerTests.java",
+          "startLine": 200,
+          "endLine": 222,
+          "excerpt": "\tvoid processFindFormIgnoresSurroundingWhitespace() throws Exception {\n\t\tPage<Owner> tasks = new PageImpl<>(List.of(george()));\n\t\twhen(this.owners.findByLastNameStartingWith(eq(\"Franklin\"), any(Pageable.class))).thenReturn(tasks);\n\n\t\tfor (String lastName : List.of(\" Franklin\", \"Franklin \", \" Franklin \")) {\n\t\t\tmockMvc.perform(get(\"/owners?page=1\").param(\"lastName\", lastName))\n\t\t\t\t.andExpect(status().is3xxRedirection())\n\t\t\t\t.andExpect(view().name(\"redirect:/owners/\" + TEST_OWNER_ID));\n\t\t}\n\n\t\tverify(this.owners, times(3)).findByLastNameStartingWith(eq(\"Franklin\"), any(Pageable.class));\n\t}\n\n\t@Test\n\tvoid processFindFormWithWhitespaceOnlyLastNameReturnsAllOwners() throws Exception {\n\t\tPage<Owner> tasks = new PageImpl<>(List.of(george(), new Owner()));\n\t\twhen(this.owners.findByLastNameStartingWith(eq(\"\"), any(Pageable.class))).thenReturn(tasks);\n\n\t\tmockMvc.perform(get(\"/owners?page=1\").param(\"lastName\", \"   \"))\n\t\t\t.andExpect(status().isOk())\n\t\t\t.andExpect(view().name(\"owners/ownersList\"));\n\n\t\tverify(this.owners).findByLastNameStartingWith(eq(\"\"), any(Pageable.class));",
+          "sha256": "f9fe569fcfcb91c6bb78e0df52050f95932eb6fd1ac64f909df24a95ce5c9be9"
+        }
+      ]
+    }
+  ]
+}

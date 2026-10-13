@@ -1,0 +1,349 @@
+{
+  "id": "httpx",
+  "repository": "encode/httpx",
+  "commit": "b5addb64f0161ff6bfe94c124ef76f6a1fba5254",
+  "trackedFiles": 125,
+  "questions": [
+    {
+      "id": "httpx-q1",
+      "question": "What does HTTPX do, and who calls or runs it?",
+      "answer": "HTTPX is a Python HTTP client library with synchronous and asynchronous APIs, HTTP/1.1 and HTTP/2 support, and an optional command-line client. Python applications call APIs such as httpx.get or Client; users can install the cli extra and run the command. It is a client, not an HTTP application server.",
+      "requiredFacts": [
+        "Python HTTP client",
+        "Sync and async APIs",
+        "HTTP/1.1 and HTTP/2 support",
+        "Optional CLI plus Python callers"
+      ],
+      "evidence": [
+        {
+          "path": "README.md",
+          "startLine": 15,
+          "endLine": 16,
+          "excerpt": "\nHTTPX is a fully featured HTTP client library for Python 3. It includes **an integrated command line client**, has support for both **HTTP/1.1 and HTTP/2**, and provides both **sync and async APIs**.",
+          "sha256": "d58f476c1273c9c06c978467c6596620d3840ea8c99ba9d32300ab3286f0e0c3"
+        },
+        {
+          "path": "README.md",
+          "startLine": 26,
+          "endLine": 45,
+          "excerpt": "Now, let's get started:\n\n```pycon\n>>> import httpx\n>>> r = httpx.get('https://www.example.org/')\n>>> r\n<Response [200 OK]>\n>>> r.status_code\n200\n>>> r.headers['content-type']\n'text/html; charset=UTF-8'\n>>> r.text\n'<!doctype html>\\n<html>\\n<head>\\n<title>Example Domain</title>...'\n```\n\nOr, using the command-line client.\n\n```shell\n$ pip install 'httpx[cli]'  # The command line client is an optional dependency.\n```",
+          "sha256": "d58f476c1273c9c06c978467c6596620d3840ea8c99ba9d32300ab3286f0e0c3"
+        },
+        {
+          "path": "pyproject.toml",
+          "startLine": 58,
+          "endLine": 59,
+          "excerpt": "[project.scripts]\nhttpx = \"httpx:main\"",
+          "sha256": "f20daa9f2eb1f4cfdbb0c5e74fa3bfe99ea260b8bbf5df6ada3f7f25fd7956ec"
+        }
+      ]
+    },
+    {
+      "id": "httpx-q2",
+      "question": "Name the principal HTTPX components and their responsibilities.",
+      "answer": "httpx/_api.py supplies top-level convenience request functions; _client.py implements Client/AsyncClient request lifecycle, authentication and redirect orchestration; _models provides request/response models; _transports supplies transport interfaces/default implementations and MockTransport; _urls supplies URL/query representation. These are modules inside the httpx distribution, not separate packages. Transport behavior can be supplied by a consumer.",
+      "requiredFacts": [
+        "_api convenience functions",
+        "_client client lifecycle/auth/redirects",
+        "_models Request/Response",
+        "_transports dispatch implementations",
+        "_urls URL/QueryParams"
+      ],
+      "evidence": [
+        {
+          "path": "httpx/_api.py",
+          "startLine": 6,
+          "endLine": 20,
+          "excerpt": "from ._client import Client\nfrom ._config import DEFAULT_TIMEOUT_CONFIG\nfrom ._models import Response\nfrom ._types import (\n    AuthTypes,\n    CookieTypes,\n    HeaderTypes,\n    ProxyTypes,\n    QueryParamTypes,\n    RequestContent,\n    RequestData,\n    RequestFiles,\n    TimeoutTypes,\n)\nfrom ._urls import URL",
+          "sha256": "aff660b388c8a5c3c92ea2b975b6d26b2aa8fe254c2856b164277ea0e1f12c4b"
+        },
+        {
+          "path": "httpx/_api.py",
+          "startLine": 102,
+          "endLine": 115,
+          "excerpt": "    with Client(\n        cookies=cookies,\n        proxy=proxy,\n        verify=verify,\n        timeout=timeout,\n        trust_env=trust_env,\n    ) as client:\n        return client.request(\n            method=method,\n            url=url,\n            content=content,\n            data=data,\n            files=files,\n            json=json,",
+          "sha256": "aff660b388c8a5c3c92ea2b975b6d26b2aa8fe254c2856b164277ea0e1f12c4b"
+        },
+        {
+          "path": "httpx/_client.py",
+          "startLine": 13,
+          "endLine": 49,
+          "excerpt": "from ._auth import Auth, BasicAuth, FunctionAuth\nfrom ._config import (\n    DEFAULT_LIMITS,\n    DEFAULT_MAX_REDIRECTS,\n    DEFAULT_TIMEOUT_CONFIG,\n    Limits,\n    Proxy,\n    Timeout,\n)\nfrom ._decoders import SUPPORTED_DECODERS\nfrom ._exceptions import (\n    InvalidURL,\n    RemoteProtocolError,\n    TooManyRedirects,\n    request_context,\n)\nfrom ._models import Cookies, Headers, Request, Response\nfrom ._status_codes import codes\nfrom ._transports.base import AsyncBaseTransport, BaseTransport\nfrom ._transports.default import AsyncHTTPTransport, HTTPTransport\nfrom ._types import (\n    AsyncByteStream,\n    AuthTypes,\n    CertTypes,\n    CookieTypes,\n    HeaderTypes,\n    ProxyTypes,\n    QueryParamTypes,\n    RequestContent,\n    RequestData,\n    RequestExtensions,\n    RequestFiles,\n    SyncByteStream,\n    TimeoutTypes,\n)\nfrom ._urls import URL, QueryParams\nfrom ._utils import URLPattern, get_environment_proxies",
+          "sha256": "ed717b3ac00debb48d089daeb4dd7fbaf47cb5642ebc4a6e76f3a2fc6cfc0f70"
+        },
+        {
+          "path": "httpx/_client.py",
+          "startLine": 930,
+          "endLine": 946,
+          "excerpt": "    def _send_handling_auth(\n        self,\n        request: Request,\n        auth: Auth,\n        follow_redirects: bool,\n        history: list[Response],\n    ) -> Response:\n        auth_flow = auth.sync_auth_flow(request)\n        try:\n            request = next(auth_flow)\n\n            while True:\n                response = self._send_handling_redirects(\n                    request,\n                    follow_redirects=follow_redirects,\n                    history=history,\n                )",
+          "sha256": "ed717b3ac00debb48d089daeb4dd7fbaf47cb5642ebc4a6e76f3a2fc6cfc0f70"
+        },
+        {
+          "path": "httpx/_transports/mock.py",
+          "startLine": 15,
+          "endLine": 27,
+          "excerpt": "class MockTransport(AsyncBaseTransport, BaseTransport):\n    def __init__(self, handler: SyncHandler | AsyncHandler) -> None:\n        self.handler = handler\n\n    def handle_request(\n        self,\n        request: Request,\n    ) -> Response:\n        request.read()\n        response = self.handler(request)\n        if not isinstance(response, Response):  # pragma: no cover\n            raise TypeError(\"Cannot use an async handler in a sync Client\")\n        return response",
+          "sha256": "3d3a34779ebb4484d7c46ae48ba90deffebbc300317f088c0dcb972626428c4a"
+        }
+      ]
+    },
+    {
+      "id": "httpx-q3",
+      "question": "Which languages, build system and package boundaries organize HTTPX?",
+      "answer": "It is a Python package named httpx, requires Python >=3.9 at this pin, and uses hatchling.build with hatch-fancy-pypi-readme. Runtime dependencies include httpcore 1.*, certifi, anyio and idna; optional groups include CLI and HTTP/2. The httpx command is declared as httpx:main; internal modules are part of the same distribution.",
+      "requiredFacts": [
+        "Python >=3.9",
+        "Hatchling build backend",
+        "Single httpx distribution",
+        "httpcore/anyio/certifi/idna runtime dependencies",
+        "Optional CLI/HTTP2 and httpx:main entry"
+      ],
+      "evidence": [
+        {
+          "path": "pyproject.toml",
+          "startLine": 1,
+          "endLine": 9,
+          "excerpt": "[build-system]\nrequires = [\"hatchling\", \"hatch-fancy-pypi-readme\"]\nbuild-backend = \"hatchling.build\"\n\n[project]\nname = \"httpx\"\ndescription = \"The next generation HTTP client.\"\nlicense = \"BSD-3-Clause\"\nrequires-python = \">=3.9\"",
+          "sha256": "f20daa9f2eb1f4cfdbb0c5e74fa3bfe99ea260b8bbf5df6ada3f7f25fd7956ec"
+        },
+        {
+          "path": "pyproject.toml",
+          "startLine": 30,
+          "endLine": 59,
+          "excerpt": "dependencies = [\n    \"certifi\",\n    \"httpcore==1.*\",\n    \"anyio\",\n    \"idna\",\n]\ndynamic = [\"readme\", \"version\"]\n\n[project.optional-dependencies]\nbrotli = [\n    \"brotli; platform_python_implementation == 'CPython'\",\n    \"brotlicffi; platform_python_implementation != 'CPython'\",\n]\ncli = [\n    \"click==8.*\",\n    \"pygments==2.*\",\n    \"rich>=10,<15\",\n]\nhttp2 = [\n    \"h2>=3,<5\",\n]\nsocks = [\n    \"socksio==1.*\",\n]\nzstd = [\n  \"zstandard>=0.18.0\",\n]\n\n[project.scripts]\nhttpx = \"httpx:main\"",
+          "sha256": "f20daa9f2eb1f4cfdbb0c5e74fa3bfe99ea260b8bbf5df6ada3f7f25fd7956ec"
+        }
+      ]
+    },
+    {
+      "id": "httpx-q4",
+      "question": "Where does selected public-library use httpx.get(url) begin?",
+      "answer": "httpx/__init__.py reexports _api and lists get in __all__. _api.get delegates to request with method GET; request creates a context-managed Client then calls client.request. This is a convenience library entry with a temporary client, distinct from reusing a caller-owned Client or the CLI main.",
+      "requiredFacts": [
+        "__init__ exports get from _api",
+        "_api.get calls request with GET",
+        "request creates context-managed Client",
+        "client.request is delegated to; CLI/reused clients distinct"
+      ],
+      "evidence": [
+        {
+          "path": "httpx/__init__.py",
+          "startLine": 1,
+          "endLine": 4,
+          "excerpt": "from .__version__ import __description__, __title__, __version__\nfrom ._api import *\nfrom ._auth import *\nfrom ._client import *",
+          "sha256": "ee97edea66c8b6e7fa76ac30847e4189dfe114069e86827719e23a7c2e110f40"
+        },
+        {
+          "path": "httpx/__init__.py",
+          "startLine": 51,
+          "endLine": 55,
+          "excerpt": "    \"delete\",\n    \"DigestAuth\",\n    \"FunctionAuth\",\n    \"get\",\n    \"head\",",
+          "sha256": "ee97edea66c8b6e7fa76ac30847e4189dfe114069e86827719e23a7c2e110f40"
+        },
+        {
+          "path": "httpx/_api.py",
+          "startLine": 174,
+          "endLine": 207,
+          "excerpt": "def get(\n    url: URL | str,\n    *,\n    params: QueryParamTypes | None = None,\n    headers: HeaderTypes | None = None,\n    cookies: CookieTypes | None = None,\n    auth: AuthTypes | None = None,\n    proxy: ProxyTypes | None = None,\n    follow_redirects: bool = False,\n    verify: ssl.SSLContext | str | bool = True,\n    timeout: TimeoutTypes = DEFAULT_TIMEOUT_CONFIG,\n    trust_env: bool = True,\n) -> Response:\n    \"\"\"\n    Sends a `GET` request.\n\n    **Parameters**: See `httpx.request`.\n\n    Note that the `data`, `files`, `json` and `content` parameters are not available\n    on this function, as `GET` requests should not include a request body.\n    \"\"\"\n    return request(\n        \"GET\",\n        url,\n        params=params,\n        headers=headers,\n        cookies=cookies,\n        auth=auth,\n        proxy=proxy,\n        follow_redirects=follow_redirects,\n        verify=verify,\n        timeout=timeout,\n        trust_env=trust_env,\n    )",
+          "sha256": "aff660b388c8a5c3c92ea2b975b6d26b2aa8fe254c2856b164277ea0e1f12c4b"
+        },
+        {
+          "path": "httpx/_api.py",
+          "startLine": 102,
+          "endLine": 121,
+          "excerpt": "    with Client(\n        cookies=cookies,\n        proxy=proxy,\n        verify=verify,\n        timeout=timeout,\n        trust_env=trust_env,\n    ) as client:\n        return client.request(\n            method=method,\n            url=url,\n            content=content,\n            data=data,\n            files=files,\n            json=json,\n            params=params,\n            headers=headers,\n            auth=auth,\n            follow_redirects=follow_redirects,\n        )\n",
+          "sha256": "aff660b388c8a5c3c92ea2b975b6d26b2aa8fe254c2856b164277ea0e1f12c4b"
+        }
+      ]
+    },
+    {
+      "id": "httpx-q5",
+      "question": "Where is X = rewriting the HTTP method when following a redirect implemented, and what rules apply?",
+      "answer": "BaseClient._redirect_method in httpx/_client.py starts with request.method. A 303 or 302 changes non-HEAD methods to GET; a 301 changes POST to GET; otherwise it preserves the method. _build_redirect_request calls this helper before constructing the next Request. The rule is shared infrastructure, not an unconditional conversion of all redirect methods.",
+      "requiredFacts": [
+        "_redirect_method in _client.py",
+        "303/302 non-HEAD -> GET",
+        "301 POST -> GET",
+        "Other cases preserve method",
+        "_build_redirect_request calls helper"
+      ],
+      "evidence": [
+        {
+          "path": "httpx/_client.py",
+          "startLine": 475,
+          "endLine": 515,
+          "excerpt": "    def _build_redirect_request(self, request: Request, response: Response) -> Request:\n        \"\"\"\n        Given a request and a redirect response, return a new request that\n        should be used to effect the redirect.\n        \"\"\"\n        method = self._redirect_method(request, response)\n        url = self._redirect_url(request, response)\n        headers = self._redirect_headers(request, url, method)\n        stream = self._redirect_stream(request, method)\n        cookies = Cookies(self.cookies)\n        return Request(\n            method=method,\n            url=url,\n            headers=headers,\n            cookies=cookies,\n            stream=stream,\n            extensions=request.extensions,\n        )\n\n    def _redirect_method(self, request: Request, response: Response) -> str:\n        \"\"\"\n        When being redirected we may want to change the method of the request\n        based on certain specs or browser behavior.\n        \"\"\"\n        method = request.method\n\n        # https://tools.ietf.org/html/rfc7231#section-6.4.4\n        if response.status_code == codes.SEE_OTHER and method != \"HEAD\":\n            method = \"GET\"\n\n        # Do what the browsers do, despite standards...\n        # Turn 302s into GETs.\n        if response.status_code == codes.FOUND and method != \"HEAD\":\n            method = \"GET\"\n\n        # If a POST is responded to with a 301, turn it into a GET.\n        # This bizarre behaviour is explained in 'requests' issue 1704.\n        if response.status_code == codes.MOVED_PERMANENTLY and method == \"POST\":\n            method = \"GET\"\n\n        return method",
+          "sha256": "ed717b3ac00debb48d089daeb4dd7fbaf47cb5642ebc4a6e76f3a2fc6cfc0f70"
+        }
+      ]
+    },
+    {
+      "id": "httpx-q6",
+      "question": "Which internal modules does A = httpx/_client.py directly use for authentication, models and transport dispatch?",
+      "answer": "Explicit imports show _client -> _auth (Auth/BasicAuth/FunctionAuth), _client -> _models (Cookies/Headers/Request/Response), _client -> _transports.base (base interfaces) and _client -> _transports.default (HTTPTransport/AsyncHTTPTransport). _send_single_request dispatches to the selected transport handle_request. Imports establish dependency; the actual mounted/custom transport depends on configuration.",
+      "requiredFacts": [
+        "_auth imported for auth objects",
+        "_models imported for models",
+        "_transports.base and .default imported",
+        "Selected transport handle_request is dynamic"
+      ],
+      "evidence": [
+        {
+          "path": "httpx/_client.py",
+          "startLine": 13,
+          "endLine": 32,
+          "excerpt": "from ._auth import Auth, BasicAuth, FunctionAuth\nfrom ._config import (\n    DEFAULT_LIMITS,\n    DEFAULT_MAX_REDIRECTS,\n    DEFAULT_TIMEOUT_CONFIG,\n    Limits,\n    Proxy,\n    Timeout,\n)\nfrom ._decoders import SUPPORTED_DECODERS\nfrom ._exceptions import (\n    InvalidURL,\n    RemoteProtocolError,\n    TooManyRedirects,\n    request_context,\n)\nfrom ._models import Cookies, Headers, Request, Response\nfrom ._status_codes import codes\nfrom ._transports.base import AsyncBaseTransport, BaseTransport\nfrom ._transports.default import AsyncHTTPTransport, HTTPTransport",
+          "sha256": "ed717b3ac00debb48d089daeb4dd7fbaf47cb5642ebc4a6e76f3a2fc6cfc0f70"
+        },
+        {
+          "path": "httpx/_client.py",
+          "startLine": 1001,
+          "endLine": 1014,
+          "excerpt": "    def _send_single_request(self, request: Request) -> Response:\n        \"\"\"\n        Sends a single request, without handling any redirections.\n        \"\"\"\n        transport = self._transport_for_url(request.url)\n        start = time.perf_counter()\n\n        if not isinstance(request.stream, SyncByteStream):\n            raise RuntimeError(\n                \"Attempted to send an async request with a sync Client instance.\"\n            )\n\n        with request_context(request=request):\n            response = transport.handle_request(request)",
+          "sha256": "ed717b3ac00debb48d089daeb4dd7fbaf47cb5642ebc4a6e76f3a2fc6cfc0f70"
+        }
+      ]
+    },
+    {
+      "id": "httpx-q7",
+      "question": "For R = synchronous Client.request with follow_redirects=True receiving a redirect, trace the source path to the next request and identify dynamic boundaries.",
+      "answer": "Client.request builds a Request then calls send. send calls _send_handling_auth; that drives auth.sync_auth_flow and calls _send_handling_redirects. The redirect loop invokes request hooks, _send_single_request and response hooks. _send_single_request selects a transport and invokes handle_request. A response with redirect location triggers _build_redirect_request, updates history and reads the prior response before looping when follow_redirects is true. Auth generators, event hooks and transport target are runtime-configurable; network outcome is not statically proven. Max redirects can raise TooManyRedirects.",
+      "requiredFacts": [
+        "request -> build_request -> send",
+        "send -> _send_handling_auth -> _send_handling_redirects",
+        "Single request selects transport.handle_request",
+        "Redirect location causes next-request build/history update/repeat",
+        "Auth/hooks/transport are runtime boundaries",
+        "TooManyRedirects limit is preserved"
+      ],
+      "evidence": [
+        {
+          "path": "httpx/_client.py",
+          "startLine": 812,
+          "endLine": 825,
+          "excerpt": "        request = self.build_request(\n            method=method,\n            url=url,\n            content=content,\n            data=data,\n            files=files,\n            json=json,\n            params=params,\n            headers=headers,\n            cookies=cookies,\n            timeout=timeout,\n            extensions=extensions,\n        )\n        return self.send(request, auth=auth, follow_redirects=follow_redirects)",
+          "sha256": "ed717b3ac00debb48d089daeb4dd7fbaf47cb5642ebc4a6e76f3a2fc6cfc0f70"
+        },
+        {
+          "path": "httpx/_client.py",
+          "startLine": 903,
+          "endLine": 919,
+          "excerpt": "        self._state = ClientState.OPENED\n        follow_redirects = (\n            self.follow_redirects\n            if isinstance(follow_redirects, UseClientDefault)\n            else follow_redirects\n        )\n\n        self._set_timeout(request)\n\n        auth = self._build_request_auth(request, auth)\n\n        response = self._send_handling_auth(\n            request,\n            auth=auth,\n            follow_redirects=follow_redirects,\n            history=[],\n        )",
+          "sha256": "ed717b3ac00debb48d089daeb4dd7fbaf47cb5642ebc4a6e76f3a2fc6cfc0f70"
+        },
+        {
+          "path": "httpx/_client.py",
+          "startLine": 930,
+          "endLine": 946,
+          "excerpt": "    def _send_handling_auth(\n        self,\n        request: Request,\n        auth: Auth,\n        follow_redirects: bool,\n        history: list[Response],\n    ) -> Response:\n        auth_flow = auth.sync_auth_flow(request)\n        try:\n            request = next(auth_flow)\n\n            while True:\n                response = self._send_handling_redirects(\n                    request,\n                    follow_redirects=follow_redirects,\n                    history=history,\n                )",
+          "sha256": "ed717b3ac00debb48d089daeb4dd7fbaf47cb5642ebc4a6e76f3a2fc6cfc0f70"
+        },
+        {
+          "path": "httpx/_client.py",
+          "startLine": 964,
+          "endLine": 1014,
+          "excerpt": "    def _send_handling_redirects(\n        self,\n        request: Request,\n        follow_redirects: bool,\n        history: list[Response],\n    ) -> Response:\n        while True:\n            if len(history) > self.max_redirects:\n                raise TooManyRedirects(\n                    \"Exceeded maximum allowed redirects.\", request=request\n                )\n\n            for hook in self._event_hooks[\"request\"]:\n                hook(request)\n\n            response = self._send_single_request(request)\n            try:\n                for hook in self._event_hooks[\"response\"]:\n                    hook(response)\n                response.history = list(history)\n\n                if not response.has_redirect_location:\n                    return response\n\n                request = self._build_redirect_request(request, response)\n                history = history + [response]\n\n                if follow_redirects:\n                    response.read()\n                else:\n                    response.next_request = request\n                    return response\n\n            except BaseException as exc:\n                response.close()\n                raise exc\n\n    def _send_single_request(self, request: Request) -> Response:\n        \"\"\"\n        Sends a single request, without handling any redirections.\n        \"\"\"\n        transport = self._transport_for_url(request.url)\n        start = time.perf_counter()\n\n        if not isinstance(request.stream, SyncByteStream):\n            raise RuntimeError(\n                \"Attempted to send an async request with a sync Client instance.\"\n            )\n\n        with request_context(request=request):\n            response = transport.handle_request(request)",
+          "sha256": "ed717b3ac00debb48d089daeb4dd7fbaf47cb5642ebc4a6e76f3a2fc6cfc0f70"
+        }
+      ]
+    },
+    {
+      "id": "httpx-q8",
+      "question": "If Y = BaseClient._redirect_method changes, which direct consumer is evidenced and which broader effects are indirect?",
+      "answer": "_build_redirect_request directly calls self._redirect_method and uses its result to construct Request and choose redirect headers/stream. Synchronous and asynchronous redirect loops call _build_redirect_request, so effects on both client modes are indirect through that builder. Actual behavior remains status/method/configuration dependent; the source does not imply that every HTTP request redirects.",
+      "requiredFacts": [
+        "_build_redirect_request is direct caller",
+        "Result sets next Request method and header/stream decisions",
+        "Sync and async loops consume builder indirectly",
+        "Impact conditional on redirect/configuration"
+      ],
+      "evidence": [
+        {
+          "path": "httpx/_client.py",
+          "startLine": 475,
+          "endLine": 492,
+          "excerpt": "    def _build_redirect_request(self, request: Request, response: Response) -> Request:\n        \"\"\"\n        Given a request and a redirect response, return a new request that\n        should be used to effect the redirect.\n        \"\"\"\n        method = self._redirect_method(request, response)\n        url = self._redirect_url(request, response)\n        headers = self._redirect_headers(request, url, method)\n        stream = self._redirect_stream(request, method)\n        cookies = Cookies(self.cookies)\n        return Request(\n            method=method,\n            url=url,\n            headers=headers,\n            cookies=cookies,\n            stream=stream,\n            extensions=request.extensions,\n        )",
+          "sha256": "ed717b3ac00debb48d089daeb4dd7fbaf47cb5642ebc4a6e76f3a2fc6cfc0f70"
+        },
+        {
+          "path": "httpx/_client.py",
+          "startLine": 985,
+          "endLine": 995,
+          "excerpt": "                if not response.has_redirect_location:\n                    return response\n\n                request = self._build_redirect_request(request, response)\n                history = history + [response]\n\n                if follow_redirects:\n                    response.read()\n                else:\n                    response.next_request = request\n                    return response",
+          "sha256": "ed717b3ac00debb48d089daeb4dd7fbaf47cb5642ebc4a6e76f3a2fc6cfc0f70"
+        },
+        {
+          "path": "httpx/_client.py",
+          "startLine": 1699,
+          "endLine": 1712,
+          "excerpt": "                response.history = list(history)\n\n                if not response.has_redirect_location:\n                    return response\n\n                request = self._build_redirect_request(request, response)\n                history = history + [response]\n\n                if follow_redirects:\n                    await response.aread()\n                else:\n                    response.next_request = request\n                    return response\n",
+          "sha256": "ed717b3ac00debb48d089daeb4dd7fbaf47cb5642ebc4a6e76f3a2fc6cfc0f70"
+        }
+      ]
+    },
+    {
+      "id": "httpx-q9",
+      "question": "Which test exercises X for a POST receiving 301, and how does it enter without a real network?",
+      "answer": "tests/client/test_redirects.py test_redirect_301 creates Client with MockTransport(redirects), posts to /redirect_301 with follow_redirects=True and checks final OK URL and one history item. The redirects function returns MOVED_PERMANENTLY plus Location for that path; MockTransport.handle_request calls the supplied handler. This exercises the client redirect path with an injected transport, not a live server or an executed-test claim.",
+      "requiredFacts": [
+        "test_redirect_301 uses Client and MockTransport",
+        "POST follows redirect",
+        "Fixture returns 301 with Location",
+        "Final URL/status/history checked",
+        "MockTransport dispatch is local, not live network"
+      ],
+      "evidence": [
+        {
+          "path": "tests/client/test_redirects.py",
+          "startLine": 8,
+          "endLine": 16,
+          "excerpt": "def redirects(request: httpx.Request) -> httpx.Response:\n    if request.url.scheme not in (\"http\", \"https\"):\n        raise httpx.UnsupportedProtocol(f\"Scheme {request.url.scheme!r} not supported.\")\n\n    if request.url.path == \"/redirect_301\":\n        status_code = httpx.codes.MOVED_PERMANENTLY\n        content = b\"<a href='https://example.org/'>here</a>\"\n        headers = {\"location\": \"https://example.org/\"}\n        return httpx.Response(status_code, headers=headers, content=content)",
+          "sha256": "6f33382abd2ecff7d92e0842a2540863d00e28c658fe7813e7d76f70aa5d99dd"
+        },
+        {
+          "path": "tests/client/test_redirects.py",
+          "startLine": 116,
+          "endLine": 121,
+          "excerpt": "def test_redirect_301():\n    client = httpx.Client(transport=httpx.MockTransport(redirects))\n    response = client.post(\"https://example.org/redirect_301\", follow_redirects=True)\n    assert response.status_code == httpx.codes.OK\n    assert response.url == \"https://example.org/\"\n    assert len(response.history) == 1",
+          "sha256": "6f33382abd2ecff7d92e0842a2540863d00e28c658fe7813e7d76f70aa5d99dd"
+        },
+        {
+          "path": "httpx/_transports/mock.py",
+          "startLine": 15,
+          "endLine": 27,
+          "excerpt": "class MockTransport(AsyncBaseTransport, BaseTransport):\n    def __init__(self, handler: SyncHandler | AsyncHandler) -> None:\n        self.handler = handler\n\n    def handle_request(\n        self,\n        request: Request,\n    ) -> Response:\n        request.read()\n        response = self.handler(request)\n        if not isinstance(response, Response):  # pragma: no cover\n            raise TypeError(\"Cannot use an async handler in a sync Client\")\n        return response",
+          "sha256": "3d3a34779ebb4484d7c46ae48ba90deffebbc300317f088c0dcb972626428c4a"
+        }
+      ]
+    },
+    {
+      "id": "httpx-q10",
+      "question": "Where does Z = a redirect response Location header enter and get transformed into the next URL?",
+      "answer": "BaseClient._redirect_url reads response.headers[Location] and constructs URL(location). Invalid URL input becomes RemoteProtocolError. A scheme without host copies the original host; relative locations join against request.url; missing fragment inherits the original fragment. _build_redirect_request uses this URL for the next Request; transport and future response remain unresolved runtime outcomes.",
+      "requiredFacts": [
+        "_redirect_url reads Location",
+        "URL parse errors become RemoteProtocolError",
+        "Missing host with scheme repaired",
+        "Relative URL joined to original",
+        "Original fragment inherited if needed",
+        "Builder uses transformed URL"
+      ],
+      "evidence": [
+        {
+          "path": "httpx/_client.py",
+          "startLine": 475,
+          "endLine": 491,
+          "excerpt": "    def _build_redirect_request(self, request: Request, response: Response) -> Request:\n        \"\"\"\n        Given a request and a redirect response, return a new request that\n        should be used to effect the redirect.\n        \"\"\"\n        method = self._redirect_method(request, response)\n        url = self._redirect_url(request, response)\n        headers = self._redirect_headers(request, url, method)\n        stream = self._redirect_stream(request, method)\n        cookies = Cookies(self.cookies)\n        return Request(\n            method=method,\n            url=url,\n            headers=headers,\n            cookies=cookies,\n            stream=stream,\n            extensions=request.extensions,",
+          "sha256": "ed717b3ac00debb48d089daeb4dd7fbaf47cb5642ebc4a6e76f3a2fc6cfc0f70"
+        },
+        {
+          "path": "httpx/_client.py",
+          "startLine": 517,
+          "endLine": 544,
+          "excerpt": "    def _redirect_url(self, request: Request, response: Response) -> URL:\n        \"\"\"\n        Return the URL for the redirect to follow.\n        \"\"\"\n        location = response.headers[\"Location\"]\n\n        try:\n            url = URL(location)\n        except InvalidURL as exc:\n            raise RemoteProtocolError(\n                f\"Invalid URL in location header: {exc}.\", request=request\n            ) from None\n\n        # Handle malformed 'Location' headers that are \"absolute\" form, have no host.\n        # See: https://github.com/encode/httpx/issues/771\n        if url.scheme and not url.host:\n            url = url.copy_with(host=request.url.host)\n\n        # Facilitate relative 'Location' headers, as allowed by RFC 7231.\n        # (e.g. '/path/to/resource' instead of 'http://domain.tld/path/to/resource')\n        if url.is_relative_url:\n            url = request.url.join(url)\n\n        # Attach previous fragment if needed (RFC 7231 7.1.2)\n        if request.url.fragment and not url.fragment:\n            url = url.copy_with(fragment=request.url.fragment)\n\n        return url",
+          "sha256": "ed717b3ac00debb48d089daeb4dd7fbaf47cb5642ebc4a6e76f3a2fc6cfc0f70"
+        }
+      ]
+    }
+  ]
+}
