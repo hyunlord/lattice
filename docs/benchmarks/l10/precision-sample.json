@@ -1,0 +1,2771 @@
+{
+  "protocol": "/tmp/lattice-l9/docs/benchmarks/l9/README.md",
+  "seedPrefix": "L9-v1:81:",
+  "identity": "JSON tuple [language,repositoryId,callsitePath,callsiteLine,callsitePointer,targetId]",
+  "selection": "7 each supported family, then remaining global hash rank to50; per-repository lowest100 per-family reservoir is sufficient for50 total",
+  "status": "FROZEN BEFORE SOURCE ADJUDICATION",
+  "candidateToolCommit": "d4f4c5feebc481854f4446c772cf1f43e4a8a224",
+  "runtimeToolProvenance": "d4f4c5feebc481854f4446c772cf1f43e4a8a224",
+  "priorSample": "/tmp/l9-final-audit/exact50/frozen-sample.json",
+  "priorCompleteEndpointResult": "47/50 FAIL; unchanged historical sample",
+  "requiredAdjudication": "Immediate callable caller identity AND exact target binding; unsupported closure boundaries cannot inherit outer caller",
+  "graphs": [
+    {
+      "repository": "click",
+      "sourceCommit": "2247b35ea1c47c727d7a06e51fa280e12a863ff6",
+      "toolCommit": "d4f4c5feebc481854f4446c772cf1f43e4a8a224",
+      "graphHash": "620ffec5009c6f02d56f733aa66e7264e285566d19f0b013aa6e339356ac4275",
+      "nodeCount": 2573,
+      "edgeCount": 3251,
+      "population": {
+        "JS/TS": 0,
+        "Python": 387,
+        "Go": 0,
+        "Rust": 0,
+        "Java/Kotlin": 0,
+        "C#": 0
+      },
+      "noFamily": 0
+    },
+    {
+      "repository": "excalidraw",
+      "sourceCommit": "e65eca999e071503efb893d3379a29fb96ff37c4",
+      "toolCommit": "d4f4c5feebc481854f4446c772cf1f43e4a8a224",
+      "graphHash": "82bbcdeb8edfebe16344679cffe313445fd621a1911bdbd8e3d4a89aae374213",
+      "nodeCount": 13759,
+      "edgeCount": 25135,
+      "population": {
+        "JS/TS": 6254,
+        "Python": 0,
+        "Go": 0,
+        "Rust": 0,
+        "Java/Kotlin": 0,
+        "C#": 0
+      },
+      "noFamily": 0
+    },
+    {
+      "repository": "fzf",
+      "sourceCommit": "c0a193e031f01fb50bf6f7be4381990a3753f7cf",
+      "toolCommit": "d4f4c5feebc481854f4446c772cf1f43e4a8a224",
+      "graphHash": "005d2126053a99deeeea312c5c17c986e08e862cecfb2793a1db8e15a0c5d51b",
+      "nodeCount": 1625,
+      "edgeCount": 3152,
+      "population": {
+        "JS/TS": 0,
+        "Python": 0,
+        "Go": 1086,
+        "Rust": 0,
+        "Java/Kotlin": 0,
+        "C#": 0
+      },
+      "noFamily": 0
+    },
+    {
+      "repository": "nowinandroid",
+      "sourceCommit": "a49ed253d75e61a2b6ab80a8da677b57437b08eb",
+      "toolCommit": "d4f4c5feebc481854f4446c772cf1f43e4a8a224",
+      "graphHash": "1624d97d5f550462f31fa1325c447c1aa047871d68a6a4db5b2af99d55c162f6",
+      "nodeCount": 2343,
+      "edgeCount": 3247,
+      "population": {
+        "JS/TS": 0,
+        "Python": 0,
+        "Go": 0,
+        "Rust": 0,
+        "Java/Kotlin": 113,
+        "C#": 0
+      },
+      "noFamily": 0
+    },
+    {
+      "repository": "ripgrep",
+      "sourceCommit": "3fce3b5bb0236da2df6d99672afb8a719642eca7",
+      "toolCommit": "d4f4c5feebc481854f4446c772cf1f43e4a8a224",
+      "graphHash": "a5341bbd0960c8d3725b0129e2bb8d580f44e875a4514401bde59d18f01035bb",
+      "nodeCount": 9069,
+      "edgeCount": 5900,
+      "population": {
+        "JS/TS": 0,
+        "Python": 0,
+        "Go": 0,
+        "Rust": 1613,
+        "Java/Kotlin": 0,
+        "C#": 0
+      },
+      "noFamily": 0
+    },
+    {
+      "repository": "spring-petclinic",
+      "sourceCommit": "500158f732419217507c7656904b8e6aa1bcc0d6",
+      "toolCommit": "d4f4c5feebc481854f4446c772cf1f43e4a8a224",
+      "graphHash": "c36885a8a047cdfd1919ec556eee638991618001f288a308ac954d707e49f4a6",
+      "nodeCount": 328,
+      "edgeCount": 369,
+      "population": {
+        "JS/TS": 0,
+        "Python": 0,
+        "Go": 0,
+        "Rust": 0,
+        "Java/Kotlin": 0,
+        "C#": 0
+      },
+      "noFamily": 0
+    },
+    {
+      "repository": "fastify",
+      "sourceCommit": "86368086171305df4e235f6d6bec892c67ec2ae2",
+      "toolCommit": "d4f4c5feebc481854f4446c772cf1f43e4a8a224",
+      "graphHash": "b84d289a0fe854853e940be9cacc766954b151d27b352a1cc716d29bcea46078",
+      "nodeCount": 10512,
+      "edgeCount": 12498,
+      "population": {
+        "JS/TS": 1118,
+        "Python": 0,
+        "Go": 0,
+        "Rust": 0,
+        "Java/Kotlin": 0,
+        "C#": 0
+      },
+      "noFamily": 0
+    },
+    {
+      "repository": "httpx",
+      "sourceCommit": "b5addb64f0161ff6bfe94c124ef76f6a1fba5254",
+      "toolCommit": "d4f4c5feebc481854f4446c772cf1f43e4a8a224",
+      "graphHash": "025829906682ee957399fddd88ba7bc00a66959f8d95ea7f1d49020eefb235b7",
+      "nodeCount": 1756,
+      "edgeCount": 2203,
+      "population": {
+        "JS/TS": 0,
+        "Python": 210,
+        "Go": 0,
+        "Rust": 0,
+        "Java/Kotlin": 0,
+        "C#": 0
+      },
+      "noFamily": 0
+    },
+    {
+      "repository": "unity-boatattack",
+      "sourceCommit": "6acf5f773a440030489cb5e2b3c009fb5fe1e8ce",
+      "toolCommit": "d4f4c5feebc481854f4446c772cf1f43e4a8a224",
+      "graphHash": "26fd2a3c8e0b37700f2d14701ec612c3ccc94455fcf2aa333044a39d21751eec",
+      "nodeCount": 851,
+      "edgeCount": 1189,
+      "population": {
+        "JS/TS": 0,
+        "Python": 0,
+        "Go": 0,
+        "Rust": 0,
+        "Java/Kotlin": 0,
+        "C#": 113
+      },
+      "noFamily": 0
+    },
+    {
+      "repository": "godot-demos",
+      "sourceCommit": "b761b4cd5718a7118f2c95eb55f181d0a5f004f1",
+      "toolCommit": "d4f4c5feebc481854f4446c772cf1f43e4a8a224",
+      "graphHash": "a21663cdb835dfdc9821864b659560f5a3a2751046c8dc3310bcb9882813a6d2",
+      "nodeCount": 3633,
+      "edgeCount": 3388,
+      "population": {
+        "JS/TS": 12,
+        "Python": 0,
+        "Go": 0,
+        "Rust": 0,
+        "Java/Kotlin": 0,
+        "C#": 1
+      },
+      "noFamily": 0
+    },
+    {
+      "repository": "sqlite",
+      "sourceCommit": "6e35c19f170958b1e846e01c55318988f2d192e0",
+      "toolCommit": "d4f4c5feebc481854f4446c772cf1f43e4a8a224",
+      "graphHash": "910257b7f95960633f47364211da3900d7de766fcf7698b2e1d71dca5e371e3a",
+      "nodeCount": 3258,
+      "edgeCount": 4161,
+      "population": {
+        "JS/TS": 942,
+        "Python": 2,
+        "Go": 0,
+        "Rust": 0,
+        "Java/Kotlin": 181,
+        "C#": 11
+      },
+      "noFamily": 0
+    },
+    {
+      "repository": "runtime",
+      "sourceCommit": "8630d8988107478d249e2fdb8162f8c7dcbd3dbb",
+      "toolCommit": "d4f4c5feebc481854f4446c772cf1f43e4a8a224",
+      "graphHash": "dcb1ea8f2fbe9b48c135e11df41f3ec9d1be28206fae313f260eb0228c8bc334",
+      "nodeCount": 599236,
+      "edgeCount": 1092169,
+      "population": {
+        "JS/TS": 3870,
+        "Python": 800,
+        "Go": 0,
+        "Rust": 0,
+        "Java/Kotlin": 3,
+        "C#": 299601
+      },
+      "noFamily": 0
+    }
+  ],
+  "shortages": [],
+  "selected": [
+    {
+      "identity": "[\"typescript\",\"excalidraw\",\"packages/excalidraw/actions/actionProperties.tsx\",1126,\"/logic/calls/33864\",\"logic:packages/excalidraw/actions/actionProperties.tsx:changeFontSize:7811\"]",
+      "rank": "0003c4b7b1119a18cbc82b5e61a57d63087b6ce90b56ad3a404c5e62e6f3d471",
+      "family": "JS/TS",
+      "language": "typescript",
+      "repository": "excalidraw",
+      "sourceCommit": "e65eca999e071503efb893d3379a29fb96ff37c4",
+      "graphHash": "82bbcdeb8edfebe16344679cffe313445fd621a1911bdbd8e3d4a89aae374213",
+      "edgeId": "calls:logic:packages/excalidraw/actions/actionProperties.tsx:perform:33815:logic:packages/excalidraw/actions/actionProperties.tsx:changeFontSize:7811:33864",
+      "callsite": {
+        "path": "packages/excalidraw/actions/actionProperties.tsx",
+        "line": 1126,
+        "pointer": "/logic/calls/33864"
+      },
+      "caller": {
+        "id": "logic:packages/excalidraw/actions/actionProperties.tsx:perform:33815",
+        "name": "perform",
+        "kind": "function",
+        "language": "typescript",
+        "qualifiedName": "perform",
+        "sources": [
+          {
+            "path": "packages/excalidraw/actions/actionProperties.tsx",
+            "line": 1125,
+            "endLine": 1132,
+            "pointer": "/logic/definitions/33815"
+          }
+        ]
+      },
+      "target": {
+        "id": "logic:packages/excalidraw/actions/actionProperties.tsx:changeFontSize:7811",
+        "name": "changeFontSize",
+        "kind": "function",
+        "language": "typescript",
+        "qualifiedName": "changeFontSize",
+        "sources": [
+          {
+            "path": "packages/excalidraw/actions/actionProperties.tsx",
+            "line": 294,
+            "endLine": 354,
+            "pointer": "/logic/definitions/7811"
+          }
+        ]
+      },
+      "attributes": {
+        "resolution": "exact",
+        "evidence": "static-call",
+        "name": "changeFontSize",
+        "receiver": ""
+      }
+    },
+    {
+      "identity": "[\"javascript\",\"fastify\",\"test/internals/validation.test.js\",143,\"/logic/calls/4068\",\"logic:lib/validation.js:compileSchemasForValidation:7502\"]",
+      "rank": "0006f66613f8247796f88a2a28780055438cc5c55675a6a7f5e93edf4a37afa2",
+      "family": "JS/TS",
+      "language": "javascript",
+      "repository": "fastify",
+      "sourceCommit": "86368086171305df4e235f6d6bec892c67ec2ae2",
+      "graphHash": "b84d289a0fe854853e940be9cacc766954b151d27b352a1cc716d29bcea46078",
+      "edgeId": "calls:logic:test/internals/validation.test.js:<callback@131:36>:3892:logic:lib/validation.js:compileSchemasForValidation:7502:4068",
+      "callsite": {
+        "path": "test/internals/validation.test.js",
+        "line": 143,
+        "pointer": "/logic/calls/4068"
+      },
+      "caller": {
+        "id": "logic:test/internals/validation.test.js:<callback@131:36>:3892",
+        "name": "<callback@131:36>",
+        "kind": "function",
+        "language": "javascript",
+        "qualifiedName": "<callback@131:36>",
+        "sources": [
+          {
+            "path": "test/internals/validation.test.js",
+            "line": 131,
+            "endLine": 145,
+            "pointer": "/logic/definitions/3892"
+          }
+        ]
+      },
+      "target": {
+        "id": "logic:lib/validation.js:compileSchemasForValidation:7502",
+        "name": "compileSchemasForValidation",
+        "kind": "function",
+        "language": "javascript",
+        "qualifiedName": "compileSchemasForValidation",
+        "sources": [
+          {
+            "path": "lib/validation.js",
+            "line": 220,
+            "endLine": 284,
+            "pointer": "/logic/definitions/7502"
+          }
+        ]
+      },
+      "attributes": {
+        "resolution": "exact",
+        "evidence": "static-call",
+        "name": "compileSchemasForValidation",
+        "receiver": "validation"
+      }
+    },
+    {
+      "identity": "[\"javascript\",\"fastify\",\"test/trust-proxy.test.js\",101,\"/logic/calls/3285\",\"logic:test/trust-proxy.test.js:testRequestValues:577\"]",
+      "rank": "0013c5b35e797f388ee8329b517d4fb5a4c60d2586d2fcaf8074e94e11595935",
+      "family": "JS/TS",
+      "language": "javascript",
+      "repository": "fastify",
+      "sourceCommit": "86368086171305df4e235f6d6bec892c67ec2ae2",
+      "graphHash": "b84d289a0fe854853e940be9cacc766954b151d27b352a1cc716d29bcea46078",
+      "edgeId": "calls:logic:test/trust-proxy.test.js:<callback@100:30>:3257:logic:test/trust-proxy.test.js:testRequestValues:577:3285",
+      "callsite": {
+        "path": "test/trust-proxy.test.js",
+        "line": 101,
+        "pointer": "/logic/calls/3285"
+      },
+      "caller": {
+        "id": "logic:test/trust-proxy.test.js:<callback@100:30>:3257",
+        "name": "<callback@100:30>",
+        "kind": "function",
+        "language": "javascript",
+        "qualifiedName": "<callback@100:30>",
+        "sources": [
+          {
+            "path": "test/trust-proxy.test.js",
+            "line": 100,
+            "endLine": 103,
+            "pointer": "/logic/definitions/3257"
+          }
+        ]
+      },
+      "target": {
+        "id": "logic:test/trust-proxy.test.js:testRequestValues:577",
+        "name": "testRequestValues",
+        "kind": "function",
+        "language": "javascript",
+        "qualifiedName": "testRequestValues",
+        "sources": [
+          {
+            "path": "test/trust-proxy.test.js",
+            "line": 23,
+            "endLine": 46,
+            "pointer": "/logic/definitions/577"
+          }
+        ]
+      },
+      "attributes": {
+        "resolution": "exact",
+        "evidence": "static-call",
+        "name": "testRequestValues",
+        "receiver": ""
+      }
+    },
+    {
+      "identity": "[\"javascript\",\"sqlite\",\"ext/wasm/tests/opfs/concurrency/worker.js\",110,\"/logic/calls/3621\",\"logic:ext/wasm/tests/opfs/concurrency/worker.js:stderr:823\"]",
+      "rank": "0015f62a83734753bbb389e9a79af47a2543d0cd0aa431888f5d80db451d633f",
+      "family": "JS/TS",
+      "language": "javascript",
+      "repository": "sqlite",
+      "sourceCommit": "6e35c19f170958b1e846e01c55318988f2d192e0",
+      "graphHash": "910257b7f95960633f47364211da3900d7de766fcf7698b2e1d71dca5e371e3a",
+      "edgeId": "calls:logic:ext/wasm/tests/opfs/concurrency/worker.js:doWork:3105:logic:ext/wasm/tests/opfs/concurrency/worker.js:stderr:823:3621",
+      "callsite": {
+        "path": "ext/wasm/tests/opfs/concurrency/worker.js",
+        "line": 110,
+        "pointer": "/logic/calls/3621"
+      },
+      "caller": {
+        "id": "logic:ext/wasm/tests/opfs/concurrency/worker.js:doWork:3105",
+        "name": "doWork",
+        "kind": "function",
+        "language": "javascript",
+        "qualifiedName": "doWork",
+        "sources": [
+          {
+            "path": "ext/wasm/tests/opfs/concurrency/worker.js",
+            "line": 95,
+            "endLine": 115,
+            "pointer": "/logic/definitions/3105"
+          }
+        ]
+      },
+      "target": {
+        "id": "logic:ext/wasm/tests/opfs/concurrency/worker.js:stderr:823",
+        "name": "stderr",
+        "kind": "function",
+        "language": "javascript",
+        "qualifiedName": "stderr",
+        "sources": [
+          {
+            "path": "ext/wasm/tests/opfs/concurrency/worker.js",
+            "line": 20,
+            "endLine": 20,
+            "pointer": "/logic/definitions/823"
+          }
+        ]
+      },
+      "attributes": {
+        "resolution": "exact",
+        "evidence": "static-call",
+        "name": "stderr",
+        "receiver": ""
+      }
+    },
+    {
+      "identity": "[\"typescript\",\"excalidraw\",\"packages/element/tests/linearElementEditor.test.tsx\",1855,\"/logic/calls/57381\",\"logic:packages/element/tests/linearElementEditor.test.tsx:createArrowWithTallLabel:52554\"]",
+      "rank": "001f5b909d7343f69821a5474ed846977b320f2d65803320f0e155e4bd1d8c7a",
+      "family": "JS/TS",
+      "language": "typescript",
+      "repository": "excalidraw",
+      "sourceCommit": "e65eca999e071503efb893d3379a29fb96ff37c4",
+      "graphHash": "82bbcdeb8edfebe16344679cffe313445fd621a1911bdbd8e3d4a89aae374213",
+      "edgeId": "calls:logic:packages/element/tests/linearElementEditor.test.tsx:<callback@1854:86>:57340:logic:packages/element/tests/linearElementEditor.test.tsx:createArrowWithTallLabel:52554:57381",
+      "callsite": {
+        "path": "packages/element/tests/linearElementEditor.test.tsx",
+        "line": 1855,
+        "pointer": "/logic/calls/57381"
+      },
+      "caller": {
+        "id": "logic:packages/element/tests/linearElementEditor.test.tsx:<callback@1854:86>:57340",
+        "name": "<callback@1854:86>",
+        "kind": "function",
+        "language": "typescript",
+        "qualifiedName": "<callback@1854:86>",
+        "sources": [
+          {
+            "path": "packages/element/tests/linearElementEditor.test.tsx",
+            "line": 1854,
+            "endLine": 1867,
+            "pointer": "/logic/definitions/57340"
+          }
+        ]
+      },
+      "target": {
+        "id": "logic:packages/element/tests/linearElementEditor.test.tsx:createArrowWithTallLabel:52554",
+        "name": "createArrowWithTallLabel",
+        "kind": "function",
+        "language": "typescript",
+        "qualifiedName": "createArrowWithTallLabel",
+        "sources": [
+          {
+            "path": "packages/element/tests/linearElementEditor.test.tsx",
+            "line": 1710,
+            "endLine": 1737,
+            "pointer": "/logic/definitions/52554"
+          }
+        ]
+      },
+      "attributes": {
+        "resolution": "exact",
+        "evidence": "static-call",
+        "name": "createArrowWithTallLabel",
+        "receiver": ""
+      }
+    },
+    {
+      "identity": "[\"typescript\",\"excalidraw\",\"packages/excalidraw/components/TTDDialog/utils/mermaidAutoFix.ts\",159,\"/logic/calls/4443\",\"logic:packages/excalidraw/components/TTDDialog/utils/mermaidAutoFix.ts:removeExtraArrowheadAfterEdgeLabel:1243\"]",
+      "rank": "0021bd980069e2eb6af650df4a6aefa494ce5bf81c1869a83b965a8617c166cf",
+      "family": "JS/TS",
+      "language": "typescript",
+      "repository": "excalidraw",
+      "sourceCommit": "e65eca999e071503efb893d3379a29fb96ff37c4",
+      "graphHash": "82bbcdeb8edfebe16344679cffe313445fd621a1911bdbd8e3d4a89aae374213",
+      "edgeId": "calls:logic:packages/excalidraw/components/TTDDialog/utils/mermaidAutoFix.ts:<callback@158:41>:4423:logic:packages/excalidraw/components/TTDDialog/utils/mermaidAutoFix.ts:removeExtraArrowheadAfterEdgeLabel:1243:4443",
+      "callsite": {
+        "path": "packages/excalidraw/components/TTDDialog/utils/mermaidAutoFix.ts",
+        "line": 159,
+        "pointer": "/logic/calls/4443"
+      },
+      "caller": {
+        "id": "logic:packages/excalidraw/components/TTDDialog/utils/mermaidAutoFix.ts:<callback@158:41>:4423",
+        "name": "<callback@158:41>",
+        "kind": "function",
+        "language": "typescript",
+        "qualifiedName": "<callback@158:41>",
+        "sources": [
+          {
+            "path": "packages/excalidraw/components/TTDDialog/utils/mermaidAutoFix.ts",
+            "line": 158,
+            "endLine": 159,
+            "pointer": "/logic/definitions/4423"
+          }
+        ]
+      },
+      "target": {
+        "id": "logic:packages/excalidraw/components/TTDDialog/utils/mermaidAutoFix.ts:removeExtraArrowheadAfterEdgeLabel:1243",
+        "name": "removeExtraArrowheadAfterEdgeLabel",
+        "kind": "function",
+        "language": "typescript",
+        "qualifiedName": "removeExtraArrowheadAfterEdgeLabel",
+        "sources": [
+          {
+            "path": "packages/excalidraw/components/TTDDialog/utils/mermaidAutoFix.ts",
+            "line": 51,
+            "endLine": 55,
+            "pointer": "/logic/definitions/1243"
+          }
+        ]
+      },
+      "attributes": {
+        "resolution": "exact",
+        "evidence": "static-call",
+        "name": "removeExtraArrowheadAfterEdgeLabel",
+        "receiver": ""
+      }
+    },
+    {
+      "identity": "[\"javascript\",\"fastify\",\"test/custom-parser.0.test.js\",575,\"/logic/calls/14223\",\"logic:fastify.js:fastify:2596\"]",
+      "rank": "0021eaa7532145b22754169ea8c67614d737681c7c7770fb0797e503227064aa",
+      "family": "JS/TS",
+      "language": "javascript",
+      "repository": "fastify",
+      "sourceCommit": "86368086171305df4e235f6d6bec892c67ec2ae2",
+      "graphHash": "b84d289a0fe854853e940be9cacc766954b151d27b352a1cc716d29bcea46078",
+      "edgeId": "calls:logic:test/custom-parser.0.test.js:<callback@573:56>:14186:logic:fastify.js:fastify:2596:14223",
+      "callsite": {
+        "path": "test/custom-parser.0.test.js",
+        "line": 575,
+        "pointer": "/logic/calls/14223"
+      },
+      "caller": {
+        "id": "logic:test/custom-parser.0.test.js:<callback@573:56>:14186",
+        "name": "<callback@573:56>",
+        "kind": "function",
+        "language": "javascript",
+        "qualifiedName": "<callback@573:56>",
+        "sources": [
+          {
+            "path": "test/custom-parser.0.test.js",
+            "line": 573,
+            "endLine": 594,
+            "pointer": "/logic/definitions/14186"
+          }
+        ]
+      },
+      "target": {
+        "id": "logic:fastify.js:fastify:2596",
+        "name": "fastify",
+        "kind": "function",
+        "language": "javascript",
+        "qualifiedName": "fastify",
+        "sources": [
+          {
+            "path": "fastify.js",
+            "line": 89,
+            "endLine": 852,
+            "pointer": "/logic/definitions/2596"
+          }
+        ]
+      },
+      "attributes": {
+        "resolution": "exact",
+        "evidence": "static-call",
+        "name": "Fastify",
+        "receiver": ""
+      }
+    },
+    {
+      "identity": "[\"python\",\"runtime\",\"src/coreclr/scripts/jitformat.py\",232,\"/logic/calls/9582\",\"logic:src/coreclr/scripts/jitformat.py:main:533\"]",
+      "rank": "001e27a88bb0b7e6df7cfe9d40d76d1c378097ae273f0b088e8960eca87ac7e2",
+      "family": "Python",
+      "language": "python",
+      "repository": "runtime",
+      "sourceCommit": "8630d8988107478d249e2fdb8162f8c7dcbd3dbb",
+      "graphHash": "dcb1ea8f2fbe9b48c135e11df41f3ec9d1be28206fae313f260eb0228c8bc334",
+      "edgeId": "calls:logic:src/coreclr/scripts/jitformat.py:<module>:0:logic:src/coreclr/scripts/jitformat.py:main:533:9582",
+      "callsite": {
+        "path": "src/coreclr/scripts/jitformat.py",
+        "line": 232,
+        "pointer": "/logic/calls/9582"
+      },
+      "caller": {
+        "id": "logic:src/coreclr/scripts/jitformat.py:<module>:0",
+        "name": "<module>",
+        "kind": "function",
+        "language": "python",
+        "qualifiedName": "<module>",
+        "sources": [
+          {
+            "path": "src/coreclr/scripts/jitformat.py",
+            "line": 1,
+            "endLine": 234,
+            "pointer": "/logic/definitions/0"
+          }
+        ]
+      },
+      "target": {
+        "id": "logic:src/coreclr/scripts/jitformat.py:main:533",
+        "name": "main",
+        "kind": "function",
+        "language": "python",
+        "qualifiedName": "main",
+        "sources": [
+          {
+            "path": "src/coreclr/scripts/jitformat.py",
+            "line": 20,
+            "endLine": 229,
+            "pointer": "/logic/definitions/533"
+          }
+        ]
+      },
+      "attributes": {
+        "resolution": "exact",
+        "evidence": "static-call",
+        "name": "main",
+        "receiver": ""
+      }
+    },
+    {
+      "identity": "[\"python\",\"runtime\",\"src/coreclr/scripts/fuzzlyn_summarize.py\",112,\"/logic/calls/3675\",\"logic:src/coreclr/scripts/fuzzlyn_summarize.py:ensure_partition:3222\"]",
+      "rank": "003eba0c0a049a2275ef6424574c88a94fadcff3d19d18744d804c1b019a9723",
+      "family": "Python",
+      "language": "python",
+      "repository": "runtime",
+      "sourceCommit": "8630d8988107478d249e2fdb8162f8c7dcbd3dbb",
+      "graphHash": "dcb1ea8f2fbe9b48c135e11df41f3ec9d1be28206fae313f260eb0228c8bc334",
+      "edgeId": "calls:logic:src/coreclr/scripts/fuzzlyn_summarize.py:main:2760:logic:src/coreclr/scripts/fuzzlyn_summarize.py:ensure_partition:3222:3675",
+      "callsite": {
+        "path": "src/coreclr/scripts/fuzzlyn_summarize.py",
+        "line": 112,
+        "pointer": "/logic/calls/3675"
+      },
+      "caller": {
+        "id": "logic:src/coreclr/scripts/fuzzlyn_summarize.py:main:2760",
+        "name": "main",
+        "kind": "function",
+        "language": "python",
+        "qualifiedName": "main",
+        "sources": [
+          {
+            "path": "src/coreclr/scripts/fuzzlyn_summarize.py",
+            "line": 87,
+            "endLine": 244,
+            "pointer": "/logic/definitions/2760"
+          }
+        ]
+      },
+      "target": {
+        "id": "logic:src/coreclr/scripts/fuzzlyn_summarize.py:ensure_partition:3222",
+        "name": "ensure_partition",
+        "kind": "function",
+        "language": "python",
+        "qualifiedName": "ensure_partition",
+        "sources": [
+          {
+            "path": "src/coreclr/scripts/fuzzlyn_summarize.py",
+            "line": 104,
+            "endLine": 106,
+            "pointer": "/logic/definitions/3222"
+          }
+        ]
+      },
+      "attributes": {
+        "resolution": "exact",
+        "evidence": "static-call",
+        "name": "ensure_partition",
+        "receiver": ""
+      }
+    },
+    {
+      "identity": "[\"python\",\"httpx\",\"tests/models/test_responses.py\",482,\"/logic/calls/13630\",\"logic:tests/models/test_responses.py:async_streaming_body:273\"]",
+      "rank": "004face458bd4cee00bbccc2fddedb125f3d4e3341dfd58482d974a956531d62",
+      "family": "Python",
+      "language": "python",
+      "repository": "httpx",
+      "sourceCommit": "b5addb64f0161ff6bfe94c124ef76f6a1fba5254",
+      "graphHash": "025829906682ee957399fddd88ba7bc00a66959f8d95ea7f1d49020eefb235b7",
+      "edgeId": "calls:logic:tests/models/test_responses.py:test_aiter_raw_with_chunksize:13544:logic:tests/models/test_responses.py:async_streaming_body:273:13630",
+      "callsite": {
+        "path": "tests/models/test_responses.py",
+        "line": 482,
+        "pointer": "/logic/calls/13630"
+      },
+      "caller": {
+        "id": "logic:tests/models/test_responses.py:test_aiter_raw_with_chunksize:13544",
+        "name": "test_aiter_raw_with_chunksize",
+        "kind": "function",
+        "language": "python",
+        "qualifiedName": "test_aiter_raw_with_chunksize",
+        "sources": [
+          {
+            "path": "tests/models/test_responses.py",
+            "line": 481,
+            "endLine": 495,
+            "pointer": "/logic/definitions/13544"
+          }
+        ]
+      },
+      "target": {
+        "id": "logic:tests/models/test_responses.py:async_streaming_body:273",
+        "name": "async_streaming_body",
+        "kind": "function",
+        "language": "python",
+        "qualifiedName": "async_streaming_body",
+        "sources": [
+          {
+            "path": "tests/models/test_responses.py",
+            "line": 22,
+            "endLine": 24,
+            "pointer": "/logic/definitions/273"
+          }
+        ]
+      },
+      "attributes": {
+        "resolution": "exact",
+        "evidence": "static-call",
+        "name": "async_streaming_body",
+        "receiver": ""
+      }
+    },
+    {
+      "identity": "[\"python\",\"httpx\",\"tests/client/test_redirects.py\",360,\"/logic/calls/14350\",\"logic:tests/client/test_redirects.py:streaming_body:14164\"]",
+      "rank": "0052b3e57c4c0447e2bbf22906526cfffe127a9515fa78a6c28fed4656ad2384",
+      "family": "Python",
+      "language": "python",
+      "repository": "httpx",
+      "sourceCommit": "b5addb64f0161ff6bfe94c124ef76f6a1fba5254",
+      "graphHash": "025829906682ee957399fddd88ba7bc00a66959f8d95ea7f1d49020eefb235b7",
+      "edgeId": "calls:logic:tests/client/test_redirects.py:test_cannot_redirect_streaming_body:14001:logic:tests/client/test_redirects.py:streaming_body:14164:14350",
+      "callsite": {
+        "path": "tests/client/test_redirects.py",
+        "line": 360,
+        "pointer": "/logic/calls/14350"
+      },
+      "caller": {
+        "id": "logic:tests/client/test_redirects.py:test_cannot_redirect_streaming_body:14001",
+        "name": "test_cannot_redirect_streaming_body",
+        "kind": "function",
+        "language": "python",
+        "qualifiedName": "test_cannot_redirect_streaming_body",
+        "sources": [
+          {
+            "path": "tests/client/test_redirects.py",
+            "line": 352,
+            "endLine": 360,
+            "pointer": "/logic/definitions/14001"
+          }
+        ]
+      },
+      "target": {
+        "id": "logic:tests/client/test_redirects.py:streaming_body:14164",
+        "name": "streaming_body",
+        "kind": "function",
+        "language": "python",
+        "qualifiedName": "streaming_body",
+        "sources": [
+          {
+            "path": "tests/client/test_redirects.py",
+            "line": 356,
+            "endLine": 357,
+            "pointer": "/logic/definitions/14164"
+          }
+        ]
+      },
+      "attributes": {
+        "resolution": "exact",
+        "evidence": "static-call",
+        "name": "streaming_body",
+        "receiver": ""
+      }
+    },
+    {
+      "identity": "[\"python\",\"runtime\",\".github/workflows/evals/test_ci_failure_fix_candidates.py\",89,\"/logic/calls/3134\",\"logic:.github/workflows/evals/test_ci_failure_fix_candidates.py:issue:375\"]",
+      "rank": "0062b3bd3587404cc8eddc0d4eff0b8f094ca971b9146cd2acece357df1abb31",
+      "family": "Python",
+      "language": "python",
+      "repository": "runtime",
+      "sourceCommit": "8630d8988107478d249e2fdb8162f8c7dcbd3dbb",
+      "graphHash": "dcb1ea8f2fbe9b48c135e11df41f3ec9d1be28206fae313f260eb0228c8bc334",
+      "edgeId": "calls:logic:.github/workflows/evals/test_ci_failure_fix_candidates.py:test_filters_metadata_and_preserves_oldest_first:3005:logic:.github/workflows/evals/test_ci_failure_fix_candidates.py:issue:375:3134",
+      "callsite": {
+        "path": ".github/workflows/evals/test_ci_failure_fix_candidates.py",
+        "line": 89,
+        "pointer": "/logic/calls/3134"
+      },
+      "caller": {
+        "id": "logic:.github/workflows/evals/test_ci_failure_fix_candidates.py:test_filters_metadata_and_preserves_oldest_first:3005",
+        "name": "test_filters_metadata_and_preserves_oldest_first",
+        "kind": "function",
+        "language": "python",
+        "qualifiedName": "CandidateTests.test_filters_metadata_and_preserves_oldest_first",
+        "sources": [
+          {
+            "path": ".github/workflows/evals/test_ci_failure_fix_candidates.py",
+            "line": 86,
+            "endLine": 127,
+            "pointer": "/logic/definitions/3005"
+          }
+        ]
+      },
+      "target": {
+        "id": "logic:.github/workflows/evals/test_ci_failure_fix_candidates.py:issue:375",
+        "name": "issue",
+        "kind": "function",
+        "language": "python",
+        "qualifiedName": "issue",
+        "sources": [
+          {
+            "path": ".github/workflows/evals/test_ci_failure_fix_candidates.py",
+            "line": 17,
+            "endLine": 27,
+            "pointer": "/logic/definitions/375"
+          }
+        ]
+      },
+      "attributes": {
+        "resolution": "exact",
+        "evidence": "static-call",
+        "name": "issue",
+        "receiver": ""
+      }
+    },
+    {
+      "identity": "[\"python\",\"httpx\",\"httpx/_multipart.py\",205,\"/logic/calls/6719\",\"logic:httpx/_utils.py:to_bytes:2738\"]",
+      "rank": "007549cad305f11a420d780f3134c5f58f44e3a61e2cd6b9d93745ac08ad88d0",
+      "family": "Python",
+      "language": "python",
+      "repository": "httpx",
+      "sourceCommit": "b5addb64f0161ff6bfe94c124ef76f6a1fba5254",
+      "graphHash": "025829906682ee957399fddd88ba7bc00a66959f8d95ea7f1d49020eefb235b7",
+      "edgeId": "calls:logic:httpx/_multipart.py:render_data:6604:logic:httpx/_utils.py:to_bytes:2738:6719",
+      "callsite": {
+        "path": "httpx/_multipart.py",
+        "line": 205,
+        "pointer": "/logic/calls/6719"
+      },
+      "caller": {
+        "id": "logic:httpx/_multipart.py:render_data:6604",
+        "name": "render_data",
+        "kind": "function",
+        "language": "python",
+        "qualifiedName": "FileField.render_data",
+        "sources": [
+          {
+            "path": "httpx/_multipart.py",
+            "line": 203,
+            "endLine": 217,
+            "pointer": "/logic/definitions/6604"
+          }
+        ]
+      },
+      "target": {
+        "id": "logic:httpx/_utils.py:to_bytes:2738",
+        "name": "to_bytes",
+        "kind": "function",
+        "language": "python",
+        "qualifiedName": "to_bytes",
+        "sources": [
+          {
+            "path": "httpx/_utils.py",
+            "line": 79,
+            "endLine": 80,
+            "pointer": "/logic/definitions/2738"
+          }
+        ]
+      },
+      "attributes": {
+        "resolution": "exact",
+        "evidence": "static-call",
+        "name": "to_bytes",
+        "receiver": ""
+      }
+    },
+    {
+      "identity": "[\"python\",\"httpx\",\"tests/models/test_responses.py\",522,\"/logic/calls/14694\",\"logic:tests/models/test_responses.py:async_streaming_body:273\"]",
+      "rank": "0089d06a26caf579c79a875896c7ffb557c5be4e6ddb37b9dc7d30a2bab40d69",
+      "family": "Python",
+      "language": "python",
+      "repository": "httpx",
+      "sourceCommit": "b5addb64f0161ff6bfe94c124ef76f6a1fba5254",
+      "graphHash": "025829906682ee957399fddd88ba7bc00a66959f8d95ea7f1d49020eefb235b7",
+      "edgeId": "calls:logic:tests/models/test_responses.py:test_aiter_raw_increments_updates_counter:14596:logic:tests/models/test_responses.py:async_streaming_body:273:14694",
+      "callsite": {
+        "path": "tests/models/test_responses.py",
+        "line": 522,
+        "pointer": "/logic/calls/14694"
+      },
+      "caller": {
+        "id": "logic:tests/models/test_responses.py:test_aiter_raw_increments_updates_counter:14596",
+        "name": "test_aiter_raw_increments_updates_counter",
+        "kind": "function",
+        "language": "python",
+        "qualifiedName": "test_aiter_raw_increments_updates_counter",
+        "sources": [
+          {
+            "path": "tests/models/test_responses.py",
+            "line": 521,
+            "endLine": 527,
+            "pointer": "/logic/definitions/14596"
+          }
+        ]
+      },
+      "target": {
+        "id": "logic:tests/models/test_responses.py:async_streaming_body:273",
+        "name": "async_streaming_body",
+        "kind": "function",
+        "language": "python",
+        "qualifiedName": "async_streaming_body",
+        "sources": [
+          {
+            "path": "tests/models/test_responses.py",
+            "line": 22,
+            "endLine": 24,
+            "pointer": "/logic/definitions/273"
+          }
+        ]
+      },
+      "attributes": {
+        "resolution": "exact",
+        "evidence": "static-call",
+        "name": "async_streaming_body",
+        "receiver": ""
+      }
+    },
+    {
+      "identity": "[\"go\",\"fzf\",\"src/terminal.go\",906,\"/logic/calls/20907\",\"logic:src/tui/tui.go:AltKey:4551\"]",
+      "rank": "005fd0a776b91504613a3e534376392af0bbec2c36536f5d234af42f2f04b783",
+      "family": "Go",
+      "language": "go",
+      "repository": "fzf",
+      "sourceCommit": "c0a193e031f01fb50bf6f7be4381990a3753f7cf",
+      "graphHash": "005d2126053a99deeeea312c5c17c986e08e862cecfb2793a1db8e15a0c5d51b",
+      "edgeId": "calls:logic:src/terminal.go:defaultKeymap:19373:logic:src/tui/tui.go:AltKey:4551:20907",
+      "callsite": {
+        "path": "src/terminal.go",
+        "line": 906,
+        "pointer": "/logic/calls/20907"
+      },
+      "caller": {
+        "id": "logic:src/terminal.go:defaultKeymap:19373",
+        "name": "defaultKeymap",
+        "kind": "function",
+        "language": "go",
+        "qualifiedName": "defaultKeymap",
+        "sources": [
+          {
+            "path": "src/terminal.go",
+            "line": 857,
+            "endLine": 937,
+            "pointer": "/logic/definitions/19373"
+          }
+        ]
+      },
+      "target": {
+        "id": "logic:src/tui/tui.go:AltKey:4551",
+        "name": "AltKey",
+        "kind": "function",
+        "language": "go",
+        "qualifiedName": "AltKey",
+        "sources": [
+          {
+            "path": "src/tui/tui.go",
+            "line": 299,
+            "endLine": 301,
+            "pointer": "/logic/definitions/4551"
+          }
+        ]
+      },
+      "attributes": {
+        "resolution": "exact",
+        "evidence": "static-call",
+        "name": "AltKey",
+        "receiver": "tui"
+      }
+    },
+    {
+      "identity": "[\"go\",\"fzf\",\"src/tokenizer.go\",326,\"/logic/calls/7328\",\"logic:src/util/chars.go:ToChars:3813\"]",
+      "rank": "00903070fd6490685c2ae63ea44aa3f7db56b0b066164592e160b88c5bd6d24f",
+      "family": "Go",
+      "language": "go",
+      "repository": "fzf",
+      "sourceCommit": "c0a193e031f01fb50bf6f7be4381990a3753f7cf",
+      "graphHash": "005d2126053a99deeeea312c5c17c986e08e862cecfb2793a1db8e15a0c5d51b",
+      "edgeId": "calls:logic:src/tokenizer.go:Transform:5907:logic:src/util/chars.go:ToChars:3813:7328",
+      "callsite": {
+        "path": "src/tokenizer.go",
+        "line": 326,
+        "pointer": "/logic/calls/7328"
+      },
+      "caller": {
+        "id": "logic:src/tokenizer.go:Transform:5907",
+        "name": "Transform",
+        "kind": "function",
+        "language": "go",
+        "qualifiedName": "Transform",
+        "sources": [
+          {
+            "path": "src/tokenizer.go",
+            "line": 266,
+            "endLine": 338,
+            "pointer": "/logic/definitions/5907"
+          }
+        ]
+      },
+      "target": {
+        "id": "logic:src/util/chars.go:ToChars:3813",
+        "name": "ToChars",
+        "kind": "function",
+        "language": "go",
+        "qualifiedName": "ToChars",
+        "sources": [
+          {
+            "path": "src/util/chars.go",
+            "line": 130,
+            "endLine": 156,
+            "pointer": "/logic/definitions/3813"
+          }
+        ]
+      },
+      "attributes": {
+        "resolution": "exact",
+        "evidence": "static-call",
+        "name": "ToChars",
+        "receiver": "util"
+      }
+    },
+    {
+      "identity": "[\"go\",\"fzf\",\"src/tui/tui.go\",292,\"/logic/calls/4458\",\"logic:src/util/util.go:ToKebabCase:2737\"]",
+      "rank": "00abb4eaf4d12c259f82e7cbfdeaeb51caf2034c65ad93a9f4a16403f47ac180",
+      "family": "Go",
+      "language": "go",
+      "repository": "fzf",
+      "sourceCommit": "c0a193e031f01fb50bf6f7be4381990a3753f7cf",
+      "graphHash": "005d2126053a99deeeea312c5c17c986e08e862cecfb2793a1db8e15a0c5d51b",
+      "edgeId": "calls:logic:src/tui/tui.go:KeyName:3968:logic:src/util/util.go:ToKebabCase:2737:4458",
+      "callsite": {
+        "path": "src/tui/tui.go",
+        "line": 292,
+        "pointer": "/logic/calls/4458"
+      },
+      "caller": {
+        "id": "logic:src/tui/tui.go:KeyName:3968",
+        "name": "KeyName",
+        "kind": "function",
+        "language": "go",
+        "qualifiedName": "Event.KeyName",
+        "sources": [
+          {
+            "path": "src/tui/tui.go",
+            "line": 263,
+            "endLine": 293,
+            "pointer": "/logic/definitions/3968"
+          }
+        ]
+      },
+      "target": {
+        "id": "logic:src/util/util.go:ToKebabCase:2737",
+        "name": "ToKebabCase",
+        "kind": "function",
+        "language": "go",
+        "qualifiedName": "ToKebabCase",
+        "sources": [
+          {
+            "path": "src/util/util.go",
+            "line": 125,
+            "endLine": 134,
+            "pointer": "/logic/definitions/2737"
+          }
+        ]
+      },
+      "attributes": {
+        "resolution": "exact",
+        "evidence": "static-call",
+        "name": "ToKebabCase",
+        "receiver": "util"
+      }
+    },
+    {
+      "identity": "[\"go\",\"fzf\",\"src/result_test.go\",196,\"/logic/calls/7145\",\"logic:src/tui/tui.go:NewColorPair:6164\"]",
+      "rank": "00d381f32ed610f11e408da085b1502d93782bc694b36550d677c728fc01c87c",
+      "family": "Go",
+      "language": "go",
+      "repository": "fzf",
+      "sourceCommit": "c0a193e031f01fb50bf6f7be4381990a3753f7cf",
+      "graphHash": "005d2126053a99deeeea312c5c17c986e08e862cecfb2793a1db8e15a0c5d51b",
+      "edgeId": "calls:logic:src/result_test.go:TestColorOffset:3633:logic:src/tui/tui.go:NewColorPair:6164:7145",
+      "callsite": {
+        "path": "src/result_test.go",
+        "line": 196,
+        "pointer": "/logic/calls/7145"
+      },
+      "caller": {
+        "id": "logic:src/result_test.go:TestColorOffset:3633",
+        "name": "TestColorOffset",
+        "kind": "function",
+        "language": "go",
+        "qualifiedName": "TestColorOffset",
+        "sources": [
+          {
+            "path": "src/result_test.go",
+            "line": 120,
+            "endLine": 217,
+            "pointer": "/logic/definitions/3633"
+          }
+        ]
+      },
+      "target": {
+        "id": "logic:src/tui/tui.go:NewColorPair:6164",
+        "name": "NewColorPair",
+        "kind": "function",
+        "language": "go",
+        "qualifiedName": "NewColorPair",
+        "sources": [
+          {
+            "path": "src/tui/tui.go",
+            "line": 398,
+            "endLine": 400,
+            "pointer": "/logic/definitions/6164"
+          }
+        ]
+      },
+      "attributes": {
+        "resolution": "exact",
+        "evidence": "static-call",
+        "name": "NewColorPair",
+        "receiver": "tui"
+      }
+    },
+    {
+      "identity": "[\"go\",\"fzf\",\"src/pattern_test.go\",114,\"/logic/calls/4347\",\"logic:src/pattern_test.go:buildPattern:2272\"]",
+      "rank": "00d411c4e473cc57ec72830e567d4a06090622163cf6b597bc43079417b4b8ed",
+      "family": "Go",
+      "language": "go",
+      "repository": "fzf",
+      "sourceCommit": "c0a193e031f01fb50bf6f7be4381990a3753f7cf",
+      "graphHash": "005d2126053a99deeeea312c5c17c986e08e862cecfb2793a1db8e15a0c5d51b",
+      "edgeId": "calls:logic:src/pattern_test.go:TestCaseSensitivity:3906:logic:src/pattern_test.go:buildPattern:2272:4347",
+      "callsite": {
+        "path": "src/pattern_test.go",
+        "line": 114,
+        "pointer": "/logic/calls/4347"
+      },
+      "caller": {
+        "id": "logic:src/pattern_test.go:TestCaseSensitivity:3906",
+        "name": "TestCaseSensitivity",
+        "kind": "function",
+        "language": "go",
+        "qualifiedName": "TestCaseSensitivity",
+        "sources": [
+          {
+            "path": "src/pattern_test.go",
+            "line": 110,
+            "endLine": 126,
+            "pointer": "/logic/definitions/3906"
+          }
+        ]
+      },
+      "target": {
+        "id": "logic:src/pattern_test.go:buildPattern:2272",
+        "name": "buildPattern",
+        "kind": "function",
+        "language": "go",
+        "qualifiedName": "buildPattern",
+        "sources": [
+          {
+            "path": "src/pattern_test.go",
+            "line": 68,
+            "endLine": 73,
+            "pointer": "/logic/definitions/2272"
+          }
+        ]
+      },
+      "attributes": {
+        "resolution": "exact",
+        "evidence": "static-call",
+        "name": "buildPattern",
+        "receiver": ""
+      }
+    },
+    {
+      "identity": "[\"go\",\"fzf\",\"src/tui/light.go\",1758,\"/logic/calls/44901\",\"logic:src/tui/light.go:cleanse:44449\"]",
+      "rank": "017996a3b13ad849026136baf114e166146242ec71e7e445f3d6ec5eaded7e89",
+      "family": "Go",
+      "language": "go",
+      "repository": "fzf",
+      "sourceCommit": "c0a193e031f01fb50bf6f7be4381990a3753f7cf",
+      "graphHash": "005d2126053a99deeeea312c5c17c986e08e862cecfb2793a1db8e15a0c5d51b",
+      "edgeId": "calls:logic:src/tui/light.go:cprint2:44733:logic:src/tui/light.go:cleanse:44449:44901",
+      "callsite": {
+        "path": "src/tui/light.go",
+        "line": 1758,
+        "pointer": "/logic/calls/44901"
+      },
+      "caller": {
+        "id": "logic:src/tui/light.go:cprint2:44733",
+        "name": "cprint2",
+        "kind": "function",
+        "language": "go",
+        "qualifiedName": "LightWindow.cprint2",
+        "sources": [
+          {
+            "path": "src/tui/light.go",
+            "line": 1755,
+            "endLine": 1759,
+            "pointer": "/logic/definitions/44733"
+          }
+        ]
+      },
+      "target": {
+        "id": "logic:src/tui/light.go:cleanse:44449",
+        "name": "cleanse",
+        "kind": "function",
+        "language": "go",
+        "qualifiedName": "cleanse",
+        "sources": [
+          {
+            "path": "src/tui/light.go",
+            "line": 1745,
+            "endLine": 1747,
+            "pointer": "/logic/definitions/44449"
+          }
+        ]
+      },
+      "attributes": {
+        "resolution": "exact",
+        "evidence": "static-call",
+        "name": "cleanse",
+        "receiver": ""
+      }
+    },
+    {
+      "identity": "[\"go\",\"fzf\",\"src/terminal.go\",5132,\"/logic/calls/147995\",\"logic:src/terminal.go:wrapPassThrough:138492\"]",
+      "rank": "01993fda10153299d4f46848fd71306d8d37db801a26bcd105ab72981323ca36",
+      "family": "Go",
+      "language": "go",
+      "repository": "fzf",
+      "sourceCommit": "c0a193e031f01fb50bf6f7be4381990a3753f7cf",
+      "graphHash": "005d2126053a99deeeea312c5c17c986e08e862cecfb2793a1db8e15a0c5d51b",
+      "edgeId": "calls:logic:src/terminal.go:renderPreviewText:145625:logic:src/terminal.go:wrapPassThrough:138492:147995",
+      "callsite": {
+        "path": "src/terminal.go",
+        "line": 5132,
+        "pointer": "/logic/calls/147995"
+      },
+      "caller": {
+        "id": "logic:src/terminal.go:renderPreviewText:145625",
+        "name": "renderPreviewText",
+        "kind": "function",
+        "language": "go",
+        "qualifiedName": "Terminal.renderPreviewText",
+        "sources": [
+          {
+            "path": "src/terminal.go",
+            "line": 5055,
+            "endLine": 5255,
+            "pointer": "/logic/definitions/145625"
+          }
+        ]
+      },
+      "target": {
+        "id": "logic:src/terminal.go:wrapPassThrough:138492",
+        "name": "wrapPassThrough",
+        "kind": "function",
+        "language": "go",
+        "qualifiedName": "wrapPassThrough",
+        "sources": [
+          {
+            "path": "src/terminal.go",
+            "line": 4804,
+            "endLine": 4814,
+            "pointer": "/logic/definitions/138492"
+          }
+        ]
+      },
+      "attributes": {
+        "resolution": "exact",
+        "evidence": "static-call",
+        "name": "wrapPassThrough",
+        "receiver": ""
+      }
+    },
+    {
+      "identity": "[\"rust\",\"ripgrep\",\"crates/cli/src/process.rs\",115,\"/logic/calls/3505\",\"logic:crates/cli/src/process.rs:sync:10127\"]",
+      "rank": "00d670f5e67046c42e41522429167a097d992088591fd2e21bcd0eb1f0a73449",
+      "family": "Rust",
+      "language": "rust",
+      "repository": "ripgrep",
+      "sourceCommit": "3fce3b5bb0236da2df6d99672afb8a719642eca7",
+      "graphHash": "a5341bbd0960c8d3725b0129e2bb8d580f44e875a4514401bde59d18f01035bb",
+      "edgeId": "calls:logic:crates/cli/src/process.rs:build:3107:logic:crates/cli/src/process.rs:sync:10127:3505",
+      "callsite": {
+        "path": "crates/cli/src/process.rs",
+        "line": 115,
+        "pointer": "/logic/calls/3505"
+      },
+      "caller": {
+        "id": "logic:crates/cli/src/process.rs:build:3107",
+        "name": "build",
+        "kind": "function",
+        "language": "rust",
+        "qualifiedName": "CommandReaderBuilder.build",
+        "sources": [
+          {
+            "path": "crates/cli/src/process.rs",
+            "line": 104,
+            "endLine": 118,
+            "pointer": "/logic/definitions/3107"
+          }
+        ]
+      },
+      "target": {
+        "id": "logic:crates/cli/src/process.rs:sync:10127",
+        "name": "sync",
+        "kind": "function",
+        "language": "rust",
+        "qualifiedName": "StderrReader.sync",
+        "sources": [
+          {
+            "path": "crates/cli/src/process.rs",
+            "line": 287,
+            "endLine": 289,
+            "pointer": "/logic/definitions/10127"
+          }
+        ]
+      },
+      "attributes": {
+        "resolution": "exact",
+        "evidence": "static-call",
+        "name": "sync",
+        "receiver": "StderrReader"
+      }
+    },
+    {
+      "identity": "[\"rust\",\"ripgrep\",\"crates/ignore/src/walk.rs\",2441,\"/logic/calls/84015\",\"logic:crates/ignore/src/walk.rs:mkdirp:77025\"]",
+      "rank": "00f5bc1bb6eed88ed9bd2a3ea93e424defca82f0e6472b1b748f0029697636db",
+      "family": "Rust",
+      "language": "rust",
+      "repository": "ripgrep",
+      "sourceCommit": "3fce3b5bb0236da2df6d99672afb8a719642eca7",
+      "graphHash": "a5341bbd0960c8d3725b0129e2bb8d580f44e875a4514401bde59d18f01035bb",
+      "edgeId": "calls:logic:crates/ignore/src/walk.rs:max_depth_does_not_load_unreachable_ignore_files:83881:logic:crates/ignore/src/walk.rs:mkdirp:77025:84015",
+      "callsite": {
+        "path": "crates/ignore/src/walk.rs",
+        "line": 2441,
+        "pointer": "/logic/calls/84015"
+      },
+      "caller": {
+        "id": "logic:crates/ignore/src/walk.rs:max_depth_does_not_load_unreachable_ignore_files:83881",
+        "name": "max_depth_does_not_load_unreachable_ignore_files",
+        "kind": "function",
+        "language": "rust",
+        "qualifiedName": "max_depth_does_not_load_unreachable_ignore_files",
+        "sources": [
+          {
+            "path": "crates/ignore/src/walk.rs",
+            "line": 2438,
+            "endLine": 2456,
+            "pointer": "/logic/definitions/83881"
+          }
+        ]
+      },
+      "target": {
+        "id": "logic:crates/ignore/src/walk.rs:mkdirp:77025",
+        "name": "mkdirp",
+        "kind": "function",
+        "language": "rust",
+        "qualifiedName": "mkdirp",
+        "sources": [
+          {
+            "path": "crates/ignore/src/walk.rs",
+            "line": 2220,
+            "endLine": 2222,
+            "pointer": "/logic/definitions/77025"
+          }
+        ]
+      },
+      "attributes": {
+        "resolution": "exact",
+        "evidence": "static-call",
+        "name": "mkdirp",
+        "receiver": ""
+      }
+    },
+    {
+      "identity": "[\"rust\",\"ripgrep\",\"crates/searcher/src/searcher/glue.rs\",585,\"/logic/calls/18379\",\"logic:crates/searcher/src/testutil.rs:new:6669\"]",
+      "rank": "010cb158eb94202be0f81b0d3692e020f730749434125f7a913bea54b7d2e7ac",
+      "family": "Rust",
+      "language": "rust",
+      "repository": "ripgrep",
+      "sourceCommit": "3fce3b5bb0236da2df6d99672afb8a719642eca7",
+      "graphHash": "a5341bbd0960c8d3725b0129e2bb8d580f44e875a4514401bde59d18f01035bb",
+      "edgeId": "calls:logic:crates/searcher/src/searcher/glue.rs:empty_line4:18038:logic:crates/searcher/src/testutil.rs:new:6669:18379",
+      "callsite": {
+        "path": "crates/searcher/src/searcher/glue.rs",
+        "line": 585,
+        "pointer": "/logic/calls/18379"
+      },
+      "caller": {
+        "id": "logic:crates/searcher/src/searcher/glue.rs:empty_line4:18038",
+        "name": "empty_line4",
+        "kind": "function",
+        "language": "rust",
+        "qualifiedName": "empty_line4",
+        "sources": [
+          {
+            "path": "crates/searcher/src/searcher/glue.rs",
+            "line": 569,
+            "endLine": 589,
+            "pointer": "/logic/definitions/18038"
+          }
+        ]
+      },
+      "target": {
+        "id": "logic:crates/searcher/src/testutil.rs:new:6669",
+        "name": "new",
+        "kind": "function",
+        "language": "rust",
+        "qualifiedName": "SearcherTester.new",
+        "sources": [
+          {
+            "path": "crates/searcher/src/testutil.rs",
+            "line": 226,
+            "endLine": 246,
+            "pointer": "/logic/definitions/6669"
+          }
+        ]
+      },
+      "attributes": {
+        "resolution": "exact",
+        "evidence": "static-call",
+        "name": "new",
+        "receiver": "SearcherTester"
+      }
+    },
+    {
+      "identity": "[\"rust\",\"ripgrep\",\"crates/printer/src/hyperlink/aliases.rs\",58,\"/logic/calls/1685\",\"logic:crates/printer/src/hyperlink/aliases.rs:alias:2004\"]",
+      "rank": "01119dc5e575355a3fec1766f9f1baaf45bdf954892cdc83874f7228196bd833",
+      "family": "Rust",
+      "language": "rust",
+      "repository": "ripgrep",
+      "sourceCommit": "3fce3b5bb0236da2df6d99672afb8a719642eca7",
+      "graphHash": "a5341bbd0960c8d3725b0129e2bb8d580f44e875a4514401bde59d18f01035bb",
+      "edgeId": "calls:logic:crates/printer/src/hyperlink/aliases.rs:<module>:0:logic:crates/printer/src/hyperlink/aliases.rs:alias:2004:1685",
+      "callsite": {
+        "path": "crates/printer/src/hyperlink/aliases.rs",
+        "line": 58,
+        "pointer": "/logic/calls/1685"
+      },
+      "caller": {
+        "id": "logic:crates/printer/src/hyperlink/aliases.rs:<module>:0",
+        "name": "<module>",
+        "kind": "function",
+        "language": "rust",
+        "qualifiedName": "<module>",
+        "sources": [
+          {
+            "path": "crates/printer/src/hyperlink/aliases.rs",
+            "line": 1,
+            "endLine": 93,
+            "pointer": "/logic/definitions/0"
+          }
+        ]
+      },
+      "target": {
+        "id": "logic:crates/printer/src/hyperlink/aliases.rs:alias:2004",
+        "name": "alias",
+        "kind": "function",
+        "language": "rust",
+        "qualifiedName": "alias",
+        "sources": [
+          {
+            "path": "crates/printer/src/hyperlink/aliases.rs",
+            "line": 71,
+            "endLine": 77,
+            "pointer": "/logic/definitions/2004"
+          }
+        ]
+      },
+      "attributes": {
+        "resolution": "exact",
+        "evidence": "static-call",
+        "name": "alias",
+        "receiver": ""
+      }
+    },
+    {
+      "identity": "[\"rust\",\"ripgrep\",\"crates/core/flags/defs.rs\",2298,\"/logic/calls/71196\",\"logic:crates/core/flags/parse.rs:parse_low_raw:5208\"]",
+      "rank": "01481aa9f5d5dbc2ae96b2ae83b11a90d35d4967621ebdf0ac20c593b44384a5",
+      "family": "Rust",
+      "language": "rust",
+      "repository": "ripgrep",
+      "sourceCommit": "3fce3b5bb0236da2df6d99672afb8a719642eca7",
+      "graphHash": "a5341bbd0960c8d3725b0129e2bb8d580f44e875a4514401bde59d18f01035bb",
+      "edgeId": "calls:logic:crates/core/flags/defs.rs:test_files_with_matches:71033:logic:crates/core/flags/parse.rs:parse_low_raw:5208:71196",
+      "callsite": {
+        "path": "crates/core/flags/defs.rs",
+        "line": 2298,
+        "pointer": "/logic/calls/71196"
+      },
+      "caller": {
+        "id": "logic:crates/core/flags/defs.rs:test_files_with_matches:71033",
+        "name": "test_files_with_matches",
+        "kind": "function",
+        "language": "rust",
+        "qualifiedName": "test_files_with_matches",
+        "sources": [
+          {
+            "path": "crates/core/flags/defs.rs",
+            "line": 2294,
+            "endLine": 2303,
+            "pointer": "/logic/definitions/71033"
+          }
+        ]
+      },
+      "target": {
+        "id": "logic:crates/core/flags/parse.rs:parse_low_raw:5208",
+        "name": "parse_low_raw",
+        "kind": "function",
+        "language": "rust",
+        "qualifiedName": "parse_low_raw",
+        "sources": [
+          {
+            "path": "crates/core/flags/parse.rs",
+            "line": 139,
+            "endLine": 145,
+            "pointer": "/logic/definitions/5208"
+          }
+        ]
+      },
+      "attributes": {
+        "resolution": "exact",
+        "evidence": "static-call",
+        "name": "parse_low_raw",
+        "receiver": ""
+      }
+    },
+    {
+      "identity": "[\"rust\",\"ripgrep\",\"crates/ignore/src/incremental.rs\",1230,\"/logic/calls/46101\",\"logic:crates/ignore/src/incremental.rs:matchedd:23107\"]",
+      "rank": "017301bc4eb48176cbf47a38f72b3881b114d97409c352ea3244a09f77f519c8",
+      "family": "Rust",
+      "language": "rust",
+      "repository": "ripgrep",
+      "sourceCommit": "3fce3b5bb0236da2df6d99672afb8a719642eca7",
+      "graphHash": "a5341bbd0960c8d3725b0129e2bb8d580f44e875a4514401bde59d18f01035bb",
+      "edgeId": "calls:logic:crates/ignore/src/incremental.rs:gitignore_whitelist_overrides_hidden_filter:45667:logic:crates/ignore/src/incremental.rs:matchedd:23107:46101",
+      "callsite": {
+        "path": "crates/ignore/src/incremental.rs",
+        "line": 1230,
+        "pointer": "/logic/calls/46101"
+      },
+      "caller": {
+        "id": "logic:crates/ignore/src/incremental.rs:gitignore_whitelist_overrides_hidden_filter:45667",
+        "name": "gitignore_whitelist_overrides_hidden_filter",
+        "kind": "function",
+        "language": "rust",
+        "qualifiedName": "gitignore_whitelist_overrides_hidden_filter",
+        "sources": [
+          {
+            "path": "crates/ignore/src/incremental.rs",
+            "line": 1221,
+            "endLine": 1233,
+            "pointer": "/logic/definitions/45667"
+          }
+        ]
+      },
+      "target": {
+        "id": "logic:crates/ignore/src/incremental.rs:matchedd:23107",
+        "name": "matchedd",
+        "kind": "function",
+        "language": "rust",
+        "qualifiedName": "matchedd",
+        "sources": [
+          {
+            "path": "crates/ignore/src/incremental.rs",
+            "line": 618,
+            "endLine": 625,
+            "pointer": "/logic/definitions/23107"
+          }
+        ]
+      },
+      "attributes": {
+        "resolution": "exact",
+        "evidence": "static-call",
+        "name": "matchedd",
+        "receiver": ""
+      }
+    },
+    {
+      "identity": "[\"rust\",\"ripgrep\",\"crates/core/flags/defs.rs\",7877,\"/logic/calls/237574\",\"logic:crates/core/flags/parse.rs:parse_low_raw:5208\"]",
+      "rank": "017c195cad251ef09f34f51e0c09a89d3182606cb799ce12d25868f593cb4baf",
+      "family": "Rust",
+      "language": "rust",
+      "repository": "ripgrep",
+      "sourceCommit": "3fce3b5bb0236da2df6d99672afb8a719642eca7",
+      "graphHash": "a5341bbd0960c8d3725b0129e2bb8d580f44e875a4514401bde59d18f01035bb",
+      "edgeId": "calls:logic:crates/core/flags/defs.rs:test_with_filename_no:237434:logic:crates/core/flags/parse.rs:parse_low_raw:5208:237574",
+      "callsite": {
+        "path": "crates/core/flags/defs.rs",
+        "line": 7877,
+        "pointer": "/logic/calls/237574"
+      },
+      "caller": {
+        "id": "logic:crates/core/flags/defs.rs:test_with_filename_no:237434",
+        "name": "test_with_filename_no",
+        "kind": "function",
+        "language": "rust",
+        "qualifiedName": "test_with_filename_no",
+        "sources": [
+          {
+            "path": "crates/core/flags/defs.rs",
+            "line": 7873,
+            "endLine": 7888,
+            "pointer": "/logic/definitions/237434"
+          }
+        ]
+      },
+      "target": {
+        "id": "logic:crates/core/flags/parse.rs:parse_low_raw:5208",
+        "name": "parse_low_raw",
+        "kind": "function",
+        "language": "rust",
+        "qualifiedName": "parse_low_raw",
+        "sources": [
+          {
+            "path": "crates/core/flags/parse.rs",
+            "line": 139,
+            "endLine": 145,
+            "pointer": "/logic/definitions/5208"
+          }
+        ]
+      },
+      "attributes": {
+        "resolution": "exact",
+        "evidence": "static-call",
+        "name": "parse_low_raw",
+        "receiver": ""
+      }
+    },
+    {
+      "identity": "[\"java\",\"sqlite\",\"ext/jni/src/org/sqlite/jni/capi/Tester1.java\",651,\"/logic/calls/21276\",\"logic:ext/jni/src/org/sqlite/jni/capi/Tester1.java:createNewDb:4242\"]",
+      "rank": "0169e4e87feaa6b32bb468620530a0d92da055db29c54c2561e64bf5ecd47aee",
+      "family": "Java/Kotlin",
+      "language": "java",
+      "repository": "sqlite",
+      "sourceCommit": "6e35c19f170958b1e846e01c55318988f2d192e0",
+      "graphHash": "910257b7f95960633f47364211da3900d7de766fcf7698b2e1d71dca5e371e3a",
+      "edgeId": "calls:logic:ext/jni/src/org/sqlite/jni/capi/Tester1.java:testSql:21235:logic:ext/jni/src/org/sqlite/jni/capi/Tester1.java:createNewDb:4242:21276",
+      "callsite": {
+        "path": "ext/jni/src/org/sqlite/jni/capi/Tester1.java",
+        "line": 651,
+        "pointer": "/logic/calls/21276"
+      },
+      "caller": {
+        "id": "logic:ext/jni/src/org/sqlite/jni/capi/Tester1.java:testSql:21235",
+        "name": "testSql",
+        "kind": "function",
+        "language": "java",
+        "qualifiedName": "Tester1.testSql",
+        "sources": [
+          {
+            "path": "ext/jni/src/org/sqlite/jni/capi/Tester1.java",
+            "line": 650,
+            "endLine": 663,
+            "pointer": "/logic/definitions/21235"
+          }
+        ]
+      },
+      "target": {
+        "id": "logic:ext/jni/src/org/sqlite/jni/capi/Tester1.java:createNewDb:4242",
+        "name": "createNewDb",
+        "kind": "function",
+        "language": "java",
+        "qualifiedName": "Tester1.createNewDb",
+        "sources": [
+          {
+            "path": "ext/jni/src/org/sqlite/jni/capi/Tester1.java",
+            "line": 138,
+            "endLine": 154,
+            "pointer": "/logic/definitions/4242"
+          }
+        ]
+      },
+      "attributes": {
+        "resolution": "exact",
+        "evidence": "static-call",
+        "name": "createNewDb",
+        "receiver": ""
+      }
+    },
+    {
+      "identity": "[\"java\",\"sqlite\",\"ext/jni/src/org/sqlite/jni/wrapper1/Sqlite.java\",1820,\"/logic/calls/67304\",\"logic:ext/jni/src/org/sqlite/jni/capi/CApi.java:sqlite3_set_authorizer:72933\"]",
+      "rank": "018be45e8511c3de5aa34dc434187a9d9641977758ccf78dcf50e31b3bbccc26",
+      "family": "Java/Kotlin",
+      "language": "java",
+      "repository": "sqlite",
+      "sourceCommit": "6e35c19f170958b1e846e01c55318988f2d192e0",
+      "graphHash": "910257b7f95960633f47364211da3900d7de766fcf7698b2e1d71dca5e371e3a",
+      "edgeId": "calls:logic:ext/jni/src/org/sqlite/jni/wrapper1/Sqlite.java:setAuthorizer:66922:logic:ext/jni/src/org/sqlite/jni/capi/CApi.java:sqlite3_set_authorizer:72933:67304",
+      "callsite": {
+        "path": "ext/jni/src/org/sqlite/jni/wrapper1/Sqlite.java",
+        "line": 1820,
+        "pointer": "/logic/calls/67304"
+      },
+      "caller": {
+        "id": "logic:ext/jni/src/org/sqlite/jni/wrapper1/Sqlite.java:setAuthorizer:66922",
+        "name": "setAuthorizer",
+        "kind": "function",
+        "language": "java",
+        "qualifiedName": "Sqlite.setAuthorizer",
+        "sources": [
+          {
+            "path": "ext/jni/src/org/sqlite/jni/wrapper1/Sqlite.java",
+            "line": 1810,
+            "endLine": 1821,
+            "pointer": "/logic/definitions/66922"
+          }
+        ]
+      },
+      "target": {
+        "id": "logic:ext/jni/src/org/sqlite/jni/capi/CApi.java:sqlite3_set_authorizer:72933",
+        "name": "sqlite3_set_authorizer",
+        "kind": "function",
+        "language": "java",
+        "qualifiedName": "CApi.sqlite3_set_authorizer",
+        "sources": [
+          {
+            "path": "ext/jni/src/org/sqlite/jni/capi/CApi.java",
+            "line": 2097,
+            "endLine": 2099,
+            "pointer": "/logic/definitions/72933"
+          }
+        ]
+      },
+      "attributes": {
+        "resolution": "exact",
+        "evidence": "static-call",
+        "name": "sqlite3_set_authorizer",
+        "receiver": "CApi"
+      }
+    },
+    {
+      "identity": "[\"kotlin\",\"nowinandroid\",\"core/designsystem/src/main/kotlin/com/google/samples/apps/nowinandroid/core/designsystem/component/Navigation.kt\",204,\"/logic/calls/8680\",\"logic:core/designsystem/src/main/kotlin/com/google/samples/apps/nowinandroid/core/designsystem/component/Navigation.kt:navigationContentColor:13220\"]",
+      "rank": "018c224c60b1dad875ea5c5d2add651b8c1f3632cc8a054e6aa86bd6b88918e0",
+      "family": "Java/Kotlin",
+      "language": "kotlin",
+      "repository": "nowinandroid",
+      "sourceCommit": "a49ed253d75e61a2b6ab80a8da677b57437b08eb",
+      "graphHash": "1624d97d5f550462f31fa1325c447c1aa047871d68a6a4db5b2af99d55c162f6",
+      "edgeId": "calls:logic:core/designsystem/src/main/kotlin/com/google/samples/apps/nowinandroid/core/designsystem/component/Navigation.kt:NiaNavigationSuiteScaffold:7572:logic:core/designsystem/src/main/kotlin/com/google/samples/apps/nowinandroid/core/designsystem/component/Navigation.kt:navigationContentColor:13220:8680",
+      "callsite": {
+        "path": "core/designsystem/src/main/kotlin/com/google/samples/apps/nowinandroid/core/designsystem/component/Navigation.kt",
+        "line": 204,
+        "pointer": "/logic/calls/8680"
+      },
+      "caller": {
+        "id": "logic:core/designsystem/src/main/kotlin/com/google/samples/apps/nowinandroid/core/designsystem/component/Navigation.kt:NiaNavigationSuiteScaffold:7572",
+        "name": "NiaNavigationSuiteScaffold",
+        "kind": "function",
+        "language": "kotlin",
+        "qualifiedName": "NiaNavigationSuiteScaffold",
+        "sources": [
+          {
+            "path": "core/designsystem/src/main/kotlin/com/google/samples/apps/nowinandroid/core/designsystem/component/Navigation.kt",
+            "line": 185,
+            "endLine": 234,
+            "pointer": "/logic/definitions/7572"
+          }
+        ]
+      },
+      "target": {
+        "id": "logic:core/designsystem/src/main/kotlin/com/google/samples/apps/nowinandroid/core/designsystem/component/Navigation.kt:navigationContentColor:13220",
+        "name": "navigationContentColor",
+        "kind": "function",
+        "language": "kotlin",
+        "qualifiedName": "NiaNavigationDefaults.navigationContentColor",
+        "sources": [
+          {
+            "path": "core/designsystem/src/main/kotlin/com/google/samples/apps/nowinandroid/core/designsystem/component/Navigation.kt",
+            "line": 350,
+            "endLine": 351,
+            "pointer": "/logic/definitions/13220"
+          }
+        ]
+      },
+      "attributes": {
+        "resolution": "exact",
+        "evidence": "static-call",
+        "name": "navigationContentColor",
+        "receiver": "NiaNavigationDefaults"
+      }
+    },
+    {
+      "identity": "[\"kotlin\",\"nowinandroid\",\"core/designsystem/src/main/kotlin/com/google/samples/apps/nowinandroid/core/designsystem/component/Navigation.kt\",281,\"/logic/calls/11261\",\"logic:core/designsystem/src/main/kotlin/com/google/samples/apps/nowinandroid/core/designsystem/theme/Theme.kt:NiaTheme:5877\"]",
+      "rank": "01b888bcd6e311fe7cd2e67a8e963e02a877242a766a9f47c251d0385d273829",
+      "family": "Java/Kotlin",
+      "language": "kotlin",
+      "repository": "nowinandroid",
+      "sourceCommit": "a49ed253d75e61a2b6ab80a8da677b57437b08eb",
+      "graphHash": "1624d97d5f550462f31fa1325c447c1aa047871d68a6a4db5b2af99d55c162f6",
+      "edgeId": "calls:logic:core/designsystem/src/main/kotlin/com/google/samples/apps/nowinandroid/core/designsystem/component/Navigation.kt:NiaNavigationBarPreview:10899:logic:core/designsystem/src/main/kotlin/com/google/samples/apps/nowinandroid/core/designsystem/theme/Theme.kt:NiaTheme:5877:11261",
+      "callsite": {
+        "path": "core/designsystem/src/main/kotlin/com/google/samples/apps/nowinandroid/core/designsystem/component/Navigation.kt",
+        "line": 281,
+        "pointer": "/logic/calls/11261"
+      },
+      "caller": {
+        "id": "logic:core/designsystem/src/main/kotlin/com/google/samples/apps/nowinandroid/core/designsystem/component/Navigation.kt:NiaNavigationBarPreview:10899",
+        "name": "NiaNavigationBarPreview",
+        "kind": "function",
+        "language": "kotlin",
+        "qualifiedName": "NiaNavigationBarPreview",
+        "sources": [
+          {
+            "path": "core/designsystem/src/main/kotlin/com/google/samples/apps/nowinandroid/core/designsystem/component/Navigation.kt",
+            "line": 266,
+            "endLine": 304,
+            "pointer": "/logic/definitions/10899"
+          }
+        ]
+      },
+      "target": {
+        "id": "logic:core/designsystem/src/main/kotlin/com/google/samples/apps/nowinandroid/core/designsystem/theme/Theme.kt:NiaTheme:5877",
+        "name": "NiaTheme",
+        "kind": "function",
+        "language": "kotlin",
+        "qualifiedName": "NiaTheme",
+        "sources": [
+          {
+            "path": "core/designsystem/src/main/kotlin/com/google/samples/apps/nowinandroid/core/designsystem/theme/Theme.kt",
+            "line": 192,
+            "endLine": 247,
+            "pointer": "/logic/definitions/5877"
+          }
+        ]
+      },
+      "attributes": {
+        "resolution": "exact",
+        "evidence": "static-call",
+        "name": "NiaTheme",
+        "receiver": ""
+      }
+    },
+    {
+      "identity": "[\"java\",\"sqlite\",\"ext/jni/src/org/sqlite/jni/capi/CApi.java\",2073,\"/logic/calls/72205\",\"logic:ext/jni/src/org/sqlite/jni/capi/CApi.java:sqlite3_result_null:66591\"]",
+      "rank": "02a9b18f5ca0db341d0d03ae58fbd5623c65bfafb4c5bd69aa1cbc1afae17e35",
+      "family": "Java/Kotlin",
+      "language": "java",
+      "repository": "sqlite",
+      "sourceCommit": "6e35c19f170958b1e846e01c55318988f2d192e0",
+      "graphHash": "910257b7f95960633f47364211da3900d7de766fcf7698b2e1d71dca5e371e3a",
+      "edgeId": "calls:logic:ext/jni/src/org/sqlite/jni/capi/CApi.java:sqlite3_result_text16:72080:logic:ext/jni/src/org/sqlite/jni/capi/CApi.java:sqlite3_result_null:66591:72205",
+      "callsite": {
+        "path": "ext/jni/src/org/sqlite/jni/capi/CApi.java",
+        "line": 2073,
+        "pointer": "/logic/calls/72205"
+      },
+      "caller": {
+        "id": "logic:ext/jni/src/org/sqlite/jni/capi/CApi.java:sqlite3_result_text16:72080",
+        "name": "sqlite3_result_text16",
+        "kind": "function",
+        "language": "java",
+        "qualifiedName": "CApi.sqlite3_result_text16",
+        "sources": [
+          {
+            "path": "ext/jni/src/org/sqlite/jni/capi/CApi.java",
+            "line": 2070,
+            "endLine": 2075,
+            "pointer": "/logic/definitions/72080"
+          }
+        ]
+      },
+      "target": {
+        "id": "logic:ext/jni/src/org/sqlite/jni/capi/CApi.java:sqlite3_result_null:66591",
+        "name": "sqlite3_result_null",
+        "kind": "function",
+        "language": "java",
+        "qualifiedName": "CApi.sqlite3_result_null",
+        "sources": [
+          {
+            "path": "ext/jni/src/org/sqlite/jni/capi/CApi.java",
+            "line": 1868,
+            "endLine": 1870,
+            "pointer": "/logic/definitions/66591"
+          }
+        ]
+      },
+      "attributes": {
+        "resolution": "exact",
+        "evidence": "static-call",
+        "name": "sqlite3_result_null",
+        "receiver": ""
+      }
+    },
+    {
+      "identity": "[\"java\",\"sqlite\",\"ext/jni/src/org/sqlite/jni/wrapper1/SqlFunction.java\",110,\"/logic/calls/4637\",\"logic:ext/jni/src/org/sqlite/jni/capi/CApi.java:sqlite3_result_double:62532\"]",
+      "rank": "03705a835bfcf6bdfa6038f811113a3da3ce535003aac545af7951c06ce5f737",
+      "family": "Java/Kotlin",
+      "language": "java",
+      "repository": "sqlite",
+      "sourceCommit": "6e35c19f170958b1e846e01c55318988f2d192e0",
+      "graphHash": "910257b7f95960633f47364211da3900d7de766fcf7698b2e1d71dca5e371e3a",
+      "edgeId": "calls:logic:ext/jni/src/org/sqlite/jni/wrapper1/SqlFunction.java:resultDouble:4601:logic:ext/jni/src/org/sqlite/jni/capi/CApi.java:sqlite3_result_double:62532:4637",
+      "callsite": {
+        "path": "ext/jni/src/org/sqlite/jni/wrapper1/SqlFunction.java",
+        "line": 110,
+        "pointer": "/logic/calls/4637"
+      },
+      "caller": {
+        "id": "logic:ext/jni/src/org/sqlite/jni/wrapper1/SqlFunction.java:resultDouble:4601",
+        "name": "resultDouble",
+        "kind": "function",
+        "language": "java",
+        "qualifiedName": "Arguments.resultDouble",
+        "sources": [
+          {
+            "path": "ext/jni/src/org/sqlite/jni/wrapper1/SqlFunction.java",
+            "line": 110,
+            "endLine": 110,
+            "pointer": "/logic/definitions/4601"
+          }
+        ]
+      },
+      "target": {
+        "id": "logic:ext/jni/src/org/sqlite/jni/capi/CApi.java:sqlite3_result_double:62532",
+        "name": "sqlite3_result_double",
+        "kind": "function",
+        "language": "java",
+        "qualifiedName": "CApi.sqlite3_result_double",
+        "sources": [
+          {
+            "path": "ext/jni/src/org/sqlite/jni/capi/CApi.java",
+            "line": 1743,
+            "endLine": 1745,
+            "pointer": "/logic/definitions/62532"
+          }
+        ]
+      },
+      "attributes": {
+        "resolution": "exact",
+        "evidence": "static-call",
+        "name": "sqlite3_result_double",
+        "receiver": "CApi"
+      }
+    },
+    {
+      "identity": "[\"kotlin\",\"nowinandroid\",\"core/designsystem/src/main/kotlin/com/google/samples/apps/nowinandroid/core/designsystem/component/Navigation.kt\",146,\"/logic/calls/6146\",\"logic:core/designsystem/src/main/kotlin/com/google/samples/apps/nowinandroid/core/designsystem/component/Navigation.kt:navigationSelectedItemColor:13315\"]",
+      "rank": "047a53824f85559d26e876785bc4ab147345c4b22a996788eae9d64ea295abd6",
+      "family": "Java/Kotlin",
+      "language": "kotlin",
+      "repository": "nowinandroid",
+      "sourceCommit": "a49ed253d75e61a2b6ab80a8da677b57437b08eb",
+      "graphHash": "1624d97d5f550462f31fa1325c447c1aa047871d68a6a4db5b2af99d55c162f6",
+      "edgeId": "calls:logic:core/designsystem/src/main/kotlin/com/google/samples/apps/nowinandroid/core/designsystem/component/Navigation.kt:NiaNavigationRailItem:5320:logic:core/designsystem/src/main/kotlin/com/google/samples/apps/nowinandroid/core/designsystem/component/Navigation.kt:navigationSelectedItemColor:13315:6146",
+      "callsite": {
+        "path": "core/designsystem/src/main/kotlin/com/google/samples/apps/nowinandroid/core/designsystem/component/Navigation.kt",
+        "line": 146,
+        "pointer": "/logic/calls/6146"
+      },
+      "caller": {
+        "id": "logic:core/designsystem/src/main/kotlin/com/google/samples/apps/nowinandroid/core/designsystem/component/Navigation.kt:NiaNavigationRailItem:5320",
+        "name": "NiaNavigationRailItem",
+        "kind": "function",
+        "language": "kotlin",
+        "qualifiedName": "NiaNavigationRailItem",
+        "sources": [
+          {
+            "path": "core/designsystem/src/main/kotlin/com/google/samples/apps/nowinandroid/core/designsystem/component/Navigation.kt",
+            "line": 124,
+            "endLine": 151,
+            "pointer": "/logic/definitions/5320"
+          }
+        ]
+      },
+      "target": {
+        "id": "logic:core/designsystem/src/main/kotlin/com/google/samples/apps/nowinandroid/core/designsystem/component/Navigation.kt:navigationSelectedItemColor:13315",
+        "name": "navigationSelectedItemColor",
+        "kind": "function",
+        "language": "kotlin",
+        "qualifiedName": "NiaNavigationDefaults.navigationSelectedItemColor",
+        "sources": [
+          {
+            "path": "core/designsystem/src/main/kotlin/com/google/samples/apps/nowinandroid/core/designsystem/component/Navigation.kt",
+            "line": 353,
+            "endLine": 354,
+            "pointer": "/logic/definitions/13315"
+          }
+        ]
+      },
+      "attributes": {
+        "resolution": "exact",
+        "evidence": "static-call",
+        "name": "navigationSelectedItemColor",
+        "receiver": "NiaNavigationDefaults"
+      }
+    },
+    {
+      "identity": "[\"csharp\",\"runtime\",\"src/libraries/Microsoft.Extensions.Hosting/tests/UnitTests/LifecycleTests.Stop.cs\",196,\"/logic/calls/8415\",\"logic:src/libraries/Microsoft.Extensions.Hosting/tests/UnitTests/LifecycleTests.Stop.cs:Verify:8963\"]",
+      "rank": "0000082d27097df39f544da928c2f6af8c81a7f2ea9a5dde63715caa75d69a13",
+      "family": "C#",
+      "language": "csharp",
+      "repository": "runtime",
+      "sourceCommit": "8630d8988107478d249e2fdb8162f8c7dcbd3dbb",
+      "graphHash": "dcb1ea8f2fbe9b48c135e11df41f3ec9d1be28206fae313f260eb0228c8bc334",
+      "edgeId": "calls:logic:src/libraries/Microsoft.Extensions.Hosting/tests/UnitTests/LifecycleTests.Stop.cs:StopNonconcurrently:7737:logic:src/libraries/Microsoft.Extensions.Hosting/tests/UnitTests/LifecycleTests.Stop.cs:Verify:8963:8415",
+      "callsite": {
+        "path": "src/libraries/Microsoft.Extensions.Hosting/tests/UnitTests/LifecycleTests.Stop.cs",
+        "line": 196,
+        "pointer": "/logic/calls/8415"
+      },
+      "caller": {
+        "id": "logic:src/libraries/Microsoft.Extensions.Hosting/tests/UnitTests/LifecycleTests.Stop.cs:StopNonconcurrently:7737",
+        "name": "StopNonconcurrently",
+        "kind": "function",
+        "language": "csharp",
+        "qualifiedName": "LifecycleTests.StopNonconcurrently",
+        "sources": [
+          {
+            "path": "src/libraries/Microsoft.Extensions.Hosting/tests/UnitTests/LifecycleTests.Stop.cs",
+            "line": 179,
+            "endLine": 217,
+            "pointer": "/logic/definitions/7737"
+          }
+        ]
+      },
+      "target": {
+        "id": "logic:src/libraries/Microsoft.Extensions.Hosting/tests/UnitTests/LifecycleTests.Stop.cs:Verify:8963",
+        "name": "Verify",
+        "kind": "function",
+        "language": "csharp",
+        "qualifiedName": "LifecycleTests.Verify",
+        "sources": [
+          {
+            "path": "src/libraries/Microsoft.Extensions.Hosting/tests/UnitTests/LifecycleTests.Stop.cs",
+            "line": 212,
+            "endLine": 216,
+            "pointer": "/logic/definitions/8963"
+          }
+        ]
+      },
+      "attributes": {
+        "resolution": "exact",
+        "evidence": "static-call",
+        "name": "Verify",
+        "receiver": ""
+      }
+    },
+    {
+      "identity": "[\"csharp\",\"runtime\",\"src/tests/JIT/Directed/nullabletypes/isinst2.cs\",4680,\"/logic/calls/249110\",\"logic:src/tests/JIT/Directed/nullabletypes/isinst2.cs:Eval:487\"]",
+      "rank": "000047e6a02464e3d5dcee5451855378715fa6e9b3293d48091858b568199c3c",
+      "family": "C#",
+      "language": "csharp",
+      "repository": "runtime",
+      "sourceCommit": "8630d8988107478d249e2fdb8162f8c7dcbd3dbb",
+      "graphHash": "dcb1ea8f2fbe9b48c135e11df41f3ec9d1be28206fae313f260eb0228c8bc334",
+      "edgeId": "calls:logic:src/tests/JIT/Directed/nullabletypes/isinst2.cs:TestCase0023:204700:logic:src/tests/JIT/Directed/nullabletypes/isinst2.cs:Eval:487:249110",
+      "callsite": {
+        "path": "src/tests/JIT/Directed/nullabletypes/isinst2.cs",
+        "line": 4680,
+        "pointer": "/logic/calls/249110"
+      },
+      "caller": {
+        "id": "logic:src/tests/JIT/Directed/nullabletypes/isinst2.cs:TestCase0023:204700",
+        "name": "TestCase0023",
+        "kind": "function",
+        "language": "csharp",
+        "qualifiedName": "Program.TestCase0023",
+        "sources": [
+          {
+            "path": "src/tests/JIT/Directed/nullabletypes/isinst2.cs",
+            "line": 3856,
+            "endLine": 4813,
+            "pointer": "/logic/definitions/204700"
+          }
+        ]
+      },
+      "target": {
+        "id": "logic:src/tests/JIT/Directed/nullabletypes/isinst2.cs:Eval:487",
+        "name": "Eval",
+        "kind": "function",
+        "language": "csharp",
+        "qualifiedName": "Program.Eval",
+        "sources": [
+          {
+            "path": "src/tests/JIT/Directed/nullabletypes/isinst2.cs",
+            "line": 19,
+            "endLine": 22,
+            "pointer": "/logic/definitions/487"
+          }
+        ]
+      },
+      "attributes": {
+        "resolution": "exact",
+        "evidence": "static-call",
+        "name": "Eval",
+        "receiver": ""
+      }
+    },
+    {
+      "identity": "[\"csharp\",\"runtime\",\"src/tests/JIT/Directed/cmov/Int_No_Op.cs\",164,\"/logic/calls/5063\",\"logic:src/tests/JIT/Directed/cmov/Int_No_Op.cs:simple_func_int:403\"]",
+      "rank": "00006f3bfb461e6d45b810313459423b1e419c33c1ca48625682154eb38646de",
+      "family": "C#",
+      "language": "csharp",
+      "repository": "runtime",
+      "sourceCommit": "8630d8988107478d249e2fdb8162f8c7dcbd3dbb",
+      "graphHash": "dcb1ea8f2fbe9b48c135e11df41f3ec9d1be28206fae313f260eb0228c8bc334",
+      "edgeId": "calls:logic:src/tests/JIT/Directed/cmov/Int_No_Op.cs:Sub_Funclet_2:3733:logic:src/tests/JIT/Directed/cmov/Int_No_Op.cs:simple_func_int:403:5063",
+      "callsite": {
+        "path": "src/tests/JIT/Directed/cmov/Int_No_Op.cs",
+        "line": 164,
+        "pointer": "/logic/calls/5063"
+      },
+      "caller": {
+        "id": "logic:src/tests/JIT/Directed/cmov/Int_No_Op.cs:Sub_Funclet_2:3733",
+        "name": "Sub_Funclet_2",
+        "kind": "function",
+        "language": "csharp",
+        "qualifiedName": "testout1.Sub_Funclet_2",
+        "sources": [
+          {
+            "path": "src/tests/JIT/Directed/cmov/Int_No_Op.cs",
+            "line": 126,
+            "endLine": 172,
+            "pointer": "/logic/definitions/3733"
+          }
+        ]
+      },
+      "target": {
+        "id": "logic:src/tests/JIT/Directed/cmov/Int_No_Op.cs:simple_func_int:403",
+        "name": "simple_func_int",
+        "kind": "function",
+        "language": "csharp",
+        "qualifiedName": "testout1.simple_func_int",
+        "sources": [
+          {
+            "path": "src/tests/JIT/Directed/cmov/Int_No_Op.cs",
+            "line": 19,
+            "endLine": 22,
+            "pointer": "/logic/definitions/403"
+          }
+        ]
+      },
+      "attributes": {
+        "resolution": "exact",
+        "evidence": "static-call",
+        "name": "simple_func_int",
+        "receiver": ""
+      }
+    },
+    {
+      "identity": "[\"csharp\",\"runtime\",\"src/tests/JIT/Directed/nullabletypes/isinstgenerics.cs\",11842,\"/logic/calls/620048\",\"logic:src/tests/JIT/Directed/nullabletypes/isinstgenerics.cs:Eval:494\"]",
+      "rank": "0000921b74b585a0937b417bf7f1e2d2253e14e82936dc087097a6bde50a9572",
+      "family": "C#",
+      "language": "csharp",
+      "repository": "runtime",
+      "sourceCommit": "8630d8988107478d249e2fdb8162f8c7dcbd3dbb",
+      "graphHash": "dcb1ea8f2fbe9b48c135e11df41f3ec9d1be28206fae313f260eb0228c8bc334",
+      "edgeId": "calls:logic:src/tests/JIT/Directed/nullabletypes/isinstgenerics.cs:TestCase0013:602991:logic:src/tests/JIT/Directed/nullabletypes/isinstgenerics.cs:Eval:494:620048",
+      "callsite": {
+        "path": "src/tests/JIT/Directed/nullabletypes/isinstgenerics.cs",
+        "line": 11842,
+        "pointer": "/logic/calls/620048"
+      },
+      "caller": {
+        "id": "logic:src/tests/JIT/Directed/nullabletypes/isinstgenerics.cs:TestCase0013:602991",
+        "name": "TestCase0013",
+        "kind": "function",
+        "language": "csharp",
+        "qualifiedName": "Program.TestCase0013",
+        "sources": [
+          {
+            "path": "src/tests/JIT/Directed/nullabletypes/isinstgenerics.cs",
+            "line": 11520,
+            "endLine": 12477,
+            "pointer": "/logic/definitions/602991"
+          }
+        ]
+      },
+      "target": {
+        "id": "logic:src/tests/JIT/Directed/nullabletypes/isinstgenerics.cs:Eval:494",
+        "name": "Eval",
+        "kind": "function",
+        "language": "csharp",
+        "qualifiedName": "Program.Eval",
+        "sources": [
+          {
+            "path": "src/tests/JIT/Directed/nullabletypes/isinstgenerics.cs",
+            "line": 19,
+            "endLine": 22,
+            "pointer": "/logic/definitions/494"
+          }
+        ]
+      },
+      "attributes": {
+        "resolution": "exact",
+        "evidence": "static-call",
+        "name": "Eval",
+        "receiver": ""
+      }
+    },
+    {
+      "identity": "[\"csharp\",\"runtime\",\"src/tests/JIT/Directed/cmov/Int_Or_Op.cs\",10366,\"/logic/calls/429975\",\"logic:src/tests/JIT/Directed/cmov/Int_Or_Op.cs:simple_func_int:403\"]",
+      "rank": "0000958c4dee9920918097f8c634560e2fe12a762cd2bb93d0325ec1dd54ddcc",
+      "family": "C#",
+      "language": "csharp",
+      "repository": "runtime",
+      "sourceCommit": "8630d8988107478d249e2fdb8162f8c7dcbd3dbb",
+      "graphHash": "dcb1ea8f2fbe9b48c135e11df41f3ec9d1be28206fae313f260eb0228c8bc334",
+      "edgeId": "calls:logic:src/tests/JIT/Directed/cmov/Int_Or_Op.cs:Sub_Funclet_219:428123:logic:src/tests/JIT/Directed/cmov/Int_Or_Op.cs:simple_func_int:403:429975",
+      "callsite": {
+        "path": "src/tests/JIT/Directed/cmov/Int_Or_Op.cs",
+        "line": 10366,
+        "pointer": "/logic/calls/429975"
+      },
+      "caller": {
+        "id": "logic:src/tests/JIT/Directed/cmov/Int_Or_Op.cs:Sub_Funclet_219:428123",
+        "name": "Sub_Funclet_219",
+        "kind": "function",
+        "language": "csharp",
+        "qualifiedName": "testout1.Sub_Funclet_219",
+        "sources": [
+          {
+            "path": "src/tests/JIT/Directed/cmov/Int_Or_Op.cs",
+            "line": 10325,
+            "endLine": 10371,
+            "pointer": "/logic/definitions/428123"
+          }
+        ]
+      },
+      "target": {
+        "id": "logic:src/tests/JIT/Directed/cmov/Int_Or_Op.cs:simple_func_int:403",
+        "name": "simple_func_int",
+        "kind": "function",
+        "language": "csharp",
+        "qualifiedName": "testout1.simple_func_int",
+        "sources": [
+          {
+            "path": "src/tests/JIT/Directed/cmov/Int_Or_Op.cs",
+            "line": 19,
+            "endLine": 22,
+            "pointer": "/logic/definitions/403"
+          }
+        ]
+      },
+      "attributes": {
+        "resolution": "exact",
+        "evidence": "static-call",
+        "name": "simple_func_int",
+        "receiver": ""
+      }
+    },
+    {
+      "identity": "[\"csharp\",\"runtime\",\"src/tests/JIT/Directed/cmov/Bool_And_Op.cs\",12682,\"/logic/calls/727557\",\"logic:src/tests/JIT/Directed/cmov/Bool_And_Op.cs:simple_func_bool:408\"]",
+      "rank": "0000af2c5f8e23ff18a5be268b2edd5ccae82935a6f75c223c2d2f8d9363eab3",
+      "family": "C#",
+      "language": "csharp",
+      "repository": "runtime",
+      "sourceCommit": "8630d8988107478d249e2fdb8162f8c7dcbd3dbb",
+      "graphHash": "dcb1ea8f2fbe9b48c135e11df41f3ec9d1be28206fae313f260eb0228c8bc334",
+      "edgeId": "calls:logic:src/tests/JIT/Directed/cmov/Bool_And_Op.cs:Sub_Funclet_287:726939:logic:src/tests/JIT/Directed/cmov/Bool_And_Op.cs:simple_func_bool:408:727557",
+      "callsite": {
+        "path": "src/tests/JIT/Directed/cmov/Bool_And_Op.cs",
+        "line": 12682,
+        "pointer": "/logic/calls/727557"
+      },
+      "caller": {
+        "id": "logic:src/tests/JIT/Directed/cmov/Bool_And_Op.cs:Sub_Funclet_287:726939",
+        "name": "Sub_Funclet_287",
+        "kind": "function",
+        "language": "csharp",
+        "qualifiedName": "testout1.Sub_Funclet_287",
+        "sources": [
+          {
+            "path": "src/tests/JIT/Directed/cmov/Bool_And_Op.cs",
+            "line": 12660,
+            "endLine": 12703,
+            "pointer": "/logic/definitions/726939"
+          }
+        ]
+      },
+      "target": {
+        "id": "logic:src/tests/JIT/Directed/cmov/Bool_And_Op.cs:simple_func_bool:408",
+        "name": "simple_func_bool",
+        "kind": "function",
+        "language": "csharp",
+        "qualifiedName": "testout1.simple_func_bool",
+        "sources": [
+          {
+            "path": "src/tests/JIT/Directed/cmov/Bool_And_Op.cs",
+            "line": 19,
+            "endLine": 22,
+            "pointer": "/logic/definitions/408"
+          }
+        ]
+      },
+      "attributes": {
+        "resolution": "exact",
+        "evidence": "static-call",
+        "name": "simple_func_bool",
+        "receiver": ""
+      }
+    },
+    {
+      "identity": "[\"csharp\",\"runtime\",\"src/tests/JIT/Directed/cmov/Bool_Xor_Op.cs\",16732,\"/logic/calls/965949\",\"logic:src/tests/JIT/Directed/cmov/Bool_Xor_Op.cs:func_sb_false:540\"]",
+      "rank": "0000bd1a3014e4d9b84c40a0be41004382404fe63712b3c8b9633c819c7f702b",
+      "family": "C#",
+      "language": "csharp",
+      "repository": "runtime",
+      "sourceCommit": "8630d8988107478d249e2fdb8162f8c7dcbd3dbb",
+      "graphHash": "dcb1ea8f2fbe9b48c135e11df41f3ec9d1be28206fae313f260eb0228c8bc334",
+      "edgeId": "calls:logic:src/tests/JIT/Directed/cmov/Bool_Xor_Op.cs:Sub_Funclet_379:965137:logic:src/tests/JIT/Directed/cmov/Bool_Xor_Op.cs:func_sb_false:540:965949",
+      "callsite": {
+        "path": "src/tests/JIT/Directed/cmov/Bool_Xor_Op.cs",
+        "line": 16732,
+        "pointer": "/logic/calls/965949"
+      },
+      "caller": {
+        "id": "logic:src/tests/JIT/Directed/cmov/Bool_Xor_Op.cs:Sub_Funclet_379:965137",
+        "name": "Sub_Funclet_379",
+        "kind": "function",
+        "language": "csharp",
+        "qualifiedName": "testout1.Sub_Funclet_379",
+        "sources": [
+          {
+            "path": "src/tests/JIT/Directed/cmov/Bool_Xor_Op.cs",
+            "line": 16708,
+            "endLine": 16751,
+            "pointer": "/logic/definitions/965137"
+          }
+        ]
+      },
+      "target": {
+        "id": "logic:src/tests/JIT/Directed/cmov/Bool_Xor_Op.cs:func_sb_false:540",
+        "name": "func_sb_false",
+        "kind": "function",
+        "language": "csharp",
+        "qualifiedName": "testout1.func_sb_false",
+        "sources": [
+          {
+            "path": "src/tests/JIT/Directed/cmov/Bool_Xor_Op.cs",
+            "line": 27,
+            "endLine": 30,
+            "pointer": "/logic/definitions/540"
+          }
+        ]
+      },
+      "attributes": {
+        "resolution": "exact",
+        "evidence": "static-call",
+        "name": "func_sb_false",
+        "receiver": ""
+      }
+    },
+    {
+      "identity": "[\"csharp\",\"runtime\",\"src/tests/JIT/Directed/cmov/Int_Xor_Op.cs\",12295,\"/logic/calls/509636\",\"logic:src/tests/JIT/Directed/cmov/Int_Xor_Op.cs:func_sb_false:532\"]",
+      "rank": "0000d43e7f2d521313e7d8a9041c8976505ac8a32e3d6d7c376b9157fdd34268",
+      "family": "C#",
+      "language": "csharp",
+      "repository": "runtime",
+      "sourceCommit": "8630d8988107478d249e2fdb8162f8c7dcbd3dbb",
+      "graphHash": "dcb1ea8f2fbe9b48c135e11df41f3ec9d1be28206fae313f260eb0228c8bc334",
+      "edgeId": "calls:logic:src/tests/JIT/Directed/cmov/Int_Xor_Op.cs:Sub_Funclet_260:507599:logic:src/tests/JIT/Directed/cmov/Int_Xor_Op.cs:func_sb_false:532:509636",
+      "callsite": {
+        "path": "src/tests/JIT/Directed/cmov/Int_Xor_Op.cs",
+        "line": 12295,
+        "pointer": "/logic/calls/509636"
+      },
+      "caller": {
+        "id": "logic:src/tests/JIT/Directed/cmov/Int_Xor_Op.cs:Sub_Funclet_260:507599",
+        "name": "Sub_Funclet_260",
+        "kind": "function",
+        "language": "csharp",
+        "qualifiedName": "testout1.Sub_Funclet_260",
+        "sources": [
+          {
+            "path": "src/tests/JIT/Directed/cmov/Int_Xor_Op.cs",
+            "line": 12252,
+            "endLine": 12298,
+            "pointer": "/logic/definitions/507599"
+          }
+        ]
+      },
+      "target": {
+        "id": "logic:src/tests/JIT/Directed/cmov/Int_Xor_Op.cs:func_sb_false:532",
+        "name": "func_sb_false",
+        "kind": "function",
+        "language": "csharp",
+        "qualifiedName": "testout1.func_sb_false",
+        "sources": [
+          {
+            "path": "src/tests/JIT/Directed/cmov/Int_Xor_Op.cs",
+            "line": 27,
+            "endLine": 30,
+            "pointer": "/logic/definitions/532"
+          }
+        ]
+      },
+      "attributes": {
+        "resolution": "exact",
+        "evidence": "static-call",
+        "name": "func_sb_false",
+        "receiver": ""
+      }
+    },
+    {
+      "identity": "[\"csharp\",\"runtime\",\"src/tests/JIT/Directed/cmov/Int_Or_Op.cs\",6836,\"/logic/calls/280425\",\"logic:src/tests/JIT/Directed/cmov/Int_Or_Op.cs:func_sb_false:531\"]",
+      "rank": "0000d69f81a181645ebcec4a820f79371d5eeba6d950659d4364048f8322e524",
+      "family": "C#",
+      "language": "csharp",
+      "repository": "runtime",
+      "sourceCommit": "8630d8988107478d249e2fdb8162f8c7dcbd3dbb",
+      "graphHash": "dcb1ea8f2fbe9b48c135e11df41f3ec9d1be28206fae313f260eb0228c8bc334",
+      "edgeId": "calls:logic:src/tests/JIT/Directed/cmov/Int_Or_Op.cs:Sub_Funclet_144:279096:logic:src/tests/JIT/Directed/cmov/Int_Or_Op.cs:func_sb_false:531:280425",
+      "callsite": {
+        "path": "src/tests/JIT/Directed/cmov/Int_Or_Op.cs",
+        "line": 6836,
+        "pointer": "/logic/calls/280425"
+      },
+      "caller": {
+        "id": "logic:src/tests/JIT/Directed/cmov/Int_Or_Op.cs:Sub_Funclet_144:279096",
+        "name": "Sub_Funclet_144",
+        "kind": "function",
+        "language": "csharp",
+        "qualifiedName": "testout1.Sub_Funclet_144",
+        "sources": [
+          {
+            "path": "src/tests/JIT/Directed/cmov/Int_Or_Op.cs",
+            "line": 6800,
+            "endLine": 6846,
+            "pointer": "/logic/definitions/279096"
+          }
+        ]
+      },
+      "target": {
+        "id": "logic:src/tests/JIT/Directed/cmov/Int_Or_Op.cs:func_sb_false:531",
+        "name": "func_sb_false",
+        "kind": "function",
+        "language": "csharp",
+        "qualifiedName": "testout1.func_sb_false",
+        "sources": [
+          {
+            "path": "src/tests/JIT/Directed/cmov/Int_Or_Op.cs",
+            "line": 27,
+            "endLine": 30,
+            "pointer": "/logic/definitions/531"
+          }
+        ]
+      },
+      "attributes": {
+        "resolution": "exact",
+        "evidence": "static-call",
+        "name": "func_sb_false",
+        "receiver": ""
+      }
+    },
+    {
+      "identity": "[\"csharp\",\"runtime\",\"src/libraries/System.Private.CoreLib/src/System/Number.DecimalIeee754.Transcendental.cs\",476,\"/logic/calls/20055\",\"logic:src/libraries/System.Private.CoreLib/src/System/Number.DecimalIeee754.Transcendental.cs:DiyFp128LogNeedsResidual:1437\"]",
+      "rank": "0001560f2136e74a85b394bdf0e0534fe496b317300be69b30f148edc0548b0a",
+      "family": "C#",
+      "language": "csharp",
+      "repository": "runtime",
+      "sourceCommit": "8630d8988107478d249e2fdb8162f8c7dcbd3dbb",
+      "graphHash": "dcb1ea8f2fbe9b48c135e11df41f3ec9d1be28206fae313f260eb0228c8bc334",
+      "edgeId": "calls:logic:src/libraries/System.Private.CoreLib/src/System/Number.DecimalIeee754.Transcendental.cs:Log2DecimalIeee754:18676:logic:src/libraries/System.Private.CoreLib/src/System/Number.DecimalIeee754.Transcendental.cs:DiyFp128LogNeedsResidual:1437:20055",
+      "callsite": {
+        "path": "src/libraries/System.Private.CoreLib/src/System/Number.DecimalIeee754.Transcendental.cs",
+        "line": 476,
+        "pointer": "/logic/calls/20055"
+      },
+      "caller": {
+        "id": "logic:src/libraries/System.Private.CoreLib/src/System/Number.DecimalIeee754.Transcendental.cs:Log2DecimalIeee754:18676",
+        "name": "Log2DecimalIeee754",
+        "kind": "function",
+        "language": "csharp",
+        "qualifiedName": "Number.Log2DecimalIeee754",
+        "sources": [
+          {
+            "path": "src/libraries/System.Private.CoreLib/src/System/Number.DecimalIeee754.Transcendental.cs",
+            "line": 440,
+            "endLine": 486,
+            "pointer": "/logic/definitions/18676"
+          }
+        ]
+      },
+      "target": {
+        "id": "logic:src/libraries/System.Private.CoreLib/src/System/Number.DecimalIeee754.Transcendental.cs:DiyFp128LogNeedsResidual:1437",
+        "name": "DiyFp128LogNeedsResidual",
+        "kind": "function",
+        "language": "csharp",
+        "qualifiedName": "Number.DiyFp128LogNeedsResidual",
+        "sources": [
+          {
+            "path": "src/libraries/System.Private.CoreLib/src/System/Number.DecimalIeee754.Transcendental.cs",
+            "line": 25,
+            "endLine": 26,
+            "pointer": "/logic/definitions/1437"
+          }
+        ]
+      },
+      "attributes": {
+        "resolution": "exact",
+        "evidence": "static-call",
+        "name": "DiyFp128LogNeedsResidual",
+        "receiver": ""
+      }
+    },
+    {
+      "identity": "[\"csharp\",\"runtime\",\"src/coreclr/nativeaot/System.Private.CoreLib/src/System/Reflection/RuntimeMethodInfo.cs\",378,\"/logic/calls/14137\",\"logic:src/coreclr/nativeaot/System.Private.CoreLib/src/System/Reflection/RuntimeMethodInfo.cs:IsAssignableFrom:16114\"]",
+      "rank": "00015bc74a4406b8e7996cb18bb651ca0b17bf7d1b4d8acecc75c6049439d162",
+      "family": "C#",
+      "language": "csharp",
+      "repository": "runtime",
+      "sourceCommit": "8630d8988107478d249e2fdb8162f8c7dcbd3dbb",
+      "graphHash": "dcb1ea8f2fbe9b48c135e11df41f3ec9d1be28206fae313f260eb0228c8bc334",
+      "edgeId": "calls:logic:src/coreclr/nativeaot/System.Private.CoreLib/src/System/Reflection/RuntimeMethodInfo.cs:CreateDelegateNoThrowOnBindFailure:11261:logic:src/coreclr/nativeaot/System.Private.CoreLib/src/System/Reflection/RuntimeMethodInfo.cs:IsAssignableFrom:16114:14137",
+      "callsite": {
+        "path": "src/coreclr/nativeaot/System.Private.CoreLib/src/System/Reflection/RuntimeMethodInfo.cs",
+        "line": 378,
+        "pointer": "/logic/calls/14137"
+      },
+      "caller": {
+        "id": "logic:src/coreclr/nativeaot/System.Private.CoreLib/src/System/Reflection/RuntimeMethodInfo.cs:CreateDelegateNoThrowOnBindFailure:11261",
+        "name": "CreateDelegateNoThrowOnBindFailure",
+        "kind": "function",
+        "language": "csharp",
+        "qualifiedName": "RuntimeMethodInfo.CreateDelegateNoThrowOnBindFailure",
+        "sources": [
+          {
+            "path": "src/coreclr/nativeaot/System.Private.CoreLib/src/System/Reflection/RuntimeMethodInfo.cs",
+            "line": 323,
+            "endLine": 411,
+            "pointer": "/logic/definitions/11261"
+          }
+        ]
+      },
+      "target": {
+        "id": "logic:src/coreclr/nativeaot/System.Private.CoreLib/src/System/Reflection/RuntimeMethodInfo.cs:IsAssignableFrom:16114",
+        "name": "IsAssignableFrom",
+        "kind": "function",
+        "language": "csharp",
+        "qualifiedName": "RuntimeMethodInfo.IsAssignableFrom",
+        "sources": [
+          {
+            "path": "src/coreclr/nativeaot/System.Private.CoreLib/src/System/Reflection/RuntimeMethodInfo.cs",
+            "line": 418,
+            "endLine": 458,
+            "pointer": "/logic/definitions/16114"
+          }
+        ]
+      },
+      "attributes": {
+        "resolution": "exact",
+        "evidence": "static-call",
+        "name": "IsAssignableFrom",
+        "receiver": ""
+      }
+    },
+    {
+      "identity": "[\"csharp\",\"runtime\",\"src/libraries/System.Private.DataContractSerialization/src/System/Runtime/Serialization/ReflectionReader.cs\",480,\"/logic/calls/23922\",\"logic:src/libraries/System.Private.DataContractSerialization/src/System/Runtime/Serialization/ReflectionReader.cs:IsArrayLikeCollection:23439\"]",
+      "rank": "000166f5156861f71f24565ba90f3144441c4fa3ec9b49a32f7bb42d943ff528",
+      "family": "C#",
+      "language": "csharp",
+      "repository": "runtime",
+      "sourceCommit": "8630d8988107478d249e2fdb8162f8c7dcbd3dbb",
+      "graphHash": "dcb1ea8f2fbe9b48c135e11df41f3ec9d1be28206fae313f260eb0228c8bc334",
+      "edgeId": "calls:logic:src/libraries/System.Private.DataContractSerialization/src/System/Runtime/Serialization/ReflectionReader.cs:ReflectionCreateCollection:23665:logic:src/libraries/System.Private.DataContractSerialization/src/System/Runtime/Serialization/ReflectionReader.cs:IsArrayLikeCollection:23439:23922",
+      "callsite": {
+        "path": "src/libraries/System.Private.DataContractSerialization/src/System/Runtime/Serialization/ReflectionReader.cs",
+        "line": 480,
+        "pointer": "/logic/calls/23922"
+      },
+      "caller": {
+        "id": "logic:src/libraries/System.Private.DataContractSerialization/src/System/Runtime/Serialization/ReflectionReader.cs:ReflectionCreateCollection:23665",
+        "name": "ReflectionCreateCollection",
+        "kind": "function",
+        "language": "csharp",
+        "qualifiedName": "ReflectionReader.ReflectionCreateCollection",
+        "sources": [
+          {
+            "path": "src/libraries/System.Private.DataContractSerialization/src/System/Runtime/Serialization/ReflectionReader.cs",
+            "line": 476,
+            "endLine": 513,
+            "pointer": "/logic/definitions/23665"
+          }
+        ]
+      },
+      "target": {
+        "id": "logic:src/libraries/System.Private.DataContractSerialization/src/System/Runtime/Serialization/ReflectionReader.cs:IsArrayLikeCollection:23439",
+        "name": "IsArrayLikeCollection",
+        "kind": "function",
+        "language": "csharp",
+        "qualifiedName": "ReflectionReader.IsArrayLikeCollection",
+        "sources": [
+          {
+            "path": "src/libraries/System.Private.DataContractSerialization/src/System/Runtime/Serialization/ReflectionReader.cs",
+            "line": 471,
+            "endLine": 474,
+            "pointer": "/logic/definitions/23439"
+          }
+        ]
+      },
+      "attributes": {
+        "resolution": "exact",
+        "evidence": "static-call",
+        "name": "IsArrayLikeCollection",
+        "receiver": ""
+      }
+    },
+    {
+      "identity": "[\"csharp\",\"runtime\",\"src/libraries/System.Runtime/tests/System.Runtime.Tests/System/HalfTests.GenericMath.cs\",56,\"/logic/calls/2000\",\"logic:src/libraries/System.Runtime/tests/System.Runtime.Tests/System/HalfTests.GenericMath.cs:AssertBitwiseEqual:945\"]",
+      "rank": "00017f00dfa670fdecaeeb72b1c7dd06f99ce8fbd9bd3b5e7303a3500313b64d",
+      "family": "C#",
+      "language": "csharp",
+      "repository": "runtime",
+      "sourceCommit": "8630d8988107478d249e2fdb8162f8c7dcbd3dbb",
+      "graphHash": "dcb1ea8f2fbe9b48c135e11df41f3ec9d1be28206fae313f260eb0228c8bc334",
+      "edgeId": "calls:logic:src/libraries/System.Runtime/tests/System.Runtime.Tests/System/HalfTests.GenericMath.cs:op_AdditionTest:1555:logic:src/libraries/System.Runtime/tests/System.Runtime.Tests/System/HalfTests.GenericMath.cs:AssertBitwiseEqual:945:2000",
+      "callsite": {
+        "path": "src/libraries/System.Runtime/tests/System.Runtime.Tests/System/HalfTests.GenericMath.cs",
+        "line": 56,
+        "pointer": "/logic/calls/2000"
+      },
+      "caller": {
+        "id": "logic:src/libraries/System.Runtime/tests/System.Runtime.Tests/System/HalfTests.GenericMath.cs:op_AdditionTest:1555",
+        "name": "op_AdditionTest",
+        "kind": "function",
+        "language": "csharp",
+        "qualifiedName": "HalfTests_GenericMath.op_AdditionTest",
+        "sources": [
+          {
+            "path": "src/libraries/System.Runtime/tests/System.Runtime.Tests/System/HalfTests.GenericMath.cs",
+            "line": 50,
+            "endLine": 68,
+            "pointer": "/logic/definitions/1555"
+          }
+        ]
+      },
+      "target": {
+        "id": "logic:src/libraries/System.Runtime/tests/System.Runtime.Tests/System/HalfTests.GenericMath.cs:AssertBitwiseEqual:945",
+        "name": "AssertBitwiseEqual",
+        "kind": "function",
+        "language": "csharp",
+        "qualifiedName": "HalfTests_GenericMath.AssertBitwiseEqual",
+        "sources": [
+          {
+            "path": "src/libraries/System.Runtime/tests/System.Runtime.Tests/System/HalfTests.GenericMath.cs",
+            "line": 28,
+            "endLine": 44,
+            "pointer": "/logic/definitions/945"
+          }
+        ]
+      },
+      "attributes": {
+        "resolution": "exact",
+        "evidence": "static-call",
+        "name": "AssertBitwiseEqual",
+        "receiver": ""
+      }
+    },
+    {
+      "identity": "[\"csharp\",\"runtime\",\"src/libraries/System.Data.OleDb/src/DbPropSet.cs\",109,\"/logic/calls/4053\",\"logic:src/libraries/System.Data.OleDb/src/OleDb_Util.cs:GetErrorDescription:15319\"]",
+      "rank": "0001837963542360e0f853db026bef68f37d4f3f3e4c21484f621550e5356485",
+      "family": "C#",
+      "language": "csharp",
+      "repository": "runtime",
+      "sourceCommit": "8630d8988107478d249e2fdb8162f8c7dcbd3dbb",
+      "graphHash": "dcb1ea8f2fbe9b48c135e11df41f3ec9d1be28206fae313f260eb0228c8bc334",
+      "edgeId": "calls:logic:src/libraries/System.Data.OleDb/src/DbPropSet.cs:SetLastErrorInfo:3526:logic:src/libraries/System.Data.OleDb/src/OleDb_Util.cs:GetErrorDescription:15319:4053",
+      "callsite": {
+        "path": "src/libraries/System.Data.OleDb/src/DbPropSet.cs",
+        "line": 109,
+        "pointer": "/logic/calls/4053"
+      },
+      "caller": {
+        "id": "logic:src/libraries/System.Data.OleDb/src/DbPropSet.cs:SetLastErrorInfo:3526",
+        "name": "SetLastErrorInfo",
+        "kind": "function",
+        "language": "csharp",
+        "qualifiedName": "DBPropSet.SetLastErrorInfo",
+        "sources": [
+          {
+            "path": "src/libraries/System.Data.OleDb/src/DbPropSet.cs",
+            "line": 99,
+            "endLine": 119,
+            "pointer": "/logic/definitions/3526"
+          }
+        ]
+      },
+      "target": {
+        "id": "logic:src/libraries/System.Data.OleDb/src/OleDb_Util.cs:GetErrorDescription:15319",
+        "name": "GetErrorDescription",
+        "kind": "function",
+        "language": "csharp",
+        "qualifiedName": "ODB.GetErrorDescription",
+        "sources": [
+          {
+            "path": "src/libraries/System.Data.OleDb/src/OleDb_Util.cs",
+            "line": 337,
+            "endLine": 349,
+            "pointer": "/logic/definitions/15319"
+          }
+        ]
+      },
+      "attributes": {
+        "resolution": "exact",
+        "evidence": "static-call",
+        "name": "GetErrorDescription",
+        "receiver": "ODB"
+      }
+    },
+    {
+      "identity": "[\"csharp\",\"runtime\",\"src/libraries/System.Diagnostics.Process/src/System/Diagnostics/Process.Multiplexing.cs\",358,\"/logic/calls/15541\",\"logic:src/libraries/System.Diagnostics.Process/src/System/Diagnostics/Process.Multiplexing.cs:EmitRemainingCharsAsLine:13770\"]",
+      "rank": "0001e9718d15c48cf2294a7f9cd5199b9cd4cfa9ac961e6e4bd0df1a1dd66397",
+      "family": "C#",
+      "language": "csharp",
+      "repository": "runtime",
+      "sourceCommit": "8630d8988107478d249e2fdb8162f8c7dcbd3dbb",
+      "graphHash": "dcb1ea8f2fbe9b48c135e11df41f3ec9d1be28206fae313f260eb0228c8bc334",
+      "edgeId": "calls:logic:src/libraries/System.Diagnostics.Process/src/System/Diagnostics/Process.Multiplexing.cs:FlushDecoderAndEmitRemainingChars:14920:logic:src/libraries/System.Diagnostics.Process/src/System/Diagnostics/Process.Multiplexing.cs:EmitRemainingCharsAsLine:13770:15541",
+      "callsite": {
+        "path": "src/libraries/System.Diagnostics.Process/src/System/Diagnostics/Process.Multiplexing.cs",
+        "line": 358,
+        "pointer": "/logic/calls/15541"
+      },
+      "caller": {
+        "id": "logic:src/libraries/System.Diagnostics.Process/src/System/Diagnostics/Process.Multiplexing.cs:FlushDecoderAndEmitRemainingChars:14920",
+        "name": "FlushDecoderAndEmitRemainingChars",
+        "kind": "function",
+        "language": "csharp",
+        "qualifiedName": "Process.FlushDecoderAndEmitRemainingChars",
+        "sources": [
+          {
+            "path": "src/libraries/System.Diagnostics.Process/src/System/Diagnostics/Process.Multiplexing.cs",
+            "line": 350,
+            "endLine": 360,
+            "pointer": "/logic/definitions/14920"
+          }
+        ]
+      },
+      "target": {
+        "id": "logic:src/libraries/System.Diagnostics.Process/src/System/Diagnostics/Process.Multiplexing.cs:EmitRemainingCharsAsLine:13770",
+        "name": "EmitRemainingCharsAsLine",
+        "kind": "function",
+        "language": "csharp",
+        "qualifiedName": "Process.EmitRemainingCharsAsLine",
+        "sources": [
+          {
+            "path": "src/libraries/System.Diagnostics.Process/src/System/Diagnostics/Process.Multiplexing.cs",
+            "line": 320,
+            "endLine": 342,
+            "pointer": "/logic/definitions/13770"
+          }
+        ]
+      },
+      "attributes": {
+        "resolution": "exact",
+        "evidence": "static-call",
+        "name": "EmitRemainingCharsAsLine",
+        "receiver": ""
+      }
+    }
+  ]
+}

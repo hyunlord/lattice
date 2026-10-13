@@ -61,7 +61,7 @@ test('corrected callable ownership cannot reuse the previous parser semantic cac
     const correct = parseLogicFacts(source, 'python'), outer = correct.definitions.find(definition => definition.name === 'outer');
     const stale = { ...correct, calls: [{ caller: outer.id, name: 'helper', receiver: '', line: 3, endLine: 3, start: 61, callbackIds: [], route: false }] };
     const cache = extractionCache(root);
-    cache.extract(source, { format: 'logic', selector: logicParserVersion.replace('/logic-2/', '/logic-1/') }, () => stale, decodeLogicFacts);
+    cache.extract(source, { format: 'logic', selector: logicParserVersion.replace(/\/logic-\d+\//u, '/logic-1/') }, () => stale, decodeLogicFacts);
     const result = cache.extract(source, { format: 'logic', selector: logicParserVersion }, () => parseLogicFacts(source, 'python'), decodeLogicFacts);
     assert.deepEqual(result.calls, []);
     assert.equal(cache.stats.parsed, 2);

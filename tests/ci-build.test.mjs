@@ -5,6 +5,7 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { execFileSync } from 'node:child_process';
 import { runCiBuild } from '../bin/ci-build.mjs';
+import { readPackedArtifact } from '../bin/packed-reader.mjs';
 import { parseCiReport, CiReportError } from '../bin/ci-report.mjs';
 function fixture(t) {
     const directory = realpathSync(mkdtempSync(join(tmpdir(), 'lattice-ci-')));
@@ -24,7 +25,7 @@ test('CI build exports real source graph and strict report without invoking cons
     const commit = f.commit();
     const result = runCiBuild({ ...f.config, sourceCommit: commit });
     assert.equal(result.checkStatus, 'pass');
-    const graph = JSON.parse(readFileSync(join(result.outputPath, 'graph.json'), 'utf8'));
+    const graph = readPackedArtifact(result.outputPath, 'graph.json');
     assert.equal(graph.repository.commit, commit);
     assert.equal(result.report.graphHash, graph.hash);
     assert.equal(result.report.counts.nodes, graph.nodes.length);

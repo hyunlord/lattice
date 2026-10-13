@@ -2,7 +2,7 @@ import { closeSync, openSync, readSync } from 'node:fs';
 import { StringDecoder } from 'node:string_decoder';
 
 /** Decode one top-level array record at a time, never a whole document string. */
-export function parseJsonObjectChunks(chunks: Iterable<Uint8Array>): Record<string, unknown> {
+export function parseJsonObjectChunks(chunks: Iterable<Uint8Array>, arrayItem?: (key: string, value: unknown) => unknown): Record<string, unknown> {
     const input = chunks[Symbol.iterator](), decoder = new StringDecoder('utf8');
     let text = '', position = 0, ended = false;
     const available = (): boolean => {
@@ -46,11 +46,11 @@ export function parseJsonObjectChunks(chunks: Iterable<Uint8Array>): Record<stri
         return parts.join('');
     };
     const value = (): unknown => JSON.parse(valueText());
-    const array = (): unknown[] => {
+    const array = (key: string): unknown[] => {
         expect('['); const items: unknown[] = [];
         if (peek() === ']') { position++; return items; }
         for (; ;) {
-            items.push(value());
+            const item = value(); items.push(arrayItem ? arrayItem(key, item) : item);
             if (peek() === ']') { position++; return items; }
             expect(',');
         }
@@ -62,7 +62,7 @@ export function parseJsonObjectChunks(chunks: Iterable<Uint8Array>): Record<stri
             if (typeof key !== 'string') throw new SyntaxError('Expected a JSON object key');
             if (Object.hasOwn(result, key)) throw new SyntaxError(`Duplicate JSON object key: ${key}`);
             expect(':');
-            const item = peek() === '[' ? array() : value();
+            const item = peek() === '[' ? array(key) : value();
             Object.defineProperty(result, key, { value: item, enumerable: true, writable: true, configurable: true });
             if (peek() === '}') break;
             expect(',');
@@ -72,11 +72,11 @@ export function parseJsonObjectChunks(chunks: Iterable<Uint8Array>): Record<stri
     } finally { input.return?.(); }
 }
 
-export function readJsonObject(path: string): Record<string, unknown> {
+export function readJsonObject(path: string, arrayItem?: (key: string, value: unknown) => unknown): Record<string, unknown> {
     function* chunks(): Generator<Uint8Array> {
         const file = openSync(path, 'r'), buffer = Buffer.allocUnsafe(64 * 1024);
         try { for (; ;) { const size = readSync(file, buffer, 0, buffer.length, null); if (!size) return; yield buffer.subarray(0, size); } }
         finally { closeSync(file); }
     }
-    return parseJsonObjectChunks(chunks());
+    return parseJsonObjectChunks(chunks(), arrayItem);
 }

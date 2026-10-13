@@ -1,3 +1,4 @@
+import { productLogicPath } from '../core/logic-policy.js';
 import type { Edge, Node } from '../core/model.js';
 import type { LoopFlow, LoopStage } from './loop-map-types.js';
 import { representativeNames } from './structural-name-facts.js';
@@ -113,7 +114,6 @@ export function manifestStructuralMap(nodes: readonly Node[], edges: readonly Ed
     for (const stage of frontier.stages) merged.set(stage.id, stage);
     const stages = [...merged.values()];
     const rootStageIds = frontier.roots;
-    const entries = sources.filter(node => Array.isArray(node.attributes['entryPoints']) && node.attributes['entryPoints'].length > 0).flatMap(node => stageOwner.get(node.id) ?? []);
-    for (const pkg of packages) if (Array.isArray(pkg.attributes['entryTargets']) && pkg.attributes['entryTargets'].length > 0) entries.push(`manifest:${pkg.id}`);
+    const entries = sources.filter(node => productLogicPath(pathOf(node)) && Array.isArray(node.attributes['entryPoints']) && node.attributes['entryPoints'].length > 0).flatMap(node => stageOwner.get(node.id) ?? []);
     return { stages, flows, rootStageIds, defaultStage: rootStageIds[0] ?? '', structuralSourceRoot: '.', structuralEntryStageIds: [...new Set(entries)], verifiedCycleStageGroups: components(rootStageIds, flows).filter(group => group.length > 1) };
 }

@@ -23,7 +23,7 @@ function attachEvidence(graph: BrowserGraph, value: unknown): void {
     if (!object(value) || value['version'] !== 1 || !object(value['groups']) || !object(value['records'])) throw new Error('근거 파일 목록 형식이 올바르지 않습니다.');
     const groups = new Map<string, DeferredSourceGroup>();
     for (const [id, entry] of Object.entries(value['groups'])) {
-        if (!/^[a-f0-9]{64}$/u.test(id) || !object(entry) || typeof entry['count'] !== 'number' || !Number.isSafeInteger(entry['count']) || entry['count'] < 1 || !arrayOf(entry['pages'], string) || entry['pages'].length !== Math.ceil(entry['count'] / 128) || !entry['pages'].every(path => /^evidence\/[a-f0-9]{64}\.json$/u.test(path))) throw new Error('근거 페이지 목록 형식이 올바르지 않습니다.');
+        if (!/^[a-f0-9]{64}$/u.test(id) || !object(entry) || typeof entry['count'] !== 'number' || !Number.isSafeInteger(entry['count']) || entry['count'] < 1 || !arrayOf(entry['pages'], string) || entry['pages'].length !== Math.ceil(entry['count'] / 128) || !entry['pages'].every(path => /^(?:evidence\/|records\/\d+\/\d+\/)[a-f0-9]{64}\.json$/u.test(path))) throw new Error('근거 페이지 목록 형식이 올바르지 않습니다.');
         groups.set(id, { id, count: entry['count'], pages: entry['pages'] });
     }
     for (const [kind, mapping] of Object.entries(value['records'])) {

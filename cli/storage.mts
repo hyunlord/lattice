@@ -1,12 +1,13 @@
 import { errorCode, object } from './types.mjs';
-import type { Graph, GraphDraft, Snapshot } from '../dist/index.js';
+import type { Graph, Snapshot } from '../dist/index.js';
 import type { buildRepository } from './build.mjs';
-import { parseGraph, parseSnapshots } from './decode.mjs';
+import { parseSnapshots } from './decode.mjs';
+import { readGraphDraft } from './graph-stream.mjs';
 import { createHash, randomUUID } from 'node:crypto';
 import { closeSync, existsSync, mkdirSync, openSync, readFileSync, readSync, renameSync, rmSync, writeFileSync, writeSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
-import { canonicalJson, createGraph } from '../dist/index.js';
-import { readJsonObject } from './json-stream.mjs';
+import { canonicalJson } from '../dist/index.js';
+import { createGraphFromOwnedDraft } from '../dist/core/graph.js';
 
 export const digest = Object.assign(
     (text: string | Uint8Array) => createHash('sha256').update(text).digest('hex'),
@@ -44,15 +45,10 @@ export function readGraph(path: string, options: { readonly memoize?: boolean; }
     const cached = previous?.bytesHash === bytesHash ? previous.graph.deref() : undefined;
     if (cached) return cached;
     const stored = readGraphDraft(path);
-    const graph = createGraph(stored.draft, digest);
+    const graph = createGraphFromOwnedDraft(stored.draft, digest);
     if (stored.hash !== graph.hash) throw new Error(`Graph hash mismatch: ${path}`);
     if (options.memoize !== false) rememberGraph(path, bytesHash, graph);
     return graph;
-}
-function readGraphDraft(path: string): { readonly draft: GraphDraft; readonly hash: unknown; } {
-    const stored = readJsonObject(path);
-    if (stored['schemaVersion'] !== 1) throw new Error(`Unsupported graph schema: ${path}`);
-    return { draft: parseGraph(stored), hash: stored['hash'] };
 }
 export function fileDigest(path: string): string {
     const descriptor = openSync(path, 'r'), bytes = Buffer.allocUnsafe(65536), hash = createHash('sha256');

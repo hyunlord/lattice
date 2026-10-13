@@ -1,4 +1,6 @@
-import type { Node, Edge } from '../dist/core/model.js';
+import type { PackedSelection } from './packed-data.js';
+import { createPackedLoader } from './packed-data.js';
+import type { Node, Edge, Repository } from '../dist/core/model.js';
 import { logicNodes, logicFlow, logicLookupBucket, type LogicNode, type LogicPageOptions, type LogicCallOptions, type LogicFlowOptions, type logicEntrypoints, type logicCalls } from './logic-model.js';
 import { parseGraph, object } from './data.js';
 export type LogicProvider = {
@@ -17,22 +19,24 @@ function page<T>(items: readonly T[], total: number, options: LogicPageOptions) 
     return { items: [...items], total, offset, limit, truncated: offset > 0 || offset + limit < total, nextOffset: offset + limit < total ? offset + limit : null };
 }
 /** Fetches only discovery pages and requested function neighborhoods, bound to the current graph hash. */
-export function createLogicProvider(graphHash: string, suffix = ''): LogicProvider {
+export function createLogicProvider(graphHash: string, suffix = '', expectedRepository?: Repository): LogicProvider {
+    const transport = createPackedLoader('./', suffix);
     const requests = new Map<string, Promise<Record<string, unknown>>>(), names = new Map<string, string>(), descriptions = new Map<string, LogicNode>();
-    const read = (path: string): Promise<Record<string, unknown>> => {
-        if (!/^logic\/(?:index\.json|entrypoints\/\d+\.json|lookup\/[a-f0-9]{2}\.json|nodes\/[a-f0-9]{64}\.json|calls\/[a-f0-9]{64}-(?:all-)?(?:in|out)-\d+\.json)$/u.test(path)) return Promise.reject(new Error('올바르지 않은 호출 정보 경로입니다.'));
-        const cached = requests.get(path); if (cached) return cached;
+    const read = (path: string, selection?: PackedSelection): Promise<Record<string, unknown>> => {
+        if (!/^records\/\d+\/\d+\/logic\.json$/u.test(path) && !/^logic\/(?:index\.json|entrypoints\/\d+\.json|lookup\/[a-f0-9]{2}\.json|nodes\/[a-f0-9]{64}\.json|calls\/[a-f0-9]{64}-(?:all-)?(?:in|out)-\d+\.json)$/u.test(path)) return Promise.reject(new Error('올바르지 않은 호출 정보 경로입니다.'));
+        const cacheKey = path + ':' + JSON.stringify(selection);
+        const cached = requests.get(cacheKey); if (cached) return cached;
         const pending = (async () => {
-            const response = await fetch('./' + path + suffix);
-            if (!response.ok) throw new Error(`호출 정보 HTTP ${response.status}. 다시 시도하세요.`);
-            const value: unknown = await response.json();
+            const value: unknown = await transport.json(path, selection);
             if (!object(value) || value['graphHash'] !== graphHash) throw new Error('호출 정보의 출처가 현재 지도와 다릅니다. 새로고침하세요.');
             return value;
         })();
-        requests.set(path, pending); void pending.catch(() => { if (requests.get(path) === pending) requests.delete(path); }); return pending;
+        requests.set(cacheKey, pending); void pending.catch(() => { if (requests.get(cacheKey) === pending) requests.delete(cacheKey); }); return pending;
     };
     const index = async () => {
         const value = await read('logic/index.json');
+        const repository = value['repository'];
+        if (expectedRepository && (!object(repository) || repository['commit'] !== expectedRepository.commit || repository['sourceFingerprint'] !== expectedRepository.sourceFingerprint || repository['dirty'] !== expectedRepository.dirty)) throw new Error('호출 정보의 소스가 현재 지도와 다릅니다.');
         if (value['schemaVersion'] !== 1 || value['pageSize'] !== 100 || !integer(value['entrypointCount']) || !integer(value['callableCount']) || !object(value['packageNames'])) throw new Error('호출 정보 목록 형식이 올바르지 않습니다.');
         for (const [id, name] of Object.entries(value['packageNames'])) if (typeof name === 'string') names.set(id, name);
         return value;
@@ -49,10 +53,10 @@ export function createLogicProvider(graphHash: string, suffix = ''): LogicProvid
         if (!item) throw new Error('함수를 찾을 수 없습니다.');
         const result = { ...item, packageIds: value['packageIds'] }; descriptions.set(item.node.id, result); return result;
     };
-    const detail = async (id: string) => {
+    const detail = async (id: string, fields: readonly string[] = []) => {
         const bucket = await read(`logic/lookup/${logicLookupBucket(id)}.json`), mapping = bucket['records'];
         if (!object(mapping) || !Object.hasOwn(mapping, id) || typeof mapping[id] !== 'string') throw new Error('함수 ID를 찾을 수 없습니다.');
-        const value = await read(mapping[id]); const node = await describe(value['node']);
+        const value = await read(mapping[id], Object.fromEntries(['graphHash', 'node', ...fields].map(field => [field, true as const]))); const node = await describe(value['node']);
         if (node.node.id !== id) throw new Error('함수 ID가 요청과 다릅니다.');
         return { value, node };
     };
@@ -73,7 +77,9 @@ export function createLogicProvider(graphHash: string, suffix = ''): LogicProvid
         return { result: page(edges, total, options), related: [...related.values()].filter(node => ids.has(node.id)) };
     };
     const calls = async (options: LogicCallOptions): Promise<ReturnType<typeof logicCalls>> => {
-        const { value, node } = await detail(options.id), direction = options.direction ?? 'both';
+        const direction = options.direction ?? 'both';
+        const fields = [...(direction === 'out' ? [] : [options.includeEstimated ? 'allIncoming' : 'incoming']), ...(direction === 'in' ? [] : [options.includeEstimated ? 'allOutgoing' : 'outgoing'])];
+        const { value, node } = await detail(options.id, fields);
         const incoming = direction === 'out' ? { result: page<Edge>([], 0, options), related: [] } : await edgePage(value[options.includeEstimated ? 'allIncoming' : 'incoming'], options);
         const outgoing = direction === 'in' ? { result: page<Edge>([], 0, options), related: [] } : await edgePage(value[options.includeEstimated ? 'allOutgoing' : 'outgoing'], options);
         const related = new Map([...incoming.related, ...outgoing.related].map(node => [node.id, node]));

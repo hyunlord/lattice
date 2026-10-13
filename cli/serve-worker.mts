@@ -1,7 +1,9 @@
+import { writeViewerAssets } from './export-assets.mjs';
 import { parentPort } from 'node:worker_threads';
-import { constants, copyFileSync, mkdirSync, rmSync, writeFileSync } from 'node:fs';
+import { mkdirSync, rmSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { performance } from 'node:perf_hooks';
+import { createPackedExport } from './export-packs.mjs';
 import { writeNodeDetails } from './export-details.mjs';
 import { writeLogic } from './export-logic.mjs';
 import { writeOverview } from './export-overview.mjs';
@@ -44,26 +46,27 @@ port.once('message', ({ options, liveDirectory }: ServeStart) => {
                 let next;
                 try {
                     next = withCacheLock(options.root, () => {
-                        const write = (path: string, text: string) => { const target = join(directory, path); mkdirSync(dirname(target), { recursive: true }); writeFileSync(target, text); };
+                        writeViewerAssets(directory);
+                        const packs = createPackedExport(directory);
+                        const write = (path: string, text: string) => { if (['overview.json', 'presentation.json', 'snapshots.json'].includes(path)) writeFileSync(join(directory, path), text); else packs.write(path, text); };
+                        const packedGraph = (path: string, graph: Parameters<typeof writeNodeDetails>[0]) => { packs.json(path, graph); const target = join(directory, path); mkdirSync(dirname(target), { recursive: true }); writeFileSync(target, JSON.stringify({ transportVersion: 2, document: path, hash: graph.hash, repository: graph.repository, lensDigest: graph.lensDigest, counts: { nodes: graph.nodes.length, edges: graph.edges.length, facets: graph.facets.length, findings: graph.findings.length, views: graph.views.length } })); };
                         const preparedIds = new Set<string>();
-                        const preparedSnapshots = prepareSnapshots(cache, { onGraph: (snapshot, graph) => { writeNodeDetails(graph, write, `details/snapshots/${snapshot.id}`); preparedIds.add(snapshot.id); } });
+                        const preparedSnapshots = prepareSnapshots(cache, { onGraph: (snapshot, graph) => { for (const records of [graph.nodes, graph.edges, graph.facets, graph.findings, graph.views]) packs.identifiers(records); writeNodeDetails(graph, write, `details/snapshots/${snapshot.id}`, {}, { json: packs.json, reference: packs.reference }); packedGraph(snapshot.artifactPath, graph); preparedIds.add(snapshot.id); } });
                         const buildArtifacts = () => {
                             const result = buildRepository(options);
                             const graph = persistBuild(options.root, result, options.cacheDir, { memoize: false, preparedSnapshots });
+                            for (const records of [graph.nodes, graph.edges, graph.facets, graph.findings, graph.views]) packs.identifiers(records);
                             for (const snapshot of graph.snapshots) {
-                                if (!preparedIds.has(snapshot.id)) writeNodeDetails(result.graph, write, `details/snapshots/${snapshot.id}`);
+                                if (!preparedIds.has(snapshot.id)) { writeNodeDetails(result.graph, write, `details/snapshots/${snapshot.id}`, {}, { json: packs.json, reference: packs.reference }); packedGraph(snapshot.artifactPath, result.graph); }
                             }
-                            copyFileSync(join(cache, 'graph.json'), join(directory, 'graph.json'), constants.COPYFILE_FICLONE);
+                            packedGraph('graph.json', graph);
                             write('presentation.json', JSON.stringify(result.presentation)); write('snapshots.json', JSON.stringify(graph.snapshots));
-                            writeNodeDetails(graph, write, 'details', result.presentation);
-                            writeLogic(graph, write); writeOverview(graph, result.presentation, write);
+                            writeNodeDetails(graph, write, 'details', result.presentation, { json: packs.json, reference: packs.reference });
+                            writeLogic(graph, write, { reference: packs.reference, json: packs.json }); writeOverview(graph, result.presentation, write, { json: packs.json });
                             return { hash: graph.hash, fingerprint: result.fingerprint, snapshots: graph.snapshots, media: result.media.files, extraction: result.extraction.stats, diagnostics: result.diagnostics };
                         };
                         const artifacts = buildArtifacts();
-                        for (const snapshot of artifacts.snapshots) {
-                            const target = join(directory, snapshot.artifactPath); mkdirSync(dirname(target), { recursive: true });
-                            copyFileSync(join(cache, snapshot.artifactPath), target, constants.COPYFILE_FICLONE);
-                        }
+                        packs.finish();
                         return artifacts;
                     }, options.cacheDir);
                 } catch (failure) { rmSync(directory, { recursive: true, force: true }); throw failure; }

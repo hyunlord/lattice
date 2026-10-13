@@ -43,7 +43,17 @@ function freezeTree(value: unknown): void {
 export function createGraph(input: GraphDraft, digest: Digest): Graph {
     validateCanonical(input);
     validateGraph(input);
-    const draft = cloneValidated(input);
+    return assembleGraph(cloneValidated(input), digest);
+}
+
+/** Internal reader contract: consume a freshly parsed draft with no external aliases. */
+export function createGraphFromOwnedDraft(input: GraphDraft, digest: Digest): Graph {
+    validateCanonical(input);
+    validateGraph(input);
+    return assembleGraph(input, digest);
+}
+
+function assembleGraph(draft: GraphDraft, digest: Digest): Graph {
     const semantic = recordProjector();
     const hashText = (value: unknown): string => {
         const hash = digest(canonicalJson(value));

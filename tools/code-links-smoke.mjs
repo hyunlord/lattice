@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import { execFileSync, spawnSync } from 'node:child_process';
 import { mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
+import { readPackedArtifact } from '../bin/packed-reader.mjs';
 
 export function verifyCodeLinks(cli, repository) {
   mkdirSync(join(repository, '.lattice'), { recursive: true });
@@ -49,7 +50,7 @@ export function verifyCodeLinks(cli, repository) {
   assert.ok(difference.facets.changed.some(change => change.before.value.status === 'supported' && change.after.value.status === 'unsupported'));
   assert.equal(difference.findings.changed.find(change => change.id === 'unresolved').after.gate.status, 'fail');
   run(['export', join(repository, '.lattice/site')]);
-  assert.equal(support(json('.lattice/site/graph.json')).status, 'unsupported');
+  assert.equal(support(readPackedArtifact(join(repository, '.lattice/site'), 'graph.json')).status, 'unsupported');
 
   rmSync(join(repository, 'Handler.cs'));
   assert.equal(check().status, 1, 'Missing required dispatch evidence cannot pass the configured gate');

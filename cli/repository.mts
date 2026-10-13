@@ -1,3 +1,4 @@
+import type { SourceObservationCache } from './source-observation-cache.mjs';
 import { errorCode, errorStatus } from './types.mjs';
 import type { RepositoryReader } from './types.mjs';
 import { execFile, execFileSync } from 'node:child_process';
@@ -29,18 +30,33 @@ function workingCommands(root: string, cacheDir?: string) {
     return {
         cachePath,
         status: ['status', '--porcelain=v2', '-z', '--branch', '--no-ahead-behind', '--untracked-files=all', '--', '.', ':(exclude).lattice/cache', ':(exclude).lattice/site', ...(cachePath ? [`:(exclude,literal)${cachePath}`] : [])],
-        paths: ['ls-files', '-z', '--cached', '--others', '--exclude-standard'],
+        paths: ['ls-files', '-z', '--cached'],
+        generatedPaths: ['ls-files', '-z', '--others', '--exclude-standard', '--', ':(literal).lattice/cache', ':(literal).lattice/site'],
         origin: ['config', '--get', 'remote.origin.url'],
     };
 }
-function workingReader(root: string, cachePath: string | undefined, statusText: string, pathText: string, origin: string): RepositoryReader {
+function untrackedPaths(status: readonly string[]): readonly string[] {
+    const paths: string[] = [];
+    for (let index = 0; index < status.length; index++) {
+        const entry = status[index] ?? '';
+        if (entry.startsWith('2 ')) index++;
+        else if (entry.startsWith('? ')) paths.push(entry.slice(2));
+    }
+    return paths;
+}
+export type WorkingMetadata = Pick<RepositoryReader, 'name' | 'remoteUrl' | 'commit' | 'dirty' | 'paths'>;
+export function withWorkingCache(repository: WorkingMetadata, cache: SourceObservationCache): RepositoryReader {
+    const readInput = (path: string) => cache.read(path, bytes => { throw new InputSizeError(path, bytes); });
+    return { ...repository, observePaths: paths => cache.observePaths(paths), readObservedText: path => cache.readObservedText(path), readInput, observationMode: cache.mode, readText: path => readInput(path)?.text };
+}
+function workingReader(root: string, cachePath: string | undefined, statusText: string, pathText: string, origin: string, cache?: SourceObservationCache): RepositoryReader {
     const status = statusText.split('\0').filter(Boolean);
     const oid = status.find(entry => entry.startsWith('# branch.oid '))?.slice('# branch.oid '.length);
     const commit = oid === '(initial)' ? undefined : oid;
-    return {
+    const repository: RepositoryReader = {
         ...identity(root, origin), ...(commit ? { commit } : {}),
         dirty: status.some(entry => !entry.startsWith('# ')),
-        paths: [...new Set(pathText.split('\0').filter(path => path && (!cachePath || (path !== cachePath && !path.startsWith(cachePath + '/')))))].sort(),
+        paths: [...new Set([...pathText.split('\0'), ...untrackedPaths(status)].filter(path => path && (!cachePath || (path !== cachePath && !path.startsWith(cachePath + '/')))))].sort(),
         readText(path) {
             let absolute;
             try { absolute = realpathSync(join(root, path)); }
@@ -52,24 +68,25 @@ function workingReader(root: string, cachePath: string | undefined, statusText: 
             return readFileSync(absolute, 'utf8');
         },
     };
+    return cache ? withWorkingCache(repository, cache) : repository;
 }
 export function workingRepository(root: string, cacheDir?: string): RepositoryReader {
     const commands = workingCommands(root, cacheDir);
-    return workingReader(root, commands.cachePath, git(root, commands.status), git(root, commands.paths), optionalGit(root, commands.origin));
+    return workingReader(root, commands.cachePath, git(root, commands.status), git(root, commands.paths) + git(root, commands.generatedPaths), optionalGit(root, commands.origin));
 }
 const executeGit = promisify(execFile);
 async function gitAsync(root: string, args: readonly string[]) {
     const { stdout } = await executeGit('git', ['--no-optional-locks', '-C', root, ...args], { encoding: 'utf8', maxBuffer: 32 * 1024 * 1024 });
     return stdout;
 }
-export async function workingRepositoryAsync(root: string, cacheDir?: string): Promise<RepositoryReader> {
+export async function workingRepositoryAsync(root: string, cacheDir?: string, cache?: SourceObservationCache): Promise<RepositoryReader> {
     const commands = workingCommands(root, cacheDir);
     const origin = gitAsync(root, commands.origin).then(value => value.trimEnd(), (error: unknown) => {
         if (errorCode(error) === 1 || errorCode(error) === 128) return '';
         throw error;
     });
-    const [status, paths, remote] = await Promise.all([gitAsync(root, commands.status), gitAsync(root, commands.paths), origin]);
-    return workingReader(root, commands.cachePath, status, paths, remote);
+    const [status, paths, generated, remote] = await Promise.all([gitAsync(root, commands.status), gitAsync(root, commands.paths), gitAsync(root, commands.generatedPaths), origin]);
+    return workingReader(root, commands.cachePath, status, paths + generated, remote, cache);
 }
 export function historicalRepository(root: string, ref?: string): RepositoryReader {
     if (!ref || ref.startsWith('-')) throw new Error('diff requires a valid commit reference');

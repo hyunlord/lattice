@@ -5,21 +5,32 @@ import type { DetailRef, DetailPages } from '../dist/query/node-detail-transport
 import { detailIdKey, detailIdentityKey, detailLabelKey } from '../dist/query/node-detail-transport.js';
 import { nodeIdentity } from '../dist/query/history-model.js';
 import { logicLookupBucket } from '../dist/query/logic-model.js';
-import { thinGraph } from './export-evidence.mjs';
+import { thinGraph, compactEvidence } from './export-evidence.mjs';
 const MAX_BYTES = 262144, PAGE_SIZE = 20;
 /** A packet contains fragments of requested records, never a complete repository graph. */
-export function writeNodeDetails(graph: Graph, write: (path: string, text: string) => void, scope = 'details', rawPresentation: unknown = {}): void {
+export function writeNodeDetails(graph: Graph, write: (path: string, text: string) => void, scope = 'details', rawPresentation: unknown = {}, options: { readonly json?: (path: string, value: unknown) => void; readonly reference?: (value: unknown, label?: string) => string; } = {}): void {
     const human = parsePresentation(rawPresentation).detail;
     const binding = { schemaVersion: 1, graphHash: graph.hash, repository: graph.repository };
     const root = `details/data/${createHash('sha256').update(JSON.stringify({ binding, human })).digest('hex')}`, lookupRoot = `${root}/lookup`;
+    const structured: [string, unknown][] = [];
+    const emit = (path: string, value: unknown) => options.json ? options.json(path, value) : write(path, JSON.stringify(value));
     const header = JSON.stringify(binding).slice(0, -1) + ',"records":{';
     let packet = 0, serial = 0, pending: string[] = [], bytes = Buffer.byteLength(header) + 2;
     const flush = () => {
+        if (options.json) {
+            if (structured.length) emit(`${root}/packets/${packet++}.json`, { ...binding, detailVersion: 2, records: Object.fromEntries(structured) });
+            structured.length = 0; return;
+        }
         if (!pending.length) return;
         write(`${root}/packets/${packet++}.json`, header + pending.join(',') + '}}');
         pending = []; bytes = Buffer.byteLength(header) + 2;
     };
     const save = (value: unknown): DetailRef => {
+        if (options.json) {
+            if (structured.length >= 32) flush();
+            const key = String(serial++); structured.push([key, value]);
+            return { record: Number(key) };
+        }
         const text = JSON.stringify(value), parts: { path: string; key: string; }[] = [];
         for (let start = 0; start < text.length;) {
             let end = Math.min(text.length, start + 8192);
@@ -42,7 +53,7 @@ export function writeNodeDetails(graph: Graph, write: (path: string, text: strin
     }
     for (const facet of graph.facets) add(facets, facet.nodeId, facet);
     for (const finding of graph.findings) for (const id of new Set(finding.targetIds)) add(findings, id, finding);
-    const minimal = (nodes: readonly Node[], edges: readonly Edge[] = [], facets: readonly Facet[] = [], findings: readonly Finding[] = []) => thinGraph({ schemaVersion: 1, hash: graph.hash, repository: graph.repository, nodes, edges, facets, findings, views: [], snapshots: [], inputs: [], adapterVersions: {}, lensDigest: graph.lensDigest }, write);
+    const minimal = (nodes: readonly Node[], edges: readonly Edge[] = [], facets: readonly Facet[] = [], findings: readonly Finding[] = []) => options.json ? compactEvidence(nodes, edges, facets, findings, write, options.reference) : thinGraph({ schemaVersion: 1, hash: graph.hash, repository: graph.repository, nodes, edges, facets, findings, views: [], snapshots: [], inputs: [], adapterVersions: {}, lensDigest: graph.lensDigest }, write);
     const labels = (edges: readonly Edge[]) => [...new Set(edges.flatMap(edge => [edge.source, edge.target]))].flatMap(id => {
         const node = byId.get(id);
         return node ? [{ ...node, attributes: node.attributes['layer'] === undefined ? {} : { layer: node.attributes['layer'] }, sources: [] }] : [];
@@ -82,12 +93,12 @@ export function writeNodeDetails(graph: Graph, write: (path: string, text: strin
         for (let start = 0; start < rows.length; start += 128) {
             const part = rows.slice(start, start + 128), records: Record<string, DetailRef> = {};
             for (const [key, value] of part) if (!Object.hasOwn(records, key)) Object.defineProperty(records, key, { value, enumerable: true });
-            ranges.push({ first: part[0]![0], last: part[part.length - 1]![0], ref: save(records) });
+            ranges.push({ first: part[0]![0], last: part[part.length - 1]![0], ref: save(options.json ? Object.entries(records).map(([key, value]) => key.startsWith('id:') ? [0, key.slice(3), value] : key.startsWith('identity:') ? [1, JSON.parse(key.slice(9)), value] : [2, key.slice(6), value]) : records) });
         }
         const text = JSON.stringify({ ...binding, ranges });
         if (Buffer.byteLength(text) > MAX_BYTES) throw new Error('Node detail lookup exceeds packet byte limit');
-        write(`${lookupRoot}/${bucket}.json`, text); buckets.delete(bucket);
+        emit(`${lookupRoot}/${bucket}.json`, { ...binding, ranges }); buckets.delete(bucket);
     }
     flush();
-    write(`${scope}/index.json`, JSON.stringify({ ...binding, lookupRoot, pageSize: PAGE_SIZE, nodeCount: graph.nodes.length }));
+    emit(`${scope}/index.json`, { ...binding, ...(options.json ? { detailVersion: 2 } : {}), lookupRoot, pageSize: PAGE_SIZE, nodeCount: graph.nodes.length });
 }

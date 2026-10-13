@@ -6,7 +6,7 @@ export function edge(value: unknown): Edge {
     const attributes = optional(item['attributes'], jsonObject);
     return { id: text(item['id']), kind: text(item['kind']), source: text(item['source']), target: text(item['target']), directed: bool(item['directed']), field: text(item['field']), sources: list(item['sources'], source), ...(attributes === undefined ? {} : { attributes }) };
 }
-function facet(value: unknown): Facet {
+export function facet(value: unknown): Facet {
     const item = record(value);
     return { id: text(item['id']), nodeId: text(item['nodeId']), key: text(item['key']), value: json(item['value']), ruleId: text(item['ruleId']), sources: list(item['sources'], source) };
 }
@@ -14,7 +14,7 @@ function gate(value: unknown): NonNullable<Finding['gate']> {
     const item = record(value);
     return { metric: text(item['metric']), comparator: choice(item['comparator'], ['eq', 'ne', 'gt', 'gte', 'lt', 'lte']), threshold: number(item['threshold']), status: choice(item['status'], ['pass', 'fail', 'unknown']) };
 }
-function finding(value: unknown): Finding {
+export function finding(value: unknown): Finding {
     const item = record(value);
     const intent = optional(item['intent'], text);
     const implementation = optional(item['implementation'], text);
@@ -24,7 +24,7 @@ function finding(value: unknown): Finding {
         ...(intent === undefined ? {} : { intent }), ...(implementation === undefined ? {} : { implementation }), ...(parsedGate === undefined ? {} : { gate: parsedGate })
     };
 }
-function view(value: unknown): View {
+export function view(value: unknown): View {
     const item = record(value);
     const description = optional(item['description'], text);
     return { id: text(item['id']), type: choice(item['type'], ['matrix', 'cycle', 'distribution', 'table', 'gallery', 'status', 'graph']), label: text(item['label']), query: jsonObject(item['query']), sources: list(item['sources'], source), ...(description === undefined ? {} : { description }) };
@@ -43,11 +43,16 @@ function repository(value: unknown): Repository {
     const remoteUrl = optional(item['remoteUrl'], text);
     return { name: text(item['name']), dirty: bool(item['dirty']), sourceFingerprint: text(item['sourceFingerprint']), ...(commit === undefined ? {} : { commit }), ...(remoteUrl === undefined ? {} : { remoteUrl }) };
 }
-export function parseGraph(value: unknown): GraphDraft {
+export function parseGraphEnvelope(value: unknown): Omit<GraphDraft, 'nodes' | 'edges' | 'facets' | 'findings' | 'views'> {
     const item = record(value);
     return {
-        repository: repository(item['repository']), nodes: list(item['nodes'], node), edges: list(item['edges'], edge), facets: list(item['facets'], facet), findings: list(item['findings'], finding), views: list(item['views'], view), snapshots: parseSnapshots(item['snapshots']), lensDigest: item['lensDigest'] === null ? null : text(item['lensDigest']),
+        repository: repository(item['repository']), snapshots: parseSnapshots(item['snapshots']), lensDigest: item['lensDigest'] === null ? null : text(item['lensDigest']),
         adapterVersions: Object.fromEntries(Object.entries(record(item['adapterVersions'])).map(([key, version]) => [key, text(version)])),
         inputs: list(item['inputs'], value => { const input = record(value); return { path: text(input['path']), contentHash: text(input['contentHash']) }; })
     };
+}
+
+export function parseGraph(value: unknown): GraphDraft {
+    const item = record(value);
+    return { ...parseGraphEnvelope(value), nodes: list(item['nodes'], node), edges: list(item['edges'], edge), facets: list(item['facets'], facet), findings: list(item['findings'], finding), views: list(item['views'], view) };
 }

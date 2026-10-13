@@ -20,7 +20,7 @@ test('wide folder trees expose paginatable physical children without losing desc
 });
 test('default ordering does not infer purpose from connection popularity', () => {
     const model = buildStructuralMap([node('bin', 'bin/a.go'), node('app', 'src/a.go'), node('util', 'src/util/a.go')], [edge('i', 'app', 'util')]);
-    assert.equal(model.defaultStage, model.rootStageIds[0]); assert(model.structuralEntryStageIds.includes('folder:src'));
+    assert.equal(model.defaultStage, model.rootStageIds[0]); assert.deepEqual(model.structuralEntryStageIds, []);
 });
 test('deterministic descriptions prefer module prose, then local README, otherwise reports missing role', () => {
     const publicNode = node('n', 'src/a.go', { publicNames: [{ name: 'Search', uses: 7 }, { name: 'Parse', uses: 3 }] });
@@ -196,7 +196,7 @@ test('direct root identity survives folding without creating a dependency back t
 test('production scope omits auxiliary contributions and all scope retains exact import files', () => {
     const nodes = [node('app', 'main.go'), node('test', 'main_test.go'), node('lib', 'lib/a.go')];
     const model = buildStructuralOverview(nodes, [edge('prod', 'app', 'lib'), edge('test', 'test', 'lib')]);
-    assert.deepEqual(model.structuralScope, { default: 'production', productionCount: 2, auxiliaryCount: 1, allRootStageIds: ['all:folder:.', 'all:folder:lib'], allDefaultStage: 'all:folder:.', allSourceRoot: '.', allEntryStageIds: ['all:folder:.'], excludedDescription: '소스 루트 밖 제품 파일 0개 · 테스트·검사 자료 파일 1개', outsideRootCount: 0, selectedCount: 2 });
+    assert.deepEqual(model.structuralScope, { default: 'production', productionCount: 2, auxiliaryCount: 1, allRootStageIds: ['all:folder:.', 'all:folder:lib'], allDefaultStage: 'all:folder:.', allSourceRoot: '.', allEntryStageIds: [], excludedDescription: '소스 루트 밖 제품 파일 0개 · 테스트·검사 자료 파일 1개', outsideRootCount: 0, selectedCount: 2 });
     assert.deepEqual([...projected(model)[0].files], ['main.go']);
     assert.deepEqual([...projected(model, model.structuralScope.allRootStageIds)[0].files], ['main.go', 'main_test.go']);
     const testsOnly = buildStructuralOverview([node('test', 'tests/api.ts')], []);

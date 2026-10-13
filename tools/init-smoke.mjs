@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import { execFileSync, spawnSync } from 'node:child_process';
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
+import { readPackedArtifact } from '../bin/packed-reader.mjs';
 
 export function verifyInit(cli, repository) {
   mkdirSync(join(repository, '.lattice'), { recursive: true });
@@ -34,13 +35,13 @@ export function verifyInit(cli, repository) {
   assert.equal(read('.lattice/lens.yaml'), lens);
   assert.equal(read('.lattice/.gitignore'), ignore);
   run(['build']); run(['check']); run(['export']);
-  const starter = JSON.parse(read('.lattice/site/graph.json'));
+  const starter = readPackedArtifact(join(repository, '.lattice/site'), 'graph.json');
   for (const id of ['document:README.md', 'module:main.ts']) assert.ok(starter.nodes.some(node => node.id === id), id);
   assert.ok(!starter.inputs.some(input => /\.(json|yaml|csv)$/u.test(input.path)));
   const mixed = lens.replace('kinds:\n', 'kinds:\n  - id: record\n    label: Records\n    files: [\"records.json\", \"records.yaml\", \"owners.csv\"]\n');
   writeFileSync(join(repository, '.lattice/lens.yaml'), mixed);
   run(['build']); run(['check']); run(['export']);
-  const graph = JSON.parse(read('.lattice/site/graph.json'));
+  const graph = readPackedArtifact(join(repository, '.lattice/site'), 'graph.json');
   for (const id of ['service:yaml', 'service:json', 'owner:one', 'document:README.md', 'module:main.ts']) assert.ok(graph.nodes.some(node => node.id === id), id);
   const edited = mixed.replace(/^name:.*$/mu, 'name: "Edited repository map"');
   writeFileSync(join(repository, '.lattice/lens.yaml'), edited);

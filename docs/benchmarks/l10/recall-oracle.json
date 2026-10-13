@@ -1,0 +1,1263 @@
+{
+  "schemaVersion": 1,
+  "questionFreezeCommit": "c54c15b",
+  "createdBeforeL9GraphInspection": true,
+  "baselineOnlyPreviouslyViewed": "894ae5d structural maps; no L9 call output viewed",
+  "selection": "Within union of frozen entry/flow source spans, sort path lexicographically, line then source expression position. Select first five explicit call sites whose repository declaration/default target is source identifiable; fewer is shortage. Constructors and virtual/default targets are retained but classified. JSX/signal registration are controls, not direct call sites.",
+  "denominators": "Report declaration-target recall for all selected internal calls; separately exact-static recall only eligibleStatic=true. Virtual/conditional/dynamic factory possibilities must not be reported as exact concrete runtime calls. Unsupported GDScript and C/C++ are separate controls, not supported-family recall.",
+  "repositories": [
+    {
+      "id": "click",
+      "sha": "2247b35ea1c47c727d7a06e51fa280e12a863ff6",
+      "selected": [
+        {
+          "path": "src/click/core.py",
+          "line": 917,
+          "caller": "Context.invoke",
+          "expression": "self._make_sub_context(other_cmd)",
+          "target": {
+            "path": "src/click/core.py",
+            "line": 871,
+            "name": "Context._make_sub_context",
+            "sourceLine": "    def _make_sub_context(self, command: Command) -> Context:"
+          },
+          "category": "virtual",
+          "eligibleStatic": false,
+          "eligibleDeclaration": true,
+          "note": "self may be a subclass; declaration target only.",
+          "sourceLine": "            ctx = self._make_sub_context(other_cmd)"
+        },
+        {
+          "path": "src/click/core.py",
+          "line": 921,
+          "caller": "Context.invoke",
+          "expression": "param.get_default(ctx)",
+          "target": {
+            "path": "src/click/core.py",
+            "line": 2644,
+            "name": "Parameter.get_default",
+            "sourceLine": "    def get_default("
+          },
+          "category": "virtual",
+          "eligibleStatic": false,
+          "eligibleDeclaration": true,
+          "note": "Option overrides get_default at3389; do not collapse virtual target to one implementation.",
+          "sourceLine": "                    default_value = param.get_default(ctx)"
+        },
+        {
+          "path": "src/click/core.py",
+          "line": 931,
+          "caller": "Context.invoke",
+          "expression": "param.type_cast_value(ctx, default_value)",
+          "target": {
+            "path": "src/click/core.py",
+            "line": 2728,
+            "name": "Parameter.type_cast_value",
+            "sourceLine": "    def type_cast_value(self, ctx: Context, value: t.Any) -> t.Any:"
+          },
+          "category": "virtual",
+          "eligibleStatic": false,
+          "eligibleDeclaration": true,
+          "note": "",
+          "sourceLine": "                    kwargs[param.name] = param.type_cast_value(ctx, default_value)"
+        },
+        {
+          "path": "src/click/core.py",
+          "line": 939,
+          "caller": "Context.invoke",
+          "expression": "augment_usage_errors(self)",
+          "target": {
+            "path": "src/click/core.py",
+            "line": 154,
+            "name": "augment_usage_errors",
+            "sourceLine": "def augment_usage_errors("
+          },
+          "category": "direct",
+          "eligibleStatic": true,
+          "eligibleDeclaration": true,
+          "note": "",
+          "sourceLine": "        with augment_usage_errors(self), ctx:"
+        },
+        {
+          "path": "src/click/core.py",
+          "line": 1390,
+          "caller": "Command.make_context",
+          "expression": "self.context_class(self,...)",
+          "target": {
+            "path": "src/click/core.py",
+            "line": 370,
+            "name": "Context.__init__",
+            "sourceLine": "    def __init__("
+          },
+          "category": "dynamic-constructor",
+          "eligibleStatic": false,
+          "eligibleDeclaration": true,
+          "note": "context_class defaults to Context at1040 but is an explicit extension point.",
+          "sourceLine": "        ctx = self.context_class(self, info_name=info_name, parent=parent, **extra)"
+        }
+      ],
+      "controls": [
+        {
+          "category": "builtin",
+          "path": "src/click/core.py",
+          "line": 907,
+          "expression": "isinstance(callback, Command)",
+          "sourceLine": "        if isinstance(callback, Command):"
+        },
+        {
+          "category": "external",
+          "path": "src/click/core.py",
+          "line": 915,
+          "expression": "typing.cast(...)",
+          "sourceLine": "                callback = t.cast(\"t.Callable[..., V]\", other_cmd.callback)"
+        },
+        {
+          "category": "dynamic-callback",
+          "path": "src/click/core.py",
+          "line": 940,
+          "expression": "callback(*args, **kwargs)",
+          "sourceLine": "            return callback(*args, **kwargs)"
+        },
+        {
+          "category": "external",
+          "path": "src/click/core.py",
+          "line": 935,
+          "expression": "dict.update(kwargs)",
+          "sourceLine": "            ctx.params.update(kwargs)"
+        }
+      ],
+      "shortage": null
+    },
+    {
+      "id": "excalidraw",
+      "sha": "e65eca999e071503efb893d3379a29fb96ff37c4",
+      "selected": [],
+      "controls": [
+        {
+          "path": "excalidraw-app/App.tsx",
+          "line": 948,
+          "caller": "ExcalidrawWrapper",
+          "expression": "<Excalidraw ...>",
+          "target": {
+            "path": "packages/excalidraw/index.tsx",
+            "line": 401,
+            "name": "Excalidraw",
+            "sourceLine": "export const Excalidraw = React.memo(ExcalidrawBase, areEqual);"
+          },
+          "category": "framework-render",
+          "eligibleStatic": false,
+          "eligibleDeclaration": true,
+          "note": "",
+          "sourceLine": "      <Excalidraw"
+        },
+        {
+          "path": "excalidraw-app/App.tsx",
+          "line": 1308,
+          "caller": "ExcalidrawApp",
+          "expression": "<ExcalidrawPlusIframeExport />",
+          "target": {
+            "path": "excalidraw-app/ExcalidrawPlusIframeExport.tsx",
+            "line": 153,
+            "name": "ExcalidrawPlusIframeExport",
+            "sourceLine": "export const ExcalidrawPlusIframeExport = () => {"
+          },
+          "category": "framework-render",
+          "eligibleStatic": false,
+          "eligibleDeclaration": true,
+          "note": "",
+          "sourceLine": "    return <ExcalidrawPlusIframeExport />;"
+        },
+        {
+          "path": "excalidraw-app/App.tsx",
+          "line": 1312,
+          "caller": "ExcalidrawApp",
+          "expression": "<TopErrorBoundary>",
+          "target": {
+            "path": "excalidraw-app/components/TopErrorBoundary.tsx",
+            "line": 12,
+            "name": "TopErrorBoundary",
+            "sourceLine": "export class TopErrorBoundary extends React.Component<"
+          },
+          "category": "framework-render",
+          "eligibleStatic": false,
+          "eligibleDeclaration": true,
+          "note": "",
+          "sourceLine": "    <TopErrorBoundary>"
+        },
+        {
+          "path": "excalidraw-app/App.tsx",
+          "line": 1314,
+          "caller": "ExcalidrawApp",
+          "expression": "<ExcalidrawAPIProvider>",
+          "target": {
+            "path": "packages/excalidraw/index.tsx",
+            "line": 52,
+            "name": "ExcalidrawAPIProvider",
+            "sourceLine": "export const ExcalidrawAPIProvider = ({"
+          },
+          "category": "framework-render",
+          "eligibleStatic": false,
+          "eligibleDeclaration": true,
+          "note": "",
+          "sourceLine": "        <ExcalidrawAPIProvider>"
+        },
+        {
+          "path": "excalidraw-app/App.tsx",
+          "line": 1315,
+          "caller": "ExcalidrawApp",
+          "expression": "<ExcalidrawWrapper />",
+          "target": {
+            "path": "excalidraw-app/App.tsx",
+            "line": 375,
+            "name": "ExcalidrawWrapper",
+            "sourceLine": "const ExcalidrawWrapper = () => {"
+          },
+          "category": "framework-render",
+          "eligibleStatic": false,
+          "eligibleDeclaration": true,
+          "note": "",
+          "sourceLine": "          <ExcalidrawWrapper />"
+        },
+        {
+          "category": "external",
+          "path": "excalidraw-app/index.tsx",
+          "line": 11,
+          "expression": "createRoot(rootElement)",
+          "sourceLine": "const root = createRoot(rootElement);"
+        },
+        {
+          "category": "external-virtual-module",
+          "path": "excalidraw-app/index.tsx",
+          "line": 12,
+          "expression": "registerSW()",
+          "sourceLine": "registerSW();"
+        },
+        {
+          "category": "framework-external",
+          "path": "excalidraw-app/index.tsx",
+          "line": 13,
+          "expression": "root.render(...)",
+          "sourceLine": "root.render("
+        },
+        {
+          "category": "framework-callback",
+          "path": "packages/excalidraw/index.tsx",
+          "line": 401,
+          "expression": "React.memo(ExcalidrawBase, areEqual)",
+          "sourceLine": "export const Excalidraw = React.memo(ExcalidrawBase, areEqual);"
+        }
+      ],
+      "shortage": "Frozen spans contain JSX/framework render references, but no direct repository-internal calls. Five render controls retained."
+    },
+    {
+      "id": "fzf",
+      "sha": "c0a193e031f01fb50bf6f7be4381990a3753f7cf",
+      "selected": [
+        {
+          "path": "main.go",
+          "line": 58,
+          "caller": "main",
+          "expression": "protector.Protect()",
+          "target": {
+            "path": "src/protector/protector.go",
+            "line": 6,
+            "name": "Protect",
+            "sourceLine": "func Protect() {}"
+          },
+          "category": "build-conditional",
+          "eligibleStatic": false,
+          "eligibleDeclaration": true,
+          "note": "!openbsd implementation; openbsd target is protector_openbsd.go:8. No build target was selected by benchmark.",
+          "sourceLine": "\tprotector.Protect()"
+        },
+        {
+          "path": "main.go",
+          "line": 60,
+          "caller": "main",
+          "expression": "fzf.ParseOptions(true, os.Args[1:])",
+          "target": {
+            "path": "src/options.go",
+            "line": 3905,
+            "name": "ParseOptions",
+            "sourceLine": "func ParseOptions(useDefaults bool, args []string) (*Options, error) {"
+          },
+          "category": "direct",
+          "eligibleStatic": true,
+          "eligibleDeclaration": true,
+          "note": "",
+          "sourceLine": "\toptions, err := fzf.ParseOptions(true, os.Args[1:])"
+        },
+        {
+          "path": "main.go",
+          "line": 113,
+          "caller": "main",
+          "expression": "fzf.Run(options)",
+          "target": {
+            "path": "src/core.go",
+            "line": 55,
+            "name": "Run",
+            "sourceLine": "func Run(opts *Options) (int, error) {"
+          },
+          "category": "direct",
+          "eligibleStatic": true,
+          "eligibleDeclaration": true,
+          "note": "",
+          "sourceLine": "\tcode, err := fzf.Run(options)"
+        },
+        {
+          "path": "main.go",
+          "line": 114,
+          "caller": "main",
+          "expression": "exit(code, err)",
+          "target": {
+            "path": "main.go",
+            "line": 50,
+            "name": "exit",
+            "sourceLine": "func exit(code int, err error) {"
+          },
+          "category": "direct",
+          "eligibleStatic": true,
+          "eligibleDeclaration": true,
+          "note": "",
+          "sourceLine": "\texit(code, err)"
+        },
+        {
+          "path": "src/core.go",
+          "line": 204,
+          "caller": "Run",
+          "expression": "NewReader(...)",
+          "target": {
+            "path": "src/reader.go",
+            "line": 36,
+            "name": "NewReader",
+            "sourceLine": "func NewReader(pusher func([]byte) bool, eventBox *util.EventBox, executor *util.Executor, delimNil bool, wait bool) *Reader {"
+          },
+          "category": "direct",
+          "eligibleStatic": true,
+          "eligibleDeclaration": true,
+          "note": "",
+          "sourceLine": "\t\treader = NewReader(func(data []byte) bool {"
+        }
+      ],
+      "controls": [
+        {
+          "category": "external",
+          "path": "src/core.go",
+          "line": 208,
+          "expression": "time.Now()",
+          "sourceLine": "\t\tingestionStart = time.Now()"
+        },
+        {
+          "category": "builtin",
+          "path": "src/core.go",
+          "line": 209,
+          "expression": "make(chan bool)",
+          "sourceLine": "\t\treadyChan := make(chan bool)"
+        }
+      ],
+      "shortage": null
+    },
+    {
+      "id": "nowinandroid",
+      "sha": "a49ed253d75e61a2b6ab80a8da677b57437b08eb",
+      "selected": [
+        {
+          "path": "app/src/main/kotlin/com/google/samples/apps/nowinandroid/MainActivity.kt",
+          "line": 136,
+          "caller": "MainActivity.onCreate::<setContent lambda>",
+          "expression": "rememberNiaAppState(...)",
+          "target": {
+            "path": "app/src/main/kotlin/com/google/samples/apps/nowinandroid/ui/NiaAppState.kt",
+            "line": 42,
+            "name": "rememberNiaAppState",
+            "sourceLine": "fun rememberNiaAppState("
+          },
+          "category": "composable-direct",
+          "eligibleStatic": true,
+          "eligibleDeclaration": true,
+          "note": "Invocation occurs within framework-executed content lambda; do not claim onCreate directly executes body eagerly.",
+          "sourceLine": "            val appState = rememberNiaAppState("
+        },
+        {
+          "path": "app/src/main/kotlin/com/google/samples/apps/nowinandroid/MainActivity.kt",
+          "line": 148,
+          "caller": "MainActivity.onCreate::<setContent lambda>",
+          "expression": "NiaTheme(...)",
+          "target": {
+            "path": "core/designsystem/src/main/kotlin/com/google/samples/apps/nowinandroid/core/designsystem/theme/Theme.kt",
+            "line": 193,
+            "name": "NiaTheme",
+            "sourceLine": "fun NiaTheme("
+          },
+          "category": "composable-direct",
+          "eligibleStatic": true,
+          "eligibleDeclaration": true,
+          "note": "",
+          "sourceLine": "                NiaTheme("
+        },
+        {
+          "path": "app/src/main/kotlin/com/google/samples/apps/nowinandroid/MainActivity.kt",
+          "line": 153,
+          "caller": "MainActivity.onCreate::<NiaTheme lambda>",
+          "expression": "NiaApp(appState)",
+          "target": {
+            "path": "app/src/main/kotlin/com/google/samples/apps/nowinandroid/ui/NiaApp.kt",
+            "line": 90,
+            "name": "NiaApp(appState,modifier,windowAdaptiveInfo)",
+            "sourceLine": "fun NiaApp("
+          },
+          "category": "composable-direct",
+          "eligibleStatic": true,
+          "eligibleDeclaration": true,
+          "note": "",
+          "sourceLine": "                    NiaApp(appState)"
+        },
+        {
+          "path": "app/src/main/kotlin/com/google/samples/apps/nowinandroid/NiaApplication.kt",
+          "line": 44,
+          "caller": "NiaApplication.onCreate",
+          "expression": "setStrictModePolicy()",
+          "target": {
+            "path": "app/src/main/kotlin/com/google/samples/apps/nowinandroid/NiaApplication.kt",
+            "line": 66,
+            "name": "setStrictModePolicy",
+            "sourceLine": "    private fun setStrictModePolicy() {"
+          },
+          "category": "direct",
+          "eligibleStatic": true,
+          "eligibleDeclaration": true,
+          "note": "",
+          "sourceLine": "        setStrictModePolicy()"
+        },
+        {
+          "path": "app/src/main/kotlin/com/google/samples/apps/nowinandroid/NiaApplication.kt",
+          "line": 47,
+          "caller": "NiaApplication.onCreate",
+          "expression": "Sync.initialize(context = this)",
+          "target": {
+            "path": "sync/work/src/main/kotlin/com/google/samples/apps/nowinandroid/sync/initializers/SyncInitializer.kt",
+            "line": 27,
+            "name": "Sync.initialize",
+            "sourceLine": "    fun initialize(context: Context) {"
+          },
+          "category": "direct",
+          "eligibleStatic": true,
+          "eligibleDeclaration": true,
+          "note": "",
+          "sourceLine": "        Sync.initialize(context = this)"
+        }
+      ],
+      "controls": [
+        {
+          "category": "framework-external",
+          "path": "app/src/main/kotlin/com/google/samples/apps/nowinandroid/MainActivity.kt",
+          "line": 79,
+          "expression": "installSplashScreen()",
+          "sourceLine": "        val splashScreen = installSplashScreen()"
+        },
+        {
+          "category": "framework-external",
+          "path": "app/src/main/kotlin/com/google/samples/apps/nowinandroid/MainActivity.kt",
+          "line": 80,
+          "expression": "super.onCreate(savedInstanceState)",
+          "sourceLine": "        super.onCreate(savedInstanceState)"
+        },
+        {
+          "category": "framework-registration",
+          "path": "app/src/main/kotlin/com/google/samples/apps/nowinandroid/MainActivity.kt",
+          "line": 135,
+          "expression": "setContent { ... }",
+          "sourceLine": "        setContent {"
+        },
+        {
+          "category": "framework-external",
+          "path": "app/src/main/kotlin/com/google/samples/apps/nowinandroid/MainActivity.kt",
+          "line": 142,
+          "expression": "collectAsStateWithLifecycle()",
+          "sourceLine": "            val currentTimeZone by appState.currentTimeZone.collectAsStateWithLifecycle()"
+        }
+      ],
+      "shortage": null
+    },
+    {
+      "id": "ripgrep",
+      "sha": "3fce3b5bb0236da2df6d99672afb8a719642eca7",
+      "selected": [
+        {
+          "path": "crates/core/main.rs",
+          "line": 45,
+          "caller": "main",
+          "expression": "run(flags::parse())",
+          "target": {
+            "path": "crates/core/main.rs",
+            "line": 78,
+            "name": "run",
+            "sourceLine": "fn run(result: crate::flags::ParseResult<HiArgs>) -> anyhow::Result<ExitCode> {"
+          },
+          "category": "direct",
+          "eligibleStatic": true,
+          "eligibleDeclaration": true,
+          "note": "",
+          "sourceLine": "    match run(flags::parse()) {"
+        },
+        {
+          "path": "crates/core/main.rs",
+          "line": 45,
+          "caller": "main",
+          "expression": "flags::parse()",
+          "target": {
+            "path": "crates/core/flags/parse.rs",
+            "line": 49,
+            "name": "parse",
+            "sourceLine": "pub(crate) fn parse() -> ParseResult<HiArgs> {"
+          },
+          "category": "direct",
+          "eligibleStatic": true,
+          "eligibleDeclaration": true,
+          "note": "",
+          "sourceLine": "    match run(flags::parse()) {"
+        },
+        {
+          "path": "crates/core/main.rs",
+          "line": 83,
+          "caller": "run",
+          "expression": "special(mode)",
+          "target": {
+            "path": "crates/core/main.rs",
+            "line": 389,
+            "name": "special",
+            "sourceLine": "fn special(mode: crate::flags::SpecialMode) -> anyhow::Result<ExitCode> {"
+          },
+          "category": "direct",
+          "eligibleStatic": true,
+          "eligibleDeclaration": true,
+          "note": "",
+          "sourceLine": "        ParseResult::Special(mode) => return special(mode),"
+        },
+        {
+          "path": "crates/core/main.rs",
+          "line": 86,
+          "caller": "run",
+          "expression": "args.mode()",
+          "target": {
+            "path": "crates/core/flags/hiargs.rs",
+            "line": 547,
+            "name": "HiArgs.mode",
+            "sourceLine": "    pub(crate) fn mode(&self) -> Mode {"
+          },
+          "category": "inherent-method",
+          "eligibleStatic": true,
+          "eligibleDeclaration": true,
+          "note": "",
+          "sourceLine": "    let matched = match args.mode() {"
+        },
+        {
+          "path": "crates/core/main.rs",
+          "line": 87,
+          "caller": "run",
+          "expression": "args.matches_possible()",
+          "target": {
+            "path": "crates/core/flags/hiargs.rs",
+            "line": 532,
+            "name": "HiArgs.matches_possible",
+            "sourceLine": "    pub(crate) fn matches_possible(&self) -> bool {"
+          },
+          "category": "inherent-method",
+          "eligibleStatic": true,
+          "eligibleDeclaration": true,
+          "note": "",
+          "sourceLine": "        Mode::Search(_) if !args.matches_possible() => false,"
+        }
+      ],
+      "controls": [
+        {
+          "category": "constructor",
+          "path": "crates/core/main.rs",
+          "line": 82,
+          "expression": "Err(err)",
+          "note": "Standard enum variant, not repository function.",
+          "sourceLine": "        ParseResult::Err(err) => return Err(err),"
+        }
+      ],
+      "shortage": null
+    },
+    {
+      "id": "spring-petclinic",
+      "sha": "500158f732419217507c7656904b8e6aa1bcc0d6",
+      "selected": [
+        {
+          "path": "src/main/java/org/springframework/samples/petclinic/owner/OwnerController.java",
+          "line": 98,
+          "caller": "OwnerController.processFindForm",
+          "expression": "owner.getLastName()",
+          "target": {
+            "path": "src/main/java/org/springframework/samples/petclinic/model/Person.java",
+            "line": 49,
+            "name": "Person.getLastName",
+            "sourceLine": "\tpublic String getLastName() {"
+          },
+          "category": "virtual",
+          "eligibleStatic": false,
+          "eligibleDeclaration": true,
+          "note": "",
+          "sourceLine": "\t\tString lastName = owner.getLastName();"
+        },
+        {
+          "path": "src/main/java/org/springframework/samples/petclinic/owner/OwnerController.java",
+          "line": 107,
+          "caller": "OwnerController.processFindForm",
+          "expression": "findPaginatedForOwnersLastName(page, lastName)",
+          "target": {
+            "path": "src/main/java/org/springframework/samples/petclinic/owner/OwnerController.java",
+            "line": 141,
+            "name": "OwnerController.findPaginatedForOwnersLastName",
+            "sourceLine": "\tprivate Page<Owner> findPaginatedForOwnersLastName(int page, String lastname) {"
+          },
+          "category": "direct",
+          "eligibleStatic": true,
+          "eligibleDeclaration": true,
+          "note": "",
+          "sourceLine": "\t\tPage<Owner> ownersResults = findPaginatedForOwnersLastName(page, lastName);"
+        },
+        {
+          "path": "src/main/java/org/springframework/samples/petclinic/owner/OwnerController.java",
+          "line": 125,
+          "caller": "OwnerController.processFindForm",
+          "expression": "owner.getId()",
+          "target": {
+            "path": "src/main/java/org/springframework/samples/petclinic/model/BaseEntity.java",
+            "line": 39,
+            "name": "BaseEntity.getId",
+            "sourceLine": "\tpublic Integer getId() {"
+          },
+          "category": "virtual",
+          "eligibleStatic": false,
+          "eligibleDeclaration": true,
+          "note": "",
+          "sourceLine": "\t\t\treturn \"redirect:/owners/\" + owner.getId();"
+        },
+        {
+          "path": "src/main/java/org/springframework/samples/petclinic/owner/OwnerController.java",
+          "line": 129,
+          "caller": "OwnerController.processFindForm",
+          "expression": "addPaginationModel(page, model, ownersResults)",
+          "target": {
+            "path": "src/main/java/org/springframework/samples/petclinic/owner/OwnerController.java",
+            "line": 132,
+            "name": "OwnerController.addPaginationModel",
+            "sourceLine": "\tprivate String addPaginationModel(int page, Model model, Page<Owner> paginated) {"
+          },
+          "category": "direct",
+          "eligibleStatic": true,
+          "eligibleDeclaration": true,
+          "note": "",
+          "sourceLine": "\t\treturn addPaginationModel(page, model, ownersResults);"
+        },
+        {
+          "path": "src/main/java/org/springframework/samples/petclinic/owner/OwnerController.java",
+          "line": 145,
+          "caller": "OwnerController.findPaginatedForOwnersLastName",
+          "expression": "owners.findByLastNameStartingWith(lastname, pageable)",
+          "target": {
+            "path": "src/main/java/org/springframework/samples/petclinic/owner/OwnerRepository.java",
+            "line": 45,
+            "name": "OwnerRepository.findByLastNameStartingWith",
+            "sourceLine": "\tPage<Owner> findByLastNameStartingWith(String lastName, Pageable pageable);"
+          },
+          "category": "framework-interface",
+          "eligibleStatic": false,
+          "eligibleDeclaration": true,
+          "note": "Spring Data supplies implementation; repository contains interface declaration only.",
+          "sourceLine": "\t\treturn owners.findByLastNameStartingWith(lastname, pageable);"
+        }
+      ],
+      "controls": [
+        {
+          "category": "framework-external",
+          "path": "src/main/java/org/springframework/samples/petclinic/PetClinicApplication.java",
+          "line": 33,
+          "expression": "SpringApplication.run(...)",
+          "sourceLine": "\t\tSpringApplication.run(PetClinicApplication.class, args);"
+        },
+        {
+          "category": "external",
+          "path": "src/main/java/org/springframework/samples/petclinic/owner/OwnerController.java",
+          "line": 103,
+          "expression": "String.strip()",
+          "sourceLine": "\t\t\tlastName = lastName.strip();"
+        },
+        {
+          "category": "external",
+          "path": "src/main/java/org/springframework/samples/petclinic/owner/OwnerController.java",
+          "line": 108,
+          "expression": "Page.getTotalPages() / Math.max(...)",
+          "sourceLine": "\t\tif (page < 1 || page > Math.max(ownersResults.getTotalPages(), 1)) {"
+        },
+        {
+          "category": "external",
+          "path": "src/main/java/org/springframework/samples/petclinic/owner/OwnerController.java",
+          "line": 144,
+          "expression": "PageRequest.of(...)",
+          "sourceLine": "\t\tPageable pageable = PageRequest.of(validatedPage - 1, pageSize);"
+        }
+      ],
+      "shortage": null
+    },
+    {
+      "id": "fastify",
+      "sha": "86368086171305df4e235f6d6bec892c67ec2ae2",
+      "selected": [
+        {
+          "path": "lib/handle-request.js",
+          "line": 35,
+          "caller": "handleRequest",
+          "expression": "handler(request, reply)",
+          "target": {
+            "path": "lib/handle-request.js",
+            "line": 89,
+            "name": "handler",
+            "sourceLine": "function handler (request, reply) {"
+          },
+          "category": "direct",
+          "eligibleStatic": true,
+          "eligibleDeclaration": true,
+          "note": "",
+          "sourceLine": "    handler(request, reply)"
+        },
+        {
+          "path": "lib/handle-request.js",
+          "line": 92,
+          "caller": "handler",
+          "expression": "preValidationHookRunner(...)",
+          "target": {
+            "path": "lib/hooks.js",
+            "line": 231,
+            "name": "hookRunner",
+            "sourceLine": "  return function hookRunner (functions, request, reply, cb) {"
+          },
+          "category": "factory-resolved",
+          "eligibleStatic": true,
+          "eligibleDeclaration": true,
+          "note": "Immutable exported const gets hookRunnerGenerator(hookIterator) at273; generator always returns this named closure. Do not target factory itself.",
+          "sourceLine": "      preValidationHookRunner("
+        },
+        {
+          "path": "lib/handle-request.js",
+          "line": 99,
+          "caller": "handler",
+          "expression": "preValidationCallback(null, request, reply)",
+          "target": {
+            "path": "lib/handle-request.js",
+            "line": 106,
+            "name": "preValidationCallback",
+            "sourceLine": "function preValidationCallback (err, request, reply) {"
+          },
+          "category": "direct",
+          "eligibleStatic": true,
+          "eligibleDeclaration": true,
+          "note": "",
+          "sourceLine": "      preValidationCallback(null, request, reply)"
+        },
+        {
+          "path": "lib/handle-request.js",
+          "line": 102,
+          "caller": "handler",
+          "expression": "preValidationCallback(err, request, reply)",
+          "target": {
+            "path": "lib/handle-request.js",
+            "line": 106,
+            "name": "preValidationCallback",
+            "sourceLine": "function preValidationCallback (err, request, reply) {"
+          },
+          "category": "direct",
+          "eligibleStatic": true,
+          "eligibleDeclaration": true,
+          "note": "",
+          "sourceLine": "    preValidationCallback(err, request, reply)"
+        },
+        {
+          "path": "lib/handle-request.js",
+          "line": 115,
+          "caller": "preValidationCallback",
+          "expression": "validateSchema(reply[kRouteContext], request)",
+          "target": {
+            "path": "lib/validation.js",
+            "line": 330,
+            "name": "validate",
+            "sourceLine": "function validate (context, request, execution) {"
+          },
+          "category": "direct",
+          "eligibleStatic": true,
+          "eligibleDeclaration": true,
+          "note": "",
+          "sourceLine": "  const validationErr = validateSchema(reply[kRouteContext], request)"
+        }
+      ],
+      "controls": [
+        {
+          "category": "dynamic-receiver",
+          "path": "lib/handle-request.js",
+          "line": 28,
+          "expression": "reply.send(err)",
+          "note": "Untyped receiver; expected Reply in framework but concrete target not explicit at sourcecallsite.",
+          "sourceLine": "    reply.send(err)"
+        },
+        {
+          "category": "external",
+          "path": "lib/handle-request.js",
+          "line": 34,
+          "expression": "Set.has(method)",
+          "sourceLine": "  if (this[kSupportedHTTPMethods].bodyless.has(method)) {"
+        },
+        {
+          "category": "dynamic-callback",
+          "path": "lib/handle-request.js",
+          "line": 190,
+          "expression": "context.handler(request, reply)",
+          "sourceLine": "      result = context.handler(request, reply)"
+        }
+      ],
+      "shortage": null
+    },
+    {
+      "id": "httpx",
+      "sha": "b5addb64f0161ff6bfe94c124ef76f6a1fba5254",
+      "selected": [
+        {
+          "path": "httpx/_client.py",
+          "line": 825,
+          "caller": "Client.request",
+          "expression": "self.send(request,...)",
+          "target": {
+            "path": "httpx/_client.py",
+            "line": 879,
+            "name": "Client.send",
+            "sourceLine": "    def send("
+          },
+          "category": "virtual",
+          "eligibleStatic": false,
+          "eligibleDeclaration": true,
+          "note": "",
+          "sourceLine": "        return self.send(request, auth=auth, follow_redirects=follow_redirects)"
+        },
+        {
+          "path": "httpx/_client.py",
+          "line": 910,
+          "caller": "Client.send",
+          "expression": "self._set_timeout(request)",
+          "target": {
+            "path": "httpx/_client.py",
+            "line": 584,
+            "name": "BaseClient._set_timeout",
+            "sourceLine": "    def _set_timeout(self, request: Request) -> None:"
+          },
+          "category": "virtual",
+          "eligibleStatic": false,
+          "eligibleDeclaration": true,
+          "note": "",
+          "sourceLine": "        self._set_timeout(request)"
+        },
+        {
+          "path": "httpx/_client.py",
+          "line": 912,
+          "caller": "Client.send",
+          "expression": "self._build_request_auth(request, auth)",
+          "target": {
+            "path": "httpx/_client.py",
+            "line": 457,
+            "name": "BaseClient._build_request_auth",
+            "sourceLine": "    def _build_request_auth("
+          },
+          "category": "virtual",
+          "eligibleStatic": false,
+          "eligibleDeclaration": true,
+          "note": "",
+          "sourceLine": "        auth = self._build_request_auth(request, auth)"
+        },
+        {
+          "path": "httpx/_client.py",
+          "line": 914,
+          "caller": "Client.send",
+          "expression": "self._send_handling_auth(...)",
+          "target": {
+            "path": "httpx/_client.py",
+            "line": 930,
+            "name": "Client._send_handling_auth",
+            "sourceLine": "    def _send_handling_auth("
+          },
+          "category": "virtual",
+          "eligibleStatic": false,
+          "eligibleDeclaration": true,
+          "note": "",
+          "sourceLine": "        response = self._send_handling_auth("
+        },
+        {
+          "path": "httpx/_client.py",
+          "line": 937,
+          "caller": "Client._send_handling_auth",
+          "expression": "auth.sync_auth_flow(request)",
+          "target": {
+            "path": "httpx/_auth.py",
+            "line": 62,
+            "name": "Auth.sync_auth_flow",
+            "sourceLine": "    def sync_auth_flow("
+          },
+          "category": "virtual",
+          "eligibleStatic": false,
+          "eligibleDeclaration": true,
+          "note": "Subclass auth strategies can override; concrete auth instance not statically fixed.",
+          "sourceLine": "        auth_flow = auth.sync_auth_flow(request)"
+        }
+      ],
+      "controls": [
+        {
+          "category": "builtin",
+          "path": "httpx/_client.py",
+          "line": 939,
+          "expression": "next(auth_flow)",
+          "sourceLine": "            request = next(auth_flow)"
+        },
+        {
+          "category": "dynamic-callback",
+          "path": "httpx/_client.py",
+          "line": 977,
+          "expression": "hook(request)",
+          "sourceLine": "                hook(request)"
+        },
+        {
+          "category": "virtual",
+          "path": "httpx/_client.py",
+          "line": 1014,
+          "expression": "transport.handle_request(request)",
+          "note": "Runtime selected transport; no unique concrete implementation.",
+          "sourceLine": "            response = transport.handle_request(request)"
+        }
+      ],
+      "shortage": null
+    },
+    {
+      "id": "unity-boatattack",
+      "sha": "6acf5f773a440030489cb5e2b3c009fb5fe1e8ce",
+      "selected": [
+        {
+          "path": "Assets/Scripts/GameSystem/RaceManager.cs",
+          "line": 123,
+          "caller": "RaceManager.SetupRace",
+          "expression": "WaypointGroup.Instance.Setup(RaceData.reversed)",
+          "target": {
+            "path": "Assets/Scripts/GameSystem/WaypointGroup.cs",
+            "line": 46,
+            "name": "WaypointGroup.Setup",
+            "sourceLine": "\t\tpublic void Setup(bool reversed)"
+          },
+          "category": "nonvirtual-method",
+          "eligibleStatic": true,
+          "eligibleDeclaration": true,
+          "note": "",
+          "sourceLine": "            WaypointGroup.Instance.Setup(RaceData.reversed); // setup waypoints"
+        },
+        {
+          "path": "Assets/Scripts/GameSystem/RaceManager.cs",
+          "line": 124,
+          "caller": "RaceManager.SetupRace",
+          "expression": "CreateBoats()",
+          "target": {
+            "path": "Assets/Scripts/GameSystem/RaceManager.cs",
+            "line": 294,
+            "name": "RaceManager.CreateBoats",
+            "sourceLine": "        private static IEnumerator CreateBoats()"
+          },
+          "category": "direct",
+          "eligibleStatic": true,
+          "eligibleDeclaration": true,
+          "note": "Iterator factory called here; enumeration later by Unity StartCoroutine.",
+          "sourceLine": "            yield return Instance.StartCoroutine(CreateBoats()); // spawn boats;"
+        },
+        {
+          "path": "Assets/Scripts/GameSystem/RaceManager.cs",
+          "line": 129,
+          "caller": "RaceManager.SetupRace",
+          "expression": "CreatePlayerUi(0)",
+          "target": {
+            "path": "Assets/Scripts/GameSystem/RaceManager.cs",
+            "line": 338,
+            "name": "RaceManager.CreatePlayerUi",
+            "sourceLine": "        private static IEnumerator CreatePlayerUi(int player)"
+          },
+          "category": "direct",
+          "eligibleStatic": true,
+          "eligibleDeclaration": true,
+          "note": "Singleplayer branch; iterator enumeration deferred.",
+          "sourceLine": "                    yield return Instance.StartCoroutine(CreatePlayerUi(0));"
+        },
+        {
+          "path": "Assets/Scripts/GameSystem/RaceManager.cs",
+          "line": 130,
+          "caller": "RaceManager.SetupRace",
+          "expression": "SetupCamera(0)",
+          "target": {
+            "path": "Assets/Scripts/GameSystem/RaceManager.cs",
+            "line": 354,
+            "name": "RaceManager.SetupCamera",
+            "sourceLine": "        private static void SetupCamera(int player, bool remove = false)"
+          },
+          "category": "direct",
+          "eligibleStatic": true,
+          "eligibleDeclaration": true,
+          "note": "",
+          "sourceLine": "                    SetupCamera(0); // setup camera for player 1"
+        },
+        {
+          "path": "Assets/Scripts/GameSystem/RaceManager.cs",
+          "line": 137,
+          "caller": "RaceManager.SetupRace",
+          "expression": "ReplayCamera.Instance.EnableSpectatorMode()",
+          "target": {
+            "path": "Assets/Scripts/Camera/ReplayCamera.cs",
+            "line": 46,
+            "name": "ReplayCamera.EnableSpectatorMode",
+            "sourceLine": "        public void EnableSpectatorMode()"
+          },
+          "category": "nonvirtual-method",
+          "eligibleStatic": true,
+          "eligibleDeclaration": true,
+          "note": "Spectator branch, not sequential after Singleplayer branch.",
+          "sourceLine": "                    ReplayCamera.Instance.EnableSpectatorMode();"
+        }
+      ],
+      "controls": [
+        {
+          "category": "framework-external",
+          "path": "Assets/Scripts/GameSystem/RaceManager.cs",
+          "line": 124,
+          "expression": "Instance.StartCoroutine(...)",
+          "sourceLine": "            yield return Instance.StartCoroutine(CreateBoats()); // spawn boats;"
+        },
+        {
+          "category": "framework-external",
+          "path": "Assets/Scripts/GameSystem/RaceManager.cs",
+          "line": 129,
+          "expression": "Instance.StartCoroutine(...)",
+          "sourceLine": "                    yield return Instance.StartCoroutine(CreatePlayerUi(0));"
+        },
+        {
+          "category": "framework-external",
+          "path": "Assets/Scripts/Utility/DemoRun.cs",
+          "line": 9,
+          "expression": "StartCoroutine(...)",
+          "sourceLine": "        StartCoroutine(RaceManager.SetupRace());"
+        }
+      ],
+      "shortage": null
+    },
+    {
+      "id": "godot-demos",
+      "sha": "b761b4cd5718a7118f2c95eb55f181d0a5f004f1",
+      "selected": [
+        {
+          "path": "2d/dodge_the_creeps/main.gd",
+          "line": 17,
+          "caller": "new_game",
+          "expression": "$Player.start($StartPosition.position)",
+          "target": {
+            "path": "2d/dodge_the_creeps/player.gd",
+            "line": 43,
+            "name": "start",
+            "sourceLine": "func start(pos):"
+          },
+          "category": "unsupported-language",
+          "eligibleStatic": false,
+          "eligibleDeclaration": true,
+          "note": "Scene binding identifies script but GDScript not a required L9 call-analysis family.",
+          "sourceLine": "\t$Player.start($StartPosition.position)"
+        },
+        {
+          "path": "2d/dodge_the_creeps/main.gd",
+          "line": 19,
+          "caller": "new_game",
+          "expression": "$HUD.update_score(score)",
+          "target": {
+            "path": "2d/dodge_the_creeps/hud.gd",
+            "line": 20,
+            "name": "update_score",
+            "sourceLine": "func update_score(score):"
+          },
+          "category": "unsupported-language",
+          "eligibleStatic": false,
+          "eligibleDeclaration": true,
+          "note": "",
+          "sourceLine": "\t$HUD.update_score(score)"
+        },
+        {
+          "path": "2d/dodge_the_creeps/main.gd",
+          "line": 20,
+          "caller": "new_game",
+          "expression": "$HUD.show_message(\"Get Ready\")",
+          "target": {
+            "path": "2d/dodge_the_creeps/hud.gd",
+            "line": 5,
+            "name": "show_message",
+            "sourceLine": "func show_message(text):"
+          },
+          "category": "unsupported-language",
+          "eligibleStatic": false,
+          "eligibleDeclaration": true,
+          "note": "",
+          "sourceLine": "\t$HUD.show_message(\"Get Ready\")"
+        }
+      ],
+      "controls": [
+        {
+          "category": "framework-external",
+          "path": "2d/dodge_the_creeps/hud.gd",
+          "line": 25,
+          "expression": "$StartButton.hide()",
+          "sourceLine": "\t$StartButton.hide()"
+        },
+        {
+          "category": "signal",
+          "path": "2d/dodge_the_creeps/hud.gd",
+          "line": 26,
+          "expression": "start_game.emit()",
+          "sourceLine": "\tstart_game.emit()"
+        },
+        {
+          "category": "framework-external",
+          "path": "2d/dodge_the_creeps/main.gd",
+          "line": 15,
+          "expression": "get_tree().call_group(...)",
+          "sourceLine": "\tget_tree().call_group(&\"mobs\", &\"queue_free\")"
+        },
+        {
+          "category": "framework-external",
+          "path": "2d/dodge_the_creeps/main.gd",
+          "line": 18,
+          "expression": "$StartTimer.start()",
+          "sourceLine": "\t$StartTimer.start()"
+        },
+        {
+          "category": "signal-binding",
+          "path": "2d/dodge_the_creeps/main.tscn",
+          "line": 59,
+          "expression": "HUD start_game -> new_game",
+          "sourceLine": "[connection signal=\"start_game\" from=\"HUD\" to=\".\" method=\"new_game\"]"
+        }
+      ],
+      "shortage": "Only three repository script calls inside frozen spans; GDScript not required supported call family."
+    },
+    {
+      "id": "sqlite",
+      "sha": "6e35c19f170958b1e846e01c55318988f2d192e0",
+      "selected": [],
+      "controls": [
+        {
+          "category": "unsupported-language",
+          "note": "C/C++ negative control; source callgraph unavailable by L9contract."
+        }
+      ],
+      "shortage": "Unsupported language, not zero real calls."
+    },
+    {
+      "id": "runtime",
+      "sha": "8630d8988107478d249e2fdb8162f8c7dcbd3dbb",
+      "selected": [
+        {
+          "path": "src/libraries/System.Net.Http/src/System/Net/Http/HttpClient.cs",
+          "line": 518,
+          "caller": "HttpClient.SendAsync(request)",
+          "expression": "SendAsync(request, DefaultCompletionOption, CancellationToken.None)",
+          "target": {
+            "path": "src/libraries/System.Net.Http/src/System/Net/Http/HttpClient.cs",
+            "line": 526,
+            "name": "HttpClient.SendAsync(request,completionOption,cancellationToken)",
+            "sourceLine": "        public Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, HttpCompletionOption completionOption, CancellationToken cancellationToken)"
+          },
+          "category": "nonvirtual-method",
+          "eligibleStatic": true,
+          "eligibleDeclaration": true,
+          "note": "",
+          "sourceLine": "            SendAsync(request, DefaultCompletionOption, CancellationToken.None);"
+        },
+        {
+          "path": "src/libraries/System.Net.Http/src/System/Net/Http/HttpClient.cs",
+          "line": 521,
+          "caller": "HttpClient.SendAsync(request,cancellationToken)",
+          "expression": "SendAsync(request, DefaultCompletionOption, cancellationToken)",
+          "target": {
+            "path": "src/libraries/System.Net.Http/src/System/Net/Http/HttpClient.cs",
+            "line": 526,
+            "name": "HttpClient.SendAsync(request,completionOption,cancellationToken)",
+            "sourceLine": "        public Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, HttpCompletionOption completionOption, CancellationToken cancellationToken)"
+          },
+          "category": "nonvirtual-method",
+          "eligibleStatic": true,
+          "eligibleDeclaration": true,
+          "note": "",
+          "sourceLine": "            SendAsync(request, DefaultCompletionOption, cancellationToken);"
+        },
+        {
+          "path": "src/libraries/System.Net.Http/src/System/Net/Http/HttpClient.cs",
+          "line": 524,
+          "caller": "HttpClient.SendAsync(request,completionOption)",
+          "expression": "SendAsync(request, completionOption, CancellationToken.None)",
+          "target": {
+            "path": "src/libraries/System.Net.Http/src/System/Net/Http/HttpClient.cs",
+            "line": 526,
+            "name": "HttpClient.SendAsync(request,completionOption,cancellationToken)",
+            "sourceLine": "        public Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, HttpCompletionOption completionOption, CancellationToken cancellationToken)"
+          },
+          "category": "nonvirtual-method",
+          "eligibleStatic": true,
+          "eligibleDeclaration": true,
+          "note": "",
+          "sourceLine": "            SendAsync(request, completionOption, CancellationToken.None);"
+        },
+        {
+          "path": "src/libraries/System.Net.Http/src/System/Net/Http/HttpClient.cs",
+          "line": 529,
+          "caller": "HttpClient.SendAsync(request,completionOption,cancellationToken)",
+          "expression": "CheckRequestBeforeSend(request)",
+          "target": {
+            "path": "src/libraries/System.Net.Http/src/System/Net/Http/HttpClient.cs",
+            "line": 573,
+            "name": "HttpClient.CheckRequestBeforeSend",
+            "sourceLine": "        private void CheckRequestBeforeSend(HttpRequestMessage request)"
+          },
+          "category": "direct",
+          "eligibleStatic": true,
+          "eligibleDeclaration": true,
+          "note": "",
+          "sourceLine": "            CheckRequestBeforeSend(request);"
+        },
+        {
+          "path": "src/libraries/System.Net.Http/src/System/Net/Http/HttpClient.cs",
+          "line": 530,
+          "caller": "HttpClient.SendAsync(request,completionOption,cancellationToken)",
+          "expression": "PrepareCancellationTokenSource(cancellationToken)",
+          "target": {
+            "path": "src/libraries/System.Net.Http/src/System/Net/Http/HttpClient.cs",
+            "line": 802,
+            "name": "HttpClient.PrepareCancellationTokenSource",
+            "sourceLine": "        private (CancellationTokenSource TokenSource, bool DisposeTokenSource, CancellationTokenSource PendingRequestsCts) PrepareCancellationTokenSource(CancellationToken cancellationToken)"
+          },
+          "category": "direct",
+          "eligibleStatic": true,
+          "eligibleDeclaration": true,
+          "note": "",
+          "sourceLine": "            (CancellationTokenSource cts, bool disposeCts, CancellationTokenSource pendingRequestsCts) = PrepareCancellationTokenSource(cancellationToken);"
+        }
+      ],
+      "controls": [
+        {
+          "category": "virtual",
+          "path": "src/libraries/System.Net.Http/src/System/Net/Http/HttpMessageInvoker.cs",
+          "line": 78,
+          "expression": "_handler.SendAsync(request, cancellationToken)",
+          "note": "Abstract handler dispatch; declaration does not identify runtime concrete handler.",
+          "sourceLine": "            return _handler.SendAsync(request, cancellationToken);"
+        }
+      ],
+      "shortage": null
+    }
+  ]
+}

@@ -31,7 +31,7 @@ test('overview loader only falls back for old export 404 and retries source-boun
     const files = new Map(), graph = { hash: 'd'.repeat(64), repository: { name: 'sample', dirty: false, sourceFingerprint: 'c'.repeat(64) }, nodes: [], edges: [], facets: [] };
     writeOverview(graph, {}, (path, text) => files.set(path, text));
     let status = 503; const requests = [];
-    t.mock.method(globalThis, 'fetch', async url => { requests.push(url); return new Response(files.get(String(url).slice(2).split('?')[0]), { status }); });
+    t.mock.method(globalThis, 'fetch', async url => { if (String(url).includes('transport.json')) return new Response(null, { status: 404 }); requests.push(url); return new Response(files.get(String(url).slice(2).split('?')[0]), { status }); });
     const loader = createOverviewLoader('?generation=3');
     await assert.rejects(loader.read(), /503/); status = 404; assert.equal(await loader.read(), undefined);
     status = 200; const overview = await loader.read(); assert.equal(requests.length, 3); assert.equal(requests.some(path => path.includes('graph.json')), false);
@@ -88,4 +88,55 @@ test('structural catalog loads card records without full relationship and stage 
     assert.equal(catalog.nodes.length, graph.nodes.length); assert.equal(catalog.nodes[0].name, JSON.parse(files.get(layer.path)).model.nodes[0].name);
     assert.deepEqual(catalog.stages, []); assert.deepEqual(catalog.nodes[0].fields, []); assert.deepEqual(catalog.nodes[0].relationGroups, []);
     assert.equal(requests.includes(layer.path), false);
+});
+test('default function focus omitted from overview has a bounded source-bound packet', async t => {
+    const { writeOverview } = await import('../bin/export-overview.mjs');
+    const { createOverviewLoader, parseOverview } = await import('../viewer/overview-data.js');
+    const hash = 'a'.repeat(64), source = { path: 'src/main.ts', line: 1, pointer: '', contentHash: hash };
+    const module = { id: 'm', kind: 'module', name: 'main.ts', attributes: { path: source.path }, sources: [source], contentHash: hash };
+    const fn = { id: 'entry', kind: 'function', name: 'main', attributes: { module: 'm', entrypoints: [{ category: 'language-main', rule: 'main', source }] }, sources: [source], contentHash: hash };
+    const graph = { hash, repository: { name: 'focus', dirty: false, sourceFingerprint: hash }, nodes: [module, fn], edges: [], facets: [] }, files = new Map();
+    writeOverview(graph, {}, (path, text) => files.set(path, text));
+    const overview = parseOverview(JSON.parse(files.get('overview.json'))), layer = overview.layers[0];
+    assert.equal(layer.model.defaultFocus, 'entry'); assert.deepEqual(layer.model.nodes, []);
+    t.mock.method(globalThis, 'fetch', async url => { const path = String(url).slice(2); return new Response(files.get(path), { status: files.has(path) ? 200 : 404 }); });
+    const focused = await createOverviewLoader().model(overview, layer, new URLSearchParams({ view: 'focus', item: 'entry' }));
+    assert.equal(focused.defaultFocus, 'entry'); assert.equal(focused.nodes.find(node => node.id === 'entry').kind, 'function');
+    assert.equal(focused.nodes.length, 1); assert.deepEqual(focused.stages, []);
+});
+test('function focus loads each selected neighbor own call neighborhood lazily', async t => {
+    const { writeOverview } = await import('../bin/export-overview.mjs');
+    const { writeLogic } = await import('../bin/export-logic.mjs');
+    const { createOverviewLoader, parseOverview } = await import('../viewer/overview-data.js');
+    const hash = 'a'.repeat(64), source = { path: 'src/main.ts', line: 1, pointer: '', contentHash: hash };
+    const nodes = ['a', 'b', 'c'].map(id => ({ id, kind: 'function', name: id, attributes: { module: 'm', entrypoints: id === 'a' ? [{ category: 'language-main', rule: 'main', source }] : [] }, sources: [source], contentHash: hash }));
+    const edges = [['a', 'b'], ['b', 'c']].map(([sourceId, target]) => ({ id: sourceId + target, kind: 'calls', source: sourceId, target, directed: true, field: '', attributes: { resolution: 'exact' }, sources: [source] }));
+    const graph = { hash, repository: { name: 'chain', dirty: false, sourceFingerprint: hash }, nodes: [{ ...nodes[0], id: 'm', kind: 'module', attributes: { path: source.path } }, ...nodes], edges, facets: [] }, files = new Map();
+    writeOverview(graph, {}, (path, text) => files.set(path, text)); writeLogic(graph, (path, text) => files.set(path, text));
+    const overview = parseOverview(JSON.parse(files.get('overview.json'))), layer = overview.layers[0], requests = [];
+    t.mock.method(globalThis, 'fetch', async url => { const path = String(url).slice(2); requests.push(path); return new Response(files.get(path), { status: files.has(path) ? 200 : 404 }); });
+    const loader = createOverviewLoader();
+    const middle = await loader.model(overview, layer, new URLSearchParams({ view: 'focus', item: 'b' }));
+    assert.equal(middle.defaultFocus, 'b'); assert.deepEqual(middle.nodes.map(node => node.id).sort(), ['a', 'b', 'c']);
+    assert.ok(middle.nodes.find(node => node.id === 'b').relationGroups.some(group => group.items.some(item => item.id === 'c')));
+    const last = await loader.model(overview, layer, new URLSearchParams({ view: 'focus', item: 'c' }));
+    assert.equal(last.defaultFocus, 'c'); assert.deepEqual(last.nodes.map(node => node.id).sort(), ['b', 'c']);
+    assert.equal(requests.includes('graph.json'), false); assert.equal(requests.includes(layer.path), false);
+});
+
+test('structured overview export avoids whole-model serialization and preserves legacy documents exactly', async t => {
+    const { writeOverview } = await import('../bin/export-overview.mjs');
+    const source = path => ({ path, line: 1, pointer: '', contentHash: 'a'.repeat(64) });
+    const graph = { hash: 'b'.repeat(64), repository: { name: 'parts', dirty: false, sourceFingerprint: 'c'.repeat(64) }, nodes: ['src/a/main.ts', 'src/b/other.ts'].map((path, i) => ({ id: `m${i}`, kind: 'module', name: path, attributes: { path }, sources: [source(path)], contentHash: 'a'.repeat(64) })), edges: [], facets: [] };
+    const legacy = new Map(); writeOverview(graph, {}, (path, text) => legacy.set(path, JSON.parse(text)));
+    const stringify = JSON.stringify, structured = new Map();
+    t.mock.method(JSON, 'stringify', (value, ...args) => {
+        if (value && typeof value === 'object' && value.model) throw new Error('Whole model serialization forbidden');
+        return stringify(value, ...args);
+    });
+    writeOverview(graph, {}, (path, text) => {
+        assert.equal(path, 'overview.json', 'derived documents must use structured transport');
+        structured.set(path, JSON.parse(text));
+    }, { json: (path, value) => structured.set(path, JSON.parse(stringify(value))) });
+    assert.deepEqual(structured, legacy, 'paths, source binding and all document values remain identical');
 });

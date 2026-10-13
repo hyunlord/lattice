@@ -1,6 +1,6 @@
 import { writeJson } from './export-json.mjs';
 import { createHash } from 'node:crypto';
-import type { Graph, Source } from '../dist/core/model.js';
+import type { Graph, Source, Node, Edge, Facet, Finding } from '../dist/core/model.js';
 import type { DeferredSourceGroup } from '../dist/query/source-groups.js';
 function evidenceWriter(write: (path: string, text: string) => void) {
     const groups: Record<string, Omit<DeferredSourceGroup, 'id'>> = {};
@@ -45,4 +45,20 @@ export function writeThinGraph(graph: Graph, writeEvidence: (path: string, text:
         separator = ',';
     }
     write(`${separator}"evidence":`); writeJson(evidence, write); write('}');
+}
+
+/** Compact detail collections retain sources lazily without repeating graph binding and ID maps. */
+export function compactEvidence(nodes: readonly Node[], edges: readonly Edge[], facets: readonly Facet[], findings: readonly Finding[], write: (path: string, text: string) => void, reference?: (value: unknown, label?: string) => string) {
+    const collection = <T extends { readonly id: string; readonly sources: readonly Source[]; }>(records: readonly T[]) => records.map(record => {
+        if (!record.sources.length) return [record];
+        const hash = createHash('sha256'); writeJson(record.sources, text => { hash.update(text); });
+        const id = hash.digest('hex'), pages: string[] = [];
+        for (let offset = 0; offset < record.sources.length; offset += 128) {
+            const sources = record.sources.slice(offset, offset + 128), text = JSON.stringify(sources), hash = createHash('sha256').update(text).digest('hex');
+            if (reference) pages.push(reference(sources, hash));
+            else { const path = `evidence/${hash}.json`; write(path, text); pages.push(path); }
+        }
+        return [{ ...record, sources: [] }, { id, count: record.sources.length, pages }];
+    });
+    return { ...(nodes.length ? { nodes } : {}), ...(edges.length ? { edges: collection(edges) } : {}), ...(facets.length ? { facets: collection(facets) } : {}), ...(findings.length ? { findings: collection(findings) } : {}) };
 }

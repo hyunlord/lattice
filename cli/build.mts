@@ -4,6 +4,8 @@ import { parseMediaConfig } from '../dist/query/media-model.js';
 import type { Options, RepositoryReader, SourceLink } from './types.mjs';
 import type { DocumentDiagnostic, NodeDraft } from '../dist/index.js';
 import { canonicalJson, createGraph, codeStructure, resolveRecords, resolveDocumentLinks, resolveModuleLinks, automaticFindings } from '../dist/index.js';
+import { createGraphFromOwnedDraft } from '../dist/core/graph.js';
+import { validateCanonical } from '../dist/core/canonical.js';
 import { applyLens } from '../dist/lens/index.js';
 import { collectInputs } from './inputs.mjs';
 import { observeRepository } from './observation.mjs';
@@ -77,9 +79,20 @@ export function buildRepository(options: Options, historical?: RepositoryReader,
         return first ? [{ code: 'unsupported-language', language, fileCount: unsupported.length, path: first.path, line: 1, message: `${language}: ${unsupported.length} source files are inventoried; definitions, imports, and calls are not supported.` }] : [];
     });
     const visibleInputDiagnostics = [...inputDiagnostics, ...unsupportedDiagnostics];
-    const allDiagnostics = [...visibleInputDiagnostics, ...diagnostics, ...interpreted.diagnostics, ...documentDiagnostics, ...moduleLinks.diagnostics, ...packages.diagnostics, ...logic.diagnostics, ...graft.diagnostics];
-    const findings = [...interpreted.findings, ...automaticFindings(interpreted.nodes, interpreted.edges, allDiagnostics, digest)];
-    const graph = createGraph({ repository: { name: repository.name, ...(repository.remoteUrl ? { remoteUrl: repository.remoteUrl } : {}), ...(repository.commit ? { commit: repository.commit } : {}), dirty: repository.dirty, sourceFingerprint: digest(canonicalJson(inputs)) }, nodes: interpreted.nodes, edges: interpreted.edges, facets: interpreted.facets, findings, views: interpreted.views ?? [], snapshots: [], lensDigest: lensInput?.contentHash ?? null, adapterVersions: { buildManifests: '0.1', logic: logicParserVersion, automaticFindings: '0.1', json: '0.1', ...(inputs.some(input => /\.ya?ml$/iu.test(input.path)) ? { yaml: '0.1' } : {}), ...(inputs.some(input => /\.csv$/iu.test(input.path)) ? { csv: '0.1' } : {}), ...(documents.length ? { markdown: '0.1' } : {}), ...(modules.length ? { code: '0.2' } : {}), ...(lens?.codeLinks.length ? { codeSupport: '0.1' } : {}), ...(lens ? { lens: '0.1' } : {}), ...(graftObservation ? { graft: graftAdapterVersion } : {}), references: '0.1' }, inputs }, digest);
+    const localDiagnostics = [...diagnostics, ...interpreted.diagnostics, ...documentDiagnostics, ...moduleLinks.diagnostics, ...packages.diagnostics, ...logic.diagnostics, ...graft.diagnostics];
+    const allDiagnostics = [...visibleInputDiagnostics, ...localDiagnostics];
+    const ownsDraft = lens === undefined && graftObservation?.diagnostic === undefined;
+    let generatedFindings = automaticFindings(interpreted.nodes, interpreted.edges, allDiagnostics, digest);
+    if (ownsDraft && inputDiagnostics.length) {
+        // Validate before copying so borrowed provenance cannot normalize invalid descriptors or prototypes.
+        validateCanonical({ findings: generatedFindings });
+        generatedFindings = structuredClone(generatedFindings);
+    }
+    const findings = [...interpreted.findings, ...generatedFindings];
+    // Borrowed interpretation/diagnostic values keep defensive validation; only local drafts transfer ownership.
+    const outputs = ownsDraft ? structuredClone({ presentation: interpreted.presentation, diagnostics: localDiagnostics }) : { presentation: interpreted.presentation, diagnostics: allDiagnostics };
+    const constructGraph = ownsDraft ? createGraphFromOwnedDraft : createGraph;
+    const graph = constructGraph({ repository: { name: repository.name, ...(repository.remoteUrl ? { remoteUrl: repository.remoteUrl } : {}), ...(repository.commit ? { commit: repository.commit } : {}), dirty: repository.dirty, sourceFingerprint: digest(canonicalJson(inputs)) }, nodes: interpreted.nodes, edges: interpreted.edges, facets: interpreted.facets, findings, views: interpreted.views ?? [], snapshots: [], lensDigest: lensInput?.contentHash ?? null, adapterVersions: { buildManifests: '0.1', logic: logicParserVersion, automaticFindings: '0.1', json: '0.1', ...(inputs.some(input => /\.ya?ml$/iu.test(input.path)) ? { yaml: '0.1' } : {}), ...(inputs.some(input => /\.csv$/iu.test(input.path)) ? { csv: '0.1' } : {}), ...(documents.length ? { markdown: '0.1' } : {}), ...(modules.length ? { code: '0.2' } : {}), ...(lens?.codeLinks.length ? { codeSupport: '0.1' } : {}), ...(lens ? { lens: '0.1' } : {}), ...(graftObservation ? { graft: graftAdapterVersion } : {}), references: '0.1' }, inputs }, digest);
     const media = resolveMediaAssets(root, graph.nodes, parseMediaConfig(interpreted.presentation?.['media']));
-    return { fingerprint, media, extraction: { stats: cache.stats, logicStats: logicCache.stats, manifest: [...cache.manifest, ...logicCache.manifest] }, graph, presentation: { ...interpreted.presentation, inputDiagnostics: visibleInputDiagnostics, logicStats: logic.stats, interpretations: readInterpretations(root, graph, historical), draftInterpretation: readDraftStatus(root, graph, historical) ?? null, mediaManifest: media.manifest }, diagnostics: allDiagnostics, coverage };
+    return { fingerprint, media, extraction: { stats: cache.stats, logicStats: logicCache.stats, manifest: [...cache.manifest, ...logicCache.manifest] }, graph, presentation: { ...outputs.presentation, inputDiagnostics: visibleInputDiagnostics, logicStats: logic.stats, interpretations: readInterpretations(root, graph, historical), draftInterpretation: readDraftStatus(root, graph, historical) ?? null, mediaManifest: media.manifest }, diagnostics: ownsDraft ? [...visibleInputDiagnostics, ...outputs.diagnostics] : outputs.diagnostics, coverage };
 }

@@ -26,7 +26,7 @@ export function logicImports(root: Node, language: string): LogicImport[] {
     }
     const requireShadowed = (node: Node): boolean => requireShadows.some(scope => scope.scopeStart <= node.startIndex && node.startIndex < scope.scopeEnd);
     const add = (node: Node, local: string, imported: string, specifier: string, namespace = false, exported = false) => { if (local && specifier) result.push({ local, imported, specifier, namespace, ...(exported ? { exported: true } : {}), ...lexicalRange(node, language), line: node.startPosition.row + 1 }); };
-    for (const node of descendants(root, n => ['import_statement', 'import_from_statement', 'import_declaration', 'import_header', 'use_declaration', 'mod_item', 'import_spec', 'variable_declarator'].includes(n.type))) {
+    for (const node of descendants(root, n => ['import_statement', 'import_from_statement', 'import_declaration', 'import_header', 'use_declaration', 'mod_item', 'import_spec', 'variable_declarator', 'extern_crate_declaration'].includes(n.type))) {
         if (['javascript', 'typescript'].includes(language)) {
             if (node.type === 'import_statement') {
                 const specifier = literal(field(node, 'source'));
@@ -56,6 +56,9 @@ export function logicImports(root: Node, language: string): LogicImport[] {
         } else if (language === 'go' && node.type === 'import_spec') {
             const path = literal(field(node, 'path')), name = field(node, 'name')?.text ?? path.split('/').at(-1) ?? '';
             if (!['_', '.'].includes(name)) add(node, name, '*', path, true);
+        } else if (language === 'rust' && node.type === 'extern_crate_declaration') {
+            const name = field(node, 'name')?.text ?? '';
+            add(node, field(node, 'alias')?.text ?? name, '*', name, true, children(node).some(child => child.type === 'visibility_modifier'));
         } else if (language === 'rust' && node.type === 'mod_item') {
             const name = field(node, 'name')?.text ?? '';
             if (!field(node, 'body')) add(node, name, '*', `self::${name}`, true);

@@ -21,7 +21,7 @@ function failure(host: HTMLElement, error: unknown, retry: () => void): void {
 }
 
 export function renderLogicEntrypoints(host: HTMLElement, provider: LogicProvider, context: LogicContext): void {
-    const title = element('h2', '실행 진입점'); const result = element('div');
+    const title = element('h2', '실행 진입점과 공개 API'); const result = element('div');
     host.append(title, element('p', '소스에서 확인한 시작 함수와 공개 API입니다. 실행 기록은 아닙니다.', 'muted'), result);
     let offset = 0;
     const render = async (): Promise<void> => {
@@ -32,7 +32,7 @@ export function renderLogicEntrypoints(host: HTMLElement, provider: LogicProvide
             for (const item of page.items) {
                 const row = element('li'); row.append(link(item.node.name, context.flowHref(item.node.id, 3)));
                 const packages = item.packageIds.map(provider.name); if (packages.length) row.append(element('p', packages.join(' / '), 'muted'));
-                for (const entry of item.entrypoints) row.append(element('span', `${entry.category} · ${sourceText(entry.source)}`, 'logic-source'));
+                for (const entry of item.entrypoints) row.append(element('span', `${({ executable: '실행 진입점', 'module-execution': '모듈 실행', 'public-api': '공개 API', 'route-handler': '요청 처리', 'framework-callback': '프레임워크 콜백' }[entry.category] ?? '기타 진입점')} · ${sourceText(entry.source)}`, 'logic-source'));
                 list.append(row);
             }
             result.replaceChildren(element('p', `${page.total}개 진입점`), page.items.length ? list : element('p', '확정할 수 있는 진입점이 없습니다. 지원 언어와 분석 한계는 근거 보기에서 확인하세요.'));

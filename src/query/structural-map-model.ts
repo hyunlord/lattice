@@ -1,3 +1,4 @@
+import { productLogicPath } from '../core/logic-policy.js';
 import type { Node, Edge } from '../core/model.js';
 import { manifestStructuralMap, manifestPackage, manifestProductSelection } from './structural-manifest-map.js';
 import { representativeNames } from './structural-name-facts.js';
@@ -170,9 +171,8 @@ export function buildStructuralMap(nodes: readonly Node[], edges: readonly Edge[
     const frontier = structuralFrontier(stages, flows, productionSource);
     const entryPaths = new Set(sourceNodes.filter(node => {
         const entries = node.attributes['entryPoints'];
-        return productionSource(node.sources[0]?.path ?? node.name) && (Array.isArray(entries) && entries.length > 0 || folder(node) === source && /(?:^|\/)(?:index\.[cm]?[jt]sx?|__init__\.py|lib\.rs|mod\.rs|main\.[^.]+|package-info\.java)$/u.test(node.sources[0]?.path ?? node.name));
+        return productLogicPath(node.sources[0]?.path ?? node.name) && Array.isArray(entries) && entries.length > 0;
     }).map(folder));
-    if (!entryPaths.size && sourceNodes.some(node => folder(node) === source)) entryPaths.add(source);
     const entries = [...entryPaths].sort().map(path => `folder:${path}`);
     const sourceById = new Map(sourceNodes.map(node => [node.id, node]));
     const previewStages = frontier.rootStageIds.length <= 2 ? frontier.stages.map(stage => stage.nodeIds.length ? { ...stage, filePreviews: structuralFilePreviews(stage.nodeIds.flatMap(id => sourceById.get(id) ?? []), edges) } : stage) : frontier.stages;

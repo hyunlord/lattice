@@ -3,17 +3,17 @@ import { source } from './data.js';
 import { deferredSources, sourceCount, type DeferredSourceGroup } from './source-groups.js';
 import { element, action } from './explore-controls.js';
 const pages = new Map<string, Promise<readonly Source[]>>();
+let transport: Promise<ReturnType<typeof import('./packed-data.js')['createPackedLoader']>> | undefined;
 export function readEvidencePage(path: string): Promise<readonly Source[]> {
-    if (!/^evidence\/[a-f0-9]{64}\.json$/u.test(path)) return Promise.reject(new Error('올바르지 않은 근거 경로입니다.'));
+    if (!/^(?:evidence\/|records\/\d+\/\d+\/)[a-f0-9]{64}\.json$/u.test(path)) return Promise.reject(new Error('올바르지 않은 근거 경로입니다.'));
     const cached = pages.get(path); if (cached) return cached;
     const pending = (async () => {
-        const response = await fetch('./' + path);
-        if (!response.ok) throw new Error(`근거 HTTP ${response.status}. 새로고침하거나 다시 시도하세요.`);
-        const text = await response.text();
-        if (globalThis.crypto?.subtle) {
-            const hash = [...new Uint8Array(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(text)))].map(byte => byte.toString(16).padStart(2, '0')).join('');
-            if (path !== `evidence/${hash}.json`) throw new Error('근거 파일 해시가 일치하지 않습니다. 새로고침 후 다시 시도하세요.');
-        }
+        const generation = typeof document === 'undefined' ? undefined : document.querySelector<HTMLMetaElement>('meta[name="lattice-generation"]')?.content;
+        const suffix = generation ? '?generation=' + encodeURIComponent(generation) : '';
+        const text = await (transport ??= import('./packed-data.js').then(module => module.createPackedLoader('./', suffix))).then(loader => loader.text(path));
+        const bytes = new TextEncoder().encode(text);
+        const hash = globalThis.crypto?.subtle ? [...new Uint8Array(await crypto.subtle.digest('SHA-256', bytes))].map(byte => byte.toString(16).padStart(2, '0')).join('') : (await import('./packed-hash.js')).packedHash(bytes);
+        if (!path.endsWith(`/${hash}.json`)) throw new Error('근거 파일 해시가 일치하지 않습니다. 새로고침 후 다시 시도하세요.');
         const value: unknown = JSON.parse(text);
         if (!Array.isArray(value) || value.length > 128 || !value.every(source)) throw new Error('근거 파일 형식이 올바르지 않습니다.');
         return value;

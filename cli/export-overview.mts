@@ -1,13 +1,15 @@
+import { writeJson } from './export-json.mjs';
 import { writeOverviewParts } from './export-overview-parts.mjs';
 import { thinStructuralOverview } from '../dist/query/thin-structural-model.js';
 import { object } from './types.mjs';
 import { createHash } from 'node:crypto';
 import type { Graph } from '../dist/core/model.js';
 import { parsePresentation } from '../dist/query/map-presentation.js';
-import { buildLoopMap } from '../dist/query/loop-map-model.js';
+import { logicOverviewMetadata } from '../dist/query/logic-model.js';
+import { buildLoopMap, buildFunctionFocus } from '../dist/query/loop-map-model.js';
 
 // The overview is derived transport, never a replacement for the canonical graph.
-export function writeOverview(graph: Pick<Graph, 'hash' | 'repository' | 'nodes' | 'edges' | 'facets'>, rawPresentation: unknown, write: (path: string, text: string) => void): void {
+export function writeOverview(graph: Pick<Graph, 'hash' | 'repository' | 'nodes' | 'edges' | 'facets'>, rawPresentation: unknown, write: (path: string, text: string) => void, options: { readonly json?: (path: string, value: unknown) => void; } = {}): void {
     const presentation = parsePresentation(rawPresentation);
     const diagnostics = object(rawPresentation) ? rawPresentation['inputDiagnostics'] : undefined;
     const limitations = Array.isArray(diagnostics) ? diagnostics.flatMap(item => object(item) && item['code'] === 'unsupported-language' && typeof item['language'] === 'string' && typeof item['fileCount'] === 'number' && Number.isSafeInteger(item['fileCount']) && item['fileCount'] > 0 ? [{ language: item['language'], fileCount: item['fileCount'] }] : []) : [];
@@ -17,12 +19,19 @@ export function writeOverview(graph: Pick<Graph, 'hash' | 'repository' | 'nodes'
     if (!layerIds.length) layerIds.push('');
     const layers = layerIds.map(id => {
         const nodes = visible.filter(node => String(node.attributes['layer'] ?? '') === id);
-        const model = buildLoopMap(nodes, graph.edges, graph.facets, presentation, graph.repository.name, { projection: 'overview' });
-        const text = JSON.stringify({ schemaVersion: 1, hash: graph.hash, repository: graph.repository, model });
-        const path = `overview/${createHash('sha256').update(text).digest('hex')}.json`;
-        write(path, text);
+        const model = buildLoopMap(nodes, graph.edges, graph.facets, presentation, graph.repository.name, { projection: 'overview', logic: logicOverviewMetadata({ nodes, edges: graph.edges }) });
+        const document = { schemaVersion: 1, hash: graph.hash, repository: graph.repository, model }, digest = createHash('sha256');
+        const text = options.json ? undefined : JSON.stringify(document);
+        if (text === undefined) writeJson(document, chunk => { digest.update(chunk); }); else digest.update(text);
+        const path = `overview/${digest.digest('hex')}.json`;
+        if (options.json) options.json(path, document); else if (text !== undefined) write(path, text);
         const initial = thinStructuralOverview(model);
-        const parts = model.structural ? writeOverviewParts(graph, model, id, write) : undefined;
+        const focusId = model.defaultFocus;
+        const focusNode = nodes.find(node => node.id === focusId && node.kind === 'function');
+        const focusEdges = focusNode ? graph.edges.filter(edge => edge.kind === 'calls' && edge.attributes?.['resolution'] === 'exact' && (edge.source === focusId || edge.target === focusId)) : [];
+        const focusIds = new Set([focusId, ...focusEdges.flatMap(edge => [edge.source, edge.target])]);
+        const focus = focusNode ? buildFunctionFocus(nodes.filter(node => focusIds.has(node.id)), focusEdges, presentation, graph.repository.name, focusNode.id) : undefined;
+        const parts = model.structural ? writeOverviewParts(graph, model, id, write, focus, options) : undefined;
         const labels = presentation.layers;
         const label = (Array.isArray(labels) ? labels.find(layer => layer.id === id)?.label : labels?.[id]?.label) ?? id;
         return { id, label, path, ...(parts ? { parts } : {}), deferred: Boolean(model.structural), model: initial };

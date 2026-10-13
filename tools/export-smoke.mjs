@@ -1,7 +1,10 @@
 import assert from 'node:assert/strict';
+import { gunzipSync } from 'node:zlib';
+import { createHash } from 'node:crypto';
 import { execFileSync, spawnSync } from 'node:child_process';
 import { existsSync, lstatSync, mkdirSync, readFileSync, readdirSync, renameSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
+import { readPackedArtifact } from '../bin/packed-reader.mjs';
 
 export function verifyExport(cli, repository) {
   mkdirSync(repository, { recursive: true });
@@ -14,19 +17,50 @@ export function verifyExport(cli, repository) {
   run(['build']);
   run(['export']);
   const first = contents();
-  assert.ok(first['structural-dependency-groups.js']);
-  assert.ok(first['evidence.js']);
-  assert.ok(first['source-groups.js']);
-  assert.doesNotMatch(first['source-groups.js'], /\.\.\/dist\//u);
-  const thin = JSON.parse(first['graph.json']);
+  const manifest = JSON.parse(first['asset-archives/manifest.json']);
+  const decodedPacks = manifest.packs.map(pack => {
+    const bytes = readFileSync(join(output, 'asset-archives', pack.path));
+    assert.equal(createHash('sha256').update(bytes).digest('hex'), pack.hash);
+    assert.equal(bytes.length, pack.encoded); assert.ok(bytes.length <= 262144);
+    const decoded = gunzipSync(bytes); assert.equal(decoded.length, pack.decoded); assert.ok(decoded.length <= 262144);
+    return decoded;
+  });
+  assert.ok(manifest.version === 1 || manifest.version === 2 || manifest.version === 3);
+  if (manifest.version === 3) {
+    assert.ok(manifest.initial.includes('app.js'));
+    assert.ok(manifest.deferred.length > 0);
+    assert.equal(new Set([...manifest.initial, ...manifest.deferred]).size, manifest.initial.length + manifest.deferred.length);
+    assert.ok(manifest.packs.some(pack => pack.stage === 'initial'));
+    assert.ok(manifest.packs.some(pack => pack.stage === 'deferred'));
+    for (const stage of ['initial', 'deferred']) {
+      const script = Buffer.concat(decodedPacks.filter((_, index) => manifest.packs[index].stage === stage)).toString('utf8');
+      const names = [...script.matchAll(/^define\("([a-zA-Z0-9_-]+)",/gmu)].map(match => match[1] + '.js').sort();
+      assert.deepEqual(names, [...manifest[stage]].sort());
+      assert.match(script, stage === 'initial' ? /lattice-assets-ready/u : /lattice-assets-register/u);
+    }
+  }
+  if (manifest.version === 1) {
+    const modules = Object.fromEntries(decodedPacks.flatMap(decoded => JSON.parse(decoded)));
+    for (const name of ['structural-dependency-groups.js', 'evidence.js', 'source-groups.js']) assert.ok(modules[name]);
+    assert.doesNotMatch(modules['source-groups.js'], /\.\.\/dist\//u);
+    assert.match(modules['loop-map-model.js'], /lattice-viewer\/structural-dependency-groups\.js/u);
+  } else {
+    const bundle = Buffer.concat(decodedPacks).toString('utf8');
+    for (const name of ['structural-dependency-groups', 'evidence', 'source-groups', 'loop-map-model']) assert.ok(bundle.includes(`define("${name}",`), `Missing compiled module ${name}`);
+    assert.doesNotMatch(bundle, /\.\.\/dist\//u);
+    assert.match(bundle, /^define\("loop-map-model", \[[^\]\n]*"structural-dependency-groups"[^\]\n]*\],/mu);
+    assert.match(bundle, /lattice-assets-ready/u);
+  }
+  assert.match(first['index.html'], /asset-bootstrap\.js/u);
+  assert.equal(first['app.js'], undefined);
+  const thin = readPackedArtifact(output, 'graph.json');
   const full = JSON.parse(readFileSync(join(repository, '.lattice/cache/graph.json'), 'utf8'));
-  for (const kind of ['edges', 'facets', 'findings', 'views']) for (const record of thin[kind]) {
+  for (const kind of thin.evidence ? ['edges', 'facets', 'findings', 'views'] : []) for (const record of thin[kind]) {
     const id = thin.evidence.records[kind]?.[record.id];
-    if (id) record.sources = thin.evidence.groups[id].pages.flatMap(path => JSON.parse(first[path]));
+    if (id) record.sources = thin.evidence.groups[id].pages.flatMap(path => readPackedArtifact(output, path));
   }
   delete thin.evidence;
   assert.deepEqual(thin, full);
-  assert.match(first['loop-map-model.js'], /\.\/structural-dependency-groups\.js/u);
   assert.equal(JSON.parse(first['.lattice-export.json']).generator, 'lattice');
   run(['export']);
   assert.deepEqual(contents(), first);

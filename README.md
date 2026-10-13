@@ -2,7 +2,7 @@
 
 A repository-neutral system map for people and agents. Deterministic extraction creates one graph for a static browser viewer and MCP tools; declarative lenses add repository-specific meaning.
 
-**Status: L9 implementation and benchmark verification.** Maintenance was lifted to add build-manifest packages, conservative static function calls and entrypoints, bounded flow views, and a small initial map payload. The [twelve-repository benchmark](docs/benchmarks/l9/README.md) freezes source commits, questions, independent reference evidence and measurement rules before implementation. The [L9 evidence report](docs/review/l9-package-logic.md) records per-repository coverage, dependency and call accuracy, first-screen timings, and independent map-versus-source answers. Numerical checks do not establish complete execution flows; unresolved dispatch, large warm MCP latency and publication verification remain explicitly distinguished. Earlier [L8 evidence](docs/review/l8-readable-repositories.md) remains historical evidence.
+**Status: L10 accepted; maintenance scope.** The user accepted the connected package/logic maps, bounded exports and map+source96/96 evaluation (16.96% elapsed saving). Eleven first-display regressions remain explicitly accepted residuals in [#97](https://github.com/hyunlord/lattice/issues/97), including the separate maximum444ms observation. See the [paired results](docs/benchmarks/l10/closure-display.md), [frozen benchmark](docs/benchmarks/l9/README.md) and earlier [L9 evidence](docs/review/l9-package-logic.md). Preserve historical failures and unresolved static dispatch limitations. Complete the approved consumer Pages release, then make only fixes for reported usage problems; additional box-click UX work belongs to a separate small task.
 
 - [Original v0.1 brief](docs/design/brief-v0.1.md)
 - [Architecture and lens contract](docs/design/lattice-v0.md)
@@ -57,6 +57,8 @@ The viewer's entrypoint list opens bounded function flows and caller/callee deta
 Initial navigation fetches a source-bound overview. Function records, calls and flow pages load on demand; legacy detailed graph views and source evidence retain their separate lazy paths. See [L9 extraction and transport](docs/design/l9-analysis.md).
 
 ## Query from agents
+
+Large-repository cold cost ([#98](https://github.com/hyunlord/lattice/issues/98)): the frozen49,457-input sample's first MCP request includes a cold build and took **349.8seconds**, with a sampled process-tree RSS peak of **5.30GB** under the default Node heap. Steady-warm p95 was **898ms**. These are different operating states: the first later worker-start request took7.04seconds and later warm peak memory was6.40GB. RSS sampling can miss short peaks. See [exact environment, source and measurement limits](docs/benchmarks/l10/closure-mcp.md); cold MCP time is not a standalone build benchmark.
 
 Run `lattice mcp --root /path/to/repository` for stdio MCP, or use `init` to configure installed clients. Eleven read-only query tools inspect overview, filtered nodes, detail, paths, matrices, findings, Git differences, freshness, entrypoints, calls and bounded flows. Three additional interpretation tools read source-bound module/folder context, write AI notes, and save an inactive lens draft. Each query checks actual file contents before serving graph evidence. See [agent notes and optional external CI summarization](docs/review/l7-interpretation.md). [Protocol, pagination, viewer links and setup](docs/design/mcp.md) describe the contract.
 

@@ -34,3 +34,20 @@ export function exportedNames(root: Node): ReadonlyMap<string, readonly string[]
     }
     return result;
 }
+
+export function pythonNamespaceExports(root: Node): readonly string[] | undefined {
+    const references = descendants(root, node => identifier(node) && node.text === '__all__');
+    if (!references.length) return undefined;
+    if (references.length !== 1) return [];
+    const assignment = references[0]?.parent;
+    if (!assignment || assignment.type !== 'assignment' || field(assignment, 'left')?.text !== '__all__' || assignment.parent?.parent?.id !== root.id) return [];
+    const value = field(assignment, 'right');
+    if (!value || !['list', 'tuple'].includes(value.type)) return [];
+    const names: string[] = [];
+    for (const item of children(value)) {
+        const match = /^(['"])([A-Za-z_]\w*)\1$/u.exec(item.text);
+        if (item.type !== 'string' || !match?.[2]) return [];
+        names.push(match[2]);
+    }
+    return [...new Set(names)];
+}

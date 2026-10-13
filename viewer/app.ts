@@ -1,5 +1,4 @@
-import { createNodeDetailLoader } from './node-detail-data.js';
-import { renderNodeDetail } from './node-detail.js';
+import type { NodeDetailLoader } from './node-detail-data.js';
 import { loopRouteEvent } from './loop-map-route.js';
 import { createOverviewLoader, type Overview } from './overview-data.js';
 import type { LoopMap } from './loop-map-types.js';
@@ -8,13 +7,13 @@ import { sourceCount } from './source-groups.js';
 import { renderLoopMap } from './loop-map.js';
 import { buildLoopMap } from './loop-map-model.js';
 import type { Node as GraphNode, Facet, Finding, Source, Snapshot } from '../dist/core/model.js';
-import { renderExplore } from './explore.js';
-import { humanValue } from './views-records.js';
-import { renderViews } from './views.js';
-import { renderList } from './list.js';
-import { renderHome } from './home.js';
-import { renderChanges } from './changes.js';
-import { renderNodeHistory } from './node-history.js';
+import type { renderExplore } from './explore.js';
+import type { humanValue } from './views-records.js';
+import type { renderViews } from './views.js';
+import type { renderList } from './list.js';
+import type { renderHome } from './home.js';
+import type { renderChanges } from './changes.js';
+import type { renderNodeHistory } from './node-history.js';
 import { valueKey } from './list-model.js';
 import { pager } from './explore-controls.js';
 import { parseGraph, parsePresentation, parseSnapshots, type BrowserGraph, type Presentation } from './data.js';
@@ -154,7 +153,7 @@ function findingView(finding: Finding, compact = false) {
     }
     return article;
 }
-function overview(version: number) {
+function overview(version: number, renderHome: typeof import('./home.js').renderHome) {
     void renderHome(main, {
         graph, nodes: visibleNodes, findings: layerFindings(), kinds, presentation, layer: activeLayer,
         snapshots, readSnapshot, isCurrent: () => version === renderVersion,
@@ -164,11 +163,13 @@ function overview(version: number) {
 }
 function home(model?: LoopMap) {
     const limitations = firstOverview?.limitations ?? [];
-    if (limitations.length) { const labels = limitations.map(limitation => `${limitation.language === 'cpp' ? 'C++' : limitation.language === 'c' ? 'C' : limitation.language} 파일 ${limitation.fileCount}개`); main.append(el('p', `${labels.join(' · ')}: 구조·호출 분석은 지원하지 않습니다. 파일 위치만 표시합니다.`, 'panel unsupported-language')); }
+    let limitationText = '';
+    if (limitations.length) { const labels = limitations.map(limitation => `${limitation.language === 'cpp' ? 'C++' : limitation.language === 'c' ? 'C' : limitation.language} 파일 ${limitation.fileCount}개`); limitationText = `${labels.join(' · ')}: 구조·호출 분석은 지원하지 않습니다. 파일 위치만 표시합니다.`; const warning = el('p', undefined, 'panel unsupported-language'); warning.append(el('span', limitationText, 'unsupported-full'), el('span', '일부 언어는 파일 위치만 표시 · 근거 보기에서 확인', 'unsupported-compact')); main.append(warning); }
     const evidence = el('section', undefined, 'picture-evidence'); evidence.hidden = true;
     const details = el('nav', undefined, 'picture-deeper'); details.hidden = true; details.setAttribute('aria-label', '자세히');
     for (const [label, path] of [['실행 진입점과 흐름', '/logic'], ['발견과 요약', '/overview'], ['목록', '/list'], ['행렬과 상태판', '/views'], ['관계 탐색', '/explore'], ['변화', '/changes']]) if (label && path) details.append(link(label, routeHref(path)));
     pageHeading('근거', undefined, evidence);
+    if (limitationText) evidence.append(el('p', limitationText));
     const map = el('div', undefined, 'picture-home-map'); main.append(map, details, evidence);
     disposeScreen = renderLoopMap(map, model ?? buildLoopMap(visibleNodes, graph.edges, graph.facets, presentation, graph.repository.name), { kindLabel, nodeHref, onMissingNode: id => { location.hash = routeHref('/home', { view: 'focus', item: id }); }, onEvidence: () => { for (const old of evidence.querySelectorAll('.lm-analysis-evidence')) old.remove(); for (const source of map.querySelectorAll('.lm-analysis-evidence')) { const copy = source.cloneNode(true); if (copy instanceof HTMLElement) { copy.hidden = false; evidence.append(copy); } } evidence.hidden = !evidence.hidden; if (!evidence.hidden) evidence.scrollIntoView({ block: 'nearest' }); }, onDetails: () => { details.hidden = !details.hidden; if (!details.hidden) details.scrollIntoView({ block: 'nearest' }); } });
 }
@@ -177,14 +178,14 @@ function selectControl(label: string, name: string, values: readonly (readonly s
     for (const [value, title] of values) { const option = el('option', title); option.value = value ?? ''; option.selected = selected === value; select.append(option); }
     wrapper.append(select); return wrapper;
 }
-function listing(params: URLSearchParams) {
+function listing(params: URLSearchParams, renderListing: typeof renderList) {
     const visibleIds = new Set(visibleNodes.map(node => node.id));
-    renderList(main, {
+    renderListing(main, {
         nodes: visibleNodes, facets: graph.facets.filter(facet => visibleIds.has(facet.nodeId)), kinds, params,
         kindLabel, facetLabel, valueLabel, sources, nodeHref, href: listHref, heading: pageHeading
     });
 }
-function detail(id: string, version: number) {
+function detail(id: string, version: number, { humanValue, renderNodeHistory }: Extract<LazyView, { kind: 'node'; }>) {
     const node = nodes.get(id);
     main.append(link('← 목록으로', listHref(), 'breadcrumb'));
     if (!node) { pageHeading('노드를 찾을 수 없습니다', id); main.append(empty('ID가 변경되었거나 현재 내보내기에 없는 노드입니다. 목록에서 다시 검색하세요.')); return; }
@@ -235,7 +236,7 @@ function detail(id: string, version: number) {
     }
     void renderNodeHistory(main, { node, snapshots, readSnapshot, isCurrent: () => version === renderVersion, sources, changesHref: (base, head, identity) => routeHref('/changes', { base, head, node: identity }) });
 }
-function views(id: string, params: URLSearchParams) {
+function views(id: string, params: URLSearchParams, renderViews: typeof import('./views.js').renderViews) {
     const visibleIds = new Set(visibleNodes.map(node => node.id));
     disposeScreen = renderViews(main, {
         views: graph.views, nodes: visibleNodes, allNodes: graph.nodes, allEdges: graph.edges, layerLabel,
@@ -246,19 +247,19 @@ function views(id: string, params: URLSearchParams) {
 }
 async function readSnapshot(snapshot: Snapshot): Promise<BrowserGraph> {
     const cached = snapshotGraphs.get(snapshot.id); if (cached) return cached;
-    const response = await fetch('./' + snapshot.artifactPath); if (!response.ok) throw new Error('스냅샷 HTTP ' + response.status);
-    const data = parseGraph(await response.json()); if (data.schemaVersion !== 1 || data.hash !== snapshot.graphHash || !Array.isArray(data.nodes) || !Array.isArray(data.findings)) throw new Error('스냅샷의 형식 또는 해시가 일치하지 않습니다.');
+    const data = parseGraph(await (await import('./packed-data.js')).packedLoader(suffix).json(snapshot.artifactPath)); if (data.schemaVersion !== 1 || data.hash !== snapshot.graphHash || data.repository.commit !== snapshot.commit || !Array.isArray(data.nodes) || !Array.isArray(data.findings)) throw new Error('스냅샷의 형식 또는 해시가 일치하지 않습니다.');
     snapshotGraphs.set(snapshot.id, data); return data;
 }
-function changes(params: URLSearchParams, version: number) {
-    void renderChanges(main, {
+function changes(params: URLSearchParams, version: number, renderHistory: typeof renderChanges) {
+    void renderHistory(main, {
         nodes: visibleNodes, kinds, layer: activeLayer, snapshots, params, readSnapshot,
         isCurrent: () => version === renderVersion, heading: pageHeading, kindLabel, facetLabel,
         valueLabel, nodeHref, sources, href: values => routeHref('/changes', values),
     });
 }
 
-function render() {
+type LazyView = { kind: 'explore'; render: typeof renderExplore; } | { kind: 'views'; render: typeof renderViews; } | { kind: 'list'; render: typeof renderList; } | { kind: 'changes'; render: typeof renderChanges; } | { kind: 'overview'; render: typeof renderHome; } | { kind: 'node'; humanValue: typeof humanValue; renderNodeHistory: typeof renderNodeHistory; };
+function render(lazyView?: LazyView) {
     const version = ++renderVersion;
     disposeScreen?.(); disposeScreen = undefined;
     main.replaceChildren();
@@ -272,7 +273,7 @@ function render() {
     const route = path === '/explore' ? 'explore' : path.startsWith('/views') ? 'views' : path.startsWith('/changes') ? 'changes' : path === '/home' ? 'home' : 'list';
     document.querySelectorAll<HTMLAnchorElement>('[data-route]').forEach(item => { item.href = routeHref('/' + item.dataset['route']); if (item.dataset['route'] === route) item.setAttribute('aria-current', 'page'); else item.removeAttribute('aria-current'); });
     document.body.classList.toggle('picture-home', path === '/home');
-    if (path === '/home') home(); else if (path === '/overview') overview(version); else if (path === '/explore') { pageHeading('관계 탐색', '종류와 분류로 좁히고, 방향 경로와 이웃을 따라 출처까지 탐색합니다.'); const visibleIds = new Set(visibleNodes.map(node => node.id)); disposeScreen = renderExplore(main, { nodes: visibleNodes, edges: graph.edges.filter(edge => visibleIds.has(edge.source) && visibleIds.has(edge.target)), facets: graph.facets.filter(facet => visibleIds.has(facet.nodeId)), params, kindLabel, facetLabel, valueLabel, nodeHref, href: values => routeHref('/explore', values) }); } else if (path === '/list') listing(params); else if (path.startsWith('/views')) views(path.slice(7), params); else if (path.startsWith('/changes')) changes(params, version); else if (path.startsWith('/node/')) { try { detail(decodeURIComponent(path.slice(6)), version); } catch { pageHeading('잘못된 노드 주소'); main.append(link('목록으로 돌아가기', listHref())); } } else { pageHeading('화면을 찾을 수 없습니다'); main.append(link('홈으로 돌아가기', routeHref('/home'))); }
+    if (path === '/home') home(); else if (path === '/overview') { if (lazyView?.kind !== 'overview') throw new Error('Overview renderer is not loaded'); overview(version, lazyView.render); } else if (path === '/explore') { if (lazyView?.kind !== 'explore') throw new Error('Explore renderer is not loaded'); pageHeading('관계 탐색', '종류와 분류로 좁히고, 방향 경로와 이웃을 따라 출처까지 탐색합니다.'); const visibleIds = new Set(visibleNodes.map(node => node.id)); disposeScreen = lazyView.render(main, { nodes: visibleNodes, edges: graph.edges.filter(edge => visibleIds.has(edge.source) && visibleIds.has(edge.target)), facets: graph.facets.filter(facet => visibleIds.has(facet.nodeId)), params, kindLabel, facetLabel, valueLabel, nodeHref, href: values => routeHref('/explore', values) }); } else if (path === '/list') { if (lazyView?.kind !== 'list') throw new Error('List renderer is not loaded'); listing(params, lazyView.render); } else if (path.startsWith('/views')) { if (lazyView?.kind !== 'views') throw new Error('Views renderer is not loaded'); views(path.slice(7), params, lazyView.render); } else if (path.startsWith('/changes')) { if (lazyView?.kind !== 'changes') throw new Error('Changes renderer is not loaded'); changes(params, version, lazyView.render); } else if (path.startsWith('/node/')) { if (lazyView?.kind !== 'node') throw new Error('Node helpers are not loaded'); try { detail(decodeURIComponent(path.slice(6)), version, lazyView); } catch { pageHeading('잘못된 노드 주소'); main.append(link('목록으로 돌아가기', listHref())); } } else { pageHeading('화면을 찾을 수 없습니다'); main.append(link('홈으로 돌아가기', routeHref('/home'))); }
     document.title = `${main.querySelector('h1')?.textContent || '지도'} · Lattice`;
     main.querySelector('h1')?.focus({ preventScroll: true });
     window.scrollTo(0, 0);
@@ -287,10 +288,9 @@ async function requireGraph(): Promise<void> {
     if (fullGraphLoaded) return;
     if (graphRequest) return graphRequest;
     const pending = (async () => {
-        const [response, presentationResponse, snapshotResponse] = await Promise.all([fetch('./graph.json' + suffix), fetch('./presentation.json' + suffix), fetch('./snapshots.json' + suffix)]);
-        if (!response.ok) throw new Error('graph.json HTTP ' + response.status);
-        const next = parseGraph(await response.json());
-        if (firstOverview && next.hash !== firstOverview.hash) throw new Error('첫 화면과 그래프의 소스가 다릅니다. 지도를 새로 고치세요.');
+        const [data, presentationResponse, snapshotResponse] = await Promise.all([(await import('./packed-data.js')).packedLoader(suffix).json('graph.json'), fetch('./presentation.json' + suffix), fetch('./snapshots.json' + suffix)]);
+        const next = parseGraph(data);
+        if (firstOverview && (next.hash !== firstOverview.hash || next.repository.commit !== firstOverview.repository.commit || next.repository.sourceFingerprint !== firstOverview.repository.sourceFingerprint || next.repository.dirty !== firstOverview.repository.dirty)) throw new Error('첫 화면과 그래프의 소스가 다릅니다. 지도를 새로 고치세요.');
         graph = next; presentation = parsePresentation(presentationResponse.ok ? await presentationResponse.json() : {});
         snapshots = snapshotResponse.ok ? parseSnapshots(await snapshotResponse.json()) : [];
         indexGraph(); fullGraphLoaded = true;
@@ -298,6 +298,8 @@ async function requireGraph(): Promise<void> {
     graphRequest = pending; try { await pending; } finally { graphRequest = undefined; }
 }
 function loadFailure(error: unknown, retry: () => void = () => { void route(); }): void {
+    ++renderVersion;
+    disposeScreen?.(); disposeScreen = undefined;
     main.replaceChildren(el('h1', '지도를 불러오지 못했습니다'), el('p', errorMessage(error), 'muted'), button('다시 시도', retry), button('새로 고침', () => location.reload()));
 }
 function needsModel(params: URLSearchParams): boolean {
@@ -305,7 +307,7 @@ function needsModel(params: URLSearchParams): boolean {
 }
 const logicContext = { nodeHref: (id: string) => routeHref('/function/' + encodeURIComponent(id)), flowHref: (id: string, depth: number) => routeHref('/flow/' + encodeURIComponent(id), { depth: String(depth) }) };
 async function logicProvider() {
-    if (firstOverview) { const { createLogicProvider } = await import('./logic-data.js'); return createLogicProvider(firstOverview.hash, suffix); }
+    if (firstOverview) { const { createLogicProvider } = await import('./logic-data.js'); return createLogicProvider(firstOverview.hash, suffix, firstOverview.repository); }
     await requireGraph(); const { graphLogicProvider } = await import('./logic.js'); return graphLogicProvider(graph);
 }
 async function mountFunctionLogic(host: HTMLElement, id: string): Promise<void> {
@@ -313,13 +315,13 @@ async function mountFunctionLogic(host: HTMLElement, id: string): Promise<void> 
     const [provider, ui] = await Promise.all([logicProvider(), import('./logic.js')]);
     if (section.isConnected) ui.renderFunctionLogic(section, provider, id, logicContext);
 }
-let nodeDetailLoader: ReturnType<typeof createNodeDetailLoader> | undefined;
+let nodeDetailLoader: NodeDetailLoader | undefined;
 let routeRequest = 0;
 let homeDeferred = false;
 let loadedHomeRoute = '';
 async function route(): Promise<void> {
-    const request = ++routeRequest;
-    const [path = '/home', search = ''] = (location.hash.slice(1) || '/home').split('?'); const params = new URLSearchParams(search);
+    const request = ++routeRequest, hash = location.hash;
+    const [path = '/home', search = ''] = (hash.slice(1) || '/home').split('?'); const params = new URLSearchParams(search);
     try {
         if (path === '/logic' || path.startsWith('/flow/') || path.startsWith('/function/')) {
             const [provider, ui] = await Promise.all([logicProvider(), import('./logic.js')]);
@@ -332,6 +334,8 @@ async function route(): Promise<void> {
             document.title = '로직 구조 · Lattice'; return;
         }
         if (path.startsWith('/node/') && firstOverview && !fullGraphLoaded) {
+            const [{ createNodeDetailLoader }, { renderNodeDetail }] = await Promise.all([import('./node-detail-data.js'), import('./node-detail.js')]);
+            if (request !== routeRequest) return;
             nodeDetailLoader ??= createNodeDetailLoader(firstOverview, suffix);
             const index = await nodeDetailLoader.index();
             if (index) {
@@ -362,8 +366,20 @@ async function route(): Promise<void> {
             homeDeferred = Boolean(layer.parts) || layer.deferred && !hydrate; loadedHomeRoute = location.hash; home(model); document.title = `${model.title ?? '지도'} · Lattice`; return;
         }
         main.setAttribute('aria-busy', 'true');
-        await requireGraph(); if (request !== routeRequest) return; render();
-    } catch (error) { if (request === routeRequest) loadFailure(error); }
+        await requireGraph(); if (request !== routeRequest || hash !== location.hash) return;
+        let lazyView: LazyView | undefined;
+        if (path === '/explore') lazyView = { kind: 'explore', render: (await import('./explore.js')).renderExplore };
+        else if (path.startsWith('/views')) lazyView = { kind: 'views', render: (await import('./views.js')).renderViews };
+        else if (path === '/list') lazyView = { kind: 'list', render: (await import('./list.js')).renderList };
+        else if (path.startsWith('/changes')) lazyView = { kind: 'changes', render: (await import('./changes.js')).renderChanges };
+        else if (path === '/overview') lazyView = { kind: 'overview', render: (await import('./home.js')).renderHome };
+        else if (path.startsWith('/node/')) {
+            const [{ renderNodeHistory }, { humanValue }] = await Promise.all([import('./node-history.js'), import('./views-records.js')]);
+            lazyView = { kind: 'node', humanValue, renderNodeHistory };
+        }
+        if (request !== routeRequest || hash !== location.hash) return;
+        render(lazyView);
+    } catch (error) { if (request === routeRequest && hash === location.hash) loadFailure(error); }
     finally { if (request === routeRequest) main.removeAttribute('aria-busy'); }
 }
 async function load(): Promise<void> {

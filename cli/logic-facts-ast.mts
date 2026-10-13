@@ -43,7 +43,14 @@ export function staticDefinition(node: Node, language: string, owner: string): b
 export function annotations(node: Node): string[] {
     const parent = node.parent?.type === 'decorated_definition' ? node.parent : node;
     const bodyStart = field(node, 'body')?.startIndex ?? node.endIndex;
-    return descendants(parent, child => child.startIndex < bodyStart && ['annotation', 'marker_annotation', 'decorator'].includes(child.type)).map(child => (field(child, 'name') ?? children(child)[0])?.text ?? child.text);
+    const selected: Node[] = [], pending = [parent];
+    while (pending.length) {
+        const child = pending.pop();
+        if (!child || child.startIndex >= bodyStart || unsupportedCallableTypes.has(child.type)) continue;
+        if (['annotation', 'marker_annotation', 'decorator'].includes(child.type)) selected.push(child);
+        pending.push(...children(child).toReversed());
+    }
+    return selected.map(child => (field(child, 'name') ?? children(child)[0])?.text ?? child.text);
 }
 export function bindings(node: Node): string[] {
     const result = new Set<string>();

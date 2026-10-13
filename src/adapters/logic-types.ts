@@ -1,6 +1,10 @@
 import type { Source } from '../core/model.js';
 
+export type LogicReceiver = { readonly name: string; readonly type: string; readonly constructed: boolean; readonly start: number; readonly scopeStart: number; readonly scopeEnd: number; };
 export type LogicDefinition = {
+    readonly nonVirtual?: boolean;
+    readonly arity?: { readonly min: number; readonly max: number; };
+    readonly receivers?: readonly LogicReceiver[];
     readonly id: string;
     readonly name: string;
     readonly line: number;
@@ -18,9 +22,11 @@ export type LogicDefinition = {
     readonly annotations: readonly string[];
 };
 export type LogicImport = { readonly local: string; readonly imported: string; readonly specifier: string; readonly namespace: boolean; readonly exported?: boolean; readonly scopeStart: number; readonly scopeEnd: number; readonly line: number; };
-export type LogicCall = { readonly caller: string; readonly name: string; readonly receiver: string; readonly line: number; readonly endLine: number; readonly start: number; readonly callbackIds: readonly string[]; readonly route: boolean; };
+export type LogicCall = { readonly argumentCount?: number; readonly caller: string; readonly name: string; readonly receiver: string; readonly line: number; readonly endLine: number; readonly start: number; readonly callbackIds: readonly string[]; readonly route: boolean; };
 export type LogicDiagnostic = { readonly code: string; readonly path: string; readonly line: number; readonly message: string; };
 export type LogicFacts = {
+    readonly mutableReceivers?: boolean;
+    readonly namespaceExports?: readonly string[];
     readonly version: 1;
     readonly path: string;
     readonly language: string;

@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import * as exporter from '../bin/export-logic.mjs';
+import { logicEntrypoints } from '../dist/query/logic-model.js';
 const source = { path: 'main.ts', line: 1, pointer: '', contentHash: 's' };
 const node = (id) => ({ id, kind: 'function', name: id, attributes: { entrypoints: [{ category: 'executable', rule: 'main', source }] }, sources: [source], contentHash: id });
 const graph = { schemaVersion: 1, hash: 'g', repository: { name: 'fixture', dirty: false, sourceFingerprint: 's' }, nodes: [node('a'), node('b')], edges: [{ id: 'ab', kind: 'calls', source: 'a', target: 'b', directed: true, field: '', attributes: { resolution: 'exact' }, sources: [source] }], facets: [], findings: [], views: [], snapshots: [], inputs: [], adapterVersions: {}, lensDigest: null };
@@ -8,7 +9,9 @@ test('logic export writes bounded source-bound entrypoints and adjacent call pag
     assert.equal(typeof exporter.writeLogic, 'function');
     const files = new Map(); exporter.writeLogic(graph, (path, text) => files.set(path, JSON.parse(text)));
     const index = files.get('logic/index.json'); assert.equal(index.graphHash, 'g'); assert.equal(index.entrypointCount, 2);
-    assert.equal(files.get('logic/entrypoints/0.json').items[0].node.id, 'a');
+    const canonicalEntries = logicEntrypoints(graph).items;
+    assert.deepEqual(canonicalEntries.map(item => item.node.id), ['a', 'b'], 'execution entries prefer outgoing exact calls');
+    assert.deepEqual(files.get('logic/entrypoints/0.json').items, canonicalEntries);
     const directory = [...files.entries()].find(([path, data]) => path.startsWith('logic/lookup/') && data.records?.a)?.[1];
     assert.ok(directory); const detail = files.get(directory.records.a);
     assert.equal(detail.outgoing.total, 1); assert.deepEqual(detail.outgoing.items[0].sources, [source]); assert.equal(detail.incoming.total, 0);

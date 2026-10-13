@@ -15,3 +15,4 @@ build/
 bin/*.mjs
 bin/live-client.js
 viewer/*.js
+viewer/asset-archives/
