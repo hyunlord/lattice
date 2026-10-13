@@ -1,0 +1,50 @@
+{
+  "publicBase": "https://hyunlord.github.io/lattice/",
+  "toolCommit": "9053b00db1ca24f4f7e8ea12be0ae5e115368303",
+  "deployment": "https://github.com/hyunlord/lattice/actions/runs/38368804790",
+  "capturedAt": "2026-10-13T08:28:59.502Z",
+  "images": [
+    {
+      "id": "httpx",
+      "width": 1440,
+      "height": 900,
+      "file": "httpx-1440.png",
+      "sha256": "f679a377596baf3bc61651f35b93c8daa51306bc3d82ce2215c5b6878841db77"
+    },
+    {
+      "id": "httpx",
+      "width": 390,
+      "height": 844,
+      "file": "httpx-390.png",
+      "sha256": "2e8a7e61a739ba4abf2f8121ad0208c8299caef382363240340c8bef941027d9"
+    },
+    {
+      "id": "ripgrep",
+      "width": 1440,
+      "height": 900,
+      "file": "ripgrep-1440.png",
+      "sha256": "df77d33e51a7a7b543ffec56d1587907ff9f679e617164600da034c223185096"
+    },
+    {
+      "id": "ripgrep",
+      "width": 390,
+      "height": 844,
+      "file": "ripgrep-390.png",
+      "sha256": "998e3211d242531293963f1c64f0503902e5cc0fbc0259504e79fffe64cc2141"
+    },
+    {
+      "id": "nowinandroid",
+      "width": 1440,
+      "height": 900,
+      "file": "nowinandroid-1440.png",
+      "sha256": "a9594a4c494fb1a27ce0914ad96731c20bd69b09d8ca47781071e9ecfbab492f"
+    },
+    {
+      "id": "nowinandroid",
+      "width": 390,
+      "height": 844,
+      "file": "nowinandroid-390.png",
+      "sha256": "7b6613434414852dab1106c1f702d9f900483466090d6581f1c927427cf0e01e"
+    }
+  ]
+}

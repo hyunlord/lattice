@@ -1,6 +1,8 @@
 # L11 delivery evidence
 
-![Three languages at1440 and390pixels; sheet thumbnails are50%](screens/sheet.png)
+![Three languages on public Pages at1440 and390pixels; thumbnails are50%](publication/screens/sheet.png)
+
+[Verified public release and fresh capture originals](publication/README.md). The earlier frozen-candidate screenshots below remain historical evidence.
 
 The original [HTTPX1440](screens/httpx-1440.png), [HTTPX390](screens/httpx-390.png), [ripgrep1440](screens/ripgrep-1440.png), [ripgrep390](screens/ripgrep-390.png), [Now in Android1440](screens/nowinandroid-1440.png) and [Now in Android390](screens/nowinandroid-390.png) are actual browser viewports, without a lens or AI summary. The [manifest](screens/manifest.json) binds their dimensions and hashes to candidate`2b7c00f`. The subsequent`940b23c` patch changes only the early loading shell and its regression tests; the completed summary model and these views are unchanged.
 
@@ -36,4 +38,4 @@ The final summary citation correction retains the immutable source URL and adjus
 
 All36 trials and independent grades are complete. [The18-repository table](evaluation/evaluation-report.md) retains original answers, grades, timing bounds and availability failures. GitHub-direct scored324/360(90.00%); map plus source scored318/360(88.33%). Accuracy non-inferiority fails by6points. The17 coordinator-timed pairs took3821.25–4127.71s direct and4205.04–4451.96s with the map:1.019–1.165times as long, missing the50% reduction target. Click direct has only a300-second self-report, so the strict18-repository primary timing aggregate is unavailable; the supplemental substitution is explicitly separate.
 
-L11 is therefore **partial, not accepted**: implementation and medium startup checks pass; measured task benefit does not. Issue#100 remains open, alongside the large-input failure#102. No answer was rerun with the later release fixes. Public release/gallery checks are the remaining delivery work, not a replacement comprehension test.
+L11 is therefore **partial, not accepted**: implementation and medium startup checks pass; measured task benefit does not. Issue#100 remains open, alongside the large-input failure#102. No answer was rerun with the later release fixes. Public release/gallery checks are complete and linked above; they do not replace the failed task-benefit test.

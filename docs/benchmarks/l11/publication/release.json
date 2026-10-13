@@ -1,0 +1,11 @@
+{
+  "release": "https://github.com/hyunlord/lattice/releases/tag/v0.1.0-l11",
+  "toolCommit": "9053b00db1ca24f4f7e8ea12be0ae5e115368303",
+  "tarball": {
+    "name": "hyunlord-lattice-0.1.0-l11.tgz",
+    "bytes": 540195,
+    "sha256": "954394c15ae3d3dd33f308d41cf071b298efa77f22454117bc48f10ee825f5de"
+  },
+  "installation": "Actual npx public release URL with a new npm cache; local pinned HTTPX source; --no-browser followed by real Chrome navigation. Browser-launch time is included; not a replacement corpus benchmark.",
+  "sourcePreservation": "Git HEAD and status matched; this smoke did not rehash every source byte. Earlier cold-open trials record complete file hashes."
+}

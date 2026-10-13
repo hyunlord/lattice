@@ -8,7 +8,9 @@ Understand an unfamiliar repository through its components, dependencies, entryp
 npx --yes https://github.com/hyunlord/lattice/releases/download/v0.1.0-l11/hyunlord-lattice-0.1.0-l11.tgz open /path/to/repository
 ```
 
-The release command above is being prepared for L11 and is not available until that release is published. Node20+ and Git are required. Public GitHub repository URLs also work. `--no-browser` prints the local address for remote/headless sessions. No lens, model key or target installation is required; analysis does not run repository code.
+Node20+ and Git are required. The command installs the [published L11 prerelease](https://github.com/hyunlord/lattice/releases/tag/v0.1.0-l11); the unscoped npm name `lattice` belongs to another project. Public GitHub repository URLs also work. `--no-browser` prints the local address for remote/headless sessions. No lens, model key or target installation is required; analysis does not run repository code.
+
+[Open the public demo gallery](https://hyunlord.github.io/lattice/) — six public repositories, no setup.
 
 ## Start with the structure
 
@@ -28,7 +30,7 @@ Descriptions come from repository documentation, manifests and clearly labelled 
 
 - [Usage, lenses, MCP and automation](docs/guide.md)
 - [Architecture](docs/design/lattice-v0.md), [design system](DESIGN.md) and [contributor contract](AGENTS.md)
-- [L11 frozen public corpus and questions](docs/benchmarks/l11/questions.json)
+- [L11 frozen public corpus and questions](docs/benchmarks/l11/questions.json), [evaluation and unmet targets](docs/benchmarks/l11/evaluation/evaluation-report.md), and [public delivery](docs/benchmarks/l11/publication/README.md)
 - [Earlier acceptance evidence](docs/review/acceptance.md) and accepted [L10 performance residuals](docs/benchmarks/l10/closure-display.md)
 - [Domain lens example: bs-mobile](https://hyunlord.github.io/bs-mobile/) — a configured example, separate from the generic product gallery
 
