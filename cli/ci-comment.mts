@@ -3,6 +3,7 @@ import { parseCiReport } from './ci-report.mjs';
 import type { GithubClient, GithubConnection } from './ci-github.mjs';
 import { botComment, githubClient, pullRequest } from './ci-github.mjs';
 import { object } from './types.mjs';
+import { commentClient, CommentRateLimitError } from './ci-comment-rate-limit.mjs';
 import { readFileSync, realpathSync } from 'node:fs';
 import { pathToFileURL } from 'node:url';
 
@@ -35,6 +36,13 @@ export interface CommentContext extends GithubConnection {
     readonly event: unknown;
 }
 export async function publishCiComment(report: CiReport, context: CommentContext, client: GithubClient = githubClient(context)) {
+    try { return await publish(report, context, commentClient(client)); }
+    catch (error) {
+        if (error instanceof CommentRateLimitError) return { status: 'skipped', reason: 'GitHub rate limit after 3 attempts; next run can retry', evidence: error.message };
+        throw error;
+    }
+}
+async function publish(report: CiReport, context: CommentContext, client: GithubClient) {
     if (context.eventName !== 'pull_request') return { status: 'skipped', reason: 'not a pull request' };
     if (!object(context.event)) throw new Error('Invalid GitHub event');
     const event = pullRequest(context.event['pull_request']);
