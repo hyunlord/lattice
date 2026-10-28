@@ -1,6 +1,10 @@
 import { object } from './types.mjs';
 export interface GithubClient { request(method: 'GET' | 'POST' | 'PATCH', path: string, body?: unknown): Promise<unknown>; }
 export interface GithubConnection { readonly token: string; readonly apiUrl?: string; }
+export class GithubApiError extends Error {
+    override readonly name = 'GithubApiError';
+    constructor(message: string, readonly rateLimited: boolean) { super(message); }
+}
 export function githubClient(connection: GithubConnection): GithubClient {
     const base = new URL(connection.apiUrl ?? 'https://api.github.com');
     if (base.username || base.password || base.search || base.hash || (base.protocol !== 'https:' && !(base.protocol === 'http:' && ['127.0.0.1', 'localhost', '[::1]'].includes(base.hostname)))) throw new Error('Invalid GitHub API URL');
@@ -19,7 +23,8 @@ export function githubClient(connection: GithubConnection): GithubClient {
                 const headers = ['x-github-request-id', 'x-accepted-github-permissions', 'retry-after', 'x-ratelimit-remaining', 'x-ratelimit-reset'].flatMap(name => {
                     const value = response.headers.get(name); return value === null ? [] : [`${name}=${safe(value)}`];
                 });
-                throw new Error(`GitHub API ${method} failed with HTTP ${response.status}${message}${headers.length ? ` (${headers.join('; ')})` : ''}`);
+                const rateLimited = response.status === 429 || (response.status === 403 && (response.headers.get('x-ratelimit-remaining') === '0' || /\brate limit\b/iu.test(message)));
+                throw new GithubApiError(`GitHub API ${method} failed with HTTP ${response.status}${message}${headers.length ? ` (${headers.join('; ')})` : ''}`, rateLimited);
             }
             try { return await response.json(); }
             catch (error) {

@@ -1,6 +1,11 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import { createServer } from 'node:http';
+import { execFile } from 'node:child_process';
+import { promisify } from 'node:util';
+import { mkdtempSync, writeFileSync, rmSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
 import { githubClient } from '../bin/ci-github.mjs';
 import { renderCiComment, publishCiComment, commentMarker } from '../bin/ci-comment.mjs';
 const head = 'a'.repeat(40), base = 'b'.repeat(40);
@@ -74,3 +79,63 @@ test('GitHub failures retain bounded denial evidence without exposing credential
         return true;
     });
 });
+
+test('publisher skips exhausted HTTP rate limits after three attempts', async t => {
+    let attempts = 0;
+    const server = createServer((_req, res) => {
+        attempts++;
+        res.writeHead(403, { 'content-type': 'application/json', 'x-ratelimit-remaining': '0' });
+        res.end('{"message":"API rate limit exceeded for installation"}');
+    });
+    await new Promise(resolve => server.listen(0, '127.0.0.1', resolve));
+    t.after(() => new Promise(resolve => server.close(resolve)));
+    const context = { repository: 'owner/repo', runId: '123', eventName: 'pull_request', event: { pull_request: pull }, token: 'test-only', apiUrl: `http://127.0.0.1:${server.address().port}` };
+    const result = await publishCiComment(report, context);
+    assert.equal(result.status, 'skipped'); assert.match(result.reason, /rate limit/); assert.equal(attempts, 3);
+});
+
+test('comment CLI exits successfully with an explicit skipped result for exhausted rate limits', async t => {
+    let attempts = 0;
+    const server = createServer((_req, res) => {
+        attempts++; res.writeHead(429, { 'content-type': 'application/json' }); res.end('{"message":"Too many requests"}');
+    });
+    await new Promise(resolve => server.listen(0, '127.0.0.1', resolve));
+    t.after(() => new Promise(resolve => server.close(resolve)));
+    const dir = mkdtempSync(join(tmpdir(), 'lattice-comment-limit-'));
+    t.after(() => rmSync(dir, { recursive: true, force: true }));
+    writeFileSync(join(dir, 'report.json'), JSON.stringify(report));
+    writeFileSync(join(dir, 'event.json'), JSON.stringify({ pull_request: pull }));
+    const { stdout, stderr } = await promisify(execFile)(process.execPath, ['bin/ci-comment.mjs', join(dir, 'report.json')], { env: { ...process.env, GITHUB_REPOSITORY: 'owner/repo', GITHUB_RUN_ID: '123', GITHUB_EVENT_NAME: 'pull_request', GITHUB_EVENT_PATH: join(dir, 'event.json'), GITHUB_TOKEN: 'test-only', GITHUB_API_URL: `http://127.0.0.1:${server.address().port}` } });
+    assert.equal(JSON.parse(stdout).status, 'skipped'); assert.match(JSON.parse(stdout).reason, /rate limit/);
+    assert.equal(stderr, ''); assert.equal(attempts, 3);
+});
+
+for (const stage of ['pull', 'comments', 'write']) {
+    test(`publisher skips rate limit at ${stage} without hiding other failures`, async t => {
+        let attempts = 0;
+        const server = createServer((req, res) => {
+            const matching = stage === 'pull' ? req.url.includes('/pulls/') : stage === 'comments' ? req.method === 'GET' && req.url.includes('/comments') : req.method === 'POST';
+            res.setHeader('content-type', 'application/json');
+            if (matching) { attempts++; res.statusCode = 429; return res.end('{"message":"Too many requests"}'); }
+            res.end(JSON.stringify(req.url.includes('/pulls/') ? pull : []));
+        });
+        await new Promise(resolve => server.listen(0, '127.0.0.1', resolve));
+        t.after(() => new Promise(resolve => server.close(resolve)));
+        const context = { repository: 'owner/repo', runId: '123', eventName: 'pull_request', event: { pull_request: pull }, token: 'test-only', apiUrl: `http://127.0.0.1:${server.address().port}` };
+        const result = await publishCiComment(report, context);
+        assert.equal(result.status, 'skipped'); assert.equal(attempts, 3);
+    });
+}
+for (const status of [401, 403, 404, 500]) {
+    test(`publisher fails HTTP ${status} without rate-limit evidence once`, async t => {
+        let attempts = 0;
+        const server = createServer((_req, res) => {
+            attempts++; res.writeHead(status, { 'content-type': 'application/json' }); res.end('{"message":"Permission denied"}');
+        });
+        await new Promise(resolve => server.listen(0, '127.0.0.1', resolve));
+        t.after(() => new Promise(resolve => server.close(resolve)));
+        const context = { repository: 'owner/repo', runId: '123', eventName: 'pull_request', event: { pull_request: pull }, token: 'test-only', apiUrl: `http://127.0.0.1:${server.address().port}` };
+        await assert.rejects(publishCiComment(report, context), new RegExp(`HTTP ${status}`));
+        assert.equal(attempts, 1);
+    });
+}
